@@ -1,0 +1,1296 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "en",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 13:08:38",
+ "seconds": 203.9,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 220,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 1000352,
+   "rss_kb": 2198196,
+   "processes": 25,
+   "t": 53.7
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 919102,
+   "rss_kb": 2081112
+  },
+  "minMemAvailableKb": 7203140,
+  "abortedForMemory": false,
+  "peakByName": {
+   "WebKitWebProces": {
+    "count": 3,
+    "pss_kb": 260215,
+    "rss_kb": 661756
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 254520,
+    "rss_kb": 378048
+   },
+   "win11-app": {
+    "count": 2,
+    "pss_kb": 119025,
+    "rss_kb": 366884
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 93884,
+    "rss_kb": 133992
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 80724,
+    "rss_kb": 112840
+   },
+   "win11-explorer": {
+    "count": 1,
+    "pss_kb": 59284,
+    "rss_kb": 179336
+   },
+   "WebKitNetworkPr": {
+    "count": 3,
+    "pss_kb": 43238,
+    "rss_kb": 174440
+   },
+   "glycin-svg": {
+    "count": 1,
+    "pss_kb": 26480,
+    "rss_kb": 36180
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 22881,
+    "rss_kb": 52764
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 16804,
+    "rss_kb": 25364
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15614,
+    "rss_kb": 34468
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4109,
+    "rss_kb": 11620
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1522,
+    "rss_kb": 10348
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 789,
+    "rss_kb": 7988
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 737,
+    "rss_kb": 7924
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 343,
+    "rss_kb": 1568
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 183,
+    "rss_kb": 2676
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 67.1,
+  "mutatingSyscallPaths": 87785,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "13:10:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:06\tpw-dump\t--monitor --no-colors",
+  "13:10:08\tpw-dump\t--monitor --no-colors",
+  "13:10:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:12\tpw-dump\t--monitor --no-colors",
+  "13:10:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:20\tpw-dump\t--monitor --no-colors",
+  "13:10:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:36\tpw-dump\t--monitor --no-colors",
+  "13:10:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:48\tpw-dump\t--monitor --no-colors",
+  "13:10:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:50\tpw-dump\t--monitor --no-colors",
+  "13:10:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:54\tpw-dump\t--monitor --no-colors",
+  "13:10:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:54\tpw-dump\t--monitor --no-colors",
+  "13:10:55\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "13:10:55\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "13:10:55\tapt\tlist --upgradable",
+  "13:10:55\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "13:10:55\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "13:10:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:56\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "13:10:56\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "13:10:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:56\tpw-dump\t--monitor --no-colors",
+  "13:10:57\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "13:10:57\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "13:10:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:58\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "13:10:58\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "13:10:59\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "13:10:59\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "13:10:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:10:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:00\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "13:11:00\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "13:11:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:01\tpw-dump\t--monitor --no-colors",
+  "13:11:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:02\tpw-dump\t--monitor --no-colors",
+  "13:11:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:06\tpw-dump\t--monitor --no-colors",
+  "13:11:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:09\tpw-dump\t--monitor --no-colors",
+  "13:11:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:18\tpw-dump\t--monitor --no-colors",
+  "13:11:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:25\tpw-dump\t--monitor --no-colors",
+  "13:11:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "13:11:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-3WaIKw0p"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 44,
+  "maxScanSeconds": 0.717,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-3WaIKw0p"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/readme-shots.py",
+  "startLanguage": "en",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.8,
+    "args": {
+     "key": "boot"
+    }
+   },
+   {
+    "step": "record",
+    "t": 5.73,
+    "args": {
+     "key": "toplevels"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 7.58,
+    "args": {
+     "name": "desktop"
+    },
+    "result": {
+     "png": "desktop.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2145,
+      "meanLevel": 61.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 7.78,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "native",
+     "pid": 438,
+     "page": null,
+     "alive": true,
+     "native": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.66,
+    "args": {
+     "name": "start"
+    },
+    "result": {
+     "png": "start.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1587,
+      "meanLevel": 41.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 10.79,
+    "args": {
+     "native": "flyout",
+     "name": "quick"
+    },
+    "result": {
+     "open": "quick"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 12.37,
+    "args": {
+     "name": "quick-settings"
+    },
+    "result": {
+     "png": "quick-settings.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2216,
+      "meanLevel": 61.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 12.58,
+    "args": {
+     "native": "flyout",
+     "name": "quick"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.46,
+    "args": {
+     "key": "winx.startButton"
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.79,
+    "args": {
+     "key": "winx.how"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 15.35,
+    "args": {
+     "name": "winx"
+    },
+    "result": {
+     "png": "winx.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2118,
+      "meanLevel": 55.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 15.46,
+    "args": {
+     "native": "flyout",
+     "name": "winx"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 16.3,
+    "args": {
+     "key": "notifications.posted"
+    }
+   },
+   {
+    "step": "native",
+    "t": 25.35,
+    "args": {
+     "native": "flyout",
+     "name": "notifications"
+    },
+    "result": {
+     "open": "notifications"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 27.19,
+    "args": {
+     "name": "notifications"
+    },
+    "result": {
+     "png": "notifications.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2252,
+      "meanLevel": 62.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.36,
+    "args": {
+     "native": "flyout",
+     "name": "notifications"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 28.14,
+    "args": {
+     "key": "notifications.cleared"
+    }
+   },
+   {
+    "step": "open",
+    "t": 30.95,
+    "args": {
+     "spec": "explorer"
+    },
+    "result": {
+     "name": "explorer",
+     "kind": "explorer",
+     "window": "69eac1341d06025eea4286fd1641d8b9",
+     "pid": 1812,
+     "page": null,
+     "alive": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 36.14,
+    "args": {
+     "name": "explorer"
+    },
+    "result": {
+     "png": "explorer.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 842,
+      "meanLevel": 33.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 37.6,
+    "args": {
+     "spec": "settings:personalization"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "6fbf0db90c7d546968d42fa577102d60",
+     "pid": 1978,
+     "page": "personalization",
+     "alive": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 42.78,
+    "args": {
+     "name": "settings"
+    },
+    "result": {
+     "png": "settings.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1773,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 43.92,
+    "args": {
+     "spec": "taskmgr"
+    },
+    "result": {
+     "name": "taskmgr",
+     "kind": "taskmgr",
+     "window": "8cc0e683214288fd374620a11547f545",
+     "pid": 2124,
+     "page": null,
+     "alive": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 49.09,
+    "args": {
+     "name": "task-manager-summary"
+    },
+    "result": {
+     "png": "task-manager-summary.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1025,
+      "meanLevel": 42.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 49.73,
+    "args": {
+     "key": "taskmgr.click"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 81.0,
+    "args": {
+     "name": "task-manager"
+    },
+    "result": {
+     "png": "task-manager.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 979,
+      "meanLevel": 39.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "close",
+    "t": 81.82,
+    "args": {
+     "name": "explorer"
+    }
+   },
+   {
+    "step": "record",
+    "t": 82.13,
+    "args": {
+     "key": "calendar.windows"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 86.71,
+    "args": {
+     "name": "calendar"
+    },
+    "result": {
+     "png": "calendar.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 769,
+      "meanLevel": 39.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 89.48,
+    "args": {
+     "native": "flyout",
+     "name": "taskview"
+    },
+    "result": {
+     "open": "taskview"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 91.17,
+    "args": {
+     "name": "task-view"
+    },
+    "result": {
+     "png": "task-view.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 431,
+      "meanLevel": 32.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 91.4,
+    "args": {
+     "native": "flyout",
+     "name": "taskview"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "close",
+    "t": 92.99,
+    "args": {
+     "name": "settings"
+    }
+   },
+   {
+    "step": "close",
+    "t": 93.81,
+    "args": {
+     "name": "taskmgr"
+    }
+   },
+   {
+    "step": "record",
+    "t": 95.32,
+    "args": {
+     "key": "theme"
+    }
+   },
+   {
+    "step": "open",
+    "t": 99.42,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "native",
+     "pid": 438,
+     "page": null,
+     "alive": true,
+     "native": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 101.32,
+    "args": {
+     "name": "light-start"
+    },
+    "result": {
+     "png": "light-start.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1368,
+      "meanLevel": 213.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 103.57,
+    "args": {
+     "spec": "explorer"
+    },
+    "result": {
+     "name": "explorer",
+     "kind": "explorer",
+     "window": "a0c8bfa0264831abedf3cd1efdfde7a3",
+     "pid": 3318,
+     "page": null,
+     "alive": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 108.77,
+    "args": {
+     "name": "light-explorer"
+    },
+    "result": {
+     "png": "light-explorer.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2037,
+      "meanLevel": 225.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "close",
+    "t": 109.59,
+    "args": {
+     "name": "explorer"
+    }
+   },
+   {
+    "step": "record",
+    "t": 109.59,
+    "args": {
+     "key": "failed"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "desktop",
+    "ok": true,
+    "t": 7.58
+   },
+   {
+    "check": "start",
+    "ok": true,
+    "t": 10.74
+   },
+   {
+    "check": "quick-settings",
+    "ok": true,
+    "t": 13.36
+   },
+   {
+    "check": "winx",
+    "ok": true,
+    "t": 16.29
+   },
+   {
+    "check": "notifications",
+    "ok": true,
+    "t": 29.81
+   },
+   {
+    "check": "explorer",
+    "ok": true,
+    "t": 36.14
+   },
+   {
+    "check": "settings",
+    "ok": true,
+    "t": 42.78
+   },
+   {
+    "check": "task-manager-summary",
+    "ok": true,
+    "t": 49.09
+   },
+   {
+    "check": "task-manager",
+    "ok": true,
+    "t": 81.01
+   },
+   {
+    "check": "calendar",
+    "ok": true,
+    "t": 86.71
+   },
+   {
+    "check": "task-view",
+    "ok": true,
+    "t": 92.18
+   },
+   {
+    "check": "light",
+    "ok": true,
+    "t": 109.59
+   }
+  ],
+  "records": {
+   "boot": {
+    "kind": "native-shell",
+    "pid": 438,
+    "tag": "boot"
+   },
+   "toplevels": [
+    {
+     "title": "Desktop",
+     "visible": true,
+     "width": 1440,
+     "height": 852
+    },
+    {
+     "title": "Start",
+     "visible": false,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "title": "Taskbar",
+     "visible": true,
+     "width": 1440,
+     "height": 900
+    }
+   ],
+   "winx.startButton": [
+    500,
+    856,
+    40,
+    40
+   ],
+   "winx.how": "right-click",
+   "notifications.posted": [
+    true,
+    "This is what a notification looks like"
+   ],
+   "notifications.cleared": 2,
+   "taskmgr.click": {
+    "input": "clutter",
+    "x": 320,
+    "y": 254,
+    "client": [
+     120,
+     188
+    ],
+    "window": [
+     200,
+     66,
+     1040,
+     720
+    ],
+    "element": "Performance",
+    "shell": {
+     "pointer": [
+      320,
+      254
+     ],
+     "focusPid": 2124
+    },
+    "pageSaw": [
+     {
+      "type": "pointerdown",
+      "x": 120,
+      "y": 188,
+      "trusted": true,
+      "target": "fl-nav__label"
+     },
+     {
+      "type": "pointerup",
+      "x": 120,
+      "y": 188,
+      "trusted": true,
+      "target": "fl-nav__label"
+     },
+     {
+      "type": "click",
+      "x": 120,
+      "y": 188,
+      "trusted": true,
+      "target": "fl-nav__label"
+     }
+    ]
+   },
+   "calendar.windows": [
+    {
+     "pid": 2862,
+     "title": "Calendar",
+     "x": 130,
+     "y": 36,
+     "w": 1180,
+     "h": 780
+    }
+   ],
+   "theme": {
+    "mode": "light",
+    "accent": "#0067c0",
+    "accentFromWallpaper": false,
+    "transparency": true,
+    "syncSystem": true,
+    "accentOnTaskbar": false,
+    "captionButtons": true,
+    "gtkFamily": "system"
+   },
+   "failed": []
+  },
+  "shots": [
+   "desktop.png",
+   "start.png",
+   "quick-settings.png",
+   "winx.png",
+   "notifications.png",
+   "explorer.png",
+   "settings.png",
+   "task-manager-summary.png",
+   "task-manager.png",
+   "calendar.png",
+   "task-view.png",
+   "light-start.png",
+   "light-explorer.png"
+  ],
+  "error": null,
+  "seconds": 109.59,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 438,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 438,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 438,
+    "page": null,
+    "alive": true,
+    "native": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=58b466613763d6ee01e58b6f6af6fe1c",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 438,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 438
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "desktop.png",
+    "group": "scenario",
+    "bytes": 1108853,
+    "area": null
+   },
+   {
+    "file": "start.png",
+    "group": "scenario",
+    "bytes": 764849,
+    "area": null
+   },
+   {
+    "file": "quick-settings.png",
+    "group": "scenario",
+    "bytes": 906204,
+    "area": null
+   },
+   {
+    "file": "winx.png",
+    "group": "scenario",
+    "bytes": 852263,
+    "area": null
+   },
+   {
+    "file": "notifications.png",
+    "group": "scenario",
+    "bytes": 857607,
+    "area": null
+   },
+   {
+    "file": "explorer.png",
+    "group": "scenario",
+    "bytes": 404751,
+    "area": null
+   },
+   {
+    "file": "settings.png",
+    "group": "scenario",
+    "bytes": 542597,
+    "area": null
+   },
+   {
+    "file": "task-manager-summary.png",
+    "group": "scenario",
+    "bytes": 455367,
+    "area": null
+   },
+   {
+    "file": "task-manager.png",
+    "group": "scenario",
+    "bytes": 452858,
+    "area": null
+   },
+   {
+    "file": "calendar.png",
+    "group": "scenario",
+    "bytes": 269251,
+    "area": null
+   },
+   {
+    "file": "task-view.png",
+    "group": "scenario",
+    "bytes": 106068,
+    "area": null
+   },
+   {
+    "file": "light-start.png",
+    "group": "scenario",
+    "bytes": 823063,
+    "area": null
+   },
+   {
+    "file": "light-explorer.png",
+    "group": "scenario",
+    "bytes": 478740,
+    "area": null
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "explorer",
+    "source": "Win11 File Explorer",
+    "title": "Win11 File Explorer",
+    "body": "“File Explorer” is ready"
+   },
+   {
+    "app": "settings",
+    "source": "Win11 Settings",
+    "title": "Win11 Settings",
+    "body": "“Settings” is ready"
+   },
+   {
+    "app": "taskmgr",
+    "source": "Win11 Task Manager",
+    "title": "Win11 Task Manager",
+    "body": "“Task Manager” is ready"
+   },
+   {
+    "app": "explorer",
+    "source": "Win11 File Explorer",
+    "title": "Win11 File Explorer",
+    "body": "“File Explorer” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/readme-shots.out/desktop.png",
+  "tests/gnome/scenarios/readme-shots.out/start.png",
+  "tests/gnome/scenarios/readme-shots.out/quick-settings.png",
+  "tests/gnome/scenarios/readme-shots.out/winx.png",
+  "tests/gnome/scenarios/readme-shots.out/notifications.png",
+  "tests/gnome/scenarios/readme-shots.out/explorer.png",
+  "tests/gnome/scenarios/readme-shots.out/settings.png",
+  "tests/gnome/scenarios/readme-shots.out/task-manager-summary.png",
+  "tests/gnome/scenarios/readme-shots.out/task-manager.png",
+  "tests/gnome/scenarios/readme-shots.out/calendar.png",
+  "tests/gnome/scenarios/readme-shots.out/task-view.png",
+  "tests/gnome/scenarios/readme-shots.out/light-start.png",
+  "tests/gnome/scenarios/readme-shots.out/light-explorer.png"
+ ]
+}

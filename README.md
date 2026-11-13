@@ -1,74 +1,141 @@
-# Win11 voor GNOME, ontwikkelversie 0.8.0
+<p align="center">
+  <img src="logo-circle.png" width="72" alt="">
+</p>
 
-English: [README.en.md](README.en.md).
+<h1 align="center">WinPoint</h1>
 
-Win11 voor GNOME geeft GNOME een Windows 11-shell. De taakbalk, de flyouts, Start en het bureaublad zijn samen één native GTK 4-proces in Rust: `win11-shell` (GTK 4.22, gtk4-rs), zonder WebKit. Verkenner, Instellingen, Taakbeheer, Alles, Schijfbeheer, Standaardapps en de Installer blijven HTML, CSS en JavaScript in WebKitGTK (GTK 3), met de vertrouwde Win11Shell-interface, pictogrammen en vensterknoppen. Een GNOME Shell-extensie koppelt de taakbalk, het bureaublad, sneltoetsen en echte vensteracties aan GNOME. Het huidige ontwikkeldoel is Ubuntu met GNOME Shell 50 en Wayland.
+<p align="center">
+  <strong>A Windows 11 style shell for GNOME, in Rust and GTK 4</strong>
+</p>
 
-De standaardruntime draait volledig in Rust, inclusief de oorspronkelijke publieke diensten, HTTP/eventstream, Alles-indexer en afbeeldinghelpers. De shell haalt apps, vastgemaakte items, instellingen, het systeemvak, meldingen, geluid, netwerk, energie en bestanden bij `win11-panel --http-only`, de Rust-backend zonder venster of WebKit. De oorspronkelijke Python-bronnen onder `vendor/host` blijven een referentie voor vergelijkende tests. Python wordt nog gebruikt voor installatie-, pakket- en ontwikkelhulpmiddelen; de geopende shell en apps starten daarvoor geen Python-backend. Een expliciet gekozen referentiebackend blijft beschikbaar voor ontwikkeltests.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/GNOME-50-4A86CF?logo=gnome&logoColor=white" alt="GNOME 50">
+  <img src="https://img.shields.io/badge/GTK-4.22-7FE719?logo=gtk&logoColor=white" alt="GTK 4.22">
+  <img src="https://img.shields.io/badge/Rust-1.92%2B-B7410E?logo=rust&logoColor=white" alt="Rust 1.92+">
+  <img src="https://img.shields.io/badge/Ubuntu-26.04-E95420?logo=ubuntu&logoColor=white" alt="Ubuntu 26.04">
+</p>
 
-Dit is werk in ontwikkeling. Er is vanuit deze werkmap geen openbare alpha gepubliceerd. De actuele controles, hun omgeving en grenzen staan bovenaan [VALIDATION.md](VALIDATION.md). Die controles bewijzen de genoemde scenario's; volledige één-op-één-pariteit op iedere machine is nog geen aangetoonde eigenschap. De eerdere HTML-versie van taakbalk, Start en bureaublad in WebKit is verwijderd; de rapporten daarover zijn historisch.
+<p align="center">
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#build">Build</a> ·
+  <a href="#install">Install</a> ·
+  <a href="#status-and-known-gaps">Status</a> ·
+  <a href="README.nl.md">Nederlands</a>
+</p>
 
-## Zelfstandige programma's
+<p align="center">
+  <img src="docs/screenshots/start.png" width="860" alt="WinPoint on GNOME 50: Start open above the taskbar, over the Lotus wallpaper">
+</p>
 
-| Programma | Functie |
+WinPoint turns GNOME 50 into a Windows 11 style desktop: a centred taskbar, Start, quick settings, a notification centre with a calendar, the Win+X menu, Task View and a desktop with icons. The shell is one native GTK 4 program in Rust (`win11-shell`), with no web engine in it. A GNOME Shell extension fits it into GNOME: it places the windows, adds GNOME's own frosted glass behind them and handles the shortcuts and window actions. It comes with its own apps (File Explorer, Settings, Task Manager and more) and a native Calendar.
+
+> [!NOTE]
+> WinPoint is a development version (0.8.0) with no public release yet. It is built and tested on Ubuntu 26.04 with GNOME Shell 50 on Wayland. The project started as "Win11 for GNOME", so its programs, paths and extension keep their `win11` names.
+
+## Screenshots
+
+All screenshots come from a private, headless GNOME 50 session at 1440×900 in English; all but the last use the dark theme.
+
+<table>
+  <tr>
+    <td align="center" width="50%"><img src="docs/screenshots/desktop.png" width="100%" alt="The desktop with icons and the taskbar"><br><sub><b>Desktop</b>: the Lotus wallpaper, desktop icons and the taskbar</sub></td>
+    <td align="center" width="50%"><img src="docs/screenshots/winx.png" width="100%" alt="The Win+X menu above the Start button"><br><sub><b>Win+X menu</b>: right-click the Start button</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/quick-settings.png" width="100%" alt="Quick settings flyout"><br><sub><b>Quick settings</b>: here without network or audio, as in the test session</sub></td>
+    <td align="center"><img src="docs/screenshots/notifications.png" width="100%" alt="Notification centre and calendar"><br><sub><b>Notifications and calendar</b>: click a day to open it in Calendar</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/task-view.png" width="100%" alt="Task View with three windows"><br><sub><b>Task View</b>: Alt+Tab or the taskbar button</sub></td>
+    <td align="center"><img src="docs/screenshots/explorer.png" width="100%" alt="File Explorer on the home folder"><br><sub><b>File Explorer</b>: tabs, navigation pane and file actions</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/settings.png" width="100%" alt="Settings, Personalisation page"><br><sub><b>Settings</b>: the Personalisation page</sub></td>
+    <td align="center"><img src="docs/screenshots/task-manager.png" width="100%" alt="Task Manager, Performance page"><br><sub><b>Task Manager</b>: the Performance page</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/calendar.png" width="100%" alt="Calendar app, month view"><br><sub><b>Calendar</b>: the native GTK 4 Calendar app, month view</sub></td>
+    <td align="center"><img src="docs/screenshots/light.png" width="100%" alt="Start in the light theme"><br><sub><b>Light theme</b>: Start with the light Lotus wallpaper</sub></td>
+  </tr>
+</table>
+
+## Features
+
+- **Taskbar**: pinned and running apps with grouping and jump lists, tray icons, clock and date, centred or left aligned, optional auto-hide.
+- **Start**: pinned apps, All apps, recommended files, the user and power menus, and search over apps, settings, files and the web.
+- **Quick settings**: Wi-Fi, Bluetooth, flight mode, night light, dark mode, do not disturb, brightness and volume sliders, and media controls.
+- **Notifications and calendar**: a notification centre with pop-up toasts, and a month calendar that opens the chosen day in the Calendar app.
+- **Win+X menu**: the quick link menu, opened by right-clicking the Start button.
+- **Task View**: every open window as a card, with Alt+Tab or the taskbar button.
+- **Desktop**: wallpaper, This PC and Recycle Bin, your desktop files, context menus, rename, drag to move and undo.
+- **Frosted glass**: GNOME Shell's own blur behind the taskbar, Start and the focused WinPoint app window, off with Transparency effects off or high contrast.
+- **Windows caption buttons for GTK apps**: minimise, maximise and close in the Windows 11 style for other GTK 3 and GTK 4 apps (Snap and Flatpak apps keep their own).
+- **Snap preview in the accent colour**: GNOME's window snap preview follows your accent colour instead of Ubuntu's orange.
+- **Own apps**: File Explorer, Settings, Task Manager, Alles (instant file search), Disks, Default apps and an Installer.
+- **Native Calendar**: a GTK 4 Calendar with day, week and month views, local events and GNOME's calendars read-only.
+- **Dutch and English**: its own language setting, separate from GNOME's; every open WinPoint window switches at once.
+
+The Windows key opens Start, Alt+Tab opens Task View and Ctrl+Alt+Delete opens Task Manager. Disabling the extension gives these keys back to GNOME.
+
+## How it works
+
+```mermaid
+flowchart LR
+    subgraph gnome["GNOME Shell 50 (Wayland)"]
+        ext["WinPoint extension<br/>extension/"]
+    end
+    shell["win11-shell (GTK 4)<br/>taskbar, flyouts, Start, desktop"]
+    backend["win11-panel --http-only<br/>the Rust services"]
+    sys[("Linux and GNOME services<br/>NetworkManager, UPower, BlueZ,<br/>PipeWire, MPRIS, tray items")]
+    apps["Own apps, one process each<br/>Explorer, Settings, Task Manager, Alles,<br/>Disks, Default apps, Installer<br/>HTML in WebKitGTK"]
+    cal["win11-calendar (GTK 4)"]
+
+    ext -->|"starts win11-panel at login,<br/>which execs win11-shell"| shell
+    shell <-->|"D-Bus: windows, geometry,<br/>blur, focus, shortcuts"| ext
+    shell <-->|"JSON API and event stream<br/>on 127.0.0.1 with a token"| backend
+    backend <--> sys
+    backend -->|"apps.launch"| apps
+    backend -->|"win11-calendar:YYYY-MM-DD"| cal
+```
+
+When the extension is enabled it starts `win11-panel`, which replaces itself with `win11-shell`. The shell holds the taskbar, its flyouts, Start and the desktop as windows of one GTK 4 process, so opening Start starts no new process. The shell starts `win11-panel --http-only` as its backend: the host's Rust services for apps and pins, settings, tray icons, notifications, sound, network, power and files, with no window and no WebKit, reached over a local JSON API and event stream. The extension runs inside GNOME Shell and talks to the shell over D-Bus (`io.github.win11shell.GnomeBridge`): it puts the taskbar, Start and the desktop in place, hides GNOME's top bar and Ubuntu's desktop icons, adds the blur and focuses windows. The apps are separate processes that start on demand. If `win11-shell` is missing or does not start, the extension shows a simple fallback bar after 6 seconds; disabling the extension restores the normal GNOME desktop.
+
+The code lives in two Cargo workspaces: the host in the top folder (GTK 3 and WebKitGTK 4.1 for the apps) and `native/` (`win11-shell` and `win11-calendar`). gtk4-rs 0.11 needs a newer glib than the host, and Cargo allows one `glib-sys` per workspace.
+
+**Memory.** In a private, headless GNOME session at 1440×900 with software rendering, `win11-shell`, its backend and GTK's SVG loader process together used **119 MiB PSS and 76 MiB anonymous memory plus swap**. The earlier WebKit taskbar, Start and desktop that it replaces used 443 MiB and 269 MiB, measured the same way with all their WebKit processes (`tests/gnome/scenarios/native-shell.py`). The shell uses GTK's cairo renderer by default (`GSK_RENDERER=cairo`); with the GL renderer on llvmpipe it was 244 and 113 MiB. These figures leave out the compositor and GPU memory and come from one test session, so treat them as an indication, not a guarantee. Details are in [notes/claude/gtk-native.md](notes/claude/gtk-native.md).
+
+<details>
+<summary><b>The programs</b></summary>
+
+| Program | What it is |
 |---|---|
-| `win11-panel` | Start `win11-shell`; met `--http-only` levert het de diensten van de shell (apps, instellingen, systeemvak, meldingen, geluid, netwerk, energie, bestanden), zonder venster |
-| `win11-shell` | Native GTK 4-shell: taakbalk, flyouts (snelle instellingen, meldingen en agenda, jump lists, Win+X, taakweergave), Start en zoeken, het bureaublad met iconen en bestandsacties |
-| `win11-explorer` | Verkenner met tabs, taboverdracht en native bestandsbediening |
-| `win11-app --app settings` | Instellingen |
-| `win11-app --app taskmgr` | Taakbeheer |
-| `win11-app --app alles` | Alles, met eigen indexproces zolang deze app geopend is |
-| `win11-app --app disks` | Schijfbeheer |
-| `win11-default-apps` | Standaardapps per bestandstype of extensie |
-| `win11-calendar` | Agenda in Windows 11-stijl (GTK 4), geopend op een dag vanuit de agenda van de taakbalk |
-| `win11-installer` | Installatie- en verwijdervoorstellen met expliciete bevestiging; nieuwe interface wordt nog geïntegreerd en gecontroleerd |
-| `win11-file-portal` | Op verzoek geactiveerde FileChooser-backend voor desktopportals |
+| `win11-panel` | Starts `win11-shell`; with `--http-only` it is the shell's backend |
+| `win11-shell` | The GTK 4 shell: taskbar, flyouts, Start and search, desktop |
+| `win11-explorer` | File Explorer, with tabs and tab transfer between windows |
+| `win11-app --app settings` | Settings |
+| `win11-app --app taskmgr` | Task Manager |
+| `win11-app --app alles` | Alles, with its own indexer while it is open |
+| `win11-app --app disks` | Disks |
+| `win11-default-apps` | Default apps per file type or extension |
+| `win11-calendar` | Calendar (GTK 4), opened on a day from the taskbar calendar |
+| `win11-installer` | Install and remove AppImage, DEB, Flatpak and Snap packages, each after an explicit confirmation |
+| `win11-file-portal` | A FileChooser backend for `xdg-desktop-portal`, started on request |
 
-Index-, afbeelding- en softwaremetadatahelpers zijn interne programma's die alleen op verzoek starten. Losse apps hoeven geen zichtbaar paneel te hebben. Taboverdracht tussen bestaande Verkenner-vensters blijft beschikbaar; voor loslaten op de desktop en echte schermpositie is de GNOME-koppeling nodig.
+`win11-launch`, `win11-index-worker`, `win11-image-worker` and `win11-software-worker` are internal helpers that start only when needed.
 
-De extensie verbergt de GNOME-bovenbalk en conflicterende oude desktopvensters zolang de nieuwe oppervlakken actief zijn. Uitschakelen of uitval herstelt de oorspronkelijke desktoptoestand. Ontbreekt `win11-shell` of start die niet, dan toont de extensie na 6 seconden haar eenvoudige noodtaakbalk. Andere dockextensies worden niet door installatie uitgezet. De Windows-toets opent Start, Ctrl+Alt+Delete opent Taakbeheer en Alt+Tab gebruikt de taakweergave. De instellingen bepalen onder meer taal, taakbalkuitlijning, achtergrond, kleuren en thema. Nederlands en Engels gelden ook voor desktoplabels zoals Prullenbak/Recycle Bin.
+</details>
 
-## Bestanden, apps en instellingen
+## Requirements
 
-De native bestandskern omvat navigatie, metadata, zoeken, mapbewaking, openen met, aanmaken, hernoemen, kopiëren/verplaatsen, klembord, Prullenbak, ZIP/TAR-archieven en eigenschappen. Archieven gebruiken `libarchive`; Prullenbak en appassociaties gebruiken GIO. Atomaire handelingen weigeren bestaande doelen te overschrijven. De bewaarde instellingen gebruiken private, atomair geschreven bestanden en gedeelde bestandsloten.
+- Ubuntu 26.04 with GNOME Shell 50 on Wayland. That is the only tested system; another distribution with GNOME 50 and GTK 4.22 may work but has not been tried.
+- To build: Rust 1.92 or newer (edition 2024), a C/C++ toolchain, `pkg-config`, the GTK 3 and WebKitGTK 4.1 development files for the apps and GTK 4.22 or newer for the shell and the Calendar.
+- To run: the GTK 3, WebKitGTK 4.1 and GTK 4 libraries, `libarchive.so.13` (archives in File Explorer), and Python 3 with PyGObject (`python3-gi`) and `glib-compile-schemas` for the installer. The installer checks these and names the Ubuntu packages that are missing.
+- Optional: FFmpeg and FFprobe for video thumbnails; PackageKit, Flatpak or snapd for the Installer; bubblewrap to isolate the metadata and image decoders.
 
-**Instellingen → Systeem → Energie en batterij** regelt de energiestand, schermuitschakeling, dimmen en automatisch slapen op netstroom of batterij. De Rust-dienst gebruikt dezelfde GNOME-voorkeuren en PowerProfiles-dienst als Ubuntu. Bestaande aangepaste tijden en ‘Nooit’ blijven behouden; wijzigingen vanuit GNOME verschijnen ook in dit venster. Beschikbaarheid en beheerdersvergrendeling worden per instelling getoond. Batterijopties verschijnen alleen wanneer een batterij aanwezig is.
-
-De oorspronkelijke `apps.*`-functies, recente bestanden en appcatalogus draaien in Rust. **Standaardapps** voegt een afzonderlijk programma toe waarmee een gebruiker op extensie of MIME-type zoekt en precies het gekozen bestandstype aan een relevante geïnstalleerde app koppelt. De effectieve desktopvoorrang wordt teruggelezen. Openen of installeren verandert deze associaties niet automatisch.
-
-Normale appvensters bewaren hun laatste normale positie, afmetingen en gemaximaliseerde toestand. Verkenner bewaart daarnaast de semantische toestand van maximaal twintig tabs. Een expliciet meegegeven pad of taboverdracht gaat voor herstel. Herstel begrenst het venster binnen een beschikbaar scherm. Start, taakbalk, desktop en tijdelijke bestandskiezers worden hiervan uitgesloten.
-
-Het Verkenner-detailspaneel vraagt een videominiatuur alleen voor de zichtbare geselecteerde video. Bestaande freedesktopminiaturen worden hergebruikt; anders maakt een kortlevende native helper één stilstaand beeld met FFmpeg. Er draait geen videospeler op de achtergrond. Zonder geschikte decoder of bij een fout blijft het oorspronkelijke bestandspictogram zichtbaar. De nieuwe videoroute is een expliciete uitbreiding; oorspronkelijke afbeeldingsroutes behouden hun gedrag. Zie [host/src/images/README.md](host/src/images/README.md).
-
-## Installeren en verwijderen van apps
-
-De nieuwe softwaredienst herkent AppImage, DEB, Flatpak-verwijzingen/-bundels en Snap-pakketten. Inspectie voert een gedownloade AppImage niet uit. Een installatievoorstel bewaart de te beoordelen bytes privé; pas een afzonderlijke bevestiging voert het eenmalige voorstel uit. Voorstellen verlopen na tien minuten. Er kan één softwarewijziging tegelijk actief zijn. Status en annulering worden bewaard voor andere vensters; een onbekende uitkomst wordt als onderbroken gemeld.
-
-AppImages krijgen een beheerde kopie onder `~/.local/opt/win11shell-appimages` en een eigen launcher. Het oorspronkelijke downloadbestand blijft staan. Verwijderen raakt alleen de geregistreerde appkopie en launcher; onverwachte extra bestanden blijven behouden. Bij een losse gebruikerslauncher heet de actie uitdrukkelijk **Snelkoppeling verwijderen** en blijven de appbestanden staan.
-
-DEB gebruikt getypeerde PackageKit-transacties en een controlesimulatie; aanvullende of beschermde pakketverwijderingen worden geweigerd. Snap gebruikt de Unix-API van snapd en zijn voortgang/annulering. Flatpak gebruikt vaste argumenten en de vastgestelde gebruikers- of systeeminstallatie. Eventuele authenticatie verloopt via het besturingssysteem. Er worden geen wachtwoorden verzameld. Persoonlijke Flatpak-gegevens worden niet verwijderd en Snap-verwijdering gebruikt geen purge.
-
-De engine is gecontroleerd met gegenereerde bestanden en nagemaakte pakketdiensten. Echte systeeminstallaties, verwijderingen en alle distributiespecifieke authenticatiedialogen zijn hiermee nog niet aangetoond. De nieuwe Installer-interface en koppelingen met Instellingen/Start worden afzonderlijk gevalideerd vóór uitgave.
-
-## Bestandskiezer via desktopportals
-
-`win11-file-portal` implementeert OpenFile, SaveFile en SaveFiles achter `xdg-desktop-portal`. Het gebruikt dezelfde Verkenner-interface en native validatie als de interne kiezer. Alleen deze FileChooser-backend wordt geselecteerd; de portalfrontend blijft verantwoordelijk voor appidentiteit en documenttoegang. De kiezer maakt of overschrijft het gekozen bestand niet zelf.
-
-Apps moeten de desktopportal gebruiken om deze kiezer te zien. Een eigen ingebouwde appkiezer verandert hierdoor niet. De backend stopt na vijftien seconden zonder aanvragen en deelt alleen tussen zijn tijdelijke kiezervensters een WebKit-context. Details en protocolgrenzen staan in [host/src/portal/README.md](host/src/portal/README.md). Registratie, backendselectie en installatie worden afzonderlijk gecontroleerd.
-
-## Geheugen en matglas
-
-Diensten starten pas wanneer een oppervlak ze nodig heeft. De Alles-indexer is een afzonderlijk Rust-proces en hoort uitsluitend bij de geopende Alles-app. De oorspronkelijke v2-indexcache blijft bruikbaar. Taakbalk, flyouts, Start en bureaublad zijn vensters van één GTK 4-proces, dus Start openen start geen nieuw proces. Gewone apps blijven losse processen.
-
-In een private 1440×900-sessie met softwarerendering gebruikten `win11-shell`, zijn backend en de SVG-lader samen **119 MiB PSS en 76 MiB anoniem geheugen plus swap**, tegen 443 en 269 MiB voor de eerdere WebKit-taakbalk, -Start en -bureaublad met al hun WebKit-processen (`tests/gnome/scenarios/native-shell.py`). De shell gebruikt standaard de cairo-renderer van GTK (`GSK_RENDERER=cairo`); met de GL-renderer (llvmpipe) was dat 244 en 113 MiB. PSS telt gedeeld geheugen proportioneel en verschilt van een opgetelde RSS-kolom. Deze meting omvat geen compositorgeheugen of GPU-VRAM. Zie [notes/claude/gtk-native.md](notes/claude/gtk-native.md).
-
-De backend van de shell (`win11-panel --http-only`) draait in een eigen begrensde systemd-groep wanneer de gebruikersmanager beschikbaar is; `win11-shell` zelf valt daar nog buiten. Gewone gestarte apps horen in eigen groepen. Dit beleid en de genoemde metingen zijn geen universele geheugengarantie voor alle videodecoders, extra apps of schermconfiguraties.
-
-Matglas komt van GNOME Shell zelf, niet van GTK of WebKit: onder de taakbalk, onder het geopende native Startmenu en onder het actieve eigen app-venster, met deze dekking (taakbalk 70 %, app-vensters en Start 90 %). Er bestaat hooguit één vensterblur tegelijk; een gesloten Start houdt er geen vast. In een private 1440×900-sessie met softwarerendering kostte dat gnome-shell 3,8 MiB PSS met Instellingen en 8,9 MiB met Start open, nog gemeten met de WebKit-Start (`tests/gnome/scenarios/frosted-glass.py`). Met Transparantie-effecten uit of hoog contrast blijft alles dekkend. Blur in de pagina van een HTML-app (menu's binnen een app) staat uit: die heeft WebKit op de GPU nodig, wat op NVIDIA eerder vastliep.
-
-## Bouwen
-
-Vereist: Rust/Cargo met ondersteuning voor edition 2024 (Rust 1.92 of nieuwer), een C/C++-bouwomgeving, GTK 3 en WebKitGTK 4.1 voor de apps en GTK 4.22 of nieuwer (GNOME 50) voor `win11-shell` en `win11-calendar`. Op de geteste Ubuntu-omgeving (Ubuntu 26.04, GTK 4.22):
+## Build
 
 ```bash
 sudo apt install build-essential pkg-config libgtk-3-dev libwebkit2gtk-4.1-dev libgtk-4-dev libarchive13t64
@@ -77,83 +144,152 @@ cargo fetch --locked --manifest-path native/Cargo.toml
 ./scripts/build.sh
 ```
 
-`./scripts/build.sh` bouwt de host (de workspace in de hoofdmap) en daarna de native workspace `native/` met `win11-shell` en `win11-calendar`. Dat zijn twee workspaces, omdat gtk4-rs 0.11 een nieuwere glib gebruikt dan de GTK 3- en WebKit-host en Cargo één `glib-sys` per workspace toestaat. Beide bouwen offline en `--locked`; `cargo fetch` haalt de crates daarom vooraf één keer op. Crates en bouwuitvoer mogen elders staan, bijvoorbeeld op een andere schijf, met de gewone Cargo-variabelen. Zet die dan al vóór `cargo fetch` en geef de installer de map met de binaries:
+`scripts/build.sh` builds both workspaces in release mode, offline and `--locked`, so `cargo fetch` downloads the crates once beforehand. All 12 binaries end up in `target/release`. It runs two jobs by default; set `WIN11_BUILD_JOBS` for more.
+
+Crates and build output can live anywhere, for example on another disk, through the usual Cargo variables. Set them before `cargo fetch` and pass the binary folder to the installer:
 
 ```bash
-export CARGO_HOME=/absoluut/pad/cargo-home CARGO_TARGET_DIR=/absoluut/pad/target
+export CARGO_HOME=/path/to/cargo-home CARGO_TARGET_DIR=/path/to/target
+cargo fetch --locked
+cargo fetch --locked --manifest-path native/Cargo.toml
 ./scripts/build.sh
-WIN11_BUILD_DIR="$CARGO_TARGET_DIR/release" ./scripts/install.sh
+WIN11_BUILD_DIR="$CARGO_TARGET_DIR/release" ./scripts/install.sh --lang en
 ```
 
-De archiefkern vereist de systeembibliotheek `libarchive.so.13`; pakketnamen kunnen per distributie verschillen. Netwerk, audio, opslag, energie en notificaties gebruiken de bijbehorende Linux-/GNOME-diensten. Videominiaturen gebruiken optioneel FFmpeg/FFprobe. Software-installatie gebruikt, afhankelijk van het pakket, PackageKit, Flatpak of snapd; DEB/Snap-metadata gebruikt `dpkg-deb`/`unsquashfs`. Beschikbare bubblewrap-isolatie wordt voor onbetrouwbare metadata-/afbeeldingdecoders gebruikt, naast aparte helpers en resourcegrenzen.
-
-Python 3 is nodig voor de huidige installatie- en pakkettools en sommige ontwikkeltests. PyGObject is alleen nodig wanneer de oorspronkelijke Python-referentie expliciet wordt getest. Het pakket bundelt geen Python-omgeving of kopieën van systeembibliotheken.
-
-Controleer de bewaarde oorspronkelijke UI-baseline en de actuele distributiemanifesten met:
-
-```bash
-python3 scripts/verify-ui.py
-```
-
-`vendor/ui-original-sha256.json` bewaart de oorspronkelijke hashes; `vendor/ui-sha256.json` en `vendor/ui-patches.json` beschrijven de huidige interface en gerichte wijzigingen. De oorspronkelijke bronbestanden zijn dus een uitgangspunt, geen claim dat ieder bestand ongewijzigd is gebleven.
-
-## Installeren en openen
-
-Vanuit een gebouwd project of een voorbereid pakket met `bin/`:
-
-```bash
-./scripts/install.sh
-~/.local/bin/win11-explorer /pad/naar/map
-~/.local/bin/win11-app --app settings
-~/.local/bin/win11-default-apps
-```
-
-De installer controleert de vereiste programma's vooraf en plaatst de gemarkeerde projectbestanden standaard onder `~/.local`. Bestaande persoonlijke instellingen worden behouden. Een installatie over een eerdere versie met de WebKit-shell verwijdert de oude `win11-start` en `win11-desktop` met hun app-items. Voor de shellkoppeling moet GNOME de nieuwe extensiecode laden; na een nieuwe installatie of extensiewijziging kan één keer afmelden en aanmelden nodig zijn. Activeer daarna de koppeling expliciet:
-
-```bash
-gnome-extensions enable win11-gnome@win11shell.local
-```
-
-Een reeds actief Ubuntu Dock of andere taakbalkextensie kan tegelijk zichtbaar blijven. Schakel een conflicterende taakbalkextensie desgewenst uit voordat de nieuwe shell wordt geactiveerd, bijvoorbeeld:
-
-```bash
-gnome-extensions disable ubuntu-dock@ubuntu.com
-```
-
-Er wordt geen Fluent GTK-thema geïnstalleerd. De standaard app-themafamilie is `system`. Installeren kiest geen nieuwe standaardbestandsbeheerder en past geen persoonlijke MIME-associaties aan.
-
-Voor een ander installatiepad bepaalt `WIN11_INSTALL_PREFIX` de locatie van `bin/` en `share/win11-gnome/`; `XDG_DATA_HOME` bepaalt waar applicatie-items, iconaliases en de extensie komen. Gebruik absolute paden. Dezelfde waarden zijn nodig bij verwijderen:
-
-```bash
-WIN11_INSTALL_PREFIX="/absoluut/pad/met spaties" ./scripts/install.sh
-WIN11_INSTALL_PREFIX="/absoluut/pad/met spaties" ./scripts/uninstall.sh
-```
-
-Verwijderen raakt de eigen gemarkeerde projectbestanden en bewaart persoonlijke instellingen. `./scripts/uninstall.sh --files-only` is bedoeld voor een geïsoleerde testinstallatie zonder bediening van een desktopsessie.
-
-## Taal
-
-Win11 voor GNOME heeft een eigen taalinstelling: Nederlands (standaard) of Engels. Die staat los van de taal van GNOME en Ubuntu. Kies de taal in **Instellingen › Tijd en taal › Taal en regio**. Alle geopende Win11-vensters schakelen meteen om: taakbalk, Start, bureaublad, Verkenner, de apps en hun venstertitels. De backend van de shell (`win11-panel --http-only`) past ook de namen van de eigen app-items aan, zodat GNOME die in dezelfde taal toont. Meldingen die al binnen waren, houden hun taal. Een eerste installatie kan de taal meteen vastleggen; een keuze die al in `settings.json` staat, blijft gelden:
+## Install
 
 ```bash
 ./scripts/install.sh --lang en
 ```
 
-Een paar teksten komen niet van Win11 en blijven in de taal van GNOME of het systeem: de wachtwoordvensters van polkit, berichten en pakketbeschrijvingen van PackageKit, teksten van NetworkManager, de eigen teksten van WebKit en de onderdelen van GNOME zelf, zoals de snelle instellingen en GNOME's melding dat een venster klaarstaat (in een Engelstalige GNOME: “X” is ready). Alles heet in beide talen Alles, en mappen op schijf, zoals Bureaublad en Documenten, worden nooit hernoemd.
+The installer checks the required programs and libraries first, then installs for your user only: programs in `~/.local/bin`, the rest in `~/.local/share/win11-gnome`, and the app entries, icons and extension under `~/.local/share`. It never runs `sudo` and keeps existing settings. `--lang en` sets English on a first install; without it the installer guesses from your locale, and a language already stored in `settings.json` always wins. It sets no default apps, except the handler for its own `win11-calendar:` links, and it makes its file picker your FileChooser portal backend.
 
-De variabele `WIN11_GNOME_CONFIG_DIR` laat de Rust-programma's een andere instellingenmap gebruiken. Die is alleen bedoeld voor tests en ontwikkeling: de GNOME-extensie en de installer lezen altijd `$XDG_CONFIG_HOME/win11-gnome` (meestal `~/.config/win11-gnome`), dus in een gewone sessie zouden de taakbalk en de vensters elk een andere taal kunnen tonen. Zet hem daarom niet in een gewone sessie.
+Sign out and back in once, so GNOME Shell loads the new extension, then enable it:
 
-## Broncode en uitgave
+```bash
+gnome-extensions enable win11-gnome@win11shell.local
+```
 
-De eigen code van Win11 voor GNOME valt onder [LICENSE](LICENSE) (MIT): de Rust-host, de native GTK 4-shell en -agenda onder `native/`, de installatiecode en ook de bewaarde Win11Shell-bronnen onder `vendor/ui`, `vendor/host` en `vendor/config`, die eigen eerder werk van de auteur zijn. De uitzonderingen staan in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Het meegeleverde Win11-icon-theme heeft zijn eigen GPL-3.0-licentie, auteursgegevens en bronarchief onder `vendor/`; de pakketmanifesten controleren de herkomst en symlinks. Zie onder meer [vendor/ui/assets/icons/NOTICE.txt](vendor/ui/assets/icons/NOTICE.txt) en `vendor/icon-bundle.json`. De projectlicentie verleent geen aanvullende rechten op materiaal van derden.
+Ubuntu Dock or another dock extension stays on and can show next to the taskbar. To turn Ubuntu Dock off:
 
-Het openbare profiel komt uit `host/src/settings-defaults.json`. Persoonlijke geschiedenis, accounts, indexcaches, computergebonden paden en runtime-tokens horen niet in een downloadpakket. `./scripts/package.sh` maakt na bouwen en testen een archief onder `dist/`, met daarin ook `LICENSE`, `THIRD_PARTY_NOTICES.md` en `LICENSES/`; het genereert zelf geen testbewijs of openbare release.
+```bash
+gnome-extensions disable ubuntu-dock@ubuntu.com
+```
 
-De voorwaarden voor publicatie staan in [RELEASE_PLAN.md](RELEASE_PLAN.md). Voor uitgave moeten de definitieve geïntegreerde build, frontend, installatie/verwijdering, ondersteunde systemen en assetvermeldingen samen worden gecontroleerd. Historische rapporten blijven in het project beschikbaar met hun oorspronkelijke versie en meetdatum.
+<details>
+<summary>Other install locations and optional system files</summary>
 
-## Licenties
+`WIN11_INSTALL_PREFIX` sets where `bin/` and `share/win11-gnome/` go, and `XDG_DATA_HOME` where the app entries, icons and extension go. Use absolute paths, and the same values when you uninstall:
 
-- De eigen code en assets van Win11 voor GNOME vallen onder de MIT-licentie: zie [LICENSE](LICENSE). Dat geldt ook voor `vendor/ui`, `vendor/host` en `vendor/config`, eigen werk uit het eerdere Win11 Shell-project, behalve de onderdelen van derden die in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) staan.
-- Het meegeleverde Win11-icon-theme (`vendor/icons/`, `vendor/icon-source/` en `vendor/ui/assets/icons/settings.svg`) valt onder GPL-3.0-only, niet onder MIT. De wijzigingen staan in [vendor/ICON_PROVENANCE.md](vendor/ICON_PROVENANCE.md).
-- De standaardachtergronden Lotus (`vendor/ui/assets/wallpapers/lotus-dark.svg` en `lotus-light.svg`) zijn met AI gemaakt (beeldgeneratie van OpenAI ChatGPT) en vallen onder CC0-1.0: zie [LICENSES/CC0-1.0.txt](LICENSES/CC0-1.0.txt).
-- Onderdelen van derden houden hun eigen licentie. Welke dat zijn, waar ze staan en wat hun licentie vraagt, staat in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). De volledige licentieteksten staan in [LICENSES/](LICENSES/), en de Rust-crates in de programma's staan in [LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md).
+```bash
+WIN11_INSTALL_PREFIX="$HOME/Apps/WinPoint test" ./scripts/install.sh
+WIN11_INSTALL_PREFIX="$HOME/Apps/WinPoint test" ./scripts/uninstall.sh
+```
+
+The Windows Update page in Settings works without system files. With them, Ubuntu's password dialog says what the release upgrade actions do. `scripts/install-system.py` installs or removes exactly those four files (two helpers in `/usr/libexec/win11-gnome` and two polkit policies); `pkexec` asks for the password, and `--dry-run` shows what it would do:
+
+```bash
+python3 scripts/install-system.py --dry-run
+python3 scripts/install-system.py
+python3 scripts/install-system.py --remove
+```
+
+</details>
+
+## Uninstall
+
+```bash
+./scripts/uninstall.sh
+```
+
+This disables the extension, removes the files the installer marked as its own and undoes its file picker and `win11-calendar:` registrations. Your settings in `~/.config/win11-gnome` stay. The caption buttons for other GTK apps are an import line in `~/.config/gtk-3.0/gtk.css` and `~/.config/gtk-4.0/gtk.css`; to remove it, turn off **Settings › Personalisation › Colours › Windows 11 caption buttons in apps** before you uninstall. `--files-only` is for isolated test installs: it removes the files without touching the desktop session.
+
+## Configuration
+
+Everything is set in the Settings app. It stores the choices in `~/.config/win11-gnome/settings.json` (or `$XDG_CONFIG_HOME/win11-gnome/settings.json`); the backend notices changes to the file, also hand edits. The defaults are in [host/src/settings-defaults.json](host/src/settings-defaults.json). The keys that matter most:
+
+| Key | Values | What it does |
+|---|---|---|
+| `language` | `"nl"`, `"en"` | The language of every WinPoint window (Settings › Time & language › Language & region) |
+| `theme.mode` | `"dark"`, `"light"` | Dark or light theme |
+| `theme.accent` | `"#0067c0"` | The accent colour |
+| `theme.transparency` | `true`, `false` | Frosted glass (Transparency effects) |
+| `theme.captionButtons` | `true`, `false` | Windows 11 caption buttons in other GTK apps |
+| `taskbar.alignment` | `"center"`, `"left"` | Taskbar alignment |
+| `taskbar.search` | `"box"`, `"iconLabel"`, `"icon"`, `"hidden"` | The search box on the taskbar |
+| `taskbar.pinned` | desktop file ids | The apps pinned to the taskbar |
+| `taskbar.autoHide` | `true`, `false` | Hide the taskbar automatically |
+| `start.pinned`, `start.showRecommended` | list, `true`/`false` | Start's pinned apps and the Recommended section |
+| `wallpaper.path` | `"builtin:lotus-dark"` or a file | The wallpaper; with `wallpaper.followTheme` a built-in one follows the light or dark theme |
+| `desktop.showIcons` | `true`, `false` | Desktop icons |
+| `time.h24`, `time.firstDayOfWeek` | `true`/`false`, `1` = Monday | Clock format and the taskbar calendar's first weekday |
+| `notifications.dnd` | `true`, `false` | Do not disturb |
+
+## Development
+
+```text
+native/shell/     win11-shell: panel/ (taskbar), flyouts/, start/, desktop/, css/
+native/calendar/  win11-calendar
+host/             the Rust host: services and JSON API, the app windows, workers, i18n tables
+extension/        the GNOME Shell extension (panel, frosted glass, shortcuts, notifications, desktop)
+vendor/ui/        HTML, CSS and JavaScript of the apps, with their icons and wallpapers
+vendor/host/      the original Python services, kept as a reference for comparison tests
+vendor/config/    the GTK caption button styles
+vendor/icons/     the Win11 icon theme (GPL-3.0-only)
+scripts/          build, install, uninstall, package and UI manifest checks
+tests/            the GNOME session harness, Rust sandbox, installer and i18n tests
+notes/claude/     design notes and the decision log (plan.md)
+```
+
+[native/ARCH.md](native/ARCH.md) describes how the shell's modules fit together.
+
+**A private GNOME session for tests.** `tests/gnome/harness.py` starts its own headless GNOME Shell 50 with a 1440×900 virtual monitor inside a bubblewrap sandbox, installs a build there and runs scenario files against it. It cannot reach your own session: it has its own home, its own D-Bus and no network. It needs `bwrap`, `dbus-run-session`, `strace`, `gnome-shell`, `gst-inspect-1.0`, PyGObject and about 2.5 GB of free memory. `--build-dir` must be a folder inside the checkout with all 12 binaries:
+
+```bash
+python3 -B tests/gnome/harness.py guard-selftest
+python3 -B tests/gnome/harness.py launch --own-lock run --lang en --build-dir target/release \
+    --scenario tests/gnome/scenarios/native-shell.py
+```
+
+Results and screenshots land in `tests/gnome/scenarios/native-shell.out/`. The other scenarios are in `tests/gnome/scenarios/`; the screenshots in this README come from `readme-shots.py`. See [tests/gnome/README.md](tests/gnome/README.md) for all options and what the sandbox guards.
+
+Other checks:
+
+```bash
+python3 tools/i18n/check.py
+python3 scripts/verify-ui.py
+tests/rust-sandbox/run-tests.sh
+tests/installer/run.sh
+```
+
+`tools/i18n/check.py` checks the Dutch and English texts, `scripts/verify-ui.py` the UI manifests, `tests/rust-sandbox/run-tests.sh` runs the host's Rust tests in a private sandbox and `tests/installer/run.sh` the installer tests. Some test tools still have defaults for the author's machine (such as the heavy lock path in `tools/heavy.sh` and the Node.js path in `tests/installer/run.sh`); both read an environment variable to override them (`WIN11_HEAVY_LOCK`, `NODE`). `WIN11_GNOME_CONFIG_DIR` points the Rust programs at another settings folder; it is for tests only, because the extension and the installer keep reading `$XDG_CONFIG_HOME/win11-gnome`.
+
+## Status and known gaps
+
+WinPoint is work in progress. The current checks, with their environment and limits, are at the top of [VALIDATION.md](VALIDATION.md) (in Dutch); they prove the scenarios they name, not full parity with Windows 11 on every machine. The conditions for a first release are in [RELEASE_PLAN.md](RELEASE_PLAN.md).
+
+Known gaps since the shell became GTK 4 only:
+
+- **Windows Update restart**: the "restart" action of the update page (`shell.restartAll`) restarts only the backend, not `win11-shell`, so the page's notice that the shell needs a restart can stay. No scenario covers this restart yet.
+- **Two commands without a receiver**: the `shell.command` events for Task Manager's "Run new task" (which opens the shell's search) and for the Open button on Settings' Clipboard page have no consumer in the new shell, so both do nothing.
+- **No fallback shell**: when `win11-shell` is missing or fails, `win11-panel` exits and the extension shows its basic fallback bar after 6 seconds.
+- **Memory limits**: when the systemd user manager is available, the backend runs in its own limited systemd group (`app-win11shell.slice`), but `win11-shell` itself still runs outside it.
+- **Apps are still WebKit**: Explorer, Settings, Task Manager, Alles, Disks, Default apps and the Installer are HTML in WebKitGTK (GTK 3). Blur inside those pages (menus within an app) is off.
+- **Installer**: the software engine is tested with generated packages and imitated package services, not yet with real system installs; the Installer interface is still being integrated.
+- **Task View** shows each window's app icon, not a live thumbnail, and File Explorer's card shows a generic icon.
+- **Win+X** opens by right-clicking Start; the Win+X key itself is not bound yet.
+- **Calendar**: in English the Calendar app starts the week on Sunday while the taskbar calendar uses `time.firstDayOfWeek` (Monday by default). GNOME's calendars and opening a day from the taskbar have not been tested in the private session.
+- **Automated coverage**: jump lists, the tray overflow, desktop context menus, rename and drag have no scenario yet.
+
+## Licences
+
+- WinPoint's own code and assets are under the [MIT licence](LICENSE). That includes `vendor/ui`, `vendor/host` and `vendor/config`, the author's own earlier work from the Win11 Shell project, except the third-party parts listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- The bundled **Win11 icon theme** by [yeyushengfan258](https://github.com/yeyushengfan258/Win11-icon-theme) (`vendor/icons/`, `vendor/icon-source/` and `vendor/ui/assets/icons/settings.svg`) is under **GPL-3.0-only**, not MIT. It is based on Ubuntu's Yaru icons. The changes made to it are in [vendor/ICON_PROVENANCE.md](vendor/ICON_PROVENANCE.md).
+- The default **Lotus wallpapers** (`vendor/ui/assets/wallpapers/lotus-dark.svg` and `lotus-light.svg`) are AI-generated (OpenAI ChatGPT image generation) and dedicated to the public domain under [CC0-1.0](LICENSES/CC0-1.0.txt).
+- Two Rust files contain code translated from CPython (PSF-2.0), and the Rust crates linked into the programs keep their own licences ([LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md)).
+
+What each part is, where it comes from and what its licence asks for is in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); the full licence texts are in [LICENSES/](LICENSES/).
+
+## Disclaimer
+
+WinPoint is an independent project. It is not affiliated with, sponsored by or endorsed by Microsoft. Windows and Windows 11 are trademarks of Microsoft Corporation. No Microsoft code or assets are included: the look follows public WinUI 3 design values (colours, radii, type sizes), the icons are the GPL Win11 icon theme and the project's own drawings, the Start button is its own design (a blue disc), and no Microsoft fonts are bundled. Other product names and logos in the screenshots belong to their owners.

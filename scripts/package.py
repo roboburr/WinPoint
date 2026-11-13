@@ -50,8 +50,12 @@ with tempfile.TemporaryDirectory(prefix="win11-gnome-package-") as temp:
             raise SystemExit(install.t("badTable", file=root/"host/data"/Path(rel).name))
         shipped.chmod(0o755 if rel.startswith("usr/libexec/") else 0o644)
     # LICENSE, THIRD_PARTY_NOTICES.md and LICENSES/ travel with the binaries (the notices of the linked crates).
-    for name in ("Cargo.toml", "Cargo.lock", "LICENSE", "THIRD_PARTY_NOTICES.md", "README.md", "RELEASE_PLAN.md"):
+    # README.md is the English README, README.nl.md the Dutch one (2026-11-13; README.en.md is gone).
+    for name in ("Cargo.toml", "Cargo.lock", "LICENSE", "THIRD_PARTY_NOTICES.md", "README.md", "README.nl.md", "RELEASE_PLAN.md"):
         shutil.copy2(root/name, stage/name)
+    # The screenshots README.md shows (docs/screenshots/*.png, own captures; the icons in them stay GPL-3.0).
+    if (root/"docs/screenshots").is_dir():
+        shutil.copytree(root/"docs/screenshots", stage/"docs/screenshots")
     shutil.copytree(root/"LICENSES", stage/"LICENSES")
     # The read-only inventory of an older Win11 Shell for Hyprland install, for machines without a checkout.
     (stage/"tools").mkdir()

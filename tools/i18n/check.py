@@ -37,7 +37,9 @@ context row that no checked text uses any more, or that names a place this check
 ``glossary.tsv`` as a rule for the whole host.
 * ``host-json`` — the Rust host's ``{nl, en}`` JSON tables (``paths.HOST_JSON_TABLES``): key and placeholder parity
   (``str-table`` warnings).
-* ``readme`` — README.md and README.en.md (once it exists, round 3) have the same heading levels and fenced blocks.
+* ``readme`` — README.md (English, the main README) and README.nl.md (Dutch) link to each other. Since 2026-11-13
+  they are no longer one text in two languages (README.en.md was folded into README.md), so their headings and
+  fenced blocks may differ.
 """
 
 from __future__ import annotations
@@ -386,28 +388,14 @@ def check_host_json(root: Path, rep: Report, gloss: Glossary) -> None:
 # shared rule "readme"
 # ------------------------------------------------------------------------------------------------------------------
 
-def check_shapes(root: Path, rep: Report) -> None:
-    a, b = root / "README.md", root / "README.en.md"
-    if a.exists() and b.exists():
-        def shape(p: Path) -> tuple[list[int], list[str]]:
-            heads, fences, cur, inside = [], [], [], False
-            for line in p.read_text(encoding="utf-8").split("\n"):
-                if line.startswith("```"):
-                    if inside:
-                        fences.append("\n".join(cur))
-                        cur = []
-                    inside = not inside
-                    continue
-                if inside:
-                    cur.append(line)
-                elif re.match(r"#{1,6} ", line):
-                    heads.append(len(line) - len(line.lstrip("#")))
-            return heads, fences
-        (ha, fa), (hb, fb) = shape(a), shape(b)
-        if ha != hb:
-            rep.add("readme", "README.en.md", 0, f"heading levels differ from README.md ({len(ha)} vs {len(hb)})")
-        if fa != fb:
-            rep.add("readme", "README.en.md", 0, "fenced command blocks differ from README.md")
+def check_readmes(root: Path, rep: Report) -> None:
+    """README.md and README.nl.md each link the other (a Markdown link or an HTML href), when both exist."""
+    for name, other in (("README.md", "README.nl.md"), ("README.nl.md", "README.md")):
+        path, target = root / name, root / other
+        if not (path.exists() and target.exists()):
+            continue
+        if not re.search(r"""[("']""" + re.escape(other) + r"""[)"'#]""", path.read_text(encoding="utf-8")):
+            rep.add("readme", name, 0, f"no link to {other}")
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -486,7 +474,7 @@ def run(root: Path | str = ROOT, js: bool = True, js_data: dict | None = None,
             check_catalogs(root, rep, gloss)
         if "host-json" not in replaced:
             check_host_json(root, rep, gloss)
-        check_shapes(root, rep)
+        check_readmes(root, rep)
     names = dict(LAYERS)
     for layer, err in broken:
         rep.add("layer-import", f"tools/i18n/{names[layer]}.py", 0, f"layer {layer} could not be loaded: {err}")
