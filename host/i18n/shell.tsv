@@ -1,0 +1,34 @@
+# host/i18n/shell.tsv: host texts of services/shell.rs, services/shell/{backlog,params}.rs.
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/shell.rs
+# command(): ApiError "unknown_command": shell.command: the command name is not 1-41 characters of a-z, 0-9, ., _ or -
+#@ host/src/services/shell.rs 46 d4d6294d38088388 plain
+shell.unknownCommand	Onbekende opdracht.	Unknown command.
+# open_with_token(): ApiError "unknown_app": shell.openApp: not one of Win11's own apps (settings, taskmgr, explorer, alles, disks, defaultapps, installer)
+#@ host/src/services/shell.rs 57 fad9d41f46d29178 plain
+shell.unknownApp	Deze app bestaat niet.	This app doesn’t exist.
+# open_with_token(): ApiError "shutting_down": shell.openApp while this host is stopping
+#@ host/src/services/shell.rs 67 e3d97e3e886ec3dd plain
+shell.shuttingDown	Win11 Shell wordt afgesloten. Probeer het zo opnieuw.	Win11 Shell is shutting down. Try again in a moment.
+# open_with_token(): ApiError "spawn_failed": the app process could not be started
+#@ host/src/services/shell.rs 69 cc51b39bdce41e48 plain
+shell.openFailed	Deze app kon niet worden geopend.	Couldn’t open this app.
+# bad_args(): ApiError "bad_args": shell.command args or shell.openApp params are not an object; explorer.ready without a valid id
+#@ host/src/services/shell.rs 90 e8d6a12b8b58205f plain
+shell.badArgs	Ongeldige invoer.	Invalid input.
+# clean_params(): ApiError "bad_args": shell.openApp params longer than 64 KiB as JSON
+#@ host/src/services/shell.rs 94 478be5c74f0fb66d plain
+shell.tooMuchData	Te veel gegevens.	Too much data.
+# user(): shell.info user name when the passwd entry and $USER are both missing (lower case, like a login name)
+#@ host/src/services/shell.rs 100 1b0e5463d30b81bc plain
+shell.userFallback	gebruiker	user

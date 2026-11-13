@@ -1,0 +1,6 @@
+The fixture's /etc/apt for tests/update/test_compat.sh's layer (bound over the system's): the shapes of Ubuntu 26.04's
+own Post-Invoke hooks (15update-stamp, 20packagekit, 99update-notifier) and a proxy line. The system's apt-config dump
+(no APT_CONFIG) must show them; the private tree's must show no hook and copy only the proxy. No program named here is
+ever run by the test (strace checks it). 15update-stamp and 99update-notifier are byte-identical to update-notifier-common's
+files (LGPL-2.0-or-later); 20packagekit is written for this test in the shape of PackageKit's hook, not a copy of it.
+See THIRD_PARTY_NOTICES.md.

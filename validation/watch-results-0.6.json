@@ -1,0 +1,50 @@
+{
+  "version": "0.6.0",
+  "isolated": true,
+  "native_methods": [
+    "files.watch",
+    "files.unwatch"
+  ],
+  "native_response_header": "X-Win11-Service: rust-files",
+  "blocked_python_equivalents": true,
+  "real_webkit_explorers": 2,
+  "all_mutations_in_private_fixtures": true,
+  "cases": [
+    {
+      "case": "two-original-explorers-start-with-python-watch-methods-trapped",
+      "passed": true
+    },
+    {
+      "case": "external-create-refreshes-both-dom-lists-with-one-local-event-each",
+      "passed": true
+    },
+    {
+      "case": "external-rename-and-delete-refresh-original-ui-without-manual-reload",
+      "passed": true
+    },
+    {
+      "case": "inactive-tab-remains-watched-and-paints-updated-list-on-switch",
+      "passed": true
+    },
+    {
+      "case": "closing-last-folder-tab-unwatches-locally-without-cross-host-duplicate",
+      "passed": true
+    },
+    {
+      "case": "native-rpc-header-refcounts-burst-debounce-and-final-cancel",
+      "passed": true
+    },
+    {
+      "case": "desktop-auto-watch-startup-emits-directory-and-desktop-events",
+      "passed": true
+    },
+    {
+      "case": "isolated-trash-auto-watch-invalidates-native-list-and-original-dom",
+      "passed": true
+    }
+  ],
+  "date": "2026-11-01",
+  "gnome": "50.1",
+  "timer_window_from_first_trigger": true,
+  "continuous_writer_unit_fixture_passed": true
+}

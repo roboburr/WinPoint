@@ -1,0 +1,93 @@
+{
+ "name": "refresh-partial-fail",
+ "group": "check",
+ "title": "Third-party source fails, GetUpdates works",
+ "description": "RefreshCache reports error 37 (repo-not-available) for a third-party URI and finishes failed; GetUpdates still succeeds.",
+ "states": [
+  "H19"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "openssl\t3.5.3-1ubuntu2.1\t0\t-\t0\nlibssl3t64\t3.5.3-1ubuntu2.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nopenssl\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\nlibssl3t64\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
+  }
+ },
+ "packages": {
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - cryptographic utility",
+   "size": 1478656,
+   "row": "security"
+  },
+  "libssl3t64;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - shared libraries",
+   "size": 6905856,
+   "row": "security"
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security",
+  "libssl3t64;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+ ],
+ "methods": {
+  "RefreshCache": [
+   {
+    "props": {
+     "Status": "refresh-cache",
+     "Percentage": 0
+    }
+   },
+   {
+    "props": {
+     "Status": "download-repository",
+     "Percentage": 60
+    }
+   },
+   {
+    "error": [
+     "repo-not-available",
+     "Failed to fetch https://dl.google.com/linux/chrome/deb/dists/stable/InRelease  404  Not Found [IP: 142.250.179.206 443]"
+    ]
+   },
+   {
+    "finish": "failed"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "RefreshCache",
+   "args": [
+    false
+   ],
+   "expect": {
+    "exit": "failed",
+    "errors": [
+     "repo-not-available"
+    ]
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 3
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 6
+ }
+}

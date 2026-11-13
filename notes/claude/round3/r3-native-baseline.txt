@@ -1,0 +1,37 @@
+# R3-NATIVE: what the coordinator re-records or merges in tests/i18n (R3-NATIVE does not own those files).
+# Format: plain text; the two BASELINE-CHANGES.ui lines below are tab-separated, ready to paste.
+
+1. tests/i18n/BASELINE-CHANGES.ui: replace lines 67 and 68 (GE1a's two taskmgr.settings / onTopDesc lines) with:
+
+R3-NATIVE	taskmgr.settings	D-G21: the Always-on-top switch is enabled again (the extension now keeps Task Manager above other windows and on every workspace while taskmgr.alwaysOnTop is on; tests/gnome/scenarios/r3-ontop.py) and its description is the first sentence of 3b898e6's (key:apps/taskmgr/pages/settings.js:onTopDesc); no other line of the block changed. The dump does not show the enabled state.
+R3-NATIVE	key:apps/taskmgr/pages/settings.js:onTopDesc	Taakbeheer blijft boven andere vensters en is op elk bureaublad te zien.	D-G21 (a D-G2 class change): 3b898e6 went on with 'Werkt alleen in de Win11 Shell-sessie, en even niet zolang het venster gemaximaliseerd is.' (a session that does not exist here), round 1 with 'Dit is in GNOME nog niet beschikbaar.'; the switch works in GNOME now, also for a maximised window (r3-ontop), so the note is gone
+
+   Check: python3 -B tools/i18n/check_ui.py --dict-diff tests/i18n/dict-nl-3b898e6.tsv --changes <the file with
+   these two lines> --quiet  ->  "0 not in BASELINE-CHANGES.ui, 0 stale" (R3-NATIVE ran it on a merged copy:
+   .rt/r3-native/BASELINE-CHANGES.ui.merged). Without them it reports onTopDesc as NOT LISTED CHANGED.
+
+2. Re-record the UI text dump block taskmgr.settings in both languages (one line each changes):
+     baseline-nl.txt:13822  "Taakbeheer blijft boven andere vensters en is op elk bureaublad te zien. Dit is in GNOME nog niet beschikbaar."
+                        ->  "Taakbeheer blijft boven andere vensters en is op elk bureaublad te zien."
+     baseline-en.txt:13818  "Keeps Task Manager above other windows and on every desktop. This isn’t available in GNOME yet."
+                        ->  "Keeps Task Manager above other windows and on every desktop."
+   tools/heavy.sh --tag rec-nl -- tests/i18n/run.sh --record --accept taskmgr.settings
+   tools/heavy.sh --tag rec-en -- tests/i18n/run.sh --lang en --record --accept taskmgr.settings
+
+3. Expectations in files R3-NATIVE does not own (one string each):
+   a. the en Ctrl+Alt+Tab group name ("Win11 taskbar" -> "Win11 Taskbar", cross.md item 9):
+     tests/gnome/scenarios/cross-r1.py:53         EXT['en']['group'] = 'Win11 Taskbar'
+     tests/gnome/scenarios/ge1c-extension.py:31   GROUP['en'] = ['Win11 Taskbar']
+     tests/installer/test_extension_text.py:122, :165   "Win11 Taskbar"
+   b. (fix round, review M1) the en core.unknownMethod text with the typographic apostrophe (D-G23):
+     tests/gnome/scenarios/ge1b-core.py:62        ERRORS['en']['unknown'] = (200, 'unknown_method', 'core.unknownMethod',
+                                                  'This function doesn’t exist.')
+   With exactly these changes (scratch wrappers under .rt/r3-native/wrap/) every check of the four that depends on
+   them passes. Grep of every scenario, tests/installer, tests/i18n, tests/update*, tools, vendor/ui/js and host/src
+   (minus runtime.rs, whose 4 test strings R3-NATIVE changed) for the old en text of each of the 4 changed core rows
+   ("doesn't accept any input", "Can't reach the reference service", "function doesn't exist"): ge1b-core.py:62 is
+   the only expectation; the other hits are recorded results (*.out, cross-r1.{a1,a2,commit,reruns}) and notes.
+   ge1b-core's picker step (D: "two pickers mapped") also fails, independently of R3-NATIVE (review n6: it looks
+   for Settings-class picker windows; D-G36 gave pickers WM class FilePicker).
+
+4. vendor/ui-sha256.json: regenerated in the worktree (tools/ui-manifest.py, 1 changed: the settings.js above).

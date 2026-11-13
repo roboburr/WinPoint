@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GW4 fixture (notes/claude/wu/gw4.md): the one key of update-notifier 3.207.2's schema that update.setAutoOpen
+     writes, with the same id, path, type and default. Compiled next to it by
+       glib-compile-schemas tests/update/fixtures/options/schemas
+     The Rust tests copy both files into <fixture root>/usr/share/glib-2.0/schemas and use a keyfile backend in the
+     fixture root (paths.rs gsettings_schemas / gsettings_keyfile), never the real dconf. -->
+<schemalist>
+  <schema path="/com/ubuntu/update-notifier/" id="com.ubuntu.update-notifier">
+    <key type="i" name="regular-auto-launch-interval">
+      <default>7</default>
+      <summary>Interval (in days) when to auto launch for normal updates</summary>
+      <description>The interval (in days) when auto launching update-manager for normal updates. Please note that it will auto launch for security updates immediately. If you set it to "0" it will also launch as soon as updates become available.</description>
+    </key>
+  </schema>
+</schemalist>

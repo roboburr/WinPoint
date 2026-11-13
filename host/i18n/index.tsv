@@ -1,0 +1,166 @@
+# host/i18n/index.tsv: host texts of services/index.rs, services/index/**, bin/index_worker.rs (the query parser's input words are never translated, C9).
+# Owner: R2-B.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/index.rs
+# ensure(): error of a request that was waiting when the index worker stopped (code index_restarting); "Alles" stays Alles (D-G5)
+#@ host/src/services/index.rs 28 5efba133f0d130d3 plain
+#@ host/src/services/index.rs 50 5efba133f0d130d3 plain
+#@ host/src/services/index.rs 72 5efba133f0d130d3 plain
+index.restarting	Alles wordt opnieuw gestart. Probeer het zo nog eens.	Alles is restarting. Try again in a moment.
+# ensure(): internal: the worker was spawned without a stdin pipe (reaches the UI only as an "offline" start-up error)
+#@ host/src/services/index.rs 31 bfc51e973f4535b5 plain
+index.noStdin	Indexer stdin ontbreekt	Indexer stdin is missing
+# ensure(): internal, as index.noStdin
+#@ host/src/services/index.rs 32 a646140d80230c7e plain
+index.noStdout	Indexer stdout ontbreekt	Indexer stdout is missing
+# worker_exited(): index.status message after five worker crashes in five minutes; sent again on a language change
+#@ host/src/services/index.rs 61 04376ef611104399 plain
+index.gaveUp	Alles kon het overzicht van je bestanden niet bijhouden.	Alles couldn’t keep track of your files.
+# send(): internal: send() without a worker (callers discard it)
+#@ host/src/services/index.rs 62 bd557c24c5cdd2fe plain
+index.notStarted	Indexer is niet gestart	The indexer hasn’t started
+# request(): ApiError "index_unavailable": index.* from a host that is not Alles (only Alles runs the index worker)
+#@ host/src/services/index.rs 66 924cdb28d285b190 plain
+index.openAlles	Open Alles om bestanden te doorzoeken.	Open Alles to search your files.
+# request(): ApiError "index_unavailable": the worker cannot be started (or gave up)
+#@ host/src/services/index.rs 67 644075f26e87a6ed plain
+index.unavailable	Alles is op dit moment niet beschikbaar.	Alles isn’t available right now.
+# request(): a worker error without a key or message
+#@ host/src/services/index.rs 77 f2eb489546825963 plain
+index.searchFailed	Er ging iets mis bij het zoeken.	Something went wrong while searching.
+# request(): ApiError "timeout": no answer from the worker within 20 s (search) or 8 s
+#@ host/src/services/index.rs 80 fc6370a5fe5847e9 plain
+index.timeout	Dit duurt te lang. Probeer het opnieuw.	This is taking too long. Try again.
+# call(): limit or offset is not a number
+#@ host/src/services/index.rs 96 e8d6a12b8b58205f plain
+#@ host/src/services/index.rs 100 e8d6a12b8b58205f plain
+#@ host/src/services/index/query.rs 168 e8d6a12b8b58205f plain
+#@ host/src/services/index/query.rs 170 e8d6a12b8b58205f plain
+#@ host/src/services/index/query.rs 172 e8d6a12b8b58205f plain
+index.badArgs	Ongeldige invoer.	Invalid input.
+# call(): ApiError "bad_args": query is not a string
+#@ host/src/services/index.rs 105 d06ab433423e428a plain
+index.badQuery	Ongeldige zoekopdracht.	Invalid search query.
+# set_roots(): ApiError "bad_args": index.setRoots: roots is not "auto" or a list of strings
+#@ host/src/services/index.rs 120 2f6e76a9f8932669 plain
+#@ host/src/services/index.rs 122 2f6e76a9f8932669 plain
+index.noRoots	Kies een of meer mappen om te doorzoeken.	Choose one or more folders to search.
+# set_roots(): ApiError "not_found": index.setRoots; {path} = the folder as given
+#@ host/src/services/index.rs 124 0d0387cacdb115eb fmt {s}=path
+index.noSuchFolder	De map “{path}” bestaat niet.	The folder “{path}” doesn’t exist.
+# set_roots(): ApiError "bad_args": index.setRoots with an empty list
+#@ host/src/services/index.rs 126 5d5a20ff1e473c5d plain
+index.noLocation	Kies minstens één locatie om te doorzoeken.	Choose at least one location to search.
+# set_roots(): ApiError "bad_args": index.setRoots: excluded is not a list of strings
+#@ host/src/services/index.rs 131 419e1b2eb2a0473a plain
+#@ host/src/services/index.rs 133 419e1b2eb2a0473a plain
+index.badExcluded	Ongeldige lijst met uitgesloten mappen.	Invalid list of excluded folders.
+# set_roots(): index.setRoots result message when the environment variable overrides the setting (the name is literal)
+#@ host/src/services/index.rs 145 4e0579bd10be9c88 plain
+index.rootsOverridden	De mappen worden bepaald door WIN11SHELL_INDEX_ROOTS.	The folders are set by WIN11SHELL_INDEX_ROOTS.
+# locations(): index.locations label of the root file system (as storage's "system" text)
+#@ host/src/services/index.rs 151 94fd0911370b8c80 plain
+index.systemDrive	Systeemschijf	System drive
+# locations(): index.locations label of a volume without a name; {size} = "1,5 TB" / "1.5 TB" or "512 GB" (as storage's "sized" text)
+#@ host/src/services/index.rs 152 6828cea4fb8b38a1 fmt {}=size
+index.sizedDrive	{size}-schijf	{size} Drive
+
+# --- host/src/services/index/engine.rs
+# configure(): ApiError "not_found": worker (no settings context: rendered in the process language, key + params sent along): root error of the status (roots[].error), rendered again by the host
+#@ host/src/services/index/engine.rs 7 d6e845f6b01e5268 plain
+index.rootNotFound	Deze locatie is niet gevonden.	This location can’t be found.
+# configure(): ApiError "not_a_folder": root error of the status, as index.rootNotFound
+#@ host/src/services/index/engine.rs 8 032f02a2fa8c3bca plain
+index.rootNotFolder	Dit is geen map.	This isn’t a folder.
+# search(): ApiError "cancelled": error code "cancelled" of a search a newer search on the same channel replaced (the UI ignores it)
+#@ host/src/services/index/engine.rs 88 9f75634aabaaf8b4 plain
+#@ host/src/services/index/engine.rs 210 9f75634aabaaf8b4 plain
+index.cancelled	Vervangen door een nieuwere zoekopdracht.	Replaced by a newer search.
+# main(): ApiError "unknown_method": the worker got a method it does not know (internal)
+#@ host/src/services/index/engine.rs 242 d4d6294d38088388 plain
+index.unknownCommand	Onbekende opdracht.	Unknown command.
+
+# --- host/src/services/index/query.rs
+# new(): ApiError "bad_regex": the regex contains a NUL byte; worker side (process language), the host renders it again from the key
+#@ host/src/services/index/query.rs 4 37f0d4d1c87e48c2 plain
+index.query.regexNullByte	Deze reguliere expressie klopt niet: embedded null byte.	This regular expression isn’t valid: embedded null byte.
+# new(): {detail} of index.query.regexInvalid when GLib gives no error text; rendered in the worker's process language (the settings file it shares with the host)
+#@ host/src/services/index/query.rs 5 3a869d2d3bc77e18 plain
+index.query.invalidPattern	ongeldig patroon	invalid pattern
+# new(): ApiError "bad_regex": {detail} = the regex engine's reason (English, Python re wording, as in 3b898e6) or index.query.invalidPattern
+#@ host/src/services/index/query.rs 13 feacc6d28a8f52bb fmt {msg}=detail
+index.query.regexInvalid	Deze reguliere expressie klopt niet: {detail}.	This regular expression isn’t valid: {detail}.
+# unary(): ApiError "bad_query": more than 128 nested <…> groups, or more than 4000 characters
+#@ host/src/services/index/query.rs 100 5bfb8d5977fbfb2b plain
+#@ host/src/services/index/query.rs 153 5bfb8d5977fbfb2b plain
+index.query.tooLong	Deze zoekopdracht is te lang.	This search query is too long.
+# make(): ApiError "bad_query": ext: without a value; "ext:jpg", "ext:mp3;flac" are parser input (C9): never translated
+#@ host/src/services/index/query.rs 126 ebd3b504fa74662b plain
+index.query.extMissing	Geef een extensie op, bijvoorbeeld ext:jpg of ext:mp3;flac.	Enter an extension, for example ext:jpg or ext:mp3;flac.
+# make(): ApiError "bad_query": parent: / in: without a value; "parent:" is parser input (C9)
+#@ host/src/services/index/query.rs 132 ce2150448c75bc99 plain
+index.query.folderMissing	Geef een map op, bijvoorbeeld parent:/home/robin/Downloads.	Enter a folder, for example parent:/home/robin/Downloads.
+# make(): ApiError "bad_query": {name} = what the user typed before the colon
+#@ host/src/services/index/query.rs 136 059d18753cc4965a fmt {kind}=name
+index.query.unknownFunction	Onbekende zoekfunctie “{name}:”.	Unknown search function “{name}:”.
+# term(): ApiError "regex_too_complex": regex:, nested repetition
+#@ host/src/services/index/query.rs 143 c193470abe38a023 plain
+index.query.regexTooComplex	Deze reguliere expressie is te ingewikkeld om snel te zoeken. Maak hem eenvoudiger (bijvoorbeeld zonder herhaling binnen een herhaling).	This regular expression is too complex to search quickly. Make it simpler (for example, without a repetition inside a repetition).
+# new(): ApiError "bad_query": the filter argument is not all, folder or a category
+#@ host/src/services/index/query.rs 163 84911a6f4c58aedd plain
+index.query.unknownFilter	Onbekend filter.	Unknown filter.
+# size_value(): ApiError "bad_query": {value} = the size as typed; "size:>10mb" is parser input (C9), it parses in both languages
+#@ host/src/services/index/query.rs 191 c79fdfedd1e73e8f fmt {s}=value
+index.query.sizeValue	Ik begrijp de grootte “{value}” niet. Probeer bijvoorbeeld size:>10mb.	I don’t understand the size “{value}”. Try size:>10mb, for example.
+# parse_size(): ApiError "bad_query": size: without a value; "size:>10mb" is parser input (C9)
+#@ host/src/services/index/query.rs 193 362bd62f30ee7963 plain
+index.query.sizeMissing	Geef een grootte op, bijvoorbeeld size:>10mb.	Enter a size, for example size:>10mb.
+# date_point(): ApiError "bad_query": {value} = the date as typed; dm:vandaag / dm:today and the ISO range are parser input (C9): query.rs date_word accepts today as well as vandaag
+#@ host/src/services/index/query.rs 258 f8e7c6bc6a6425cd fmt {s}=value
+#@ host/src/services/index/query.rs 262 f8e7c6bc6a6425cd fmt {s}=value
+index.query.dateValueHint	Ik begrijp de datum “{value}” niet. Probeer bijvoorbeeld dm:vandaag of dm:2026-10-01..2026-10-25.	I don’t understand the date “{value}”. Try dm:today or dm:2026-10-01..2026-10-25, for example.
+# date_point(): ApiError "bad_query": a day or month out of range
+#@ host/src/services/index/query.rs 260 f6e313b2f66ee66d fmt {s}=value
+index.query.dateValue	Ik begrijp de datum “{value}” niet.	I don’t understand the date “{value}”.
+# parse_date(): ApiError "bad_query": dm: without a value; dm:vandaag / dm:today are parser input (C9), both accepted
+#@ host/src/services/index/query.rs 264 3dca7d4575e84ce1 plain
+index.query.dateMissing	Geef een datum op, bijvoorbeeld dm:vandaag.	Enter a date, for example dm:today.
+
+# --- host/src/services/index/cache.rs
+# load(): index file problems (cache.rs Fault): internal; can reach roots[].error of the status only when a fresh build cannot be read back
+#@ host/src/services/index/cache.rs 78 fc57b8aff3202521 plain
+index.cache.otherVersion	Andere indexversie	Different index version
+# load()
+#@ host/src/services/index/cache.rs 80 632cd05c32137ab6 plain
+index.cache.noLength	Geen indexlengte	No index length
+# load(): more than 2^31 files (also a build error: roots[].error)
+#@ host/src/services/index/cache.rs 81 d8844c48d6528060 plain
+#@ host/src/services/index/cache.rs 148 d8844c48d6528060 plain
+index.cache.tooManyRows	Te veel indexregels	Too many index rows
+# load()
+#@ host/src/services/index/cache.rs 83 aec306306dbe885f plain
+index.cache.noSegments	Geen segmenten	No segments
+# load()
+#@ host/src/services/index/cache.rs 95 75dfabd89f6c2437 plain
+index.cache.badSegment	Ongeldig segment	Invalid segment
+# load()
+#@ host/src/services/index/cache.rs 97 caf2a6833b447c9f plain
+index.cache.noChunks	Geen naamblokken	No name blocks
+# load()
+#@ host/src/services/index/cache.rs 98 dfe2cdbac28969d5 plain
+index.cache.badChunk	Ongeldig naamblok	Invalid name block
+# load()
+#@ host/src/services/index/cache.rs 112 e8afd173201f965c plain
+index.cache.badNamePosition	Ongeldige naampositie	Invalid name position
+# open(): index file problems (cache.rs Fault): a column file whose length does not match its header; reaches roots[].error of the status only when a fresh build cannot be read back
+#@ host/src/services/index/cache.rs 74 bc889c4a0219f3ef plain
+index.cache.badColumn	Inconsistente indexkolom	Inconsistent index column

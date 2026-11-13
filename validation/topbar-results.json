@@ -1,0 +1,49 @@
+{
+  "version": "0.6.1",
+  "checks": [
+    "extension bridge loaded",
+    "native panel mapped",
+    "panel preloads resident Start",
+    "ready preloaded Start has no native window before click",
+    "desktop topbar hidden",
+    "top strut removed",
+    "overview topbar restored",
+    "GNOME Quick Settings available in overview",
+    "overview exit hides topbar",
+    "GNOME visibility updates preserve desktop policy",
+    "independent Explorer mapped",
+    "fullscreen hides both panels",
+    "fullscreen exit preserves desktop topbar policy",
+    "native failure restores GNOME bar and fallback",
+    "panel restart hides GNOME bar",
+    "disable restores GNOME bar and strut",
+    "disable removes resident Start",
+    "disable preserves independent Explorer",
+    "prehidden original stays hidden",
+    "disable restores originally-hidden state",
+    "normal panel policy before lock",
+    "lock relinquishes GNOME panel",
+    "lock removes resident Start",
+    "unlock resumes native panel policy",
+    "final disable removes resident Start",
+    "all observed Start processes exit"
+  ],
+  "count": 26,
+  "private_home_xdg": true,
+  "gnome": "50.1",
+  "css_unchanged": true,
+  "observed_start_pids": [
+    985873,
+    987595,
+    987908,
+    988198
+  ],
+  "resident_start_cleanup": true,
+  "binary_sha256": {
+    "win11-start": "d43ba2567512505d7d3a1884a4aa7860e6d29a5c65efece58d1520e65cf75173",
+    "win11-explorer": "06ecb19c331da2f32a535a6e6617dafab605a09ae0d84b41e94d8ae66b4e3afb",
+    "win11-panel": "0cad7d04ab40adde546e2beb446a46c9ffc573ff635c1542f01654332b3bfec4",
+    "win11-app": "2784838efe760f4103a40a2651250270c9ffc26eea137441c11649a41f2324c0"
+  },
+  "panel_bridge_sha256": "a2b6593e0e3a6ab761f830d122bbb32bcf7323220e10f81ee3961fc985c8595b"
+}

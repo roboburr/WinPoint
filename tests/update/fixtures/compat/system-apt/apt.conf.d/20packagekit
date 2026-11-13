@@ -1,0 +1,3 @@
+// Test fixture, written for Win11 for GNOME: a hook in the shape of PackageKit's apt hook (tell PackageKit after dpkg runs and after apt update).
+DPkg::Post-Invoke {"/usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --method org.freedesktop.PackageKit.StateHasChanged cache-update >/dev/null 2>&1 || true";};
+APT::Update::Post-Invoke-Success {"/usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --method org.freedesktop.PackageKit.StateHasChanged cache-update >/dev/null 2>&1 || true";};

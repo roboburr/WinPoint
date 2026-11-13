@@ -1,0 +1,54 @@
+# host/i18n/tray.tsv: host texts of services/tray.rs and services/tray/**.
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/tray.rs
+# find(): ApiError "bad_args": tray.*: no icon id given
+#@ host/src/services/tray.rs 195 b8aa8285aeb6babb plain
+tray.invalidIcon	Ongeldig pictogram.	Invalid icon.
+# find(): ApiError "not_found": the system tray icon (StatusNotifierItem) has gone
+#@ host/src/services/tray.rs 197 0e248429f989dd52 plain
+#@ host/src/services/tray.rs 202 0e248429f989dd52 plain
+tray.iconGone	Dit pictogram bestaat niet meer.	This icon no longer exists.
+# api_error(): ApiError "timeout": the tray icon's app did not answer within 2 s
+#@ host/src/services/tray.rs 205 24c5cdaf7db95e9d plain
+tray.notResponding	Deze app reageert niet.	This app is not responding.
+# api_error(): ApiError "tray_failed": the tray icon's app returned a D-Bus error (its name is in data.error)
+#@ host/src/services/tray.rs 207 a8f22a309c116ba7 plain
+tray.commandFailed	Deze app kon de opdracht niet uitvoeren.	This app couldn’t carry out the command.
+# menu_error(): ApiError "no_menu": the tray icon has no (more) DBusMenu
+#@ host/src/services/tray.rs 211 db5f55bfb9a9ae8d plain
+#@ host/src/services/tray.rs 213 db5f55bfb9a9ae8d plain
+#@ host/src/services/tray.rs 225 db5f55bfb9a9ae8d plain
+#@ host/src/services/tray.rs 233 db5f55bfb9a9ae8d plain
+tray.noMenu	Deze app heeft geen menu.	This app doesn’t have a menu.
+# layout(): ApiError "menu_failed": DBusMenu GetLayout failed or gave an unexpected type
+#@ host/src/services/tray.rs 220 52facebf5c5ee6dd plain
+#@ host/src/services/tray.rs 223 52facebf5c5ee6dd plain
+tray.menuFailed	Het menu van deze app kon niet worden geopend.	Couldn’t open this app’s menu.
+# call(): ApiError "bad_args": tray.scroll: orientation is not vertical or horizontal
+#@ host/src/services/tray.rs 276 6a35216279aea7dd plain
+#@ host/src/services/tray.rs 280 6a35216279aea7dd plain
+tray.badScrollDirection	Ongeldige scrollrichting.	Invalid scroll direction.
+# call(): ApiError "bad_args": tray.scroll: delta is not an integer
+#@ host/src/services/tray.rs 283 8af7d7408a9017f7 plain
+tray.badScrollAmount	Ongeldige scrollwaarde.	Invalid scroll amount.
+# call(): ApiError "bad_args": tray.menuEvent: event is not clicked, hovered, opened or closed
+#@ host/src/services/tray.rs 293 a081b27bdb0d944c plain
+#@ host/src/services/tray.rs 299 a081b27bdb0d944c plain
+tray.unknownMenuAction	Onbekende menu-actie.	Unknown menu action.
+# call(): ApiError "bad_args": tray.menuEvent: itemId is not a non-negative 32-bit integer
+#@ host/src/services/tray.rs 302 144ed7d89d5e2014 plain
+tray.badMenuItem	Ongeldig menu-item.	Invalid menu item.
+# point(): ApiError "bad_args": activate/secondaryActivate/contextMenu: x or y is not an integer
+#@ host/src/services/tray.rs 306 558ad85618257062 plain
+#@ host/src/services/tray.rs 309 558ad85618257062 plain
+tray.badPosition	Ongeldige positie.	Invalid position.

@@ -1,0 +1,143 @@
+{
+ "name": "lock-wait",
+ "group": "install",
+ "title": "Waiting for the package lock",
+ "description": "The real UpdatePackages waits 6 steps with Status 30 (waiting-for-lock: unattended-upgrades holds dpkg), then downloads and installs.",
+ "states": [
+  "H07"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libsoup-3.0-0\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-common\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-0\tamd64\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\nlibsoup-3.0-common\tall\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\n@@end\n"
+  }
+ },
+ "packages": {
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Shared library",
+   "size": 1257472,
+   "row": "soup"
+  },
+  "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Common files",
+   "size": 63488,
+   "row": "soup"
+  }
+ },
+ "updates": [
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security",
+  "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security"
+ ],
+ "methods": {
+  "UpdatePackages": [
+   {
+    "managerProps": {
+     "Locked": true
+    }
+   },
+   {
+    "props": {
+     "Status": "waiting-for-lock",
+     "ElapsedTime": 1,
+     "AllowCancel": true
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "waiting-for-lock",
+     "ElapsedTime": 2,
+     "AllowCancel": true
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "waiting-for-lock",
+     "ElapsedTime": 3,
+     "AllowCancel": true
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "waiting-for-lock",
+     "ElapsedTime": 4,
+     "AllowCancel": true
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "waiting-for-lock",
+     "ElapsedTime": 5,
+     "AllowCancel": true
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "waiting-for-lock",
+     "ElapsedTime": 6,
+     "AllowCancel": true
+    },
+    "ms": 40
+   },
+   {
+    "managerProps": {
+     "Locked": false
+    }
+   },
+   {
+    "emitInstall": true
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 2
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "statuses": [
+     "waiting-for-lock",
+     "download",
+     "commit",
+     "update"
+    ],
+    "minCount": {
+     "PropertiesChanged": 6
+    }
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 9
+ }
+}

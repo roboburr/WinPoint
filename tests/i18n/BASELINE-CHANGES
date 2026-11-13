@@ -1,0 +1,12 @@
+# Intended changes of the UI text dumps of Win11 voor GNOME (notes/claude/plan.md ground rule "Dutch stays default and
+# byte-identical"; format from H's tests/i18n/BASELINE-CHANGES). One line per change, tab-separated:
+#   STEP<TAB>file(s) or surface ids<TAB>what changes and why
+#       a change of tests/i18n/baseline-nl.txt (record it with tests/i18n/run.sh --record --accept ID,…) or of
+#       baseline-en.txt (--record --lang en --accept ID,…); a new surface (a new block) needs no line
+#   STEP<TAB>key:KEY<TAB>the new nl text, exactly (TSV escapes \n \t)<TAB>why
+#       a catalog row (i18n/host/<stem>.tsv, GE1b and later) whose nl may differ from the frozen Rust literal
+# STEP is a step of notes/claude/plan.md (GE0a … GE1c, GE2…, R…). A key mentioned in a line of the first kind
+# exempts nothing. Robin's decisions D-G1/D-G2 say which Dutch changes are accepted.
+#
+# The baselines were recorded by GE0a from vendor/ui at 3b898e6 plus GE0a's mock additions
+# (tests/i18n/MOCK-CHANGES.md); no Dutch change so far.

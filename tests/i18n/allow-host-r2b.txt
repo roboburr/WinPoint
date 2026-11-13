@@ -1,0 +1,9 @@
+# tests/i18n/allow-host-r2b.txt: R2-B's additions to tests/i18n/allow-host.txt (contracts C9; round2-gate §7). Same columns:
+# path<TAB>selector<TAB>reason. Read by tools/i18n/extract_rs.py, check_rust.py and drift_rust.py with the main file;
+# the coordinator merges it.
+#
+# --- matchers on system data (never shown as text)
+host/src/services/sysmon/performance.rs	fn:nice_pci&class:user-visible-english	PCI vendor-name matchers of the GPU name ("Advanced Micro Devices" in the sysfs/lspci vendor string becomes "AMD"); the literal is never shown
+#
+# --- regex error details of the index query parser (user-visible English, kept for Dutch byte identity)
+host/src/services/index/query.rs	fn:new&class:user-visible-english	user-visible English detail of 3b898e6: the regex engine's reason for a GLib error code, in Python re wording ("nothing to repeat" …), which fills {detail} of index.query.regexInvalid in both languages, so a Dutch user sees it inside the Dutch message; kept so Dutch stays byte-identical; translating it is a Dutch change (round 3 / Robin); not C9

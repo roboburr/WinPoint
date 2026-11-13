@@ -1,0 +1,362 @@
+# host/i18n/files.tsv: host texts of files/** except the ApiError block of files/mod.rs.
+# Owner: R2-C.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/files/mod.rs
+# call(): ApiError "offline": a call arrived while this window's file service shuts down (also watch.rs offline())
+#@ host/src/files/mod.rs 54 9dc5eb1e8ea91155 plain
+#@ host/src/files/watch.rs 25 9dc5eb1e8ea91155 plain
+files.shuttingDown	De bestandsdienst wordt afgesloten.	The file service is shutting down.
+# call(): ApiError "bad_args": the arguments are no JSON object
+#@ host/src/files/mod.rs 56 e8d6a12b8b58205f plain
+files.badArgs	Ongeldige invoer.	Invalid input.
+# abs_in(): ApiError "bad_args": a path argument that is empty, too long, has a NUL byte or is not absolute
+#@ host/src/files/mod.rs 115 8d405543e104b674 plain
+#@ host/src/files/mod.rs 118 8d405543e104b674 plain
+#@ host/src/files/mod.rs 121 8d405543e104b674 plain
+#@ host/src/files/trash.rs 81 8d405543e104b674 plain
+files.badPath	Ongeldig pad.	Invalid path.
+# paths(): ApiError "bad_args": a call without paths (or more than 10,000)
+#@ host/src/files/mod.rs 124 d5628abfcedeabf3 plain
+#@ host/src/files/mod.rs 126 d5628abfcedeabf3 plain
+#@ host/src/files/trash.rs 143 d5628abfcedeabf3 plain
+files.noItems	Kies eerst een of meer items.	Select one or more items first.
+# directory(): ApiError "not_found"
+#@ host/src/files/mod.rs 128 a7d5ecadc1ea3768 plain
+#@ host/src/files/read.rs 25 a7d5ecadc1ea3768 plain
+files.folderGone	Deze map bestaat niet (meer).	This folder no longer exists.
+# validate_name(): ApiError "bad_name": rename/new item without a name
+#@ host/src/files/mod.rs 130 5cb472cc6e43b8df plain
+#@ host/src/files/mod.rs 132 5cb472cc6e43b8df plain
+files.noName	Geef een naam op.	Enter a name.
+# validate_name(): ApiError "bad_name"
+#@ host/src/files/mod.rs 134 7446fad1a0e21b29 plain
+files.slash	Een naam mag geen schuine streep (/) bevatten.	A name can’t contain a slash (/).
+# validate_name(): ApiError "bad_name": the names . and ..
+#@ host/src/files/mod.rs 138 fcf557292eb82fe5 plain
+files.reservedName	Deze naam kan niet. Kies een andere naam.	You can’t use this name. Choose another name.
+# validate_name(): ApiError "bad_name": control characters
+#@ host/src/files/mod.rs 140 285ad7ac7811c867 plain
+files.badChars	Deze naam bevat ongeldige tekens.	This name contains invalid characters.
+# validate_name(): ApiError "name_too_long": over 255 bytes; also io_error() ENAMETOOLONG
+#@ host/src/files/mod.rs 142 3cacb13faac6bff1 plain
+#@ host/src/files/mod.rs 156 3cacb13faac6bff1 plain
+files.nameTooLong	Deze naam is te lang.	This name is too long.
+# io_error(): {item} of the io_error() messages for a path without a name: a piece inside a sentence, lower case (en sentence starts are capitalised in code)
+#@ host/src/files/mod.rs 143 a609067d36d7b2bd plain
+files.thisItem	dit item	this item
+# io_error(): {item} of the io_error() messages: the item's name in quotes
+#@ host/src/files/mod.rs 144 91979ce2f2687834 fmt {name}=name
+files.quotedName	‘{name}’	“{name}”
+# io_error(): ApiError "no_access": EACCES/EPERM; {item} = files.quotedName or files.thisItem
+#@ host/src/files/mod.rs 146 e58f9c32471ab738 fmt {item}=item
+files.noAccessTo	Je hebt geen toegang tot {item}.	You don’t have access to {item}.
+# io_error(): ApiError "not_found": ENOENT; {item} = files.quotedName or files.thisItem
+#@ host/src/files/mod.rs 148 65bd09fc7f00167b fmt {item}=item
+files.notFoundItem	{item} bestaat niet (meer).	{item} no longer exists.
+# io_error(): ApiError "no_space": ENOSPC
+#@ host/src/files/mod.rs 150 d0b66e94306b188e plain
+files.noSpace	Er is niet genoeg ruimte op de schijf.	There isn’t enough space on the drive.
+# io_error(): ApiError "read_only": EROFS
+#@ host/src/files/mod.rs 152 adf7e161c985da99 plain
+files.readOnly	Deze schijf is alleen-lezen.	This drive is read-only.
+# io_error(): ApiError "exists": EEXIST; also a new item or a trashed item that keeps colliding
+#@ host/src/files/mod.rs 154 213cf69f2577c762 plain
+#@ host/src/files/mutate.rs 39 213cf69f2577c762 plain
+#@ host/src/files/trash.rs 91 213cf69f2577c762 plain
+files.exists	Er bestaat al een item met deze naam.	There’s already an item with this name.
+# io_error(): ApiError "busy": EBUSY; {item} = files.quotedName or files.thisItem
+#@ host/src/files/mod.rs 158 25799f00f2bde69e fmt {item}=item
+files.inUse	{item} is in gebruik.	{item} is in use.
+# io_error(): ApiError "not_dir": ENOTDIR
+#@ host/src/files/mod.rs 160 032f02a2fa8c3bca plain
+#@ host/src/files/read.rs 27 032f02a2fa8c3bca plain
+files.notDir	Dit is geen map.	This isn’t a folder.
+# io_error(): ApiError "bad_name": EINVAL, e.g. a character a FAT/NTFS drive refuses
+#@ host/src/files/mod.rs 162 50033c7b9095465d plain
+files.nameNotOnDrive	Deze naam kan niet op deze schijf.	This name isn’t allowed on this drive.
+# io_error(): ApiError "failed": any other OS error (its text is in data); {item} = files.quotedName or files.thisItem
+#@ host/src/files/mod.rs 164 ccc0017fa7b5bab4 fmt {item}=item
+files.failedFor	Dat lukte niet met {item}.	Something went wrong with {item}.
+
+# --- host/src/files/clipboard.rs
+# read(): ApiError "failed": the shared file-clipboard state (copy/cut in Verkenner) is over 32 MiB
+#@ host/src/files/clipboard.rs 9 1fe4d4018bb02a1e plain
+files.clipboardTooLarge	Het bestandsklembord is te groot.	The file clipboard is too large.
+# read(): ApiError "failed": its state file is no JSON
+#@ host/src/files/clipboard.rs 11 e99e4601e89a98d1 plain
+files.clipboardUnreadable	Het bestandsklembord kan niet worden gelezen.	The file clipboard can’t be read.
+# read(): ApiError "failed": its state file has an unknown shape
+#@ host/src/files/clipboard.rs 17 4e94a1a1b19e2b03 plain
+files.clipboardInvalid	Het bestandsklembord is ongeldig.	The file clipboard isn’t valid.
+# write(): ApiError "failed": the sequence number overflowed
+#@ host/src/files/clipboard.rs 20 9be4a67fc7b7b61a plain
+files.clipboardNotUpdated	Het bestandsklembord kan niet worden bijgewerkt.	The file clipboard can’t be updated.
+# write(): ApiError "bad_args": copy/cut of a selection whose state would be over 32 MiB
+#@ host/src/files/clipboard.rs 23 6c7aa5fdac7ff9d1 plain
+files.selectionTooLarge	Deze bestandsselectie is te groot.	This selection is too large.
+# call(): ApiError "bad_args": files.clipboardSet with an op that is neither copy nor cut
+#@ host/src/files/clipboard.rs 43 441d1d0772f5afe0 plain
+files.badOp	Ongeldige bewerking.	Invalid operation.
+# call(): ApiError "empty": files.paste with an empty file clipboard (or only items that are gone)
+#@ host/src/files/clipboard.rs 73 51ccfa079ab1ba50 plain
+files.nothingToPaste	Er is niets om te plakken.	There’s nothing to paste.
+# check_private(): ApiError "no_access": its lock or state file is not a private regular file of this user
+#@ host/src/files/clipboard.rs 93 4281ba1f51777f7a plain
+files.clipboardNotPrivate	Het bestandsklembord moet privé zijn.	The file clipboard must be private.
+
+# --- host/src/files/dry.rs
+# rename(): ApiError "not_found": the item of the call is gone (rename, trash, restore, properties, open …)
+#@ host/src/files/dry.rs 33 97915404004b3fb9 plain
+#@ host/src/files/mutate.rs 43 97915404004b3fb9 plain
+#@ host/src/files/properties.rs 74 97915404004b3fb9 plain
+#@ host/src/files/trash.rs 114 97915404004b3fb9 plain
+#@ host/src/files/trash.rs 119 97915404004b3fb9 plain
+#@ host/src/files/actions.rs 15 97915404004b3fb9 plain
+#@ host/src/files/actions.rs 21 97915404004b3fb9 plain
+files.itemGone	Dit item bestaat niet (meer).	This item no longer exists.
+# rename(): ApiError "exists": rename onto another item's name; {name} = the new name
+#@ host/src/files/dry.rs 36 0958409f19f7c703 fmt {name}=name
+#@ host/src/files/mutate.rs 46 0958409f19f7c703 fmt {name}=name
+files.nameExists	Er bestaat al een item met de naam ‘{name}’ in deze map.	There’s already an item named “{name}” in this folder.
+# create(): ApiError "bad_args": files.createFile with a kind other than text or empty
+#@ host/src/files/dry.rs 46 bb9c19cae0d04201 plain
+#@ host/src/files/mutate.rs 25 bb9c19cae0d04201 plain
+files.unknownKind	Onbekend soort bestand.	Unknown file type.
+# create(): the name of a new folder (Windows 11: New folder)
+#@ host/src/files/dry.rs 48 da83fe01c6e93d85 plain
+#@ host/src/files/dry.rs 49 cf28f49ec597a6ed en
+#@ host/src/files/mutate.rs 26 da83fe01c6e93d85 plain
+#@ host/src/files/mutate.rs 27 cf28f49ec597a6ed en
+files.new.folder	Nieuwe map	New folder
+# create(): the name of a new empty file without extension
+#@ host/src/files/dry.rs 51 3a23975b7c9491f7 plain
+#@ host/src/files/dry.rs 53 44dedd0f97fea3c8 en
+#@ host/src/files/mutate.rs 29 3a23975b7c9491f7 plain
+#@ host/src/files/mutate.rs 31 44dedd0f97fea3c8 en
+files.new.empty	Nieuw bestand	New file
+# create(): the name of a new text file (Windows 11: New Text Document.txt; keep the extension)
+#@ host/src/files/dry.rs 54 ce1938fc8f5964e3 plain
+#@ host/src/files/dry.rs 55 e0ce6a98188fa613 en
+#@ host/src/files/mutate.rs 32 ce1938fc8f5964e3 plain
+#@ host/src/files/mutate.rs 33 e0ce6a98188fa613 en
+files.new.text	Nieuw tekstdocument.txt	New Text Document.txt
+
+# --- host/src/files/mutate.rs
+# rename(): ApiError "failed": a case-only rename went through a temporary name and could not be undone; {path} = that temporary path
+#@ host/src/files/mutate.rs 48 65dab8f83ff6487c fmt {}=path
+files.renameIncomplete	Hernoemen kon niet worden afgemaakt. Het oorspronkelijke item staat in ‘{path}’.	The rename couldn’t be finished. The original item is in “{path}”.
+# transfer(): ApiError "not_found": copy/move/paste into a folder that is gone
+#@ host/src/files/mutate.rs 75 6ca09d110f652fc0 plain
+files.destGone	De doelmap bestaat niet (meer).	The destination folder no longer exists.
+# transfer(): copy/move of a folder into itself or a subfolder; per item in failed[]; the same text is the io::Error marker that transfer() compares
+#@ host/src/files/mutate.rs 77 72b4ea7397edac09 plain
+#@ host/src/files/mutate.rs 81 72b4ea7397edac09 plain
+files.intoItself	Je kunt een map niet in zichzelf plaatsen.	You can’t put a folder inside itself.
+# transfer(): a copy into its own folder is named “<name> - <copyWord>.ext” (Windows 11: “photo - Copy.jpg”)
+#@ host/src/files/mutate.rs 79 a343f28597de261a plain
+#@ host/src/files/mutate.rs 80 e21f935f11d7e966 en
+files.copyWord	kopie	Copy
+
+# --- host/src/files/places.rs
+# locations(): files.places: the names of the standard places in the navigation pane (display names only: the folders on disk keep their XDG names, D-G15)
+#@ host/src/files/places.rs 6 f178f0fdbc2ec837 plain
+#@ host/src/files/places.rs 7 9bd88f2485acbb94 en
+files.place.desktop	Bureaublad	Desktop
+# locations()
+#@ host/src/files/places.rs 10 f41a1134c14f44df plain
+#@ host/src/files/places.rs 11 b4e929d8bcfe0418 en
+files.place.documents	Documenten	Documents
+# locations()
+#@ host/src/files/places.rs 21 19198073fad1a0c2 plain
+#@ host/src/files/places.rs 22 6eb00b4b2614a144 en
+files.place.music	Muziek	Music
+# locations()
+#@ host/src/files/places.rs 26 5b59291d11c933e6 plain
+#@ host/src/files/places.rs 27 1e6245009d677035 en
+files.place.pictures	Afbeeldingen	Pictures
+# locations()
+#@ host/src/files/places.rs 31 d50d3fd9c9af761d plain
+#@ host/src/files/places.rs 32 c9a9639463c21952 en
+files.place.videos	Video's	Videos
+# locations()
+#@ host/src/files/places.rs 36 5dd579052e94975e plain
+#@ host/src/files/places.rs 37 fa56abc468388b10 en
+files.place.trash	Prullenbak	Recycle Bin
+# locations(): the file system root /
+#@ host/src/files/places.rs 43 94fd0911370b8c80 plain
+#@ host/src/files/places.rs 44 c7dd576c29dd2cc7 en
+files.place.root	Systeemschijf	System drive
+# account_name(): the name of the home place when the account has no name and $USER is unset
+#@ host/src/files/places.rs 66 1b0e5463d30b81bc plain
+files.place.user	gebruiker	user
+
+# --- host/src/files/properties.rs
+# multi_properties(): files.properties of several items of one type: the start of “<prefix><type name>” (one row per piece keeps 3b898e6 Dutch; mind the space at the end)
+#@ host/src/files/properties.rs 54 8bf3de74a1a1d990 plain
+#@ host/src/files/properties.rs 55 101c63cc5b36b7e6 en
+files.allOfTypePrefix	Alle van het type 	All of type 
+# multi_properties(): files.properties of several items of different types
+#@ host/src/files/properties.rs 57 a2a71cab0c247968 plain
+#@ host/src/files/properties.rs 58 11c5f12d254b20f8 en
+files.multipleTypes	Meerdere typen	Multiple types
+# set_attributes(): ApiError "symlink": read-only or hidden asked for a symbolic link
+#@ host/src/files/properties.rs 77 27e9508c5a88715d plain
+#@ host/src/files/properties.rs 83 27e9508c5a88715d plain
+files.symlink	Dit is een koppeling. Wijzig de eigenschappen van het doel zelf.	This is a link. Change the properties of its target instead.
+# set_attributes(): ApiError "dotfile"
+#@ host/src/files/properties.rs 80 da043e31ee1df4ff plain
+files.dotfile	Dit item is verborgen omdat de naam met een punt begint. Wijzig de naam om het zichtbaar te maken.	This item is hidden because its name starts with a dot. Rename it to make it visible.
+# set_read_only(): ApiError "busy": the item was replaced between the check and the change of its read-only attribute
+#@ host/src/files/properties.rs 85 a7957dba612f8c0e plain
+files.changedMeanwhile	Dit item is ondertussen gewijzigd.	This item has changed in the meantime.
+
+# --- host/src/files/read.rs
+# desktop_entry(): the name of Win11’s own “Deze pc” desktop shortcut (Windows 11: This PC)
+#@ host/src/files/read.rs 120 8c91e9d1332ba797 plain
+#@ host/src/files/read.rs 119 638a348b9debb1ab en
+files.thisPc	Deze pc	This PC
+# type_name(): the type of a file without a named type; {ext} = its extension in capitals (PNG File)
+#@ host/src/files/read.rs 166 8fd452b354b5e292 fmt {}=ext
+#@ host/src/files/read.rs 167 f81735b25e88b4ce enfmt {}=ext
+files.type.ext	{ext}-bestand	{ext} File
+# type_name(): the type of a font file
+#@ host/src/files/read.rs 172 c5f56b5900fb8836 plain
+#@ host/src/files/read.rs 173 6b918eaaeec78811 en
+files.type.font	Lettertypebestand	Font File
+# type_name(): the type of a file with no known type and no short extension
+#@ host/src/files/read.rs 175 82cb99ec017d69dd plain
+#@ host/src/files/read.rs 176 50009ce1da4d15e1 en
+files.type.file	Bestand	File
+
+# --- host/src/files/search.rs
+# parse(): ApiError "bad_args": files.find: a query that is no string or over 500 characters
+#@ host/src/files/search.rs 6 d06ab433423e428a plain
+#@ host/src/files/search.rs 9 d06ab433423e428a plain
+files.badQuery	Ongeldige zoekopdracht.	Invalid search query.
+# parse(): ApiError "bad_args": files.find: a search time budget that is no number
+#@ host/src/files/search.rs 13 3116b63a67de4c78 plain
+files.badBudget	Ongeldige zoekduur.	Invalid search time limit.
+
+# --- host/src/files/trash.rs
+# lock(): ApiError "no_access": the lock file of the Recycle Bin is not a private regular file of this user
+#@ host/src/files/trash.rs 13 242d8807ce2df2e4 plain
+files.trashLockNotPrivate	De Prullenbak-vergrendeling moet privé zijn.	The Recycle Bin lock must be private.
+# manual_one(): ApiError "no_access": the home Recycle Bin directory is not a safe private directory
+#@ host/src/files/trash.rs 79 21ba3ce49c1cb585 plain
+files.trashUnsafe	De Prullenbak is niet veilig toegankelijk.	The Recycle Bin can’t be accessed safely.
+# gio_one(): ApiError "no_trash"
+#@ host/src/files/trash.rs 110 69084112044ea015 plain
+files.noTrash	Deze schijf heeft geen Prullenbak. Het item is niet verwijderd.	This drive has no Recycle Bin. The item wasn’t deleted.
+# gio_one(): ApiError "no_access"
+#@ host/src/files/trash.rs 112 e438ad4f52c483c0 plain
+files.noDeleteAccess	Je hebt geen toegang om dit item te verwijderen.	You don’t have permission to delete this item.
+# gio_one(): ApiError "failed"
+#@ host/src/files/trash.rs 116 8a68a998901933f8 plain
+files.trashFailed	Dit item kon niet naar de Prullenbak.	This item couldn’t be moved to the Recycle Bin.
+# restore(): files.restoreTrash: per item in failed[]
+#@ host/src/files/trash.rs 146 a2c632188eb6e94c plain
+files.notInTrash	Dit item staat niet (meer) in de Prullenbak.	This item is no longer in the Recycle Bin.
+# restore(): files.restoreTrash: per item in failed[]
+#@ host/src/files/trash.rs 147 50024b810afabae0 plain
+files.otherDrive	De oorspronkelijke locatie ligt niet op deze schijf. Sleep het item zelf naar een map.	The original location isn’t on this drive. Drag the item to a folder yourself.
+# restore(): files.restoreTrash: per item in failed[] (no Path= in its .trashinfo)
+#@ host/src/files/trash.rs 150 a9849fb026374237 plain
+files.unknownOrigin	De oorspronkelijke locatie is onbekend.	The original location is unknown.
+# empty_with_mounts(): ApiError "partial": files.emptyTrash: {n} items of the Recycle Bin could not be deleted (ApiError partial); .other keeps 3b898e6’s “item(s)”
+#@ host/src/files/trash.rs 182 9c76346ab0afe7ce fmt {failed}=n
+files.emptyTrashFailed.other	{n} item(s) konden niet worden verwijderd.	{n} items couldn’t be deleted.
+# empty_with_mounts(): ApiError "partial" for exactly one item (D-G1a: the singular is new Dutch, H's nl)
+#@ new
+files.emptyTrashFailed.one	{n} item kon niet worden verwijderd.	{n} item couldn’t be deleted.
+
+# --- host/src/files/archive_ffi.rs
+# LoadError::message(): files.compress/extract when libarchive.so.13 cannot be loaded (ApiError unsupported_archive)
+#@ host/src/files/archive_ffi.rs 8 139748298a5b0768 plain
+files.libarchiveMissing	libarchive.so.13 ontbreekt; installeer het libarchive-runtimepakket.	libarchive.so.13 is missing; install the libarchive runtime package.
+# LoadError::message(): the start of “<piece><libarchive symbol>” when a symbol is missing (one row per piece keeps 3b898e6 Dutch; mind the space at the end)
+#@ host/src/files/archive_ffi.rs 10 78416489af7c6ee9 plain
+files.libarchiveLacks	De archiefbibliotheek mist 	The archive library is missing 
+# error(): libarchive reported an error without its own text (data of files.badArchive, or of files.failedFor)
+#@ host/src/files/archive_ffi.rs 12 949931ed5f7ca4d4 plain
+files.archiveFailed	De archiefbewerking is mislukt.	The archive operation failed.
+
+# --- host/src/files/archives.rs
+# bad_archive(): ApiError "bad_archive": files.extract (data: a diagnostic, such as the files.zip* texts below)
+#@ host/src/files/archives.rs 5 63c2ae348e68b976 plain
+files.badArchive	Dit archief is beschadigd of onvolledig.	This archive is damaged or incomplete.
+# unsupported(): ApiError "unsupported_archive": Archiefbeheer / Archive Manager is GNOME’s archive app (File Roller); Win11 Shell is the product name (D-G16)
+#@ host/src/files/archives.rs 7 3e38f5882aee8db3 plain
+files.unsupportedArchive	Dit soort archief kan Win11 Shell niet uitpakken. Open het met Archiefbeheer.	Win11 Shell can’t extract this kind of archive. Open it with Archive Manager.
+# unsafe_path(): ApiError "unsafe_archive"
+#@ host/src/files/archives.rs 9 04a03404ec0b0def plain
+files.unsafePaths	Dit archief bevat onveilige paden en wordt niet uitgepakt.	This archive contains unsafe paths and won’t be extracted.
+# unsafe_link(): ApiError "unsafe_archive"
+#@ host/src/files/archives.rs 11 1dcaaa1cc9da633c plain
+files.unsafeLinks	Dit archief bevat onveilige koppelingen en wordt niet uitgepakt.	This archive contains unsafe links and won’t be extracted.
+# unsafe_device(): ApiError "unsafe_archive"
+#@ host/src/files/archives.rs 13 1ce6a8bc69f4e142 plain
+files.deviceFiles	Dit archief bevat apparaatbestanden en wordt niet uitgepakt.	This archive contains device files and won’t be extracted.
+# compress(): ApiError "not_found": files.compress: a selected item is gone; {name} = its name
+#@ host/src/files/archives.rs 30 3ae24741def8170f fmt {}=name
+files.namedGone	‘{name}’ bestaat niet (meer).	“{name}” no longer exists.
+# zip_index(): diagnostics in the data of files.badArchive (the ZIP index check)
+#@ host/src/files/archives.rs 41 7b2cbabd98b8d6b5 plain
+files.zipMultiDisk	Archieven over meerdere schijven worden niet ondersteund.	Archives that span several disks aren’t supported.
+# zip_index()
+#@ host/src/files/archives.rs 44 2c4a1a7532a3c63f plain
+files.zip64IndexInvalid	Ongeldige ZIP64-index.	Invalid ZIP64 index.
+# zip_index()
+#@ host/src/files/archives.rs 45 bc2a09cfc488a334 plain
+#@ host/src/files/archives.rs 48 bc2a09cfc488a334 plain
+#@ host/src/files/archives.rs 56 bc2a09cfc488a334 plain
+files.zipIndexInvalid	Ongeldige ZIP-index.	Invalid ZIP index.
+# zip_index()
+#@ host/src/files/archives.rs 46 e571545a69e36b21 plain
+#@ host/src/files/archives.rs 54 e571545a69e36b21 plain
+files.zipOffsetInvalid	Ongeldige ZIP-offset.	Invalid ZIP offset.
+# zip_index()
+#@ host/src/files/archives.rs 51 e6991dd687bcc8d7 plain
+files.zipExtraInvalid	Ongeldige ZIP-extra-info.	Invalid ZIP extra field.
+# zip_index()
+#@ host/src/files/archives.rs 52 1b1734d687897663 plain
+files.zip64SizeInvalid	Ongeldige ZIP64-grootte.	Invalid ZIP64 size.
+# zip_index()
+#@ host/src/files/archives.rs 53 d0e09a34c31a8852 plain
+files.zip64OffsetInvalid	Ongeldige ZIP64-offset.	Invalid ZIP64 offset.
+# zip_index()
+#@ host/src/files/archives.rs 55 50b6207f45e97ff6 plain
+files.zipDuplicateHeader	Dubbele ZIP-headeroffset.	Duplicate ZIP header offset.
+# zip_index()
+#@ host/src/files/archives.rs 57 f2c09bb523e1a3d8 plain
+files.zipIndexLength	Ongeldige ZIP-indexlengte.	Invalid ZIP index length.
+# new(): data of files.badArchive
+#@ host/src/files/archives.rs 61 a5027171ab905839 plain
+files.archiveReaderMemory	Geheugen voor archieflezer ontbreekt.	There isn’t enough memory for the archive reader.
+# extract(): ApiError "not_found"
+#@ host/src/files/archives.rs 80 eef134ff06961f87 plain
+#@ host/src/files/archives.rs 82 eef134ff06961f87 plain
+files.archiveGone	Dit archief bestaat niet (meer).	This archive no longer exists.
+# extract(): data of files.badArchive: the unpacked sizes add up to more than 2^64 bytes
+#@ host/src/files/archives.rs 83 0b53692bc01298f7 plain
+files.archiveTooLarge	Archiefgrootte is te groot.	The archive is too large.
+# extract(): ApiError "no_space"
+#@ host/src/files/archives.rs 88 267efbdd9f5a0584 plain
+files.noSpaceExtract	Er is niet genoeg ruimte op de schijf om dit archief uit te pakken.	There isn’t enough space on the drive to extract this archive.
+# extract(): data of files.badArchive
+#@ host/src/files/archives.rs 91 03582fec0397d9d4 plain
+files.archiveChanged	Het archief veranderde tijdens het lezen.	The archive changed while it was being read.
+# extract_tree(): data of files.badArchive
+#@ host/src/files/archives.rs 108 eacb6141eb2b7fff plain
+files.extractedSizeWrong	De uitgepakte grootte klopt niet.	The extracted size doesn’t match.
+# extract_tree(): data of files.badArchive
+#@ host/src/files/archives.rs 109 280c1b057b1a523e plain
+files.hardLinkMissing	Een harde koppeling verwijst naar een ontbrekend item.	A hard link points to a missing item.

@@ -1,0 +1,172 @@
+/* Win11 Shell — Windows 11 caption buttons for GTK 4 / libadwaita apps.
+ *
+ * Imported from ~/.config/gtk-4.0/gtk.css by Win11 Shell (Instellingen › Persoonlijke instellingen ›
+ * Kleuren › "Windows 11-vensterknoppen in apps"); it restyles only the minimize / maximize / close
+ * buttons on top of any theme (Adwaita/libadwaita, Yaru, Fluent imported in the same gtk.css).
+ *
+ * How it follows light/dark: the glyphs are symbolic SVGs recoloured with -gtk-recolor() from the
+ * button's own text colour (no palette: GTK 4.22 misplaces a recoloured image that has one), and the hover
+ * fill is mixed from that colour too, so a
+ * colour-scheme or gtk-theme switch restyles open apps live; nothing here names a light or dark colour
+ * except Windows' red close button.
+ *
+ * Specificity: ":not(#w11shell)" adds an id's weight, so these rules beat a theme imported earlier in the
+ * same gtk.css (Fluent's ":not(.suggested-action):not(.destructive-action)" chains). Rules from the
+ * system theme or libadwaita already lose because gtk.css has USER priority.
+ *
+ * Left alone: window controls with the class "overlaid" (they float over content outside any header bar, e.g.
+ * Showtime's video page, which keeps them readable on video with its own white glyphs and shadow).
+ * Right-to-left layouts: GTK 4 puts windowcontrols.end on the left; the edge and corner rules have :dir(rtl) mirrors.
+ */
+
+/* ---------------------------------------------------------------- the buttons */
+windowcontrols:not(.overlaid) > button.minimize:not(#w11shell),
+windowcontrols:not(.overlaid) > button.maximize:not(#w11shell),
+windowcontrols:not(.overlaid) > button.close:not(#w11shell) {
+  min-width: 46px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 10px;
+  transition: background-color 83ms linear;
+}
+
+windowcontrols:not(.overlaid) > button.minimize:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-minimize-symbolic.svg"));
+}
+windowcontrols:not(.overlaid) > button.maximize:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-maximize-symbolic.svg"));
+}
+window.maximized windowcontrols:not(.overlaid) > button.maximize:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-restore-symbolic.svg"));
+}
+windowcontrols:not(.overlaid) > button.close:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-close-symbolic.svg"));
+}
+
+/* The theme's own icon (and libadwaita's round plate, which it paints on the image) stays out of sight. */
+windowcontrols:not(.overlaid) > button.minimize:not(#w11shell) > image,
+windowcontrols:not(.overlaid) > button.maximize:not(#w11shell) > image,
+windowcontrols:not(.overlaid) > button.close:not(#w11shell) > image {
+  opacity: 0;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------------- states */
+windowcontrols:not(.overlaid) > button.minimize:not(#w11shell):hover,
+windowcontrols:not(.overlaid) > button.maximize:not(#w11shell):hover {
+  background-color: color-mix(in srgb, currentColor 7%, transparent);
+}
+windowcontrols:not(.overlaid) > button.minimize:not(#w11shell):active,
+windowcontrols:not(.overlaid) > button.maximize:not(#w11shell):active {
+  background-color: color-mix(in srgb, currentColor 11%, transparent);
+}
+windowcontrols:not(.overlaid) > button.close:not(#w11shell):hover {
+  background-color: #c42b1c;
+  color: #ffffff;
+}
+windowcontrols:not(.overlaid) > button.close:not(#w11shell):active {
+  background-color: rgba(196, 43, 28, 0.9);
+  color: rgba(255, 255, 255, 0.7);
+}
+/* Unfocused window: no dimming of our own. libadwaita already fades every header bar to 50% when the window is
+   unfocused (filter: opacity on the header bar / toolbar-view top bar, glyphs and hover fill alike); other GTK 4
+   themes give the buttons their unfocused text colour, which the glyphs follow. Dimming here as well would leave
+   the glyphs at a quarter of their strength (checked with the libadwaita, Yaru and Fluent stylesheets). */
+
+/* ---------------------------------------------------------------- flush with the top-right corner */
+/* libadwaita's AdwHeaderBar (headerbar > windowhandle > box > widget > box.end): its box has 6–7px padding;
+   the caption buttons reach over it to the top and right edge, so they fill the whole header height. */
+headerbar > windowhandle > box > widget > box.end > windowcontrols.end:not(.overlaid):not(#w11shell) {
+  margin-top: -6px;
+  margin-bottom: -6px;
+  margin-right: -6px;
+}
+headerbar > windowhandle > box > widget > box.start > windowcontrols.start:not(.overlaid):not(#w11shell) {
+  margin-top: -6px;
+  margin-bottom: -6px;
+  margin-left: -6px;
+}
+/* right-to-left: the end box sits on the left, the start box on the right */
+headerbar > windowhandle > box > widget > box.end > windowcontrols.end:not(.overlaid):not(#w11shell):dir(rtl) {
+  margin-right: 0;
+  margin-left: -6px;
+}
+headerbar > windowhandle > box > widget > box.start > windowcontrols.start:not(.overlaid):not(#w11shell):dir(rtl) {
+  margin-left: 0;
+  margin-right: -6px;
+}
+/* Stacked top bars (AdwToolbarView with collapsed spacing, e.g. Text Editor): 3px around the bars plus 3px in the
+   header bar; reach up to the window edge, and down to just past the header bar (an even height keeps the 1px
+   glyph lines on whole pixels), not into a tab bar under it. */
+toolbarview > .top-bar .collapse-spacing headerbar > windowhandle > box > widget > box.end > windowcontrols.end:not(.overlaid):not(#w11shell),
+toolbarview > .top-bar .collapse-spacing headerbar > windowhandle > box > widget > box.start > windowcontrols.start:not(.overlaid):not(#w11shell) {
+  margin-top: -6px;
+  margin-bottom: -4px;
+}
+
+/* Windows' caption buttons touch each other */
+windowcontrols:not(.overlaid):not(#w11shell) {
+  border-spacing: 0;
+}
+
+/* GTK's own title bar for windows without a header bar: Windows' standard 32px caption. */
+headerbar.default-decoration:not(#w11shell) {
+  min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+headerbar.default-decoration:not(#w11shell) > windowhandle > box {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+headerbar.default-decoration:not(#w11shell) windowcontrols.end:not(.overlaid) {
+  margin: 0;
+}
+headerbar.default-decoration:not(#w11shell):dir(rtl),
+headerbar.default-decoration:not(#w11shell):dir(rtl) > windowhandle > box {
+  padding-left: 0;
+}
+
+/* ---------------------------------------------------------------- the window corner */
+/* The close button sits in the top-right corner: round its corner like the window's
+   (libadwaita: --window-radius, 0 when maximized or tiled). */
+windowcontrols.end:not(.overlaid) > button.close:last-child:not(#w11shell) {
+  border-top-right-radius: var(--window-radius, 8px);
+}
+windowcontrols.start:not(.overlaid) > button.close:first-child:not(#w11shell) {
+  border-top-left-radius: var(--window-radius, 8px);
+}
+/* right-to-left: the same buttons, mirrored (the close button of the end box is in the top-LEFT corner) */
+windowcontrols.end:not(.overlaid) > button.close:last-child:not(#w11shell):dir(rtl) {
+  border-top-right-radius: 0;
+  border-top-left-radius: var(--window-radius, 8px);
+}
+windowcontrols.start:not(.overlaid) > button.close:first-child:not(#w11shell):dir(rtl) {
+  border-top-left-radius: 0;
+  border-top-right-radius: var(--window-radius, 8px);
+}
+window.maximized windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner),
+window.fullscreen windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner),
+window.tiled windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner),
+window.tiled-top windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner),
+window.tiled-left windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner),
+window.tiled-right windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner),
+window.solid-csd windowcontrols:not(.overlaid) > button.close:not(#w11shell):not(#w11shell-corner) {
+  border-radius: 0;
+}

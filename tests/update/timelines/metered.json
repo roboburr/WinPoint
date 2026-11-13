@@ -1,0 +1,138 @@
+{
+ "name": "metered",
+ "group": "install",
+ "title": "Metered connection",
+ "description": "NetworkManager Metered 1 (yes) and PackageKit NetworkState 5 (mobile): the service asks before downloading. Step() then releases a gate and Metered becomes 3 (guess-yes), which also counts as metered.",
+ "states": [
+  "H17",
+  "H18"
+ ],
+ "daemon": {
+  "networkState": "mobile"
+ },
+ "nm": {
+  "Connectivity": "full",
+  "Metered": "yes"
+ },
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\n@@end\n"
+  }
+ },
+ "packages": {
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit",
+   "downloadSize": 21734410
+  },
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "JavaScript engine library from WebKitGTK",
+   "size": 31653888,
+   "row": "webkit",
+   "downloadSize": 7340216
+  }
+ },
+ "updates": [
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security"
+ ],
+ "script": [
+  {
+   "until": "step"
+  },
+  {
+   "nm": {
+    "Metered": "guess-yes"
+   }
+  }
+ ],
+ "client": [
+  {
+   "get": [
+    "nm",
+    "Metered"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "Metered": "yes"
+    }
+   }
+  },
+  {
+   "get": [
+    "manager",
+    "NetworkState"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "NetworkState": "mobile"
+    }
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 2
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "props": {
+     "DownloadSizeRemaining": 29074626
+    }
+   }
+  },
+  {
+   "control": "Step",
+   "expect": {
+    "contains": "released step gate"
+   }
+  },
+  {
+   "waitSignal": "PropertiesChanged",
+   "path": "/org/freedesktop/NetworkManager"
+  },
+  {
+   "get": [
+    "nm",
+    "Metered"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "Metered": "guess-yes"
+    }
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 12
+ }
+}

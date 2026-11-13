@@ -1,0 +1,26 @@
+10:47:21 GE0c run lang=nl switch=False seed=defaults MemAvailable=6215004 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/fix-power-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2d-picker.py
+10:48:45 private install: exit 0 in 68.8 s, 87858 mutated paths, 0 outside the run dir, ok=True
+10:48:48 GStreamer registry warmed in 2.6 s (['gst-inspect-1.0 version 1.28.2'])
+10:48:51 GNOME Shell 50.1 up (mode user, unsafe True)
+10:48:56 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2d-picker.py
+10:48:56   check PASS: session starts in Dutch
+10:49:03   check PASS: picker 1 (MODAL_DIALOG): Meta WM class is io.github.win11shell.FilePicker (o2)
+10:49:03   check PASS: picker 1: GTK application id is the caller's, io.github.win11shell.Settings (review m6)
+10:49:03   check PASS: picker 1: transient for the Settings window
+10:49:03   check PASS: picker 1: GNOME groups it under Settings (WindowTracker, via the transient parent)
+10:49:03   check PASS: picker 2 (NORMAL): Meta WM class is io.github.win11shell.FilePicker (o2)
+10:49:03   check PASS: picker 2: GTK application id is the caller's, io.github.win11shell.Settings (review m6)
+10:49:03   check PASS: picker 2: transient for the Settings window
+10:49:03   check PASS: picker 2: GNOME groups it under Settings (WindowTracker, via the transient parent)
+10:49:03   check PASS: two pickers recorded
+10:49:03   check PASS: taskbar: Settings has one running button before the pickers
+10:49:03   check PASS: taskbar: picker 1 open: no button of its own (running buttons unchanged)
+10:49:03   check PASS: taskbar: picker 2 open: no button of its own (running buttons unchanged)
+10:49:03   check PASS: taskbar: the non-modal picker is grouped on the Settings button (2 windows)
+10:49:04   check PASS: both shell.pickFile calls settle as cancelled (path null)
+10:49:05   check PASS: every check passed
+10:49:05 shutdown shell clients: signalled own descendants 60:ibus-daemon, 76:glycin-svg, 119:glycin-image-rs, 427:win11-desktop, 428:win11-panel, 1654:glycin-image-rs, 584:WebKitNetworkPr, 587:WebKitWebProces, 599:glycin-svg, 664:win11-start, 827:WebKitNetworkPr, 828:WebKitWebProces, 847:glycin-svg, 585:WebKitNetworkPr, 586:WebKitWebProces, 601:glycin-svg, 662:glycin-image-rs, 180:ibus-memconf, 214:ibus-extension-, 546:ibus-engine-sim
+10:49:05 shutdown gnome-shell: signalled own descendants 39:gnome-shell
+10:49:05 shutdown system bus: signalled own descendants 38:dbus-daemon
+10:49:05 inner sweep: signalled own descendants 1664:glycin-image-rs
+10:49:05 inner done: 0 surfaces, 0 failed []

@@ -1,0 +1,49 @@
+# tests/i18n/allow-host-r2d.txt: R2-D's never-translated host literals (contracts C9; round2-gate.md §5 and §7).
+# Format: tests/i18n/allow-host.txt (path<TAB>selector<TAB>reason). The coordinator merges this file.
+# Rule of thumb used here (as GE1b did for lib.rs/runtime.rs): a text that only stderr or a D-Bus peer ever
+# receives stays as it is (D-G15); every text that can reach a page or another app's dialog is converted.
+# Each rule names one text (and its fn where that is narrower), so a user text added to these files later is still
+# caught by the ratchet (review m2: no file-wide class: rules).
+#
+# --- start-up errors: returned as Err(String) up to lib.rs run() (or portal::run), which prints them with
+#     eprintln! and exits; no window exists yet
+host/src/apps/mod.rs	text:Appbewaking starten: {e}	start-up error, stderr only (Monitor::new → Apps::new → Runtime::new → lib.rs run → eprintln)
+host/src/transfers.rs	text:Tab-overdrachtsmap moet privé zijn	start-up error, stderr only (Transfers::new → Runtime::new → lib.rs run → eprintln)
+host/src/process_scope.rs	fn:ensure_slice&text:Ongeldig systemd-unitadres	start-up error, stderr only: the shell memory slice is checked only for Role::Shell, i.e. from ensure_native (lib.rs run / portal::run → eprintln "Win11 GNOME-procesisolatie: …")
+host/src/process_scope.rs	fn:ensure_slice&text:Ongeldige systemd-eigenschappen	start-up error, stderr only (ensure_slice, as above)
+host/src/process_scope.rs	fn:ensure_slice&text:De shell-geheugengroep bestaat al en is niet van deze installatie.	start-up error, stderr only (ensure_slice, as above)
+#
+# --- technical literals the classifier reads as Dutch
+host/src/apps/catalog.rs	fn:english&text:{key}[en_GB]	F38: the desktop-entry key name (Name[en_GB], GenericName[en_GB] …) looked up in GLib's KeyFile, not a text; the classifier takes "en" for the Dutch word
+#
+# --- errors that no caller shows
+host/src/apps/defaults.rs	text:Het standaard-app-slot moet privé zijn.	io::Error of ConfigLock::acquire; every caller replaces it (map_err(|_| …) with apps.defaultNotChanged / apps.somethingWentWrong)
+host/src/apps/defaults.rs	text:Een app-id bevat een nulbyte.	io::Error of set_string_list; its only caller drop_default_entry is used as .unwrap_or(false)
+# wallpaper::sync's errors (image() and target() are called only by sync()) reach only settings_runtime.rs's
+# eprintln!("GNOME-achtergrond bijwerken: {error}"): a log detail (D-G15)
+host/src/wallpaper.rs	fn:image&text:Onbekende ingebouwde achtergrond.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+host/src/wallpaper.rs	fn:image&text:Ongeldig lokaal afbeeldingsadres.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+host/src/wallpaper.rs	fn:image&text:De achtergrond moet een lokaal bestand zijn.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+host/src/wallpaper.rs	fn:image&text:De gekozen achtergrondafbeelding bestaat niet.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+host/src/wallpaper.rs	fn:target&text:Ongeldige achtergrondkleur.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+host/src/wallpaper.rs	fn:sync&text:GNOME-instellingenschema's ontbreken.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+host/src/wallpaper.rs	fn:sync&text:Het GNOME-achtergrondschema ontbreekt.	wallpaper::sync error, stderr only (settings_runtime.rs eprintln)
+#
+# --- command-line usage of the helper binary win11-launch (like bin/app.rs): before the request is parsed there is
+#     no ack socket, so only main's eprintln! prints these
+host/src/bin/launch.rs	text:Launch-opdracht ontbreekt	CLI usage error of win11-launch, stderr only (no ack socket yet)
+host/src/bin/launch.rs	text:Te veel argumenten	CLI usage error of win11-launch, stderr only (no ack socket yet)
+#
+# --- the FileChooser portal's own texts (English at 3b898e6). The pickers it opens are picker.rs, whose texts are
+#     converted.
+host/src/portal.rs	fn:register&text:Portal XML interface missing	start-up error of the portal: register → portal::run → bin/file_portal.rs main eprintln! ("Win11 file portal: …"), stderr only
+host/src/portal.rs	fn:run&text:Another process already owns the Win11 FileChooser backend	start-up error of the portal: portal::run → bin/file_portal.rs main eprintln!, stderr only
+host/src/portal.rs	fn:choose&text:Win11 FileChooser parent	title of the hidden parent ApplicationWindow that carries the xdg-foreign parent; it is never mapped, so never shown
+host/src/portal.rs	fn:run&text:Nested file chooser unavailable in portal	Err ack to a UiRequest other than Lifecycle inside the portal process, i.e. a page's shell.pickFile (FilePicker) or shell.setRegions (Regions). Unreachable: the only page the portal loads is the picker, which sends neither (shell.setRegions is answered only for kind "panel", runtime.rs:153); it would reach that page, not stderr
+host/src/portal/external.rs	fn:new&text:No display	xdg-foreign/X11 parent error of Parent::new; portal.rs choose() prints it with eprintln! ("Win11 file portal: {e}; opening without external parent") and opens without a parent
+host/src/portal/external.rs	fn:new&text:Invalid Wayland parent	Parent::new error, printed by portal.rs choose() with eprintln! only
+host/src/portal/external.rs	fn:new&text:Invalid X11 parent	Parent::new error, printed by portal.rs choose() with eprintln! only
+host/src/portal/external.rs	fn:new&text:Unknown parent-window identifier	Parent::new error, printed by portal.rs choose() with eprintln! only
+host/src/portal/external.rs	fn:apply&text:Picker surface is not realized	Parent::apply error; portal.rs choose()'s configure hook prints it with eprintln! ("Win11 file portal: {e}") only
+host/src/portal/external.rs	fn:apply&text:Wayland parent could not be imported	Parent::apply error, printed by portal.rs choose()'s configure hook with eprintln! only
+host/src/portal/model.rs	fn:bad&text:Invalid FileChooser {what}	request validation, returned to xdg-desktop-portal as org.freedesktop.DBus.Error.InvalidArgs (machine protocol)

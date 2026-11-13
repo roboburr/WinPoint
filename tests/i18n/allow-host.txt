@@ -1,0 +1,67 @@
+# tests/i18n/allow-host.txt: Rust host literals that are never translated (contracts C9, plan-critique F15).
+# tools/i18n/extract_rs.py refuses to convert a literal that matches a rule here; tools/i18n/check_rust.py checks
+# the syntax and reports rules that match nothing; tools/i18n/drift_rust.py keeps every one of them frozen anyway.
+#
+# Columns (one tab each): path<TAB>selector<TAB>reason
+#   path      a file under G (host/src/…); * and ** globs allowed (fnmatch on the whole path)
+#   selector  one or more of the following, joined by & (all must hold):
+#             text:<exact decoded text>   sha:<sha256[:16]>     fn:<enclosing fn name>   item:<const/static name>
+#             macro:<innermost macro, e.g. eprintln!>           call:<innermost call, e.g. .expect or ApiError::new>
+#             class:<GE0b class at 3b898e6: technical, log, user-visible-dutch, …>       file (every literal)
+#             label:<text>   (path host/i18n/<stem>.tsv) a quoted name in an en row that is no UI label on purpose,
+#                            e.g. a GNOME or Ubuntu app's own name; tools/i18n/check_rust.py rule "label" (F16)
+#
+# --- logs and developer diagnostics (D-G15, H D10: logs stay as they are)
+host/src/**	macro:eprintln!	stderr log line
+host/src/**	macro:eprint!	stderr log line
+host/src/**	macro:println!	command-line output of a developer binary (usage, diagnostics)
+host/src/**	macro:print!	command-line output of a developer binary
+host/src/**	macro:panic!	panic message (internal)
+host/src/**	macro:unreachable!	internal assertion
+host/src/**	macro:assert!	internal assertion
+host/src/**	macro:assert_eq!	internal assertion
+host/src/**	macro:debug_assert!	internal assertion
+host/src/**	call:.expect	panic message of an embedded-data invariant (internal)
+# start-up failures: returned as Err(String) up to lib.rs run(), which prints "Win11 voor GNOME: {err}" and exits
+host/src/lib.rs	text:De oorspronkelijke interface ontbreekt	start-up error, stderr only (run → eprintln)
+host/src/lib.rs	text:Start registreren: {err}	start-up error, stderr only
+host/src/lib.rs	text:Herstarten: {error}	restart error, stderr only
+host/src/runtime.rs	text:UI-map ontbreekt	start-up error, stderr only (Runtime::new → run)
+host/src/runtime.rs	text:Geen TCP-adres	start-up error, stderr only (Runtime::server → run)
+# HTTP reason phrases of plain-text responses (machine protocol, not shown by the UI)
+host/src/runtime.rs	text:Bad URL	HTTP reason phrase
+host/src/runtime.rs	text:Method Not Allowed	HTTP reason phrase
+host/src/runtime.rs	text:Not Found	HTTP reason phrase
+host/src/runtime.rs	text:Unauthorized	HTTP reason phrase
+# the i18n runtime's own diagnostics (host/src/i18n.rs; frozen in round 2): new since 3b898e6, so the ratchet sees them
+host/src/i18n.rs	call:log_once	the runtime's log lines and their once-tags (log_once -> eprintln; bilingual log style, D-G15)
+host/src/i18n.rs	fn:parse	catalogue row problems, logged once by catalogue() (internal; check_rust.py and a unit test keep the catalogues clean)
+host/src/i18n.rs	fn:join	the nl/en join words of i18n::join (" en " / " and "): both halves of one language branch
+host/src/i18n.rs	fn:join_or	the nl/en join words of i18n::join_or (" of " / " or ")
+#
+# --- machine markers written into user files (H D11: byte-identical)
+host/src/settings_effects.rs	item:CAP_BEGIN	marker in the user's gtk.css
+host/src/settings_effects.rs	item:CAP_END	marker in the user's gtk.css
+host/src/settings_effects.rs	item:CAP_LINE	marker comment in the user's gtk.css (Dutch on purpose; its removal matches it)
+host/src/settings_effects.rs	item:THEME_BEGIN	marker in the user's gtk-4.0/gtk.css
+host/src/settings_effects.rs	item:THEME_END	marker in the user's gtk-4.0/gtk.css
+host/src/settings_effects.rs	item:THEME_LINE	marker comment in the user's gtk-4.0/gtk.css
+host/src/services/display.rs	text:# Win11 Shell: beeldscherminstellingen (automatisch bijgewerkt door Instellingen)	header comment written into monitors.conf
+#
+# --- input words the index query parser accepts (services/index/query.rs); its messages are translated
+host/src/services/index/query.rs	fn:alias	search-function aliases the user types (ext:, dm:, size: …)
+host/src/services/index/query.rs	fn:date_word	date words the user types (vandaag, gisteren …)
+host/src/services/index/query.rs	class:technical	operators, units and words the parser accepts
+#
+# --- matchers for daemon and D-Bus output (English or machine text from UDisks, BlueZ, tray hosts)
+host/src/services/disks.rs	fn:map_error&class:technical	UDisks/D-Bus error-text matchers
+host/src/services/system/bluetooth.rs	fn:error_key	BlueZ error-name and message matchers
+host/src/services/tray/helpers.rs	fn:error_kind	D-Bus error-name and message matchers of tray hosts
+host/src/services/notifications.rs	item:LEGACY_APP_NAME	matcher for the app name 3b898e6 stored for a nameless notification; add() stores "" instead (C5)
+#
+# --- systemd unit and slice ids, XDG folder names on disk (H D12)
+host/src/process_scope.rs	class:technical	systemd unit, slice and property names
+host/src/files/places.rs	fn:fallback_dir	XDG folder names on disk (fallback when user-dirs.dirs has none)
+#
+# --- api-methods.json: documentation of the wire API, English, never shown to users
+host/src/api-methods.json	file	API method docs (not in the frozen tables; listed for the converter)

@@ -1,0 +1,96 @@
+{
+  "version": "0.7.0",
+  "serviceChecks": [
+    {
+      "case": "non-Alles-panel-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-start-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-desktop-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-settings-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-taskmgr-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-explorer-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-disks-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "non-Alles-unknown-cannot-spawn-via-search-start-or-forced-autostart",
+      "passed": true
+    },
+    {
+      "case": "Alles-first-index-call-starts-one-owned-worker",
+      "passed": true,
+      "pid": 6
+    },
+    {
+      "case": "Alles-search-and-repeat-status-reuse-same-worker",
+      "passed": true,
+      "matches": 200
+    },
+    {
+      "case": "closing-Alles-backend-stops-worker-and-preserves-persisted-index",
+      "passed": true
+    },
+    {
+      "case": "reopening-Alles-loads-retained-cache-and-closing-stops-new-worker",
+      "passed": true
+    },
+    {
+      "case": "original-non-GNOME-host-keeps-existing-ownership-policy",
+      "passed": true
+    }
+  ],
+  "gnomeChecks": [
+    {
+      "case": "Panel-preloaded-Start-and-Desktop-do-not-autostart-index-even-with-forced-env",
+      "passed": true
+    },
+    {
+      "case": "background-shell-index-status-and-search-cannot-start-worker",
+      "passed": true
+    },
+    {
+      "case": "opening-Alles-starts-one-worker-searches-private-fixture-and-persists-index",
+      "passed": true,
+      "appPid": 1227124,
+      "indexPid": 1227165
+    },
+    {
+      "case": "second-Alles-launch-reuses-one-window-backend-and-indexer-and-delivers-new-query",
+      "passed": true
+    },
+    {
+      "case": "closing-Alles-stops-worker-and-retains-cache",
+      "passed": true
+    },
+    {
+      "case": "resident-shell-stays-usable-and-does-not-restart-index-after-Alles-close",
+      "passed": true
+    }
+  ],
+  "gnomeBinaries": {
+    "win11-app": "587b2efa89db9e4913caae214e70f31435b3bf16e743acd5add8ff3a1c438068",
+    "win11-explorer": "f04bf87115ccd3088ca7a9c8a90119ab81c7f04da51296c02020487cae0147e4",
+    "win11-panel": "51aecbc4ba0007e84b766a3a4884269ac1573e076d89f4c5100419f0a4c09e53",
+    "win11-start": "7466eabd334103434d99dad0cda9ebd2d8aaa495c6babc241438dfb41ae1c057",
+    "win11-desktop": "c198e81e836c6ed6d529d55efefe59ae001eadf803ecfa99d3f81e86a50ea5d1"
+  },
+  "indexServiceSha256": "e3079ae4d51c3c743a29269f3c1f8bf23b42460efd969442f4e6687b0349d687",
+  "scope": "Only Everything owns the filename index; background shells do not start one. Private fixture roots/cache only. App scope/memory cap validation is separate."
+}

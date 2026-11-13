@@ -1,0 +1,377 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 12:30:34",
+ "seconds": 98.2,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 20,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 533464,
+   "rss_kb": 771160,
+   "processes": 16,
+   "t": 9.3
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 456083,
+   "rss_kb": 661252
+  },
+  "minMemAvailableKb": 7246856,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 269214,
+    "rss_kb": 341564
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 83952,
+    "rss_kb": 120532
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 76941,
+    "rss_kb": 105772
+   },
+   "glycin-svg": {
+    "count": 2,
+    "pss_kb": 43900,
+    "rss_kb": 68956
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 31346,
+    "rss_kb": 51700
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17014,
+    "rss_kb": 34112
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4107,
+    "rss_kb": 11588
+   },
+   "glycin-image-rs": {
+    "count": 1,
+    "pss_kb": 3685,
+    "rss_kb": 6900
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1281,
+    "rss_kb": 10008
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 815,
+    "rss_kb": 8012
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 769,
+    "rss_kb": 7880
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 258,
+    "rss_kb": 1476
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 182,
+    "rss_kb": 2660
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 69.1,
+  "mutatingSyscallPaths": 87785,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "12:32:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:32:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:32:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:32:04\tpw-dump\t--monitor --no-colors",
+  "12:32:06\tpw-dump\t--monitor --no-colors",
+  "12:32:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:32:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:32:10\tpw-dump\t--monitor --no-colors"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-nlQgBRdq"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 4,
+  "maxScanSeconds": 0.722,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-nlQgBRdq"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/snap-accent.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.8,
+    "args": {
+     "key": "default"
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.11,
+    "args": {
+     "key": "changed"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the snap preview has the accent of the settings",
+    "ok": true,
+    "t": 0.8,
+    "preview": {
+     "bg": [
+      0,
+      103,
+      192,
+      71
+     ],
+     "border": [
+      0,
+      103,
+      192
+     ]
+    },
+    "accent": "#0067C0"
+   },
+   {
+    "check": "the snap preview follows a new accent",
+    "ok": true,
+    "t": 1.11,
+    "preview": {
+     "bg": [
+      232,
+      17,
+      35,
+      71
+     ],
+     "border": [
+      232,
+      17,
+      35
+     ]
+    }
+   }
+  ],
+  "records": {
+   "default": {
+    "bg": [
+     0,
+     103,
+     192,
+     71
+    ],
+    "border": [
+     0,
+     103,
+     192
+    ]
+   },
+   "changed": {
+    "bg": [
+     232,
+     17,
+     35,
+     71
+    ],
+    "border": [
+     232,
+     17,
+     35
+    ]
+   }
+  },
+  "shots": [],
+  "error": null,
+  "seconds": 1.11,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 392,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 392,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 392,
+    "page": null,
+    "alive": true,
+    "native": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=4d81f87c6d72a9e00e3f11ca6af6f532",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 392,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 392
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": []
+}

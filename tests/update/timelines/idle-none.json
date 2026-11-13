@@ -1,0 +1,70 @@
+{
+ "name": "idle-none",
+ "group": "check",
+ "title": "Up to date",
+ "description": "Controleren op updates: RefreshCache(false) then GetUpdates(filter none) lists nothing.",
+ "states": [
+  "H01",
+  "H02"
+ ],
+ "packages": {},
+ "updates": [],
+ "methods": {
+  "RefreshCache": [
+   {
+    "props": {
+     "Status": "refresh-cache",
+     "Percentage": 0
+    },
+    "ms": 50
+   },
+   {
+    "props": {
+     "Status": "download-packagelist",
+     "Percentage": 40
+    },
+    "ms": 50
+   },
+   {
+    "props": {
+     "Status": "loading-cache",
+     "Percentage": 90
+    },
+    "ms": 50
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "RefreshCache",
+   "args": [
+    false
+   ],
+   "expect": {
+    "exit": "success",
+    "statuses": [
+     "refresh-cache",
+     "download-packagelist",
+     "loading-cache"
+    ]
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 0
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 6
+ }
+}

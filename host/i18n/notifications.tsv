@@ -1,0 +1,38 @@
+# host/i18n/notifications.tsv: host texts of services/notifications.rs (C5's appName is GE1b's and needs no row).
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/notifications.rs
+# call(): ApiError "bad_args": the id of dismiss/invokeAction/delivered is not an integer
+#@ host/src/services/notifications.rs 121 ef0fa12cf6f84412 plain
+notifications.invalid	Ongeldige melding.	Invalid notification.
+# call(): ApiError "bad_args": notifications.invokeAction: the action key is not a string of at most 200 characters
+#@ host/src/services/notifications.rs 130 dfc63a226dd9b4b3 plain
+#@ host/src/services/notifications.rs 159 dfc63a226dd9b4b3 plain
+notifications.invalidAction	Ongeldige actie.	Invalid action.
+# call(): ApiError "forbidden": consumerReady/consumerGone/delivered from a host other than the panel (the taskbar process)
+#@ host/src/services/notifications.rs 139 83503d4b176b05a1 plain
+notifications.panelOnly	Alleen het paneel kan meldingen overnemen.	Only the taskbar can take over notifications.
+# call(): ApiError "not_found"
+#@ host/src/services/notifications.rs 169 54d41caff43004f3 plain
+notifications.gone	Deze melding bestaat niet meer.	This notification no longer exists.
+# call(): notifications.test (Settings › Notifications): title of the test notification, no full stop; the old inline pair's English
+#@ host/src/services/notifications.rs 177 0faaea1c7c9e58f2 plain
+#@ host/src/services/notifications.rs 178 37ccfd02240e9c57 en
+notifications.test.summary	Zo ziet een melding eruit	This is what a notification looks like
+# call(): notifications.test: body of the test notification; the old inline pair's English
+#@ host/src/services/notifications.rs 180 501bbe9bca3d7f6d plain
+#@ host/src/services/notifications.rs 181 bd2bc354ec9e6cae en
+notifications.test.body	Meldingen van je apps verschijnen hier en blijven bewaard in het meldingencentrum.	Notifications from your apps appear here and stay in the notification centre.
+# call(): notifications.test: the label of its only action button; the old inline pair's English
+#@ host/src/services/notifications.rs 186 06e12cfbe9b6d668 plain
+#@ host/src/services/notifications.rs 187 5ad3dbd1242a4cea en
+notifications.test.ok	Prima	Got it

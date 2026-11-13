@@ -1,0 +1,18 @@
+# GW5 side file for tests/i18n/BASELINE-ADDITIONS.ui (the coordinator appends the GW5 lines there; same format):
+# the new Dutch texts of the "Nieuwe Ubuntu-versies" row (vendor/ui/js/apps/settings/pages/update-release.js, design
+# §3.6, nl and en from the design's own texts). They show on the existing Update page surfaces: settings.update and
+# every settings-update.* block gain the row (title, "Elke nieuwe versie", its two description lines,
+# "Ubuntu 26.10 is uitgebracht; …" and, as the mock has no root helper, the InfoBar "Ubuntu vraagt om je wachtwoord
+# om ‘/bin/sh’ …"; the row is disabled and without that InfoBar in H25/H25b), and on the new settings-update-prompt.*
+# surfaces (surfaces-additions-gw5.json).
+GW5	key:apps/settings/pages/update-release.js:promptRow	Nieuwe Ubuntu-versies
+GW5	key:apps/settings/pages/update-release.js:promptLts	Alleen LTS-versies
+GW5	key:apps/settings/pages/update-release.js:promptNormal	Elke nieuwe versie
+GW5	key:apps/settings/pages/update-release.js:promptNever	Nooit melden
+GW5	key:apps/settings/pages/update-release.js:promptLtsDesc	Om de twee jaar een upgrade; elke versie krijgt 5 jaar updates.
+GW5	key:apps/settings/pages/update-release.js:promptNormalDesc	Elk half jaar een upgrade; een tussenversie krijgt 9 maanden updates.
+GW5	key:apps/settings/pages/update-release.js:promptNormalGnome	Elke tussenversie heeft een nieuwe GNOME, en {product} moet daar eerst klaar voor zijn.
+GW5	key:apps/settings/pages/update-release.js:promptLtsInterim	Je gebruikt een tussenversie, dus Ubuntu biedt toch elke nieuwe versie aan tot de volgende LTS.
+GW5	key:apps/settings/pages/update-release.js:relNotOffered	Ubuntu {version} is uitgebracht; Ubuntu biedt de upgrade nog niet aan.
+GW5	key:apps/settings/pages/update-release.js:promptOverride	Deze instelling wordt bepaald door {file}.
+GW5	key:apps/settings/pages/update-release.js:promptShInfo	Ubuntu vraagt om je wachtwoord om ‘/bin/sh’ als beheerder uit te voeren. Dat is {product}, dat alleen de regel Prompt= aanpast.

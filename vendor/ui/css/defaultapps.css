@@ -1,0 +1,34 @@
+/* Shares the original AppFrame, Fluent cards, dialogs and theme tokens. */
+.da-app .af-content { overflow-y: auto; }
+.da-page { max-width: 1120px; width: 100%; margin: 0 auto; padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 24px; }
+.da-header { display: flex; flex-direction: column; gap: 8px; }
+.da-title { margin: 0; font-size: 28px; line-height: 1.35; font-weight: 600; }
+.da-intro, .da-example { margin: 0; color: var(--text-2); }
+.da-search { max-width: 560px; display: flex; flex-direction: column; gap: 8px; }
+.da-search .fl-textbox { width: 100%; }
+.da-example { font-size: 12px; }
+.da-list { min-height: 180px; }
+.da-list[aria-busy="true"] { cursor: progress; }
+.da-loading { display: grid; justify-items: center; gap: 16px; padding: 64px 0; color: var(--text-2); }
+.da-type .fl-sc__inner { min-height: 78px; }
+.da-type .fl-sc__icon { width: 36px; height: 36px; }
+.da-type-name { display: block; }
+.da-mime { display: block; margin-top: 3px; color: var(--text-3); font-size: 12px; overflow-wrap: anywhere; }
+.da-default { display: flex; align-items: center; gap: 10px; width: 230px; }
+.da-default-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.da-pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 36px; color: var(--text-2); }
+.da-paging-buttons { display: flex; gap: 8px; }
+.da-dialog-type { margin: 0 0 16px; }
+.da-dialog-intro { margin: 0 0 10px; color: var(--text-2); }
+.da-choices { display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; }
+.da-choice { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 10px 14px; border: 1px solid transparent; border-radius: var(--radius-control); cursor: pointer; }
+.da-choice:hover { background: var(--fill-subtle-2); }
+.da-choice.is-selected { background: var(--fill-subtle-3); border-color: var(--stroke-control); }
+.da-choice:focus-within { outline: 2px solid var(--accent); outline-offset: -2px; }
+.da-choice input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; flex: none; }
+.da-choice-text { display: flex; flex-direction: column; gap: 3px; }
+.da-choice-name { font-size: 14px; }
+.da-choice-current { font-size: 12px; color: var(--text-2); }
+.da-dialog-status:not(:empty) { margin-top: 16px; }
+@media (max-width: 700px) { .da-page { padding: 20px 16px 28px; } .da-default { width: 160px; } }
+@media (max-width: 500px) { .da-default { width: 100px; } .da-pagination { align-items: flex-start; flex-direction: column; } }

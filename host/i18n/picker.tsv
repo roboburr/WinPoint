@@ -1,0 +1,53 @@
+# host/i18n/picker.tsv: host texts of picker.rs (and portal.rs, which shows the picker).
+# Owner: R2-D.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/picker.rs
+# create(): shell.pickFile/portal: at most four pickers per process
+#@ host/src/picker.rs 1 6f2db39be195b7af plain
+picker.tooMany	Er zijn al vier bestandskiezers geopend.	Four file pickers are already open.
+# create(): the window that asked for the picker is gone
+#@ host/src/picker.rs 2 babaa831b8cfac27 plain
+picker.parentClosed	Het bovenliggende venster is gesloten.	The parent window has closed.
+# create(): the picker's page URL could not be parsed; no full stop in nl
+#@ host/src/picker.rs 3 2a1122bc7b553085 plain
+picker.invalidAddress	Ongeldig vensteradres	Invalid window address
+# create(): GTK did not create the picker window
+#@ host/src/picker.rs 16 b93118f04cdf49e7 plain
+picker.couldNotOpen	De bestandskiezer kon niet worden geopend.	Couldn’t open the file picker.
+# submit(): a submit arrived for a picker that is gone
+#@ host/src/picker.rs 29 621b507f585a031c plain
+picker.closed	Dit selectievenster is gesloten.	This selection window has closed.
+# selection(): the page submitted none, too many or more than one path for a single choice
+#@ host/src/picker.rs 37 cac2aa0c9adfe9f3 plain
+picker.chooseValidSelection	Kies een geldige bestandsselectie.	Choose a valid file selection.
+# selection(): an empty, overlong or NUL-containing path
+#@ host/src/picker.rs 38 032f550eb935ed09 plain
+picker.chooseValidPath	Kies een geldig bestandspad.	Choose a valid file path.
+# selection(): the chosen filter index is out of range
+#@ host/src/picker.rs 42 827b622ec80a8968 plain
+picker.invalidFileType	Ongeldig bestandstype.	Invalid file type.
+# selection(): a portal choice (e.g. encoding) has no valid value
+#@ host/src/picker.rs 47 6e845b84eb03e1cd plain
+#@ host/src/picker.rs 52 6e845b84eb03e1cd plain
+picker.invalidOption	Ongeldige optie.	Invalid option.
+# validate()
+#@ host/src/picker.rs 61 6fff7d12ac29e611 plain
+picker.chooseAbsolutePath	Kies een absoluut bestandspad.	Choose an absolute file path.
+# validate(): folder mode ("Map kiezen")
+#@ host/src/picker.rs 62 d3c83515ad165040 plain
+picker.chooseExistingFolder	Kies een bestaande map.	Choose an existing folder.
+# validate(): save mode ("Opslaan als"): the name's folder must exist
+#@ host/src/picker.rs 63 7c5cfeba74b4459b plain
+picker.chooseFileInFolder	Kies een bestand in een bestaande map.	Choose a file in an existing folder.
+# validate(): open mode ("Openen")
+#@ host/src/picker.rs 64 1af94546184302ee plain
+picker.chooseExistingFile	Kies een bestaand bestand.	Choose an existing file.

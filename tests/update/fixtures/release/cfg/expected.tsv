@@ -1,0 +1,45 @@
+# GW5 (m1): how Ubuntu reads each file (Python's configparser as MetaRelease._parse_cfg: error = the file is ignored,
+# none = no Prompt in [DEFAULT], value:<Prompt lowercased, newline as \n>), what host/data/release-upgrades-helper's
+# set-prompt does with it as the main file (ok, or parse = refused and the file kept), and whether the helper names
+# it as a release-upgrades.d override (yes, no, or unjudged: a lone CR or a Unicode space outside a comment line).
+# Checked by tests/update/test_helpers.sh (against python3 at test time) and release.rs (config_prompt).
+# name	Ubuntu reads	set-prompt	override
+crlf	value:normal	ok	yes
+crlf-nokey	none	ok	no
+header-comment	value:normal	ok	yes
+header-bracket	none	ok	no
+lowercase-default	none	ok	no
+key-before-section	error	parse	no
+comment-before-section	value:lts	ok	yes
+indented-after-key	none	ok	no
+indented-first	value:never	ok	yes
+indented-options-header	none	ok	no
+comment-then-indented-header	none	ok	no
+duplicate-key	error	ok	no
+duplicate-default	error	ok	no
+second-default	value:lts	ok	yes
+duplicate-section	error	parse	no
+duplicate-other-key	error	parse	no
+junk-line	error	parse	no
+empty-key	error	parse	no
+continuation	value:lts\nmore	ok	yes
+comment-in-continuation	value:lts\nmore	ok	yes
+blank-in-continuation	value:lts\n\nmore	ok	yes
+indented-header-continuation	value:lts\n[sources]	ok	yes
+inline-comment	value:lts # x	ok	yes
+colon-first	value:lts=x	ok	yes
+spaced-key	none	ok	no
+spaces	value:lts	ok	yes
+value-empty	value:	ok	yes
+never-no	value:no	ok	yes
+no-final-newline	value:lts	ok	yes
+lone-cr	value:lts	parse	unjudged
+comment-lone-cr	value:never	parse	unjudged
+bom	error	parse	no
+nbsp-indent	none	parse	unjudged
+nbsp-value	value:lts	ok	unjudged
+nbsp-comment	value:lts	ok	yes
+unit-separator	value:lts	ok	unjudged
+empty	none	ok	no
+comments-only	none	ok	no
+other-section-only	none	ok	no

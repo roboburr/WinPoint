@@ -1,0 +1,5 @@
+# tests/i18n/allow-host-gw2.txt: GW2a (Windows Update service core) additions to tests/i18n/allow-host.txt, same format
+# (path<TAB>selector<TAB>reason). Never translated (contracts C9). The coordinator merges this file.
+#
+host/src/services/update/restart.rs	item:NOISE	matchers for replaced mappings that never need a restart (file names in /proc/<pid>/maps: memfd, gschemas.compiled, gvfs …); compared, never shown (C9)
+host/src/services/update/phasing.rs	item:SCRIPT	the read-only python3 -I apt_pkg classifier passed as a program text to python3; its prints are machine markers, never shown (C9)

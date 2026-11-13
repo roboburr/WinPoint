@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-01",
+  "version": "0.5.0",
+  "isolated": true,
+  "native_methods": [
+    "files.find",
+    "files.places",
+    "files.watch",
+    "files.unwatch",
+    "files.open",
+    "files.openWith",
+    "files.trustLauncher",
+    "files.openTerminal"
+  ],
+  "native_response_header": "X-Win11-Service: rust-files",
+  "python_differential": true,
+  "python_equivalents_trapped": true,
+  "cases": [
+    {
+      "case": "standard-places-match-original-fields-icons-and-order",
+      "passed": true
+    },
+    {
+      "case": "recursive-search-reference-unicode-terms-globs-hidden-mime-limits-and-links",
+      "passed": true
+    },
+    {
+      "case": "search-errors-preserve-original-contract",
+      "passed": true
+    },
+    {
+      "case": "native-watch-external-create-refcounts-debounce-and-unwatch",
+      "passed": true
+    },
+    {
+      "case": "native-desktop-auto-watch-remains-pinned",
+      "passed": true
+    },
+    {
+      "case": "native-open-default-app-preserves-uri-and-cleans-private-environment",
+      "passed": true
+    },
+    {
+      "case": "native-openwith-selected-installed-app",
+      "passed": true
+    },
+    {
+      "case": "opening-errors-match-original-validation-and-app-not-found",
+      "passed": true
+    },
+    {
+      "case": "native-shortcut-prompt-trust-and-safe-launch",
+      "passed": true
+    },
+    {
+      "case": "native-terminal-choice-working-directory-argv-and-clean-environment",
+      "passed": true
+    },
+    {
+      "case": "native-open-directory-creates-independent-rust-explorer",
+      "passed": true
+    },
+    {
+      "case": "new-files-methods-work-with-python-equivalents-trapped",
+      "passed": true
+    }
+  ],
+  "native_files_method_count": 28,
+  "all_mutations_in_private_fixtures": true,
+  "real_webkit_explorers": 3,
+  "foreign_launches_use_only_test_recorders": true,
+  "full_visual_identity_proven": false
+}

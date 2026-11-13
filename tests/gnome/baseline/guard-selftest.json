@@ -1,0 +1,1589 @@
+{
+ "cases": 136,
+ "failed": 0,
+ "results": [
+  {
+   "case": "positive control outer",
+   "layer": "in-process",
+   "expect": "accepted",
+   "codes": [],
+   "passed": true
+  },
+  {
+   "case": "positive control inner",
+   "layer": "in-process",
+   "expect": "accepted",
+   "codes": [],
+   "passed": true
+  },
+  {
+   "case": "inner stage requires RT/bus",
+   "layer": "in-process",
+   "expect": "session-bus-not-private",
+   "codes": [
+    "session-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "composite live environment",
+   "layer": "in-process",
+   "expect": [
+    "home-real",
+    "runtime-live",
+    "session-bus-live",
+    "display-set",
+    "wayland-display-set",
+    "gsettings-not-keyfile"
+   ],
+   "codes": [
+    "home-real",
+    "runtime-live",
+    "session-bus-live",
+    "display-set",
+    "wayland-display-set",
+    "gsettings-not-keyfile"
+   ],
+   "passed": true
+  },
+  {
+   "case": "real HOME",
+   "layer": "in-process",
+   "expect": "home-real",
+   "codes": [
+    "home-real"
+   ],
+   "passed": true
+  },
+  {
+   "case": "real HOME with trailing slash",
+   "layer": "in-process",
+   "expect": "home-real",
+   "codes": [
+    "home-real"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live XDG_RUNTIME_DIR",
+   "layer": "in-process",
+   "expect": "runtime-live",
+   "codes": [
+    "runtime-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus",
+   "layer": "in-process",
+   "expect": "session-bus-live",
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus with guid",
+   "layer": "in-process",
+   "expect": "session-bus-live",
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus escaped",
+   "layer": "in-process",
+   "expect": "session-bus-live",
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus second in list",
+   "layer": "in-process",
+   "expect": "session-bus-live",
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "DISPLAY set",
+   "layer": "in-process",
+   "expect": "display-set",
+   "codes": [
+    "display-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "DISPLAY set but empty",
+   "layer": "in-process",
+   "expect": "display-set",
+   "codes": [
+    "display-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WAYLAND_DISPLAY set",
+   "layer": "in-process",
+   "expect": "wayland-display-set",
+   "codes": [
+    "wayland-display-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GSETTINGS_BACKEND unset",
+   "layer": "in-process",
+   "expect": "gsettings-not-keyfile",
+   "codes": [
+    "gsettings-not-keyfile"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GSETTINGS_BACKEND dconf",
+   "layer": "in-process",
+   "expect": "gsettings-not-keyfile",
+   "codes": [
+    "gsettings-not-keyfile"
+   ],
+   "passed": true
+  },
+  {
+   "case": "abstract session bus",
+   "layer": "in-process",
+   "expect": "session-bus-not-private",
+   "codes": [
+    "session-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "tcp session bus",
+   "layer": "in-process",
+   "expect": "session-bus-not-private",
+   "codes": [
+    "session-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "session bus unset",
+   "layer": "in-process",
+   "expect": "session-bus-missing",
+   "codes": [
+    "session-bus-missing"
+   ],
+   "passed": true
+  },
+  {
+   "case": "real system bus",
+   "layer": "in-process",
+   "expect": "system-bus-not-private",
+   "codes": [
+    "system-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "NO_AT_BRIDGE missing",
+   "layer": "in-process",
+   "expect": "at-bridge",
+   "codes": [
+    "at-bridge"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GTK_A11Y missing",
+   "layer": "in-process",
+   "expect": "gtk-a11y",
+   "codes": [
+    "gtk-a11y"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live ~/.local/bin on PATH",
+   "layer": "in-process",
+   "expect": "path-live-home",
+   "codes": [
+    "path-live-home",
+    "path-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live XDG_CONFIG_HOME",
+   "layer": "in-process",
+   "expect": "xdg-not-private",
+   "codes": [
+    "xdg-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live XDG_DATA_HOME",
+   "layer": "in-process",
+   "expect": "xdg-not-private",
+   "codes": [
+    "xdg-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live WIN11_REFERENCE_INSTANCE",
+   "layer": "in-process",
+   "expect": "reference-instance-set",
+   "codes": [
+    "reference-instance-set",
+    "live-runtime-ref"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GNOME_SHELL_SESSION_MODE=ubuntu",
+   "layer": "in-process",
+   "expect": "live-pointer-var",
+   "codes": [
+    "live-pointer-var"
+   ],
+   "passed": true
+  },
+  {
+   "case": "home outside the run dir",
+   "layer": "in-process",
+   "expect": "home-not-private",
+   "codes": [
+    "home-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 NO_AT_BRIDGE=0",
+   "layer": "in-process",
+   "expect": "at-bridge",
+   "codes": [
+    "at-bridge"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 NO_AT_BRIDGE empty",
+   "layer": "in-process",
+   "expect": "at-bridge",
+   "codes": [
+    "at-bridge"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 GTK_A11Y=atspi",
+   "layer": "in-process",
+   "expect": "gtk-a11y",
+   "codes": [
+    "gtk-a11y"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 GTK_A11Y empty",
+   "layer": "in-process",
+   "expect": "gtk-a11y",
+   "codes": [
+    "gtk-a11y"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 real HOME as /.",
+   "layer": "in-process",
+   "expect": "home-real",
+   "codes": [
+    "home-real"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_DATA_DIRS with ~/.local/share first",
+   "layer": "in-process",
+   "expect": "xdg-data-dirs-home",
+   "codes": [
+    "xdg-not-private",
+    "xdg-data-dirs-home"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_DATA_DIRS with ~/.local/share/ last",
+   "layer": "in-process",
+   "expect": "xdg-data-dirs-home",
+   "codes": [
+    "xdg-not-private",
+    "xdg-data-dirs-home"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_DATA_DIRS with the live extensions dir",
+   "layer": "in-process",
+   "expect": "xdg-data-dirs-home",
+   "codes": [
+    "xdg-not-private",
+    "xdg-data-dirs-home"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_SETTINGS live",
+   "layer": "in-process",
+   "expect": "reference-settings-set",
+   "codes": [
+    "reference-settings-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_SETTINGS empty",
+   "layer": "in-process",
+   "expect": "reference-settings-set",
+   "codes": [
+    "reference-settings-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_SETTINGS private path",
+   "layer": "in-process",
+   "expect": "reference-settings-set",
+   "codes": [
+    "reference-settings-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_INSTANCE empty",
+   "layer": "in-process",
+   "expect": "reference-instance-set",
+   "codes": [
+    "reference-instance-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_GNOME_CONFIG_DIR live",
+   "layer": "in-process",
+   "expect": "gnome-config-dir-set",
+   "codes": [
+    "gnome-config-dir-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_GNOME_CONFIG_DIR private path",
+   "layer": "in-process",
+   "expect": "gnome-config-dir-set",
+   "codes": [
+    "gnome-config-dir-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 AT_SPI_BUS_ADDRESS live",
+   "layer": "in-process",
+   "expect": "at-spi-bus-set",
+   "codes": [
+    "at-spi-bus-set",
+    "live-runtime-ref"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 AT_SPI_BUS_ADDRESS private path",
+   "layer": "in-process",
+   "expect": "at-spi-bus-set",
+   "codes": [
+    "at-spi-bus-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_SESSION_ID set",
+   "layer": "in-process",
+   "expect": "xdg-session-id-set",
+   "codes": [
+    "xdg-session-id-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_SESSION_ID empty",
+   "layer": "in-process",
+   "expect": "xdg-session-id-set",
+   "codes": [
+    "xdg-session-id-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "XDG_SEAT set",
+   "layer": "in-process",
+   "expect": "live-pointer-var",
+   "codes": [
+    "live-pointer-var"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WIN11_BUILD_DIR live ~/.local/bin",
+   "layer": "in-process",
+   "expect": "build-dir-not-repo",
+   "codes": [
+    "build-dir-not-repo"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WIN11_BUILD_DIR unset",
+   "layer": "in-process",
+   "expect": "build-dir-not-repo",
+   "codes": [
+    "build-dir-not-repo"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GIO_USE_VFS unset",
+   "layer": "in-process",
+   "expect": "gio-vfs-not-local",
+   "codes": [
+    "gio-vfs-not-local"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GIO_USE_VFS=gvfs",
+   "layer": "in-process",
+   "expect": "gio-vfs-not-local",
+   "codes": [
+    "gio-vfs-not-local"
+   ],
+   "passed": true
+  },
+  {
+   "case": "update tool dir unset",
+   "layer": "in-process",
+   "expect": "update-seam-not-private",
+   "codes": [
+    "update-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "update fixture root not the private one",
+   "layer": "in-process",
+   "expect": "update-seam-not-private",
+   "codes": [
+    "update-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "update PackageKit bus set",
+   "layer": "in-process",
+   "expect": "update-seam-extra",
+   "codes": [
+    "update-seam-extra"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 composite (all conditions)",
+   "layer": "in-process",
+   "expect": [
+    "at-bridge",
+    "gtk-a11y",
+    "home-real",
+    "xdg-data-dirs-home",
+    "reference-settings-set",
+    "reference-instance-set",
+    "gnome-config-dir-set",
+    "at-spi-bus-set",
+    "xdg-session-id-set"
+   ],
+   "codes": [
+    "home-real",
+    "at-bridge",
+    "gtk-a11y",
+    "xdg-not-private",
+    "xdg-data-dirs-home",
+    "reference-settings-set",
+    "reference-instance-set",
+    "gnome-config-dir-set",
+    "at-spi-bus-set",
+    "xdg-session-id-set",
+    "live-runtime-ref",
+    "live-runtime-ref"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 extension copy private",
+   "layer": "in-process",
+   "expect": "accepted",
+   "codes": [],
+   "passed": true
+  },
+  {
+   "case": "F24 extension copy live",
+   "layer": "in-process",
+   "expect": [
+    "extension-copy-not-private"
+   ],
+   "codes": [
+    "extension-copy-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 extension copy in the repo",
+   "layer": "in-process",
+   "expect": [
+    "extension-copy-not-private"
+   ],
+   "codes": [
+    "extension-copy-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 extension copy system",
+   "layer": "in-process",
+   "expect": [
+    "extension-copy-not-private"
+   ],
+   "codes": [
+    "extension-copy-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "caller's own environment, no sandbox",
+   "layer": "process",
+   "expect": "refused",
+   "exit": 2,
+   "codes": [
+    "home-real",
+    "runtime-live",
+    "session-bus-live",
+    "system-bus-not-private",
+    "display-set",
+    "wayland-display-set",
+    "gsettings-not-keyfile",
+    "at-bridge",
+    "gtk-a11y",
+    "gio-vfs-not-local",
+    "update-seam-not-private",
+    "update-seam-not-private",
+    "xdg-not-private",
+    "xdg-not-private",
+    "xdg-not-private",
+    "xdg-not-private",
+    "xdg-not-private",
+    "xdg-not-private",
+    "xdg-data-dirs-home",
+    "build-dir-not-repo",
+    "path-live-home",
+    "path-live-home",
+    "path-live-home",
+    "path-live-home",
+    "path-live-home",
+    "path-live-home",
+    "path-not-private",
+    "live-pointer-var",
+    "live-pointer-var",
+    "live-pointer-var",
+    "live-runtime-ref",
+    "live-runtime-ref",
+    "live-runtime-ref",
+    "live-runtime-ref",
+    "marker-missing",
+    "not-sandboxed-home",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-network",
+    "not-sandboxed-pid",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-no-mask-list"
+   ],
+   "passed": true,
+   "callerLooksLive": true
+  },
+  {
+   "case": "private env but no sandbox",
+   "layer": "process",
+   "expect": "only not-sandboxed-*",
+   "exit": 2,
+   "codes": [
+    "not-sandboxed-home",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-network",
+    "not-sandboxed-pid",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-no-mask-list"
+   ],
+   "passed": true
+  },
+  {
+   "case": "composite live environment, no sandbox",
+   "layer": "process",
+   "expect": [
+    "home-real",
+    "runtime-live",
+    "session-bus-live",
+    "display-set",
+    "wayland-display-set",
+    "gsettings-not-keyfile"
+   ],
+   "exit": 2,
+   "codes": [
+    "home-real",
+    "runtime-live",
+    "session-bus-live",
+    "display-set",
+    "wayland-display-set",
+    "gsettings-not-keyfile",
+    "not-sandboxed-home",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-network",
+    "not-sandboxed-pid",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-no-mask-list"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 composite, no sandbox",
+   "layer": "process",
+   "expect": [
+    "at-bridge",
+    "gtk-a11y",
+    "home-real",
+    "xdg-data-dirs-home",
+    "reference-settings-set",
+    "reference-instance-set",
+    "gnome-config-dir-set",
+    "at-spi-bus-set",
+    "xdg-session-id-set"
+   ],
+   "exit": 2,
+   "codes": [
+    "home-real",
+    "at-bridge",
+    "gtk-a11y",
+    "xdg-not-private",
+    "xdg-data-dirs-home",
+    "reference-settings-set",
+    "reference-instance-set",
+    "gnome-config-dir-set",
+    "at-spi-bus-set",
+    "xdg-session-id-set",
+    "live-runtime-ref",
+    "live-runtime-ref",
+    "not-sandboxed-home",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-live-socket",
+    "not-sandboxed-network",
+    "not-sandboxed-pid",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-run",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-root",
+    "not-sandboxed-no-mask-list"
+   ],
+   "passed": true
+  },
+  {
+   "case": "sandbox + private env (positive control)",
+   "layer": "sandbox",
+   "expect": "accepted",
+   "exit": 0,
+   "codes": [],
+   "passed": true,
+   "output": "GUARD OK (outer stage: private environment inside the bubblewrap sandbox)"
+  },
+  {
+   "case": "real HOME",
+   "layer": "sandbox",
+   "expect": "home-real",
+   "exit": 2,
+   "codes": [
+    "home-real"
+   ],
+   "passed": true
+  },
+  {
+   "case": "real HOME with trailing slash",
+   "layer": "sandbox",
+   "expect": "home-real",
+   "exit": 2,
+   "codes": [
+    "home-real"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live XDG_RUNTIME_DIR",
+   "layer": "sandbox",
+   "expect": "runtime-live",
+   "exit": 2,
+   "codes": [
+    "runtime-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus",
+   "layer": "sandbox",
+   "expect": "session-bus-live",
+   "exit": 2,
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus with guid",
+   "layer": "sandbox",
+   "expect": "session-bus-live",
+   "exit": 2,
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus escaped",
+   "layer": "sandbox",
+   "expect": "session-bus-live",
+   "exit": 2,
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live session bus second in list",
+   "layer": "sandbox",
+   "expect": "session-bus-live",
+   "exit": 2,
+   "codes": [
+    "session-bus-live"
+   ],
+   "passed": true
+  },
+  {
+   "case": "DISPLAY set",
+   "layer": "sandbox",
+   "expect": "display-set",
+   "exit": 2,
+   "codes": [
+    "display-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "DISPLAY set but empty",
+   "layer": "sandbox",
+   "expect": "display-set",
+   "exit": 2,
+   "codes": [
+    "display-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WAYLAND_DISPLAY set",
+   "layer": "sandbox",
+   "expect": "wayland-display-set",
+   "exit": 2,
+   "codes": [
+    "wayland-display-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GSETTINGS_BACKEND unset",
+   "layer": "sandbox",
+   "expect": "gsettings-not-keyfile",
+   "exit": 2,
+   "codes": [
+    "gsettings-not-keyfile"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GSETTINGS_BACKEND dconf",
+   "layer": "sandbox",
+   "expect": "gsettings-not-keyfile",
+   "exit": 2,
+   "codes": [
+    "gsettings-not-keyfile"
+   ],
+   "passed": true
+  },
+  {
+   "case": "abstract session bus",
+   "layer": "sandbox",
+   "expect": "session-bus-not-private",
+   "exit": 2,
+   "codes": [
+    "session-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "tcp session bus",
+   "layer": "sandbox",
+   "expect": "session-bus-not-private",
+   "exit": 2,
+   "codes": [
+    "session-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "session bus unset",
+   "layer": "sandbox",
+   "expect": "session-bus-missing",
+   "exit": 2,
+   "codes": [
+    "session-bus-missing"
+   ],
+   "passed": true
+  },
+  {
+   "case": "real system bus",
+   "layer": "sandbox",
+   "expect": "system-bus-not-private",
+   "exit": 2,
+   "codes": [
+    "system-bus-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "NO_AT_BRIDGE missing",
+   "layer": "sandbox",
+   "expect": "at-bridge",
+   "exit": 2,
+   "codes": [
+    "at-bridge"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GTK_A11Y missing",
+   "layer": "sandbox",
+   "expect": "gtk-a11y",
+   "exit": 2,
+   "codes": [
+    "gtk-a11y"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live ~/.local/bin on PATH",
+   "layer": "sandbox",
+   "expect": "path-live-home",
+   "exit": 2,
+   "codes": [
+    "path-live-home",
+    "path-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live XDG_CONFIG_HOME",
+   "layer": "sandbox",
+   "expect": "xdg-not-private",
+   "exit": 2,
+   "codes": [
+    "xdg-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live XDG_DATA_HOME",
+   "layer": "sandbox",
+   "expect": "xdg-not-private",
+   "exit": 2,
+   "codes": [
+    "xdg-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "live WIN11_REFERENCE_INSTANCE",
+   "layer": "sandbox",
+   "expect": "reference-instance-set",
+   "exit": 2,
+   "codes": [
+    "reference-instance-set",
+    "live-runtime-ref"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GNOME_SHELL_SESSION_MODE=ubuntu",
+   "layer": "sandbox",
+   "expect": "live-pointer-var",
+   "exit": 2,
+   "codes": [
+    "live-pointer-var"
+   ],
+   "passed": true
+  },
+  {
+   "case": "home outside the run dir",
+   "layer": "sandbox",
+   "expect": "home-not-private",
+   "exit": 2,
+   "codes": [
+    "home-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 NO_AT_BRIDGE=0",
+   "layer": "sandbox",
+   "expect": "at-bridge",
+   "exit": 2,
+   "codes": [
+    "at-bridge"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 NO_AT_BRIDGE empty",
+   "layer": "sandbox",
+   "expect": "at-bridge",
+   "exit": 2,
+   "codes": [
+    "at-bridge"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 GTK_A11Y=atspi",
+   "layer": "sandbox",
+   "expect": "gtk-a11y",
+   "exit": 2,
+   "codes": [
+    "gtk-a11y"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 GTK_A11Y empty",
+   "layer": "sandbox",
+   "expect": "gtk-a11y",
+   "exit": 2,
+   "codes": [
+    "gtk-a11y"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 real HOME as /.",
+   "layer": "sandbox",
+   "expect": "home-real",
+   "exit": 2,
+   "codes": [
+    "home-real"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_DATA_DIRS with ~/.local/share first",
+   "layer": "sandbox",
+   "expect": "xdg-data-dirs-home",
+   "exit": 2,
+   "codes": [
+    "xdg-not-private",
+    "xdg-data-dirs-home"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_DATA_DIRS with ~/.local/share/ last",
+   "layer": "sandbox",
+   "expect": "xdg-data-dirs-home",
+   "exit": 2,
+   "codes": [
+    "xdg-not-private",
+    "xdg-data-dirs-home"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_DATA_DIRS with the live extensions dir",
+   "layer": "sandbox",
+   "expect": "xdg-data-dirs-home",
+   "exit": 2,
+   "codes": [
+    "xdg-not-private",
+    "xdg-data-dirs-home"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_SETTINGS live",
+   "layer": "sandbox",
+   "expect": "reference-settings-set",
+   "exit": 2,
+   "codes": [
+    "reference-settings-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_SETTINGS empty",
+   "layer": "sandbox",
+   "expect": "reference-settings-set",
+   "exit": 2,
+   "codes": [
+    "reference-settings-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_SETTINGS private path",
+   "layer": "sandbox",
+   "expect": "reference-settings-set",
+   "exit": 2,
+   "codes": [
+    "reference-settings-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_REFERENCE_INSTANCE empty",
+   "layer": "sandbox",
+   "expect": "reference-instance-set",
+   "exit": 2,
+   "codes": [
+    "reference-instance-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_GNOME_CONFIG_DIR live",
+   "layer": "sandbox",
+   "expect": "gnome-config-dir-set",
+   "exit": 2,
+   "codes": [
+    "gnome-config-dir-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 WIN11_GNOME_CONFIG_DIR private path",
+   "layer": "sandbox",
+   "expect": "gnome-config-dir-set",
+   "exit": 2,
+   "codes": [
+    "gnome-config-dir-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 AT_SPI_BUS_ADDRESS live",
+   "layer": "sandbox",
+   "expect": "at-spi-bus-set",
+   "exit": 2,
+   "codes": [
+    "at-spi-bus-set",
+    "live-runtime-ref"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 AT_SPI_BUS_ADDRESS private path",
+   "layer": "sandbox",
+   "expect": "at-spi-bus-set",
+   "exit": 2,
+   "codes": [
+    "at-spi-bus-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_SESSION_ID set",
+   "layer": "sandbox",
+   "expect": "xdg-session-id-set",
+   "exit": 2,
+   "codes": [
+    "xdg-session-id-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 XDG_SESSION_ID empty",
+   "layer": "sandbox",
+   "expect": "xdg-session-id-set",
+   "exit": 2,
+   "codes": [
+    "xdg-session-id-set"
+   ],
+   "passed": true
+  },
+  {
+   "case": "XDG_SEAT set",
+   "layer": "sandbox",
+   "expect": "live-pointer-var",
+   "exit": 2,
+   "codes": [
+    "live-pointer-var"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WIN11_BUILD_DIR live ~/.local/bin",
+   "layer": "sandbox",
+   "expect": "build-dir-not-repo",
+   "exit": 2,
+   "codes": [
+    "build-dir-not-repo"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WIN11_BUILD_DIR unset",
+   "layer": "sandbox",
+   "expect": "build-dir-not-repo",
+   "exit": 2,
+   "codes": [
+    "build-dir-not-repo"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GIO_USE_VFS unset",
+   "layer": "sandbox",
+   "expect": "gio-vfs-not-local",
+   "exit": 2,
+   "codes": [
+    "gio-vfs-not-local"
+   ],
+   "passed": true
+  },
+  {
+   "case": "GIO_USE_VFS=gvfs",
+   "layer": "sandbox",
+   "expect": "gio-vfs-not-local",
+   "exit": 2,
+   "codes": [
+    "gio-vfs-not-local"
+   ],
+   "passed": true
+  },
+  {
+   "case": "update tool dir unset",
+   "layer": "sandbox",
+   "expect": "update-seam-not-private",
+   "exit": 2,
+   "codes": [
+    "update-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "update fixture root not the private one",
+   "layer": "sandbox",
+   "expect": "update-seam-not-private",
+   "exit": 2,
+   "codes": [
+    "update-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "update PackageKit bus set",
+   "layer": "sandbox",
+   "expect": "update-seam-extra",
+   "exit": 2,
+   "codes": [
+    "update-seam-extra"
+   ],
+   "passed": true
+  },
+  {
+   "case": "F24 composite",
+   "layer": "sandbox",
+   "expect": [
+    "at-bridge",
+    "gtk-a11y",
+    "home-real",
+    "xdg-data-dirs-home",
+    "reference-settings-set",
+    "reference-instance-set",
+    "gnome-config-dir-set",
+    "at-spi-bus-set",
+    "xdg-session-id-set"
+   ],
+   "exit": 2,
+   "codes": [
+    "home-real",
+    "at-bridge",
+    "gtk-a11y",
+    "xdg-not-private",
+    "xdg-data-dirs-home",
+    "reference-settings-set",
+    "reference-instance-set",
+    "gnome-config-dir-set",
+    "at-spi-bus-set",
+    "xdg-session-id-set",
+    "live-runtime-ref",
+    "live-runtime-ref"
+   ],
+   "passed": true
+  },
+  {
+   "case": "decoy positive control: a connect from outside the sandbox reaches it",
+   "layer": "sockets",
+   "expect": 1,
+   "codes": [
+    1
+   ],
+   "passed": true
+  },
+  {
+   "case": "sandbox: the decoy is masked (not a socket inside, connect fails, 0 connections); /run/dbus, /run/user, /run/systemd empty, no real home, /var/lib or snapd socket",
+   "layer": "sockets",
+   "expect": "accepted, 0 connections",
+   "exit": 0,
+   "codes": [],
+   "connect": "error: Connection refused",
+   "decoyConnections": 0,
+   "facts": {
+    "runDbus": [],
+    "runUser": [],
+    "runSystemd": [],
+    "run": [
+     "dbus",
+     "systemd",
+     "udev",
+     "user"
+    ],
+    "var": [
+     "cache",
+     "run",
+     "tmp"
+    ],
+    "realHomeEntries": [
+     "Documents"
+    ],
+    "varLib": false,
+    "snapdSocket": false,
+    "masked": [
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d1239493.s",
+     "/run/udev/control",
+     "/run/udev/io.systemd.Udev"
+    ],
+    "rootMount": {
+     "fsType": "ext4",
+     "source": "/dev/nvme0n1p2",
+     "majMin": "259:6",
+     "root": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/root",
+     "readOnly": true,
+     "sameDeviceAsCheckout": true
+    },
+    "rootWritable": false,
+    "hostBindRoots": [
+     "/etc",
+     "/run/udev",
+     "/var/cache/fontconfig"
+    ]
+   },
+   "passed": true
+  },
+  {
+   "case": "sandbox: a socket in the checkout that is not masked (appeared after the scan) is refused before any connect",
+   "layer": "sockets",
+   "expect": "host-socket-visible",
+   "exit": 2,
+   "codes": [
+    "host-socket-visible"
+   ],
+   "decoyConnections": 0,
+   "passed": true
+  },
+  {
+   "case": "sandbox: no list of masked host sockets (a sandbox launch did not scan)",
+   "layer": "sockets",
+   "expect": "not-sandboxed-no-mask-list",
+   "exit": 2,
+   "codes": [
+    "not-sandboxed-no-mask-list"
+   ],
+   "decoyConnections": 0,
+   "passed": true
+  },
+  {
+   "case": "sandbox: / is a read-only bind of run/root on the checkout's file system (storage sees a system drive at /)",
+   "layer": "sockets",
+   "expect": "not tmpfs, ro, same device",
+   "exit": 0,
+   "codes": [],
+   "rootMount": {
+    "fsType": "ext4",
+    "source": "/dev/nvme0n1p2",
+    "majMin": "259:6",
+    "root": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/root",
+    "readOnly": true,
+    "sameDeviceAsCheckout": true
+   },
+   "passed": true
+  },
+  {
+   "case": "sandbox: a host socket that is listed but not masked is refused before any connect",
+   "layer": "sockets",
+   "expect": "host-socket-visible (still a socket)",
+   "exit": 2,
+   "codes": [
+    "host-socket-visible"
+   ],
+   "messages": [
+    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d1239493.s is still a socket inside the sandbox (listed, not masked)"
+   ],
+   "decoyConnections": 0,
+   "passed": true
+  },
+  {
+   "case": "sandbox: an unmasked socket in a bound host directory is refused before any connect",
+   "layer": "sockets",
+   "expect": "host-socket-visible (host directory)",
+   "exit": 2,
+   "codes": [
+    "host-socket-visible"
+   ],
+   "socket": "/run/udev/control",
+   "messages": [
+    "/run/udev/control is a socket in the host directory /run/udev (not masked)"
+   ],
+   "passed": true
+  },
+  {
+   "case": "launch: --selftest-unmasked with run is refused",
+   "layer": "sockets",
+   "expect": "selftest-option-misuse",
+   "exit": 2,
+   "codes": [
+    "selftest-option-misuse"
+   ],
+   "passed": true
+  },
+  {
+   "case": "launch: --selftest-listed-unmasked with run is refused",
+   "layer": "sockets",
+   "expect": "selftest-option-misuse",
+   "exit": 2,
+   "codes": [
+    "selftest-option-misuse"
+   ],
+   "passed": true
+  },
+  {
+   "case": "launch: --selftest-mutate with a session run is refused",
+   "layer": "sockets",
+   "expect": "selftest-option-misuse",
+   "exit": 2,
+   "codes": [
+    "selftest-option-misuse"
+   ],
+   "passed": true
+  },
+  {
+   "case": "launch: --out tests/gnome itself (n3) is refused",
+   "layer": "sockets",
+   "expect": "out-invalid",
+   "exit": 2,
+   "codes": [
+    "out-invalid"
+   ],
+   "passed": true
+  },
+  {
+   "case": "launch: --out containing run/ (n3) is refused",
+   "layer": "sockets",
+   "expect": "out-invalid",
+   "exit": 2,
+   "codes": [
+    "out-invalid"
+   ],
+   "passed": true
+  },
+  {
+   "case": "decoy total",
+   "layer": "sockets",
+   "expect": 1,
+   "codes": [
+    1
+   ],
+   "passed": true
+  },
+  {
+   "case": "strace check: /var/run, .., . and // are folded and a relative path counts as outside",
+   "layer": "strace",
+   "expect": [
+    "//run/udev/control",
+    "/run/../home/x.sock",
+    "/run/udev/control",
+    "/var/cache/../../home/x/.cache/ibus/dbus-x",
+    "/var/run/../cache/fontconfig/x",
+    "/var/run/../home/x.s",
+    "/var/run/udev/control",
+    "rel/x.sock"
+   ],
+   "codes": [
+    "//run/udev/control",
+    "/run/../home/x.sock",
+    "/run/udev/control",
+    "/var/cache/../../home/x/.cache/ibus/dbus-x",
+    "/var/run/../cache/fontconfig/x",
+    "/var/run/../home/x.s",
+    "/var/run/udev/control",
+    "rel/x.sock"
+   ],
+   "passed": true
+  },
+  {
+   "case": "strace exec check (WU-FIX, D-G51): a real pkexec, check-new-release, apt-get, apt-cache, do-release-upgrade or loginctl fails the run; the run/ stubs and a failed attempt do not",
+   "layer": "strace",
+   "expect": [
+    "/bin/loginctl",
+    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/stubs/../../../../../../../usr/bin/pkexec",
+    "/usr/bin/apt-cache",
+    "/usr/bin/do-release-upgrade",
+    "/usr/bin/pkexec",
+    "/usr/lib/ubuntu-release-upgrader/check-new-release",
+    "/usr/sbin/../bin/apt-get",
+    "usr/bin/loginctl"
+   ],
+   "codes": [
+    "/bin/loginctl",
+    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/stubs/../../../../../../../usr/bin/pkexec",
+    "/usr/bin/apt-cache",
+    "/usr/bin/do-release-upgrade",
+    "/usr/bin/pkexec",
+    "/usr/lib/ubuntu-release-upgrader/check-new-release",
+    "/usr/sbin/../bin/apt-get",
+    "usr/bin/loginctl"
+   ],
+   "passed": true
+  },
+  {
+   "case": "socket watch: a socket that appears during the run is found within two scans and stops the session",
+   "layer": "sockets",
+   "expect": "one call, <= 2 scans",
+   "codes": [
+    0.38
+   ],
+   "scans": 4,
+   "passed": true
+  },
+  {
+   "case": "lock: no ancestor holds the lock",
+   "layer": "lock",
+   "expect": "refused",
+   "exit": 4,
+   "codes": [
+    "refused"
+   ],
+   "passed": true
+  },
+  {
+   "case": "lock: flock(1) ancestor holds the lock file",
+   "layer": "lock",
+   "expect": "ancestor:flock",
+   "exit": 0,
+   "codes": [
+    "ancestor:flock"
+   ],
+   "passed": true
+  },
+  {
+   "case": "lock: flock(1) ancestor holds another file",
+   "layer": "lock",
+   "expect": "refused",
+   "exit": 4,
+   "codes": [
+    "refused"
+   ],
+   "passed": true
+  },
+  {
+   "case": "lock: tools/heavy.sh ancestor holds the lock",
+   "layer": "lock",
+   "expect": "ancestor:heavy.sh",
+   "exit": 0,
+   "codes": [
+    "ancestor:heavy.sh"
+   ],
+   "passed": true
+  },
+  {
+   "case": "lock: --own-lock with the lock free",
+   "layer": "lock",
+   "expect": "own",
+   "exit": 0,
+   "codes": [
+    "own"
+   ],
+   "passed": true
+  }
+ ],
+ "when": "2026-11-06 06:39:13",
+ "commit": "ref: refs/heads/claude/gnome-english-update"
+}

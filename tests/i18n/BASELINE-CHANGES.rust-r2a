@@ -1,0 +1,15 @@
+# tests/i18n/BASELINE-CHANGES.rust-r2a: the Dutch (and other frozen-text) changes of round-2 step R2-A (system and
+# settings), in the format of tests/i18n/BASELINE-CHANGES.rust (five tab-separated fields). The coordinator merges it.
+# Every key: line is a Dutch change Robin sees in the report; the literal lines say what replaced the 3b898e6 text.
+#
+# D-G2: GNOME-wrong texts. Both described a Hyprland/"Win11 session" that the GNOME version does not have; the new
+# texts are byte-identical to the UI's own D-G2 notes on the Display page (vendor/ui settings/pages/display.js
+# nightNA and displaysNA, BASELINE-CHANGES.ui), in nl and en. No behaviour changed: the same code, the same
+# condition, only the message.
+key:system.nightLight.unsupported	-	-	Nachtlampje werkt hier niet. Daarvoor zijn Hyprland en hyprsunset nodig.	D-G2: system.nightLight.set (code unsupported) said night light needs Hyprland and hyprsunset; GNOME's own night light is set in Ubuntu's Settings app. Now the UI's nightNA text "Nachtlampje kan hier niet worden ingesteld. Gebruik daarvoor de app Instellingen van Ubuntu."
+host/src/services/system/power.rs	73	0ebf717ebd9da4e7	system.nightLight.unsupported	D-G2: the Hyprland/hyprsunset text, replaced by the catalogue row system.nightLight.unsupported (new Dutch text, key line above)
+key:display.unsupported	-	-	Beeldscherminstellingen wijzigen kan alleen in de Win11-sessie.	D-G2: display.set (code unsupported) sent the user to a 'Win11 session' that does not exist in the GNOME version. Now the UI's displaysNA text "Beeldscherminstellingen wijzigen kan hier niet. Gebruik daarvoor de app Instellingen van Ubuntu."
+host/src/services/display.rs	17	e55f048fafd95129	display.unsupported	D-G2: the 'alleen in de Win11-sessie' text, replaced by the catalogue row display.unsupported (new Dutch text, key line above)
+#
+# Technical literals removed by the conversion (no Dutch output changes)
+host/src/services/notifications.rs	170	1843653496800edf	-	technical: the "nl" of `self.ctx.language() == "nl"` that chose a half of the notifications.test inline pairs; the pairs are now notifications.test.summary/.body/.ok rendered with self.ctx.lang() (same nl and en texts)

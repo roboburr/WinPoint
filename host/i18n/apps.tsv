@@ -1,0 +1,82 @@
+# host/i18n/apps.tsv: host texts of apps/**.
+# Owner: R2-D.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/apps/pertype.rs
+# selected(): ApiError "bad_args": Default Apps by file type: the MIME type argument is not valid
+#@ host/src/apps/pertype.rs 4 827b622ec80a8968 plain
+apps.invalidFileType	Ongeldig bestandstype.	Invalid file type.
+# label(): Default Apps: the name of a link type without a description of its own, e.g. "mailto-koppelingen"; {scheme} is the URI scheme (mailto, https …)
+#@ host/src/apps/pertype.rs 16 81b02bc3a404dbc8 fmt {s}=scheme
+#@ host/src/apps/pertype.rs 15 a9e258dd09aa5b3b enfmt {s}=scheme
+apps.schemeLinks	{scheme}-koppelingen	{scheme} links
+# integer(): ApiError "bad_args"
+#@ host/src/apps/pertype.rs 30 e8d6a12b8b58205f plain
+#@ host/src/apps/mod.rs 18 e8d6a12b8b58205f plain
+#@ host/src/apps/mod.rs 40 e8d6a12b8b58205f plain
+#@ host/src/apps/mod.rs 42 e8d6a12b8b58205f plain
+#@ host/src/apps/mod.rs 45 e8d6a12b8b58205f plain
+apps.invalidInput	Ongeldige invoer.	Invalid input.
+# list(): ApiError "bad_args": Default Apps: the search box text is not a string of at most 200 characters
+#@ host/src/apps/pertype.rs 33 850a14ec81bb1852 plain
+apps.invalidSearch	Ongeldige zoekterm.	Invalid search term.
+# set(): ApiError "bad_args"
+#@ host/src/apps/pertype.rs 54 2d4cda81b20edd55 plain
+#@ host/src/apps/defaults.rs 108 2d4cda81b20edd55 plain
+#@ host/src/apps/mod.rs 33 2d4cda81b20edd55 plain
+apps.invalidApp	Ongeldige app.	Invalid app.
+# set(): ApiError "not_found"
+#@ host/src/apps/pertype.rs 56 33f6d94e9e7c9543 plain
+#@ host/src/apps/defaults.rs 121 33f6d94e9e7c9543 plain
+apps.appNotFound	Deze app is niet gevonden.	This app wasn’t found.
+# set(): ApiError "failed"
+#@ host/src/apps/pertype.rs 61 36171cbe6ce58824 plain
+#@ host/src/apps/pertype.rs 63 36171cbe6ce58824 plain
+#@ host/src/apps/defaults.rs 124 36171cbe6ce58824 plain
+#@ host/src/apps/defaults.rs 130 36171cbe6ce58824 plain
+apps.defaultNotChanged	De standaard-app kon niet worden gewijzigd.	The default app couldn’t be changed.
+
+# --- host/src/apps/defaults.rs
+# for_file(): ApiError "bad_args": Open with: the path is not absolute
+#@ host/src/apps/defaults.rs 68 8d405543e104b674 plain
+apps.invalidPath	Ongeldig pad.	Invalid path.
+# for_file(): ApiError "not_found": Open with: the file vanished
+#@ host/src/apps/defaults.rs 70 31477d03472cb7ca plain
+apps.fileGone	Dit bestand bestaat niet (meer).	This file doesn’t exist any more.
+# for_file(): Open with a folder: Win11's own Explorer, first in the list (its name as the UI and catalog-data.json's ownApps show it)
+#@ host/src/apps/defaults.rs 76 59744e7e325d7cb0 plain
+#@ host/src/apps/defaults.rs 75 d6f6a04891cc1380 en
+apps.explorerName	Verkenner	File Explorer
+# selected_default(): ApiError "bad_args": Settings › Default apps: not browser, mail, files, music, video, image, text or terminal
+#@ host/src/apps/defaults.rs 105 58f3c5dad2991409 plain
+apps.unknownDefaultKind	Onbekend soort standaard-app.	Unknown kind of default app.
+# selected_default(): ApiError "bad_args": one of Win11's own apps for a kind it does not handle (only File Explorer for folders)
+#@ host/src/apps/defaults.rs 112 55bf7f6bbdb3aacb plain
+apps.cantBeDefault	Deze app kan hier niet als standaard worden gekozen.	This app can’t be chosen as the default here.
+# internal(): ApiError "internal": setting the default terminal failed
+#@ host/src/apps/defaults.rs 116 f73409fc752adfa3 plain
+apps.somethingWentWrong	Er ging iets mis. Probeer het opnieuw.	Something went wrong. Try again.
+# set_default(): ApiError "not_installed": win11shell-explorer.desktop is missing; install.sh is the installer script's file name
+#@ host/src/apps/defaults.rs 118 19c059f4870be0d6 plain
+apps.explorerNotInstalled	Verkenner staat nog niet in het app-menu. Voer install.sh opnieuw uit en probeer het daarna nog eens.	File Explorer isn’t in the app menu yet. Run install.sh once more, then try again.
+
+# --- host/src/apps/mod.rs
+# call(): ApiError "offline": an apps.* call arrived while this window's app service shuts down
+#@ host/src/apps/mod.rs 16 47d03b03b504559b plain
+apps.shuttingDown	De appdienst wordt afgesloten.	The app service is shutting down.
+# call(): ApiError "bad_uri": apps.openUri without a uri
+#@ host/src/apps/mod.rs 38 d298109c614160fe plain
+apps.linkCantOpen	Deze link kan niet worden geopend.	This link can’t be opened.
+
+# --- host/src/apps/recent.rs
+# clear(): ApiError "failed": Start › Recommended: clearing the recent-files list failed (its backup could not be written)
+#@ host/src/apps/recent.rs 71 544ec9540cf71fce plain
+apps.historyNotCleared	De geschiedenis kon niet worden gewist.	Couldn’t clear the history.

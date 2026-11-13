@@ -1,0 +1,82 @@
+libmutter-Message: 04:20:12.307: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:39): libmutter-WARNING **: 04:20:12.308: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:39): libmutter-WARNING **: 04:20:12.308: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 04:20:12.402: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 04:20:12.403: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 04:20:12.403: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 04:20:12.404: Obtained a high priority EGL context
+libmutter-Message: 04:20:12.417: Added virtual monitor Meta-0
+libmutter-Message: 04:20:12.420: Using Wayland display name 'w11-wl'
+
+(gnome-shell:39): libmutter-WARNING **: 04:20:12.461: There is no colord server available
+GNOME Shell-Message: 04:20:12.829: Registering session with GDM
+GNOME Shell-Message: 04:20:12.840: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+
+(gnome-shell:39): GNOME Shell-CRITICAL **: 04:20:12.896: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+
+(gnome-shell:39): GNOME Shell-CRITICAL **: 04:20:12.896: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+GNOME Shell-Message: 04:20:12.909: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 04:20:12.927: Failed to register AuthenticationAgent
+portal is not running: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.portal.IBus was not provided by any .service files
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+
+(gnome-shell:39): GnomeDesktop-WARNING **: 04:20:13.682: Could not create transient scope for PID 386: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+
+(gnome-shell:39): GnomeDesktop-WARNING **: 04:20:13.682: Could not create transient scope for PID 387: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+GNOME Shell-Message: 04:20:13.712: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+** Message: 04:20:13.726: Failed to start camera monitor
+GNOME Shell-Message: 04:20:13.746: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 04:20:13.747: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 04:20:13.747: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:39): accountsservice-WARNING **: 04:20:13.858: ActUserManager: user (null) has no username (uid: -1)
+WARNING: Glycin running without sandbox.
+WARNING: Glycin running without sandbox.
+WARNING: Glycin running without sandbox.
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 04:20:14.827: GNOME Shell started at Fri Nov 06 2026 04:20:12 GMT+0100 (Central European Standard Time)
+GNOME Shell-Message: 04:20:14.827: Registering display with GDM
+GNOME Shell-Message: 04:20:14.835: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:39): libmutter-WARNING **: 04:20:28.179: Tried to ping window W3 (Task Manager) with a bad serial! Not allowed.
+
+(gnome-shell:39): libmutter-CRITICAL **: 04:20:29.216: meta_window_set_stack_position_no_sync: assertion 'window->stack_position >= 0' failed
+
+(gnome-shell:39): libmutter-WARNING **: 04:20:42.666: Tried to ping window W4 (Taakbeheer) with a bad serial! Not allowed.
+
+(gnome-shell:39): libmutter-CRITICAL **: 04:20:43.664: meta_window_set_stack_position_no_sync: assertion 'window->stack_position >= 0' failed
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:39): Gjs-CRITICAL **: 04:20:51.345: Object MetaWindowActorWayland (0x6373d7c64080), has been already disposed — impossible to access it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x6373d218b4d0 ==
+#0   7ffe7f3dc5f0 b   resource:///org/gnome/gjs/modules/core/overrides/GObject.js:710 (1be5da9caec0 @ 25)
+#1   7ffe7f3dcd60 b   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:244 (1938f257b100 @ 596)
+#2   6373d228cb48 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:94 (1938f2576a60 @ 84)
+
+(gnome-shell:39): GLib-GObject-CRITICAL **: 04:20:51.345: ../../../gobject/gsignal.c:2723: instance '0x6373d7c64080' has no handler with id '24629'
+
+(gnome-shell:39): Gjs-CRITICAL **: 04:20:51.345: Object MetaWindowActorWayland (0x6373d7c64080), has been already disposed — impossible to access it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x6373d218b4d0 ==
+#0   7ffe7f3dcc70 b   resource:///org/gnome/gjs/modules/core/overrides/GObject.js:710 (1be5da9caec0 @ 25)
+#1   7ffe7f3dcd60 b   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:244 (1938f257b100 @ 596)
+#2   6373d228cb48 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:94 (1938f2576a60 @ 84)
+
+(gnome-shell:39): GLib-GObject-CRITICAL **: 04:20:51.345: ../../../gobject/gsignal.c:2723: instance '0x6373d7c64080' has no handler with id '24630'
+** Message: 04:20:51.346: Shutting down GNOME Shell
+libmutter-Message: 04:20:51.454: Removed virtual monitor Meta-0

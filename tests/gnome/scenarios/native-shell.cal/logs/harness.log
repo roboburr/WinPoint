@@ -1,0 +1,32 @@
+04:01:44 GE0c run lang=nl switch=False seed=defaults MemAvailable=5390740 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
+04:03:11 private install: exit 0 in 72.2 s, 87907 mutated paths, 0 outside the run dir, ok=True
+04:03:13 GStreamer registry warmed in 2.4 s (['gst-inspect-1.0 version 1.28.2'])
+04:03:17 GNOME Shell 50.1 up (mode user, unsafe True)
+04:03:22 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
+04:03:26   check PASS: M: the WebKit panel, Start and desktop run
+04:03:26 kill_panel: signalled own descendants 439:win11-panel, 599:WebKitNetworkPr, 601:WebKitWebProces, 643:glycin-svg, 687:win11-start, 837:WebKitNetworkPr, 838:WebKitWebProces, 854:glycin-svg
+04:03:27 native-shell: WebKit desktop: signalled own descendants 438:win11-desktop, 588:WebKitNetworkPr, 589:WebKitWebProces, 600:glycin-svg, 638:glycin-image-rs
+04:03:27   check PASS: A: win11-shell reported its boot
+04:03:27   check PASS: A: the panel process is win11-shell now
+04:03:27   check PASS: A: no WebKit host runs any more (Start and desktop exit at once)
+04:03:27   check PASS: B: a visible taskbar window
+04:03:27   check PASS: B: the taskbar has tb-start
+04:03:27   check PASS: B: the taskbar has tb-clock
+04:03:27   check PASS: B: the taskbar has tb-sys
+04:03:27   check PASS: B: GNOME sees a Panel window of the native pid
+04:03:27   check PASS: B: the extension registered the native pid as Panel
+04:03:29   check PASS: C: the quick flyout opens
+04:03:30   check PASS: C: the quick flyout closes again
+04:03:30   check PASS: C: the notifications flyout opens
+04:03:31   check PASS: C: the notifications flyout closes again
+04:03:31   check PASS: D: tb-start opens a Start window of the same pid
+04:03:31   check PASS: D: the extension holds Panel and Start under one pid
+04:03:31   check PASS: D: the backdrop capabilities list the taskbar and Start of that pid
+04:03:33   check PASS: D: a second click closes Start
+04:03:38   check PASS: N: the native shell uses less memory (PSS + SwapPss) than the WebKit panel, Start and desktop
+04:03:38   check PASS: every check passed
+04:03:38 shutdown shell clients: signalled own descendants 66:ibus-daemon, 83:glycin-svg, 92:glycin-image-rs, 1400:glycin-image-rs, 1414:win11-shell, 1420:win11-panel, 1487:glycin-svg, 235:ibus-memconf, 237:ibus-extension-, 247:ibus-engine-sim
+04:03:38 shutdown gnome-shell: signalled own descendants 46:gnome-shell
+04:03:38 shutdown system bus: signalled own descendants 45:dbus-daemon
+04:03:39 inner sweep: signalled own descendants 1410:glycin-image-rs
+04:03:39 inner done: 0 surfaces, 0 failed []

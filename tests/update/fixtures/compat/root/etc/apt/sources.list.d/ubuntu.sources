@@ -1,0 +1,25 @@
+# The shape of Ubuntu 26.04's own file (two Ubuntu stanzas, a deb-src one, a disabled proposed one), with file:
+# URIs: tests/update/test_compat.sh replaces /srv/w11-archive with the run's signed fixture archive. The security
+# stanza has its own component list, so the test proves the tree copies each stanza's components.
+Types: deb
+URIs: file:/srv/w11-archive/ubuntu/
+Suites: resolute resolute-updates resolute-backports
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+Types: deb
+URIs: file:/srv/w11-archive/ubuntu/
+Suites: resolute-security
+Components: main restricted universe
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+Types: deb-src
+URIs: file:/srv/w11-archive/ubuntu/
+Suites: resolute
+Components: main
+
+Enabled: no
+Types: deb
+URIs: file:/srv/w11-archive/ubuntu/
+Suites: resolute-proposed
+Components: main

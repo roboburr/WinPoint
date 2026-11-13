@@ -1,0 +1,76 @@
+10:12:34 GE0c run lang=nl switch=False seed=defaults MemAvailable=5361668 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/fix-power-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/ge1c-extension.py
+10:14:02 private install: exit 0 in 72.3 s, 87858 mutated paths, 0 outside the run dir, ok=True
+10:14:05 GStreamer registry warmed in 2.8 s (['gst-inspect-1.0 version 1.28.2'])
+10:14:09 GNOME Shell 50.1 up (mode user, unsafe True)
+10:14:14 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/ge1c-extension.py
+10:14:14   check PASS: session starts in Dutch
+10:14:14   check PASS: nl: accessible names nl
+10:14:14   check PASS: nl: Ctrl+Alt+Tab group nl (exactly one entry for the bar)
+10:14:14   check PASS: nl: clock date format nl
+10:14:14   check PASS: nl: search label nl
+10:14:14   check PASS: nl: bridge failure text nl (in-process Call)
+10:14:14   check PASS: nl: "app missing" notification nl
+10:14:14   check PASS: wait_text panel: 'Deze app is nog niet geïnstalleerd.'
+10:14:14   check PASS: nl: GNOME names of the own entries (install.py, C6)
+10:14:15   check PASS: nl: failure toast in the panel nl (host relay)
+10:14:18   check PASS: dropdown: Settings wrote language=en by rename
+10:14:18   check PASS: en-dropdown: accessible names en
+10:14:18   check PASS: en-dropdown: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+10:14:18   check PASS: en-dropdown: clock date format en
+10:14:18   check PASS: en-dropdown: search label en
+10:14:18   check PASS: en-dropdown: no Dutch word in the extension's own texts
+10:14:18   check PASS: en-dropdown: bridge failure text en (in-process Call)
+10:14:18   check PASS: en-dropdown: "app missing" notification en
+10:14:18   check PASS: wait_text panel: 'This app isn’t installed yet.'
+10:14:24   check PASS: en-dropdown: pinned File Explorer button follows the .desktop Name= rewritten by win11-panel (C6)
+10:14:25   check PASS: en-dropdown: failure toast in the panel en (host relay)
+10:14:26   check PASS: c6-en: pinned File Explorer button shows 'Win11 File Explorer' after the Name= rewrite (installed-changed)
+10:14:32   check PASS: c6-nl: pinned File Explorer button shows 'Win11 Verkenner' after the Name= rewrite (installed-changed)
+10:14:32   check PASS: nl-rename: accessible names nl
+10:14:32   check PASS: nl-rename: Ctrl+Alt+Tab group nl (exactly one entry for the bar)
+10:14:32   check PASS: nl-rename: clock date format nl
+10:14:32   check PASS: nl-rename: search label nl
+10:14:32   check PASS: nl-rename: bridge failure text nl (in-process Call)
+10:14:32   check PASS: nl-rename: "app missing" notification nl
+10:14:32   check PASS: wait_text panel: 'Deze app is nog niet geïnstalleerd.'
+10:14:33   check PASS: en-rewrite: accessible names en
+10:14:33   check PASS: en-rewrite: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+10:14:33   check PASS: en-rewrite: clock date format en
+10:14:33   check PASS: en-rewrite: search label en
+10:14:33   check PASS: en-rewrite: no Dutch word in the extension's own texts
+10:14:33   check PASS: en-rewrite: bridge failure text en (in-process Call)
+10:14:33   check PASS: en-rewrite: "app missing" notification en
+10:14:34   check PASS: wait_text panel: 'This app isn’t installed yet.'
+10:14:34   check PASS: c1-EN: language "EN" means nl in the extension (C1)
+10:14:34   check PASS: c1-object: language {"custom": "ge1c"} means nl in the extension (C1)
+10:14:35   check PASS: c1-missing: settings.json moved away means nl (C1)
+10:14:35   check PASS: c1-back: settings.json moved back gives en again
+10:14:35 kill_panel: signalled own descendants 428:win11-panel, 582:WebKitNetworkPr, 586:WebKitWebProces, 600:glycin-svg, 663:win11-start, 830:WebKitNetworkPr, 831:WebKitWebProces, 841:glycin-svg
+10:14:36   check PASS: fallback bar shown after the panel stopped
+10:14:36   check PASS: fallback bar labels English (the language at kill time)
+10:14:36   check PASS: en-fallback: accessible names en
+10:14:36   check PASS: en-fallback: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+10:14:36   check PASS: en-fallback: clock date format en
+10:14:36   check PASS: en-fallback: search label en
+10:14:36   check PASS: en-fallback: no Dutch word in the extension's own texts
+10:14:36   check PASS: en-fallback: bridge failure text en (in-process Call)
+10:14:36   check PASS: en-fallback: "app missing" notification en
+10:14:37   check PASS: nl-fallback: accessible names nl
+10:14:37   check PASS: nl-fallback: Ctrl+Alt+Tab group nl (exactly one entry for the bar)
+10:14:37   check PASS: nl-fallback: clock date format nl
+10:14:37   check PASS: nl-fallback: search label nl
+10:14:37   check PASS: nl-fallback: bridge failure text nl (in-process Call)
+10:14:37   check PASS: nl-fallback: "app missing" notification nl
+10:14:38   check PASS: en-fallback-2: accessible names en
+10:14:38   check PASS: en-fallback-2: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+10:14:38   check PASS: en-fallback-2: clock date format en
+10:14:38   check PASS: en-fallback-2: search label en
+10:14:38   check PASS: en-fallback-2: no Dutch word in the extension's own texts
+10:14:38   check PASS: en-fallback-2: bridge failure text en (in-process Call)
+10:14:38   check PASS: en-fallback-2: "app missing" notification en
+10:14:38   scenario: ge1c review scenario done
+10:14:38 shutdown shell clients: signalled own descendants 59:ibus-daemon, 76:glycin-svg, 427:win11-desktop, 1376:glycin-image-rs, 585:WebKitNetworkPr, 587:WebKitWebProces, 601:glycin-svg, 664:glycin-image-rs, 228:ibus-memconf, 230:ibus-extension-, 439:ibus-engine-sim
+10:14:38 shutdown gnome-shell: signalled own descendants 39:gnome-shell
+10:14:38 shutdown system bus: signalled own descendants 38:dbus-daemon
+10:14:38 inner sweep: signalled own descendants 1386:glycin-image-rs
+10:14:38 inner done: 0 surfaces, 0 failed []

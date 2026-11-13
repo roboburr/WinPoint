@@ -1,0 +1,3069 @@
+#!/usr/bin/python3 -IB
+"""GW1: fake PackageKit + fake NetworkManager on a private dbus-daemon (design 9.1, 4.11).
+
+Always run as ``python3 -I`` and only through ``tests/update/run.sh``, which starts everything inside a
+bubblewrap layer (private /run, no network, own PID namespace) where the real system bus does not exist.
+Python 3 + ``gi.repository.Gio`` only (design C6). Subcommands:
+
+  serve        the fake itself: owns org.freedesktop.PackageKit on its own connection (manager + dynamic
+               transactions, using the interface XML that packagekit 1.3.4 installs in
+               /usr/share/dbus-1/interfaces), optionally org.freedesktop.NetworkManager (another connection),
+               the control name io.github.win11shell.FakePackageKit at /Control (a third connection), and with
+               --session-bus a fake org.freedesktop.Notifications. Every signal is emitted broadcast
+               (destination None), like packagekitd.
+  activate     started by the private system bus itself (D-Bus activation through <run>/services): asks the
+               running fake to own org.freedesktop.PackageKit again (the "installed but idle" packagekitd).
+  layer        inside the bwrap layer (started by run.sh): guard, stubs, the two private buses, the fake,
+               then the self-test client or a given command with the test seams exported; stub-log check.
+  selftest     the reference client: plays every timeline and checks signals, CallCount() and the stub log.
+  guard        print what the guard sees for the current environment (exit 2 when it refuses).
+  check-stubs  compare a stub log with an expected list (for later drivers: GW2b, GX1, GW8).
+  decoy        (outside any layer, run.sh only) listening sockets that count connections: a decoy system bus
+               and live session bus for the refusal checks, and a socket outside the layer.
+
+Control interface io.github.win11shell.FakePackageKit at /Control (design 9.1, plus three extras):
+  Load(s timeline)   reset everything and load tests/update/timelines/<timeline>.json ("" = defaults);
+                     the fake starts paused: scripted events wait for Step() or Run(). Clients that stay
+                     connected see Destroy (+ TransactionListChanged) for dropped transactions and
+                     PropertiesChanged for every manager / NM property the new timeline changes
+  Step() -> s        advance one scripted event (or release one {"until": "step"} gate); "idle"/"blocked …"
+  Run()              play the rest at the scripted pace, and every later script too, until the next Load
+  SetDaemon(b)       true: own org.freedesktop.PackageKit on a NEW connection (new unique name); false: close
+                     that connection (name and unique name vanish, transactions are gone: packagekitd exited)
+  Calls() -> a(ssss) (method, path, sender, args JSON) of every call that reached the fake's PK/NM/
+                     Notifications objects since Load, in arrival order (Properties.Get/GetAll included)
+  CallCount() -> u   len(Calls())
+  State() -> s       extra: JSON with mode, transactions, pending events, armed gates, violations, activations
+  CallsJson() -> s   extra: Calls() with interface, member and the call flags (noAutoStart)
+  Activate()         extra, used by `activate`: SetDaemon(true) and count one D-Bus activation
+See tests/update/README.md for the timeline format.
+"""
+from __future__ import annotations
+
+import argparse
+import collections
+import datetime
+import json
+import os
+import pwd
+import re
+import secrets
+import select
+import shutil
+import signal
+import socket
+import stat
+import subprocess
+import sys
+import threading
+import time
+import urllib.parse
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent              # W/tests/update
+W = HERE.parent.parent
+TIMELINES = HERE / 'timelines'
+STUBS_SRC = HERE / 'stubs'
+RUNS = HERE / '.run'
+PY = '/usr/bin/python3'
+PRIVATE_RT = '/tmp/w11-update'                       # XDG_RUNTIME_DIR inside the layer (private tmpfs /tmp)
+MARKER = '.win11-update-fixture'
+UID = os.getuid()
+REAL_HOME = pwd.getpwuid(UID).pw_dir
+LIVE_RUNTIME = f'/run/user/{UID}'
+EXIT_REFUSED = 2
+
+PK_NAME = 'org.freedesktop.PackageKit'
+PK_PATH = '/org/freedesktop/PackageKit'
+PK_IFACE = 'org.freedesktop.PackageKit'
+TX_IFACE = 'org.freedesktop.PackageKit.Transaction'
+PK_XML_DIR = Path('/usr/share/dbus-1/interfaces')
+NM_NAME = NM_IFACE = 'org.freedesktop.NetworkManager'
+NM_PATH = '/org/freedesktop/NetworkManager'
+NOTIFY_NAME = NOTIFY_IFACE = 'org.freedesktop.Notifications'
+NOTIFY_PATH = '/org/freedesktop/Notifications'
+CONTROL_NAME = CONTROL_IFACE = 'io.github.win11shell.FakePackageKit'
+CONTROL_PATH = '/Control'
+PROPS_IFACE = 'org.freedesktop.DBus.Properties'
+TXE = 'org.freedesktop.PackageKit.Transaction.'     # D-Bus error names as in packagekitd (strings of the binary)
+
+DEFAULT_MS = 20          # pace of a scripted event in Run() mode
+EXPAND_MS = 5            # pace of events generated by emitInstall & co.
+DESTROY_MS = 50          # Finished -> Destroy (packagekitd keeps a finished transaction for some seconds: its
+                         # scheduler logs "already finished, so waiting to timeout"; a timeline can set
+                         # "destroyMs", download-install uses 5000 to model it)
+PLURAL_HINT = 'supports-plural-signals=true'    # Packages / UpdateDetails only with this hint (1.3.4 XML)
+SERVICE_FILE = 'org.freedesktop.PackageKit.service'
+MASKED_LIST = 'masked-sockets.txt'               # written by run.sh outside the layer: host sockets it masked
+
+NM_XML = """<node><interface name="org.freedesktop.NetworkManager">
+ <method name="CheckConnectivity"><arg type="u" name="connectivity" direction="out"/></method>
+ <method name="state"><arg type="u" name="state" direction="out"/></method>
+ <method name="GetDevices"><arg type="ao" name="devices" direction="out"/></method>
+ <signal name="StateChanged"><arg type="u" name="state"/></signal>
+ <property name="Connectivity" type="u" access="read"/>
+ <property name="ConnectivityCheckEnabled" type="b" access="read"/>
+ <property name="Metered" type="u" access="read"/>
+ <property name="State" type="u" access="read"/>
+ <property name="NetworkingEnabled" type="b" access="read"/>
+ <property name="PrimaryConnection" type="o" access="read"/>
+ <property name="Version" type="s" access="read"/>
+</interface></node>"""
+
+NOTIFY_XML = """<node><interface name="org.freedesktop.Notifications">
+ <method name="Notify"><arg type="s" direction="in"/><arg type="u" direction="in"/><arg type="s" direction="in"/>
+  <arg type="s" direction="in"/><arg type="s" direction="in"/><arg type="as" direction="in"/>
+  <arg type="a{sv}" direction="in"/><arg type="i" direction="in"/><arg type="u" direction="out"/></method>
+ <method name="CloseNotification"><arg type="u" direction="in"/></method>
+ <method name="GetCapabilities"><arg type="as" direction="out"/></method>
+ <method name="GetServerInformation"><arg type="s" direction="out"/><arg type="s" direction="out"/>
+  <arg type="s" direction="out"/><arg type="s" direction="out"/></method>
+ <signal name="NotificationClosed"><arg type="u"/><arg type="u"/></signal>
+ <signal name="ActionInvoked"><arg type="u"/><arg type="s"/></signal>
+</interface></node>"""
+
+CONTROL_XML = """<node><interface name="io.github.win11shell.FakePackageKit">
+ <method name="Load"><arg type="s" name="timeline" direction="in"/></method>
+ <method name="Step"><arg type="s" name="event" direction="out"/></method>
+ <method name="Run"/>
+ <method name="SetDaemon"><arg type="b" name="present" direction="in"/></method>
+ <method name="Calls"><arg type="a(ssss)" name="calls" direction="out"/></method>
+ <method name="CallCount"><arg type="u" name="count" direction="out"/></method>
+ <method name="State"><arg type="s" name="json" direction="out"/></method>
+ <method name="CallsJson"><arg type="s" name="json" direction="out"/></method>
+ <method name="Activate"/>
+</interface></node>"""
+
+
+# ----------------------------------------------------------------------------------------------------------
+# Enums (tests/update/enums.json, equal to the PackageKitGlib-1.0 / NM-1.0 typelibs: test_enums.py)
+# ----------------------------------------------------------------------------------------------------------
+
+class TimelineError(Exception):
+    pass
+
+
+def _load_enums() -> tuple[dict, dict]:
+    data = json.loads((HERE / 'enums.json').read_text(encoding='utf-8'))
+    table = dict(data['PackageKitGlib'])
+    table.update({f'NM.{k}': v for k, v in data['NM'].items()})
+    return table, data['bitfields']
+
+
+ENUMS, BITFIELDS = _load_enums()
+
+
+def ev(kind: str, value) -> int:
+    """An enum value from an int or a nick (e.g. ev('Status', 'download') == 8)."""
+    if isinstance(value, bool):
+        raise TimelineError(f'{kind}: boolean {value!r} is not an enum value')
+    if isinstance(value, int):
+        return value
+    try:
+        return ENUMS[kind][value]
+    except KeyError:
+        raise TimelineError(f'unknown {kind} nick {value!r} (add it to enums.json)') from None
+
+
+def nick(kind: str, value: int) -> str:
+    for k, v in ENUMS.get(kind, {}).items():
+        if v == value:
+            return k
+    return str(value)
+
+
+def bitfield(value) -> int:
+    if isinstance(value, int) and not isinstance(value, bool):
+        return value
+    try:
+        return BITFIELDS[value]
+    except KeyError:
+        raise TimelineError(f'unknown bitfield {value!r} (enums.json "bitfields")') from None
+
+
+# ----------------------------------------------------------------------------------------------------------
+# Guard (design 4.11): refuse anything that could reach the live session or the real system bus
+# ----------------------------------------------------------------------------------------------------------
+
+BUS_VARS = ('DBUS_SESSION_BUS_ADDRESS', 'DBUS_SYSTEM_BUS_ADDRESS', 'WIN11_UPDATE_PK_BUS', 'AT_SPI_BUS_ADDRESS',
+            'DBUS_STARTER_ADDRESS')
+LIVE_POINTERS = ('XDG_SESSION_ID', 'XDG_SEAT', 'XDG_VTNR', 'XDG_SEAT_PATH', 'XDG_SESSION_PATH', 'SESSION_MANAGER',
+                 'SSH_AUTH_SOCK', 'GNOME_KEYRING_CONTROL', 'WAYLAND_SOCKET', 'XAUTHORITY', 'DESKTOP_STARTUP_ID',
+                 'XDG_ACTIVATION_TOKEN', 'GNOME_SETUP_DISPLAY', 'HYPRLAND_INSTANCE_SIGNATURE', 'DBUS_STARTER_BUS_TYPE',
+                 'WIN11_REFERENCE_SETTINGS', 'WIN11_REFERENCE_INSTANCE', 'WIN11_GNOME_CONFIG_DIR',
+                 'GNOME_SHELL_SESSION_MODE', 'WIN11_HEAVY_LOCK', 'WIN11_HEAVY_HELD')
+SEAMS = ('WIN11_UPDATE_PK_BUS', 'WIN11_UPDATE_FIXTURE_ROOT', 'WIN11_UPDATE_TOOL_DIR')
+
+
+def _norm(path: str) -> str:
+    return os.path.normpath(path) if path else ''
+
+
+def _inside(path: str | Path, root: str | Path) -> bool:
+    try:
+        return Path(os.path.realpath(path)).is_relative_to(os.path.realpath(root))
+    except (OSError, ValueError):
+        return False
+
+
+def _under(path: str, prefix: str) -> bool:
+    n = _norm(path)
+    return n == prefix or n.startswith(prefix.rstrip('/') + '/')
+
+
+def bus_locations(address: str, runtime: str | None) -> list[tuple[str, str, str]]:
+    """(transport, key, value) for every location in a D-Bus address list (values unescaped)."""
+    out = []
+    for part in filter(None, address.split(';')):
+        transport, _, rest = part.partition(':')
+        pairs = {}
+        for item in rest.split(','):
+            if '=' in item:
+                k, v = item.split('=', 1)
+                pairs[k] = urllib.parse.unquote(v)
+        found = False
+        for key in ('path', 'dir', 'tmpdir', 'abstract'):
+            if key in pairs:
+                out.append((transport, key, pairs[key]))
+                found = True
+        if pairs.get('runtime') == 'yes':
+            out.append((transport, 'runtime', f'{runtime}/bus' if runtime else '/run/user/?/bus'))
+            found = True
+        if not found:
+            out.append((transport, 'other', rest))
+    return out
+
+
+def guard_problems(env: dict, stage: str) -> list[tuple[str, str]]:
+    """Every reason this environment could reach the live session or the real system. Empty = safe.
+    stage 'pre': before the private buses exist (placeholders, no seams); 'child': seams exported."""
+    p: list[tuple[str, str]] = []
+    add = lambda code, msg: p.append((code, msg))
+    if os.geteuid() == 0:
+        add('root', 'running as root')
+    run = env.get('WIN11_FAKE_RUN_DIR', '')
+    if not run or not _inside(run, RUNS) or _norm(run) == _norm(str(RUNS)):
+        add('run-dir-invalid', f'WIN11_FAKE_RUN_DIR={run!r} is not a run directory in {RUNS}')
+        run = ''
+    home = env.get('HOME', '')
+    if not home:
+        add('home-missing', 'HOME is not set')
+    elif _norm(home) == _norm(REAL_HOME) or os.path.realpath(home) == os.path.realpath(REAL_HOME):
+        add('home-real', f'HOME is the real home {REAL_HOME}')
+    elif not run or not _inside(home, run):
+        add('home-not-private', f'HOME={home} is not inside the run directory')
+    for key in ('XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME', 'XDG_STATE_HOME'):
+        value = env.get(key, '')
+        if not value or not run or not _inside(value, run):
+            add('xdg-not-private', f'{key}={value!r} is not inside the run directory')
+    runtime = env.get('XDG_RUNTIME_DIR', '')
+    if runtime and (_under(runtime, '/run/user') or _inside(runtime, LIVE_RUNTIME)):
+        add('runtime-live', f'XDG_RUNTIME_DIR={runtime} is a live runtime directory')
+    elif _norm(runtime) != PRIVATE_RT:
+        add('runtime-not-private', f'XDG_RUNTIME_DIR={runtime!r} is not {PRIVATE_RT}')
+    for key in BUS_VARS:
+        if key not in env:
+            if key in ('DBUS_SESSION_BUS_ADDRESS', 'DBUS_SYSTEM_BUS_ADDRESS'):
+                add('bus-missing', f'{key} is not set (GLib would guess one)')
+            continue
+        if key in ('AT_SPI_BUS_ADDRESS', 'DBUS_STARTER_ADDRESS'):
+            add('live-pointer', f'{key} is set')
+        for transport, k, value in bus_locations(env[key], runtime):
+            if _under(value, '/run/user') or _inside(value, LIVE_RUNTIME):
+                add('bus-live', f'{key} points under /run/user/: {env[key]}')
+            elif _under(value, '/run/dbus') or _under(value, '/var/run/dbus'):
+                add('system-bus-real', f'{key} points at the real system bus: {env[key]}')
+            elif transport != 'unix' or k != 'path':
+                add('bus-not-private', f'{key} uses {transport}:{k}, not a private unix:path')
+            elif not _under(value, PRIVATE_RT) or '..' in value.split('/'):
+                add('bus-not-private', f'{key} socket {value} is not inside {PRIVATE_RT}')
+    if stage == 'child':
+        if env.get('WIN11_UPDATE_PK_BUS') != env.get('DBUS_SYSTEM_BUS_ADDRESS'):
+            add('pk-bus-mismatch', 'WIN11_UPDATE_PK_BUS differs from DBUS_SYSTEM_BUS_ADDRESS')
+        for key in ('WIN11_UPDATE_FIXTURE_ROOT', 'WIN11_UPDATE_TOOL_DIR'):
+            value = env.get(key, '')
+            if not value or not run or not _inside(value, run) or not os.path.isfile(os.path.join(value, MARKER)):
+                add('seam-invalid', f'{key}={value!r} is not a marked directory inside the run directory')
+    else:
+        for key in env:
+            if key.startswith('WIN11_UPDATE_'):
+                add('seam-preset', f'{key} is set before the layer exported it')
+    for key in ('DISPLAY', 'WAYLAND_DISPLAY'):
+        if key in env:
+            add(key.lower().replace('_', '-') + '-set', f'{key}={env[key]!r} is set')
+    if env.get('NO_AT_BRIDGE') != '1':
+        add('at-bridge', 'NO_AT_BRIDGE=1 is missing')
+    if env.get('GTK_A11Y') != 'none':
+        add('gtk-a11y', 'GTK_A11Y=none is missing')
+    if env.get('GSETTINGS_BACKEND') != 'keyfile':
+        add('gsettings-not-keyfile', f'GSETTINGS_BACKEND={env.get("GSETTINGS_BACKEND")!r} is not keyfile')
+    path = [e for e in env.get('PATH', '').split(':') if e]
+    if not path or not run or _norm(path[0]) != _norm(os.path.join(run, 'guard-bin')):
+        add('path-not-guarded', f'PATH does not start with the run directory\'s guard-bin: {env.get("PATH")!r}')
+    for entry in path:
+        if (_inside(entry, REAL_HOME) or _under(entry, REAL_HOME)) and not (run and _inside(entry, run)):
+            add('path-live-home', f'PATH entry {entry} is in the real home')
+    for key in LIVE_POINTERS:
+        if key in env:
+            add('live-pointer', f'{key} is set')
+    for key, value in env.items():
+        if '/run/user/' in value and key not in BUS_VARS and key != 'XDG_RUNTIME_DIR':
+            add('live-runtime-ref', f'{key} refers to /run/user/')
+    return p
+
+
+def sandbox_problems() -> list[tuple[str, str]]:
+    """Facts about this process: is it inside run.sh's bubblewrap layer?"""
+    p = []
+    for path, code in (('/run/dbus/system_bus_socket', 'system-bus-visible'),
+                       ('/var/run/dbus/system_bus_socket', 'system-bus-visible'),
+                       (f'{LIVE_RUNTIME}/bus', 'live-session-bus-visible'),
+                       (LIVE_RUNTIME, 'live-runtime-visible'),
+                       ('/tmp/.X11-unix', 'x11-visible'),
+                       ('/run/systemd/private', 'run-not-private'),
+                       ('/run/snapd.socket', 'run-not-private'),
+                       ('/run/reboot-required', 'run-not-private')):
+        if os.path.lexists(path):
+            p.append((code, f'{path} is visible'))
+    try:
+        if os.listdir('/run/user'):
+            p.append(('run-user-not-private', '/run/user is not empty'))
+    except OSError:
+        pass
+    try:
+        init = Path('/proc/1/comm').read_text().strip()
+    except OSError:
+        init = '?'
+    if init != 'bwrap':
+        p.append(('not-sandboxed-pid', f'PID 1 is {init!r} (expected bwrap: own PID namespace)'))
+    try:
+        interfaces = [line.split(':')[0].strip() for line in Path('/proc/net/dev').read_text().splitlines()[2:]]
+    except OSError:
+        interfaces = ['?']
+    if [i for i in interfaces if i != 'lo']:
+        p.append(('not-sandboxed-network', f'network interfaces {interfaces} (expected loopback only)'))
+    if os.access(REAL_HOME, os.W_OK):
+        p.append(('home-writable', f'{REAL_HOME} is writable (expected a read-only bind)'))
+    try:
+        status = Path('/proc/self/status').read_text()
+        if not re.search(r'^NoNewPrivs:\s*1$', status, re.M):
+            p.append(('no-new-privs-missing', 'no_new_privs is not set (bwrap sets it)'))
+    except OSError:
+        p.append(('no-new-privs-missing', '/proc/self/status unreadable'))
+    p += socket_problems(os.environ.get('WIN11_FAKE_RUN_DIR', ''))
+    return p
+
+
+def find_sockets(root: str, limit: int = 5) -> list[str]:
+    """Socket inodes under root (d_type first, lstat only for special files; symlinks are not followed)."""
+    found, stack = [], [root]
+    while stack and len(found) < limit:
+        try:
+            with os.scandir(stack.pop()) as it:
+                for e in it:
+                    try:
+                        if e.is_dir(follow_symlinks=False):
+                            stack.append(e.path)
+                        elif not e.is_file(follow_symlinks=False) and not e.is_symlink() \
+                                and stat.S_ISSOCK(e.stat(follow_symlinks=False).st_mode):
+                            found.append(e.path)
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+    return found
+
+
+def socket_problems(run: str) -> list[tuple[str, str]]:
+    """F1: no pathname socket of the host may be reachable inside the layer. run.sh binds only /usr, /etc, /sys
+    and W, masks every listening host socket in them (/proc/net/unix, outside) with /dev/null and lists them in
+    <run>/masked-sockets.txt; here every listed path must no longer be a socket, and W must hold no socket."""
+    p = []
+    if run:
+        try:
+            masked = [x for x in Path(run, MASKED_LIST).read_text().splitlines() if x.strip()]
+        except OSError:
+            masked = None
+            p.append(('masked-list-missing', f'{run}/{MASKED_LIST} is missing (run.sh writes it outside the layer)'))
+        for path in masked or []:
+            try:
+                if stat.S_ISSOCK(os.lstat(path).st_mode):
+                    p.append(('host-socket-visible', f'{path} is still a socket inside the layer'))
+            except OSError:
+                pass
+    for path in find_sockets(str(W)):
+        p.append(('host-socket-visible', f'{path} is a socket inside the layer (in the worktree)'))
+    return p
+
+
+def private_bus_problems(addresses: list[str], env: dict) -> list[tuple[str, str]]:
+    """The seam rule GW1 enforces for every bus it serves or probes (proposed for paths.rs, gw1.md fix round):
+    exactly one unix:path= per address whose socket lies directly in $XDG_RUNTIME_DIR, and that directory is not
+    under /run, holds the marker, is owned by the euid with mode 0700; and /run/dbus/system_bus_socket is not
+    visible at all (so this is a sandbox without the real system bus)."""
+    p = []
+    if os.path.lexists('/run/dbus/system_bus_socket') or os.path.lexists('/var/run/dbus/system_bus_socket'):
+        p.append(('system-bus-visible', '/run/dbus/system_bus_socket is visible (not inside a test sandbox)'))
+    runtime = env.get('XDG_RUNTIME_DIR', '')
+    rt = os.path.realpath(runtime) if runtime else ''
+    if not rt or _under(rt, '/run') or _under(rt, '/var/run') or _under(runtime, '/run'):
+        p.append(('runtime-not-private', f'XDG_RUNTIME_DIR={runtime!r} is not a private runtime directory'))
+        rt = ''
+    else:
+        try:
+            st = os.stat(rt)
+            if st.st_uid != os.geteuid() or stat.S_IMODE(st.st_mode) != 0o700:
+                p.append(('runtime-not-private', f'{rt} is not owned by uid {os.geteuid()} with mode 0700'))
+            if not os.path.isfile(os.path.join(rt, MARKER)):
+                p.append(('runtime-not-marked', f'{rt} has no {MARKER}'))
+        except OSError as e:
+            p.append(('runtime-not-private', f'{rt}: {e}'))
+    for addr in addresses:
+        locs = bus_locations(addr, None)
+        if len(locs) != 1 or locs[0][0] != 'unix' or locs[0][1] != 'path':
+            p.append(('bus-not-private', f'{addr} is not one unix:path= address'))
+            continue
+        raw = locs[0][2]
+        sock = os.path.realpath(raw)
+        if _under(raw, '/run') or _under(raw, '/var/run') or _under(sock, '/run') or _under(sock, '/var/run'):
+            p.append(('bus-not-private', f'{addr} is under /run'))
+        elif not rt or os.path.dirname(sock) != rt or os.path.dirname(os.path.normpath(raw)) != os.path.normpath(runtime):
+            p.append(('bus-not-private', f'{addr}: the socket is not directly in XDG_RUNTIME_DIR={runtime!r}'))
+    return p
+
+
+def refuse(problems: list[tuple[str, str]]) -> int:
+    for code, msg in problems:
+        print(f'GUARD REFUSED [{code}] {msg}', file=sys.stderr, flush=True)
+    return EXIT_REFUSED
+
+
+# ----------------------------------------------------------------------------------------------------------
+# Timelines
+# ----------------------------------------------------------------------------------------------------------
+
+ACTIONS = {
+    # action: needs a transaction stream
+    'props': True, 'package': True, 'packages': True, 'item': True, 'restart': True, 'error': True,
+    'details': True, 'updateDetail': True, 'updateDetails': True, 'transaction': True, 'finish': True,
+    'destroy': True, 'flood': True, 'emitUpdates': True, 'emitDetails': True, 'emitUpdateDetails': True,
+    'emitSimulate': True, 'emitInstall': True, 'emitHistory': True, 'removeUpdates': False,
+    'until': False, 'setUpdates': False, 'manager': False, 'managerProps': False, 'nm': False, 'daemon': False,
+    'fixture': False, 'foreign': False, 'note': False, '_destroy': True,
+}
+META = ('ms', 'label')
+DYNAMIC = ('emitUpdates', 'emitDetails', 'emitUpdateDetails', 'emitSimulate', 'emitInstall', 'emitHistory')
+GATES = re.compile(r'^(call:[A-Za-z]+|vanish|step)$')
+TOP_KEYS = {'name', 'title', 'group', 'description', 'states', 'daemon', 'nm', 'packages', 'updates', 'batch',
+            'updateDetails', 'history', 'methods', 'script', 'onVanish', 'forbiddenIds', 'stubs', 'fixtures',
+            'client', 'expect', 'destroyMs'}
+METHOD_KEYS = {'RefreshCache', 'GetUpdates', 'GetDetails', 'GetUpdateDetail', 'UpdatePackages',
+               'UpdatePackages:simulate', 'RepairSystem', 'RepairSystem:simulate', 'GetOldTransactions', 'Cancel',
+               'StateHasChanged'}
+PROP_ENUMS = {'Status': 'Status', 'Role': 'Role'}
+TX_PROP_KEYS = {'Role', 'Status', 'LastPackage', 'Uid', 'Sender', 'Percentage', 'AllowCancel', 'CallerActive',
+                'ElapsedTime', 'RemainingTime', 'Speed', 'DownloadSizeRemaining', 'TransactionFlags'}
+MGR_PROP_KEYS = {'Locked', 'NetworkState', 'BackendName', 'BackendDescription', 'DistroId'}
+NM_PROP_KEYS = {'Connectivity', 'Metered', 'State', 'NetworkingEnabled', 'ConnectivityCheckEnabled'}
+
+
+def timeline_names() -> list[str]:
+    return sorted(p.stem for p in TIMELINES.glob('*.json'))
+
+
+def load_timeline(name: str) -> dict:
+    if name in ('', 'none'):
+        return {'name': 'none'}
+    if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', name):
+        raise TimelineError(f'bad timeline name {name!r}')
+    path = TIMELINES / f'{name}.json'
+    try:
+        tl = json.loads(path.read_text(encoding='utf-8'))
+    except FileNotFoundError:
+        raise TimelineError(f'no timeline {name!r} in {TIMELINES}') from None
+    except ValueError as e:
+        raise TimelineError(f'{path.name}: {e}') from None
+    if tl.get('name') != name:
+        raise TimelineError(f'{path.name}: "name" is {tl.get("name")!r}')
+    validate_timeline(tl)
+    return tl
+
+
+def _check_events(events, where: str, tl: dict) -> None:
+    if not isinstance(events, list):
+        raise TimelineError(f'{where}: a script must be a list')
+    for i, e in enumerate(events):
+        here = f'{where}[{i}]'
+        if not isinstance(e, dict):
+            raise TimelineError(f'{here}: an event must be an object')
+        keys = [k for k in e if k not in META]
+        extra = {'finish': ('destroy', 'destroyMs')}
+        action = [k for k in keys if k in ACTIONS]
+        if len(action) != 1:
+            raise TimelineError(f'{here}: needs exactly one action, has {keys}')
+        a = action[0]
+        allowed = set(extra.get(a, ())) | {a}
+        if set(keys) - allowed:
+            raise TimelineError(f'{here}: unknown keys {sorted(set(keys) - allowed)}')
+        v = e[a]
+        if a == 'props':
+            for k, x in v.items():
+                if k not in TX_PROP_KEYS:
+                    raise TimelineError(f'{here}: unknown transaction property {k}')
+                if k in PROP_ENUMS:
+                    ev(PROP_ENUMS[k], x)
+        elif a == 'package':
+            ev('Info', v[0])
+        elif a == 'packages':
+            for item in v:
+                ev('Info', item[0])
+        elif a == 'item':
+            ev('Status', v[1])
+        elif a == 'restart':
+            ev('Restart', v[0])
+        elif a == 'error':
+            ev('Error', v[0])
+        elif a == 'finish':
+            ev('Exit', v)
+        elif a == 'until':
+            if not GATES.match(str(v)):
+                raise TimelineError(f'{here}: bad gate {v!r}')
+        elif a == 'managerProps':
+            for k, x in v.items():
+                if k not in MGR_PROP_KEYS:
+                    raise TimelineError(f'{here}: unknown manager property {k}')
+                if k == 'NetworkState':
+                    ev('Network', x)
+        elif a == 'nm':
+            for k, x in v.items():
+                if k not in NM_PROP_KEYS:
+                    raise TimelineError(f'{here}: unknown NM property {k}')
+                if k in ('Connectivity', 'Metered', 'State'):
+                    ev(f'NM.{k}', x)
+        elif a == 'foreign':
+            ev('Role', v.get('role', 'update-packages'))
+            _check_events(v.get('script', []), here + '.foreign.script', tl)
+        elif a == 'fixture':
+            for rel in v:
+                _fixture_rel(rel)
+        elif a == 'emitInstall' and isinstance(v, dict):
+            if 'error' in v:
+                ev('Error', v['error'][0])
+            for t in v.get('restart', {}).values():
+                ev('Restart', t)
+        elif a == 'emitSimulate' and isinstance(v, dict):
+            for item in v.get('extra', []):
+                ev('Info', item[0])
+            size = v.get('downloadSize')
+            if 'downloadSize' in v and (isinstance(size, bool) or not isinstance(size, int) or size < 0):
+                raise TimelineError(f'{here}: emitSimulate.downloadSize must be an integer >= 0')
+
+
+def validate_timeline(tl: dict) -> None:
+    unknown = set(tl) - TOP_KEYS
+    if unknown:
+        raise TimelineError(f'unknown top-level keys {sorted(unknown)}')
+    bad = set(tl.get('daemon', {})) - {'present', 'activatable', 'locked', 'networkState', 'distroId', 'timeSinceAction'}
+    if bad:
+        raise TimelineError(f'daemon: unknown keys {sorted(bad)}')
+    for key, script in tl.get('methods', {}).items():
+        if key not in METHOD_KEYS:
+            raise TimelineError(f'methods: unknown method key {key!r}')
+        if isinstance(script, dict):
+            if set(script) != {'each'}:
+                raise TimelineError(f'methods.{key}: an object must be {{"each": [scripts]}}')
+            for i, s in enumerate(script['each']):
+                _check_events(s, f'methods.{key}.each[{i}]', tl)
+        else:
+            _check_events(script, f'methods.{key}', tl)
+    _check_events(tl.get('script', []), 'script', tl)
+    for i, e in enumerate(tl.get('script', [])):
+        a = next(k for k in e if k in ACTIONS)
+        if ACTIONS[a]:
+            raise TimelineError(f'script[{i}]: {a} needs a transaction (use methods, or foreign.script)')
+    for pid, pkg in tl.get('packages', {}).items():
+        if len(pid.split(';')) != 4:
+            raise TimelineError(f'packages: bad package id {pid!r}')
+        ev('Info', pkg.get('info', 'normal'))
+    for pid in tl.get('updates', []):
+        if pid not in tl.get('packages', {}):
+            raise TimelineError(f'updates: {pid!r} is not in packages')
+    names = json.loads((STUBS_SRC / 'names.json').read_text())['tools']
+    for tool in tl.get('stubs', {}):
+        if tool not in names:
+            raise TimelineError(f'stubs: {tool!r} is not a tool stub (stubs/names.json)')
+    for rel in tl.get('fixtures', {}):
+        _fixture_rel(rel)
+    if tl.get('onVanish', 'continue') not in ('continue', 'cancel'):
+        raise TimelineError('onVanish must be "continue" or "cancel"')
+    nm = tl.get('nm', {})
+    if nm is not None:
+        for k, x in nm.items():
+            if k not in NM_PROP_KEYS:
+                raise TimelineError(f'nm: unknown property {k}')
+            if k in ('Connectivity', 'Metered', 'State'):
+                ev(f'NM.{k}', x)
+
+
+def _fixture_rel(rel: str) -> str:
+    parts = Path(rel).parts
+    if not rel or rel.startswith('/') or '..' in parts or rel.startswith(MARKER):
+        raise TimelineError(f'fixture path {rel!r} must be relative and stay inside the fixture root')
+    return rel
+
+
+# ----------------------------------------------------------------------------------------------------------
+# The fake daemon
+# ----------------------------------------------------------------------------------------------------------
+
+class Stream:
+    """One ordered list of scripted events: the global script, or one transaction's script."""
+
+    def __init__(self, label: str, tx=None):
+        self.label, self.tx = label, tx
+        self.events: collections.deque = collections.deque()
+        self.timer = 0
+        self.armed: str | None = None
+        self.dead = False
+
+
+class Tx:
+    def __init__(self, path: str, sender: str, uid: int, foreign: bool = False):
+        self.path, self.sender, self.uid, self.foreign = path, sender, uid, foreign
+        self.props = {'Role': 0, 'Status': 1, 'LastPackage': '', 'Uid': uid, 'Sender': sender, 'Percentage': 101,
+                      'AllowCancel': True, 'CallerActive': True, 'ElapsedTime': 0, 'RemainingTime': 0, 'Speed': 0,
+                      'DownloadSizeRemaining': 0, 'TransactionFlags': 0}
+        self.reg = 0
+        self.conn = None                 # the PackageKit connection the object is registered on
+        self.key: str | None = None
+        self.args: tuple = ()
+        self.hints: list[str] = []
+        self.started = time.monotonic()
+        self.finished = False
+        self.vanished = False
+        self.exit: int | None = None
+        self.error: int | None = None
+        self.data_lines: list[str] = []
+        self.stream = Stream(path, self)
+
+
+class Fake:
+    def __init__(self, opts):
+        from gi.repository import Gio, GLib
+        self.Gio, self.GLib = Gio, GLib
+        self.opts = opts
+        self.lock = threading.Lock()
+        self.calls: list[dict] = []
+        self.tool_dir = Path(opts.tool_dir) if opts.tool_dir else None
+        self.fixture_root = Path(opts.fixture_root) if opts.fixture_root else None
+        self.service_dir = Path(opts.service_dir) if getattr(opts, 'service_dir', None) else None
+        # Three connections on the private system bus, as in reality three processes: the control name (and the
+        # bus-driver queries), NetworkManager, and PackageKit (self.pkconn, opened by set_daemon(True) and closed
+        # by set_daemon(False), so a daemon "restart" gets a new unique name).
+        self.conn = self._connect(opts.bus)
+        self.nmconn = self._connect(opts.bus)
+        self.pkconn = None
+        self.sconn = self._connect(opts.session_bus) if opts.session_bus else None
+        self.pk_mgr_info = self._iface(PK_XML_DIR / 'org.freedesktop.PackageKit.xml', PK_IFACE)
+        self.pk_tx_info = self._iface(PK_XML_DIR / 'org.freedesktop.PackageKit.Transaction.xml', TX_IFACE)
+        self.nm_info = Gio.DBusNodeInfo.new_for_xml(NM_XML).interfaces[0]
+        self.ctl_info = Gio.DBusNodeInfo.new_for_xml(CONTROL_XML).interfaces[0]
+        self.notify_info = Gio.DBusNodeInfo.new_for_xml(NOTIFY_XML).interfaces[0]
+        self.conn.add_filter(self._control_filter)
+        self.nmconn.add_filter(self._filter)
+        if self.sconn:
+            self.sconn.add_filter(self._filter)
+        self.conn.register_object(CONTROL_PATH, self.ctl_info, self._control_call, None, None)
+        self._request_name(self.conn, CONTROL_NAME)
+        self.conn.signal_subscribe('org.freedesktop.DBus', 'org.freedesktop.DBus', 'NameOwnerChanged',
+                                   '/org/freedesktop/DBus', None, Gio.DBusSignalFlags.NONE, self._owner_changed)
+        if self.sconn:
+            self.sconn.register_object(NOTIFY_PATH, self.notify_info, self._notify_call, None, None)
+            self._request_name(self.sconn, NOTIFY_NAME)
+        self.mgr_reg = 0
+        self.nm_reg = 0
+        self.nm_owned = False
+        self.activatable = False
+        self.activations = 0
+        self.mgr_props: dict = {}
+        self.nm_props: dict = {}
+        self.txs: dict[str, Tx] = {}
+        self.streams: list[Stream] = []
+        self.tx_seq = 1000
+        self.uids: dict[str, int] = {}
+        self.notify_seq = 0
+        self.reset({'name': 'none'})
+
+    @property
+    def pk_owned(self) -> bool:
+        return self.pkconn is not None
+
+    # -- helpers ---------------------------------------------------------------------------------------
+
+    def _iface(self, path: Path, name: str):
+        try:
+            node = self.Gio.DBusNodeInfo.new_for_xml(path.read_text(encoding='utf-8'))
+        except OSError as e:
+            raise SystemExit(f'fake: cannot read {path}: {e} (package packagekit ships it)')
+        info = node.lookup_interface(name)
+        if info is None:
+            raise SystemExit(f'fake: {path} has no interface {name}')
+        return info
+
+    def log(self, msg: str) -> None:
+        print(time.strftime('%H:%M:%S ') + msg, flush=True)
+
+    def _connect(self, address: str):
+        Gio = self.Gio
+        flags = Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION
+        return Gio.DBusConnection.new_for_address_sync(address, flags, None, None)
+
+    def _driver(self, method: str, args=None, sig: str | None = None, reply: str | None = None):
+        GLib = self.GLib
+        r = self.conn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', method,
+                                GLib.Variant(sig, tuple(args)) if sig else None,
+                                GLib.VariantType(reply) if reply else None, self.Gio.DBusCallFlags.NONE, 5000, None)
+        return r.unpack() if r is not None else None
+
+    def _request_name(self, conn, name: str) -> None:
+        GLib = self.GLib
+        r = conn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', 'RequestName',
+                           GLib.Variant('(su)', (name, 4)), GLib.VariantType('(u)'),
+                           self.Gio.DBusCallFlags.NONE, 5000, None).unpack()[0]
+        if r not in (1, 4):
+            raise SystemExit(f'fake: could not own {name} (RequestName -> {r})')
+
+    def _release_name(self, conn, name: str) -> None:
+        GLib = self.GLib
+        conn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', 'ReleaseName',
+                       GLib.Variant('(s)', (name,)), GLib.VariantType('(u)'), self.Gio.DBusCallFlags.NONE, 5000, None)
+
+    def _uid_of(self, sender: str) -> int:
+        if sender not in self.uids:
+            GLib = self.GLib
+            try:
+                self.uids[sender] = self.conn.call_sync(
+                    'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', 'GetConnectionUnixUser',
+                    GLib.Variant('(s)', (sender,)), GLib.VariantType('(u)'), self.Gio.DBusCallFlags.NONE, 2000,
+                    None).unpack()[0]
+            except GLib.Error:
+                self.uids[sender] = 4294967295
+        return self.uids[sender]
+
+    def _cmdline_of(self, sender: str) -> str:
+        GLib = self.GLib
+        try:
+            pid = self.conn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus',
+                                      'GetConnectionUnixProcessID', GLib.Variant('(s)', (sender,)),
+                                      GLib.VariantType('(u)'), self.Gio.DBusCallFlags.NONE, 2000, None).unpack()[0]
+            raw = Path(f'/proc/{pid}/cmdline').read_bytes()
+            return ' '.join(a.decode(errors='replace') for a in raw.split(b'\0') if a)
+        except (GLib.Error, OSError):
+            return ''
+
+    def _sig(self, info, prop: str) -> str:
+        p = info.lookup_property(prop)
+        if p is None:
+            raise TimelineError(f'no property {prop} on {info.name}')
+        return p.signature
+
+    def emit(self, path: str, iface: str, member: str, sig: str | None, args: tuple = ()) -> None:
+        if self.pkconn is None:
+            raise TimelineError(f'{member} on {path}: packagekitd is not running (SetDaemon(false))')
+        params = self.GLib.Variant(sig, tuple(args)) if sig else None
+        self.pkconn.emit_signal(None, path, iface, member, params)      # broadcast, like packagekitd
+
+    def emit_props(self, path: str, iface: str, info, changed: dict, conn=None) -> None:
+        if not changed:
+            return
+        GLib = self.GLib
+        values = {k: GLib.Variant(self._sig(info, k), v) for k, v in changed.items()}
+        conn = conn or self.pkconn
+        if conn is None:
+            raise TimelineError(f'PropertiesChanged on {path}: packagekitd is not running')
+        conn.emit_signal(None, path, PROPS_IFACE, 'PropertiesChanged', GLib.Variant('(sa{sv}as)', (iface, values, [])))
+
+    # -- call recording (message filters, GDBus worker thread) --------------------------------------------
+
+    def _control_filter(self, conn, message, incoming):
+        """Load() clears Calls() at the moment its message is read, on the same worker thread that records the
+        other calls: the recording order then equals the dispatch order, so a call counts exactly when it is
+        handled under the new timeline (F9). Nothing else reaching the control connection is recorded."""
+        try:
+            if incoming and message.get_message_type() == self.Gio.DBusMessageType.METHOD_CALL \
+                    and message.get_path() == CONTROL_PATH and message.get_member() == 'Load' \
+                    and (message.get_interface() or CONTROL_IFACE) == CONTROL_IFACE:
+                with self.lock:
+                    self.calls = []
+        except Exception as e:      # noqa: BLE001 - never break the connection
+            print(f'fake: control filter error {e!r}', file=sys.stderr, flush=True)
+        return message
+
+    def _filter(self, conn, message, incoming):
+        try:
+            Gio = self.Gio
+            if incoming and message.get_message_type() == Gio.DBusMessageType.METHOD_CALL:
+                iface = message.get_interface() or ''
+                path = message.get_path() or ''
+                member = message.get_member() or ''
+                label = member if not iface.startswith('org.freedesktop.DBus.') \
+                    else iface.rsplit('.', 1)[1] + '.' + member
+                body = message.get_body()
+                args = list(body.unpack()) if body is not None else []
+                flags = int(message.get_flags())
+                rec = {'method': label, 'interface': iface, 'member': member, 'path': path,
+                       'sender': message.get_sender() or '', 'destination': message.get_destination() or '',
+                       'args': args, 'bus': 'session' if conn is self.sconn else 'system',
+                       'to': 'nm' if conn is self.nmconn else ('notify' if conn is self.sconn else 'pk'),
+                       'noAutoStart': bool(flags & int(Gio.DBusMessageFlags.NO_AUTO_START)),
+                       'noReplyExpected': bool(flags & int(Gio.DBusMessageFlags.NO_REPLY_EXPECTED)),
+                       't': round(time.time(), 3)}
+                with self.lock:
+                    self.calls.append(rec)
+        except Exception as e:      # noqa: BLE001 - never break the connection
+            print(f'fake: filter error {e!r}', file=sys.stderr, flush=True)
+        return message
+
+    # -- names, reset, Load ------------------------------------------------------------------------------
+
+    def set_daemon(self, present: bool) -> None:
+        """True: a new connection owns org.freedesktop.PackageKit (new unique name, like a new packagekitd).
+        False: that connection closes, so the bus drops the name and the unique name, as when packagekitd exits;
+        its transactions vanish without Destroy."""
+        if present and self.pkconn is None:
+            conn = self._connect(self.opts.bus)
+            conn.add_filter(self._filter)
+            self.mgr_reg = conn.register_object(PK_PATH, self.pk_mgr_info, self._mgr_call, self._get_prop, None)
+            self._request_name(conn, PK_NAME)
+            self.pkconn = conn
+            self.log(f'daemon: org.freedesktop.PackageKit owned by {conn.get_unique_name()}')
+        elif not present and self.pkconn is not None:
+            for tx in list(self.txs.values()):
+                self._drop_tx(tx)
+            conn, self.pkconn = self.pkconn, None
+            if self.mgr_reg:
+                conn.unregister_object(self.mgr_reg)
+                self.mgr_reg = 0
+            unique = conn.get_unique_name()
+            conn.flush_sync(None)
+            conn.close_sync(None)
+            self.log(f'daemon: {unique} closed (packagekitd exited; all transactions gone)')
+
+    def set_activatable(self, on: bool) -> None:
+        """F4: whether the private system bus can D-Bus-activate the fake (<run>/services holds our file)."""
+        if self.service_dir is None:
+            if on:
+                self.log('daemon: activatable requested, but the fake has no --service-dir (not activatable)')
+            self.activatable = False
+            return
+        target = self.service_dir / SERVICE_FILE
+        text = service_text()
+        changed = False
+        if on and (not target.exists() or target.read_text(encoding='utf-8') != text):
+            tmp = self.service_dir.parent / '.service.tmp'      # same file system, outside the service dir
+            tmp.write_text(text, encoding='utf-8')
+            os.replace(tmp, target)
+            changed = True
+        elif not on and target.exists():
+            target.unlink()
+            changed = True
+        if changed:
+            self._driver('ReloadConfig')       # synchronous: ListActivatableNames is current once this returns
+        self.activatable = on
+
+    def set_nm(self, present: bool) -> None:
+        if present and not self.nm_owned:
+            self.nm_reg = self.nmconn.register_object(NM_PATH, self.nm_info, self._nm_call, self._get_prop, None)
+            self._request_name(self.nmconn, NM_NAME)
+            self.nm_owned = True
+        elif not present and self.nm_owned:
+            self._release_name(self.nmconn, NM_NAME)
+            self.nmconn.unregister_object(self.nm_reg)
+            self.nm_reg = 0
+            self.nm_owned = False
+
+    def reset(self, tl: dict) -> None:
+        """Load(): Calls() was already cleared by _control_filter. Clients that stay connected across Load see
+        the change (F6): Destroy for every transaction object that goes away while the daemon keeps running,
+        TransactionListChanged when one of them was active, and PropertiesChanged for each manager and NM property
+        whose value differs; a daemon or NM that appears or vanishes shows as NameOwnerChanged instead."""
+        daemon = tl.get('daemon', {})
+        want_pk = bool(daemon.get('present', True))
+        nm = tl.get('nm', {}) if 'nm' in tl else {}
+        for s in self.streams:
+            self._stop(s)
+        was_active = self.active_paths() if self.pk_owned else []
+        keep_running = self.pk_owned and want_pk
+        for tx in list(self.txs.values()):
+            if keep_running:
+                self.pkconn.emit_signal(None, tx.path, TX_IFACE, 'Destroy', None)
+            self._drop_tx(tx)
+        self.streams = []
+        self.txs = {}
+        if keep_running and was_active:
+            self.emit(PK_PATH, PK_IFACE, 'TransactionListChanged', '(as)', ([],))
+        self.mode = 'paused'
+        self.tl = tl
+        self.violations: list[str] = []
+        self.packages = dict(tl.get('packages', {}))
+        self.updates = list(tl.get('updates', []))
+        self.history = list(tl.get('history', []))
+        self.method_counts: collections.Counter = collections.Counter()
+        self.notify_seq = 0
+        self.activations = 0
+        old_mgr, old_nm = dict(self.mgr_props), dict(self.nm_props)
+        had_nm = self.nm_owned
+        self.mgr_props = {'VersionMajor': 1, 'VersionMinor': 3, 'VersionMicro': 4, 'BackendName': 'apt',
+                          'BackendDescription': 'APT', 'BackendAuthor': 'fake (GW1)', 'Roles': (1 << 34) - 2,
+                          'Groups': 0, 'Filters': (1 << 28) - 2, 'MimeTypes': ['application/vnd.debian.binary-package'],
+                          'Locked': bool(daemon.get('locked', False)),
+                          'NetworkState': ev('Network', daemon.get('networkState', 'online')),
+                          'DistroId': daemon.get('distroId', 'ubuntu;26.04;x86_64')}
+        if nm is not None:
+            self.nm_props = {'Connectivity': ev('NM.Connectivity', nm.get('Connectivity', 'full')),
+                             'ConnectivityCheckEnabled': bool(nm.get('ConnectivityCheckEnabled', True)),
+                             'Metered': ev('NM.Metered', nm.get('Metered', 'no')),
+                             'State': ev('NM.State', nm.get('State', 'connected-global')),
+                             'NetworkingEnabled': bool(nm.get('NetworkingEnabled', True)),
+                             'PrimaryConnection': '/org/freedesktop/NetworkManager/ActiveConnection/1',
+                             'Version': '1.54.0'}
+        self.set_nm(nm is not None)
+        self.set_daemon(want_pk)
+        # The real packagekit package installs a D-Bus service file, so "installed" (activatable) is the default;
+        # daemon-absent (not installed) sets "activatable": false.
+        self.set_activatable(bool(daemon.get('activatable', True)))
+        if keep_running:
+            self.emit_props(PK_PATH, PK_IFACE, self.pk_mgr_info,
+                            {k: v for k, v in self.mgr_props.items() if k in old_mgr and old_mgr[k] != v})
+        if had_nm and self.nm_owned:
+            changed = {k: v for k, v in self.nm_props.items() if k in old_nm and old_nm[k] != v}
+            self.emit_props(NM_PATH, NM_IFACE, self.nm_info, changed, conn=self.nmconn)
+            if 'State' in changed:
+                self.nmconn.emit_signal(None, NM_PATH, NM_IFACE, 'StateChanged',
+                                        self.GLib.Variant('(u)', (changed['State'],)))
+        self._write_stub_responses(tl.get('stubs', {}))
+        self._write_fixtures(tl.get('fixtures', {}))
+        self.global_stream = Stream('global')
+        self.streams.append(self.global_stream)
+        self.global_stream.events.extend(_copy(tl.get('script', [])))
+        self._arm(self.global_stream)
+        self.log(f'Load {tl.get("name")}: {len(self.updates)} updates, daemon={self.pk_owned}, '
+                 f'activatable={self.activatable}, nm={self.nm_owned}')
+
+    def _write_stub_responses(self, stubs: dict) -> None:
+        if not self.tool_dir:
+            return
+        rdir = self.tool_dir / '.responses'
+        rdir.mkdir(mode=0o700, exist_ok=True)
+        for old in rdir.glob('*.json'):
+            old.unlink()
+        for tool, spec in stubs.items():
+            (rdir / f'{tool}.json').write_text(json.dumps(spec), encoding='utf-8')
+
+    def _write_fixtures(self, files: dict) -> None:
+        if not files:
+            return
+        if not self.fixture_root:
+            raise TimelineError('this timeline writes fixtures, but the fake has no --fixture-root')
+        for rel, content in files.items():
+            target = self.fixture_root / _fixture_rel(rel)
+            if not _inside(target.parent if target.parent.exists() else self.fixture_root, self.fixture_root):
+                raise TimelineError(f'fixture {rel} escapes the fixture root')
+            if content is None:
+                target.unlink(missing_ok=True)
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            tmp = target.with_name(target.name + '.tmp')
+            tmp.write_text(content, encoding='utf-8')
+            os.replace(tmp, target)
+
+    # -- streams ------------------------------------------------------------------------------------------
+
+    def _stop(self, s: Stream) -> None:
+        if s.timer:
+            self.GLib.source_remove(s.timer)
+            s.timer = 0
+
+    def _drop_tx(self, tx: Tx) -> None:
+        tx.stream.dead = True
+        self._stop(tx.stream)
+        if tx.stream in self.streams:
+            self.streams.remove(tx.stream)
+        if tx.reg and tx.conn is not None and not tx.conn.is_closed():
+            tx.conn.unregister_object(tx.reg)
+        tx.reg, tx.conn = 0, None
+        self.txs.pop(tx.path, None)
+
+    def _gate_ok(self, s: Stream, gate: str) -> bool:
+        return gate == 'vanish' and s.tx is not None and s.tx.vanished
+
+    def _arm(self, s: Stream) -> None:
+        """Consume satisfied gates at the head; arm the first unsatisfied one."""
+        s.armed = None
+        while s.events and 'until' in s.events[0]:
+            gate = s.events[0]['until']
+            if self._gate_ok(s, gate):
+                s.events.popleft()
+                self.log(f'{s.label}: gate {gate} passed')
+                continue
+            s.armed = gate
+            return
+
+    def _release(self, s: Stream, gate: str) -> None:
+        if s.armed == gate and s.events and s.events[0].get('until') == gate:
+            s.events.popleft()
+            self.log(f'{s.label}: gate {gate} released')
+            self._arm(s)
+            self._schedule(s)
+
+    def note_call(self, method: str, tx: Tx | None = None) -> None:
+        gate = f'call:{method}'
+        for s in list(self.streams):
+            if tx is None or s.tx is tx:
+                self._release(s, gate)
+
+    def _schedule(self, s: Stream) -> None:
+        if self.mode != 'auto' or s.timer or s.dead or not s.events or s.armed:
+            return
+        head = s.events[0]
+        if 'flood' in head:
+            f = head['flood']
+            delay = int(1000 * f.get('batch', 10) / f.get('rate', 200))
+        else:
+            delay = int(head.get('ms', DEFAULT_MS))
+        s.timer = self.GLib.timeout_add(max(delay, 0), self._fire, s)
+
+    def _fire(self, s: Stream) -> bool:
+        s.timer = 0
+        if not s.dead:
+            try:
+                self._play_head(s)
+            except Exception as e:      # noqa: BLE001
+                self.violations.append(f'{s.label}: event failed: {e!r}')
+                self.log(f'ERROR {s.label}: {e!r}')
+                if s.events:
+                    s.events.popleft()
+            self._arm(s)
+            self._schedule(s)
+        return False
+
+    def run_all(self) -> None:
+        self.mode = 'auto'
+        for s in list(self.streams):
+            self._arm(s)
+            self._schedule(s)
+
+    def step(self) -> str:
+        for s in self.streams:
+            if s.armed == 'step':
+                self._release(s, 'step')
+                return f'{s.label} released step gate'
+        if self.mode == 'auto':
+            return 'auto'
+        for s in list(self.streams):
+            if s.events and not s.armed and not s.dead:
+                desc = self._play_head(s)
+                self._arm(s)
+                return f'{s.label} {desc}'
+        blocked = [f'{s.label}:{s.armed}' for s in self.streams if s.armed]
+        return 'blocked ' + ' '.join(blocked) if blocked else 'idle'
+
+    def _play_head(self, s: Stream) -> str:
+        while s.events and any(k in s.events[0] for k in DYNAMIC):
+            head = s.events.popleft()
+            s.events.extendleft(reversed(self._expand(s, head)))
+        if not s.events:
+            return 'nothing'
+        head = s.events[0]
+        if 'flood' in head:
+            return self._flood_tick(s, head)
+        s.events.popleft()
+        return self._play(s, head)
+
+    # -- event effects ----------------------------------------------------------------------------------
+
+    def _pkg_summary(self, pid: str) -> str:
+        return self.packages.get(pid, {}).get('summary', pid.split(';')[0])
+
+    def _expand(self, s: Stream, e: dict) -> list[dict]:
+        tx = s.tx
+        if tx is None:
+            raise TimelineError(f'{s.label}: {list(e)} needs a transaction')
+        ms = {'ms': EXPAND_MS}
+        if 'emitUpdates' in e:
+            entries = [[self.packages[p].get('info', 'normal'), p, self._pkg_summary(p)] for p in self.updates]
+            if not entries:
+                return []
+            if self.tl.get('batch'):
+                return [{'packages': entries, **ms}]
+            return [{'package': x, **ms} for x in entries]
+        ids = list(tx.args[-1]) if tx.args and isinstance(tx.args[-1], (list, tuple)) else []
+        if 'emitDetails' in e:
+            out = []
+            for p in ids:
+                pkg = self.packages.get(p, {})
+                d = {'package-id': p, 'summary': self._pkg_summary(p), 'description': pkg.get('description', ''),
+                     'license': pkg.get('license', 'GPL-2+'), 'group': 0, 'url': pkg.get('url', ''),
+                     'size': pkg.get('size', 0)}
+                if 'downloadSize' in pkg:
+                    d['download-size'] = pkg['downloadSize']
+                out.append({'details': d, **ms})
+            return out
+        if 'emitUpdateDetails' in e:
+            entries = []
+            for p in ids:
+                d = self.tl.get('updateDetails', {}).get(p, {})
+                entries.append({'id': p, **d})
+            return [{'updateDetails': entries, **ms}] if entries else []
+        if 'emitSimulate' in e:
+            opt = e['emitSimulate'] if isinstance(e['emitSimulate'], dict) else {}
+            total = sum(self.packages.get(p, {}).get('downloadSize', self.packages.get(p, {}).get('size', 0))
+                        for p in ids)
+            # GW2b: a simulate that reports another total (0: the apt backend's "unknown"; review m1)
+            total = int(opt.get('downloadSize', total))
+            out = [{'props': {'Status': 'dep-resolve', 'Percentage': 101}, **ms}]
+            out += [{'package': ['updating', p, self._pkg_summary(p)], **ms} for p in ids]
+            out += [{'package': [x[0], x[1], x[2] if len(x) > 2 else self._pkg_summary(x[1])], **ms}
+                    for x in opt.get('extra', [])]
+            out.append({'props': {'DownloadSizeRemaining': total, 'Percentage': 100}, **ms})
+            return out
+        if 'emitInstall' in e:
+            return self._expand_install(tx, ids, e['emitInstall'] if isinstance(e['emitInstall'], dict) else {})
+        if 'emitHistory' in e:
+            n = int(tx.args[0]) if tx.args else 5
+            return [{'transaction': h, **ms} for h in list(reversed(self.history))[:n]]
+        raise TimelineError(f'cannot expand {e}')
+
+    def _expand_install(self, tx: Tx, ids: list, opt: dict) -> list[dict]:
+        ms = {'ms': EXPAND_MS}
+        size = lambda p: self.packages.get(p, {}).get('downloadSize', self.packages.get(p, {}).get('size', 100000))
+        total = sum(size(p) for p in ids)
+        fail_at = opt.get('failAt')
+        done = ids if fail_at is None else ids[:fail_at]
+        keep = set(opt.get('keep', []))
+        restart = opt.get('restart', {})
+        out = [{'props': {'Status': 'download', 'AllowCancel': True, 'Percentage': 0,
+                          'DownloadSizeRemaining': total, 'Speed': 2400000,
+                          'RemainingTime': max(1, total // 2400000)}, **ms}]
+        left = total
+        for i, p in enumerate(ids):
+            left -= size(p)
+            out += [{'package': ['downloading', p, self._pkg_summary(p)], **ms},
+                    {'item': [p, 'download', 50], **ms},
+                    {'item': [p, 'download', 100], **ms},
+                    {'props': {'Percentage': int(50 * (i + 1) / max(len(ids), 1)), 'DownloadSizeRemaining': left,
+                               'RemainingTime': max(0, left // 2400000)}, **ms}]
+        out.append({'props': {'Status': 'commit', 'AllowCancel': False, 'Speed': 0, 'RemainingTime': 0}, **ms})
+        out.append({'props': {'Status': 'update'}, **ms})
+        for i, p in enumerate(done):
+            out += [{'package': ['updating', p, self._pkg_summary(p)], **ms},
+                    {'item': [p, 'update', 100], **ms},
+                    {'package': ['finished', p, self._pkg_summary(p)], **ms},
+                    {'props': {'Percentage': 50 + int(50 * (i + 1) / max(len(ids), 1))}, **ms}]
+            if p in restart:
+                out.append({'restart': [restart[p], p], **ms})
+        fin = {'destroyMs': int(opt['destroyMs'])} if 'destroyMs' in opt else {}
+        if fail_at is not None:
+            err = opt.get('error', ['package-failed-to-install', 'E: Sub-process /usr/bin/dpkg returned an error code (1)'])
+            out += [{'error': err, **ms}, {'removeUpdates': list(done), **ms},
+                    {'finish': opt.get('exit', 'failed'), **fin, **ms}]
+        else:
+            out += [{'props': {'Status': 'cleanup'}, **ms},
+                    {'removeUpdates': [p for p in ids if p not in keep], **ms},
+                    {'finish': 'success', **fin, **ms}]
+        return out
+
+    def _flood_tick(self, s: Stream, head: dict) -> str:
+        f = head['flood']
+        if '_left' not in f:
+            f['_left'] = int(f.get('rate', 200) * f.get('seconds', 60))
+            f['_n'] = 0
+        ids = f.get('ids') or (list(s.tx.args[-1]) if s.tx and s.tx.args else ['flood;1;all;fake'])
+        batch = min(int(f.get('batch', 10)), f['_left'])
+        for _ in range(batch):
+            n = f['_n']
+            pct = n % 101
+            self.emit(s.tx.path, TX_IFACE, 'ItemProgress', '(suu)', (ids[n % len(ids)], ev('Status', 'download'), pct))
+            s.tx.props['Percentage'] = pct
+            self.emit_props(s.tx.path, TX_IFACE, self.pk_tx_info, {'Percentage': pct})
+            f['_n'] = n + 1
+        f['_left'] -= batch
+        if f['_left'] <= 0:
+            s.events.popleft()
+            self.log(f'{s.label}: flood done ({f["_n"]} ItemProgress + {f["_n"]} PropertiesChanged)')
+        return f'flood {f["_n"]}'
+
+    def _play(self, s: Stream, e: dict) -> str:
+        GLib = self.GLib
+        tx = s.tx
+        a = next(k for k in e if k in ACTIONS)
+        v = e[a]
+        if ACTIONS[a] and tx is None:
+            raise TimelineError(f'{s.label}: {a} needs a transaction')
+        if a == 'props':
+            changed = {}
+            for k, x in v.items():
+                val = ev(PROP_ENUMS[k], x) if k in PROP_ENUMS else x
+                tx.props[k] = val
+                changed[k] = val
+            self.emit_props(tx.path, TX_IFACE, self.pk_tx_info, changed)
+            return 'props ' + ' '.join(f'{k}={x}' for k, x in v.items())
+        if a == 'package':
+            info, pid = ev('Info', v[0]), v[1]
+            summary = v[2] if len(v) > 2 else self._pkg_summary(pid)
+            tx.props['LastPackage'] = pid
+            self.emit(tx.path, TX_IFACE, 'Package', '(uss)', (info, pid, summary))
+            self._data(tx, info, pid)
+            return f'Package {v[0]} {pid}'
+        if a == 'packages':
+            items = [(ev('Info', x[0]), x[1], x[2] if len(x) > 2 else self._pkg_summary(x[1])) for x in v]
+            if items:
+                tx.props['LastPackage'] = items[-1][1]
+            if self._plural(tx):
+                self.emit(tx.path, TX_IFACE, 'Packages', '(a(uss))', (items,))
+            else:       # packagekitd sends Packages only to clients that set supports-plural-signals=true
+                for item in items:
+                    self.emit(tx.path, TX_IFACE, 'Package', '(uss)', item)
+            for info, pid, _ in items:
+                self._data(tx, info, pid)
+            return f'{"Packages" if self._plural(tx) else "Package x"} ({len(items)})'
+        if a == 'item':
+            self.emit(tx.path, TX_IFACE, 'ItemProgress', '(suu)', (v[0], ev('Status', v[1]), int(v[2])))
+            return f'ItemProgress {v[0]} {v[1]} {v[2]}'
+        if a == 'restart':
+            self.emit(tx.path, TX_IFACE, 'RequireRestart', '(us)', (ev('Restart', v[0]), v[1]))
+            return f'RequireRestart {v[0]} {v[1]}'
+        if a == 'error':
+            self.emit(tx.path, TX_IFACE, 'ErrorCode', '(us)', (ev('Error', v[0]), v[1]))
+            tx.error = ev('Error', v[0])
+            return f'ErrorCode {v[0]}'
+        if a == 'details':
+            types = {'package-id': 's', 'summary': 's', 'description': 's', 'url': 's', 'license': 's',
+                     'group': 'u', 'size': 't', 'download-size': 't'}
+            data = {k: GLib.Variant(types.get(k, 's'), x) for k, x in v.items()}
+            self.emit(tx.path, TX_IFACE, 'Details', '(a{sv})', (data,))
+            return f'Details {v.get("package-id")}'
+        if a in ('updateDetail', 'updateDetails'):
+            entries = [v] if a == 'updateDetail' else v
+            rows = [self._update_detail_tuple(d) for d in entries]
+            if a == 'updateDetails' and self._plural(tx):
+                self.emit(tx.path, TX_IFACE, 'UpdateDetails', '(a(sasasasasasussuss))', (rows,))
+                return f'UpdateDetails ({len(rows)})'
+            for row in rows:        # singular: always allowed, and the only form without the plural hint
+                self.emit(tx.path, TX_IFACE, 'UpdateDetail', '(sasasasasasussuss)', row)
+            return f'UpdateDetail x ({len(rows)})'
+        if a == 'transaction':
+            t = (v['path'], v.get('timespec', ''), bool(v.get('succeeded', True)), ev('Role', v.get('role', 'update-packages')),
+                 int(v.get('duration', 1000)), v.get('data', ''), int(v.get('uid', UID)), v.get('cmdline', ''))
+            self.emit(tx.path, TX_IFACE, 'Transaction', '(osbuusus)', t)
+            return f'Transaction {v["path"]}'
+        if a == 'finish':
+            return self._finish(s, ev('Exit', v), e.get('destroy', True),
+                                int(e.get('destroyMs', self.tl.get('destroyMs', DESTROY_MS))))
+        if a in ('destroy', '_destroy'):
+            return self._destroy(tx)
+        if a == 'setUpdates':
+            self.updates = [p for p in v]
+            return f'updates = {len(self.updates)}'
+        if a == 'removeUpdates':
+            gone = set(v)
+            self.updates = [p for p in self.updates if p not in gone]
+            return f'updates = {len(self.updates)}'
+        if a == 'manager':
+            sigs = {'UpdatesChanged': None, 'RestartSchedule': None, 'InstalledChanged': None, 'RepoListChanged': None}
+            if v == 'TransactionListChanged':
+                self.emit(PK_PATH, PK_IFACE, v, '(as)', (self.active_paths(),))
+            elif v in sigs:
+                self.emit(PK_PATH, PK_IFACE, v, None)
+            else:
+                raise TimelineError(f'unknown manager signal {v}')
+            return f'manager {v}'
+        if a == 'managerProps':
+            changed = {k: (ev('Network', x) if k == 'NetworkState' else x) for k, x in v.items()}
+            self.mgr_props.update(changed)
+            if self.pk_owned:
+                self.emit_props(PK_PATH, PK_IFACE, self.pk_mgr_info, changed)
+            return 'managerProps ' + ' '.join(f'{k}={x}' for k, x in v.items())
+        if a == 'nm':
+            changed = {k: (ev(f'NM.{k}', x) if k in ('Connectivity', 'Metered', 'State') else x) for k, x in v.items()}
+            self.nm_props.update(changed)
+            if self.nm_owned:
+                self.emit_props(NM_PATH, NM_IFACE, self.nm_info, changed, conn=self.nmconn)
+                if 'State' in changed:
+                    self.nmconn.emit_signal(None, NM_PATH, NM_IFACE, 'StateChanged',
+                                            GLib.Variant('(u)', (changed['State'],)))
+            return 'nm ' + ' '.join(f'{k}={x}' for k, x in v.items())
+        if a == 'daemon':
+            self.set_daemon(bool(v))
+            return f'daemon {bool(v)}'
+        if a == 'fixture':
+            self._write_fixtures(v)
+            return 'fixture ' + ' '.join(v)
+        if a == 'foreign':
+            t = self._new_tx(v.get('sender', ':0.foreign'), int(v.get('uid', 0)), foreign=True)
+            t.key = 'foreign'
+            t.props['Role'] = ev('Role', v.get('role', 'update-packages'))
+            t.props['TransactionFlags'] = bitfield(v.get('flags', 'flags:only-trusted'))
+            t.stream.events.extend(_copy(v.get('script', [])))
+            self.emit(PK_PATH, PK_IFACE, 'TransactionListChanged', '(as)', (self.active_paths(),))
+            self._arm(t.stream)
+            self._schedule(t.stream)
+            return f'foreign transaction {t.path} uid {t.uid}'
+        if a == 'note':
+            return f'note {v}'
+        if a == 'until':
+            return f'gate {v}'
+        raise TimelineError(f'unknown action {a}')
+
+    @staticmethod
+    def _plural(tx: Tx) -> bool:
+        return PLURAL_HINT in tx.hints
+
+    def _data(self, tx: Tx, info: int, pid: str) -> None:
+        if info in (ENUMS['Info'].get('updating'), ENUMS['Info'].get('installing'), ENUMS['Info'].get('removing'),
+                    ENUMS['Info'].get('obsoleting'), ENUMS['Info'].get('finished')):
+            tx.data_lines.append(f'{nick("Info", info)}\t{pid}')
+
+    def _update_detail_tuple(self, d: dict) -> tuple:
+        return (d['id'], d.get('updates', []), d.get('obsoletes', []), d.get('vendorUrls', []),
+                d.get('bugUrls', []), d.get('cveUrls', []), ev('Restart', d.get('restart', 'none')),
+                d.get('text', ''), d.get('changelog', ''), int(d.get('state', 1)), d.get('issued', ''),
+                d.get('updated', ''))
+
+    def _finish(self, s: Stream, exit_code: int, destroy: bool, destroy_ms: int) -> str:
+        tx = s.tx
+        if tx.finished:
+            raise TimelineError(f'{tx.path} finished twice')
+        runtime = int((time.monotonic() - tx.started) * 1000)
+        tx.props['Status'] = ev('Status', 'finished')
+        tx.props['AllowCancel'] = False
+        self.emit_props(tx.path, TX_IFACE, self.pk_tx_info, {'Status': tx.props['Status'], 'AllowCancel': False})
+        self.emit(tx.path, TX_IFACE, 'Finished', '(uu)', (exit_code, runtime))
+        tx.finished = True
+        tx.exit = exit_code
+        if tx.props['Role'] not in (0, ev('Role', 'get-old-transactions')):
+            self.history.append({'path': tx.path, 'timespec': datetime.datetime.now(datetime.timezone.utc)
+                                 .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z', 'succeeded': exit_code == 1,
+                                 'role': tx.props['Role'], 'duration': runtime, 'data': '\n'.join(tx.data_lines),
+                                 'uid': tx.uid, 'cmdline': '' if tx.foreign else self._cmdline_of(tx.sender)})
+        if self.pk_owned:
+            self.emit(PK_PATH, PK_IFACE, 'TransactionListChanged', '(as)', (self.active_paths(),))
+        s.events.clear()
+        if destroy:
+            s.events.appendleft({'_destroy': True, 'ms': destroy_ms})
+        return f'Finished {nick("Exit", exit_code)}'
+
+    def _destroy(self, tx: Tx) -> str:
+        self.emit(tx.path, TX_IFACE, 'Destroy', None)
+        self._drop_tx(tx)
+        return 'Destroy'
+
+    def active_paths(self) -> list[str]:
+        return [t.path for t in self.txs.values() if t.props['Role'] and not t.finished]
+
+    # -- transactions and method handlers --------------------------------------------------------------
+
+    def _new_tx(self, sender: str, uid: int, foreign: bool = False) -> Tx:
+        self.tx_seq += 1
+        if self.pkconn is None:
+            raise TimelineError('a transaction needs a running packagekitd')
+        tx = Tx(f'/{self.tx_seq}_{secrets.token_hex(4)}', sender, uid, foreign)
+        tx.conn = self.pkconn
+        tx.reg = self.pkconn.register_object(tx.path, self.pk_tx_info, self._tx_call, self._get_prop, None)
+        self.txs[tx.path] = tx
+        self.streams.append(tx.stream)
+        return tx
+
+    def _script_for(self, key: str) -> list[dict]:
+        n = self.method_counts[key]
+        self.method_counts[key] += 1
+        spec = self.tl.get('methods', {}).get(key)
+        if isinstance(spec, dict):
+            each = spec['each']
+            return _copy(each[min(n, len(each) - 1)])
+        if spec is not None:
+            return _copy(spec)
+        return _copy(DEFAULT_SCRIPTS[key])
+
+    def _owner_changed(self, conn, sender, path, iface, member, params):
+        name, old, new = params.unpack()
+        if new or not name.startswith(':'):
+            return
+        for tx in list(self.txs.values()):
+            if tx.sender == name and not tx.finished and not tx.vanished:
+                tx.vanished = True
+                tx.props['CallerActive'] = False
+                self.emit_props(tx.path, TX_IFACE, self.pk_tx_info, {'CallerActive': False})
+                self.log(f'{tx.path}: caller {name} vanished')
+                if self.tl.get('onVanish', 'continue') == 'cancel' and tx.props['AllowCancel']:
+                    self.log(f'{tx.path}: cancelled because its caller vanished (onVanish=cancel)')
+                    self._start_cancel(tx)
+                else:
+                    self._arm(tx.stream)
+                    self._schedule(tx.stream)
+
+    def _start_cancel(self, tx: Tx) -> None:
+        s = tx.stream
+        self._stop(s)
+        s.events.clear()
+        s.events.extend(self._script_for('Cancel'))
+        self._arm(s)
+        self._schedule(s)
+
+    def _mgr_call(self, conn, sender, path, iface, method, params, inv):
+        GLib = self.GLib
+        args = params.unpack()
+        if method == 'CreateTransaction':
+            tx = self._new_tx(sender, self._uid_of(sender))
+            self.log(f'CreateTransaction -> {tx.path} for {sender}')
+            inv.return_value(GLib.Variant('(o)', (tx.path,)))
+            return
+        if method == 'GetTransactionList':
+            inv.return_value(GLib.Variant('(ao)', (self.active_paths(),)))
+            self.note_call(method)
+            return
+        if method == 'StateHasChanged':
+            inv.return_value(None)
+            self.global_stream.events.extend(self._script_for('StateHasChanged'))
+            self._arm(self.global_stream)
+            self._schedule(self.global_stream)
+            self.note_call(method)
+            return
+        if method == 'CanAuthorize':
+            inv.return_value(GLib.Variant('(u)', (2,)))
+            return
+        if method == 'GetTimeSinceAction':
+            inv.return_value(GLib.Variant('(u)', (int(self.tl.get('daemon', {}).get('timeSinceAction', 3600)),)))
+            return
+        if method == 'GetDaemonState':
+            inv.return_value(GLib.Variant('(s)', ('fake packagekitd (GW1)',)))
+            return
+        inv.return_dbus_error(TXE + 'NotSupported', f'{method} is not implemented by the fake')
+
+    ROLE_METHODS = {'RefreshCache': 'refresh-cache', 'GetUpdates': 'get-updates', 'GetDetails': 'get-details',
+                    'GetUpdateDetail': 'get-update-detail', 'UpdatePackages': 'update-packages',
+                    'RepairSystem': 'repair-system', 'GetOldTransactions': 'get-old-transactions'}
+
+    def _tx_call(self, conn, sender, path, iface, method, params, inv):
+        tx = self.txs.get(path)
+        if tx is None:
+            inv.return_dbus_error(TXE + 'NoSuchTransaction', f'{path} does not exist')
+            return
+        args = params.unpack()
+        if method == 'SetHints':
+            tx.hints = list(args[0])
+            bad = [h for h in tx.hints if '=' not in h]
+            if bad:
+                inv.return_dbus_error(TXE + 'InputInvalid', f'bad hints {bad}')
+                return
+            inv.return_value(None)
+            return
+        if method == 'Cancel':
+            self._cancel(tx, sender, inv)
+            return
+        if method not in self.ROLE_METHODS:
+            inv.return_dbus_error(TXE + 'NotSupported', f'{method} is not implemented by the fake')
+            return
+        if tx.props['Role']:
+            inv.return_dbus_error(TXE + 'TransactionExistsWithRole', f'{path} already has a role')
+            return
+        key = method
+        flags = 0
+        if method in ('UpdatePackages', 'RepairSystem'):
+            flags = int(args[0])
+            if flags & bitfield('flags:simulate'):
+                key += ':simulate'
+        if method in ('UpdatePackages', 'GetDetails', 'GetUpdateDetail'):
+            ids = list(args[-1])
+            bad = [p for p in ids if len(p.split(';')) != 4]
+            if bad:
+                inv.return_dbus_error(TXE + 'PackageIdInvalid', f'invalid package ids {bad}')
+                return
+            if method == 'UpdatePackages':
+                for p in ids:
+                    if p in self.tl.get('forbiddenIds', []):
+                        self.violations.append(f'{key} on {path} contains forbidden id {p}')
+        tx.key, tx.args = key, tuple(args)
+        tx.started = time.monotonic()
+        tx.props['Role'] = ev('Role', self.ROLE_METHODS[method])
+        tx.props['TransactionFlags'] = flags
+        inv.return_value(None)
+        self.log(f'{path}: {key} {json.dumps(args, default=str)[:200]}')
+        self.emit_props(tx.path, TX_IFACE, self.pk_tx_info, {'Role': tx.props['Role'], 'TransactionFlags': flags})
+        self.emit(PK_PATH, PK_IFACE, 'TransactionListChanged', '(as)', (self.active_paths(),))
+        tx.stream.events.extend(self._script_for(key))
+        self._arm(tx.stream)
+        self._schedule(tx.stream)
+        self.note_call(method)
+
+    def _cancel(self, tx: Tx, sender: str, inv) -> None:
+        if tx.finished or not tx.props['Role']:
+            inv.return_dbus_error(TXE + 'NotRunning', f'{tx.path} is not running')
+        elif not tx.props['AllowCancel']:
+            inv.return_dbus_error(TXE + 'CannotCancel', 'The transaction cannot be cancelled at this time')
+        elif self._uid_of(sender) != tx.uid:
+            inv.return_dbus_error(TXE + 'RefusedByPolicy', 'cancel-foreign is not authorised in the fake')
+        else:
+            inv.return_value(None)
+            self.log(f'{tx.path}: Cancel accepted')
+            self._start_cancel(tx)
+            return
+        self.note_call('Cancel', tx)
+
+    def _nm_call(self, conn, sender, path, iface, method, params, inv):
+        GLib = self.GLib
+        if method == 'CheckConnectivity':
+            inv.return_value(GLib.Variant('(u)', (self.nm_props['Connectivity'],)))
+        elif method == 'state':
+            inv.return_value(GLib.Variant('(u)', (self.nm_props['State'],)))
+        elif method == 'GetDevices':
+            inv.return_value(GLib.Variant('(ao)', ([],)))
+        else:
+            inv.return_dbus_error('org.freedesktop.DBus.Error.UnknownMethod', method)
+
+    def _notify_call(self, conn, sender, path, iface, method, params, inv):
+        GLib = self.GLib
+        if method == 'Notify':
+            self.notify_seq += 1
+            inv.return_value(GLib.Variant('(u)', (self.notify_seq,)))
+        elif method == 'CloseNotification':
+            inv.return_value(None)
+            self.sconn.emit_signal(None, NOTIFY_PATH, NOTIFY_IFACE, 'NotificationClosed',
+                                   GLib.Variant('(uu)', (params.unpack()[0], 3)))
+        elif method == 'GetCapabilities':
+            inv.return_value(GLib.Variant('(as)', (['body', 'actions', 'persistence'],)))
+        elif method == 'GetServerInformation':
+            inv.return_value(GLib.Variant('(ssss)', ('Fake notifications (GW1)', 'win11shell', '1.0', '1.2')))
+        else:
+            inv.return_dbus_error('org.freedesktop.DBus.Error.UnknownMethod', method)
+
+    def _get_prop(self, conn, sender, path, iface, prop):
+        GLib = self.GLib
+        if iface == PK_IFACE:
+            return GLib.Variant(self._sig(self.pk_mgr_info, prop), self.mgr_props[prop])
+        if iface == TX_IFACE:
+            tx = self.txs.get(path)
+            return GLib.Variant(self._sig(self.pk_tx_info, prop), tx.props[prop]) if tx else None
+        if iface == NM_IFACE:
+            return GLib.Variant(self._sig(self.nm_info, prop), self.nm_props[prop])
+        return None
+
+    # -- control ----------------------------------------------------------------------------------------
+
+    def _control_call(self, conn, sender, path, iface, method, params, inv):
+        GLib = self.GLib
+        args = params.unpack()
+        try:
+            if method == 'Load':
+                self.reset(load_timeline(args[0]))
+                inv.return_value(None)
+            elif method == 'Step':
+                inv.return_value(GLib.Variant('(s)', (self.step(),)))
+            elif method == 'Run':
+                self.run_all()
+                inv.return_value(None)
+            elif method == 'SetDaemon':
+                self.set_daemon(bool(args[0]))
+                inv.return_value(None)
+            elif method == 'Activate':
+                if not self.pk_owned:
+                    self.activations += 1
+                    self.log(f'daemon: D-Bus activation #{self.activations} (requested by {sender})')
+                self.set_daemon(True)
+                inv.return_value(None)
+            elif method == 'Calls':
+                with self.lock:
+                    rows = [(c['method'], c['path'], c['sender'], json.dumps(c['args'], default=str))
+                            for c in self.calls]
+                inv.return_value(GLib.Variant('(a(ssss))', (rows,)))
+            elif method == 'CallCount':
+                with self.lock:
+                    n = len(self.calls)
+                inv.return_value(GLib.Variant('(u)', (n,)))
+            elif method == 'CallsJson':
+                with self.lock:
+                    text = json.dumps(self.calls, default=str)
+                inv.return_value(GLib.Variant('(s)', (text,)))
+            elif method == 'State':
+                inv.return_value(GLib.Variant('(s)', (json.dumps(self.state(), default=str),)))
+            else:
+                inv.return_dbus_error('org.freedesktop.DBus.Error.UnknownMethod', method)
+        except TimelineError as e:
+            inv.return_dbus_error(CONTROL_IFACE + '.Error', str(e))
+        except Exception as e:      # noqa: BLE001
+            inv.return_dbus_error(CONTROL_IFACE + '.Error', repr(e))
+
+    def state(self) -> dict:
+        return {'timeline': self.tl.get('name'), 'mode': self.mode, 'daemon': self.pk_owned, 'nm': self.nm_owned,
+                'pkUnique': self.pkconn.get_unique_name() if self.pkconn else None,
+                'activatable': self.activatable, 'activations': self.activations,
+                'updates': list(self.updates), 'violations': list(self.violations), 'history': len(self.history),
+                'transactions': [{'path': t.path, 'role': nick('Role', t.props['Role']), 'status': t.props['Status'],
+                                  'finished': t.finished, 'foreign': t.foreign, 'sender': t.sender, 'uid': t.uid,
+                                  'vanished': t.vanished} for t in self.txs.values()],
+                'streams': [{'label': s.label, 'pending': len(s.events), 'armed': s.armed,
+                             'head': (list(s.events[0])[0] if s.events else None)} for s in self.streams]}
+
+
+def _copy(obj):
+    return json.loads(json.dumps(obj))
+
+
+DEFAULT_SCRIPTS = {
+    'RefreshCache': [{'props': {'Status': 'refresh-cache', 'Percentage': 0}}, {'props': {'Percentage': 50}},
+                     {'props': {'Percentage': 100}}, {'finish': 'success'}],
+    'GetUpdates': [{'props': {'Status': 'query', 'Percentage': 101}}, {'emitUpdates': True}, {'finish': 'success'}],
+    'GetDetails': [{'props': {'Status': 'query'}}, {'emitDetails': True}, {'finish': 'success'}],
+    'GetUpdateDetail': [{'props': {'Status': 'query'}}, {'emitUpdateDetails': True}, {'finish': 'success'}],
+    'UpdatePackages:simulate': [{'emitSimulate': True}, {'finish': 'success'}],
+    'UpdatePackages': [{'emitInstall': True}],
+    'RepairSystem': [{'props': {'Status': 'run-hook', 'AllowCancel': False}}, {'props': {'Status': 'cleanup'}},
+                     {'finish': 'success'}],
+    'RepairSystem:simulate': [{'finish': 'success'}],
+    'GetOldTransactions': [{'props': {'Status': 'query'}}, {'emitHistory': True}, {'finish': 'success'}],
+    'Cancel': [{'props': {'Status': 'cancel', 'AllowCancel': False}, 'ms': 10},
+               {'error': ['transaction-cancelled', 'The task was stopped successfully'], 'ms': 10},
+               {'finish': 'cancelled', 'ms': 10}],
+    'StateHasChanged': [{'manager': 'UpdatesChanged', 'ms': 100}],
+}
+
+
+def serve_problems(addresses: list[str], env: dict) -> list[tuple[str, str]]:
+    """The fake only serves a private bus inside a sandbox: run.sh's layer or, for GW8, GE0c's harness sandbox
+    (whose XDG_RUNTIME_DIR must then hold the .win11-update-fixture marker): private_bus_problems + PID 1."""
+    p = private_bus_problems(addresses, env)
+    try:
+        if Path('/proc/1/comm').read_text().strip() != 'bwrap':
+            p.append(('not-sandboxed-pid', 'PID 1 is not bwrap'))
+    except OSError:
+        p.append(('not-sandboxed-pid', '/proc/1/comm unreadable'))
+    return p
+
+
+def service_text() -> str:
+    """The only file <run>/services may hold: the D-Bus activation of the fake PackageKit."""
+    return (f'[D-BUS Service]\nName={PK_NAME}\n'
+            f'Exec={PY} -I -B {HERE / "fake_packagekit.py"} activate\n')
+
+
+def system_bus_conf(service_dir: Path) -> str:
+    return ('<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN"\n'
+            ' "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">\n'
+            '<!-- GW1, generated by fake_packagekit.py layer: tests/update/bus.conf + one service dir. -->\n'
+            f'<busconfig>\n  <include ignore_missing="no">{HERE / "bus.conf"}</include>\n'
+            f'  <servicedir>{service_dir}</servicedir>\n</busconfig>\n')
+
+
+def service_dir_problems(service_dir: Path | None, conf: Path | None = None) -> list[tuple[str, str]]:
+    """F4: the private system bus can activate nothing but the fake: the generated config is exactly bus.conf
+    + this one directory, bus.conf has no service directories, and the directory holds at most our file."""
+    p = []
+    base = (HERE / 'bus.conf').read_text(encoding='utf-8')
+    for bad in ('<servicedir', '<standard_session_servicedirs', '<standard_system_servicedirs', '<includedir',
+                '<include', '<servicehelper', 'eavesdrop="true"'):
+        if bad in re.sub(r'<!--.*?-->', '', base, flags=re.S):
+            p.append(('bus-conf', f'tests/update/bus.conf contains {bad}'))
+    if service_dir is None:
+        return p
+    if conf is not None:
+        try:
+            if conf.read_text(encoding='utf-8') != system_bus_conf(service_dir):
+                p.append(('bus-conf', f'{conf} is not the generated wrapper'))
+        except OSError as e:
+            p.append(('bus-conf', f'{conf}: {e}'))
+    try:
+        names = sorted(os.listdir(service_dir))
+    except OSError as e:
+        return p + [('service-dir', f'{service_dir}: {e}')]
+    if [n for n in names if n != SERVICE_FILE]:
+        p.append(('service-dir', f'{service_dir} holds {names} (only {SERVICE_FILE} is allowed)'))
+    if SERVICE_FILE in names and (service_dir / SERVICE_FILE).read_text(encoding='utf-8') != service_text():
+        p.append(('service-dir', f'{service_dir / SERVICE_FILE} is not the generated activation file'))
+    return p
+
+
+def cmd_serve(a) -> int:
+    from gi.repository import GLib
+    if os.geteuid() == 0:
+        print('fake: refusing to run as root', file=sys.stderr)
+        return EXIT_REFUSED
+    problems = serve_problems([x for x in (a.bus, a.session_bus) if x], dict(os.environ))
+    if a.service_dir:
+        problems += service_dir_problems(Path(a.service_dir))
+    if problems:
+        return refuse(problems)
+    fake = Fake(a)
+    loop = GLib.MainLoop()
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, sig, lambda *_: (loop.quit(), False)[1])
+    fake.conn.connect('closed', lambda *_: loop.quit())
+    if a.ready:
+        tmp = a.ready + '.tmp'
+        Path(tmp).write_text(json.dumps({'pid': os.getpid(), 'unique': fake.conn.get_unique_name()}))
+        os.replace(tmp, a.ready)
+    fake.log(f'fake ready on {a.bus} as {fake.conn.get_unique_name()}')
+    loop.run()
+    fake.log('fake stopping')
+    return 0
+
+
+def cmd_activate(a) -> int:
+    """Exec of <run>/services/org.freedesktop.PackageKit.service: the private system bus starts this when a
+    client calls PackageKit without NO_AUTO_START while the fake has released the name. It only ever talks to
+    the bus that started it (DBUS_STARTER_ADDRESS), and only inside the layer."""
+    env = dict(os.environ)
+    starter = env.get('DBUS_STARTER_ADDRESS', '')
+    problems = serve_problems([starter], env) if starter else [('bus-missing', 'DBUS_STARTER_ADDRESS is not set')]
+    problems += sandbox_problems()
+    if os.geteuid() == 0:
+        problems.append(('root', 'running as root'))
+    if problems:
+        return refuse(problems)
+    control_call(starter, 'Activate')
+    print(f'fake activate: org.freedesktop.PackageKit owned again on {starter}', flush=True)
+    return 0
+
+
+# ----------------------------------------------------------------------------------------------------------
+# Stub log
+# ----------------------------------------------------------------------------------------------------------
+
+def read_stub_log(path: Path, start: int = 0) -> list[dict]:
+    try:
+        lines = path.read_text(encoding='utf-8').splitlines()
+    except FileNotFoundError:
+        return []
+    return [json.loads(x) for x in lines[start:] if x.strip()]
+
+
+def check_stub_log(path: Path, expected: list, start: int = 0) -> dict:
+    """expected: ordered list of matchers: a tool name, or {"tool", "argv"?, "argvPrefix"?, "dir"?, "count"?}.
+    "count" (GW2b) stands for that many consecutive calls of the same matcher (0 allowed); default 1."""
+    actual = read_stub_log(path, start)
+    want = []
+    for x in expected:
+        m = {'tool': x} if isinstance(x, str) else dict(x)
+        want.extend([m] * int(m.pop('count', 1)))
+    unexpected, missing, i = [], [], 0
+
+    def match(m, rec):
+        return (m['tool'] == rec['tool'] and ('dir' not in m or m['dir'] == rec['dir'])
+                and ('argv' not in m or m['argv'] == rec['argv'])
+                and ('argvPrefix' not in m or rec['argv'][:len(m['argvPrefix'])] == m['argvPrefix']))
+    for rec in actual:
+        if i < len(want) and match(want[i], rec):
+            i += 1
+        else:
+            unexpected.append({'tool': rec['tool'], 'dir': rec['dir'], 'argv': rec['argv'][:6]})
+    missing = want[i:]
+    return {'ok': not unexpected and not missing, 'calls': len(actual), 'unexpected': unexpected, 'missing': missing}
+
+
+def cmd_check_stubs(a) -> int:
+    expected = json.loads(Path(a.expect).read_text()) if a.expect else []
+    result = check_stub_log(Path(a.log), expected, a.start)
+    print(json.dumps(result, indent=1))
+    return 0 if result['ok'] else 1
+
+
+# ----------------------------------------------------------------------------------------------------------
+# layer: inside run.sh's bubblewrap layer
+# ----------------------------------------------------------------------------------------------------------
+
+def setup_stubs(run: Path) -> None:
+    names = json.loads((STUBS_SRC / 'names.json').read_text())
+    src = (STUBS_SRC / 'stub.py').read_bytes()
+    for sub, key in (('guard-bin', 'guard'), ('tools', 'tools')):
+        d = run / sub
+        d.mkdir(mode=0o700, exist_ok=True)
+        stub = d / 'stub.py'
+        stub.write_bytes(src)
+        stub.chmod(0o755)
+        for name in names[key]:
+            link = d / name
+            if not os.path.lexists(link):
+                os.symlink('stub.py', link)
+    (run / 'stub-calls.jsonl').touch(mode=0o600)
+
+
+def start_bus(run: Path, label: str, procs: list, config: Path) -> str:
+    log = open(run / 'logs' / f'bus-{label}.log', 'w')
+    r, w = os.pipe()
+    p = subprocess.Popen(['/usr/bin/dbus-daemon', f'--config-file={config}', '--nofork',
+                          f'--print-address={w}'], pass_fds=(w,), stdin=subprocess.DEVNULL, stdout=log,
+                         stderr=subprocess.STDOUT, cwd='/')
+    os.close(w)
+    procs.append(p)
+    buf = b''
+    deadline = time.monotonic() + 10
+    while b'\n' not in buf and time.monotonic() < deadline:
+        ready, _, _ = select.select([r], [], [], 0.2)
+        if ready:
+            chunk = os.read(r, 4096)
+            if not chunk:
+                break
+            buf += chunk
+    os.close(r)
+    address = buf.decode().strip()
+    if not address.startswith(f'unix:path={PRIVATE_RT}/dbus-'):
+        raise RuntimeError(f'{label} bus did not start or has an unexpected address {address!r}')
+    return address
+
+
+def control_call(address: str, method: str, args=None, sig: str | None = None, reply: str | None = None):
+    from gi.repository import Gio, GLib
+    flags = Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION
+    conn = Gio.DBusConnection.new_for_address_sync(address, flags, None, None)
+    try:
+        r = conn.call_sync(CONTROL_NAME, CONTROL_PATH, CONTROL_IFACE, method,
+                           GLib.Variant(sig, tuple(args)) if sig else None,
+                           GLib.VariantType(reply) if reply else None, Gio.DBusCallFlags.NONE, 10000, None)
+        return r.unpack() if r is not None else None
+    finally:
+        conn.close_sync(None)
+
+
+def stop(procs: list) -> None:
+    for p in reversed(procs):
+        if p.poll() is None:
+            p.terminate()
+    deadline = time.monotonic() + 3
+    for p in reversed(procs):
+        try:
+            p.wait(max(0.1, deadline - time.monotonic()))
+        except subprocess.TimeoutExpired:
+            p.kill()
+            p.wait()
+
+
+def check_calls(calls: list[dict], expected) -> dict:
+    """--expect-calls: an int (exact CallCount()) or an ordered list of matchers: a method label
+    ("CreateTransaction", "Properties.GetAll") or {"method", "path"?, "to"?: pk|nm|notify, "noAutoStart"?,
+    "args"?, "argsPrefix"?}. Every recorded call must match the next matcher; none may be left over."""
+    if isinstance(expected, int) and not isinstance(expected, bool):
+        return {'ok': len(calls) == expected, 'calls': len(calls), 'expected': expected}
+    want = [{'method': x} if isinstance(x, str) else x for x in expected]
+    unexpected, i = [], 0
+
+    def match(m, c):
+        return (m['method'] == c['method'] and all(m[k] == c.get(k) for k in ('path', 'to', 'noAutoStart') if k in m)
+                and ('args' not in m or m['args'] == c['args'])
+                and ('argsPrefix' not in m or c['args'][:len(m['argsPrefix'])] == m['argsPrefix']))
+    for c in calls:
+        if i < len(want) and match(want[i], c):
+            i += 1
+        else:
+            unexpected.append({'method': c['method'], 'path': c['path'], 'to': c['to']})
+    return {'ok': not unexpected and i == len(want), 'calls': len(calls), 'unexpected': unexpected[:20],
+            'missing': want[i:]}
+
+
+def cmd_layer(a) -> int:
+    env = dict(os.environ)
+    problems = guard_problems(env, 'pre') + sandbox_problems()
+    if problems:
+        return refuse(problems)
+    if a.mode == 'guard-only':
+        print('GUARD OK', flush=True)
+        return 0
+    run = Path(env['WIN11_FAKE_RUN_DIR'])
+    os.makedirs(PRIVATE_RT, mode=0o700, exist_ok=True)
+    os.chmod(PRIVATE_RT, 0o700)
+    os.makedirs(env['TMPDIR'], mode=0o700, exist_ok=True)
+    for sub in ('logs', 'fixture', 'tools', 'services'):
+        (run / sub).mkdir(mode=0o700, exist_ok=True)
+    for sub in ('fixture', 'tools'):
+        # GW2b: the service's seam check (paths.rs) refuses a seam directory that is group or world writable
+        os.chmod(run / sub, 0o700)
+    setup_stubs(run)
+    for d in (run / 'fixture', run / 'tools', Path(PRIVATE_RT)):
+        (d / MARKER).write_text('GW1 test seam marker (design 4.11)\n')
+    service_dir = run / 'services'
+    sys_conf = run / 'bus-system.conf'
+    sys_conf.write_text(system_bus_conf(service_dir), encoding='utf-8')
+    problems = service_dir_problems(service_dir, sys_conf)
+    if problems:
+        return refuse(problems)
+    procs: list = []
+    result = {'mode': a.mode, 'started': time.strftime('%Y-%m-%d %H:%M:%S')}
+    rc = 1
+    try:
+        sys_addr = start_bus(run, 'system', procs, sys_conf)
+        sess_addr = start_bus(run, 'session', procs, HERE / 'bus.conf')
+        child_env = {**env, 'DBUS_SYSTEM_BUS_ADDRESS': sys_addr, 'DBUS_SESSION_BUS_ADDRESS': sess_addr,
+                     'WIN11_UPDATE_PK_BUS': sys_addr, 'WIN11_UPDATE_FIXTURE_ROOT': str(run / 'fixture'),
+                     'WIN11_UPDATE_TOOL_DIR': str(run / 'tools')}
+        problems = guard_problems(child_env, 'child') + sandbox_problems() \
+            + private_bus_problems([sys_addr, sess_addr], child_env)
+        if problems:
+            return refuse(problems)
+        ready = run / 'fake.ready'
+        fake_log = open(run / 'logs' / 'fake.log', 'w')
+        fake = subprocess.Popen([PY, '-I', '-B', str(HERE / 'fake_packagekit.py'), 'serve', '--bus', sys_addr,
+                                 '--session-bus', sess_addr, '--tool-dir', str(run / 'tools'),
+                                 '--fixture-root', str(run / 'fixture'), '--service-dir', str(service_dir),
+                                 '--ready', str(ready)],
+                                env=child_env, stdin=subprocess.DEVNULL, stdout=fake_log,
+                                stderr=subprocess.STDOUT, cwd=str(W))
+        procs.append(fake)
+        deadline = time.monotonic() + 15
+        while not ready.exists():
+            if time.monotonic() > deadline or fake.poll() is not None:
+                raise RuntimeError(f'the fake did not start (see {run / "logs" / "fake.log"})')
+            time.sleep(0.05)
+        (run / 'env.txt').write_text(''.join(f'{k}={v}\n' for k, v in sorted(child_env.items())))
+        if a.mode == 'selftest':
+            cmd = [PY, '-I', '-B', str(HERE / 'fake_packagekit.py'), 'selftest'] + a.rest
+        else:
+            if a.timeline:
+                control_call(sys_addr, 'Load', [a.timeline], '(s)')
+                if a.run:
+                    control_call(sys_addr, 'Run')
+            cmd = a.rest
+            if not cmd:
+                raise RuntimeError('exec: no command given after --')
+            if '/' in cmd[0] and not os.path.isabs(cmd[0]):
+                cmd[0] = str(W / cmd[0])
+        mark = len(read_stub_log(run / 'stub-calls.jsonl'))
+        t0 = time.monotonic()
+        try:
+            rc = subprocess.run(cmd, env=child_env, stdin=subprocess.DEVNULL, cwd=str(W),
+                                timeout=a.timeout).returncode
+        except subprocess.TimeoutExpired:
+            print(f'layer: {cmd[0]} timed out after {a.timeout} s', file=sys.stderr)
+            rc = 124
+        result.update({'command': cmd[:8], 'rc': rc, 'seconds': round(time.monotonic() - t0, 1)})
+        fake_ok = True
+        try:
+            if fake.poll() is not None:
+                raise RuntimeError(f'the fake exited with {fake.returncode} during the run')
+            calls = json.loads(control_call(sys_addr, 'CallsJson', reply='(s)')[0])
+            state = json.loads(control_call(sys_addr, 'State', reply='(s)')[0])
+            (run / 'calls.json').write_text(json.dumps(calls, indent=1, default=str))
+            result['callCount'] = len(calls)
+            result['violations'] = state['violations']
+        except Exception as e:      # noqa: BLE001
+            fake_ok = False
+            calls = []
+            result['callCount'] = f'unavailable: {e!r}'
+            print(f'layer: FAIL, the fake is not reachable at the end of the run: {e}', file=sys.stderr, flush=True)
+        if a.mode == 'exec':
+            expected = json.loads(Path(a.expect_stubs).read_text()) if a.expect_stubs else []
+            check = check_stub_log(run / 'stub-calls.jsonl', expected, mark)
+            result['stubs'] = check
+            print(f'layer: stub log {"OK" if check["ok"] else "MISMATCH"}: {check["calls"]} call(s), '
+                  f'unexpected {check["unexpected"]}, missing {check["missing"]}', flush=True)
+            print(f'layer: fake CallCount() = {result["callCount"]} since the last Load '
+                  f'(calls in {run / "calls.json"})', flush=True)
+            ok = check['ok'] and fake_ok
+            if a.expect_calls is not None and fake_ok:
+                spec = a.expect_calls
+                expected_calls = int(spec) if re.fullmatch(r'\d+', spec) else json.loads(Path(spec).read_text())
+                cc = check_calls(calls, expected_calls)
+                result['callsCheck'] = cc
+                print(f'layer: CallCount check {"OK" if cc["ok"] else "MISMATCH"}: '
+                      + json.dumps({k: v for k, v in cc.items() if k != 'ok'})[:400], flush=True)
+                ok = ok and cc['ok']
+            if result.get('violations'):
+                print(f'layer: fake violations {result["violations"]}', flush=True)
+                ok = False
+            if not ok and rc == 0:
+                rc = 1
+        elif not fake_ok and rc == 0:
+            rc = 1
+    except Exception as e:      # noqa: BLE001
+        print(f'layer: {e}', file=sys.stderr, flush=True)
+        result['error'] = str(e)
+        rc = rc or 1
+    finally:
+        stop(procs)
+        result['exit'] = rc
+        (run / 'result.json').write_text(json.dumps(result, indent=1, default=str))
+    return rc
+
+
+# ----------------------------------------------------------------------------------------------------------
+# selftest: the reference client (design 9.1 done-when)
+# ----------------------------------------------------------------------------------------------------------
+
+TX_SIGS = {'RefreshCache': '(b)', 'GetUpdates': '(t)', 'GetDetails': '(as)', 'GetUpdateDetail': '(as)',
+           'UpdatePackages': '(tas)', 'RepairSystem': '(t)', 'GetOldTransactions': '(u)'}
+DRIVER_SIGS = {'NameHasOwner': ('(s)', '(b)'), 'ListActivatableNames': (None, '(as)'), 'GetNameOwner': ('(s)', '(s)'),
+               'ListNames': (None, '(as)')}
+MGR_SIGS = {'GetTransactionList': (None, '(ao)'), 'StateHasChanged': ('(s)', None), 'CanAuthorize': ('(s)', '(u)'),
+            'GetTimeSinceAction': ('(u)', '(u)')}
+CONTROL_SIGS = {'Load': ('(s)', None), 'Step': (None, '(s)'), 'Run': (None, None), 'SetDaemon': ('(b)', None),
+                'Activate': (None, None),
+                'State': (None, '(s)'), 'CallsJson': (None, '(s)'), 'CallCount': (None, '(u)'),
+                'Calls': (None, '(a(ssss))')}
+NOT_REACHED = ('org.freedesktop.DBus.Error.ServiceUnknown', 'org.freedesktop.DBus.Error.NameHasNoOwner')
+HINTS = ['interactive=true', 'background=false']
+PROP_KINDS = {'Status': 'Status', 'Role': 'Role', 'NetworkState': 'Network', 'Connectivity': 'NM.Connectivity',
+              'Metered': 'NM.Metered', 'State': 'NM.State'}
+
+
+def _plain(x):
+    if isinstance(x, tuple):
+        return [_plain(i) for i in x]
+    if isinstance(x, list):
+        return [_plain(i) for i in x]
+    if isinstance(x, dict):
+        return {k: _plain(v) for k, v in x.items()}
+    return x
+
+
+def _is_subsequence(small: list, big: list) -> bool:
+    it = iter(big)
+    return all(any(x == y for y in it) for x in small)
+
+
+class Bus:
+    """One client connection of the self-test (A, B, ...), or the observer."""
+
+    def __init__(self, st, label: str, observer: bool = False):
+        Gio, GLib = st.Gio, st.GLib
+        self.st, self.label = st, label
+        flags = Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION
+        self.conn = Gio.DBusConnection.new_for_address_sync(st.addr, flags, None, None)
+        self.unique = self.conn.get_unique_name()
+        self.signals: list = []
+        self.props: dict = collections.defaultdict(dict)     # path -> merged PropertiesChanged
+        self.destroyed: set = set()
+        self.members: collections.Counter = collections.Counter()   # (path, member) -> count
+        self.dest_bad: list = []
+        self.broadcast = 0
+        if observer:
+            self.conn.add_filter(self._filter)
+        for sender in (PK_NAME, NM_NAME):
+            self.conn.signal_subscribe(sender, None, None, None, None, Gio.DBusSignalFlags.NONE, self._on)
+        # One round trip: the bus has applied our AddMatch rules once this returns.
+        self.conn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', 'GetId', None,
+                            GLib.VariantType('(s)'), Gio.DBusCallFlags.NONE, 5000, None)
+        self.closed = False
+
+    def _on(self, conn, sender, path, iface, member, params):
+        args = _plain(params.unpack()) if params is not None else []
+        self.signals.append((path, iface, member, args))
+        self.members[(path, member)] += 1
+        if member == 'PropertiesChanged':
+            self.props[path].update(args[1])
+        elif member == 'Destroy':
+            self.destroyed.add(path)
+
+    def _filter(self, conn, message, incoming):
+        Gio = self.st.Gio
+        if incoming and message.get_message_type() == Gio.DBusMessageType.SIGNAL \
+                and message.get_sender() != 'org.freedesktop.DBus':
+            dest = message.get_destination()
+            if dest:
+                self.dest_bad.append((message.get_member(), dest))
+            else:
+                self.broadcast += 1
+        return message
+
+    def call(self, dest, path, iface, method, sig, args, reply, flags='', timeout=10000, record=True):
+        Gio, GLib = self.st.Gio, self.st.GLib
+        f = Gio.DBusCallFlags.NO_AUTO_START if 'no-auto-start' in flags else Gio.DBusCallFlags.NONE
+        label = method if not iface.startswith('org.freedesktop.DBus.') else iface.rsplit('.', 1)[1] + '.' + method
+        entry = {'method': label, 'path': path, 'client': self.label}
+        if record:          # bus-driver calls never reach the fake
+            self.st.sent.append(entry)
+        try:
+            r = self.conn.call_sync(dest, path, iface, method, GLib.Variant(sig, tuple(args)) if sig else None,
+                                    GLib.VariantType(reply) if reply else None, f, timeout, None)
+            return (_plain(r.unpack()) if r is not None else None), None
+        except GLib.Error as e:
+            name = Gio.DBusError.get_remote_error(e) or f'local:{e.message}'
+            if name in NOT_REACHED:
+                entry['reached'] = False
+            return None, name
+
+    def close(self):
+        if not self.closed:
+            self.conn.close_sync(None)
+            self.closed = True
+
+
+def summarize(signals: list, path: str) -> dict:
+    s = {'exit': None, 'errors': [], 'count': collections.Counter(), 'statuses': [], 'props': {}, 'packages': [],
+         'restart': [], 'details': [], 'updateDetails': [], 'transactions': [], 'order': []}
+    for p, iface, member, args in signals:
+        if p != path:
+            continue
+        s['count'][member] += 1
+        s['order'].append(member)
+        if member == 'PropertiesChanged':
+            s['props'].update(args[1])
+            if 'Status' in args[1]:
+                s['statuses'].append(args[1]['Status'])
+        elif member == 'Finished':
+            s['exit'] = args[0]
+        elif member == 'ErrorCode':
+            s['errors'].append(args[0])
+        elif member == 'Package':
+            s['packages'].append((args[0], args[1]))
+        elif member == 'Packages':
+            s['packages'] += [(i, pid) for i, pid, _ in args[0]]
+        elif member == 'RequireRestart':
+            s['restart'].append(args[0])
+        elif member == 'Details':
+            s['details'].append(args[0])
+        elif member == 'UpdateDetails':
+            s['updateDetails'] += args[0]
+        elif member == 'UpdateDetail':
+            s['updateDetails'].append(args)
+        elif member == 'Transaction':
+            s['transactions'].append(args)
+    return s
+
+
+class SelfTest:
+    def __init__(self, a):
+        from gi.repository import Gio, GLib
+        self.Gio, self.GLib = Gio, GLib
+        self.a = a
+        self.addr = os.environ['WIN11_UPDATE_PK_BUS']
+        self.run = Path(os.environ['WIN11_FAKE_RUN_DIR'])
+        self.tools = Path(os.environ['WIN11_UPDATE_TOOL_DIR'])
+        self.fixture = Path(os.environ['WIN11_UPDATE_FIXTURE_ROOT'])
+        self.stub_log = self.run / 'stub-calls.jsonl'
+        self.sent: list = []
+        self.ctl = Bus(self, 'control')
+
+    # -- helpers --------------------------------------------------------------------------------------
+
+    def pump(self, cond, timeout: float) -> bool:
+        GLib = self.GLib
+        loop = GLib.MainLoop()
+        deadline = time.monotonic() + timeout
+        result = [False]
+
+        def check():
+            try:
+                result[0] = bool(cond())
+            except Exception as e:      # noqa: BLE001
+                print(f'selftest: condition error {e!r}', file=sys.stderr)
+                result[0] = False
+                loop.quit()
+                return False
+            if result[0] or time.monotonic() > deadline:
+                loop.quit()
+                return False
+            return True
+        GLib.timeout_add(5, check)
+        loop.run()
+        return result[0]
+
+    def drain(self, buses: list, quiet: float = 0.2, limit: float = 15) -> None:
+        """Pump until no connection has received a signal for `quiet` seconds (all backlogs delivered)."""
+        last = [sum(len(b.signals) for b in buses), time.monotonic()]
+
+        def settled():
+            n = sum(len(b.signals) for b in buses)
+            if n != last[0]:
+                last[0], last[1] = n, time.monotonic()
+            return time.monotonic() - last[1] >= quiet
+        self.pump(settled, limit)
+
+    def control(self, method: str, args=()):
+        sig, reply = CONTROL_SIGS[method]
+        saved = self.sent
+        self.sent = []
+        try:
+            r, err = self.ctl.call(CONTROL_NAME, CONTROL_PATH, CONTROL_IFACE, method, sig, list(args), reply)
+        finally:
+            self.sent = saved
+        if err:
+            raise RuntimeError(f'control {method}{tuple(args)} failed: {err}')
+        return r[0] if isinstance(r, list) and len(r) == 1 else r
+
+    def resolve(self, x, ctx):
+        if isinstance(x, list):
+            return [self.resolve(i, ctx) for i in x]
+        if isinstance(x, str):
+            if x == '$uid':
+                return UID
+            m = re.fullmatch(r'\$([A-Za-z]+)(?:\[(\d+)\])?', x)
+            if m:
+                value = ctx[m.group(1)]
+                return value[int(m.group(2))] if m.group(2) is not None else value
+            if x.startswith(('filter:', 'flags:')):
+                return bitfield(x)
+        return x
+
+    def expect_value(self, key: str, value, ctx):
+        value = self.resolve(value, ctx)
+        if key in PROP_KINDS and isinstance(value, str):
+            return ev(PROP_KINDS[key], value)
+        return value
+
+    def props_match(self, props: dict, cond: dict, ctx) -> bool:
+        for k, v in cond.items():
+            if k == 'PercentageMin':
+                if not (props.get('Percentage', 101) != 101 and props.get('Percentage', 0) >= v):
+                    return False
+            elif props.get(k) != self.expect_value(k, v, ctx):
+                return False
+        return True
+
+    def check_summary(self, where: str, s: dict, exp: dict, ctx, fails: list, generic: bool = True) -> None:
+        def fail(msg):
+            fails.append(f'{where}: {msg}')
+        if 'exit' in exp and s['exit'] != ev('Exit', exp['exit']):
+            fail(f'exit {s["exit"]} != {exp["exit"]}')
+        if 'errors' in exp and s['errors'] != [ev('Error', e) for e in exp['errors']]:
+            fail(f'errors {s["errors"]} != {exp["errors"]}')
+        for m, n in exp.get('count', {}).items():
+            if s['count'][m] != n:
+                fail(f'{m} count {s["count"][m]} != {n}')
+        for m, n in exp.get('minCount', {}).items():
+            if s['count'][m] < n:
+                fail(f'{m} count {s["count"][m]} < {n}')
+        if 'statuses' in exp and not _is_subsequence([ev('Status', x) for x in exp['statuses']], s['statuses']):
+            fail(f'statuses {s["statuses"]} do not contain {exp["statuses"]} in order')
+        if 'packages' in exp and len(s['packages']) != exp['packages']:
+            fail(f'{len(s["packages"])} packages != {exp["packages"]}')
+        if 'infos' in exp and sorted(i for i, _ in s['packages']) != sorted(ev('Info', i) for i in exp['infos']):
+            fail(f'infos {sorted(i for i, _ in s["packages"])} != {exp["infos"]}')
+        if 'ids' in exp and sorted(p for _, p in s['packages']) != sorted(self.resolve(exp['ids'], ctx)):
+            fail('package ids differ')
+        if 'restart' in exp and s['restart'] != [ev('Restart', r) for r in exp['restart']]:
+            fail(f'restart {s["restart"]} != {exp["restart"]}')
+        for k, v in exp.get('props', {}).items():
+            if s['props'].get(k) != self.expect_value(k, v, ctx):
+                fail(f'property {k}={s["props"].get(k)!r} != {v!r}')
+        if 'details' in exp and len(s['details']) != exp['details']:
+            fail(f'{len(s["details"])} Details != {exp["details"]}')
+        if 'downloadSize' in exp:
+            have = [('download-size' in d) for d in s['details']]
+            if not have or any(h != exp['downloadSize'] for h in have):
+                fail(f'download-size presence {have} != {exp["downloadSize"]}')
+        if 'updateDetails' in exp and len(s['updateDetails']) != exp['updateDetails']:
+            fail(f'{len(s["updateDetails"])} update details != {exp["updateDetails"]}')
+        if 'cves' in exp and sum(len(d[5]) for d in s['updateDetails']) != exp['cves']:
+            fail(f'CVE url count {sum(len(d[5]) for d in s["updateDetails"])} != {exp["cves"]}')
+        if 'bugs' in exp and sum(len(d[4]) for d in s['updateDetails']) != exp['bugs']:
+            fail(f'bug url count {sum(len(d[4]) for d in s["updateDetails"])} != {exp["bugs"]}')
+        if 'changelogs' in exp and sum(1 for d in s['updateDetails'] if d[8]) != exp['changelogs']:
+            fail('changelog count differs')
+        if 'transactions' in exp:
+            want = exp['transactions']
+            got = s['transactions']
+            if len(got) < len(want):
+                fail(f'{len(got)} Transaction signals < {len(want)}')
+            for w, g in zip(want, got):
+                if 'path' in w and g[0] != self.resolve(w['path'], ctx):
+                    fail(f'Transaction path {g[0]} != {self.resolve(w["path"], ctx)}')
+                if 'succeeded' in w and g[2] != w['succeeded']:
+                    fail(f'Transaction succeeded {g[2]} != {w["succeeded"]}')
+                if 'role' in w and g[3] != ev('Role', w['role']):
+                    fail(f'Transaction role {g[3]} != {w["role"]}')
+                if 'dataContains' in w and w['dataContains'] not in g[5]:
+                    fail(f'Transaction data lacks {w["dataContains"]!r}')
+        if generic:
+            if s['count']['Finished'] != 1 or s['count']['Destroy'] != 1:
+                fail(f'Finished {s["count"]["Finished"]} / Destroy {s["count"]["Destroy"]} (want 1 / 1)')
+            elif s['order'][-2:] != ['Finished', 'Destroy']:
+                fail(f'signals after Finished: {s["order"][-4:]}')
+
+    # -- steps --------------------------------------------------------------------------------------------
+
+    def step(self, step: dict, ctx: dict, fails: list, where: str) -> None:
+        cur = ctx['clients'][ctx['current']]
+        exp = step.get('expect', {})
+        fail = lambda msg: fails.append(f'{where}: {msg}')
+        if 'tx' in step:
+            method = step['tx']
+            args = self.resolve(step.get('args', []), ctx)
+            r, err = cur.call(PK_NAME, PK_PATH, PK_IFACE, 'CreateTransaction', None, [], '(o)')
+            if err:
+                fail(f'CreateTransaction failed: {err}')
+                return
+            tid = r[0]
+            ctx[step.get('saveTid', 'tid')] = tid
+            hints = HINTS + ([PLURAL_HINT] if step.get('plural') else []) + list(step.get('hints', []))
+            _, err = cur.call(PK_NAME, tid, TX_IFACE, 'SetHints', '(as)', [hints], None)
+            if err:
+                fail(f'SetHints failed: {err}')
+            _, err = cur.call(PK_NAME, tid, TX_IFACE, method, TX_SIGS[method], args, None)
+            if err or 'dbusError' in exp:
+                if err != exp.get('dbusError'):
+                    fail(f'{method} -> {err} (expected {exp.get("dbusError")})')
+                return
+            cancel_when, detach = step.get('cancelWhen'), step.get('detachWhen')
+            detach_on = step.get('detachOn')          # a signal name: stop waiting there (e.g. before Destroy)
+            cancel = [None]
+
+            def cond():
+                props = cur.props[tid]
+                if cancel_when and cancel[0] is None and self.props_match(props, cancel_when, ctx):
+                    _, e = cur.call(PK_NAME, tid, TX_IFACE, 'Cancel', None, [], None)
+                    cancel[0] = e or 'ok'
+                if detach and self.props_match(props, detach, ctx):
+                    return True
+                if detach_on and cur.members[(tid, detach_on)]:
+                    return True
+                return tid in cur.destroyed
+            if not self.pump(cond, float(step.get('timeout', 15))):
+                fail(f'{method} on {tid}: timed out (detach={bool(detach)})')
+            s = summarize(cur.signals, tid)
+            self.check_summary(f'{where} {method}', s, exp, ctx, fails, generic=not (detach or detach_on))
+            if detach_on and tid in cur.destroyed and step.get('destroyAfterDetach', False) is False:
+                fail(f'{method} on {tid}: Destroy came together with {detach_on} (expected a gap)')
+            if cancel_when and cancel[0] != exp.get('cancel', 'ok'):
+                fail(f'Cancel -> {cancel[0]} (expected {exp.get("cancel", "ok")})')
+            if 'save' in step:
+                ctx[step['save']] = [p for _, p in s['packages']]
+            return
+        if 'manager' in step:
+            method = step['manager']
+            sig, reply = MGR_SIGS[method]
+            r, err = cur.call(PK_NAME, PK_PATH, PK_IFACE, method, sig, self.resolve(step.get('args', []), ctx), reply,
+                              step.get('flags', ''))
+            if err != exp.get('dbusError'):
+                fail(f'{method} -> error {err} (expected {exp.get("dbusError")})')
+            value = r[0] if r else None
+            if 'len' in exp and (value is None or len(value) != exp['len']):
+                fail(f'{method} -> {value} (expected {exp["len"]} entries)')
+            if 'contains' in exp and (value is None or self.resolve(exp['contains'], ctx) not in value):
+                fail(f'{method} -> {value} lacks {self.resolve(exp["contains"], ctx)}')
+            if 'save' in step:
+                ctx[step['save']] = value
+            return
+        if 'getAll' in step or 'get' in step:
+            target = step.get('getAll') or step['get'][0]
+            dest, path, iface = {'manager': (PK_NAME, PK_PATH, PK_IFACE), 'nm': (NM_NAME, NM_PATH, NM_IFACE)}.get(
+                target, (PK_NAME, None, TX_IFACE))
+            path = path or self.resolve(target, ctx)
+            if 'getAll' in step:
+                r, err = cur.call(dest, path, PROPS_IFACE, 'GetAll', '(s)', [iface], '(a{sv})', step.get('flags', ''))
+                props = r[0] if r else {}
+            else:
+                r, err = cur.call(dest, path, PROPS_IFACE, 'Get', '(ss)', [iface, step['get'][1]], '(v)',
+                                  step.get('flags', ''))
+                props = {step['get'][1]: r[0]} if r else {}
+            if err != exp.get('dbusError'):
+                fail(f'{"GetAll" if "getAll" in step else "Get"} {path} -> error {err} (expected {exp.get("dbusError")})')
+            for k, v in exp.get('props', {}).items():
+                if props.get(k) != self.expect_value(k, v, ctx):
+                    fail(f'{path} {k}={props.get(k)!r} (expected {v!r})')
+            return
+        if 'driver' in step:
+            method = step['driver']
+            sig, reply = DRIVER_SIGS[method]
+            r, err = cur.call('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', method, sig,
+                              self.resolve(step.get('args', []), ctx), reply, record=False)
+            value = r[0] if r else None
+            if err:
+                fail(f'{method} -> {err}')
+            if 'value' in exp and value != exp['value']:
+                fail(f'{method} -> {value!r} (expected {exp["value"]!r})')
+            if 'contains' in exp and (not isinstance(value, list) or exp['contains'] not in value):
+                fail(f'{method} -> {value!r} lacks {exp["contains"]!r}')
+            if 'lacks' in exp and (not isinstance(value, list) or exp['lacks'] in value):
+                fail(f'{method} -> {value!r} contains {exp["lacks"]!r}')
+            if 'save' in step:
+                ctx[step['save']] = value
+            return
+        if 'state' in step:
+            st = json.loads(self.control('State'))
+            for k, v in step['state'].items():
+                if st.get(k) != v:
+                    fail(f'State().{k} = {st.get(k)!r} (expected {v!r})')
+            if 'differsFrom' in exp and st.get('pkUnique') == ctx.get(exp['differsFrom']):
+                fail(f'State().pkUnique {st.get("pkUnique")} did not change')
+            if 'save' in step:
+                ctx[step['save']] = st.get('pkUnique')
+            return
+        if 'control' in step:
+            r = self.control(step['control'], step.get('args', []))
+            if 'contains' in exp and exp['contains'] not in str(r):
+                fail(f'control {step["control"]} -> {r!r} lacks {exp["contains"]!r}')
+            return
+        if 'phasing' in step:
+            ids = self.resolve(step['phasing'], ctx)
+            names = [p.split(';')[0] for p in ids]
+            mark = len(read_stub_log(self.stub_log))
+            p = subprocess.run([str(self.tools / 'python3'), '-I', '-c', '# GW1 self-test client: phasing call'],
+                               input=''.join(n + '\n' for n in names), capture_output=True, text=True, timeout=15)
+            if p.returncode != 0:
+                fail(f'phasing stub rc {p.returncode}: {p.stderr.strip()}')
+            out = {}
+            for line in p.stdout.splitlines():
+                cols = line.split('\t')
+                if len(cols) == 5:
+                    out[cols[0]] = cols
+            excluded = {n for n, c in out.items() if c[2] == '1' or c[4] == '1'}
+            ctx[step.get('save', 'install')] = [pid for pid in ids if pid.split(';')[0] not in excluded]
+            if 'phased' in exp and sorted(n for n, c in out.items() if c[2] == '1') != sorted(exp['phased']):
+                fail(f'phased {sorted(n for n, c in out.items() if c[2] == "1")} != {exp["phased"]}')
+            if 'install' in exp and len(ctx[step.get('save', 'install')]) != exp['install']:
+                fail(f'{len(ctx[step.get("save", "install")])} ids to install != {exp["install"]}')
+            recs = read_stub_log(self.stub_log, mark)
+            if [r['tool'] for r in recs] != ['python3'] or recs[0]['stdin'] != ''.join(n + '\n' for n in names):
+                fail(f'stub log after the phasing call: {[(r["tool"], (r["stdin"] or "")[:40]) for r in recs]}')
+            return
+        if 'disconnect' in step:
+            ctx['clients'][step['disconnect']].close()
+            return
+        if 'connect' in step:
+            ctx['clients'][step['connect']] = Bus(self, step['connect'])
+            ctx['current'] = step['connect']
+            return
+        if 'attach' in step:
+            tid = self.resolve(step['attach'], ctx)
+            if not self.pump(lambda: tid in cur.destroyed, float(step.get('timeout', 15))):
+                fail(f'attach {tid}: no Destroy within the timeout')
+            self.check_summary(f'{where} attach', summarize(cur.signals, tid), exp, ctx, fails)
+            return
+        if 'waitSignal' in step:
+            member, path = step['waitSignal'], self.resolve(step.get('path', PK_PATH), ctx)
+            start = int(ctx.get('mark', {}).get(cur.label, 0)) if step.get('fromStart') else len(cur.signals)
+            found = []
+
+            def cond():
+                for rec in cur.signals[start:]:
+                    if rec[2] == member and rec[0] == path:
+                        found.append(rec)
+                        return True
+                return False
+            if not self.pump(cond, float(step.get('timeout', 10))):
+                fail(f'no {member} on {path}')
+            elif 'save' in step:
+                ctx[step['save']] = found[0][3][0] if found[0][3] else None
+            return
+        if 'waitObserver' in step:
+            w = step['waitObserver']
+            path = self.resolve(w['path'], ctx)
+            if not self.pump(lambda: ctx['observer'].members[(path, w['member'])] > 0, float(step.get('timeout', 10))):
+                fail(f'observer saw no {w["member"]} on {path}')
+            return
+        if 'observerExpect' in step:
+            w = step['observerExpect']
+            self.check_summary(f'{where} observer', summarize(ctx['observer'].signals, self.resolve(w['path'], ctx)),
+                               w.get('expect', {}), ctx, fails, generic=bool(w.get('generic', False)))
+            return
+        if 'fixtureExists' in step:
+            if (self.fixture / step['fixtureExists']).exists() != exp.get('exists', True):
+                fail(f'fixture {step["fixtureExists"]} exists != {exp.get("exists", True)}')
+            return
+        if 'sleep' in step:
+            self.pump(lambda: False, step['sleep'] / 1000)
+            return
+        fail(f'unknown client step {step}')
+
+    # -- one timeline -------------------------------------------------------------------------------------
+
+    def timeline(self, name: str) -> dict:
+        t0 = time.monotonic()
+        tl = load_timeline(name)
+        exp = tl.get('expect', {})
+        fails: list = []
+        stub_mark = len(read_stub_log(self.stub_log))
+        self.sent = []
+        observer = Bus(self, 'observer', observer=True)
+        ctx = {'clients': {'A': Bus(self, 'A')}, 'current': 'A', 'observer': observer}
+        self.control('Load', [name])
+        if not exp.get('paused'):
+            self.control('Run')
+        for i, step in enumerate(tl.get('client', [])):
+            try:
+                self.step(step, ctx, fails, f'client[{i}]')
+            except Exception as e:      # noqa: BLE001
+                fails.append(f'client[{i}] {json.dumps(step)[:80]}: {e!r}')
+        self.drain([observer] + list(ctx['clients'].values()))
+        state = json.loads(self.control('State'))
+        calls = json.loads(self.control('CallsJson'))
+        count = self.control('CallCount')
+        plain = self.control('Calls')
+        if count != len(calls) or len(plain) != count:
+            fails.append(f'CallCount() {count} != len(Calls()) {len(plain)} / CallsJson {len(calls)}')
+        want = [(e['method'], e['path']) for e in self.sent if e.get('reached', True)]
+        got = [(c['method'], c['path']) for c in calls]
+        if got != want:
+            fails.append(f'Calls() differ from what the client sent: fake {got[:6]}… client {want[:6]}…')
+        if 'callCount' in exp and count != exp['callCount']:
+            fails.append(f'CallCount() {count} != expected {exp["callCount"]}')
+        tools = [r['tool'] for r in read_stub_log(self.stub_log, stub_mark)]
+        if tools != exp.get('stubs', []):
+            fails.append(f'stub log {tools} != expected {exp.get("stubs", [])}')
+        if state['violations'] != exp.get('violations', []):
+            fails.append(f'fake violations {state["violations"]}')
+        for label, bus in ctx['clients'].items():
+            if not _is_subsequence(bus.signals, observer.signals):
+                fails.append(f'client {label} received signals the observer did not (not broadcast?)')
+        if observer.dest_bad:
+            fails.append(f'unicast signals seen by the observer: {observer.dest_bad[:3]}')
+        n_signals = len(observer.signals)
+        for bus in list(ctx['clients'].values()) + [observer]:
+            bus.close()
+        return {'timeline': name, 'passed': not fails, 'fails': fails, 'callCount': count,
+                'observerSignals': n_signals, 'observerBroadcast': observer.broadcast,
+                'clientSignals': sum(len(b.signals) for b in ctx['clients'].values()),
+                'seconds': round(time.monotonic() - t0, 2)}
+
+    # -- checks beyond the timelines ----------------------------------------------------------------------
+
+    def meta(self) -> list[dict]:
+        out = []
+
+        def record(name, fails, **extra):
+            out.append({'check': name, 'passed': not fails, 'fails': fails, **extra})
+        # guard-bin first (F14): stub_log and probe run programs through PATH; with a gap in guard-bin they are
+        # skipped instead of reaching a real /usr/bin/pkexec or systemctl.
+        order = (self.meta_guard_bin, self.meta_timeline_set, self.meta_callcount, self.meta_calls_race,
+                 self.meta_paused_step, self.meta_unicast_control, self.meta_load_transitions, self.meta_pk_restart,
+                 self.meta_activation, self.meta_forbidden_id, self.meta_notifications, self.meta_outside_socket,
+                 self.meta_stub_log, self.meta_enums, self.meta_probe)
+        gap = False
+        for fn in order:
+            fails: list = []
+            extra: dict = {}
+            if gap and fn in (self.meta_stub_log, self.meta_probe):
+                fails.append('skipped: guard-bin does not cover every name, so nothing is run through PATH')
+            else:
+                try:
+                    extra = fn(fails) or {}
+                except Exception as e:      # noqa: BLE001
+                    fails.append(f'exception {e!r}')
+            if fn == self.meta_guard_bin and fails:
+                gap = True
+            record(fn.__name__[5:], fails, **extra)
+        return out
+
+    def meta_timeline_set(self, fails):
+        names = timeline_names()
+        if len(names) != 32:
+            fails.append(f'{len(names)} timelines, want 32 (design 9.1 has 31, plus daemon-idle-activatable)')
+        for n in names:
+            try:
+                self.control('Load', [n])
+            except Exception as e:      # noqa: BLE001
+                fails.append(f'Load({n}) failed: {e}')
+        return {'timelines': len(names)}
+
+    def meta_callcount(self, fails):
+        self.control('Load', ['idle-none'])
+        if self.control('CallCount') != 0:
+            fails.append('CallCount() after Load is not 0')
+        self.sent = []
+        a = Bus(self, 'A')
+        a.call(PK_NAME, PK_PATH, PROPS_IFACE, 'GetAll', '(s)', [PK_IFACE], '(a{sv})', 'no-auto-start')
+        calls = self.control('Calls')
+        if self.control('CallCount') != 1 or calls != [['Properties.GetAll', PK_PATH, a.unique, json.dumps([PK_IFACE])]]:
+            fails.append(f'Calls() after one GetAll: {calls}')
+        flags = json.loads(self.control('CallsJson'))[0]
+        if not flags['noAutoStart']:
+            fails.append('CallsJson did not record NO_AUTO_START')
+        a.close()
+        return {'calls': calls}
+
+    def meta_paused_step(self, fails):
+        tl = load_timeline('download-install')
+        self.control('Load', ['download-install'])
+        self.sent = []
+        a = Bus(self, 'A')
+        r, err = a.call(PK_NAME, PK_PATH, PK_IFACE, 'CreateTransaction', None, [], '(o)')
+        tid = r[0]
+        a.call(PK_NAME, tid, TX_IFACE, 'UpdatePackages', '(tas)', [bitfield('flags:only-trusted'), tl['updates']], None)
+        self.pump(lambda: False, 0.3)
+        early = [m for p, _, m, args in a.signals if p == tid
+                 and not (m == 'PropertiesChanged' and set(args[1]) <= {'Role', 'TransactionFlags'})]
+        if early:
+            fails.append(f'paused fake emitted {early[:5]} before any Step()')
+        steps, last = 0, ''
+        while steps < 1000:
+            last = self.control('Step')
+            if last in ('idle', 'auto') or last.startswith('blocked'):
+                break
+            steps += 1
+            self.pump(lambda: False, 0.005)
+        self.pump(lambda: tid in a.destroyed, 2)
+        s = summarize(a.signals, tid)
+        if s['count']['Finished'] != 1 or s['count']['Destroy'] != 1 or last != 'idle':
+            fails.append(f'after {steps} steps: Finished {s["count"]["Finished"]}, Destroy {s["count"]["Destroy"]}, '
+                         f'last Step() {last!r}')
+        events = sum(s['count'].values()) - 1      # minus the Role/TransactionFlags change at call time
+        a.close()
+        return {'steps': steps, 'signals': events}
+
+    def meta_unicast_control(self, fails):
+        """The broadcast check means something: a unicast signal does not reach a third connection."""
+        GLib = self.GLib
+        a, b, obs = Bus(self, 'A'), Bus(self, 'B'), Bus(self, 'observer', observer=True)
+        got = {'b': 0, 'obs': 0}
+        flags = self.Gio.DBusSignalFlags.NONE
+        b.conn.signal_subscribe(a.unique, 'io.github.win11shell.Test', 'Ping', '/t', None, flags,
+                                lambda *x: got.__setitem__('b', got['b'] + 1))
+        obs.conn.signal_subscribe(a.unique, 'io.github.win11shell.Test', 'Ping', '/t', None, flags,
+                                  lambda *x: got.__setitem__('obs', got['obs'] + 1))
+        for conn in (b.conn, obs.conn):
+            conn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', 'GetId', None,
+                           GLib.VariantType('(s)'), self.Gio.DBusCallFlags.NONE, 5000, None)
+        a.conn.emit_signal(b.unique, '/t', 'io.github.win11shell.Test', 'Ping', None)      # unicast to B
+        a.conn.emit_signal(None, '/t', 'io.github.win11shell.Test', 'Ping', None)          # broadcast
+        a.conn.flush_sync(None)
+        self.pump(lambda: got['b'] >= 2 and got['obs'] >= 1, 2)
+        self.pump(lambda: False, 0.1)
+        if got != {'b': 2, 'obs': 1}:
+            fails.append(f'unicast control: {got} (want B 2, observer 1)')
+        for x in (a, b, obs):
+            x.close()
+        return {'received': got}
+
+    def meta_notifications(self, fails):
+        """The fake org.freedesktop.Notifications on the private session bus (GW2b: only the owner notifies)."""
+        Gio, GLib = self.Gio, self.GLib
+        self.control('Load', ['idle-none'])
+        flags = Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION
+        addr = os.environ['DBUS_SESSION_BUS_ADDRESS']
+        conn = Gio.DBusConnection.new_for_address_sync(addr, flags, None, None)
+        closed = []
+        conn.signal_subscribe(NOTIFY_NAME, NOTIFY_IFACE, 'NotificationClosed', NOTIFY_PATH, None,
+                              Gio.DBusSignalFlags.NONE, lambda c, s, p, i, m, a: closed.append(a.unpack()))
+        nid = conn.call_sync(NOTIFY_NAME, NOTIFY_PATH, NOTIFY_IFACE, 'Notify',
+                             GLib.Variant('(susssasa{sv}i)', ('win11-gw1-selftest', 0, '', 'Test notification', '',
+                                                             [], {}, -1)),
+                             GLib.VariantType('(u)'), Gio.DBusCallFlags.NONE, 5000, None).unpack()[0]
+        conn.call_sync(NOTIFY_NAME, NOTIFY_PATH, NOTIFY_IFACE, 'CloseNotification', GLib.Variant('(u)', (nid,)), None,
+                       Gio.DBusCallFlags.NONE, 5000, None)
+        self.pump(lambda: bool(closed), 2)
+        calls = json.loads(self.control('CallsJson'))
+        got = [(c['method'], c['bus'], c['to']) for c in calls]
+        if nid != 1 or closed != [(1, 3)] or got != [('Notify', 'session', 'notify'), ('CloseNotification', 'session', 'notify')]:
+            fails.append(f'Notify id {nid}, closed {closed}, calls {got}')
+        if os.environ['DBUS_SESSION_BUS_ADDRESS'] == self.addr:
+            fails.append('the session bus is the fake system bus')
+        conn.close_sync(None)
+        return {'calls': got}
+
+    def meta_forbidden_id(self, fails):
+        tl = load_timeline('phased-as-normal')
+        self.control('Load', ['phased-as-normal'])
+        self.control('Run')
+        a = Bus(self, 'A')
+        r, _ = a.call(PK_NAME, PK_PATH, PK_IFACE, 'CreateTransaction', None, [], '(o)')
+        a.call(PK_NAME, r[0], TX_IFACE, 'UpdatePackages', '(tas)', [bitfield('flags:only-trusted'),
+                                                                    tl['forbiddenIds']], None)
+        v = json.loads(self.control('State'))['violations']
+        if len(v) != 1 or tl['forbiddenIds'][0] not in v[0]:
+            fails.append(f'violations {v}')
+        a.close()
+        return {'violations': v}
+
+    def meta_stub_log(self, fails):
+        self.control('Load', ['phased-as-normal'])        # writes the python3 response file
+        mark = len(read_stub_log(self.stub_log))
+        env = dict(os.environ)
+        rcs = {}
+        guard_dir = os.path.realpath(os.environ['PATH'].split(':')[0])
+        probe_arg = '--win11-stub-probe'        # harmless even for the real program (F14)
+        for argv in (['pkexec', probe_arg], ['systemctl', probe_arg], ['apt-get', probe_arg], ['busctl', probe_arg]):
+            found = shutil.which(argv[0], path=env['PATH'])
+            if not found or os.path.dirname(os.path.abspath(found)) != guard_dir:
+                fails.append(f'{argv[0]} resolves to {found}, not to guard-bin: not run')
+                return {}
+            rcs[argv[0]] = subprocess.run([found] + argv[1:], env=env, capture_output=True, timeout=10).returncode
+        rcs['env -i loginctl'] = subprocess.run(['/usr/bin/env', '-i', str(self.tools / 'loginctl'), 'enable-linger'],
+                                                capture_output=True, timeout=10).returncode
+        if set(rcs.values()) != {97}:
+            fails.append(f'stub exit codes {rcs} (want 97)')
+        got = check_stub_log(self.stub_log, [], mark)
+        if got['ok'] or len(got['unexpected']) != 5:
+            fails.append(f'the check did not catch the 5 unexpected calls: {got}')
+        ok = check_stub_log(self.stub_log, ['pkexec', 'systemctl', 'apt-get', 'busctl',
+                                            {'tool': 'loginctl', 'dir': 'tools', 'argv': ['enable-linger']}], mark)
+        if not ok['ok']:
+            fails.append(f'the check refused the expected calls: {ok}')
+        mark2 = len(read_stub_log(self.stub_log))
+        p = subprocess.run([str(self.tools / 'nice'), '-n', '10', 'python3', '-I', '-c', 'x'],
+                           input='ubuntu-drivers-common\n', capture_output=True, text=True, timeout=10)
+        q = subprocess.run([str(self.tools / 'nice'), '-n', '10', '/usr/bin/id'], capture_output=True, timeout=10)
+        recs = read_stub_log(self.stub_log, mark2)
+        if p.returncode != 0 or 'ubuntu-drivers-common\t' not in p.stdout or q.returncode != 97 \
+                or [r['tool'] for r in recs] != ['nice', 'python3', 'nice']:
+            fails.append(f'nice pass-through: rc {p.returncode}/{q.returncode}, {[r["tool"] for r in recs]}')
+        return {'exitCodes': rcs, 'caught': len(got['unexpected'])}
+
+    def meta_guard_bin(self, fails):
+        names = json.loads((STUBS_SRC / 'names.json').read_text())
+        guard = set(names['guard'])
+        text = (W / 'tests/rust-sandbox/run-tests.sh').read_text()
+        ge0b = set(re.search(r'for name in (.*?); do', text, re.S).group(1).replace('\\', ' ').split())
+        htext = (W / 'tests/gnome/harness.py').read_text()
+        block = re.search(r'^STUBS = \((.*?)\)\.split\(\)', htext, re.S | re.M).group(1)
+        ge0c = set(''.join(re.findall(r"'([^']*)'", block)).split())
+        missing = sorted((ge0b | ge0c) - guard)
+        if missing:
+            fails.append(f'guard-bin lacks {missing}')
+        gw1 = {'xdg-terminal-exec', 'screen', 'apt-cache', 'apt-config', 'check-new-release', 'ptyxis',
+               'gnome-terminal', 'kgx', 'unattended-upgrade'}
+        if gw1 - ge0c:
+            fails.append(f'tests/gnome/harness.py STUBS lacks the GW1 additions {sorted(gw1 - ge0c)}')
+        loose = set(names['tools']) - guard - {'python3', 'sh', 'nice', 'ionice'}
+        if loose:
+            fails.append(f'tool stubs not in guard-bin: {sorted(loose)}')
+        path0 = os.environ['PATH'].split(':')[0]
+        for n in sorted(guard | ge0b | ge0c):
+            found = shutil.which(n, path=os.environ['PATH'])
+            if not os.path.islink(os.path.join(path0, n)) or not found \
+                    or os.path.dirname(os.path.abspath(found)) != os.path.abspath(path0):
+                fails.append(f'{n} resolves to {found}, not to a stub in {path0}')
+        return {'guard': len(guard), 'ge0b': len(ge0b), 'ge0c': len(ge0c)}
+
+    def meta_enums(self, fails):
+        p = subprocess.run([PY, '-I', '-B', str(HERE / 'test_enums.py')], capture_output=True, text=True, timeout=60)
+        if p.returncode != 0:
+            fails.append(f'test_enums.py rc {p.returncode}: {(p.stdout + p.stderr)[-400:]}')
+        return {'output': p.stdout.strip().splitlines()[-1:] if p.stdout else []}
+
+    def meta_probe(self, fails):
+        probe = [PY, '-I', '-B', str(W / 'tools/update/probe.py')]
+        out = self.run / 'probe.json'
+        cases = [('no bus given', [], 2), ('real system bus', ['--bus', 'unix:path=/run/dbus/system_bus_socket'], 2),
+                 ('live session bus', ['--bus', f'unix:path={LIVE_RUNTIME}/bus'], 2),
+                 ('abstract socket', ['--bus', 'unix:abstract=/tmp/dbus-x'], 2),
+                 ('--live inside the test layer', ['--live', '--get-updates'], 2)]
+        result = {}
+        for label, args, want in cases:
+            p = subprocess.run(probe + args, capture_output=True, text=True, timeout=30, stdin=subprocess.DEVNULL)
+            result[label] = p.returncode
+            if p.returncode != want or 'REFUSED' not in p.stderr:
+                fails.append(f'probe {label}: rc {p.returncode}, stderr {p.stderr.strip()[-200:]}')
+        self.control('Load', ['available-mixed'])
+        self.control('Run')
+        p = subprocess.run(probe + ['--bus', self.addr, '--get-updates', '--simulate-all', '--phasing', '--out', str(out)],
+                           capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
+        result['private bus'] = p.returncode
+        if p.returncode != 0:
+            fails.append(f'probe on the private bus: rc {p.returncode}: {p.stderr.strip()[-300:]}')
+        else:
+            data = json.loads(out.read_text())
+            if len(data['getUpdates']['packages']) != 24 or not data['simulate']['packages'] \
+                    or len(data['phasing']['phased']) != 2 or data['bus'] != 'private':
+                fails.append(f'probe output: {len(data["getUpdates"]["packages"])} packages, '
+                             f'{len(data["simulate"]["packages"])} simulated, phasing {data["phasing"]["phased"]}')
+        calls = [c['method'] for c in json.loads(self.control('CallsJson'))]
+        forbidden = [c for c in calls if c in ('RefreshCache', 'RepairSystem')]
+        ups = [c for c in json.loads(self.control('CallsJson')) if c['method'] == 'UpdatePackages']
+        if forbidden or any(c['args'][0] != bitfield('flags:simulate|only-trusted') for c in ups):
+            fails.append(f'probe sent {forbidden} or a non-simulate UpdatePackages {[c["args"][0] for c in ups]}')
+        # F3: packagekitd idle (not running, D-Bus activatable): R1's normal case. The probe activates it.
+        self.control('Load', ['daemon-idle-activatable'])
+        self.control('Run')
+        p = subprocess.run(probe + ['--bus', self.addr, '--get-updates', '--out', str(out)],
+                           capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
+        st = json.loads(self.control('State'))
+        result['idle, activatable'] = p.returncode
+        data = json.loads(out.read_text()) if p.returncode in (0, 1) and out.exists() else {}
+        n_idle = len(load_timeline('daemon-idle-activatable')['updates'])
+        if p.returncode != 0 or st['activations'] != 1 or not st['daemon'] \
+                or len(data.get('getUpdates', {}).get('packages', [])) != n_idle \
+                or data.get('daemon') != {'running': False, 'activatable': True}:
+            fails.append(f'probe with an idle packagekitd: rc {p.returncode}, activations {st["activations"]}, '
+                         f'daemon {data.get("daemon")}, {len(data.get("getUpdates", {}).get("packages", []))} '
+                         f'updates (want {n_idle}): {p.stderr.strip()[-200:]}')
+        # Not installed (nothing activatable): a clear result, and nothing reaches the fake.
+        self.control('Load', ['daemon-absent'])
+        out.unlink(missing_ok=True)
+        p = subprocess.run(probe + ['--bus', self.addr, '--get-updates', '--out', str(out)],
+                           capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
+        data = json.loads(out.read_text()) if out.exists() else {}
+        result['not installed'] = p.returncode
+        if p.returncode != 1 or data.get('errorCode') != 'packagekitd-not-available' \
+                or self.control('CallCount') != 0:
+            fails.append(f'probe without packagekitd: rc {p.returncode}, {data.get("errorCode")}, '
+                         f'{data.get("error")}, CallCount {self.control("CallCount")}')
+        return {'exitCodes': result, 'calls': calls}
+
+    def meta_calls_race(self, fails):
+        """F9: a call pipelined right behind Load() on the same connection is counted in Calls() exactly when it
+        is handled under the new timeline (its reply shows which one: NetworkState mobile 5 vs online 2)."""
+        Gio, GLib = self.Gio, self.GLib
+        a = Bus(self, 'A')
+        seen = collections.Counter()
+        for i in range(20):
+            self.control('Load', ['metered'])
+            done = {}
+
+            def finish(key):
+                def cb(conn, res, *_):
+                    try:
+                        r = conn.call_finish(res)
+                        done[key] = r.unpack()[0] if r is not None and r.n_children() else True
+                    except GLib.Error as e:
+                        done[key] = f'error {e.message}'
+                return cb
+            a.conn.call(CONTROL_NAME, CONTROL_PATH, CONTROL_IFACE, 'Load', GLib.Variant('(s)', ('idle-none',)), None,
+                        Gio.DBusCallFlags.NONE, 10000, None, finish('load'))
+            a.conn.call(PK_NAME, PK_PATH, PROPS_IFACE, 'Get', GLib.Variant('(ss)', (PK_IFACE, 'NetworkState')),
+                        GLib.VariantType('(v)'), Gio.DBusCallFlags.NONE, 10000, None, finish('get'))
+            self.pump(lambda: 'load' in done and 'get' in done, 5)
+            count = self.control('CallCount')
+            new = done.get('get') == ev('Network', 'online')
+            seen['after' if new else 'before'] += 1
+            if done.get('get') not in (ev('Network', 'online'), ev('Network', 'mobile')) or count != (1 if new else 0):
+                fails.append(f'round {i}: Get -> {done.get("get")!r} (handled {"after" if new else "before"} Load), '
+                             f'CallCount {count}')
+        a.close()
+        return {'rounds': 20, 'handledAfterLoad': seen['after'], 'handledBeforeLoad': seen['before']}
+
+    def meta_load_transitions(self, fails):
+        """F6: a client that stays connected across Load() sees Destroy and TransactionListChanged for the
+        dropped transaction and PropertiesChanged for the manager and NM properties that changed."""
+        tl = load_timeline('metered')
+        self.control('Load', ['metered'])                     # paused: the transaction below stays active
+        a = Bus(self, 'A')
+        r, _ = a.call(PK_NAME, PK_PATH, PK_IFACE, 'CreateTransaction', None, [], '(o)')
+        tid = r[0]
+        a.call(PK_NAME, tid, TX_IFACE, 'UpdatePackages', '(tas)', [bitfield('flags:only-trusted'), tl['updates']], None)
+        self.pump(lambda: False, 0.1)
+        n0 = len(a.signals)
+        self.control('Load', ['idle-none'])
+        online, metered_no = ev('Network', 'online'), ev('NM.Metered', 'no')
+        self.pump(lambda: tid in a.destroyed and a.props[PK_PATH].get('NetworkState') == online
+                  and a.props[NM_PATH].get('Metered') == metered_no, 3)
+        new = a.signals[n0:]
+        tlc = [x[3] for x in new if x[2] == 'TransactionListChanged']
+        if tid not in a.destroyed:
+            fails.append('no Destroy for the transaction that Load() dropped')
+        if tlc != [[[]]]:
+            fails.append(f'TransactionListChanged after Load(): {tlc} (want one, empty)')
+        if a.props[PK_PATH].get('NetworkState') != online:
+            fails.append(f'NetworkState after Load(): {a.props[PK_PATH].get("NetworkState")} (want {online})')
+        if a.props[NM_PATH].get('Metered') != metered_no:
+            fails.append(f'NM Metered after Load(): {a.props[NM_PATH].get("Metered")} (want {metered_no})')
+        a.close()
+        return {'signalsAfterLoad': sorted(collections.Counter(x[2] for x in new).items())}
+
+    def meta_pk_restart(self, fails):
+        """F8: SetDaemon(false) is packagekitd exiting (its unique name vanishes), SetDaemon(true) a new daemon
+        with a new unique name; the control name and NetworkManager keep theirs."""
+        Gio, GLib = self.Gio, self.GLib
+        self.control('Load', ['idle-none'])
+        a = Bus(self, 'A')
+
+        def drv(method, *args):
+            sig, reply = DRIVER_SIGS[method]
+            r, err = a.call('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', method, sig,
+                            list(args), reply, record=False)
+            return (r[0] if r else None), err
+        changes = []
+        a.conn.signal_subscribe('org.freedesktop.DBus', 'org.freedesktop.DBus', 'NameOwnerChanged',
+                                '/org/freedesktop/DBus', PK_NAME, Gio.DBusSignalFlags.NONE,
+                                lambda c, s, p, i, m, params: changes.append(tuple(params.unpack())))
+        drv('ListNames')                                  # round trip: the match rule is active
+        first, _ = drv('GetNameOwner', PK_NAME)
+        ctl, _ = drv('GetNameOwner', CONTROL_NAME)
+        nm, _ = drv('GetNameOwner', NM_NAME)
+        self.control('SetDaemon', [False])
+        gone, err = drv('GetNameOwner', PK_NAME)
+        old_alive, _ = drv('NameHasOwner', first)
+        self.control('SetDaemon', [True])
+        second, _ = drv('GetNameOwner', PK_NAME)
+        self.pump(lambda: len(changes) >= 2, 2)
+        if not first or not second or first == second:
+            fails.append(f'PackageKit owner {first} -> {second} (want a new unique name)')
+        if err != 'org.freedesktop.DBus.Error.NameHasNoOwner' or old_alive is not False:
+            fails.append(f'after SetDaemon(false): GetNameOwner -> {gone}/{err}, old unique name alive {old_alive}')
+        if drv('GetNameOwner', CONTROL_NAME)[0] != ctl or drv('GetNameOwner', NM_NAME)[0] != nm or ctl == first:
+            fails.append('the control name or NetworkManager changed owner, or shares the PackageKit connection')
+        if changes[:2] != [(PK_NAME, first, ''), (PK_NAME, '', second)]:
+            fails.append(f'NameOwnerChanged: {changes}')
+        a.close()
+        return {'owners': [first, second], 'nameOwnerChanged': len(changes)}
+
+    def meta_activation(self, fails):
+        """F4: the private system bus can activate only the fake, only from <run>/services, and only when the
+        timeline says it is installed; the private session bus can activate nothing."""
+        Gio = self.Gio
+        services = self.run / 'services'
+        for code, msg in service_dir_problems(services, self.run / 'bus-system.conf'):
+            fails.append(f'{code}: {msg}')
+        a = Bus(self, 'A')
+
+        def activatable(bus):
+            r, err = bus.call('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus',
+                              'ListActivatableNames', None, [], '(as)', record=False)
+            return sorted(r[0]) if r else err
+        self.control('Load', ['daemon-absent'])
+        absent = (activatable(a), sorted(os.listdir(services)))
+        self.control('Load', ['daemon-idle-activatable'])
+        idle = (activatable(a), sorted(os.listdir(services)))
+        if absent != (['org.freedesktop.DBus'], []):
+            fails.append(f'daemon-absent: activatable {absent[0]}, service dir {absent[1]}')
+        if idle != (['org.freedesktop.DBus', PK_NAME], [SERVICE_FILE]):
+            fails.append(f'daemon-idle-activatable: activatable {idle[0]}, service dir {idle[1]}')
+        flags = Gio.DBusConnectionFlags.AUTHENTICATION_CLIENT | Gio.DBusConnectionFlags.MESSAGE_BUS_CONNECTION
+        sconn = Gio.DBusConnection.new_for_address_sync(os.environ['DBUS_SESSION_BUS_ADDRESS'], flags, None, None)
+        session = sorted(sconn.call_sync('org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus',
+                                         'ListActivatableNames', None, self.GLib.VariantType('(as)'),
+                                         Gio.DBusCallFlags.NONE, 5000, None).unpack()[0])
+        sconn.close_sync(None)
+        if session != ['org.freedesktop.DBus']:
+            fails.append(f'the private session bus can activate {session}')
+        a.close()
+        return {'daemonAbsent': absent[0], 'idle': idle[0], 'sessionBus': session}
+
+    def meta_outside_socket(self, fails):
+        """F1: run.sh started a listening socket outside the layer, in the run directory (the one writable
+        bind), before the layer: it is masked, so nothing inside can connect to it. run.sh checks afterwards that
+        the decoy's log shows 0 connections."""
+        try:
+            path = json.loads((self.run / 'outside-decoy.json').read_text())['socket']
+        except (OSError, ValueError, KeyError) as e:
+            fails.append(f'run.sh did not start the outside decoy: {e}')
+            return {}
+        masked = [x for x in (self.run / MASKED_LIST).read_text().splitlines() if x.strip()]
+        try:
+            mode = os.lstat(path).st_mode
+            kind = 'socket' if stat.S_ISSOCK(mode) else 'char device' if stat.S_ISCHR(mode) else oct(mode)
+        except OSError as e:
+            kind = f'absent ({e.strerror})'
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        try:
+            s.connect(path)
+            s.send(b'from inside the layer')
+            fails.append(f'CONNECTED to {path} from inside the layer')
+            outcome = 'connected'
+        except OSError as e:
+            outcome = e.strerror
+        finally:
+            s.close()
+        if path not in masked or kind == 'socket':
+            fails.append(f'{path}: {kind}, in the masked list: {path in masked}')
+        return {'kind': kind, 'connect': outcome, 'masked': len(masked)}
+
+
+def cmd_selftest(a) -> int:
+    problems = guard_problems(dict(os.environ), 'child') + sandbox_problems()
+    if problems:
+        return refuse(problems)
+    st = SelfTest(a)
+    names = a.only or timeline_names()
+    results = []
+    for name in names:
+        r = st.timeline(name)
+        results.append(r)
+        print(('PASS ' if r['passed'] else 'FAIL ') + f"timeline {name}: {r['observerSignals']} signals seen by the "
+              f"observer, CallCount {r['callCount']}, {r['seconds']} s", flush=True)
+        for f in r['fails']:
+            print(f'    {f}', flush=True)
+    meta = [] if a.only and not a.meta else st.meta()
+    for m in meta:
+        print(('PASS ' if m['passed'] else 'FAIL ') + f"check {m['check']}: "
+              + json.dumps({k: v for k, v in m.items() if k not in ('check', 'passed', 'fails')}, default=str)[:300],
+              flush=True)
+        for f in m['fails']:
+            print(f'    {f}', flush=True)
+    passed = sum(r['passed'] for r in results) + sum(m['passed'] for m in meta)
+    total = len(results) + len(meta)
+    summary = {'timelines': results, 'checks': meta, 'passed': passed, 'total': total,
+               'timelinesPassed': sum(r['passed'] for r in results), 'timelinesTotal': len(results),
+               'when': time.strftime('%Y-%m-%d %H:%M:%S')}
+    (st.run / 'selftest.json').write_text(json.dumps(summary, indent=1, default=str))
+    print(f'self-test (inside the layer): {summary["timelinesPassed"]}/{len(results)} timelines, '
+          f'{sum(m["passed"] for m in meta)}/{len(meta)} checks passed', flush=True)
+    return 0 if passed == total else 1
+
+
+def cmd_guard(a) -> int:
+    problems = guard_problems(dict(os.environ), a.stage) + sandbox_problems()
+    if problems:
+        return refuse(problems)
+    print('GUARD OK')
+    return 0
+
+
+def cmd_decoy(a) -> int:
+    """Listening unix sockets that only count connections (run.sh, outside any layer): the decoy system bus and
+    live session bus of the refusal checks, and the "socket outside the layer" of the F1 check. Connects to
+    nothing; binds only inside tests/update/.run/ or a /tmp/w11-update-decoy.* directory; exits on SIGTERM."""
+    if os.geteuid() == 0:
+        return refuse([('root', 'running as root')])
+    for path in a.sockets:
+        parent = os.path.dirname(os.path.abspath(path))
+        if not (_inside(parent, RUNS) or re.fullmatch(r'/tmp/w11-update-decoy\.[A-Za-z0-9]+', parent)):
+            return refuse([('decoy-path', f'{path} is not in {RUNS} or /tmp/w11-update-decoy.*')])
+    socks = {}
+    for path in a.sockets:
+        if os.path.lexists(path):
+            return refuse([('decoy-path', f'{path} exists already')])
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        s.bind(path)
+        s.listen(16)
+        socks[s.fileno()] = (s, path)
+    stop_now = []
+    signal.signal(signal.SIGTERM, lambda *_: stop_now.append(1))
+    Path(a.ready).write_text(json.dumps({'pid': os.getpid(), 'sockets': a.sockets}))
+    with open(a.log, 'a', encoding='utf-8') as log:
+        while not stop_now:
+            try:
+                ready, _, _ = select.select(list(socks), [], [], 0.5)
+            except InterruptedError:
+                continue
+            for fd in ready:
+                s, path = socks[fd]
+                try:
+                    c, _ = s.accept()
+                except OSError:
+                    continue
+                c.settimeout(0.2)
+                try:
+                    data = c.recv(64)
+                except OSError:
+                    data = b''
+                c.close()
+                log.write(json.dumps({'t': round(time.time(), 3), 'socket': path, 'first': data.decode('latin-1')})
+                          + '\n')
+                log.flush()
+    for s, path in socks.values():
+        s.close()
+        try:
+            os.unlink(path)
+        except OSError:
+            pass
+    return 0
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    sub = ap.add_subparsers(dest='cmd', required=True)
+    s = sub.add_parser('serve')
+    s.add_argument('--bus', required=True)
+    s.add_argument('--session-bus')
+    s.add_argument('--tool-dir')
+    s.add_argument('--fixture-root')
+    s.add_argument('--service-dir', help='<run>/services: makes the fake D-Bus activatable (F4)')
+    s.add_argument('--ready')
+    sub.add_parser('activate')
+    l = sub.add_parser('layer')
+    l.add_argument('mode', choices=('selftest', 'exec', 'guard-only'))
+    l.add_argument('--timeline')
+    l.add_argument('--run', action='store_true')
+    l.add_argument('--expect-stubs')
+    l.add_argument('--expect-calls', help='N (exact CallCount() at the end) or a JSON list of call matchers')
+    l.add_argument('--timeout', type=float, default=1800)
+    l.add_argument('rest', nargs=argparse.REMAINDER)
+    t = sub.add_parser('selftest')
+    t.add_argument('--only', nargs='*')
+    t.add_argument('--meta', action='store_true', help='with --only: also run the checks beyond the timelines')
+    g = sub.add_parser('guard')
+    g.add_argument('--stage', choices=('pre', 'child'), default='pre')
+    c = sub.add_parser('check-stubs')
+    c.add_argument('--log', required=True)
+    c.add_argument('--expect')
+    c.add_argument('--start', type=int, default=0)
+    d = sub.add_parser('decoy')
+    d.add_argument('--log', required=True)
+    d.add_argument('--ready', required=True)
+    d.add_argument('sockets', nargs='+')
+    a = ap.parse_args(argv)
+    if getattr(a, 'rest', None) and a.rest[:1] == ['--']:
+        a.rest = a.rest[1:]
+    return {'serve': cmd_serve, 'activate': cmd_activate, 'layer': cmd_layer, 'selftest': cmd_selftest,
+            'guard': cmd_guard, 'check-stubs': cmd_check_stubs, 'decoy': cmd_decoy}[a.cmd](a)
+
+
+if __name__ == '__main__':
+    sys.exit(main())

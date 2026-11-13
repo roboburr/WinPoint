@@ -1,0 +1,393 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 07:52:27",
+ "seconds": 97.1,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 18,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 843966,
+   "rss_kb": 1995820,
+   "processes": 26,
+   "t": 3.1
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 768089,
+   "rss_kb": 1887820
+  },
+  "minMemAvailableKb": 8706032,
+  "abortedForMemory": false,
+  "peakByName": {
+   "WebKitWebProces": {
+    "count": 3,
+    "pss_kb": 232488,
+    "rss_kb": 628700
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 229099,
+    "rss_kb": 341544
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 75428,
+    "rss_kb": 103816
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 69203,
+    "rss_kb": 192792
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 69104,
+    "rss_kb": 192704
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 58266,
+    "rss_kb": 173932
+   },
+   "WebKitNetworkPr": {
+    "count": 3,
+    "pss_kb": 57935,
+    "rss_kb": 193108
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 27323,
+    "rss_kb": 81456
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 13447,
+    "rss_kb": 31896
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4197,
+    "rss_kb": 11708
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 4062,
+    "rss_kb": 13940
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1424,
+    "rss_kb": 10268
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 781,
+    "rss_kb": 7884
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 760,
+    "rss_kb": 7888
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 260,
+    "rss_kb": 1500
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 189,
+    "rss_kb": 2684
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 68.6,
+  "mutatingSyscallPaths": 87907,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "07:53:57\tpw-dump\t--monitor --no-colors",
+  "07:53:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:53:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:53:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:53:57\tpw-dump\t--monitor --no-colors",
+  "07:53:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:53:59\tpw-dump\t--monitor --no-colors",
+  "07:53:59\tpw-dump\t--monitor --no-colors",
+  "07:53:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:54:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:54:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:54:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-VkYSYQDa"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 4,
+  "maxScanSeconds": 0.74,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-VkYSYQDa"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/snap-accent.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.8,
+    "args": {
+     "key": "default"
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.11,
+    "args": {
+     "key": "changed"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the snap preview has the accent of the settings",
+    "ok": true,
+    "t": 0.8,
+    "preview": {
+     "bg": [
+      0,
+      103,
+      192,
+      71
+     ],
+     "border": [
+      0,
+      103,
+      192
+     ]
+    },
+    "accent": "#0067C0"
+   },
+   {
+    "check": "the snap preview follows a new accent",
+    "ok": true,
+    "t": 1.11,
+    "preview": {
+     "bg": [
+      232,
+      17,
+      35,
+      71
+     ],
+     "border": [
+      232,
+      17,
+      35
+     ]
+    }
+   }
+  ],
+  "records": {
+   "default": {
+    "bg": [
+     0,
+     103,
+     192,
+     71
+    ],
+    "border": [
+     0,
+     103,
+     192
+    ]
+   },
+   "changed": {
+    "bg": [
+     232,
+     17,
+     35,
+     71
+    ],
+    "border": [
+     232,
+     17,
+     35
+    ]
+   }
+  },
+  "shots": [],
+  "error": null,
+  "seconds": 1.11,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "ff4144a8e36c4373843064f855d456af",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "e0bd8a139c34fdd10261d71a029fd1f3",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "c743689af727c18a2e456ef360bd2a67",
+    "pid": null,
+    "page": null,
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=d2bd2cadb7a3d5c8fd5f63476af6b403",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "windowIds": {
+    "panel": "ff4144a8e36c4373843064f855d456af",
+    "desktop": "e0bd8a139c34fdd10261d71a029fd1f3",
+    "start": "c743689af727c18a2e456ef360bd2a67"
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": []
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "about": "Names of the own .desktop entries per Win11 language. scripts/install.py writes them at install time in the language from settings.json; win11-panel --http-only (the backend of win11-shell, the native GTK 4 shell) rewrites Name= and Comment= of the installed entries at start and when the language changes (D-G4, notes/claude/contracts.md). nl values are byte-identical to install.py at 3b898e6. Calendar: the native Calendar app (win11-calendar). D-G70: the WebKit Desktop and Start entries are gone.",
+  "comment": {
+    "nl": "Bestaande Win11Shell-interface in een zelfstandige Rust-host voor GNOME",
+    "en": "Existing Win11Shell interface in a standalone Rust host for GNOME"
+  },
+  "entries": {
+    "Panel": { "nl": "Win11 Taakbalk", "en": "Win11 Taskbar" },
+    "Settings": { "nl": "Win11 Instellingen", "en": "Win11 Settings" },
+    "DefaultApps": { "nl": "Win11 Standaardapps", "en": "Win11 Default apps" },
+    "Installer": { "nl": "Win11 App-installatie", "en": "Win11 App Installer" },
+    "Search": { "nl": "Alles", "en": "Alles" },
+    "Disks": { "nl": "Win11 Schijfbeheer", "en": "Win11 Disk Management" },
+    "TaskManager": { "nl": "Win11 Taakbeheer", "en": "Win11 Task Manager" },
+    "Explorer": { "nl": "Win11 Verkenner", "en": "Win11 File Explorer" },
+    "Calendar": { "nl": "Agenda", "en": "Calendar" }
+  }
+}

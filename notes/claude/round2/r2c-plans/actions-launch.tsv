@@ -1,0 +1,28 @@
+6	files_launch.appNotFound		lang	This app wasn’t found. It might have been uninstalled.	an app id or .desktop path that is not installed (data.id)
+19	files_launch.noApp		lang	Choose an app.	files.openWith without an app
+32	files_launch.noAppForFile		lang	There’s no app installed that can open this file.	files.open: no default app for the file type (data: the launcher’s error)
+48	files_launch.appFailed		lang	This app couldn’t be started.	a Win11 app or an installed app did not start (data: the error)
+55	files_launch.appFailed		lang	This app couldn’t be started.	
+57	files_launch.cannotOpenShortcut		lang	This shortcut can’t be opened.	a link shortcut nested more than 32 deep, or a .desktop file of a type other than Application or Link
+102	files_launch.untrustedDrive		lang	For your security, shortcuts on this drive aren’t started.	a .desktop file on a drive without Unix permissions (FAT, NTFS, network …)
+104	files_launch.untrusted		lang	This shortcut isn’t trusted (yet), so starting it is blocked for your security. Do you trust where it came from? Then choose “Allow launching”.	a .desktop file that is not marked trusted; “Allow launching” is the button of the UI’s question (bridge.js launchAllow)
+114	files_launch.damagedShortcut		lang	This shortcut is damaged.	a .desktop file that is no key file with a [Desktop Entry] group
+118	files_launch.cannotOpenShortcut		lang	This shortcut can’t be opened.	
+120	files_launch.cannotOpenLink		lang	This link can’t be opened.	an empty, too long or malformed URI
+126	files_launch.unsupportedLink		lang	This kind of link can’t be opened.	a scheme other than http, https, mailto or file (data.scheme)
+134	files_launch.invalidLink		lang	This link isn’t valid.	an http(s) link without a valid host
+136	files_launch.invalidLink		lang	This link isn’t valid.	
+139	files_launch.invalidLink		lang	This link isn’t valid.	
+142	files_launch.fileGone		lang	This file no longer exists.	a file:// link to a file that is gone
+147	files_launch.noAppForLink		lang	There’s no app to open this link.	no default app for the link’s scheme (data: the launcher’s error)
+155	files_launch.notShortcut		lang	This isn’t a shortcut.	files.trustLauncher on something that is no .desktop file
+157	files_launch.untrustedDriveTrust		lang	For your security, shortcuts on this drive can’t be started. Copy the shortcut to your own folder first.	files.trustLauncher for a .desktop file on a drive without Unix permissions
+159	files_launch.notShortcut		lang	This isn’t a shortcut.	
+161	files_launch.foreignShortcut		lang	This shortcut belongs to someone else and can’t be trusted.	files.trustLauncher for a .desktop file of another user
+166	files_launch.trustFailed		lang	Couldn’t mark this shortcut as trusted.	GIO could not set metadata::trusted (data: its error)
+217	files_launch.noTerminal		lang	No terminal app is installed.	
+219	files_launch.terminalNotFound		lang	The terminal app can’t be found.	the default terminal’s program is not on PATH
+226	files_launch.terminalFailed		lang	The terminal couldn’t be started.	
+233	files_launch.launcherMissing		lang	The standalone app launcher is missing. Reinstall the full package.	win11-launch is not next to this program (data of files_launch.noAppForFile and others)
+241	files_launch.launchFailed		lang	The app couldn’t be started.	win11-launch reported a failure without its own text (data)
+242	files_launch.launcherNoReply		lang	The standalone app launcher didn’t respond.	win11-launch did not answer within 12 s (data)

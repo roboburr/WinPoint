@@ -1,0 +1,523 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-05 20:55:15",
+ "seconds": 107.7,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/a1-debug",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 31,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 998950,
+   "rss_kb": 2562328,
+   "processes": 32,
+   "t": 14.8
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 906210,
+   "rss_kb": 2432728
+  },
+  "minMemAvailableKb": 3139420,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 257598,
+    "rss_kb": 373224
+   },
+   "WebKitWebProces": {
+    "count": 4,
+    "pss_kb": 257081,
+    "rss_kb": 831800
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 92184,
+    "rss_kb": 125392
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 72496,
+    "rss_kb": 202008
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 70169,
+    "rss_kb": 199748
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 65183,
+    "rss_kb": 191176
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 64504,
+    "rss_kb": 193384
+   },
+   "WebKitNetworkPr": {
+    "count": 4,
+    "pss_kb": 54075,
+    "rss_kb": 236928
+   },
+   "glycin-svg": {
+    "count": 5,
+    "pss_kb": 29731,
+    "rss_kb": 98780
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15440,
+    "rss_kb": 34416
+   },
+   "glycin-image-rs": {
+    "count": 4,
+    "pss_kb": 12415,
+    "rss_kb": 33164
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4360,
+    "rss_kb": 11804
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1569,
+    "rss_kb": 10500
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 811,
+    "rss_kb": 7912
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 778,
+    "rss_kb": 7884
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 370,
+    "rss_kb": 1580
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 186,
+    "rss_kb": 2628
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/a1-debug",
+  "exit": 0,
+  "seconds": 72.4,
+  "mutatingSyscallPaths": 87856,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "20:56:48\tpw-dump\t--monitor --no-colors",
+  "20:56:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:49\tpw-dump\t--monitor --no-colors",
+  "20:56:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:50\tpw-dump\t--monitor --no-colors",
+  "20:56:51\tpw-dump\t--monitor --no-colors",
+  "20:56:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:54\tpw-dump\t--monitor --no-colors",
+  "20:56:55\tpw-dump\t--monitor --no-colors",
+  "20:56:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:56:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:57:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "20:57:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "leftoverProcessesAfterInner": [],
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/ge1a-disks-race.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.91,
+    "args": {
+     "spec": "disks"
+    },
+    "result": {
+     "name": "disks",
+     "kind": "disks",
+     "window": "82910379f2c03adf3e828387b48c74a0",
+     "pid": 1373,
+     "page": null,
+     "alive": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.41,
+    "args": {
+     "key": "host.disksListAroundSwitch"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.19,
+    "args": {
+     "name": "disks-nl",
+     "surface": "disks"
+    },
+    "result": {
+     "png": "disks-nl.png",
+     "area": [
+      190,
+      46,
+      1060,
+      760
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1060,
+       760
+      ],
+      "distinctColours": 82,
+      "meanLevel": 33.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.78,
+    "args": {
+     "name": "disks-en",
+     "surface": "disks"
+    },
+    "result": {
+     "png": "disks-en.png",
+     "area": [
+      190,
+      46,
+      1060,
+      760
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1060,
+       760
+      ],
+      "distinctColours": 76,
+      "meanLevel": 33.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 7.38,
+    "args": {
+     "name": "disks-nl-2",
+     "surface": "disks"
+    },
+    "result": {
+     "png": "disks-nl-2.png",
+     "area": [
+      190,
+      46,
+      1060,
+      760
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1060,
+       760
+      ],
+      "distinctColours": 82,
+      "meanLevel": 33.8,
+      "looksBlank": false
+     }
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "session starts in Dutch",
+    "ok": true,
+    "t": 0.8,
+    "lang": "nl"
+   },
+   {
+    "check": "Schijven shows the host text in Dutch",
+    "ok": true,
+    "t": 2.01,
+    "text": "\nSchijven\n\n\n\nSchijven en volumes\n\nVernieuwen\nSchijfbeheer werkt niet\nSchijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.\n\nVernieuwen"
+   },
+   {
+    "check": "Schijven reaches English after the evidence step",
+    "ok": true,
+    "t": 2.51,
+    "text": "\nDisks\n\n\n\nDisks & volumes\n\nRefresh\nDisk Management doesn’t work\nUDisks isn’t available on this computer.\n\nRefresh"
+   },
+   {
+    "check": "Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch",
+    "ok": true,
+    "t": 3.92,
+    "seconds": 0.1,
+    "primedError": "UDisks isn’t available on this computer.",
+    "text": "\nSchijven\n\n\n\nSchijven en volumes\n\nVernieuwen\nSchijfbeheer werkt niet\nSchijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.\n\nVernieuwen"
+   },
+   {
+    "check": "Schijven shows the host text in en within 3.0 s although disks.list ran just before the switch",
+    "ok": true,
+    "t": 5.54,
+    "seconds": 0.1,
+    "primedError": "Schijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.",
+    "text": "\nDisks\n\n\n\nDisks & volumes\n\nRefresh\nDisk Management doesn’t work\nUDisks isn’t available on this computer.\n\nRefresh"
+   },
+   {
+    "check": "Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch",
+    "ok": true,
+    "t": 7.14,
+    "seconds": 0.1,
+    "primedError": "UDisks isn’t available on this computer.",
+    "text": "\nSchijven\n\n\n\nSchijven en volumes\n\nVernieuwen\nSchijfbeheer werkt niet\nSchijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.\n\nVernieuwen"
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 8.58,
+    "failed": []
+   }
+  ],
+  "records": {
+   "host.disksListAroundSwitch": {
+    "before": {
+     "ok": true,
+     "error": "Schijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.",
+     "supported": false
+    },
+    "rightAfter": {
+     "ok": true,
+     "error": "UDisks isn’t available on this computer.",
+     "supported": false
+    },
+    "refresh": {
+     "ok": true,
+     "error": "UDisks isn’t available on this computer.",
+     "supported": false
+    },
+    "cachedKeepsOldLanguage": false
+   }
+  },
+  "shots": [
+   "disks-nl.png",
+   "disks-en.png",
+   "disks-nl-2.png"
+  ],
+  "error": null,
+  "seconds": 8.58,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "acc7391c48371caa9beaea45afa13a79",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "7c319a161f61b88e10610c1ac2bea79c",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "d9cacf3afa4c0732f758b008be1a4308",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "disks": {
+    "name": "disks",
+    "kind": "disks",
+    "window": "82910379f2c03adf3e828387b48c74a0",
+    "pid": 1373,
+    "page": null,
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/rt/sbus,guid=21b865bb3b354f7edea284a76aecdf7e",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "windowIds": {
+    "panel": "acc7391c48371caa9beaea45afa13a79",
+    "desktop": "7c319a161f61b88e10610c1ac2bea79c",
+    "start": "d9cacf3afa4c0732f758b008be1a4308"
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "disks-nl.png",
+    "group": "scenario",
+    "bytes": 23749,
+    "area": [
+     190,
+     46,
+     1060,
+     760
+    ]
+   },
+   {
+    "file": "disks-en.png",
+    "group": "scenario",
+    "bytes": 22173,
+    "area": [
+     190,
+     46,
+     1060,
+     760
+    ]
+   },
+   {
+    "file": "disks-nl-2.png",
+    "group": "scenario",
+    "bytes": 23749,
+    "area": [
+     190,
+     46,
+     1060,
+     760
+    ]
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/ge1a-disks-race.a1/disks-nl.png",
+  "tests/gnome/scenarios/ge1a-disks-race.a1/disks-en.png",
+  "tests/gnome/scenarios/ge1a-disks-race.a1/disks-nl-2.png"
+ ]
+}

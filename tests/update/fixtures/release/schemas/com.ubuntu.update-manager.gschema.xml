@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GW5 fixture: the two keys of com.ubuntu.update-manager that update.release.ubuntuHold writes (notes/claude/
+     windows-update-gnome.md §4.12), with the id, path, types and defaults of update-manager 1:26.04's schema. -->
+<schemalist>
+  <schema id="com.ubuntu.update-manager" path="/apps/update-manager/">
+    <key name="check-dist-upgrades" type="b">
+      <default>true</default>
+      <summary>Check for new distribution releases</summary>
+    </key>
+    <key name="check-new-release-ignore" type="s">
+      <default>''</default>
+      <summary>Do not check for new distribution releases</summary>
+    </key>
+  </schema>
+</schemalist>

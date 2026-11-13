@@ -1,0 +1,208 @@
+# tests/i18n/BASELINE-CHANGES.rust: every intended change to the Dutch (or other frozen) text of the Rust host
+# against 3b898e6, one exact key per line with a reason (contracts C3; plan.md ground rules).
+# Checked by python3 -B tools/i18n/drift_rust.py. Two kinds of line, tab-separated, five fields:
+#
+#   host/src/<file>  <ordinal>  <sha256[:16]>  <replacement>  <reason>
+#       a literal of tests/i18n/rust-frozen-all.tsv (path, ordinal and sha prefix exactly as listed there) that is
+#       changed or removed without a catalogue row that rebuilds it; <replacement> names what took its place
+#       (a catalogue key, "-" for nothing).
+#   key:<catalogue key>  -  -  <old text or "-">  <reason>
+#       a catalogue row whose Dutch text is new ("#@ new" rows, a plural .one form adopted under D-G1a, …).
+#
+# Round 2: each agent writes tests/i18n/BASELINE-CHANGES.rust-r2<x> in the same format; the coordinator merges.
+#
+# GE1b (round 1)
+# C4/D-G6 native window titles: Dutch titles where 3b898e6 showed English in both languages (GE0c F2)
+key:window.title.settings	-	-	Settings	nl native title = the UI's title Instellingen (C4); was English in both languages
+key:window.title.taskmgr	-	-	Task Manager	nl native title = the UI's Taakbeheer (C4)
+key:window.title.alles	-	-	Everything	nl native title = the UI's Alles (C4); English is Alles too (D-G5)
+key:window.title.disks	-	-	Disks	nl native title = the UI's Schijven (C4)
+key:window.title.defaultapps	-	-	Default apps	nl native title = the UI's Standaard-apps (C4)
+key:window.title.installer	-	-	App installer	nl native title = the UI's App-installatieprogramma (C4)
+key:window.title.explorer	-	-	File Explorer	nl native title = the UI's Verkenner (C4)
+key:window.title.pickerOpen	-	-	File selection	nl picker title = the UI's picker title Openen (C4)
+key:window.title.pickerSave	-	-	File selection	nl picker title = the UI's Opslaan als (C4)
+key:window.title.pickerFolder	-	-	File selection	nl picker title = the UI's Map kiezen (C4)
+# English titles that changed (the other seven 3b898e6 titles are the en of their window.tsv row: '#@ … en' lines)
+host/src/window.rs	33	75304cf77db08b6e	window.title.alles	English-only native title 'Everything' in both languages (GE0c F2): now per kind in nl and en, re-applied on a switch (C4, D-G6); its en value is window.tsv's; en is Alles (D-G5)
+host/src/window.rs	42	4532a8993d7c3965	window.title.pickerOpen	English-only picker title 'File selection': now Openen/Opslaan als/Map kiezen per picker mode, as the UI's picker title (C4); only a file-portal caller (another app) keeps its own title, Win11's own shell.pickFile callers get the mode title so it follows a switch (GE1b fix, review m3)
+host/src/window.rs	45	f5000e099f97f0ae	window.title.installer	English-only native title 'App installer' in both languages (GE0c F2): now per kind in nl and en, re-applied on a switch (C4, D-G6); its en value is window.tsv's; en as the UI's frame title: App Installer
+# technical literals removed by the core pilot refactor (runtime.rs envelopes, services/mod.rs language())
+host/src/runtime.rs	65	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 276): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	82	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 309): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	89	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 322): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	97	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 332): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	103	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 339): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	109	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 353): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	115	2689367b205c16ce	-	technical json! key 'ok' (3b898e6 line 367): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	66	ca00fccfb408989e	-	technical json! key 'error' (3b898e6 line 276): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	83	ca00fccfb408989e	-	technical json! key 'error' (3b898e6 line 309): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	90	ca00fccfb408989e	-	technical json! key 'error' (3b898e6 line 322): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	98	ca00fccfb408989e	-	technical json! key 'error' (3b898e6 line 332): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	104	ca00fccfb408989e	-	technical json! key 'error' (3b898e6 line 339): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	110	ca00fccfb408989e	-	technical json! key 'error' (3b898e6 line 353): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	67	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 276): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	84	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 309): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	91	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 322): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	99	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 332): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	105	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 339): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	111	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 353): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	117	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 367): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	133	5694d08a2e53ffca	-	technical json! key 'code' (3b898e6 line 427): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	69	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 276): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	86	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 309): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	93	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 322): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	101	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 332): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	107	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 339): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	113	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 353): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	119	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 367): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/runtime.rs	135	ab530a13e4591498	-	technical json! key 'message' (3b898e6 line 427): the envelope is now built by ApiError::json() through failure(), same JSON plus C2 key/params
+host/src/services/mod.rs	3	a4ef304ba42a200b	i18n::language_in	technical 'language' (3b898e6 line 63): ctx.language() reads the cached language (C1, i18n::language_in) instead of a full settings snapshot
+host/src/services/mod.rs	4	dbd3a49d0d906b4e	i18n::language_in	technical 'en' (3b898e6 line 63): ctx.language() reads the cached language (C1, i18n::language_in) instead of a full settings snapshot
+host/src/services/mod.rs	5	dbd3a49d0d906b4e	i18n::language_in	technical 'en' (3b898e6 line 64): ctx.language() reads the cached language (C1, i18n::language_in) instead of a full settings snapshot
+host/src/services/mod.rs	6	1843653496800edf	i18n::language_in	technical 'nl' (3b898e6 line 66): ctx.language() reads the cached language (C1, i18n::language_in) instead of a full settings snapshot
+# D-G70 (2026-11-13): the WebKit taskbar/panel, Start and desktop surfaces are removed; win11-panel execs the native
+# GTK 4 shell (win11-shell) and, with --http-only, is its backend. Their adapters, window code and literals are gone.
+host/src/bin/desktop.rs	1	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 2, technical)
+host/src/bin/start.rs	1	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 2, technical)
+host/src/gnome.rs	21	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 68, technical)
+host/src/gnome.rs	62	ad300c2949c98fb5	-	D-G70: WebKit Start/panel/desktop removed; was 'rects' (3b898e6 line 221, technical)
+host/src/gnome.rs	63	e2552aa8be3b2de7	-	D-G70: WebKit Start/panel/desktop removed; was 'Inputregio mist een lijst met rechthoeken' (3b898e6 line 223, user-visible-dutch)
+host/src/gnome.rs	64	93f764413ba94bef	-	D-G70: WebKit Start/panel/desktop removed; was 'Te veel inputrechthoeken' (3b898e6 line 225, user-visible-dutch)
+host/src/gnome.rs	65	e40624a14f8a2044	-	D-G70: WebKit Start/panel/desktop removed; was 'Inputrechthoek heeft geen geldige {key}' (3b898e6 line 233, user-visible-dutch)
+host/src/gnome.rs	66	2d711642b726b044	-	D-G70: WebKit Start/panel/desktop removed; was 'x' (3b898e6 line 235, technical)
+host/src/gnome.rs	67	a1fce4363854ff88	-	D-G70: WebKit Start/panel/desktop removed; was 'y' (3b898e6 line 235, technical)
+host/src/gnome.rs	68	50e721e49c013f00	-	D-G70: WebKit Start/panel/desktop removed; was 'w' (3b898e6 line 235, technical)
+host/src/gnome.rs	69	aaa9402664f1a41f	-	D-G70: WebKit Start/panel/desktop removed; was 'h' (3b898e6 line 235, technical)
+host/src/gnome.rs	70	a688441a6df89be2	-	D-G70: WebKit Start/panel/desktop removed; was 'Het paneelvenster is nog niet gerealiseerd' (3b898e6 line 255, user-visible-dutch)
+host/src/gnome.rs	71	4bdb64b60610eb1d	-	D-G70: WebKit Start/panel/desktop removed; was 'Inputregio kon niet worden gemaakt: {error}' (3b898e6 line 260, user-visible-dutch)
+host/src/gnome.rs	72	91f060a9ad4b39eb	-	D-G70: WebKit Start/panel/desktop removed; was 'keyboard' (3b898e6 line 262, technical)
+host/src/gnome.rs	73	433cd7fc8060e082	-	D-G70: WebKit Start/panel/desktop removed; was 'exclusive' (3b898e6 line 263, technical)
+host/src/gnome.rs	75	433cd7fc8060e082	-	D-G70: WebKit Start/panel/desktop removed; was 'exclusive' (3b898e6 line 274, technical)
+host/src/gnome.rs	74	5f243965221e8099	-	D-G70: WebKit Start/panel/desktop removed; was 'panel.keyboard' (3b898e6 line 273, technical)
+host/src/gnome.rs	76	b68de0ebc1824dd6	-	D-G70: WebKit Start/panel/desktop removed; was "\\n(() => {\\n  let stopped = false;\\n  addEventListener('page…" (3b898e6 line 291, technical)
+host/src/gnome.rs	77	88021c271a14aee6	-	D-G70: WebKit Start/panel/desktop removed; was "\\n(() => {\\n  window.__win11PanelState={phase:'start',runs:0,…" (3b898e6 line 308, technical)
+host/src/lib.rs	53	955f552ee4aef53f	-	D-G70: WebKit Start/panel/desktop removed; was '\\nwindow.__win11shellHost.standaloneStart = true;\\naddEventLi…' (3b898e6 line 141, technical)
+host/src/lib.rs	65	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 279, technical)
+host/src/lib.rs	86	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 297, technical)
+host/src/lib.rs	91	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 313, technical)
+host/src/lib.rs	93	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 314, technical)
+host/src/lib.rs	97	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 331, technical)
+host/src/lib.rs	103	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 378, technical)
+host/src/lib.rs	66	ab7b8bbc34d0ef85	-	D-G70: WebKit Start/panel/desktop removed; was 'io.github.win11shell.Start' (3b898e6 line 279, technical)
+host/src/lib.rs	67	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 280, technical)
+host/src/lib.rs	87	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 297, technical)
+host/src/lib.rs	68	ffd72641e8f4970b	-	D-G70: WebKit Start/panel/desktop removed; was 'io.github.win11shell.Panel' (3b898e6 line 280, technical)
+host/src/lib.rs	69	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 281, technical)
+host/src/lib.rs	88	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 297, technical)
+host/src/lib.rs	89	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 303, technical)
+host/src/lib.rs	109	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 382, technical)
+host/src/lib.rs	111	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 383, technical)
+host/src/lib.rs	70	65dced8c9561ce48	-	D-G70: WebKit Start/panel/desktop removed; was 'io.github.win11shell.Desktop' (3b898e6 line 281, technical)
+host/src/lib.rs	90	92ee4309e34a95c9	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop-quit' (3b898e6 line 304, technical)
+host/src/lib.rs	92	1bcacab55c9751a0	-	D-G70: WebKit Start/panel/desktop removed; was '--preload' (3b898e6 line 313, technical)
+host/src/lib.rs	117	1bcacab55c9751a0	-	D-G70: WebKit Start/panel/desktop removed; was '--preload' (3b898e6 line 392, technical)
+host/src/lib.rs	130	1bcacab55c9751a0	-	D-G70: WebKit Start/panel/desktop removed; was '--preload' (3b898e6 line 531, technical)
+host/src/lib.rs	96	0ef6ec226337643d	-	D-G70: WebKit Start/panel/desktop removed; was 'alles' (3b898e6 line 320, technical)
+host/src/lib.rs	98	253870567a5bd39e	-	D-G70: WebKit Start/panel/desktop removed; was 'shell.info' (3b898e6 line 331, technical)
+host/src/lib.rs	128	253870567a5bd39e	-	D-G70: WebKit Start/panel/desktop removed; was 'shell.info' (3b898e6 line 524, technical)
+host/src/lib.rs	104	763cdc62a869262b	-	D-G70: WebKit Start/panel/desktop removed; was 'surface' (3b898e6 line 379, technical)
+host/src/lib.rs	107	763cdc62a869262b	-	D-G70: WebKit Start/panel/desktop removed; was 'surface' (3b898e6 line 381, technical)
+host/src/lib.rs	110	763cdc62a869262b	-	D-G70: WebKit Start/panel/desktop removed; was 'surface' (3b898e6 line 383, technical)
+host/src/lib.rs	105	ce635c4eabff5e4f	-	D-G70: WebKit Start/panel/desktop removed; was 'shell' (3b898e6 line 379, technical)
+host/src/lib.rs	108	ce635c4eabff5e4f	-	D-G70: WebKit Start/panel/desktop removed; was 'shell' (3b898e6 line 381, technical)
+host/src/lib.rs	129	5550a4b323783e98	-	D-G70: WebKit Start/panel/desktop removed; was 'win11-start' (3b898e6 line 530, technical)
+host/src/lib.rs	131	38adccfa11e7d15a	-	D-G70: WebKit Start/panel/desktop removed; was 'WIN11_NATIVE_INSTANCE' (3b898e6 line 532, technical)
+host/src/process_scope.rs	7	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 29, technical)
+host/src/process_scope.rs	8	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 29, technical)
+host/src/process_scope.rs	71	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 312, technical)
+host/src/process_scope.rs	72	1bcacab55c9751a0	-	D-G70: WebKit Start/panel/desktop removed; was '--preload' (3b898e6 line 312, technical)
+host/src/runtime.rs	18	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 156, technical)
+host/src/runtime.rs	21	becd457d4fe9bcf6	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop.ready' (3b898e6 line 158, technical)
+host/src/runtime.rs	25	becd457d4fe9bcf6	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop.ready' (3b898e6 line 158, technical)
+host/src/runtime.rs	22	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 158, technical)
+host/src/runtime.rs	23	2689367b205c16ce	-	D-G70: WebKit Start/panel/desktop removed; was 'ok' (3b898e6 line 158, technical)
+host/src/runtime.rs	24	04efa603c0a9195b	-	D-G70: WebKit Start/panel/desktop removed; was 'dryRun' (3b898e6 line 158, technical)
+host/src/runtime.rs	26	ce71df4dc560de1e	-	D-G70: WebKit Start/panel/desktop removed; was 'pid' (3b898e6 line 158, technical)
+host/src/runtime.rs	27	7efe6b06e7c7b878	-	D-G70: WebKit Start/panel/desktop removed; was 'gnome' (3b898e6 line 158, technical)
+host/src/settings_runtime.rs	6	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 61, technical)
+host/src/window.rs	1	2dae1f9945e52c7e	-	D-G70: WebKit Start/panel/desktop removed; was "window.dispatchEvent(new CustomEvent('win11:start-show',{{detai…" (3b898e6 line 61, technical)
+host/src/window.rs	2	0783194f07ebff94	-	D-G70: WebKit Start/panel/desktop removed; was 'start-shown' (3b898e6 line 62, technical)
+host/src/window.rs	3	84816ff383c826e9	-	D-G70: WebKit Start/panel/desktop removed; was 'resident' (3b898e6 line 62, technical)
+host/src/window.rs	8	84816ff383c826e9	-	D-G70: WebKit Start/panel/desktop removed; was 'resident' (3b898e6 line 124, technical)
+host/src/window.rs	4	0cf70d8d0678c61f	-	D-G70: WebKit Start/panel/desktop removed; was "window.dispatchEvent(new CustomEvent('win11:start-hide',{{detai…" (3b898e6 line 74, technical)
+host/src/window.rs	5	253870567a5bd39e	-	D-G70: WebKit Start/panel/desktop removed; was 'shell.info' (3b898e6 line 108, technical)
+host/src/window.rs	6	e6349c5eb137d687	-	D-G70: WebKit Start/panel/desktop removed; was 'startFocused' (3b898e6 line 110, technical)
+host/src/window.rs	7	c14182cc1395cd5e	-	D-G70: WebKit Start/panel/desktop removed; was 'start-hidden' (3b898e6 line 124, technical)
+host/src/window.rs	95	c14182cc1395cd5e	-	D-G70: WebKit Start/panel/desktop removed; was 'start-hidden' (3b898e6 line 448, technical)
+host/src/window.rs	10	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 164, technical)
+host/src/window.rs	17	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 188, technical)
+host/src/window.rs	51	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 219, technical)
+host/src/window.rs	55	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 229, technical)
+host/src/window.rs	59	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 246, technical)
+host/src/window.rs	60	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 253, technical)
+host/src/window.rs	66	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 325, technical)
+host/src/window.rs	108	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 483, technical)
+host/src/window.rs	123	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 517, technical)
+host/src/window.rs	135	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 568, technical)
+host/src/window.rs	153	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 648, technical)
+host/src/window.rs	157	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 680, technical)
+host/src/window.rs	187	cced28c6dc3f99c2	-	D-G70: WebKit Start/panel/desktop removed; was 'start' (3b898e6 line 814, technical)
+host/src/window.rs	11	22095e57b72fc378	-	D-G70: WebKit Start/panel/desktop removed; was 'start-toggle' (3b898e6 line 165, technical)
+host/src/window.rs	67	22095e57b72fc378	-	D-G70: WebKit Start/panel/desktop removed; was 'start-toggle' (3b898e6 line 336, technical)
+host/src/window.rs	12	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 166, technical)
+host/src/window.rs	14	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 172, technical)
+host/src/window.rs	23	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 190, technical)
+host/src/window.rs	133	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 568, technical)
+host/src/window.rs	155	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 650, technical)
+host/src/window.rs	159	68693d02ab4fbb23	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop' (3b898e6 line 680, technical)
+host/src/window.rs	13	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 171, technical)
+host/src/window.rs	20	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 189, technical)
+host/src/window.rs	109	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 483, technical)
+host/src/window.rs	134	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 568, technical)
+host/src/window.rs	154	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 649, technical)
+host/src/window.rs	158	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 680, technical)
+host/src/window.rs	164	320e00e73a7d24a9	-	D-G70: WebKit Start/panel/desktop removed; was 'panel' (3b898e6 line 703, technical)
+host/src/window.rs	15	2080075e5abd5f44	-	D-G70: WebKit Start/panel/desktop removed; was 'desktop.geometry' (3b898e6 line 177, technical)
+host/src/window.rs	16	b2dbc3b0ac9225d4	-	D-G70: WebKit Start/panel/desktop removed; was 'panel.geometry' (3b898e6 line 179, technical)
+host/src/window.rs	18	e4bb9f1ece9af926	-	D-G70: WebKit Start/panel/desktop removed; was 'Start' (3b898e6 line 188, user-visible-english)
+host/src/window.rs	19	2f118ad4073dfc42	-	D-G70: WebKit Start/panel/desktop removed; was 'view-app-grid-symbolic' (3b898e6 line 188, technical)
+host/src/window.rs	22	2f118ad4073dfc42	-	D-G70: WebKit Start/panel/desktop removed; was 'view-app-grid-symbolic' (3b898e6 line 189, technical)
+host/src/window.rs	21	4e816f0816823f12	-	D-G70: WebKit Start/panel/desktop removed; was 'Win11 Taskbar' (3b898e6 line 189, user-visible-english)
+host/src/window.rs	24	ca4117936402fece	-	D-G70: WebKit Start/panel/desktop removed; was 'Win11 Desktop' (3b898e6 line 190, user-visible-english)
+host/src/window.rs	25	eb193bf06acef98f	-	D-G70: WebKit Start/panel/desktop removed; was 'user-desktop' (3b898e6 line 190, technical)
+host/src/window.rs	52	ac7f39a1e0b7bcd0	-	D-G70: WebKit Start/panel/desktop removed; was 'logical' (3b898e6 line 224, technical)
+host/src/window.rs	56	ac7f39a1e0b7bcd0	-	D-G70: WebKit Start/panel/desktop removed; was 'logical' (3b898e6 line 234, technical)
+host/src/window.rs	188	ac7f39a1e0b7bcd0	-	D-G70: WebKit Start/panel/desktop removed; was 'logical' (3b898e6 line 835, technical)
+host/src/window.rs	190	ac7f39a1e0b7bcd0	-	D-G70: WebKit Start/panel/desktop removed; was 'logical' (3b898e6 line 839, technical)
+host/src/window.rs	53	50e721e49c013f00	-	D-G70: WebKit Start/panel/desktop removed; was 'w' (3b898e6 line 224, technical)
+host/src/window.rs	189	50e721e49c013f00	-	D-G70: WebKit Start/panel/desktop removed; was 'w' (3b898e6 line 835, technical)
+host/src/window.rs	54	dec0f004eaa07c2a	-	D-G70: WebKit Start/panel/desktop removed; was 'width' (3b898e6 line 224, technical)
+host/src/window.rs	57	aaa9402664f1a41f	-	D-G70: WebKit Start/panel/desktop removed; was 'h' (3b898e6 line 234, technical)
+host/src/window.rs	191	aaa9402664f1a41f	-	D-G70: WebKit Start/panel/desktop removed; was 'h' (3b898e6 line 839, technical)
+host/src/window.rs	58	39e0f5efdc39ec10	-	D-G70: WebKit Start/panel/desktop removed; was 'height' (3b898e6 line 234, technical)
+host/src/window.rs	61	ad300c2949c98fb5	-	D-G70: WebKit Start/panel/desktop removed; was 'rects' (3b898e6 line 280, technical)
+host/src/window.rs	62	91f060a9ad4b39eb	-	D-G70: WebKit Start/panel/desktop removed; was 'keyboard' (3b898e6 line 280, technical)
+host/src/window.rs	63	1b760162484c0095	-	D-G70: WebKit Start/panel/desktop removed; was 'on-demand' (3b898e6 line 280, technical)
+host/src/window.rs	65	f2377e72f2b44883	-	D-G70: WebKit Start/panel/desktop removed; was 'regions' (3b898e6 line 306, technical)
+host/src/window.rs	68	87ab63a5c25f65ad	-	D-G70: WebKit Start/panel/desktop removed; was 'start-dismiss' (3b898e6 line 346, technical)
+host/src/window.rs	69	eff7b2a35059806f	-	D-G70: WebKit Start/panel/desktop removed; was 'start-quit' (3b898e6 line 350, technical)
+host/src/window.rs	83	493819d11966bbe8	-	D-G70: WebKit Start/panel/desktop removed; was 'openStart' (3b898e6 line 410, technical)
+host/src/window.rs	84	184e4e3157b382c5	-	D-G70: WebKit Start/panel/desktop removed; was 'panel.toggleStart' (3b898e6 line 411, technical)
+host/src/window.rs	85	5550a4b323783e98	-	D-G70: WebKit Start/panel/desktop removed; was 'win11-start' (3b898e6 line 414, technical)
+host/src/window.rs	92	5707998b0a1fc19f	-	D-G70: WebKit Start/panel/desktop removed; was 'start-ready' (3b898e6 line 435, technical)
+host/src/window.rs	93	5707998b0a1fc19f	-	D-G70: WebKit Start/panel/desktop removed; was 'start-ready' (3b898e6 line 440, technical)
+host/src/window.rs	94	21f41321ab907b1b	-	D-G70: WebKit Start/panel/desktop removed; was 'preloaded' (3b898e6 line 441, technical)
+host/src/window.rs	96	afc9b31d9f3f3645	-	D-G70: WebKit Start/panel/desktop removed; was 'epoch' (3b898e6 line 450, technical)
+host/src/window.rs	98	afc9b31d9f3f3645	-	D-G70: WebKit Start/panel/desktop removed; was 'epoch' (3b898e6 line 457, technical)
+host/src/window.rs	97	f9b31a2ab12d1b55	-	D-G70: WebKit Start/panel/desktop removed; was 'start-closing' (3b898e6 line 455, technical)
+host/src/window.rs	106	f22621e5ca0a351f	-	D-G70: WebKit Start/panel/desktop removed; was '{NATIVE_BRIDGE} window.__win11shellHost.windowId={};window.__wi…' (3b898e6 line 482, technical)
+host/src/window.rs	136	685c5ef3cb5cf091	-	D-G70: WebKit Start/panel/desktop removed; was 'Shell-renderer gestopt: {reason:?}' (3b898e6 line 571, log)
+host/src/window.rs	165	6b009c3d111950c7	-	D-G70: WebKit Start/panel/desktop removed; was 'panel-taskview' (3b898e6 line 704, technical)
+host/src/window.rs	166	4a8862f5dde8b522	-	D-G70: WebKit Start/panel/desktop removed; was 'taskview' (3b898e6 line 704, technical)
+host/src/window.rs	167	81b42c19cdcd48ef	-	D-G70: WebKit Start/panel/desktop removed; was 'panel-search' (3b898e6 line 704, technical)
+host/src/window.rs	168	2419329067823cab	-	D-G70: WebKit Start/panel/desktop removed; was 'search' (3b898e6 line 704, technical)
+host/src/window.rs	169	a1444f68458bea6d	-	D-G70: WebKit Start/panel/desktop removed; was "window.dispatchEvent(new CustomEvent('win11:panel-command',{{de…" (3b898e6 line 712, technical)
+# WinPoint clean-up (418ea594): wallpaper ids renamed
+host/src/wallpaper.rs	16	69b323396d066d80	-	WinPoint clean-up (418ea594): the built-in 'bloom' wallpaper ids are now 'lotus' (ALIASES resolves the old ids); was 'bloom-' (3b898e6 line 36, technical)
+host/src/wallpaper.rs	34	2d38352cbfa886ce	-	WinPoint clean-up (418ea594): the built-in 'bloom' wallpaper ids are now 'lotus' (ALIASES resolves the old ids); was 'builtin:bloom-dark' (3b898e6 line 73, technical)

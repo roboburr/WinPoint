@@ -1,0 +1,241 @@
+# host/i18n/sysmon.tsv: host texts of services/sysmon.rs and services/sysmon/** (incl. the unit friendly names, D-G9).
+# Owner: R2-B.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/sysmon/actions.rs
+# service_action(): ApiError "bad_args": Taakbeheer › Services: the unit name is missing or not a valid user service name
+#@ host/src/services/sysmon/actions.rs 30 3e57a2da540508c4 plain
+#@ host/src/services/sysmon/actions.rs 37 3e57a2da540508c4 plain
+sysmon.service.unknown	Onbekende service.	Unknown service.
+# service_action(): ApiError "bad_args": the action is not start, stop or restart
+#@ host/src/services/sysmon/actions.rs 42 4cd7f67ade2522c5 plain
+sysmon.service.unknownAction	Onbekende actie.	Unknown action.
+# service_action(): ApiError "protected": stop/restart of a service the desktop needs
+#@ host/src/services/sysmon/actions.rs 45 881a7a7c31d06f78 plain
+sysmon.service.protected	Deze service is nodig voor je bureaublad en kan hier niet worden gestopt.	Your desktop needs this service, so it can’t be stopped here.
+# service_action(): ApiError "failed": systemctl --user start failed
+#@ host/src/services/sysmon/actions.rs 51 2ba537d24bef2552 plain
+sysmon.service.startFailed	Starten lukte niet.	The service couldn’t be started.
+# service_action(): ApiError "failed": systemctl --user stop failed
+#@ host/src/services/sysmon/actions.rs 53 9e26454b5e67fefe plain
+sysmon.service.stopFailed	Stoppen lukte niet.	The service couldn’t be stopped.
+# service_action(): ApiError "failed": systemctl --user restart failed
+#@ host/src/services/sysmon/actions.rs 54 a8f70d1823c5e4a2 plain
+sysmon.service.restartFailed	Opnieuw starten lukte niet.	The service couldn’t be restarted.
+# pid_list(): ApiError "bad_args": endTask / setEfficiency / restartPlan without pids
+#@ host/src/services/sysmon/actions.rs 57 e2b6fcce0f108e5b plain
+sysmon.process.none	Geen processen opgegeven.	No processes were specified.
+# pid_list(): ApiError "bad_args": a pid that is not a positive number
+#@ host/src/services/sysmon/actions.rs 59 3cee55fb2c1e06cb plain
+sysmon.process.invalid	Ongeldig proces.	Invalid process.
+# message(): check_own (Own::Critical): results[].error of endTask/setEfficiency, restartPlan refusal 'protected'
+#@ host/src/services/sysmon/actions.rs 60 22ec6c0e67ba288d plain
+sysmon.process.critical	Dit proces is nodig voor je bureaublad en kan niet worden beëindigd.	Your desktop needs this process, so it can’t be ended.
+# message(): check_own (Own::Gone): results[].error, restartPlan refusal 'not_found'
+#@ host/src/services/sysmon/actions.rs 62 c5253318bf520269 plain
+#@ host/src/services/sysmon/actions.rs 190 c5253318bf520269 plain
+sysmon.process.gone	Dit proces bestaat niet meer.	This process no longer exists.
+# message(): check_own (Own::OtherUser)
+#@ host/src/services/sysmon/actions.rs 63 4458b368d99f1036 plain
+sysmon.process.otherUser	Dit proces is van een andere gebruiker of van het systeem.	This process belongs to another user or to the system.
+# message(): check_own (Own::Kernel): a kernel thread
+#@ host/src/services/sysmon/actions.rs 65 9c3b5bb6a520ac72 plain
+sysmon.process.kernel	Dit is een onderdeel van het systeem.	This is part of the system.
+# end_task(): results[].error of endTask: EPERM
+#@ host/src/services/sysmon/actions.rs 69 56e8db0b42a196cf plain
+sysmon.endTask.denied	Hiervoor heb je geen toestemming.	You don’t have permission to do this.
+# end_task(): results[].error of endTask; {error} = the system's error text (io::Error)
+#@ host/src/services/sysmon/actions.rs 70 00361c4ad7b15a42 fmt {}=error
+sysmon.endTask.failed	Beëindigen lukte niet ({error}).	The process couldn’t be ended ({error}).
+# efficiency(): results[].error of setEfficiency
+#@ host/src/services/sysmon/actions.rs 91 77ada0fd5e3d5040 plain
+sysmon.efficiency.critical	Dit proces is nodig voor je bureaublad en kan niet worden afgeremd.	Your desktop needs this process, so it can’t be put in Efficiency mode.
+# efficiency(): results[].error of setEfficiency for Win11's own scopes
+#@ host/src/services/sysmon/actions.rs 97 7324bd58045c5534 plain
+sysmon.efficiency.ownShell	Dit hoort bij Win11 Shell (taakbalk of Taakbeheer). Dat houdt altijd voorrang en kan niet worden afgeremd.	This is part of Win11 Shell (the taskbar or Task Manager). It always keeps its priority, so it can’t be put in Efficiency mode.
+# efficiency(): systemctl set-property CPUWeight failed
+#@ host/src/services/sysmon/actions.rs 114 a5cb2ad734e61590 plain
+sysmon.efficiency.failed	Efficiëntiemodus aanpassen lukte niet.	Efficiency mode couldn’t be changed.
+# efficiency(): results[].error when renice cannot lower the nice value again ("Terugzetten" = turning Efficiency mode off again)
+#@ host/src/services/sysmon/actions.rs 121 08b26cbe62d2fbe6 plain
+sysmon.efficiency.noUndo	Terugzetten kan alleen door de app opnieuw te starten.	Normal priority can only be restored by restarting the app.
+# exec_plan(): ApiError "unsupported": restartPlan refusal 'unsupported'
+#@ host/src/services/sysmon/actions.rs 160 d9a934c0ed743657 plain
+sysmon.restart.setid	Dit proces draait met andere rechten (setuid/setgid) en kan hier niet opnieuw worden gestart.	This process runs with different permissions (setuid/setgid), so it can’t be restarted here.
+# exec_plan(): ApiError "unsupported": restartPlan refusal 'unsupported': /proc/<pid>/environ is unreadable ("instellingen" = its environment)
+#@ host/src/services/sysmon/actions.rs 163 7358e60183ed3d1e plain
+sysmon.restart.noEnviron	Dit proces laat zijn instellingen niet lezen en kan hier niet opnieuw worden gestart.	This process’s environment can’t be read, so it can’t be restarted here.
+# exec_plan(): ApiError "unsupported": restartPlan refusal 'unsupported': another mount namespace
+#@ host/src/services/sysmon/actions.rs 166 1d34b013ef9293ab plain
+sysmon.restart.sandboxed	Dit proces draait afgeschermd (bijvoorbeeld als Flatpak of Snap) en kan hier niet opnieuw worden gestart. Sluit het en open het opnieuw.	This process runs in a sandbox (for example as a Flatpak or Snap), so it can’t be restarted here. Close it and open it again.
+# exec_plan(): ApiError "unsupported": restartPlan refusal 'unsupported'
+#@ host/src/services/sysmon/actions.rs 170 9ccb993cd3ccc113 plain
+sysmon.restart.exeGone	Het programma is bijgewerkt of verwijderd. Start het zelf opnieuw.	The program has been updated or removed. Start it again yourself.
+# exec_plan(): ApiError "unsupported": restartPlan refusal 'unsupported': the executable is setuid/setgid
+#@ host/src/services/sysmon/actions.rs 171 ffdd9f70c6fcc550 plain
+sysmon.restart.setidProgram	Dit programma draait met andere rechten (setuid/setgid) en kan hier niet opnieuw worden gestart.	This program runs with different permissions (setuid/setgid), so it can’t be restarted here.
+# exec_plan(): {parent} of sysmon.restart.parent when the parent process has no name
+#@ host/src/services/sysmon/actions.rs 177 5dae35819ad4c21a plain
+sysmon.restart.otherProgram	een ander programma	another program
+# exec_plan(): ApiError "unsupported": restartPlan refusal 'unsupported'; {parent} = the parent's process name, or sysmon.restart.otherProgram
+#@ host/src/services/sysmon/actions.rs 179 328447a0c7a9f90b fmt {pname}=parent
+sysmon.restart.parent	Dit proces is gestart door ‘{parent}’ en hoort daarbij. Start dat programma opnieuw.	This process was started by “{parent}” and belongs to it. Restart that program.
+# restart_plan(): ApiError "unsupported": restartPlan refusal 'unsupported'
+#@ host/src/services/sysmon/actions.rs 193 8c98751c50e0bcdc plain
+sysmon.restart.noCommand	Dit proces kan niet opnieuw worden gestart (het heeft geen opdrachtregel).	This process can’t be restarted (it has no command line).
+# restart_plan(): ApiError "protected": restartPlan refusal 'protected': a helper of the host
+#@ host/src/services/sysmon/actions.rs 203 304d04ff448fee76 plain
+sysmon.restart.shellPart	Dit is een onderdeel van Win11 Shell. Start Win11 Shell opnieuw om het opnieuw te starten.	This is part of Win11 Shell. Restart Win11 Shell to restart it.
+# restart_plan(): ApiError "protected": restartPlan refusal 'protected'
+#@ host/src/services/sysmon/actions.rs 209 561c1eb751b81560 plain
+sysmon.restart.criticalService	Deze service is nodig voor je bureaublad en kan hier niet opnieuw worden gestart.	Your desktop needs this service, so it can’t be restarted here.
+# confirm(): ApiError "confirm_required": refusal 'confirm_required': Taakbeheer asks this question, then calls again with confirm
+#@ host/src/services/sysmon/actions.rs 219 04a3dc6a2ec36a41 plain
+sysmon.restart.terminal	Dit proces draait in een terminal. Het wordt opnieuw gestart zonder terminalvenster: je ziet zijn uitvoer dan niet meer en kunt niets meer typen. Toch opnieuw starten?	This process is running in a terminal. It will be restarted without a terminal window: you won’t see its output any more and can’t type anything into it. Restart it anyway?
+# restart(): ApiError "failed": restartProcess refusal 'failed'
+#@ host/src/services/sysmon/actions.rs 246 8f4ce122b1f15bc4 plain
+sysmon.restart.notStopped	Het proces stopte niet, dus het is niet opnieuw gestart.	The process didn’t stop, so it wasn’t restarted.
+# restart(): ApiError "launch_failed": restartProcess refusal 'launch_failed'; {message} = the apps.launch error message
+#@ host/src/services/sysmon/actions.rs 252 d6778cd6156619b9 fmt {}=message
+sysmon.restart.reopenFailed	Het proces is gestopt, maar opnieuw openen lukte niet: {message}	The process was stopped, but it couldn’t be opened again: {message}
+# restart(): ApiError "launch_failed": restartProcess refusal 'launch_failed'; {error} = the system's error text
+#@ host/src/services/sysmon/actions.rs 263 ce815e422fdb1aee fmt {e}=error
+sysmon.restart.respawnFailed	Het proces is gestopt, maar opnieuw starten lukte niet ({error}).	The process was stopped, but it couldn’t be started again ({error}).
+
+# --- host/src/services/sysmon/startup.rs
+# set(): ApiError "bad_args": Taakbeheer › Opstart-apps: the id is no valid .desktop file name
+#@ host/src/services/sysmon/startup.rs 69 adfe3500573c0e9f plain
+sysmon.startup.unknown	Onbekend opstartitem.	Unknown startup app.
+# set(): ApiError "not_found"
+#@ host/src/services/sysmon/startup.rs 71 9616f7bb90e84c94 plain
+sysmon.startup.gone	Dit opstartitem bestaat niet meer.	This startup app no longer exists.
+# set(): ApiError "failed"
+#@ host/src/services/sysmon/startup.rs 73 d3f2d1cf9f73c549 plain
+sysmon.startup.readFailed	Dit opstartitem kon niet worden gelezen.	This startup app couldn’t be read.
+# set(): ApiError "failed": writing the autostart entry into ~/.config/autostart failed
+#@ host/src/services/sysmon/startup.rs 82 14ab227734aca13f plain
+sysmon.startup.saveFailed	De instelling kon niet worden opgeslagen.	The setting couldn’t be saved.
+
+# --- host/src/services/sysmon.rs
+# call(): ApiError "bad_args": restartPlan / restartProcess with more than one pid
+#@ host/src/services/sysmon.rs 45 58a7fdd7069f00c5 plain
+sysmon.process.single	Geef één proces op.	Specify one process.
+
+# --- host/src/services/sysmon/common.rs
+# friendly(): Taakbeheer › Processen/Services: the friendly name of a gsd-* process and of an org.gnome.SettingsDaemon.* unit without its own part name (D-G9)
+#@ host/src/services/sysmon/common.rs 16 25045696b55bce3d plain
+#@ host/src/services/sysmon/common.rs 22 25045696b55bce3d plain
+#@ host/src/services/sysmon/common.rs 15 e6d2eea501f0c3e5 en
+sysmon.unit.gnomeSettings	GNOME-instellingendienst	GNOME settings daemon
+# unit_friendly(): unit org.gnome.SettingsDaemon.<Part>.service; {part} = the part's name from text.json _GSD (nl/en pair, e.g. "energiebeheer" / "power management")
+#@ host/src/services/sysmon/common.rs 21 90dd941c5a6ce29d fmt {v}=part
+sysmon.unit.gnomeSettingsPart	GNOME-instellingen: {part}	GNOME settings: {part}
+# unit_friendly(): unit gvfs-<part>-volume-monitor.service; {part} = text.json _GVFS (e.g. "telefoons" / "phones"), else the raw part
+#@ host/src/services/sysmon/common.rs 25 95c343ccd6487aa8 fmt {}=part
+sysmon.unit.volumeMonitor	Stationsbewaking ({part})	Drive monitor ({part})
+# unit_friendly(): unit friendly names (D-G9): speech-dispatcher.service
+#@ host/src/services/sysmon/common.rs 28 9815678ad7cfa85b plain
+sysmon.unit.speech	Spraakdienst	Speech service
+# unit_friendly(): at-spi-dbus-bus.service
+#@ host/src/services/sysmon/common.rs 30 905970106d446139 plain
+sysmon.unit.accessibility	Toegankelijkheidsdienst	Accessibility service
+# unit_friendly(): gnome-keyring-daemon.service
+#@ host/src/services/sysmon/common.rs 32 1f40479c32b082e1 plain
+sysmon.unit.keyring	Sleutelbos (wachtwoorden)	Keyring (passwords)
+# unit_friendly(): dconf.service
+#@ host/src/services/sysmon/common.rs 34 70ed0a80fb85dd5b plain
+sysmon.unit.settingsDatabase	Instellingendatabase	Settings database
+# unit_friendly(): xdg-permission-store.service
+#@ host/src/services/sysmon/common.rs 36 164bcc9774f78524 plain
+sysmon.unit.permissionStore	Machtigingenopslag	Permission store
+# unit_friendly(): xdg-document-portal.service
+#@ host/src/services/sysmon/common.rs 38 f4eda24025d9ee14 plain
+sysmon.unit.documentPortal	Documentportaal	Document portal
+# unit_friendly(): xdg-desktop-portal.service
+#@ host/src/services/sysmon/common.rs 40 b67027fc06d28774 plain
+sysmon.unit.desktopPortal	Bureaubladportaal	Desktop portal
+# unit_friendly(): gvfs-daemon.service
+#@ host/src/services/sysmon/common.rs 42 cfaa303c43e16163 plain
+sysmon.unit.fileSystemServices	Bestandssysteemdiensten (GVfs)	File system services (GVfs)
+# unit_friendly(): gvfs-metadata.service
+#@ host/src/services/sysmon/common.rs 44 6492376ecb0fba9d plain
+sysmon.unit.fileMetadata	Bestandsgegevens	File metadata
+# unit_friendly(): evolution-source-registry.service
+#@ host/src/services/sysmon/common.rs 46 d408320f5048600b plain
+sysmon.unit.calendarContacts	Agenda en contacten	Calendar and contacts
+# unit_friendly(): evolution-calendar-factory.service
+#@ host/src/services/sysmon/common.rs 48 ba36f243a4182f31 plain
+sysmon.unit.calendar	Agenda-dienst	Calendar service
+# unit_friendly(): evolution-addressbook-factory.service
+#@ host/src/services/sysmon/common.rs 50 7e7e6e4b5b5b594e plain
+sysmon.unit.addressBook	Adresboekdienst	Address book service
+# unit_friendly(): gnome-session-monitor.service and gnome-session-manager@*
+#@ host/src/services/sysmon/common.rs 52 9b87ab5cee62f07e plain
+#@ host/src/services/sysmon/common.rs 84 9b87ab5cee62f07e plain
+sysmon.unit.sessionManager	GNOME-sessiebeheer	GNOME session manager
+# unit_friendly(): mpris-proxy.service
+#@ host/src/services/sysmon/common.rs 54 f985059a75126044 plain
+sysmon.unit.bluetoothMedia	Bluetooth-mediabediening	Bluetooth media control
+# unit_friendly(): obex.service
+#@ host/src/services/sysmon/common.rs 56 a81a0a008db97f44 plain
+sysmon.unit.bluetoothTransfer	Bluetooth-bestandsoverdracht	Bluetooth file transfer
+# unit_friendly(): filter-chain.service
+#@ host/src/services/sysmon/common.rs 58 509f2de87fa7be36 plain
+sysmon.unit.soundFilters	Geluidsfilters (PipeWire)	Sound filters (PipeWire)
+# unit_friendly(): flatpak-portal.service and flatpak-session-helper.service
+#@ host/src/services/sysmon/common.rs 60 e0039724d1127598 plain
+#@ host/src/services/sysmon/common.rs 62 e0039724d1127598 plain
+sysmon.unit.flatpak	Flatpak-dienst	Flatpak service
+# unit_friendly(): gcr-ssh-agent.service and ssh-agent.service
+#@ host/src/services/sysmon/common.rs 64 9225deed3fef5c2a plain
+#@ host/src/services/sysmon/common.rs 66 9225deed3fef5c2a plain
+sysmon.unit.sshKeys	SSH-sleutels	SSH keys
+# unit_friendly(): localsearch-3.service and tracker-miner-fs-3.service
+#@ host/src/services/sysmon/common.rs 68 533c5dc5f415fb58 plain
+#@ host/src/services/sysmon/common.rs 70 533c5dc5f415fb58 plain
+sysmon.unit.fileIndexer	Bestanden indexeren	File indexer
+# unit_friendly(): xdg-desktop-portal-gnome.service
+#@ host/src/services/sysmon/common.rs 72 29dfca248ae70e6f plain
+sysmon.unit.desktopPortalGnome	Bureaubladportaal (GNOME)	Desktop portal (GNOME)
+# unit_friendly(): xdg-desktop-portal-gtk.service
+#@ host/src/services/sysmon/common.rs 74 8ec5670410d8c08b plain
+sysmon.unit.desktopPortalGtk	Bureaubladportaal (GTK)	Desktop portal (GTK)
+# unit_friendly(): xdg-desktop-portal-hyprland.service
+#@ host/src/services/sysmon/common.rs 76 58b71cb2f4d4d42f plain
+sysmon.unit.desktopPortalHyprland	Bureaubladportaal (Hyprland)	Desktop portal (Hyprland)
+# unit_friendly(): org.gnome.Evolution-alarm-notify
+#@ host/src/services/sysmon/common.rs 78 5cdc8532c0f1b125 plain
+sysmon.unit.reminders	Herinneringen	Reminders
+# unit_friendly(): update-notifier (as text.json _FRIENDLY's en for the process)
+#@ host/src/services/sysmon/common.rs 80 40d987fd48149213 plain
+sysmon.unit.updateNotifier	Updatemeldingen	Update notifier
+# unit_friendly(): snapd-desktop-integration
+#@ host/src/services/sysmon/common.rs 82 89281bad5c19f00b plain
+sysmon.unit.snapIntegration	Snap-integratie	Snap integration
+# unit_friendly(): unit snap.<name>.*.service; {name} = the snap's name
+#@ host/src/services/sysmon/common.rs 89 ab765d2070325fc9 fmt {}=name
+sysmon.unit.snap	Snap-dienst ({name})	Snap service ({name})
+# fmt_duration(): {dur} of the health page's "uses a lot of CPU" message (sysmon text.json h_cpu_warn_m); English as in 3b898e6
+#@ host/src/services/sysmon/common.rs 107 1f4ca1046a46d1cb fmt {sec}=sec
+#@ host/src/services/sysmon/common.rs 106 d544bb9a87afe74f enfmt {sec}=sec
+sysmon.duration.seconds	{sec} seconden	{sec} s
+# fmt_duration(): 1 minute (no {n}: the count is always 1)
+#@ host/src/services/sysmon/common.rs 112 8b3658f38c19784b plain
+#@ host/src/services/sysmon/common.rs 109 e67b6f61f579060a en
+sysmon.duration.minutes.one	1 minuut	1 minute
+# fmt_duration(): 2-59 minutes
+#@ host/src/services/sysmon/common.rs 113 049a08ff24fe83c0 fmt {m}=n
+#@ host/src/services/sysmon/common.rs 111 b8b9f90dff4f1672 enfmt {m}=n
+sysmon.duration.minutes.other	{n} minuten	{n} min
+# fmt_duration(): the hour unit in "{h} u {m} min" (format! of fmt_duration, 60 minutes and more)
+#@ host/src/services/sysmon/common.rs 117 0bfe935e70c321c7 plain
+#@ host/src/services/sysmon/common.rs 116 aaa9402664f1a41f en
+sysmon.duration.hourUnit	u	h

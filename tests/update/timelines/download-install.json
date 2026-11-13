@@ -1,0 +1,151 @@
+{
+ "name": "download-install",
+ "group": "install",
+ "title": "Download and install",
+ "description": "Simulate, then the real install: per package Package(downloading) and ItemProgress 50/100 while Speed, RemainingTime and DownloadSizeRemaining fall, then commit/update with Package(updating)/ItemProgress/Package(finished), cleanup, success. GetUpdates afterwards is empty. The real install keeps its finished transaction for 5 s before Destroy, as packagekitd does (\"already finished, so waiting to timeout\"): in that gap GetTransactionList no longer lists it, but its properties still answer.",
+ "states": [
+  "H04",
+  "H05",
+  "H06",
+  "R02"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibgtk-3-0t64\t3.24.52-1ubuntu1\t0\t-\t0\nlibgtk-3-common\t3.24.52-1ubuntu1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibgtk-3-0t64\tamd64\t3.24.52-1ubuntu1\t0\t-\t0\t3.24.52-1ubuntu0\nlibgtk-3-common\tall\t3.24.52-1ubuntu1\t0\t-\t0\t3.24.52-1ubuntu0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
+  }
+ },
+ "packages": {
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit"
+  },
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "JavaScript engine library from WebKitGTK",
+   "size": 31653888,
+   "row": "webkit"
+  },
+  "libgtk-3-0t64;3.24.52-1ubuntu1;amd64;ubuntu-resolute-updates": {
+   "info": "bugfix",
+   "summary": "GTK graphical user interface library",
+   "size": 9580544,
+   "row": "gtk"
+  },
+  "libgtk-3-common;3.24.52-1ubuntu1;all;ubuntu-resolute-updates": {
+   "info": "bugfix",
+   "summary": "common files for the GTK graphical user interface library",
+   "size": 1122304,
+   "row": "gtk"
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libgtk-3-0t64;3.24.52-1ubuntu1;amd64;ubuntu-resolute-updates",
+  "libgtk-3-common;3.24.52-1ubuntu1;all;ubuntu-resolute-updates",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+ ],
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 5
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "count": {
+     "Package": 5
+    }
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "count": {
+     "ItemProgress": 15,
+     "Package": 15
+    },
+    "statuses": [
+     "download",
+     "commit",
+     "update",
+     "cleanup",
+     "finished"
+    ]
+   },
+   "detachOn": "Finished",
+   "saveTid": "installTid",
+   "timeout": 20
+  },
+  {
+   "manager": "GetTransactionList",
+   "flags": "no-auto-start",
+   "expect": {
+    "len": 0
+   }
+  },
+  {
+   "getAll": "$installTid",
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "Status": "finished",
+     "Role": "update-packages"
+    }
+   }
+  },
+  {
+   "attach": "$installTid",
+   "timeout": 10
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 0
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 14
+ },
+ "methods": {
+  "UpdatePackages": [
+   {
+    "emitInstall": {
+     "destroyMs": 5000
+    }
+   }
+  ]
+ }
+}

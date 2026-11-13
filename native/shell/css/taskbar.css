@@ -1,0 +1,271 @@
+/* Taskbar (vendor/ui/css/shell.css .sh-taskbar, .sh-tb-*, .sh-tray-*, .sh-clock, .sh-ni-*; tokens.css). */
+window.w11 {
+  --tb-tint: rgba(28, 28, 28, 0.7);
+  --tb-solid: #1c1c1c;
+  --tb-stroke: rgba(255, 255, 255, 0.075);
+  --tb-hover: rgba(255, 255, 255, 0.075);
+  --tb-hover-stroke: rgba(255, 255, 255, 0.055);
+  --tb-press: rgba(255, 255, 255, 0.045);
+  --tb-active: rgba(255, 255, 255, 0.065);
+  --tb-active-stroke: rgba(255, 255, 255, 0.07);
+  --tb-ind: rgba(255, 255, 255, 0.55);
+  --tb-search-bg: rgba(255, 255, 255, 0.06);
+  --tb-search-hover: rgba(255, 255, 255, 0.09);
+  --tb-search-stroke: rgba(255, 255, 255, 0.07);
+  --tb-menu-bg: #2c2c2c;
+  --tb-menu-stroke: rgba(0, 0, 0, 0.36);
+  --tb-menu-hover: rgba(255, 255, 255, 0.06);
+  --tb-menu-press: rgba(255, 255, 255, 0.04);
+  --tb-menu-shadow: rgba(0, 0, 0, 0.42);
+  --tb-badge-text: #ffffff;
+}
+window.w11.w11-light {
+  --tb-tint: rgba(238, 238, 238, 0.7);
+  --tb-solid: #eeeeee;
+  --tb-stroke: rgba(0, 0, 0, 0.075);
+  --tb-hover: rgba(255, 255, 255, 0.6);
+  --tb-hover-stroke: rgba(0, 0, 0, 0.045);
+  --tb-press: rgba(255, 255, 255, 0.38);
+  --tb-active: rgba(255, 255, 255, 0.7);
+  --tb-active-stroke: rgba(0, 0, 0, 0.06);
+  --tb-ind: rgba(0, 0, 0, 0.42);
+  --tb-search-bg: rgba(255, 255, 255, 0.72);
+  --tb-search-hover: rgba(255, 255, 255, 0.92);
+  --tb-search-stroke: rgba(0, 0, 0, 0.07);
+  --tb-menu-bg: #f9f9f9;
+  --tb-menu-stroke: rgba(0, 0, 0, 0.1);
+  --tb-menu-hover: rgba(0, 0, 0, 0.037);
+  --tb-menu-press: rgba(0, 0, 0, 0.024);
+  --tb-menu-shadow: rgba(0, 0, 0, 0.16);
+}
+
+/* the strip: solid, or the 70 % tint over the extension's blur; 1 px top border */
+.w11-taskbar {
+  min-height: 48px;
+  background-color: var(--tb-solid);
+  background-image: none;
+  box-shadow: inset 0 1px var(--tb-stroke);
+  color: var(--text-1);
+  font-size: 12px;
+}
+.w11-taskbar.w11-glass { background-color: var(--tb-tint); }
+.w11-tb-bar { min-height: 48px; }
+.w11-tb-center { min-height: 40px; }
+.w11-tb-apps { min-height: 40px; }
+
+/* buttons: 40 x 40, transparent, 4 px radius, hover fill + 1 px stroke */
+.w11-taskbar button {
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  outline: none;
+  color: var(--text-1);
+  font-size: 12px;
+  font-weight: normal;
+}
+.w11-taskbar button.w11-tb-btn {
+  min-width: 38px;
+  min-height: 38px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  transition: background-color 83ms linear, border-color 83ms linear;
+}
+.w11-taskbar button.w11-tb-btn:hover,
+.w11-taskbar button.w11-tb-btn.is-active,
+.w11-taskbar button.w11-tb-btn.is-menu {
+  background-color: var(--tb-hover);
+  border-color: var(--tb-hover-stroke);
+}
+.w11-taskbar button.w11-tb-btn:active { background-color: var(--tb-press); }
+.w11-taskbar button:focus-visible { outline: 2px solid var(--text-1); outline-offset: -2px; }
+.w11-tb-ico { transition: transform 167ms cubic-bezier(0.2, 0.9, 0.3, 1.25); }
+.w11-taskbar button.w11-tb-btn:active .w11-tb-ico,
+.w11-taskbar button.w11-tb-sys:active .w11-tray-ico,
+.w11-taskbar button.w11-tb-searchbox:active .w11-tb-searchbox-icon {
+  transform: scale(0.82);
+  transition: transform 90ms cubic-bezier(0.7, 0, 1, 0.5);
+}
+
+/* running / focused app */
+.w11-taskbar button.w11-tb-app.is-focused { background-color: var(--tb-active); border-color: var(--tb-active-stroke); }
+.w11-taskbar button.w11-tb-app.is-focused:hover { background-color: var(--tb-hover); }
+.w11-tb-ind {
+  min-width: 6px;
+  min-height: 3px;
+  margin-bottom: 1px;
+  border-radius: 1.5px;
+  background-color: var(--tb-ind);
+  opacity: 0;
+  transition: min-width 167ms cubic-bezier(0, 0, 0, 1), background-color 167ms linear, opacity 167ms linear;
+}
+.w11-tb-app.is-running .w11-tb-ind { opacity: 1; }
+.w11-tb-app.is-running:hover:not(.is-focused) .w11-tb-ind { min-width: 8px; }
+.w11-tb-app.is-focused .w11-tb-ind { min-width: 16px; background-color: var(--accent); }
+.w11-taskbar button.w11-tb-app.is-dragging { background-color: var(--tb-hover); border-color: var(--tb-hover-stroke); }
+.w11-tb-app.is-dragging .w11-tb-ico { transform: scale(1.08); }
+
+@keyframes w11-tb-bounce {
+  0% { transform: translateY(0); }
+  28% { transform: translateY(-7px); }
+  56% { transform: translateY(0); }
+  76% { transform: translateY(-2.5px); }
+  100% { transform: translateY(0); }
+}
+@keyframes w11-tb-enter {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes w11-tb-pulse {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+.w11-tb-ico.is-bounce { animation: w11-tb-bounce 720ms cubic-bezier(0.3, 0.6, 0.4, 1); }
+.is-entering { animation: w11-tb-enter 250ms cubic-bezier(0, 0, 0, 1); }
+.is-pulse { animation: w11-tb-pulse 400ms cubic-bezier(0.3, 0.6, 0.4, 1); }
+
+/* search pill (Win11 24H2) */
+.w11-taskbar button.w11-tb-searchbox {
+  min-width: 182px;
+  min-height: 30px;
+  margin: 0 4px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--tb-search-stroke);
+  border-radius: 16px;
+  background-color: var(--tb-search-bg);
+  font-size: 14px;
+  transition: background-color 83ms linear;
+}
+.w11-taskbar button.w11-tb-searchbox:hover,
+.w11-taskbar button.w11-tb-searchbox.is-active { background-color: var(--tb-search-hover); }
+.w11-taskbar button.w11-tb-searchbox.is-compact { min-width: 0; padding-right: 14px; }
+.w11-tb-searchbox-icon { transition: transform 167ms cubic-bezier(0, 0, 0, 1); }
+.w11-tb-searchbox-label { color: var(--text-2); font-size: 14px; }
+
+/* tray: system button, clock, show desktop */
+.w11-tb-tray { min-height: 48px; }
+.w11-taskbar button.w11-tb-sys,
+.w11-taskbar button.w11-tb-clock {
+  min-height: 38px;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  transition: background-color 83ms linear, border-color 83ms linear;
+}
+.w11-taskbar button.w11-tb-sys { padding: 0 9px; }
+.w11-taskbar button.w11-tb-clock { padding: 0 8px 0 10px; }
+.w11-taskbar button.w11-tb-sys:hover, .w11-taskbar button.w11-tb-sys.is-active,
+.w11-taskbar button.w11-tb-clock:hover, .w11-taskbar button.w11-tb-clock.is-active {
+  background-color: var(--tb-hover);
+  border-color: var(--tb-hover-stroke);
+}
+.w11-taskbar button.w11-tb-sys:active, .w11-taskbar button.w11-tb-clock:active { background-color: var(--tb-press); }
+.w11-tray-ico { transition: transform 167ms cubic-bezier(0.2, 0.9, 0.3, 1.25); }
+.w11-clock-time, .w11-clock-date { font-size: 12px; font-feature-settings: "tnum"; }
+.w11-clock-bell { min-width: 16px; color: var(--text-1); }
+.w11-clock-bell.is-dnd { color: var(--text-2); }
+.w11-clock-count {
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background-color: var(--accent);
+  color: var(--tb-badge-text);
+  font-size: 11px;
+  font-weight: 600;
+}
+.w11-taskbar button.w11-tb-desktop {
+  min-width: 12px;
+  min-height: 48px;
+  margin: 0 0 0 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+.w11-tb-desktop-line {
+  min-width: 1px;
+  margin: 12px 0;
+  background-color: var(--text-3);
+  opacity: 0;
+  transition: opacity 83ms linear;
+}
+.w11-taskbar button.w11-tb-desktop:hover .w11-tb-desktop-line,
+.w11-taskbar button.w11-tb-desktop:focus-visible .w11-tb-desktop-line { opacity: 1; }
+
+/* notification area: 32 x 40 icons, 16 px, no gap; the "^" chevron */
+.w11-ni-area, .w11-ni-list { min-height: 40px; }
+.w11-taskbar button.w11-tb-btn.w11-ni-item,
+.w11-taskbar button.w11-tb-btn.w11-ni-chevron { min-width: 30px; }
+.w11-ni-chevron-ico { transition: -gtk-icon-transform 250ms cubic-bezier(0, 0, 0, 1); }
+.w11-ni-chevron.is-active .w11-ni-chevron-ico { -gtk-icon-transform: rotate(180deg); }
+.w11-ni-ico { min-width: 16px; min-height: 16px; }
+.w11-ni-overlay { margin: 0 -3px -3px 0; }
+.w11-ni-dot {
+  min-width: 6px;
+  min-height: 6px;
+  margin: -2px -2px 0 0;
+  border-radius: 3px;
+  background-color: var(--accent);
+  box-shadow: 0 0 0 1.5px var(--tb-solid);
+}
+
+/* popovers above the taskbar: window list, menus, overflow */
+popover.w11-tb-preview > contents,
+popover.w11-tb-menu > contents {
+  padding: 4px;
+  border: 1px solid var(--tb-menu-stroke);
+  border-radius: var(--radius-overlay);
+  background-color: var(--tb-menu-bg);
+  box-shadow: 0 8px 16px var(--tb-menu-shadow);
+  color: var(--text-1);
+}
+popover.w11-tb-preview, popover.w11-tb-menu { margin-bottom: 8px; }
+.w11-tb-pv { min-width: 200px; }
+.w11-tb-pv-head { padding: 6px 10px 4px 10px; }
+.w11-tb-pv-app { font-size: 12px; color: var(--text-2); }
+.w11-tb-pv-item {
+  min-height: 32px;
+  padding: 0 4px 0 10px;
+  border-radius: var(--radius-control);
+}
+.w11-tb-pv-item:hover { background-color: var(--tb-menu-hover); }
+.w11-tb-pv-item.is-current { background-color: var(--tb-menu-hover); }
+.w11-tb-pv-item.is-minimized .w11-tb-pv-title { color: var(--text-2); }
+.w11-tb-pv-item.is-closing { opacity: 0.3; }
+.w11-tb-pv-title { font-size: 12px; }
+popover.w11-tb-preview button.w11-tb-pv-close {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  opacity: 0;
+}
+popover.w11-tb-preview .w11-tb-pv-item:hover button.w11-tb-pv-close { opacity: 1; }
+popover.w11-tb-preview button.w11-tb-pv-close:hover { background-color: #c42b1c; color: #ffffff; }
+popover.w11-tb-menu modelbutton,
+popover.w11-tb-menu button.w11-tb-menu-item {
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: var(--text-1);
+  font-size: 14px;
+}
+popover.w11-tb-menu modelbutton:hover,
+popover.w11-tb-menu button.w11-tb-menu-item:hover { background-color: var(--tb-menu-hover); }
+popover.w11-tb-menu modelbutton:active,
+popover.w11-tb-menu button.w11-tb-menu-item:active { background-color: var(--tb-menu-press); }
+popover.w11-tb-menu modelbutton:disabled { color: var(--text-3); }
+popover.w11-tb-menu separator { margin: 4px 0; background-color: var(--tb-menu-stroke); min-height: 1px; }

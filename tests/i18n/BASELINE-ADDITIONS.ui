@@ -1,0 +1,218 @@
+# New Dutch texts of the UI layer (vendor/ui) that no key had at 3b898e6: Windows Update (notes/claude/windows-update-gnome.md
+# §10, plan.md D-G28). Owner: GW3; later Windows Update steps write theirs to notes/claude/baseline-additions-<step>.txt
+# and the coordinator merges them here. The list of *changed* keys is tests/i18n/BASELINE-CHANGES.ui.
+# Checked by: python3 -B -m unittest tests/i18n/test_update_mock_rows.py (this file lists exactly the rows that
+#   python3 -B tools/i18n/check_ui.py --dict-diff tests/i18n/dict-nl-3b898e6.tsv reports as "added" in
+#   apps/settings/pages/update*.js and in the registry's P(update-*) pages, with the same text).
+# A new key in these files adds no line to an existing block of tests/i18n/baseline-nl.txt except where §3.9 says so
+# (BASELINE-CHANGES.ui); the dump shows it on the new surfaces (settings.update-*, settings-update.*).
+# One line per new key, tab-separated:
+#   STEP<TAB>key:<file below vendor/ui/js>:<key><TAB><the nl text exactly; TSV escapes \n \t \\>
+# exportName is GE1a's (a Dutch-only literal moved into the dictionary unchanged, BASELINE-CHANGES.ui header).
+# Sources of the texts: the design's §3.2-§3.4 and §3.6 tables (nl and en together, en-GB, typographic ’).
+GW3	key:apps/settings/pages/update-advanced.js:advUpdater	Software-updater van Ubuntu
+GW3	key:apps/settings/pages/update-advanced.js:open	Openen
+GW3	key:apps/settings/pages/update-advanced.js:updaterTitle	Software-updater openen?
+GW3	key:apps/settings/pages/update-advanced.js:updaterBody	De Software-updater van Ubuntu wordt geopend. Als je updates installeert, vraagt Ubuntu om je wachtwoord. Dat is normaal: updates veranderen het systeem. Sla je werk op, want soms moet de computer daarna opnieuw opstarten.
+GW3	key:apps/settings/pages/update-history.js:hEmpty	Er is nog geen updategeschiedenis.
+GW3	key:apps/settings/pages/update.js:product	Win11 Shell
+GW3	key:apps/settings/pages/update.js:checkFor	Controleren op updates
+GW3	key:apps/settings/pages/update.js:updatesAvailable	Updates beschikbaar
+GW3	key:apps/settings/pages/update.js:installAll	Alles downloaden en installeren
+GW3	key:apps/settings/pages/update.js:downloading	Updates downloaden
+GW3	key:apps/settings/pages/update.js:progressDl	{done} van {total} · nog ongeveer {eta}
+GW3	key:apps/settings/pages/update.js:progressDlNoEta	{done} van {total}
+GW3	key:apps/settings/pages/update.js:preparing	Voorbereiden…
+GW3	key:apps/settings/pages/update.js:cancel	Annuleren
+GW3	key:apps/settings/pages/update.js:installing	Updates installeren
+GW3	key:apps/settings/pages/update.js:keepOn	Laat je pc aan staan.
+GW3	key:apps/settings/pages/update.js:waitLock	Wachten tot een andere installatie klaar is
+GW3	key:apps/settings/pages/update.js:waitLockAuto	Ubuntu installeert op dit moment automatische updates.
+GW3	key:apps/settings/pages/update.js:waitLockOther	Een ander programma installeert software.
+GW3	key:apps/settings/pages/update.js:waitAuth	Wachten op toestemming
+GW3	key:apps/settings/pages/update.js:waitAuthDesc	Bevestig in het venster dat om je wachtwoord vraagt.
+GW3	key:apps/settings/pages/update.js:foreign	Er wordt software geïnstalleerd door een ander programma
+GW3	key:apps/settings/pages/update.js:foreignOwn	{product} installeert of verwijdert een app
+GW3	key:apps/settings/pages/update.js:foreignDesc	Je kunt updates installeren zodra dat klaar is.
+GW3	key:apps/settings/pages/update.js:relRunning	Ubuntu wordt bijgewerkt naar {version}
+GW3	key:apps/settings/pages/update.js:relRunningNoVer	Ubuntu wordt bijgewerkt
+GW3	key:apps/settings/pages/update.js:relRunningBody	Het venster van Ubuntu doet de upgrade. Sluit het niet.
+GW3	key:apps/settings/pages/update.js:relShowWindow	Venster weer openen
+GW3	key:apps/settings/pages/update.js:restartRequired	Opnieuw opstarten vereist
+GW3	key:apps/settings/pages/update.js:restartDescFor	Start je pc opnieuw op om de update van {list} af te ronden.
+GW3	key:apps/settings/pages/update.js:restartDesc	Start je pc opnieuw op om de updates af te ronden.
+GW3	key:apps/settings/pages/update.js:restartNow	Nu opnieuw opstarten
+GW3	key:apps/settings/pages/update.js:rebootQ	Wil je de pc opnieuw opstarten?
+GW3	key:apps/settings/pages/update.js:rebootBody	Alle apps worden gesloten en de pc start daarna vanzelf weer op. Werk dat je nog niet hebt opgeslagen, kan verloren gaan.
+GW3	key:apps/settings/pages/update.js:reboot	Opnieuw opstarten
+GW3	key:apps/settings/pages/update.js:errorTitle	Er zijn problemen opgetreden bij het installeren van sommige updates
+GW3	key:apps/settings/pages/update.js:techDetails	Technische details
+GW3	key:apps/settings/pages/update.js:retry	Opnieuw proberen
+GW3	key:apps/settings/pages/update.js:unsupportedDesc	{product} kan updates hier niet zelf installeren. Gebruik de Software-updater van Ubuntu.
+GW3	key:apps/settings/pages/update.js:offline	Je bent offline
+GW3	key:apps/settings/pages/update.js:offlineDesc	Maak verbinding met internet om te controleren op updates. Laatst gecontroleerd: {when}
+GW3	key:apps/settings/pages/update.js:offlineDescNoWhen	Maak verbinding met internet om te controleren op updates.
+GW3	key:apps/settings/pages/update.js:repairTitle	Een eerdere installatie is niet afgerond
+GW3	key:apps/settings/pages/update.js:repairDesc	Ubuntu moet dit eerst herstellen. Daarna kun je weer updates installeren.
+GW3	key:apps/settings/pages/update.js:repair	Herstellen
+GW3	key:apps/settings/pages/update.js:alsoAvailable	Ook beschikbaar
+GW3	key:apps/settings/pages/update.js:phasedLater.one	1 update wordt later aangeboden
+GW3	key:apps/settings/pages/update.js:phasedLater.other	{n} updates worden later aangeboden
+GW3	key:apps/settings/pages/update.js:keptBack.one	1 update wordt nu niet geïnstalleerd
+GW3	key:apps/settings/pages/update.js:keptBack.other	{n} updates worden nu niet geïnstalleerd
+GW3	key:apps/settings/pages/update.js:pkgKernel	Linux-kernel
+GW3	key:apps/settings/pages/update.js:pkgLibc	systeembibliotheek
+GW3	key:apps/settings/pages/update.js:pkgGnome	GNOME Shell
+GW3	key:apps/settings/pages/update.js:andMore.one	en 1 andere
+GW3	key:apps/settings/pages/update.js:andMore.other	en {n} andere
+GW3	key:apps/settings/pages/update.js:meteredInfo	Je gebruikt een verbinding met een datalimiet. Downloaden kan kosten met zich meebrengen.
+GW3	key:apps/settings/pages/update.js:meteredQ	Toch downloaden?
+GW3	key:apps/settings/pages/update.js:meteredBody	Er wordt ongeveer {size} gedownload.
+GW3	key:apps/settings/pages/update.js:download	Downloaden
+GW3	key:apps/settings/pages/update.js:removeQ	Pakketten verwijderen?
+GW3	key:apps/settings/pages/update.js:removeBody	Voor deze updates moet {list} worden verwijderd. Toch installeren?
+GW3	key:apps/settings/pages/update.js:installAnyway	Toch installeren
+GW3	key:apps/settings/pages/update.js:rowSecurity	Beveiligingsupdates voor Ubuntu {version}
+GW3	key:apps/settings/pages/update.js:rowGnome	GNOME Shell {version}
+GW3	key:apps/settings/pages/update.js:rowWebkit	WebKitGTK {version} (webweergave van {product})
+GW3	key:apps/settings/pages/update.js:rowGtk	GTK 3 {version}
+GW3	key:apps/settings/pages/update.js:rowSoup	libsoup {version}
+GW3	key:apps/settings/pages/update.js:rowGlib	GLib {version}
+GW3	key:apps/settings/pages/update.js:rowKernel	Linux-kernel {version}
+GW3	key:apps/settings/pages/update.js:rowOther	Overige updates
+GW3	key:apps/settings/pages/update.js:rowCaption.one	1 pakket · {size}
+GW3	key:apps/settings/pages/update.js:rowCaption.other	{n} pakketten · {size}
+GW3	key:apps/settings/pages/update.js:rowCaptionNoSize.one	1 pakket
+GW3	key:apps/settings/pages/update.js:rowCaptionNoSize.other	{n} pakketten
+GW3	key:apps/settings/pages/update.js:securityTag	Beveiligingsupdate
+GW3	key:apps/settings/pages/update.js:rsPendingDownload	Wachten op downloaden
+GW3	key:apps/settings/pages/update.js:rsDownloading	Downloaden - {pct}%
+GW3	key:apps/settings/pages/update.js:rsPendingInstall	Wachten op installatie
+GW3	key:apps/settings/pages/update.js:rsInstalling	Installeren - {pct}%
+GW3	key:apps/settings/pages/update.js:rsInstalled	Geïnstalleerd
+GW3	key:apps/settings/pages/update.js:rsRestart	Wachten op opnieuw opstarten
+GW3	key:apps/settings/pages/update.js:rsFailed	Installatiefout
+GW3	key:apps/settings/pages/update.js:offeredLater	Wordt later aangeboden
+GW3	key:apps/settings/pages/update.js:keptBackRow	Wordt nu niet geïnstalleerd
+GW3	key:apps/settings/pages/update.js:whatsNew	Wat is er nieuw
+GW3	key:apps/settings/pages/update.js:changes	Wijzigingen
+GW3	key:apps/settings/pages/update.js:cves	Beveiligingsproblemen
+GW3	key:apps/settings/pages/update.js:bugs	Opgeloste fouten
+GW3	key:apps/settings/pages/update.js:noDetails	Ubuntu heeft voor deze update geen beschrijving.
+GW3	key:apps/settings/pages/update.js:close	Sluiten
+GW3	key:apps/settings/pages/update.js:shellRestartTitle	{product} moet opnieuw starten
+GW3	key:apps/settings/pages/update.js:shellRestartBody	Onderdelen van het bureaublad zijn bijgewerkt ({list}). Opnieuw starten duurt een paar seconden; vensters van {product} gaan even dicht.
+GW3	key:apps/settings/pages/update.js:shellRestartNow	{product} opnieuw starten
+GW3	key:apps/settings/pages/update.js:cWebkit	WebKitGTK
+GW3	key:apps/settings/pages/update.js:cGtk	GTK
+GW3	key:apps/settings/pages/update.js:cSoup	libsoup
+GW3	key:apps/settings/pages/update.js:cGlib	GLib
+GW3	key:apps/settings/pages/update.js:cPixbuf	GDK Pixbuf
+GW3	key:apps/settings/pages/update.js:cCairo	cairo
+GW3	key:apps/settings/pages/update.js:cArchive	libarchive
+GW3	key:apps/settings/pages/update.js:cSelf	{product}
+GW3	key:apps/settings/pages/update.js:moreOptions	Meer opties
+GW3	key:apps/settings/pages/update.js:historyRow	Updategeschiedenis
+GW3	key:apps/settings/pages/update.js:advancedRow	Geavanceerde opties
+GW3	key:apps/settings/pages/update.js:advancedRowDesc	Melding bij opnieuw opstarten, datalimiet, Software-updater van Ubuntu
+GE1a	key:apps/settings/pages/update.js:exportName	win11shell-instellingen-{date}.json
+GW3	key:apps/settings/registry.js:P(update-history).title	Updategeschiedenis
+GW3	key:apps/settings/registry.js:P(update-history).description	Eerdere updates en Ubuntu-versies
+GW3	key:apps/settings/registry.js:P(update-history).keywords	["updategeschiedenis", "geschiedenis", "eerdere updates", "logboek"]
+GW3	key:apps/settings/registry.js:P(update-advanced).title	Geavanceerde opties
+GW3	key:apps/settings/registry.js:P(update-advanced).description	Melding bij opnieuw opstarten, datalimiet, Software-updater van Ubuntu
+GW3	key:apps/settings/registry.js:P(update-advanced).keywords	["geavanceerd", "datalimiet", "software-updater", "automatisch bijwerken", "beveiligingsupdates", "snap"]
+# GW4 (notes/claude/wu/gw4.md): Updategeschiedenis and Geavanceerde opties, the design's §3.6 tables; advAutoOpenDays is §3.6's
+# advAutoOpenDesc first sentence (only while on) with a zero form of GW4's own (update-notifier's 0 = at once) and the one
+# form "elke dag" (§3.6's "om de 1 dag" reads as every other day; GW4 review m7).
+GW4	key:apps/settings/pages/update-advanced.js:advMetered	Updates downloaden via verbindingen met een datalimiet
+GW4	key:apps/settings/pages/update-advanced.js:advMeteredDesc	Er kunnen kosten in rekening worden gebracht
+GW4	key:apps/settings/pages/update-advanced.js:advNotify	Melden wanneer opnieuw opstarten vereist is om het bijwerken te voltooien
+GW4	key:apps/settings/pages/update-advanced.js:advAutoOpen	Software-updater van Ubuntu automatisch openen voor gewone updates
+GW4	key:apps/settings/pages/update-advanced.js:advAutoOpenDays.zero	Ubuntu opent de Software-updater meteen als er gewone updates zijn.
+GW4	key:apps/settings/pages/update-advanced.js:advAutoOpenDays.one	Ubuntu opent de Software-updater elke dag als er gewone updates zijn.
+GW4	key:apps/settings/pages/update-advanced.js:advAutoOpenDays.other	Ubuntu opent de Software-updater om de {n} dagen als er gewone updates zijn.
+GW4	key:apps/settings/pages/update-advanced.js:advAutoOpenDesc	Voor beveiligingsupdates opent Ubuntu hem altijd meteen. Updates kun je ook hier installeren.
+GW4	key:apps/settings/pages/update-advanced.js:advSecurity	Automatische beveiligingsupdates
+GW4	key:apps/settings/pages/update-advanced.js:advSecurityOn	Aan: Ubuntu installeert ze elke dag
+GW4	key:apps/settings/pages/update-advanced.js:advSecurityOff	Uit
+GW4	key:apps/settings/pages/update-advanced.js:advSnaps	Apps uit de Snap Store
+GW4	key:apps/settings/pages/update-advanced.js:advSnapsDesc	Worden automatisch bijgewerkt door Ubuntu. Laatst: {when}, volgende: {next}.
+GW4	key:apps/settings/pages/update-history.js:product	Win11 Shell
+GW4	key:apps/settings/pages/update-history.js:hUpdates	Updates
+GW4	key:apps/settings/pages/update-history.js:hReleases	Ubuntu-versies
+GW4	key:apps/settings/pages/update-history.js:hSoftware	Software
+GW4	key:apps/settings/pages/update-history.js:hInstalledOn	Geïnstalleerd op {date}
+GW4	key:apps/settings/pages/update-history.js:hFailedOn	Kon niet worden geïnstalleerd op {date}
+GW4	key:apps/settings/pages/update-history.js:hByUbuntu	automatisch door Ubuntu
+GW4	key:apps/settings/pages/update-history.js:hByUs	via {product}
+GW4	key:apps/settings/pages/update-history.js:hByApp	via een app
+GW4	key:apps/settings/pages/update-history.js:hByTerminal	in een terminal (apt)
+GW4	key:apps/settings/pages/update-history.js:hLoadMore	Meer laden
+# R3-UI (notes/claude/round3/r3-ui.md; plan.md D-G44): the Windows 11 24H2 parts §3.6 lacked (GW4 review N8): the
+# restart-notification row's description, the "Aanvullende opties" header, Updategeschiedenis' "Gerelateerde
+# instellingen" with its Herstel row (the header is common.js's existing `related`), and the held Snap refreshes in
+# Windows' pause wording (snaps.held, GW4 review m9).
+R3-UI	key:apps/settings/pages/update-advanced.js:advNotifyDesc	Een melding weergeven wanneer je pc opnieuw moet worden opgestart om het bijwerken te voltooien
+R3-UI	key:apps/settings/pages/update-advanced.js:advSnapsHeld	Updates zijn onderbroken tot {until}. Laatst: {when}.
+R3-UI	key:apps/settings/pages/update-advanced.js:advSnapsHeldForever	Updates zijn onderbroken. Laatst: {when}.
+R3-UI	key:apps/settings/pages/update-advanced.js:advMore	Aanvullende opties
+R3-UI	key:apps/settings/pages/update-history.js:hRecovery	Herstel
+R3-UI	key:apps/settings/pages/update-history.js:hRecoveryDesc	Back-up van instellingen, alles terugzetten
+GW5	key:apps/settings/pages/update-release.js:promptRow	Nieuwe Ubuntu-versies
+GW5	key:apps/settings/pages/update-release.js:promptLts	Alleen LTS-versies
+GW5	key:apps/settings/pages/update-release.js:promptNormal	Elke nieuwe versie
+GW5	key:apps/settings/pages/update-release.js:promptNever	Nooit melden
+GW5	key:apps/settings/pages/update-release.js:promptLtsDesc	Om de twee jaar een upgrade; elke versie krijgt 5 jaar updates.
+GW5	key:apps/settings/pages/update-release.js:promptNormalDesc	Elk half jaar een upgrade; een tussenversie krijgt 9 maanden updates.
+GW5	key:apps/settings/pages/update-release.js:promptNormalGnome	Elke tussenversie heeft een nieuwe GNOME, en {product} moet daar eerst klaar voor zijn.
+GW5	key:apps/settings/pages/update-release.js:promptLtsInterim	Je gebruikt een tussenversie, dus Ubuntu biedt toch elke nieuwe versie aan tot de volgende LTS.
+GW5	key:apps/settings/pages/update-release.js:relNotOffered	Ubuntu {version} is uitgebracht; Ubuntu biedt de upgrade nog niet aan.
+GW5	key:apps/settings/pages/update-release.js:promptOverride	Deze instelling wordt bepaald door {file}.
+GW5	key:apps/settings/pages/update-release.js:promptShInfo	Ubuntu vraagt om je wachtwoord om ‘/bin/sh’ als beheerder uit te voeren. Dat is {product}, dat alleen de regel Prompt= aanpast.
+# GW6: the feature-update card and its start dialog (update-release.js, design §3.5). relAnywayStart is the design's relAnyway
+# without its ellipsis (the button of the dialog the link opens; notes/claude/wu/gw6.md D-items).
+GW6	key:apps/settings/pages/update-release.js:relAvailable	Ubuntu {version} is beschikbaar
+GW6	key:apps/settings/pages/update-release.js:relChecking	Controleren of deze pc klaar is voor Ubuntu {version}…
+GW6	key:apps/settings/pages/update-release.js:relOkBody	De nieuwste versie van Ubuntu, met nieuwe functies. Krijgt {support} updates, tot {eol}.
+GW6	key:apps/settings/pages/update-release.js:relCompatOk	✓ {product} werkt met Ubuntu {version}.
+GW6	key:apps/settings/pages/update-release.js:relInstall	Downloaden en installeren
+GW6	key:apps/settings/pages/update-release.js:relWhatsNew	Bekijk wat er in deze update zit
+GW6	key:apps/settings/pages/update-release.js:relBefore	Let op voordat je upgradet
+GW6	key:apps/settings/pages/update-release.js:relOnWay	Ubuntu {version} is onderweg
+GW6	key:apps/settings/pages/update-release.js:relHoldGnome	Wacht op een compatibele Win11-versie. {product} werkt nog niet met GNOME {major}, dat bij Ubuntu {version} hoort.
+GW6	key:apps/settings/pages/update-release.js:relHoldBody	Wacht op een compatibele Win11-versie. Zodra {product} klaar is voor deze versie, zie je de upgrade hier.
+GW6	key:apps/settings/pages/update-release.js:relAnyway	Toch upgraden…
+GW6	key:apps/settings/pages/update-release.js:relAnywayStart	Toch upgraden
+GW6	key:apps/settings/pages/update-release.js:relUbuntuMayOffer	De Software-updater van Ubuntu kan deze upgrade nog wel aanbieden. Wacht daar ook mee.
+GW6	key:apps/settings/pages/update-release.js:relUbuntuWait	Ook de melding van Ubuntu uitstellen
+GW6	key:apps/settings/pages/update-release.js:relUbuntuWaiting	Ubuntu biedt deze upgrade niet meer zelf aan tot {product} er klaar voor is.
+GW6	key:apps/settings/pages/update-release.js:relUbuntuUndo	Ongedaan maken
+GW6	key:apps/settings/pages/update-release.js:relUbuntuHold	Ubuntu heeft de upgrade tijdelijk stopgezet.
+GW6	key:apps/settings/pages/update-release.js:relBlocked	Deze pc is nog niet klaar voor Ubuntu {version}
+GW6	key:apps/settings/pages/update-release.js:relUpdatesFirst	Installeer eerst de beschikbare updates.
+GW6	key:apps/settings/pages/update-release.js:relUpdatesThen	Updates installeren en daarna upgraden
+GW6	key:apps/settings/pages/update-release.js:relRebootFirst	Start je pc eerst opnieuw op om eerdere updates af te ronden. Daarna kun je upgraden.
+GW6	key:apps/settings/pages/update-release.js:restartNow	Nu opnieuw opstarten
+GW6	key:apps/settings/pages/update-release.js:relRunning	Ubuntu wordt bijgewerkt naar {version}
+GW6	key:apps/settings/pages/update-release.js:relRunningBody	Het venster van Ubuntu doet de upgrade. Sluit het niet.
+GW6	key:apps/settings/pages/update-release.js:relShowWindow	Venster weer openen
+GW6	key:apps/settings/pages/update-release.js:relWaitingBody	Ubuntu wacht misschien op een antwoord in het upgradevenster.
+GW6	key:apps/settings/pages/update-release.js:relNotStarted	De upgrade is niet gestart
+GW6	key:apps/settings/pages/update-release.js:retry	Opnieuw proberen
+GW6	key:apps/settings/pages/update-release.js:relEnded	De upgrade is gestopt voordat hij klaar was
+GW6	key:apps/settings/pages/update-release.js:relEndedBody	Ubuntu heeft de upgrade niet afgemaakt. In het logboek staat wat er is gebeurd.
+GW6	key:apps/settings/pages/update-release.js:relOpenLog	Logboek openen
+GW6	key:apps/settings/pages/update-release.js:close	Sluiten
+GW6	key:apps/settings/pages/update-release.js:relCheckFailed	De controle is niet gelukt. {reason}
+GW6	key:apps/settings/pages/update-release.js:supportMonths.one	1 maand
+GW6	key:apps/settings/pages/update-release.js:supportMonths.other	{n} maanden
+GW6	key:apps/settings/pages/update-release.js:supportYears.one	1 jaar
+GW6	key:apps/settings/pages/update-release.js:supportYears.other	{n} jaar
+GW6	key:apps/settings/pages/update-release.js:relStartQ	Upgraden naar Ubuntu {version}?
+GW6	key:apps/settings/pages/update-release.js:relStartBody	Het upgraden doet Ubuntu zelf, in een terminalvenster. Het duurt meestal 30 tot 90 minuten en Ubuntu vraagt om je wachtwoord. Sla je werk op, sluit een laptop aan op de lader en sluit het venster niet tot Ubuntu om een herstart vraagt.
+GW6	key:apps/settings/pages/update-release.js:relStart	Upgrade starten
+GW6	key:apps/settings/pages/update-release.js:cancel	Annuleren
+GW6	key:apps/settings/pages/update-release.js:relBattery	Je laptop werkt op de accu. Sluit hem aan op de lader voordat je begint.
+GW6	key:apps/settings/pages/update-release.js:relMetered	Je gebruikt een verbinding met een datalimiet. Een upgrade downloadt vaak meer dan 2 GB.
+GW6	key:apps/settings/pages/update-release.js:relEnglishFirst	De eerste regels in het venster zijn in het Engels.

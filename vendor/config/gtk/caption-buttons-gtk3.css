@@ -1,0 +1,206 @@
+/* Win11 Shell — Windows 11 caption buttons for GTK 3 apps and for Chromium/Electron title bars.
+ *
+ * Imported from ~/.config/gtk-3.0/gtk.css by Win11 Shell (Instellingen › Persoonlijke instellingen ›
+ * Kleuren › "Windows 11-vensterknoppen in apps"); it restyles only the minimize / maximize / close
+ * buttons on top of any theme (Adwaita, Yaru, Fluent, ...).
+ *
+ * How it follows light/dark: the glyphs are symbolic SVGs recoloured with -gtk-recolor(); GTK apps use
+ * the button's own text colour (currentColor), the hover fill is mixed from that colour, so switching the
+ * gtk-theme (Yaru-blue ↔ Yaru-blue-dark, Fluent-Light ↔ Fluent-Dark) restyles open apps live.
+ *
+ * Two kinds of title bars use .titlebutton:
+ *   GTK 3:      headerbar > box.right > button.titlebutton.close > image
+ *   Chromium:   window.background.csd > headerbar.header-bar.titlebar > windowcontrols > button.titlebutton.close
+ *               (Chrome 14x, checked with Google Chrome on Hyprland; older Chromium/Electron builds leave out the
+ *               windowcontrols node). Chrome, VS Code and Electron apps build this style path themselves, draw the
+ *               button background with it and then paint the icon theme's window-close-symbolic in the button's
+ *               colour on top.
+ * Chromium keeps its own (icon theme) glyph, see below; it gets the Windows button shape, hover and red close.
+ * Right-to-left: GTK 3's box.left / box.right are physical sides (in RTL the buttons are in box.left, close as
+ * :first-child), so the rules below need no :dir() variants.
+ *
+ * Specificity: ":not(#w11shell)" adds an id's weight, so these rules also beat a theme imported in the same
+ * gtk.css; rules from the active GTK theme lose anyway (gtk.css has USER priority).
+ */
+
+/* ================================================================ GTK 3 header bars */
+headerbar > box > button.titlebutton.minimize:not(#w11shell),
+headerbar > box > button.titlebutton.maximize:not(#w11shell),
+headerbar > box > button.titlebutton.close:not(#w11shell) {
+  min-width: 46px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 10px;
+  transition: background-color 83ms linear;
+}
+headerbar > box > button.titlebutton.minimize:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-minimize-symbolic.svg"));
+}
+headerbar > box > button.titlebutton.maximize:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-maximize-symbolic.svg"));
+}
+.maximized headerbar > box > button.titlebutton.maximize:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-restore-symbolic.svg"));
+}
+headerbar > box > button.titlebutton.close:not(#w11shell) {
+  background-image: -gtk-recolor(url("glyphs/w11-close-symbolic.svg"));
+}
+/* the theme's own icon stays out of sight */
+headerbar > box > button.titlebutton.minimize:not(#w11shell) > image,
+headerbar > box > button.titlebutton.maximize:not(#w11shell) > image,
+headerbar > box > button.titlebutton.close:not(#w11shell) > image {
+  opacity: 0;
+}
+
+headerbar > box > button.titlebutton.minimize:not(#w11shell):hover,
+headerbar > box > button.titlebutton.maximize:not(#w11shell):hover {
+  background-color: alpha(currentColor, 0.07);
+}
+headerbar > box > button.titlebutton.minimize:not(#w11shell):active,
+headerbar > box > button.titlebutton.maximize:not(#w11shell):active {
+  background-color: alpha(currentColor, 0.11);
+}
+headerbar > box > button.titlebutton.close:not(#w11shell):hover {
+  background-color: #c42b1c;
+  color: #ffffff;
+}
+headerbar > box > button.titlebutton.close:not(#w11shell):active {
+  background-color: rgba(196, 43, 28, 0.9);
+  color: rgba(255, 255, 255, 0.7);
+}
+headerbar > box > button.titlebutton.minimize:not(#w11shell):backdrop:not(:hover),
+headerbar > box > button.titlebutton.maximize:not(#w11shell):backdrop:not(:hover),
+headerbar > box > button.titlebutton.close:not(#w11shell):backdrop:not(:hover) {
+  color: alpha(@theme_fg_color, 0.45);
+}
+
+/* flush with the right (left) edge: the header bar's 6px side padding is reached over */
+headerbar > box.right:not(#w11shell) {
+  margin-right: -6px;
+}
+headerbar > box.left:not(#w11shell) {
+  margin-left: -6px;
+}
+
+/* GTK's own title bar for windows without a header bar: Windows' standard 32px caption; its side padding differs
+   per theme (Yaru 4px), so it goes and the buttons sit at the edge without reaching over it */
+headerbar.default-decoration:not(#w11shell) {
+  min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+headerbar.default-decoration > box.right:not(#w11shell):not(#w11shell-dd),
+headerbar.default-decoration > box.left:not(#w11shell):not(#w11shell-dd) {
+  margin-left: 0;
+  margin-right: 0;
+}
+headerbar.default-decoration > box > button.titlebutton.minimize:not(#w11shell),
+headerbar.default-decoration > box > button.titlebutton.maximize:not(#w11shell),
+headerbar.default-decoration > box > button.titlebutton.close:not(#w11shell) {
+  min-height: 32px;
+}
+
+/* the window corner: the close button's outer corner is rounded like a GTK 3 window's (Yaru 15px; Adwaita and
+   Fluent 8px: a larger radius only leaves a sliver of title bar colour, a smaller one would stick out) */
+.csd headerbar > box.right > button.titlebutton.close:last-child:not(#w11shell) {
+  border-top-right-radius: 15px;
+}
+.csd headerbar > box.left > button.titlebutton.close:first-child:not(#w11shell) {
+  border-top-left-radius: 15px;
+}
+.maximized headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.fullscreen headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.tiled headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.tiled-top headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.tiled-left headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.tiled-right headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.solid-csd headerbar > box > button.titlebutton.close:not(#w11shell):not(#w11shell-corner) {
+  border-radius: 0;
+}
+
+/* ================================================================ Chromium / Electron title bars */
+/* Chromium draws the glyph itself (the icon theme's window-*-symbolic, in the button's text colour, so it follows
+   light/dark; with Win11 Shell's Win11 icon theme those are Windows-style glyphs). It paints that glyph over
+   everything, also when the image node is hidden; a transparent text colour would hide it, but GTK 3 then also drops
+   every recoloured background image, so ours cannot replace it: here only the button itself becomes Windows-like.
+   Two paths: with windowcontrols (current Chrome) and without (older Chromium / Electron builds). Chromium lays the
+   buttons out itself: it puts a fixed 6px between them (margin 0 -3px cancels it) and builds every button's style
+   on its own (:first-child/:last-child never match, so .close is the outer button of the default layout). */
+headerbar.titlebar > windowcontrols > button.titlebutton.minimize:not(#w11shell),
+headerbar.titlebar > windowcontrols > button.titlebutton.maximize:not(#w11shell),
+headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell),
+headerbar.titlebar > button.titlebutton.minimize:not(#w11shell),
+headerbar.titlebar > button.titlebutton.maximize:not(#w11shell),
+headerbar.titlebar > button.titlebutton.close:not(#w11shell) {
+  min-width: 46px;
+  min-height: 32px;
+  margin: 0 -3px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  background-color: transparent;
+  background-image: none;
+}
+headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell),
+headerbar.titlebar > button.titlebutton.close:not(#w11shell) {
+  margin-right: 0;
+}
+headerbar.titlebar > windowcontrols > button.titlebutton.minimize:not(#w11shell):hover,
+headerbar.titlebar > windowcontrols > button.titlebutton.maximize:not(#w11shell):hover,
+headerbar.titlebar > button.titlebutton.minimize:not(#w11shell):hover,
+headerbar.titlebar > button.titlebutton.maximize:not(#w11shell):hover {
+  background-color: alpha(currentColor, 0.07);
+}
+headerbar.titlebar > windowcontrols > button.titlebutton.minimize:not(#w11shell):active,
+headerbar.titlebar > windowcontrols > button.titlebutton.maximize:not(#w11shell):active,
+headerbar.titlebar > button.titlebutton.minimize:not(#w11shell):active,
+headerbar.titlebar > button.titlebutton.maximize:not(#w11shell):active {
+  background-color: alpha(currentColor, 0.11);
+}
+headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell):hover,
+headerbar.titlebar > button.titlebutton.close:not(#w11shell):hover {
+  background-color: #c42b1c;
+  color: #ffffff;
+}
+headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell):active,
+headerbar.titlebar > button.titlebutton.close:not(#w11shell):active {
+  background-color: rgba(196, 43, 28, 0.9);
+  color: rgba(255, 255, 255, 0.7);
+}
+headerbar.titlebar > windowcontrols > button.titlebutton.minimize:not(#w11shell):backdrop:not(:hover),
+headerbar.titlebar > windowcontrols > button.titlebutton.maximize:not(#w11shell):backdrop:not(:hover),
+headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell):backdrop:not(:hover),
+headerbar.titlebar > button.titlebutton.minimize:not(#w11shell):backdrop:not(:hover),
+headerbar.titlebar > button.titlebutton.maximize:not(#w11shell):backdrop:not(:hover),
+headerbar.titlebar > button.titlebutton.close:not(#w11shell):backdrop:not(:hover) {
+  color: alpha(@theme_fg_color, 0.45);
+}
+/* Chromium takes the space next to the buttons from the header bar's padding: flush with the edge */
+window.csd > headerbar.header-bar.titlebar:not(#w11shell) {
+  padding-left: 0;
+  padding-right: 0;
+}
+.csd > headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell),
+.csd > headerbar.titlebar > button.titlebutton.close:not(#w11shell) {
+  border-top-right-radius: 8px;
+}
+.maximized > headerbar.titlebar > windowcontrols > button.titlebutton.close:not(#w11shell):not(#w11shell-corner),
+.maximized > headerbar.titlebar > button.titlebutton.close:not(#w11shell):not(#w11shell-corner) {
+  border-radius: 0;
+}

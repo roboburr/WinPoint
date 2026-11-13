@@ -1,0 +1,96 @@
+{
+ "name": "flood",
+ "group": "flood",
+ "title": "Progress flood",
+ "description": "200 ItemProgress + 200 PropertiesChanged (Percentage) per second for 60 s during the download (GW2b: <= 4 local and <= 1 remote progress events/s).",
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libsoup-3.0-0\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-common\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-0\tamd64\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\nlibsoup-3.0-common\tall\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\n@@end\n"
+  }
+ },
+ "packages": {
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Shared library",
+   "size": 1257472,
+   "row": "soup"
+  },
+  "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Common files",
+   "size": 63488,
+   "row": "soup"
+  }
+ },
+ "updates": [
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security",
+  "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security"
+ ],
+ "methods": {
+  "UpdatePackages": [
+   {
+    "props": {
+     "Status": "download",
+     "AllowCancel": true,
+     "Percentage": 0
+    }
+   },
+   {
+    "flood": {
+     "rate": 200,
+     "seconds": 60,
+     "batch": 10
+    }
+   },
+   {
+    "props": {
+     "Status": "update",
+     "AllowCancel": false
+    }
+   },
+   {
+    "removeUpdates": [
+     "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security",
+     "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 2
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "timeout": 120,
+   "expect": {
+    "exit": "success",
+    "count": {
+     "ItemProgress": 12000
+    },
+    "minCount": {
+     "PropertiesChanged": 12000
+    }
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 6
+ }
+}

@@ -1,0 +1,59 @@
+# host/i18n/core.tsv: host texts of the HTTP/API envelopes of runtime.rs and the service dispatcher in services/mod.rs.
+# Owner: GE1b (frozen in round 2).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/runtime.rs
+# new(): ApiError "offline": a call arrived after this window's services shut down
+#@ host/src/runtime.rs 6 88af237789f3c638 plain
+core.serviceStopped	De dienst is afgesloten.	The service has shut down.
+# ui(): ApiError "surface": the GTK window behind a call (regions, file picker) is gone; no full stop in nl
+#@ host/src/runtime.rs 8 edaaa13538accfc3 plain
+core.windowClosed	Venster is gesloten	The window is closed
+# ui(): ApiError "surface": the GTK window did not answer within the time-out; no full stop in nl
+#@ host/src/runtime.rs 10 4867066e82741a30 plain
+core.windowNotResponding	Venster reageert niet	The window is not responding
+# call(): ApiError "bad_args"
+#@ host/src/runtime.rs 13 e8d6a12b8b58205f plain
+core.badArgs	Ongeldige invoer.	Invalid input.
+# call(): ApiError "bad_args": nativeBackdrop.configure takes no arguments
+#@ host/src/runtime.rs 16 2a9e6890543a4b58 plain
+core.noInput	Deze actie accepteert geen invoer.	This action doesn’t accept any input.
+# serve(): ApiError "forbidden": HTTP 403: a request from another origin
+#@ host/src/runtime.rs 70 7f1d3bc763e111b4 plain
+core.forbidden	Geen toegang.	Access denied.
+# serve(): ApiError "method_not_allowed": HTTP 405 for /api/call
+#@ host/src/runtime.rs 87 980bba5f3b09eb74 plain
+core.methodNotAllowed	Gebruik POST.	Use POST.
+# serve(): ApiError "bad_request": HTTP 400: bad method name; also a body that is no JSON object
+#@ host/src/runtime.rs 94 40a4a437cf84dac7 plain
+#@ host/src/runtime.rs 120 40a4a437cf84dac7 plain
+core.badRequest	Ongeldige aanvraag.	Invalid request.
+# serve(): ApiError "length_required": HTTP 411: chunked request body
+#@ host/src/runtime.rs 102 40a4a437cf84dac7 plain
+core.lengthRequired	Ongeldige aanvraag.	Invalid request.
+# serve(): ApiError "too_large": HTTP 413: a body over 16 MiB
+#@ host/src/runtime.rs 108 478be5c74f0fb66d plain
+#@ host/src/runtime.rs 114 478be5c74f0fb66d plain
+core.tooLarge	Te veel gegevens.	Too much data.
+# proxy(): ApiError "offline": HTTP 502: the Python reference service (WIN11_REFERENCE_INSTANCE, tests only) did not answer; {error} is the transport error
+#@ host/src/runtime.rs 136 1fca88e57c92eccc fmt {e}=error
+core.referenceOffline	Referentiedienst niet bereikbaar: {error}	Can’t reach the reference service: {error}
+# events(): the same, as the plain-text body of the /api/events 502
+#@ host/src/runtime.rs 138 a46486fdc33c3fc2 plain
+core.referenceUnreachable	Referentiedienst niet bereikbaar	Can’t reach the reference service
+# unknown(): ApiError "unknown_method": a method name nobody handles
+#@ host/src/runtime.rs 154 f903791ba7ece70a plain
+core.unknownMethod	Deze functie bestaat niet.	This function doesn’t exist.
+
+# --- host/src/services/mod.rs
+# call(): ApiError "offline": a call before this window's dispatcher is connected (start-up)
+#@ host/src/services/mod.rs 8 f36c493726aa834b plain
+core.starting	De dienst wordt gestart.	The service is starting.

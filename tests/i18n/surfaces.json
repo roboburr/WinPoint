@@ -1,0 +1,1318 @@
+{
+ "_comment": [
+  "tests/i18n/dump.html opens every surface below (GE0a, notes/claude/round0/ge0a.md; H: notes/english-option-design.md §3.3).",
+  "q: the query after /ui/index.html? (dump.html adds mock=1 mockreset=1 mockStatic=1 theme=light lang= i18ncheck=1 i18nstop=).",
+  "wait: logical ms the page runs (its stop time; default below). seed: mock settings put in localStorage first (no mockreset).",
+  "do: harness actions after the stop time, for G surfaces without an ?open= hook: [{click|contextmenu: CSS selector, nth?: 0 first, -1 last, wait?: logical ms more (default 1500)}].",
+  "Hooks: ?open= (Alles; GE1a/H's E1: Verkenner, Taakbeheer and Schijven menus and dialogs), ?page=, ?place=, ?path=, ?select=, ?properties=, ?volume=, ?disk=, ?picker=, ?tabs=, ?path=/?uninstall= (installer), ?query= (Standaard-apps). GE1a added H's 17 E1 surfaces (H's ids) and three GNOME states of the mocks (settings-gnome.display, settings-gnome.clipboard and the removed shell.clipboard.unsupported: what the Rust host reports under GNOME). D-G70 removed the HTML shell and desktop surfaces (shell, shell.*, desktop, desktop.*; the native GTK 4 shell native/shell replaced them), so every surface is surface=app.",
+  "The settings.* ids (but settings.search and the settings.installed.* actions) must be exactly the pages of vendor/ui/js/apps/settings/registry.js, the taskmgr.* ids the tabs of taskmgr/main.js PAGE_IDS (tests/i18n/test_ge0a.py).",
+  "Variants of a page that are not a registry page use another prefix (settings-gnome.*, taskmgr-dialog.*), so the settings.*/taskmgr.* rule above holds.",
+  "settings-update.<id>: the Windows Update page in every mock state of mock/update.js (?updateScenario=, the ids of notes/claude/windows-update-gnome.md §9.3 plus H27/H28, and text variants with a letter, e.g. H05b, plus R06; GW3). Later steps add theirs through notes/claude/surfaces-additions-<step>.json.",
+  "settings-update-history.<id> / settings-update-advanced.<id>: the two Windows Update subpages in every mock state of mock/update.js (?updateScenario=S…, GW4: S01-S02b history, S03-S03i advanced options; R3-UI: S03j/S03k refreshes held by snapd); the registry pages settings.update-history / settings.update-advanced show the defaults (S01, S03).",
+  "settings-check.<name> (R3-UI fix round): behaviour a text dump does not show. probe: checks after the actions, [{disabled|inview: CSS selector, nth?}], each one line '# probe <check> <selector>: true|false|none' (dump.html). language-EN: a hand-edited language the dropdown resolves as C1 does (Nederlands); restartall-dry / -sent: the update page's Win11 Shell restart button after a dry-run answer (usable) and after a real one (?mockRestartAll=live: disabled until the page is built again, gx1.md §7 decision 1); recovery-link / -none: Updategeschiedenis' Herstel row scrolls Update en herstel to its backup and reset group (the control without the link: not in view).",
+  "settings-update-prompt.<id>: the \"Nieuwe Ubuntu-versies\" row of the Update page in the mock states M01-M04 of mock/update.js (?updateScenario=M…, GW5: M01 normal with the /bin/sh InfoBar of a PC without the root helper (today), M01b never, M02 lts on an interim release, M03 overridden by a release-upgrades.d file, M04 a change waiting for Ubuntu's password dialog without the root helper (the ComboBox disabled, the InfoBar stays), M04b a change with the root helper and a dismissed password dialog); the page itself is idle (H01). Not under settings-update.: test_update_mock_rows.py pairs that prefix with the [HR] scenario ids.",
+  "settings-update-card.<id>: the feature-update card \"Ubuntu 26.10 is beschikbaar\" of the Update page in the mock states C01-C16 of mock/update.js (?updateScenario=C…, GW6, design §3.5 and §9.3 plus letters: C01 not offered (no card), C02 checking, C03 ok, C03b an LTS offer, C04 warn with \"Let op voordat je upgradet\" opened, C05 hold (GNOME 51 named), C05b hold by releases.json alone, C05c hold with \"Toch upgraden…\", C05d its warning start dialog, C06 blocked, C07/C07b updatesFirst, C08 rebootFirst, C09 the start dialog on battery and metered with the English-first line, C10 running next to our own job, C11 waiting, C12 ubuntuHold, C13/C13b/C13c unknown (apt, offline, metered), C14 startFailed, C14b after Retry, C15 ended, C16 hold after the postponement, C16b its live click). Not under settings-update.: test_update_mock_rows.py pairs that prefix with the [HR] scenario ids."
+ ],
+ "defaults": {
+  "size": [
+   1440,
+   900
+  ],
+  "wait": 2500
+ },
+ "surfaces": [
+  {
+   "id": "settings.home",
+   "q": "surface=app&app=settings&page=home",
+   "wait": 3500
+  },
+  {
+   "id": "settings.system",
+   "q": "surface=app&app=settings&page=system",
+   "wait": 3500
+  },
+  {
+   "id": "settings.display",
+   "q": "surface=app&app=settings&page=display",
+   "wait": 3500
+  },
+  {
+   "id": "settings.sound",
+   "q": "surface=app&app=settings&page=sound",
+   "wait": 3500
+  },
+  {
+   "id": "settings.notifications",
+   "q": "surface=app&app=settings&page=notifications",
+   "wait": 3500
+  },
+  {
+   "id": "settings.power",
+   "q": "surface=app&app=settings&page=power",
+   "wait": 3500
+  },
+  {
+   "id": "settings.storage",
+   "q": "surface=app&app=settings&page=storage",
+   "wait": 3500
+  },
+  {
+   "id": "settings.clipboard",
+   "q": "surface=app&app=settings&page=clipboard",
+   "wait": 3500
+  },
+  {
+   "id": "settings.about",
+   "q": "surface=app&app=settings&page=about",
+   "wait": 3500
+  },
+  {
+   "id": "settings.bluetooth",
+   "q": "surface=app&app=settings&page=bluetooth",
+   "wait": 3500
+  },
+  {
+   "id": "settings.network",
+   "q": "surface=app&app=settings&page=network",
+   "wait": 3500
+  },
+  {
+   "id": "settings.wifi",
+   "q": "surface=app&app=settings&page=wifi",
+   "wait": 3500
+  },
+  {
+   "id": "settings.ethernet",
+   "q": "surface=app&app=settings&page=ethernet",
+   "wait": 3500
+  },
+  {
+   "id": "settings.personalization",
+   "q": "surface=app&app=settings&page=personalization",
+   "wait": 3500
+  },
+  {
+   "id": "settings.background",
+   "q": "surface=app&app=settings&page=background",
+   "wait": 3500
+  },
+  {
+   "id": "settings.colors",
+   "q": "surface=app&app=settings&page=colors",
+   "wait": 3500
+  },
+  {
+   "id": "settings.themes",
+   "q": "surface=app&app=settings&page=themes",
+   "wait": 3500
+  },
+  {
+   "id": "settings.start",
+   "q": "surface=app&app=settings&page=start",
+   "wait": 3500
+  },
+  {
+   "id": "settings.taskbar",
+   "q": "surface=app&app=settings&page=taskbar",
+   "wait": 3500
+  },
+  {
+   "id": "settings.desktopicons",
+   "q": "surface=app&app=settings&page=desktopicons",
+   "wait": 3500
+  },
+  {
+   "id": "settings.apps",
+   "q": "surface=app&app=settings&page=apps",
+   "wait": 3500
+  },
+  {
+   "id": "settings.installed",
+   "q": "surface=app&app=settings&page=installed",
+   "wait": 3500
+  },
+  {
+   "id": "settings.installed.menu",
+   "q": "surface=app&app=settings&page=installed",
+   "wait": 3500,
+   "do": [
+    {
+     "contextmenu": ".st-app-row"
+    }
+   ]
+  },
+  {
+   "id": "settings.installed.review",
+   "q": "surface=app&app=settings&page=installed",
+   "wait": 3500,
+   "do": [
+    {
+     "contextmenu": ".st-app-row"
+    },
+    {
+     "click": ".fl-menu__item",
+     "nth": -1
+    }
+   ]
+  },
+  {
+   "id": "settings.defaultapps",
+   "q": "surface=app&app=settings&page=defaultapps",
+   "wait": 3500
+  },
+  {
+   "id": "settings.startup",
+   "q": "surface=app&app=settings&page=startup",
+   "wait": 3500
+  },
+  {
+   "id": "settings.accounts",
+   "q": "surface=app&app=settings&page=accounts",
+   "wait": 3500
+  },
+  {
+   "id": "settings.time",
+   "q": "surface=app&app=settings&page=time",
+   "wait": 3500
+  },
+  {
+   "id": "settings.datetime",
+   "q": "surface=app&app=settings&page=datetime",
+   "wait": 3500
+  },
+  {
+   "id": "settings.language",
+   "q": "surface=app&app=settings&page=language",
+   "wait": 3500
+  },
+  {
+   "id": "settings.accessibility",
+   "q": "surface=app&app=settings&page=accessibility",
+   "wait": 3500
+  },
+  {
+   "id": "settings.textsize",
+   "q": "surface=app&app=settings&page=textsize",
+   "wait": 3500
+  },
+  {
+   "id": "settings.visualeffects",
+   "q": "surface=app&app=settings&page=visualeffects",
+   "wait": 3500
+  },
+  {
+   "id": "settings.contrast",
+   "q": "surface=app&app=settings&page=contrast",
+   "wait": 3500
+  },
+  {
+   "id": "settings.privacy",
+   "q": "surface=app&app=settings&page=privacy",
+   "wait": 3500
+  },
+  {
+   "id": "settings.update",
+   "q": "surface=app&app=settings&page=update",
+   "wait": 3500
+  },
+  {
+   "id": "settings.update-history",
+   "q": "surface=app&app=settings&page=update-history",
+   "wait": 3500
+  },
+  {
+   "id": "settings.update-advanced",
+   "q": "surface=app&app=settings&page=update-advanced",
+   "wait": 3500
+  },
+  {
+   "id": "settings.search",
+   "q": "surface=app&app=settings&page=search&q=geluid",
+   "wait": 3500
+  },
+  {
+   "id": "settings-gnome.display",
+   "q": "surface=app&app=settings&page=display&mockDisplays=gnome&mockNightLight=0",
+   "wait": 3500
+  },
+  {
+   "id": "settings-gnome.clipboard",
+   "q": "surface=app&app=settings&page=clipboard&mockClipboard=off",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H01",
+   "q": "surface=app&app=settings&page=update&updateScenario=H01",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H02",
+   "q": "surface=app&app=settings&page=update&updateScenario=H02",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H03",
+   "q": "surface=app&app=settings&page=update&updateScenario=H03",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H04",
+   "q": "surface=app&app=settings&page=update&updateScenario=H04",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H05",
+   "q": "surface=app&app=settings&page=update&updateScenario=H05",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H05b",
+   "q": "surface=app&app=settings&page=update&updateScenario=H05b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H05c",
+   "q": "surface=app&app=settings&page=update&updateScenario=H05c",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H06",
+   "q": "surface=app&app=settings&page=update&updateScenario=H06",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H07",
+   "q": "surface=app&app=settings&page=update&updateScenario=H07",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H07b",
+   "q": "surface=app&app=settings&page=update&updateScenario=H07b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H08",
+   "q": "surface=app&app=settings&page=update&updateScenario=H08",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H09",
+   "q": "surface=app&app=settings&page=update&updateScenario=H09",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H10",
+   "q": "surface=app&app=settings&page=update&updateScenario=H10",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H10b",
+   "q": "surface=app&app=settings&page=update&updateScenario=H10b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H10c",
+   "q": "surface=app&app=settings&page=update&updateScenario=H10c",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H10d",
+   "q": "surface=app&app=settings&page=update&updateScenario=H10d",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-upd__actions > .fl-btn"
+    }
+   ]
+  },
+  {
+   "id": "settings-update.H10e",
+   "q": "surface=app&app=settings&page=update&updateScenario=H10e",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-upd__actions > .fl-btn"
+    },
+    {
+     "click": ".fl-dialog-layer [data-result=\"primary\"]"
+    }
+   ]
+  },
+  {
+   "id": "settings-update.H11",
+   "q": "surface=app&app=settings&page=update&updateScenario=H11",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H12",
+   "q": "surface=app&app=settings&page=update&updateScenario=H12",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-upd__details > .fl-expander__header"
+    }
+   ]
+  },
+  {
+   "id": "settings-update.H13",
+   "q": "surface=app&app=settings&page=update&updateScenario=H13",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H14",
+   "q": "surface=app&app=settings&page=update&updateScenario=H14",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H14b",
+   "q": "surface=app&app=settings&page=update&updateScenario=H14b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H15",
+   "q": "surface=app&app=settings&page=update&updateScenario=H15",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H16",
+   "q": "surface=app&app=settings&page=update&updateScenario=H16",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H17",
+   "q": "surface=app&app=settings&page=update&updateScenario=H17",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H18",
+   "q": "surface=app&app=settings&page=update&updateScenario=H18",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H19",
+   "q": "surface=app&app=settings&page=update&updateScenario=H19",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H20",
+   "q": "surface=app&app=settings&page=update&updateScenario=H20",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H20b",
+   "q": "surface=app&app=settings&page=update&updateScenario=H20b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H21",
+   "q": "surface=app&app=settings&page=update&updateScenario=H21",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H22",
+   "q": "surface=app&app=settings&page=update&updateScenario=H22",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H23",
+   "q": "surface=app&app=settings&page=update&updateScenario=H23",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H24",
+   "q": "surface=app&app=settings&page=update&updateScenario=H24",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H25",
+   "q": "surface=app&app=settings&page=update&updateScenario=H25",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H25b",
+   "q": "surface=app&app=settings&page=update&updateScenario=H25b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H26",
+   "q": "surface=app&app=settings&page=update&updateScenario=H26",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H27",
+   "q": "surface=app&app=settings&page=update&updateScenario=H27",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.H28",
+   "q": "surface=app&app=settings&page=update&updateScenario=H28",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.R01",
+   "q": "surface=app&app=settings&page=update&updateScenario=R01",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.R02",
+   "q": "surface=app&app=settings&page=update&updateScenario=R02",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.R03",
+   "q": "surface=app&app=settings&page=update&updateScenario=R03",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update.R04",
+   "q": "surface=app&app=settings&page=update&updateScenario=R04",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrow > .fl-expander__header",
+     "nth": -1
+    }
+   ]
+  },
+  {
+   "id": "settings-update.R05",
+   "q": "surface=app&app=settings&page=update&updateScenario=R05",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrow > .fl-expander__header",
+     "nth": 1
+    },
+    {
+     "click": ".st-updrow__whatsnew"
+    }
+   ]
+  },
+  {
+   "id": "settings-update.R05b",
+   "q": "surface=app&app=settings&page=update&updateScenario=R05b",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrow > .fl-expander__header",
+     "nth": -1
+    },
+    {
+     "click": ".st-updrow__whatsnew"
+    }
+   ]
+  },
+  {
+   "id": "settings-update.R06",
+   "q": "surface=app&app=settings&page=update&updateScenario=R06",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-history.S01",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S01",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-history.S01b",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S01b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-history.S01c",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S01c",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updhist__more .fl-btn"
+    }
+   ]
+  },
+  {
+   "id": "settings-update-history.S01d",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S01d",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-history.S02",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S02",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-history.S02b",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S02b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03b",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03b",
+   "wait": 3500,
+   "seed": {
+    "update": {
+     "notifyRestart": false,
+     "metered": true
+    }
+   }
+  },
+  {
+   "id": "settings-update-advanced.S03c",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03c",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03d",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03d",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03e",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03e",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03f",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03f",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updadv__auto .fl-toggle__track"
+    }
+   ]
+  },
+  {
+   "id": "settings-update-advanced.S03g",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03g",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03h",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03h",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03i",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03i",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03j",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03j",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-advanced.S03k",
+   "q": "surface=app&app=settings&page=update-advanced&updateScenario=S03k",
+   "wait": 3500
+  },
+  {
+   "id": "settings-check.language-EN",
+   "q": "surface=app&app=settings&page=language",
+   "seed": {
+    "language": "EN"
+   }
+  },
+  {
+   "id": "settings-check.restartall-dry",
+   "q": "surface=app&app=settings&page=update&updateScenario=H20",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-notice .fl-infobar__action .fl-btn"
+    }
+   ],
+   "probe": [
+    {
+     "disabled": ".st-notice .fl-infobar__action .fl-btn"
+    }
+   ]
+  },
+  {
+   "id": "settings-check.restartall-sent",
+   "q": "surface=app&app=settings&page=update&updateScenario=H20&mockRestartAll=live",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-notice .fl-infobar__action .fl-btn"
+    }
+   ],
+   "probe": [
+    {
+     "disabled": ".st-notice .fl-infobar__action .fl-btn"
+    }
+   ]
+  },
+  {
+   "id": "settings-check.recovery-link",
+   "q": "surface=app&app=settings&page=update-history&updateScenario=S01",
+   "size": [
+    1280,
+    520
+   ],
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updhist__recovery"
+    }
+   ],
+   "probe": [
+    {
+     "inview": ".st-upd__backup"
+    }
+   ]
+  },
+  {
+   "id": "settings-check.recovery-none",
+   "q": "surface=app&app=settings&page=update&updateScenario=S01",
+   "size": [
+    1280,
+    520
+   ],
+   "wait": 3500,
+   "probe": [
+    {
+     "inview": ".st-upd__backup"
+    }
+   ]
+  },
+  {
+   "id": "taskmgr.summary",
+   "q": "surface=app&app=taskmgr&page=summary",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.processes",
+   "q": "surface=app&app=taskmgr&page=processes",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.performance",
+   "q": "surface=app&app=taskmgr&page=performance",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.storage",
+   "q": "surface=app&app=taskmgr&page=storage",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.startup",
+   "q": "surface=app&app=taskmgr&page=startup",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.services",
+   "q": "surface=app&app=taskmgr&page=services",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.details",
+   "q": "surface=app&app=taskmgr&page=details",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr.settings",
+   "q": "surface=app&app=taskmgr&page=settings",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr-dialog.end",
+   "q": "surface=app&app=taskmgr&page=processes&open=end&target=firefox",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr-dialog.restart",
+   "q": "surface=app&app=taskmgr&page=processes&open=restart&target=firefox",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr-dialog.efficiency",
+   "q": "surface=app&app=taskmgr&page=processes&open=efficiency&target=firefox",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr-dialog.properties",
+   "q": "surface=app&app=taskmgr&page=processes&open=properties&target=firefox",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr-dialog.menu",
+   "q": "surface=app&app=taskmgr&page=processes&open=menu&target=firefox",
+   "wait": 4000
+  },
+  {
+   "id": "taskmgr-dialog.restart-shell",
+   "q": "surface=app&app=taskmgr&page=processes&open=restart-shell",
+   "wait": 4000
+  },
+  {
+   "id": "explorer.home",
+   "q": "surface=app&app=explorer"
+  },
+  {
+   "id": "explorer.thispc",
+   "q": "surface=app&app=explorer&place=thispc"
+  },
+  {
+   "id": "explorer.gallery",
+   "q": "surface=app&app=explorer&place=gallery"
+  },
+  {
+   "id": "explorer.trash",
+   "q": "surface=app&app=explorer&place=trash"
+  },
+  {
+   "id": "explorer.desktop",
+   "q": "surface=app&app=explorer&place=desktop"
+  },
+  {
+   "id": "explorer.documents",
+   "q": "surface=app&app=explorer&place=documents"
+  },
+  {
+   "id": "explorer.downloads",
+   "q": "surface=app&app=explorer&place=downloads"
+  },
+  {
+   "id": "explorer.pictures",
+   "q": "surface=app&app=explorer&place=pictures"
+  },
+  {
+   "id": "explorer.music",
+   "q": "surface=app&app=explorer&place=music"
+  },
+  {
+   "id": "explorer.videos",
+   "q": "surface=app&app=explorer&place=videos"
+  },
+  {
+   "id": "explorer.folder",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten/Recepten"
+  },
+  {
+   "id": "explorer.select",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=Verlanglijstje.txt"
+  },
+  {
+   "id": "explorer.properties",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=Verlanglijstje.txt&properties=1",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.properties.folder",
+   "q": "surface=app&app=explorer&path=/home/robin&select=Documenten&properties=1",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.detailspane",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=Verlanglijstje.txt",
+   "seed": {
+    "explorer": {
+     "detailsPane": true
+    }
+   }
+  },
+  {
+   "id": "explorer.previewpane",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=Verlanglijstje.txt",
+   "seed": {
+    "explorer": {
+     "previewPane": true
+    }
+   }
+  },
+  {
+   "id": "explorer.view.list",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten",
+   "seed": {
+    "explorer": {
+     "view": "list"
+    }
+   }
+  },
+  {
+   "id": "explorer.view.large",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten",
+   "seed": {
+    "explorer": {
+     "view": "large"
+    }
+   }
+  },
+  {
+   "id": "explorer.tabs",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&tabs=%5B%22%2Fhome%2Frobin%2FAfbeeldingen%22%5D"
+  },
+  {
+   "id": "explorer.picker.open",
+   "q": "surface=app&app=explorer&picker=%7B%22action%22:%22open%22%7D"
+  },
+  {
+   "id": "explorer.picker.save",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&picker=%7B%22save%22:true,%22name%22:%22Naamloos.txt%22%7D"
+  },
+  {
+   "id": "explorer.picker.folder",
+   "q": "surface=app&app=explorer&picker=%7B%22folder%22:true%7D"
+  },
+  {
+   "id": "explorer.menu",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=Verlanglijstje.txt&open=menu",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.menu-background",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&open=menu-background",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.properties.multi",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=%5B%22Verlanglijstje.txt%22,%22Recepten%22%5D&properties=1",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.options",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&open=options",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.share",
+   "q": "surface=app&app=explorer&path=/home/robin/Documenten&select=Verlanglijstje.txt&open=share",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.drive",
+   "q": "surface=app&app=explorer&place=thispc&open=drive",
+   "wait": 3500
+  },
+  {
+   "id": "explorer.trash-properties",
+   "q": "surface=app&app=explorer&place=trash&open=trash",
+   "wait": 3500
+  },
+  {
+   "id": "alles",
+   "q": "surface=app&app=alles"
+  },
+  {
+   "id": "alles.query",
+   "q": "surface=app&app=alles&query=foto"
+  },
+  {
+   "id": "alles.tips",
+   "q": "surface=app&app=alles&query=foto&select=0&open=tips",
+   "wait": 3000
+  },
+  {
+   "id": "alles.options",
+   "q": "surface=app&app=alles&query=foto&select=0&open=options",
+   "wait": 3000
+  },
+  {
+   "id": "alles.options-bottom",
+   "q": "surface=app&app=alles&query=foto&select=0&open=options-bottom",
+   "wait": 3000
+  },
+  {
+   "id": "alles.preview",
+   "q": "surface=app&app=alles&query=foto&select=0&open=preview",
+   "wait": 3000
+  },
+  {
+   "id": "alles.menu",
+   "q": "surface=app&app=alles&query=foto&select=0&open=menu",
+   "wait": 3000
+  },
+  {
+   "id": "alles.properties",
+   "q": "surface=app&app=alles&query=foto&select=0&open=properties",
+   "wait": 3000
+  },
+  {
+   "id": "alles.sort",
+   "q": "surface=app&app=alles&query=foto&select=0&open=sort",
+   "wait": 3000
+  },
+  {
+   "id": "alles.filter",
+   "q": "surface=app&app=alles&query=foto&select=0&open=filter",
+   "wait": 3000
+  },
+  {
+   "id": "alles.error",
+   "q": "surface=app&app=alles&query=regex:(",
+   "wait": 3000
+  },
+  {
+   "id": "alles.empty",
+   "q": "surface=app&app=alles&query=zzqqxxnietsgevonden"
+  },
+  {
+   "id": "disks",
+   "q": "surface=app&app=disks",
+   "wait": 3000
+  },
+  {
+   "id": "disks.disk",
+   "q": "surface=app&app=disks&disk=/dev/nvme0n1",
+   "wait": 3000
+  },
+  {
+   "id": "disks.disk.usb",
+   "q": "surface=app&app=disks&disk=/dev/sdb",
+   "wait": 3000
+  },
+  {
+   "id": "disks.volume",
+   "q": "surface=app&app=disks&volume=/dev/sda2",
+   "wait": 3000
+  },
+  {
+   "id": "disks.volume.luks",
+   "q": "surface=app&app=disks&volume=/dev/sda3",
+   "wait": 3000
+  },
+  {
+   "id": "disks.format",
+   "q": "surface=app&app=disks&select=/dev/sdb1&open=format",
+   "wait": 3500
+  },
+  {
+   "id": "disks.label",
+   "q": "surface=app&app=disks&select=/dev/sda2&open=label",
+   "wait": 3500
+  },
+  {
+   "id": "disks.delete",
+   "q": "surface=app&app=disks&select=/dev/sda2&open=delete",
+   "wait": 3500
+  },
+  {
+   "id": "disks.unlock",
+   "q": "surface=app&app=disks&select=/dev/sda3&open=unlock",
+   "wait": 3500
+  },
+  {
+   "id": "disks.new",
+   "q": "surface=app&app=disks&disk=/dev/sdc&open=new",
+   "wait": 3500
+  },
+  {
+   "id": "disks.initialize",
+   "q": "surface=app&app=disks&disk=/dev/sdc&open=initialize",
+   "wait": 3500
+  },
+  {
+   "id": "disks.menu",
+   "q": "surface=app&app=disks&select=/dev/sda2&open=menu",
+   "wait": 3500
+  },
+  {
+   "id": "disks.disk-menu",
+   "q": "surface=app&app=disks&disk=/dev/sdb&open=disk-menu",
+   "wait": 3500
+  },
+  {
+   "id": "disks.free-menu",
+   "q": "surface=app&app=disks&disk=/dev/sdc&open=free-menu",
+   "wait": 3500
+  },
+  {
+   "id": "defaultapps",
+   "q": "surface=app&app=defaultapps",
+   "wait": 3000
+  },
+  {
+   "id": "defaultapps.query",
+   "q": "surface=app&app=defaultapps&query=jpg",
+   "wait": 3000
+  },
+  {
+   "id": "defaultapps.choose",
+   "q": "surface=app&app=defaultapps",
+   "wait": 3000,
+   "do": [
+    {
+     "click": ".da-type"
+    }
+   ]
+  },
+  {
+   "id": "defaultapps.noapps",
+   "q": "surface=app&app=defaultapps&query=exe",
+   "wait": 3000,
+   "do": [
+    {
+     "click": ".da-type"
+    }
+   ]
+  },
+  {
+   "id": "installer",
+   "q": "surface=app&app=installer",
+   "wait": 3000
+  },
+  {
+   "id": "installer.activity",
+   "q": "surface=app&app=installer&mockJobs=1",
+   "wait": 3000
+  },
+  {
+   "id": "installer.deb",
+   "q": "surface=app&app=installer&path=/home/robin/Downloads/code_1.106.2-1763073473_amd64.deb",
+   "wait": 3000
+  },
+  {
+   "id": "installer.appimage",
+   "q": "surface=app&app=installer&path=/home/robin/Downloads/Obsidian-1.9.14.AppImage",
+   "wait": 3000
+  },
+  {
+   "id": "installer.snap",
+   "q": "surface=app&app=installer&path=/home/robin/Downloads/hello-world_6.4.snap",
+   "wait": 3000
+  },
+  {
+   "id": "installer.unsupported",
+   "q": "surface=app&app=installer&path=/home/robin/Downloads/Notities.txt",
+   "wait": 3000
+  },
+  {
+   "id": "installer.uninstall",
+   "q": "surface=app&app=installer&uninstall=org.gnome.TextEditor.desktop",
+   "wait": 3000
+  },
+  {
+   "id": "installer.uninstall.protected",
+   "q": "surface=app&app=installer&uninstall=win11shell-settings.desktop",
+   "wait": 3000
+  },
+  {
+   "id": "installer.review",
+   "q": "surface=app&app=installer&path=/home/robin/Downloads/code_1.106.2-1763073473_amd64.deb",
+   "wait": 3000,
+   "do": [
+    {
+     "click": ".si-detail .fl-btn--accent"
+    }
+   ]
+  },
+  {
+   "id": "installer.progress",
+   "q": "surface=app&app=installer&path=/home/robin/Downloads/code_1.106.2-1763073473_amd64.deb",
+   "wait": 3000,
+   "do": [
+    {
+     "click": ".si-detail .fl-btn--accent"
+    },
+    {
+     "click": "[data-result=\"primary\"]",
+     "wait": 3000
+    }
+   ]
+  },
+  {
+   "id": "settings-update-prompt.M01",
+   "q": "surface=app&app=settings&page=update&updateScenario=M01",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M01b",
+   "q": "surface=app&app=settings&page=update&updateScenario=M01b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M02",
+   "q": "surface=app&app=settings&page=update&updateScenario=M02",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M03",
+   "q": "surface=app&app=settings&page=update&updateScenario=M03",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M04",
+   "q": "surface=app&app=settings&page=update&updateScenario=M04",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updprompt .fl-dropdown"
+    },
+    {
+     "click": ".fl-dropdown__item",
+     "nth": 0
+    }
+   ]
+  },
+  {
+   "id": "settings-update-prompt.M04b",
+   "q": "surface=app&app=settings&page=update&updateScenario=M04b",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updprompt .fl-dropdown"
+    },
+    {
+     "click": ".fl-dropdown__item",
+     "nth": 0
+    }
+   ]
+  },
+  {
+   "id": "settings-update-card.C01",
+   "q": "surface=app&app=settings&page=update&updateScenario=C01",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C02",
+   "q": "surface=app&app=settings&page=update&updateScenario=C02",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C03",
+   "q": "surface=app&app=settings&page=update&updateScenario=C03",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C03b",
+   "q": "surface=app&app=settings&page=update&updateScenario=C03b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C04",
+   "q": "surface=app&app=settings&page=update&updateScenario=C04",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrel__before .fl-expander__header"
+    }
+   ]
+  },
+  {
+   "id": "settings-update-card.C05",
+   "q": "surface=app&app=settings&page=update&updateScenario=C05",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C05b",
+   "q": "surface=app&app=settings&page=update&updateScenario=C05b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C05c",
+   "q": "surface=app&app=settings&page=update&updateScenario=C05c",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C05d",
+   "q": "surface=app&app=settings&page=update&updateScenario=C05d",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrel__links .fl-link",
+     "nth": 0
+    }
+   ]
+  },
+  {
+   "id": "settings-update-card.C06",
+   "q": "surface=app&app=settings&page=update&updateScenario=C06",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C07",
+   "q": "surface=app&app=settings&page=update&updateScenario=C07",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C07b",
+   "q": "surface=app&app=settings&page=update&updateScenario=C07b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C08",
+   "q": "surface=app&app=settings&page=update&updateScenario=C08",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C09",
+   "q": "surface=app&app=settings&page=update&updateScenario=C09&mockBattery=1",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrel__control .fl-btn--accent"
+    }
+   ]
+  },
+  {
+   "id": "settings-update-card.C10",
+   "q": "surface=app&app=settings&page=update&updateScenario=C10",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C11",
+   "q": "surface=app&app=settings&page=update&updateScenario=C11",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C12",
+   "q": "surface=app&app=settings&page=update&updateScenario=C12",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C13",
+   "q": "surface=app&app=settings&page=update&updateScenario=C13",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C13b",
+   "q": "surface=app&app=settings&page=update&updateScenario=C13b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C13c",
+   "q": "surface=app&app=settings&page=update&updateScenario=C13c",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C14",
+   "q": "surface=app&app=settings&page=update&updateScenario=C14",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C14b",
+   "q": "surface=app&app=settings&page=update&updateScenario=C14b",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrel__control .fl-btn"
+    }
+   ]
+  },
+  {
+   "id": "settings-update-card.C15",
+   "q": "surface=app&app=settings&page=update&updateScenario=C15",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C16",
+   "q": "surface=app&app=settings&page=update&updateScenario=C16",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-card.C16b",
+   "q": "surface=app&app=settings&page=update&updateScenario=C16b",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updrel__links .fl-link",
+     "nth": -1
+    }
+   ]
+  }
+ ]
+}

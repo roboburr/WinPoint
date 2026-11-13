@@ -1,0 +1,1182 @@
+{
+  "version": "0.5.0",
+  "date": "2026-11-01",
+  "method": "files.find",
+  "native_response_header": "X-Win11-Service: rust-files",
+  "isolated": true,
+  "case_count": 166,
+  "differential_cases": 164,
+  "generated_glob_queries": 80,
+  "python_equivalent_trapped": true,
+  "original_webkit_bridge": true,
+  "long_tmp_startup": true,
+  "search_box_behavior": "Original Explorer Enter opens the separate Alles app.",
+  "cases": [
+    {
+      "case": "differential-query-0-hidden-False",
+      "passed": true,
+      "query": "",
+      "showHidden": false,
+      "items": 51
+    },
+    {
+      "case": "differential-query-1-hidden-True",
+      "passed": true,
+      "query": "",
+      "showHidden": true,
+      "items": 62
+    },
+    {
+      "case": "differential-query-2-hidden-False",
+      "passed": true,
+      "query": "file",
+      "showHidden": false,
+      "items": 5
+    },
+    {
+      "case": "differential-query-3-hidden-True",
+      "passed": true,
+      "query": "file",
+      "showHidden": true,
+      "items": 6
+    },
+    {
+      "case": "differential-query-4-hidden-False",
+      "passed": true,
+      "query": "FILE",
+      "showHidden": false,
+      "items": 5
+    },
+    {
+      "case": "differential-query-5-hidden-True",
+      "passed": true,
+      "query": "FILE",
+      "showHidden": true,
+      "items": 6
+    },
+    {
+      "case": "differential-query-6-hidden-False",
+      "passed": true,
+      "query": "*.txt",
+      "showHidden": false,
+      "items": 21
+    },
+    {
+      "case": "differential-query-7-hidden-True",
+      "passed": true,
+      "query": "*.txt",
+      "showHidden": true,
+      "items": 26
+    },
+    {
+      "case": "differential-query-8-hidden-False",
+      "passed": true,
+      "query": "file?.txt",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-9-hidden-True",
+      "passed": true,
+      "query": "file?.txt",
+      "showHidden": true,
+      "items": 2
+    },
+    {
+      "case": "differential-query-10-hidden-False",
+      "passed": true,
+      "query": "[a-c]",
+      "showHidden": false,
+      "items": 18
+    },
+    {
+      "case": "differential-query-11-hidden-True",
+      "passed": true,
+      "query": "[a-c]",
+      "showHidden": true,
+      "items": 20
+    },
+    {
+      "case": "differential-query-12-hidden-False",
+      "passed": true,
+      "query": "[!a-c]*",
+      "showHidden": false,
+      "items": 44
+    },
+    {
+      "case": "differential-query-13-hidden-True",
+      "passed": true,
+      "query": "[!a-c]*",
+      "showHidden": true,
+      "items": 55
+    },
+    {
+      "case": "differential-query-14-hidden-False",
+      "passed": true,
+      "query": "[z-a]*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-15-hidden-True",
+      "passed": true,
+      "query": "[z-a]*",
+      "showHidden": true,
+      "items": 0
+    },
+    {
+      "case": "differential-query-16-hidden-False",
+      "passed": true,
+      "query": "[!z-a]*",
+      "showHidden": false,
+      "items": 51
+    },
+    {
+      "case": "differential-query-17-hidden-True",
+      "passed": true,
+      "query": "[!z-a]*",
+      "showHidden": true,
+      "items": 62
+    },
+    {
+      "case": "differential-query-18-hidden-False",
+      "passed": true,
+      "query": "[a--b]",
+      "showHidden": false,
+      "items": 9
+    },
+    {
+      "case": "differential-query-19-hidden-True",
+      "passed": true,
+      "query": "[a--b]",
+      "showHidden": true,
+      "items": 10
+    },
+    {
+      "case": "differential-query-20-hidden-False",
+      "passed": true,
+      "query": "[]]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-21-hidden-True",
+      "passed": true,
+      "query": "[]]",
+      "showHidden": true,
+      "items": 2
+    },
+    {
+      "case": "differential-query-22-hidden-False",
+      "passed": true,
+      "query": "[[]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-23-hidden-True",
+      "passed": true,
+      "query": "[[]",
+      "showHidden": true,
+      "items": 2
+    },
+    {
+      "case": "differential-query-24-hidden-False",
+      "passed": true,
+      "query": "[",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-25-hidden-True",
+      "passed": true,
+      "query": "[",
+      "showHidden": true,
+      "items": 2
+    },
+    {
+      "case": "differential-query-26-hidden-False",
+      "passed": true,
+      "query": "[!]",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-27-hidden-True",
+      "passed": true,
+      "query": "[!]",
+      "showHidden": true,
+      "items": 0
+    },
+    {
+      "case": "differential-query-28-hidden-False",
+      "passed": true,
+      "query": "[^a]",
+      "showHidden": false,
+      "items": 13
+    },
+    {
+      "case": "differential-query-29-hidden-True",
+      "passed": true,
+      "query": "[^a]",
+      "showHidden": true,
+      "items": 13
+    },
+    {
+      "case": "differential-query-30-hidden-False",
+      "passed": true,
+      "query": "[&~|]",
+      "showHidden": false,
+      "items": 5
+    },
+    {
+      "case": "differential-query-31-hidden-True",
+      "passed": true,
+      "query": "[&~|]",
+      "showHidden": true,
+      "items": 5
+    },
+    {
+      "case": "differential-query-32-hidden-False",
+      "passed": true,
+      "query": "a**?b*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-33-hidden-True",
+      "passed": true,
+      "query": "a**?b*",
+      "showHidden": true,
+      "items": 2
+    },
+    {
+      "case": "differential-query-34-hidden-False",
+      "passed": true,
+      "query": "strasse",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-35-hidden-True",
+      "passed": true,
+      "query": "strasse",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-36-hidden-False",
+      "passed": true,
+      "query": "STRASSE FILE",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-37-hidden-True",
+      "passed": true,
+      "query": "STRASSE FILE",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-38-hidden-False",
+      "passed": true,
+      "query": "ος",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-39-hidden-True",
+      "passed": true,
+      "query": "ος",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-40-hidden-False",
+      "passed": true,
+      "query": "İ",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-41-hidden-True",
+      "passed": true,
+      "query": "İ",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-42-hidden-False",
+      "passed": true,
+      "query": "\u001cSTRASSE\u001f",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-43-hidden-True",
+      "passed": true,
+      "query": "\u001cSTRASSE\u001f",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-44-hidden-False",
+      "passed": true,
+      "query": "nested needle",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-45-hidden-True",
+      "passed": true,
+      "query": "nested needle",
+      "showHidden": true,
+      "items": 4
+    },
+    {
+      "case": "differential-query-46-hidden-False",
+      "passed": true,
+      "query": "needle",
+      "showHidden": false,
+      "items": 4
+    },
+    {
+      "case": "differential-query-47-hidden-True",
+      "passed": true,
+      "query": "needle",
+      "showHidden": true,
+      "items": 8
+    },
+    {
+      "case": "differential-query-48-hidden-False",
+      "passed": true,
+      "query": "é",
+      "showHidden": false,
+      "items": 3
+    },
+    {
+      "case": "differential-query-49-hidden-True",
+      "passed": true,
+      "query": "é",
+      "showHidden": true,
+      "items": 3
+    },
+    {
+      "case": "differential-query-50-hidden-False",
+      "passed": true,
+      "query": "é",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-51-hidden-True",
+      "passed": true,
+      "query": "é",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-52-hidden-False",
+      "passed": true,
+      "query": "ffi",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-53-hidden-True",
+      "passed": true,
+      "query": "ffi",
+      "showHidden": true,
+      "items": 2
+    },
+    {
+      "case": "differential-query-54-hidden-False",
+      "passed": true,
+      "query": "line?break.txt",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-55-hidden-True",
+      "passed": true,
+      "query": "line?break.txt",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-56-hidden-False",
+      "passed": true,
+      "query": "line*break.txt",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-57-hidden-True",
+      "passed": true,
+      "query": "line*break.txt",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-58-hidden-False",
+      "passed": true,
+      "query": "[\n]",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-59-hidden-True",
+      "passed": true,
+      "query": "[\n]",
+      "showHidden": true,
+      "items": 1
+    },
+    {
+      "case": "differential-query-60-hidden-False",
+      "passed": true,
+      "query": "[a-b-c]",
+      "showHidden": false,
+      "items": 26
+    },
+    {
+      "case": "differential-query-61-hidden-False",
+      "passed": true,
+      "query": "*[a-b-c]*",
+      "showHidden": false,
+      "items": 26
+    },
+    {
+      "case": "differential-query-62-hidden-False",
+      "passed": true,
+      "query": "[a-c-e-g]",
+      "showHidden": false,
+      "items": 37
+    },
+    {
+      "case": "differential-query-63-hidden-False",
+      "passed": true,
+      "query": "*[a-c-e-g]*",
+      "showHidden": false,
+      "items": 37
+    },
+    {
+      "case": "differential-query-64-hidden-False",
+      "passed": true,
+      "query": "[--a]",
+      "showHidden": false,
+      "items": 39
+    },
+    {
+      "case": "differential-query-65-hidden-False",
+      "passed": true,
+      "query": "*[--a]*",
+      "showHidden": false,
+      "items": 39
+    },
+    {
+      "case": "differential-query-66-hidden-False",
+      "passed": true,
+      "query": "[a--]",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-67-hidden-False",
+      "passed": true,
+      "query": "*[a--]*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-68-hidden-False",
+      "passed": true,
+      "query": "[a---z]",
+      "showHidden": false,
+      "items": 12
+    },
+    {
+      "case": "differential-query-69-hidden-False",
+      "passed": true,
+      "query": "*[a---z]*",
+      "showHidden": false,
+      "items": 12
+    },
+    {
+      "case": "differential-query-70-hidden-False",
+      "passed": true,
+      "query": "[!a-]",
+      "showHidden": false,
+      "items": 49
+    },
+    {
+      "case": "differential-query-71-hidden-False",
+      "passed": true,
+      "query": "*[!a-]*",
+      "showHidden": false,
+      "items": 49
+    },
+    {
+      "case": "differential-query-72-hidden-False",
+      "passed": true,
+      "query": "[-a]",
+      "showHidden": false,
+      "items": 21
+    },
+    {
+      "case": "differential-query-73-hidden-False",
+      "passed": true,
+      "query": "*[-a]*",
+      "showHidden": false,
+      "items": 21
+    },
+    {
+      "case": "differential-query-74-hidden-False",
+      "passed": true,
+      "query": "[a-]",
+      "showHidden": false,
+      "items": 21
+    },
+    {
+      "case": "differential-query-75-hidden-False",
+      "passed": true,
+      "query": "*[a-]*",
+      "showHidden": false,
+      "items": 21
+    },
+    {
+      "case": "differential-query-76-hidden-False",
+      "passed": true,
+      "query": "[!-a]",
+      "showHidden": false,
+      "items": 49
+    },
+    {
+      "case": "differential-query-77-hidden-False",
+      "passed": true,
+      "query": "*[!-a]*",
+      "showHidden": false,
+      "items": 49
+    },
+    {
+      "case": "differential-query-78-hidden-False",
+      "passed": true,
+      "query": "[!--]",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-79-hidden-False",
+      "passed": true,
+      "query": "*[!--]*",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-80-hidden-False",
+      "passed": true,
+      "query": "[z-a-b]",
+      "showHidden": false,
+      "items": 18
+    },
+    {
+      "case": "differential-query-81-hidden-False",
+      "passed": true,
+      "query": "*[z-a-b]*",
+      "showHidden": false,
+      "items": 18
+    },
+    {
+      "case": "differential-query-82-hidden-False",
+      "passed": true,
+      "query": "[z-a-z-a]",
+      "showHidden": false,
+      "items": 11
+    },
+    {
+      "case": "differential-query-83-hidden-False",
+      "passed": true,
+      "query": "*[z-a-z-a]*",
+      "showHidden": false,
+      "items": 11
+    },
+    {
+      "case": "differential-query-84-hidden-False",
+      "passed": true,
+      "query": "[a-z-A-Z]",
+      "showHidden": false,
+      "items": 43
+    },
+    {
+      "case": "differential-query-85-hidden-False",
+      "passed": true,
+      "query": "*[a-z-A-Z]*",
+      "showHidden": false,
+      "items": 43
+    },
+    {
+      "case": "differential-query-86-hidden-False",
+      "passed": true,
+      "query": "[a-c-z-a-e]",
+      "showHidden": false,
+      "items": 34
+    },
+    {
+      "case": "differential-query-87-hidden-False",
+      "passed": true,
+      "query": "*[a-c-z-a-e]*",
+      "showHidden": false,
+      "items": 34
+    },
+    {
+      "case": "differential-query-88-hidden-False",
+      "passed": true,
+      "query": "[a-c-c-e]",
+      "showHidden": false,
+      "items": 35
+    },
+    {
+      "case": "differential-query-89-hidden-False",
+      "passed": true,
+      "query": "*[a-c-c-e]*",
+      "showHidden": false,
+      "items": 35
+    },
+    {
+      "case": "differential-query-90-hidden-False",
+      "passed": true,
+      "query": "[z-a-]",
+      "showHidden": false,
+      "items": 11
+    },
+    {
+      "case": "differential-query-91-hidden-False",
+      "passed": true,
+      "query": "*[z-a-]*",
+      "showHidden": false,
+      "items": 11
+    },
+    {
+      "case": "differential-query-92-hidden-False",
+      "passed": true,
+      "query": "[[]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-93-hidden-False",
+      "passed": true,
+      "query": "*[[]*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-94-hidden-False",
+      "passed": true,
+      "query": "[]]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-95-hidden-False",
+      "passed": true,
+      "query": "*[]]*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-96-hidden-False",
+      "passed": true,
+      "query": "[[]]",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-97-hidden-False",
+      "passed": true,
+      "query": "*[[]]*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-98-hidden-False",
+      "passed": true,
+      "query": "[!]",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-99-hidden-False",
+      "passed": true,
+      "query": "*[!]*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-100-hidden-False",
+      "passed": true,
+      "query": "[!!]",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-101-hidden-False",
+      "passed": true,
+      "query": "*[!!]*",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-102-hidden-False",
+      "passed": true,
+      "query": "[![]",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-103-hidden-False",
+      "passed": true,
+      "query": "*[![]*",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-104-hidden-False",
+      "passed": true,
+      "query": "[^]",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-105-hidden-False",
+      "passed": true,
+      "query": "*[^]*",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-106-hidden-False",
+      "passed": true,
+      "query": "[^^]",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-107-hidden-False",
+      "passed": true,
+      "query": "*[^^]*",
+      "showHidden": false,
+      "items": 1
+    },
+    {
+      "case": "differential-query-108-hidden-False",
+      "passed": true,
+      "query": "[&]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-109-hidden-False",
+      "passed": true,
+      "query": "*[&]*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-110-hidden-False",
+      "passed": true,
+      "query": "[&&]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-111-hidden-False",
+      "passed": true,
+      "query": "*[&&]*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-112-hidden-False",
+      "passed": true,
+      "query": "[||]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-113-hidden-False",
+      "passed": true,
+      "query": "*[||]*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-114-hidden-False",
+      "passed": true,
+      "query": "[~~]",
+      "showHidden": false,
+      "items": 3
+    },
+    {
+      "case": "differential-query-115-hidden-False",
+      "passed": true,
+      "query": "*[~~]*",
+      "showHidden": false,
+      "items": 3
+    },
+    {
+      "case": "differential-query-116-hidden-False",
+      "passed": true,
+      "query": "[a&&b]",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-117-hidden-False",
+      "passed": true,
+      "query": "*[a&&b]*",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-118-hidden-False",
+      "passed": true,
+      "query": "[a||b]",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-119-hidden-False",
+      "passed": true,
+      "query": "*[a||b]*",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-120-hidden-False",
+      "passed": true,
+      "query": "[a~~b]",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-121-hidden-False",
+      "passed": true,
+      "query": "*[a~~b]*",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-122-hidden-False",
+      "passed": true,
+      "query": "[\\]",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-123-hidden-False",
+      "passed": true,
+      "query": "*[\\]*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-124-hidden-False",
+      "passed": true,
+      "query": "[\\-a]",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-125-hidden-False",
+      "passed": true,
+      "query": "*[\\-a]*",
+      "showHidden": false,
+      "items": 15
+    },
+    {
+      "case": "differential-query-126-hidden-False",
+      "passed": true,
+      "query": "[a-\\]",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-127-hidden-False",
+      "passed": true,
+      "query": "*[a-\\]*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-128-hidden-False",
+      "passed": true,
+      "query": "[!\\]",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-129-hidden-False",
+      "passed": true,
+      "query": "*[!\\]*",
+      "showHidden": false,
+      "items": 50
+    },
+    {
+      "case": "differential-query-130-hidden-False",
+      "passed": true,
+      "query": "[",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-131-hidden-False",
+      "passed": true,
+      "query": "*[*",
+      "showHidden": false,
+      "items": 2
+    },
+    {
+      "case": "differential-query-132-hidden-False",
+      "passed": true,
+      "query": "[]",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-133-hidden-False",
+      "passed": true,
+      "query": "*[]*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-134-hidden-False",
+      "passed": true,
+      "query": "[!",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-135-hidden-False",
+      "passed": true,
+      "query": "*[!*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-136-hidden-False",
+      "passed": true,
+      "query": "[abc",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-137-hidden-False",
+      "passed": true,
+      "query": "*[abc*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-138-hidden-False",
+      "passed": true,
+      "query": "[[",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-query-139-hidden-False",
+      "passed": true,
+      "query": "*[[*",
+      "showHidden": false,
+      "items": 0
+    },
+    {
+      "case": "differential-options-0",
+      "passed": true,
+      "args": {
+        "limit": 1
+      },
+      "items": 1
+    },
+    {
+      "case": "differential-options-1",
+      "passed": true,
+      "args": {
+        "limit": 3.8
+      },
+      "items": 3
+    },
+    {
+      "case": "differential-options-2",
+      "passed": true,
+      "args": {
+        "limit": 0
+      },
+      "items": 1
+    },
+    {
+      "case": "differential-options-3",
+      "passed": true,
+      "args": {
+        "limit": false
+      },
+      "items": 1
+    },
+    {
+      "case": "differential-options-4",
+      "passed": true,
+      "args": {
+        "limit": "٢"
+      },
+      "items": 2
+    },
+    {
+      "case": "differential-options-5",
+      "passed": true,
+      "args": {
+        "limit": "5_001"
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-6",
+      "passed": true,
+      "args": {
+        "limit": "bad"
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-7",
+      "passed": true,
+      "args": {
+        "mimePrefix": "text/"
+      },
+      "items": 35
+    },
+    {
+      "case": "differential-options-8",
+      "passed": true,
+      "args": {
+        "mimePrefix": "inode/"
+      },
+      "items": 13
+    },
+    {
+      "case": "differential-options-9",
+      "passed": true,
+      "args": {
+        "mimePrefix": ""
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-10",
+      "passed": true,
+      "args": {
+        "mimePrefix": false
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-11",
+      "passed": true,
+      "args": {
+        "showHidden": "false"
+      },
+      "items": 62
+    },
+    {
+      "case": "differential-options-12",
+      "passed": true,
+      "args": {
+        "query": false
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-13",
+      "passed": true,
+      "args": {
+        "query": 0
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-14",
+      "passed": true,
+      "args": {
+        "query": []
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-15",
+      "passed": true,
+      "args": {
+        "budget": 0
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-16",
+      "passed": true,
+      "args": {
+        "budget": "0.5"
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-17",
+      "passed": true,
+      "args": {
+        "budget": -1
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-options-18",
+      "passed": true,
+      "args": {
+        "budget": "NaN"
+      },
+      "items": 51
+    },
+    {
+      "case": "differential-errors-0",
+      "passed": true,
+      "code": "bad_args"
+    },
+    {
+      "case": "differential-errors-1",
+      "passed": true,
+      "code": "bad_args"
+    },
+    {
+      "case": "differential-errors-2",
+      "passed": true,
+      "code": "bad_args"
+    },
+    {
+      "case": "differential-errors-3",
+      "passed": true,
+      "code": "not_found"
+    },
+    {
+      "case": "differential-errors-4",
+      "passed": true,
+      "code": "not_found"
+    },
+    {
+      "case": "search-works-while-python-equivalent-is-trapped",
+      "passed": true
+    },
+    {
+      "case": "original-webkit-bridge-queries-native-recursive-search",
+      "passed": true,
+      "items": 1
+    }
+  ]
+}

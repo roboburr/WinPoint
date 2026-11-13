@@ -1,0 +1,104 @@
+# tests/i18n/BASELINE-CHANGES.rust-gw2: GW2a (Windows Update service core, worktree .wt/gw2), format as in
+# tests/i18n/BASELINE-CHANGES.rust. Every line is a new Dutch text of the new update.* service: host/i18n/update.tsv
+# rows marked '#@ new', all from notes/claude/windows-update-gnome.md §3.7 (except update.err.notHere, see
+# notes/claude/wu/gw2.md). No existing Dutch text changes.
+key:update.product	-	-	-	new Windows Update host text (design §3.7): {product} in every update text (design §3.1, C7: the product name until Robin decides branding)
+key:update.err.network	-	-	-	new Windows Update host text (design §3.7): PackageKit no-network 2, no-more-mirrors 43, repo-not-available 37 (an Ubuntu URI, or GetUpdates failed too)
+key:update.warn.source	-	-	-	new Windows Update host text (design §3.7): the same codes for a non-Ubuntu source while GetUpdates succeeds; {source} is the host name of the source
+key:update.err.offline	-	-	-	new Windows Update host text (design §3.7): NetworkManager connectivity none before a check
+key:update.err.repair	-	-	-	new Windows Update host text (design §3.7): exit repair-required 11, error unfinished-transaction 66, or a failed configure that leaves half-done packages
+key:update.err.cannotCancel	-	-	-	new Windows Update host text (design §3.7): cannot-cancel 25, or Cancel while AllowCancel is false
+key:update.err.notAuthorized	-	-	-	new Windows Update host text (design §3.7): not-authorized 48 (polkit)
+key:update.err.noSpace	-	-	-	new Windows Update host text (design §3.7): no-space-on-device 46
+key:update.err.download	-	-	-	new Windows Update host text (design §3.7): package-download-failed 10
+key:update.err.locked	-	-	-	new Windows Update host text (design §3.7): cannot-get-lock 26, lock-required 67, cancelled-priority 65 / exit cancelled-priority 9
+key:update.err.untrusted	-	-	-	new Windows Update host text (design §3.7): gpg-failure 5, bad/missing-gpg-signature 30/31, cannot-update-repo-unsigned 51, exit need-untrusted 8
+key:update.err.conflict	-	-	-	new Windows Update host text (design §3.7): dep-resolution-failed 13, package-conflicts 36, file-conflicts 35, package-install-blocked 39
+key:update.err.dpkg	-	-	-	new Windows Update host text (design §3.7): package-failed-to-configure 56, -install 58, update-failed-due-to-running-process 60
+key:update.err.cancelled	-	-	-	new Windows Update host text (design §3.7): transaction-cancelled 17, exit cancelled 3 (cancel is only offered during the download)
+key:update.err.failed	-	-	-	new Windows Update host text (design §3.7): anything else, incl. EulaRequired, MediaChangeRequired, RepoSignatureRequired
+key:update.err.checkFailed	-	-	-	new Windows Update host text (design §3.7): RefreshCache and GetUpdates both failed for a non-network reason
+key:update.err.noPackageKit	-	-	-	new Windows Update host text (design §3.7): no PackageKit name on the bus and not activatable
+key:update.err.unknownOutcome	-	-	-	new Windows Update host text (design §3.7): PackageKit vanished mid-transaction and GetOldTransactions has no record
+key:update.err.busy	-	-	-	new Windows Update host text (design §3.7): our own job already runs (the job lock is held)
+key:update.err.stale	-	-	-	new Windows Update host text (design §3.7): ids or rows not in the current snapshot; package-database-changed 61
+key:update.err.badArgs	-	-	-	new Windows Update host text (design §3.7): invalid arguments of an update.* method
+key:update.err.testSeam	-	-	-	new Windows Update host text (design §3.7): a WIN11_UPDATE_* variable is set but fails its check (design §4.11); only tests ever see it
+key:update.err.details	-	-	-	new Windows Update host text (design §3.7): GetUpdateDetail failed
+key:update.err.notHere	-	-	-	new Windows Update host text (design §3.7) (not in §3.7: GW2 deviation, coordinator to confirm): an update write method in a host that is not Settings (reader mode, design §4.1); not in §3.7 (GW2 deviation)
+key:update.guard.power	-	-	-	new Windows Update host text (design §3.7): a power action while our job is past AllowCancel (committing)
+key:update.guard.upgrade	-	-	-	new Windows Update host text (design §3.7): a power action, shell.restartAll or any update write while Ubuntu's release upgrader runs
+key:update.guard.restart	-	-	-	new Windows Update host text (design §3.7): shell.restartAll while one of our update jobs is active (any phase)
+key:update.guard.software	-	-	-	new Windows Update host text (design §3.7): shell.restartAll while a Software job is queued, running or authenticating
+key:update.notify.installed	-	-	-	new Windows Update host text (design §3.7): notification title: our job is done
+key:update.notify.installedBody	-	-	-	new Windows Update host text (design §3.7): notification body under update.notify.installed
+key:update.notify.restart	-	-	-	new Windows Update host text (design §3.7): notification title: our job is done and needs a restart (settings.update.notifyRestart)
+key:update.notify.restartBody	-	-	-	new Windows Update host text (design §3.7): notification body under update.notify.restart
+key:update.notify.restartNow	-	-	-	new Windows Update host text (design §3.7): notification action button
+key:update.notify.later	-	-	-	new Windows Update host text (design §3.7): notification action button (the same word in both languages)
+key:update.notify.failed	-	-	-	new Windows Update host text (design §3.7): notification title: our job failed
+key:update.notify.view	-	-	-	new Windows Update host text (design §3.7): notification action button: opens Settings on the update page
+key:update.release.terminalTitle	-	-	-	new Windows Update host text (design §3.7): title of the terminal window that runs Ubuntu's release upgrader
+key:update.release.err.updatesPending	-	-	-	new Windows Update host text (design §3.7): release start refused: a non-phased update is pending (do-release-upgrade's own rule)
+key:update.release.err.rebootFirst	-	-	-	new Windows Update host text (design §3.7): release start refused: reboot-required lists libc6, linux-base or linux-image-*
+key:update.release.err.busy	-	-	-	new Windows Update host text (design §3.7): release start refused: a transaction or dpkg runs
+key:update.release.err.hold	-	-	-	new Windows Update host text (design §3.7): release start refused: the compatibility verdict is hold or blocked
+key:update.release.err.notOffered	-	-	-	new Windows Update host text (design §3.7): release start refused: nothing offered
+key:update.release.err.noTerminal	-	-	-	new Windows Update host text (design §3.7): no xdg-terminal-exec
+key:update.release.err.notRunning	-	-	-	new Windows Update host text (design §3.7): attach refused: the upgrader is gone
+key:update.release.err.noAttachHelper	-	-	-	new Windows Update host text (design §3.7): attach without the root helper; the command is typed by the user, never by our code
+key:update.release.err.noPassword	-	-	-	new Windows Update host text (design §3.7): pkexec rc 126
+key:update.release.err.wrongPassword	-	-	-	new Windows Update host text (design §3.7): pkexec rc 127
+key:update.release.err.promptFailed	-	-	-	new Windows Update host text (design §3.7): the Prompt helper printed @@fail
+key:update.release.err.checkFailed	-	-	-	new Windows Update host text (design §3.7): check-new-release failed
+key:update.release.err.refused	-	-	-	new Windows Update host text (design §3.7): the wrapper's rc is not 0, 126 or 127 before the upgrader appeared
+key:update.release.err.noWindow	-	-	-	new Windows Update host text (design §3.7): no upgrader and no status file 120 s after the start
+key:update.release.pressEnter	-	-	-	new Windows Update host text (design §3.7): last line of the terminal wrapper when it keeps the window open
+key:update.release.err.ubuntuHold	-	-	-	new Windows Update host text (design §3.7): update.release.ubuntuHold could not write the update-manager keys
+key:update.compat.missing	-	-	-	new Windows Update host text (design §3.7): compatibility reason: a blocking part has no candidate; {part} is an update.part.* text
+key:update.compat.removed	-	-	-	new Windows Update host text (design §3.7): compatibility reason: the simulation removes a blocking part
+key:update.compat.degraded	-	-	-	new Windows Update host text (design §3.7): compatibility reason: a degraded part is missing or removed; {feature} is an update.feature.* text
+key:update.compat.thirdParty.one	-	-	-	new Windows Update host text (design §3.7): compatibility note: third-party sources exist; {name} is the first source's name
+key:update.compat.thirdParty.other	-	-	-	new Windows Update host text (design §3.7): plural of update.compat.thirdParty
+key:update.compat.offline	-	-	-	new Windows Update host text (design §3.7): compatibility unknown: offline
+key:update.compat.metered	-	-	-	new Windows Update host text (design §3.7): compatibility unknown: metered and settings.update.metered is off; names the Advanced options toggle
+key:update.compat.apt	-	-	-	new Windows Update host text (design §3.7): compatibility unknown: the private apt tree failed
+key:update.part.webkit	-	-	-	new Windows Update host text (design §3.7): part label (compatibility reasons)
+key:update.part.jsc	-	-	-	new Windows Update host text (design §3.7): part label (a name, the same in both languages)
+key:update.part.gtk	-	-	-	new Windows Update host text (design §3.7): part label (a name)
+key:update.part.soup	-	-	-	new Windows Update host text (design §3.7): part label (a name)
+key:update.part.glib	-	-	-	new Windows Update host text (design §3.7): part label (a name)
+key:update.part.pixbuf	-	-	-	new Windows Update host text (design §3.7): part label
+key:update.part.cairo	-	-	-	new Windows Update host text (design §3.7): part label
+key:update.part.zlib	-	-	-	new Windows Update host text (design §3.7): part label (a name)
+key:update.part.archive	-	-	-	new Windows Update host text (design §3.7): part label
+key:update.part.gnomeShell	-	-	-	new Windows Update host text (design §3.7): part label (a name)
+key:update.part.ffmpeg	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.ffmpeg	-	-	-	new Windows Update host text (design §3.7): what does not work without ffmpeg ({feature} in update.compat.degraded)
+key:update.part.bubblewrap	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.bubblewrap	-	-	-	new Windows Update host text (design §3.7): what does not work without bubblewrap
+key:update.part.squashfs	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.squashfs	-	-	-	new Windows Update host text (design §3.7): what does not work without squashfs-tools
+key:update.part.flatpak	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.flatpak	-	-	-	new Windows Update host text (design §3.7): what does not work without flatpak
+key:update.part.packagekit	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.packagekit	-	-	-	new Windows Update host text (design §3.7): what does not work without PackageKit
+key:update.part.terminal	-	-	-	new Windows Update host text (design §3.7): degraded part: ptyxis, gnome-terminal or gnome-console
+key:update.feature.terminal	-	-	-	new Windows Update host text (design §3.7): what does not work without a terminal
+key:update.part.screen	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.screen	-	-	-	new Windows Update host text (design §3.7): what does not work without screen
+key:update.part.dock	-	-	-	new Windows Update host text (design §3.7): degraded part (a name)
+key:update.feature.dock	-	-	-	new Windows Update host text (design §3.7): what does not work without the Ubuntu Dock
+key:update.post.upgraded	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification title: first login on a new release, extension active
+key:update.post.extOff	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification title: the extension is OUT_OF_DATE (4) or INACTIVE (2) although enabled
+key:update.post.extOffBody	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification body
+key:update.post.dockOn	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification action
+key:update.post.later	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification action (the same word in both languages)
+key:update.post.extError	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification title: the extension is in ERROR (3)
+key:update.post.extErrorBody	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification body
+key:update.post.extsOff	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification title: org.gnome.shell disable-user-extensions is true
+key:update.post.extsOffBody	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification body
+key:update.post.extsOn	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification action
+key:update.post.missing	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification title: blocking parts are missing after the upgrade
+key:update.post.missingBody	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification body; {parts} is a joined list of update.part.* texts
+key:update.post.installParts	-	-	-	new Windows Update host text (design §3.7): post-upgrade notification action

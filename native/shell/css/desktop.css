@@ -1,0 +1,216 @@
+/* Desktop (vendor/ui/css/desktop.css): wallpaper, icons, rubber band, rename box, context menus, toast and the
+   desktop's dialogs. Desktop labels are always white with a soft shadow (also in light mode), like Windows. */
+
+window.w11-desktop { background-color: #000; }
+window.w11-desktop .dt-wall { background-color: #000; }
+.dt { color: #fff; }
+
+/* ---- icons ---------------------------------------------------------------- */
+.dt-item {
+  padding: 2px 1px 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: transparent;
+  transition: background-color 83ms linear, border-color 83ms linear, opacity 167ms linear;
+}
+.dt-item__icon { margin: 3px 0; }
+.dt-item__icon > image { -gtk-icon-shadow: 0 1px 2px rgba(0, 0, 0, 0.28); }
+.dt-item__label {
+  padding: 0 2px;
+  color: #fff;
+  font-size: 12px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+/* hover and selection: the light-blue "explorer" selection colours Windows uses on the desktop, so a selection
+   stays visible on light wallpapers too */
+.dt-item:hover { background-color: rgba(229, 243, 255, 0.16); border-color: rgba(229, 243, 255, 0.3); }
+.dt-item.is-selected { background-color: rgba(204, 232, 255, 0.34); border-color: rgba(153, 209, 255, 0.8); }
+.dt-item.is-selected:hover { background-color: rgba(204, 232, 255, 0.42); border-color: rgba(153, 209, 255, 0.8); }
+/* desktop not focused (a window is active): calmer selection */
+.dt:not(.is-active) .dt-item.is-selected { background-color: rgba(220, 236, 250, 0.2); border-color: rgba(200, 222, 245, 0.45); }
+.dt.is-kbd .dt-item.is-focused { border-color: rgba(255, 255, 255, 0.85); }
+.dt-item.is-cut .dt-item__icon { opacity: 0.45; }
+.dt-item.is-drop-target { background-color: rgba(255, 255, 255, 0.3); border-color: rgba(255, 255, 255, 0.55); }
+.dt.is-dragging .dt-item:not(.is-drop-target):hover { background-color: transparent; border-color: transparent; }
+.dt-item.dt-ghost {
+  opacity: 0.72;
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+  transition: none;
+}
+
+/* ---- rubber band ---------------------------------------------------------- */
+.dt-band {
+  border: 1px solid color-mix(in srgb, var(--accent, #0078d4) 85%, white);
+  background-color: color-mix(in srgb, var(--accent, #0078d4) 30%, transparent);
+}
+
+/* ---- inline rename ---------------------------------------------------------- */
+.dt-item.is-renaming { background-color: transparent; border-color: transparent; }
+.dt-item.is-renaming .dt-item__label { opacity: 0; }
+.dt entry.dt-rename {
+  min-height: 20px;
+  margin: 0;
+  padding: 1px 3px;
+  border: 1px solid #4a4a4a;
+  border-radius: 2px;
+  outline: none;
+  background-color: #fff;
+  color: #000;
+  font-size: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  caret-color: #000;
+}
+.dt entry.dt-rename > text { color: #000; background-color: transparent; }
+.dt entry.dt-rename > text > selection { background-color: #0078d4; color: #fff; }
+popover.dt-rename-tip > contents {
+  padding: 7px 10px;
+  border: 1px solid rgba(117, 117, 117, 0.4);
+  border-radius: 4px;
+  background-color: #2c2c2c;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.26);
+}
+window.w11-light popover.dt-rename-tip > contents { background-color: #f9f9f9; color: rgba(0, 0, 0, 0.9); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.14); }
+popover.dt-rename-tip > arrow { background-color: #2c2c2c; border-color: rgba(117, 117, 117, 0.4); }
+window.w11-light popover.dt-rename-tip > arrow { background-color: #f9f9f9; }
+
+/* ---- context menus (core/contextmenu.js, components.css .fl-menu) --------------- */
+popover.dt-menu { padding: 0; background: transparent; box-shadow: none; }
+popover.dt-menu > contents {
+  min-width: 200px;
+  padding: 4px 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background-color: #2c2c2c;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 14px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.26);
+}
+popover.dt-menu modelbutton {
+  min-height: 32px;
+  margin: 2px 4px;
+  padding: 0 12px;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.96);
+  background-color: transparent;
+}
+popover.dt-menu modelbutton:hover,
+popover.dt-menu modelbutton:selected,
+popover.dt-menu modelbutton:focus { background-color: rgba(255, 255, 255, 0.0605); }
+popover.dt-menu modelbutton:active { background-color: rgba(255, 255, 255, 0.0419); color: rgba(255, 255, 255, 0.79); }
+popover.dt-menu modelbutton:disabled { color: rgba(255, 255, 255, 0.3628); }
+popover.dt-menu modelbutton accelerator { margin-left: 24px; color: rgba(255, 255, 255, 0.79); font-size: 12px; }
+popover.dt-menu modelbutton:disabled accelerator { color: rgba(255, 255, 255, 0.3628); }
+popover.dt-menu modelbutton arrow { color: rgba(255, 255, 255, 0.79); }
+popover.dt-menu separator { min-height: 1px; margin: 4px 0; background-color: rgba(255, 255, 255, 0.0837); }
+popover.dt-menu .horizontal-buttons, popover.dt-menu box.inline-buttons { padding: 0 4px 4px; }
+popover.dt-menu button.image-button,
+popover.dt-menu .inline-buttons button {
+  min-width: 40px;
+  min-height: 36px;
+  margin: 0 1px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.96);
+}
+popover.dt-menu button.image-button:hover,
+popover.dt-menu .inline-buttons button:hover { background-color: rgba(255, 255, 255, 0.0605); }
+popover.dt-menu button.image-button:disabled,
+popover.dt-menu .inline-buttons button:disabled { color: rgba(255, 255, 255, 0.3628); }
+
+window.w11-light popover.dt-menu > contents {
+  border-color: rgba(0, 0, 0, 0.0578);
+  background-color: #f9f9f9;
+  color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+}
+window.w11-light popover.dt-menu modelbutton { color: rgba(0, 0, 0, 0.9); }
+window.w11-light popover.dt-menu modelbutton:hover,
+window.w11-light popover.dt-menu modelbutton:selected,
+window.w11-light popover.dt-menu modelbutton:focus { background-color: rgba(0, 0, 0, 0.0373); }
+window.w11-light popover.dt-menu modelbutton:active { background-color: rgba(0, 0, 0, 0.0241); color: rgba(0, 0, 0, 0.61); }
+window.w11-light popover.dt-menu modelbutton:disabled { color: rgba(0, 0, 0, 0.3614); }
+window.w11-light popover.dt-menu modelbutton accelerator,
+window.w11-light popover.dt-menu modelbutton arrow { color: rgba(0, 0, 0, 0.61); }
+window.w11-light popover.dt-menu separator { background-color: rgba(0, 0, 0, 0.0803); }
+window.w11-light popover.dt-menu button.image-button,
+window.w11-light popover.dt-menu .inline-buttons button { color: rgba(0, 0, 0, 0.9); }
+window.w11-light popover.dt-menu button.image-button:hover,
+window.w11-light popover.dt-menu .inline-buttons button:hover { background-color: rgba(0, 0, 0, 0.0373); }
+
+/* ---- toast (bottom right, above the taskbar) ------------------------------------ */
+.dt-toast {
+  min-width: 364px;
+  padding: 0 0 16px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background-color: #2c2c2c;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 14px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.26);
+}
+.dt-toast__head { min-height: 36px; padding: 4px 6px 0 16px; color: rgba(255, 255, 255, 0.79); font-size: 12px; }
+.dt-toast__appicon { color: var(--accent, #60cdff); }
+.dt-toast__close {
+  min-width: 32px;
+  min-height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.79);
+}
+.dt-toast__close:hover { background-color: rgba(255, 255, 255, 0.0605); color: rgba(255, 255, 255, 0.96); }
+.dt-toast__body { padding: 4px 16px 0; }
+.dt-toast__title { font-weight: 600; }
+.dt-toast__msg { color: rgba(255, 255, 255, 0.79); }
+.dt-toast__actions { padding: 14px 16px 0; }
+window.w11-light .dt-toast { border-color: rgba(0, 0, 0, 0.0578); background-color: #f9f9f9; color: rgba(0, 0, 0, 0.9); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14); }
+window.w11-light .dt-toast__head, window.w11-light .dt-toast__msg, window.w11-light .dt-toast__close { color: rgba(0, 0, 0, 0.61); }
+window.w11-light .dt-toast__close:hover { background-color: rgba(0, 0, 0, 0.0373); color: rgba(0, 0, 0, 0.9); }
+
+/* ---- buttons (Win11 standard and accent) ------------------------------------------ */
+button.dt-btn {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  background-image: none;
+  background-color: rgba(255, 255, 255, 0.0605);
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 14px;
+}
+button.dt-btn:hover { background-color: rgba(255, 255, 255, 0.0837); }
+button.dt-btn:active { background-color: rgba(255, 255, 255, 0.0326); color: rgba(255, 255, 255, 0.79); }
+button.dt-btn.dt-btn--accent { border-color: transparent; background-color: var(--accent, #60cdff); color: #000; }
+button.dt-btn.dt-btn--accent:hover { background-color: color-mix(in srgb, var(--accent, #60cdff) 90%, black); }
+button.dt-btn.dt-btn--danger { border-color: transparent; background-color: #c42b1c; color: #fff; }
+button.dt-btn.dt-btn--danger:hover { background-color: #b02717; }
+window.w11-light button.dt-btn { border-color: rgba(0, 0, 0, 0.0578); background-color: rgba(255, 255, 255, 0.7); color: rgba(0, 0, 0, 0.9); }
+window.w11-light button.dt-btn:hover { background-color: rgba(249, 249, 249, 0.5); }
+window.w11-light button.dt-btn:active { background-color: rgba(249, 249, 249, 0.3); color: rgba(0, 0, 0, 0.61); }
+window.w11-light button.dt-btn.dt-btn--accent { background-color: var(--accent, #0078d4); color: #fff; }
+
+/* ---- dialogs (Win11 content dialog) --------------------------------------------- */
+window.dt-dialog { background-color: #202020; color: rgba(255, 255, 255, 0.96); border-radius: 8px; }
+window.dt-dialog .dt-dialog__content { padding: 24px 24px 22px; background-color: #2b2b2b; }
+window.dt-dialog .dt-dialog__title { font-size: 20px; font-weight: 600; }
+window.dt-dialog .dt-dialog__message { font-size: 14px; }
+window.dt-dialog .dt-dialog__footer { padding: 24px; background-color: #202020; border-top: 1px solid rgba(255, 255, 255, 0.0837); }
+window.dt-dialog.w11-light { background-color: #f3f3f3; color: rgba(0, 0, 0, 0.9); }
+window.dt-dialog.w11-light .dt-dialog__content { background-color: #fff; }
+window.dt-dialog.w11-light .dt-dialog__footer { background-color: #f3f3f3; border-top-color: rgba(0, 0, 0, 0.0803); }
+window.dt-dialog .dt-props { font-size: 12px; }
+window.dt-dialog .dt-props__label { color: rgba(255, 255, 255, 0.79); }
+window.dt-dialog.w11-light .dt-props__label { color: rgba(0, 0, 0, 0.61); }
+window.dt-dialog .dt-props__head { font-size: 14px; padding-bottom: 2px; }
+window.dt-dialog separator { min-height: 1px; background-color: rgba(255, 255, 255, 0.0837); }
+window.dt-dialog.w11-light separator { background-color: rgba(0, 0, 0, 0.0803); }

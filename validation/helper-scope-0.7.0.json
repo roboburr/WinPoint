@@ -1,0 +1,23 @@
+{
+  "version": "0.7.0",
+  "checks": [
+    {
+      "case": "isolated-helper-launches-child-with-literal-URI-environment-and-cwd",
+      "passed": true,
+      "unit": "app-win11-helper-proof-1254283-success.service",
+      "appPid": 1254292
+    },
+    {
+      "case": "app-stays-in-independent-service-after-short-lived-helper-ACK-exits",
+      "passed": true,
+      "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/app-win11-helper-proof-1254283-success.service"
+    },
+    {
+      "case": "GIO-helper-error-is-returned-over-private-ack-channel",
+      "passed": true,
+      "error": "De app is niet gevonden"
+    }
+  ],
+  "helperSha256": "fbd41c0b09806ccdb9eec0f770bfa639e84c23827e34980b498bb407e443218c",
+  "scope": "Actual user manager; only own short-lived fixture services/app; no real user app or preexisting cgroup changed."
+}

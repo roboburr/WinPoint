@@ -1,0 +1,49 @@
+# host/i18n/transfers.tsv: host texts of transfers.rs (Verkenner tab transfer).
+# Owner: R2-D.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/transfers.rs
+# call_in(): Verkenner tab drag between windows: the ticket is malformed; no full stop in nl
+#@ host/src/transfers.rs 6 f0b22e33e41998a5 plain
+transfers.invalidTicket	Ongeldige tab-overdrachtscode	Invalid tab transfer code
+# call_in(): the offer is older than 90 s; the source window keeps its tab
+#@ host/src/transfers.rs 19 8a19ee570301ff52 plain
+transfers.expired	Tab-overdracht is verlopen; de brontab blijft behouden	The tab transfer has expired; the original tab is kept
+# call_in(): a window tried to take over its own tab
+#@ host/src/transfers.rs 22 4556cdf3385956f9 plain
+transfers.alreadyHere	Deze tab staat al in dit venster	This tab is already in this window
+# call_in()
+#@ host/src/transfers.rs 25 233f289c7deefce5 plain
+transfers.claimedElsewhere	De tab wordt al door een ander venster overgenomen	Another window is already taking over this tab
+# call_in(): tabRelease after tabCommit
+#@ host/src/transfers.rs 35 85e235a0ee364928 plain
+transfers.cantWithdraw	Een bevestigde overdracht kan niet worden ingetrokken	A confirmed transfer can’t be withdrawn
+# call_in(): tabStatus from a window that did not offer the tab
+#@ host/src/transfers.rs 38 1a603b4eb794985c plain
+transfers.onlySourceChecks	Alleen het bronvenster mag de overdracht controleren	Only the original window can check the transfer
+# call_in(): tabDetach from a window that did not offer the tab
+#@ host/src/transfers.rs 42 fd62eab593dfa883 plain
+transfers.onlySourceDetaches	Alleen het bronvenster mag de tab losmaken	Only the original window can detach the tab
+# call_in()
+#@ host/src/transfers.rs 47 a40c76625b3c5d65 plain
+transfers.unknownAction	Onbekende tab-overdrachtsactie	Unknown tab transfer action
+# owns_claim()
+#@ host/src/transfers.rs 49 b053aae367949556 plain
+transfers.claimedByOther	Deze tab is door een ander venster geclaimd	Another window has claimed this tab
+# read_private(): the private offer/claim file is not a small private regular file
+#@ host/src/transfers.rs 51 7bda607580afee88 plain
+transfers.invalidFile	Ongeldig tab-overdrachtsbestand	Invalid tab transfer file
+# validate_snapshot(): the offered tab state is no version-1 object or over 1 MiB
+#@ host/src/transfers.rs 53 d5bba80069368efa plain
+transfers.invalidContent	Ongeldige tabinhoud	Invalid tab contents
+# validate_snapshot(): a location in the tab state or its history is not valid
+#@ host/src/transfers.rs 64 f477c4508f284761 plain
+transfers.invalidFolder	Ongeldige map in de tab	Invalid folder in the tab

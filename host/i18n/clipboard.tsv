@@ -1,0 +1,19 @@
+# host/i18n/clipboard.tsv: host texts of services/shell/clipboard.rs.
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/shell/clipboard.rs
+# pin(): ApiError "not_found": clipboard history (unsupported in GNOME, History is kept for its pinned file): the item to pin is gone
+#@ host/src/services/shell/clipboard.rs 40 420cd7093401b3a1 plain
+clipboard.notFound	Dit item staat niet meer in het klembord.	This item is no longer on the clipboard.
+# pin(): ApiError "too_many": at most 25 pinned items; the number is part of the text
+#@ host/src/services/shell/clipboard.rs 44 9c2f34672de1aa73 plain
+clipboard.pinLimit	Je kunt maximaal 25 items vastmaken.	You can pin up to 25 items.

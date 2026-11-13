@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-01",
+  "version": "0.3.0",
+  "gnome": "50.1",
+  "isolated_headless_wayland": true,
+  "rust_unit_tests": {
+    "passed": 37
+  },
+  "file_integration": {
+    "cases": 34,
+    "all_passed": true,
+    "separate_ordering_repeat_cases": 4,
+    "separate_ordering_repeat_all_passed": true
+  },
+  "tabs": {
+    "scenarios": 10,
+    "native_cross_window_move": true,
+    "native_source_closes_after_commit": true,
+    "native_desktop_detach": true,
+    "native_reattach_to_original_window": true,
+    "native_last_tab_closes_detached_window": true,
+    "physical_hardware_drag_tested": false,
+    "trusted_wayland_virtual_pointer_drag": true
+  },
+  "panel": {
+    "original_taskbar_ui": true,
+    "native_dock": true,
+    "input_regions": true,
+    "center": {
+      "height": 900,
+      "ready": true,
+      "viewport": 1440,
+      "w": 436,
+      "x": 502
+    },
+    "strut_px": 48,
+    "fallback_hidden": true,
+    "native_window_list": true,
+    "start_separate_process": true,
+    "disable_closes_panel_only": true,
+    "start_ui": {
+      "h": 726,
+      "menu": {
+        "bottom": 726,
+        "height": 726,
+        "left": 0,
+        "right": 642,
+        "top": 0,
+        "width": 642,
+        "x": 0,
+        "y": 0
+      },
+      "w": 642
+    },
+    "native_icon_minimize_restore": true,
+    "resolution": "1440x900",
+    "scale": 1,
+    "start_geometry": {
+      "x": 399,
+      "y": 114,
+      "width": 642,
+      "height": 726
+    },
+    "start_toggle": true,
+    "start_focus_dismiss": true,
+    "panel_frame": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "monitor": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    }
+  },
+  "limits": [
+    "Physical input hardware not tested",
+    "Other 0.2.0 app and resolution cases were not all rerun for 0.3.0"
+  ]
+}

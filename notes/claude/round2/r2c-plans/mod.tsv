@@ -1,0 +1,26 @@
+54	files.shuttingDown		self.lang()	The file service is shutting down.	a call arrived while this window's file service shuts down (also watch.rs offline())
+56	files.badArgs		self.lang()	Invalid input.	the arguments are no JSON object
+117	files.badPath		lang	Invalid path.	a path argument that is empty, too long, has a NUL byte or is not absolute
+120	files.badPath		lang	Invalid path.	
+123	files.badPath		lang	Invalid path.	
+126	files.noItems		lang	Select one or more items first.	a call without paths (or more than 10,000)
+128	files.noItems		lang	Select one or more items first.	
+130	files.folderGone		lang	This folder no longer exists.	
+132	files.noName		lang	Enter a name.	rename/new item without a name
+134	files.noName		lang	Enter a name.	
+136	files.slash		lang	A name can’t contain a slash (/).	
+140	files.reservedName		lang	You can’t use this name. Choose another name.	the names . and ..
+142	files.badChars		lang	This name contains invalid characters.	control characters
+144	files.nameTooLong		lang	This name is too long.	over 255 bytes; also io_error() ENAMETOOLONG
+145	files.thisItem		lang	this item	{item} of the io_error() messages for a path without a name: a piece inside a sentence, lower case (en sentence starts are capitalised in code)
+146	files.quotedName		lang	“{name}”	{item} of the io_error() messages: the item's name in quotes
+148	files.noAccessTo		lang	You don’t have access to {item}.	EACCES/EPERM; {item} = files.quotedName or files.thisItem
+150	files.notFoundItem		lang	{item} no longer exists.	ENOENT; {item} = files.quotedName or files.thisItem
+152	files.noSpace		lang	There isn’t enough space on the disk.	ENOSPC
+154	files.readOnly		lang	This drive is read-only.	EROFS
+156	files.exists		lang	There’s already an item with this name.	EEXIST; also a new item or a trashed item that keeps colliding
+158	files.nameTooLong		lang	This name is too long.	
+160	files.inUse		lang	{item} is in use.	EBUSY; {item} = files.quotedName or files.thisItem
+162	files.notDir		lang	This isn’t a folder.	ENOTDIR
+164	files.nameNotOnDrive		lang	This name isn’t allowed on this drive.	EINVAL, e.g. a character a FAT/NTFS drive refuses
+166	files.failedFor		lang	That didn’t work for {item}.	any other OS error (its text is in data); {item} = files.quotedName or files.thisItem

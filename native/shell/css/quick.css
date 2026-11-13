@@ -1,0 +1,517 @@
+/* Quick settings (Win+A) and the power confirmation, ported from vendor/ui/css/flyouts.css (QUICK SETTINGS,
+   POWER) and components.css (Button, ToggleSwitch, Slider, ContentDialog) with the values of tokens.css.
+   Own palette on .q-root (quick.rs / power.rs set q-dark or q-light); the accent variables come from quick.rs
+   (Win11 accent palette of the user's colour, a provider above this sheet). Every button made by these modules
+   has the class q-b, which drops the GTK theme's look. */
+
+/* the host frames carry no look of their own: the cards below do */
+.w11-flyout.w11-flyout-quick,
+.w11-flyout.w11-flyout-power {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* ---- Palette ------------------------------------------------------------ */
+.q-root {
+  --q-text-1: #ffffff;
+  --q-text-2: rgba(255, 255, 255, 0.786);
+  --q-text-3: rgba(255, 255, 255, 0.5442);
+  --q-text-disabled: rgba(255, 255, 255, 0.3628);
+  --q-surface: #2c2c2c;
+  --q-surface-top: rgba(255, 255, 255, 0.08);
+  --q-stroke-flyout: rgba(0, 0, 0, 0.2);
+  --q-footer: rgba(0, 0, 0, 0.16);
+  --q-fill-control: rgba(255, 255, 255, 0.0605);
+  --q-fill-control-2: rgba(255, 255, 255, 0.0837);
+  --q-fill-control-3: rgba(255, 255, 255, 0.0326);
+  --q-fill-control-disabled: rgba(255, 255, 255, 0.0419);
+  --q-fill-subtle-2: rgba(255, 255, 255, 0.0605);
+  --q-fill-subtle-3: rgba(255, 255, 255, 0.0419);
+  --q-fill-strong: rgba(255, 255, 255, 0.5442);
+  --q-fill-strong-disabled: rgba(255, 255, 255, 0.2465);
+  --q-fill-solid: #454545;
+  --q-fill-alt-2: rgba(0, 0, 0, 0.1);
+  --q-fill-alt-3: rgba(255, 255, 255, 0.0419);
+  --q-fill-alt-4: rgba(255, 255, 255, 0.0698);
+  --q-input-active: #1e1e1e;
+  --q-stroke-control: rgba(255, 255, 255, 0.0698);
+  --q-stroke-control-top: rgba(255, 255, 255, 0.093);
+  --q-stroke-control-bottom: rgba(255, 255, 255, 0.0698);
+  --q-stroke-strong: rgba(255, 255, 255, 0.5442);
+  --q-stroke-strong-disabled: rgba(255, 255, 255, 0.1581);
+  --q-stroke-divider: rgba(255, 255, 255, 0.0837);
+  --q-stroke-card: rgba(0, 0, 0, 0.1);
+  --q-stroke-surface: rgba(117, 117, 117, 0.4);
+  --q-on-accent-stroke: rgba(255, 255, 255, 0.08);
+  --q-on-accent-stroke-bottom: rgba(0, 0, 0, 0.14);
+  --q-tile-divider-on: rgba(0, 0, 0, 0.16);
+  --q-caution: #fce100;
+  --q-caution-bg: #433519;
+  --q-critical: #ff99a4;
+  --q-attention-bg: rgba(255, 255, 255, 0.0326);
+  --q-dialog-top: #2b2b2b;
+  --q-dialog-bottom: #202020;
+  --q-smoke: rgba(0, 0, 0, 0.3);
+  --q-focus: #ffffff;
+  --q-accent: #4cc2ff;
+  --q-accent-2: rgba(76, 194, 255, 0.9);
+  --q-accent-3: rgba(76, 194, 255, 0.8);
+  --q-accent-text: #000000;
+  --q-accent-text-2: rgba(0, 0, 0, 0.5);
+  --q-accent-fg: #99ebff;
+  --q-accent-disabled: rgba(255, 255, 255, 0.1581);
+  --q-text-on-accent-disabled: rgba(255, 255, 255, 0.5302);
+  color: var(--q-text-1);
+  font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: 14px;
+}
+.q-root.q-light {
+  --q-text-1: rgba(0, 0, 0, 0.8956);
+  --q-text-2: rgba(0, 0, 0, 0.6063);
+  --q-text-3: rgba(0, 0, 0, 0.4458);
+  --q-text-disabled: rgba(0, 0, 0, 0.3614);
+  --q-surface: #fcfcfc;
+  --q-surface-top: rgba(255, 255, 255, 0.5);
+  --q-stroke-flyout: rgba(0, 0, 0, 0.0578);
+  --q-footer: rgba(0, 0, 0, 0.035);
+  --q-fill-control: rgba(255, 255, 255, 0.7);
+  --q-fill-control-2: rgba(249, 249, 249, 0.5);
+  --q-fill-control-3: rgba(249, 249, 249, 0.3);
+  --q-fill-control-disabled: rgba(249, 249, 249, 0.3);
+  --q-fill-subtle-2: rgba(0, 0, 0, 0.0373);
+  --q-fill-subtle-3: rgba(0, 0, 0, 0.0241);
+  --q-fill-strong: rgba(0, 0, 0, 0.4458);
+  --q-fill-strong-disabled: rgba(0, 0, 0, 0.3173);
+  --q-fill-solid: #ffffff;
+  --q-fill-alt-2: rgba(0, 0, 0, 0.0241);
+  --q-fill-alt-3: rgba(0, 0, 0, 0.0578);
+  --q-fill-alt-4: rgba(0, 0, 0, 0.0924);
+  --q-input-active: #ffffff;
+  --q-stroke-control: rgba(0, 0, 0, 0.0578);
+  --q-stroke-control-top: rgba(0, 0, 0, 0.0578);
+  --q-stroke-control-bottom: rgba(0, 0, 0, 0.1622);
+  --q-stroke-strong: rgba(0, 0, 0, 0.4458);
+  --q-stroke-strong-disabled: rgba(0, 0, 0, 0.2169);
+  --q-stroke-divider: rgba(0, 0, 0, 0.0803);
+  --q-stroke-card: rgba(0, 0, 0, 0.0578);
+  --q-stroke-surface: rgba(117, 117, 117, 0.4);
+  --q-on-accent-stroke: rgba(255, 255, 255, 0.08);
+  --q-on-accent-stroke-bottom: rgba(0, 0, 0, 0.4);
+  --q-tile-divider-on: rgba(255, 255, 255, 0.22);
+  --q-caution: #9d5d00;
+  --q-caution-bg: #fff4ce;
+  --q-critical: #c42b1c;
+  --q-attention-bg: rgba(246, 246, 246, 0.5);
+  --q-dialog-top: #ffffff;
+  --q-dialog-bottom: #f3f3f3;
+  --q-focus: rgba(0, 0, 0, 0.8956);
+  --q-accent: #0067c0;
+  --q-accent-2: rgba(0, 103, 192, 0.9);
+  --q-accent-3: rgba(0, 103, 192, 0.8);
+  --q-accent-text: #ffffff;
+  --q-accent-text-2: rgba(255, 255, 255, 0.7);
+  --q-accent-fg: #003e92;
+  --q-accent-disabled: rgba(0, 0, 0, 0.2169);
+  --q-text-on-accent-disabled: #ffffff;
+}
+
+/* ---- Shared little pieces ----------------------------------------------- */
+.q-caption { font-size: 12px; }
+.q-strong { font-weight: 600; }
+.q-text-2 { color: var(--q-text-2); }
+.q-tabular { font-feature-settings: "tnum"; }
+
+.q-b {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  min-height: 0;
+  color: var(--q-text-1);
+  outline: none;
+  transition: background-color 83ms linear, color 83ms linear, border-color 83ms linear;
+}
+.q-b:focus-visible { outline: 2px solid var(--q-focus); outline-offset: -2px; }
+.q-b:disabled { color: var(--q-text-disabled); }
+.q-b label { color: inherit; }
+
+/* subtle icon buttons (mute, output, settings, back, pager, media controls) */
+.q-icon-btn:hover { background-color: var(--q-fill-subtle-2); }
+.q-icon-btn:active { background-color: var(--q-fill-subtle-3); color: var(--q-text-2); }
+
+/* Win11 Button */
+.q-btn {
+  min-height: 30px;
+  padding: 0 11px;
+  border: 1px solid var(--q-stroke-control);
+  border-top-color: var(--q-stroke-control-top);
+  border-bottom-color: var(--q-stroke-control-bottom);
+  background-color: var(--q-fill-control);
+  font-size: 14px;
+}
+.q-btn:hover { background-color: var(--q-fill-control-2); }
+.q-btn:active { background-color: var(--q-fill-control-3); color: var(--q-text-2); border-color: var(--q-stroke-control); }
+.q-btn:disabled { background-color: var(--q-fill-control-disabled); color: var(--q-text-disabled); border-color: var(--q-stroke-control); }
+.q-btn.q-accent {
+  background-color: var(--q-accent);
+  color: var(--q-accent-text);
+  border-color: var(--q-on-accent-stroke);
+  border-bottom-color: var(--q-on-accent-stroke-bottom);
+}
+.q-btn.q-accent:hover { background-color: var(--q-accent-2); }
+.q-btn.q-accent:active { background-color: var(--q-accent-3); color: var(--q-accent-text-2); border-color: transparent; }
+.q-btn.q-accent:disabled { background-color: var(--q-accent-disabled); color: var(--q-text-on-accent-disabled); border-color: transparent; }
+
+/* ---- Cards (Acrylic falls back to the solid colour) ---------------------- */
+.q-surface {
+  background-color: var(--q-surface);
+  border: 1px solid var(--q-stroke-flyout);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 var(--q-surface-top), 0 8px 16px rgba(0, 0, 0, 0.26);
+}
+.q-root.q-light .q-surface { box-shadow: inset 0 1px 0 var(--q-surface-top), 0 8px 16px rgba(0, 0, 0, 0.14); }
+
+/* open: slide up 24 px and fade in, like the flyout host */
+.fo-qs-wrap.is-opening { animation: q-slide-in 250ms cubic-bezier(0, 0, 0, 1); }
+@keyframes q-slide-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   QUICK SETTINGS
+   ========================================================================== */
+.fo-qs__main { padding: 24px 16px 18px; }
+
+/* note on the visible page (error or test mode) */
+.fo-qs__notice {
+  margin: 0 8px 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: var(--q-caution-bg);
+  border: 1px solid var(--q-stroke-card);
+  color: var(--q-text-1);
+}
+.fo-qs__notice .q-notice-icon { color: var(--q-caution); }
+.fo-qs__notice.is-info { background-color: var(--q-attention-bg); }
+.fo-qs__notice.is-info .q-notice-icon { color: var(--q-accent); }
+.fo-qs__main > .fo-qs__notice-slot .fo-qs__notice { margin-top: -8px; }
+
+/* Tiles: 3 columns of 96x48 buttons and a caption below */
+.fo-tile__box {
+  min-height: 48px;
+  border: 1px solid var(--q-stroke-control);
+  border-bottom-color: var(--q-stroke-control-bottom);
+  border-radius: 4px;
+  transition: border-color 83ms linear;
+}
+.fo-tile__main, .fo-tile__more {
+  border-radius: 0;
+  background-color: var(--q-fill-control);
+  color: var(--q-text-1);
+}
+.fo-tile__more { min-width: 33px; border-left: 1px solid var(--q-stroke-divider); }
+.fo-tile__main:hover, .fo-tile__more:hover { background-color: var(--q-fill-control-2); }
+.fo-tile__main:active, .fo-tile__more:active { background-color: var(--q-fill-control-3); color: var(--q-text-2); }
+.fo-tile__main:focus-visible, .fo-tile__more:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--q-focus); }
+.fo-tile.is-on .fo-tile__box { border-color: var(--q-on-accent-stroke); border-bottom-color: var(--q-on-accent-stroke-bottom); }
+.fo-tile.is-on .fo-tile__main, .fo-tile.is-on .fo-tile__more { background-color: var(--q-accent); color: var(--q-accent-text); }
+.fo-tile.is-on .fo-tile__main:hover, .fo-tile.is-on .fo-tile__more:hover { background-color: var(--q-accent-2); }
+.fo-tile.is-on .fo-tile__main:active, .fo-tile.is-on .fo-tile__more:active { background-color: var(--q-accent-3); color: var(--q-accent-text-2); }
+.fo-tile.is-on .fo-tile__more { border-left-color: var(--q-tile-divider-on); }
+.fo-tile.is-disabled .fo-tile__main { color: var(--q-text-disabled); background-color: var(--q-fill-control-disabled); }
+.fo-tile__label { padding: 0 2px; color: var(--q-text-1); font-size: 12px; }
+
+/* Sliders */
+.fo-qs__sliders { margin-top: 20px; }
+.fo-qs__slider-row { min-height: 40px; }
+.fo-qs__slider-glyph { color: var(--q-text-1); }
+
+scale.q-slider { padding: 0 10px; min-height: 32px; margin: 0; }
+scale.q-slider > trough {
+  min-height: 4px;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  box-shadow: none;
+  background-color: var(--q-fill-strong);
+}
+scale.q-slider > trough > highlight {
+  min-height: 4px;
+  border: none;
+  border-radius: 2px;
+  background-color: var(--q-accent);
+  box-shadow: none;
+}
+scale.q-slider > trough > slider {
+  min-width: 20px;
+  min-height: 20px;
+  margin: -8px;
+  border: 1px solid var(--q-stroke-control);
+  border-top-color: var(--q-stroke-control-top);
+  border-bottom-color: var(--q-stroke-control-bottom);
+  border-radius: 10px;
+  background-color: var(--q-accent);
+  box-shadow: inset 0 0 0 4px var(--q-fill-solid), 0 1px 2px rgba(0, 0, 0, 0.2);
+  outline: none;
+  transition: box-shadow 167ms cubic-bezier(0, 0, 0, 1);
+}
+scale.q-slider:hover > trough > slider { box-shadow: inset 0 0 0 3px var(--q-fill-solid), 0 1px 2px rgba(0, 0, 0, 0.2); }
+scale.q-slider > trough > slider:active { box-shadow: inset 0 0 0 5px var(--q-fill-solid), 0 1px 2px rgba(0, 0, 0, 0.2); }
+scale.q-slider:focus-visible > trough > slider { outline: 2px solid var(--q-focus); outline-offset: 1px; }
+scale.q-slider:disabled > trough { background-color: var(--q-fill-strong-disabled); }
+scale.q-slider:disabled > trough > highlight { background-color: var(--q-accent-disabled); }
+
+/* Footer: battery, settings, power */
+.fo-qs__footer {
+  min-height: 48px;
+  padding: 0 4px 0 12px;
+  border-top: 1px solid var(--q-stroke-divider);
+  background-color: var(--q-footer);
+}
+.fo-qs__battery { min-height: 32px; padding: 0 8px; color: var(--q-text-1); }
+.fo-qs__battery:hover { background-color: var(--q-fill-subtle-2); }
+.fo-qs__battery:active { background-color: var(--q-fill-subtle-3); color: var(--q-text-2); }
+
+menubutton.q-power > button {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  min-width: 40px;
+  min-height: 40px;
+  color: var(--q-text-1);
+  outline: none;
+}
+menubutton.q-power > button:hover { background-color: var(--q-fill-subtle-2); }
+menubutton.q-power > button:active,
+menubutton.q-power > button:checked { background-color: var(--q-fill-subtle-3); color: var(--q-text-2); }
+menubutton.q-power > button:focus-visible { outline: 2px solid var(--q-focus); outline-offset: -2px; }
+menubutton.q-power > button > arrow { min-width: 0; min-height: 0; -gtk-icon-size: 0; }
+
+popover.q-menu { background: none; padding: 0; margin: 0; }
+popover.q-menu > contents {
+  padding: 4px;
+  border: 1px solid var(--q-stroke-flyout);
+  border-radius: 8px;
+  background-color: var(--q-surface);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.26);
+  color: var(--q-text-1);
+}
+.q-menu-item { min-height: 36px; min-width: 180px; padding: 0 12px; }
+.q-menu-item:hover { background-color: var(--q-fill-subtle-2); }
+.q-menu-item:active { background-color: var(--q-fill-subtle-3); color: var(--q-text-2); }
+
+/* ---- Sub-pages (Wi-Fi, Bluetooth, sound output) ------------------------ */
+.fo-sub { padding-top: 8px; }
+.fo-sub__header { min-height: 48px; padding: 0 20px 0 12px; }
+.fo-sub__title { margin-left: 4px; }
+.fo-sub__progress { margin: -2px 24px 0; }
+.fo-sub__list { padding: 6px 12px 8px; }
+.fo-sub__footer { padding: 4px 12px 12px; }
+.fo-sub__more, .fo-sub__link { min-height: 32px; padding: 0 12px; color: var(--q-text-1); }
+.fo-sub__link { color: var(--q-accent-fg); padding: 0 6px; }
+.fo-sub__more:hover, .fo-sub__link:hover { background-color: var(--q-fill-subtle-2); }
+.fo-sub__more:active, .fo-sub__link:active { background-color: var(--q-fill-subtle-3); color: var(--q-text-2); }
+.fo-sub__empty { min-height: 140px; padding: 16px 24px; }
+.fo-sub__empty-icon { color: var(--q-text-3); }
+.fo-sub__scanning { padding: 32px 16px; }
+.fo-sub__notice .fo-qs__notice { margin: 0 20px 8px; }
+
+/* toggle switch (Win11 ToggleSwitch, 40x20) */
+switch.q-switch {
+  min-width: 40px;
+  min-height: 18px;
+  padding: 0;
+  border: 1px solid var(--q-stroke-strong);
+  border-radius: 10px;
+  background-color: var(--q-fill-alt-2);
+  box-shadow: none;
+  outline-offset: 2px;
+  transition: background-color 83ms linear, border-color 83ms linear;
+}
+switch.q-switch:hover { background-color: var(--q-fill-alt-3); }
+switch.q-switch > image { color: transparent; -gtk-icon-size: 0; }
+switch.q-switch > slider {
+  min-width: 12px;
+  min-height: 12px;
+  margin: 3px 4px;
+  border: none;
+  border-radius: 7px;
+  background-color: var(--q-text-2);
+  box-shadow: none;
+}
+switch.q-switch:checked { background-color: var(--q-accent); border-color: var(--q-accent); }
+switch.q-switch:checked:hover { background-color: var(--q-accent-2); }
+switch.q-switch:checked > slider { background-color: var(--q-accent-text); }
+switch.q-switch:disabled { background-color: transparent; border-color: var(--q-stroke-strong-disabled); }
+switch.q-switch:disabled > slider { background-color: var(--q-fill-strong-disabled); }
+switch.q-switch:checked:disabled { background-color: var(--q-accent-disabled); border-color: transparent; }
+switch.q-switch:checked:disabled > slider { background-color: var(--q-text-on-accent-disabled); }
+
+/* progress (indeterminate, accent) */
+progressbar.q-progress > trough {
+  min-height: 3px;
+  min-width: 40px;
+  border: none;
+  border-radius: 2px;
+  background-color: transparent;
+  box-shadow: none;
+}
+progressbar.q-progress > trough > progress {
+  min-height: 3px;
+  border: none;
+  border-radius: 2px;
+  background-color: var(--q-accent);
+  box-shadow: none;
+}
+
+/* Network / device rows */
+.fo-net { border-radius: 4px; }
+.fo-net.is-expanded { background-color: var(--q-fill-subtle-2); }
+.fo-net__head { min-height: 52px; padding: 8px 12px; }
+.fo-net__head:hover { background-color: var(--q-fill-subtle-2); }
+.fo-net.is-expanded .fo-net__head:hover { background-color: var(--q-fill-subtle-3); }
+.fo-net__head:active { background-color: var(--q-fill-subtle-3); }
+.fo-net__lock { margin: 0 -3px -2px 0; }
+.fo-net__name { font-size: 14px; }
+.fo-net.is-active .fo-net__name { font-weight: 600; }
+.fo-net__body { padding: 0 10px 12px 44px; }
+.fo-net__actions { min-height: 32px; }
+.fo-net__error { color: var(--q-critical); }
+.fo-net__warn { color: var(--q-text-2); }
+.fo-net__prompt { margin-bottom: -2px; }
+.fo-bt-add__glyph { color: var(--q-accent-fg); }
+.fo-qs__notice.fo-bt-stuck { margin: 2px 0 6px; }
+.fo-sub__link.fo-bt-stuck__reset { min-height: 26px; margin-left: -6px; }
+
+checkbutton.q-check { min-height: 32px; font-size: 12px; color: var(--q-text-1); padding: 0; }
+checkbutton.q-check > check {
+  min-width: 18px;
+  min-height: 18px;
+  margin: 0 8px 0 0;
+  border: 1px solid var(--q-stroke-strong);
+  border-radius: 4px;
+  background-color: var(--q-fill-alt-2);
+  box-shadow: none;
+  color: transparent;
+}
+checkbutton.q-check:hover > check { background-color: var(--q-fill-alt-3); }
+checkbutton.q-check > check:checked {
+  background-color: var(--q-accent);
+  border-color: var(--q-accent);
+  color: var(--q-accent-text);
+}
+
+/* password box (Win11 TextBox) */
+.q-entry {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--q-stroke-control);
+  border-bottom: 1px solid var(--q-stroke-strong);
+  border-radius: 4px;
+  background-color: var(--q-fill-control);
+  color: var(--q-text-1);
+  box-shadow: none;
+  outline: none;
+  caret-color: var(--q-text-1);
+}
+.q-entry:hover { background-color: var(--q-fill-control-2); }
+.q-entry:focus-within {
+  background-color: var(--q-input-active);
+  border-bottom: 2px solid var(--q-accent);
+  padding-bottom: 0;
+}
+.q-entry.is-error { border-bottom: 2px solid var(--q-critical); }
+.q-entry > text > placeholder { color: var(--q-text-2); }
+.q-entry > image { color: var(--q-text-2); }
+
+/* Sound outputs */
+.fo-sink { min-height: 40px; padding: 0 12px 0 0; }
+.fo-sink > box > .fo-sink__ind { margin-right: 1px; border-radius: 2px; background-color: transparent; }
+.fo-sink:hover { background-color: var(--q-fill-subtle-2); }
+.fo-sink:active { background-color: var(--q-fill-subtle-3); }
+.fo-sink.is-selected { background-color: var(--q-fill-subtle-2); }
+.fo-sink.is-selected > box > .fo-sink__ind { background-color: var(--q-accent); }
+
+/* ---- Media card ---------------------------------------------------------- */
+.fo-media { padding: 12px 12px 10px 16px; }
+.fo-media__top { min-height: 24px; color: var(--q-text-2); }
+.fo-media__app { color: var(--q-text-2); }
+.fo-media__text { padding-top: 6px; }
+.fo-media__title { font-size: 14px; }
+/* the picture under the text, over the card's width (quick.rs render_media) */
+.fo-media__art {
+  margin-top: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.fo-media__art.is-empty {
+  background-color: var(--q-fill-control);
+  color: var(--q-text-2);
+  border: 1px solid var(--q-stroke-card);
+  box-shadow: none;
+}
+.fo-media__controls { margin-top: 8px; }
+
+/* ==========================================================================
+   POWER: confirmation dialog on smoke, shutdown screen
+   ========================================================================== */
+.fo-smoke { background-color: var(--q-smoke); padding: 24px; }
+
+.q-dialog {
+  border: 1px solid var(--q-stroke-surface);
+  border-radius: 8px;
+  background-color: var(--q-dialog-bottom);
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.37), 0 2px 21px rgba(0, 0, 0, 0.37);
+  color: var(--q-text-1);
+}
+.q-root.q-light .q-dialog { box-shadow: 0 32px 64px rgba(0, 0, 0, 0.1876), 0 2px 21px rgba(0, 0, 0, 0.1474); }
+.q-dialog__body { padding: 24px; background-color: var(--q-dialog-top); }
+.q-dialog__title {
+  margin-bottom: 12px;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+.q-dialog__content { font-size: 14px; color: var(--q-text-1); }
+.q-dialog__content.q-text-2 { color: var(--q-text-2); }
+.q-dialog__tip { margin-top: 12px; }
+.q-dialog__footer { padding: 24px; border-top: 1px solid var(--q-stroke-card); background-color: var(--q-dialog-bottom); }
+
+.q-dialog.is-entering { animation: q-dialog-in 250ms cubic-bezier(0, 0, 0, 1); }
+@keyframes q-dialog-in {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: none; }
+}
+.q-dialog.is-nudge { animation: q-nudge 250ms cubic-bezier(0.55, 0.55, 0, 1); }
+@keyframes q-nudge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+.fo-shutdown {
+  background-color: #030912;
+  background-image: radial-gradient(ellipse at 50% 42%, #0f2a52 0%, #081833 52%, #030912 100%);
+  color: #ffffff;
+}
+.fo-shutdown:focus-visible { outline: none; }
+.fo-shutdown__label {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: 20px;
+  color: #ffffff;
+}
+.fo-shutdown__note { color: rgba(255, 255, 255, 0.78); font-size: 14px; }
+.fo-dots { color: #ffffff; }
+.fo-shutdown.is-error .fo-dots { opacity: 0.35; }

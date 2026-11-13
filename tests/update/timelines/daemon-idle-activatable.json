@@ -1,0 +1,154 @@
+{
+ "name": "daemon-idle-activatable",
+ "group": "reattach",
+ "title": "packagekitd installed but idle (D-Bus activated)",
+ "description": "The normal state on this machine: packagekitd is not running (it exits after ShutdownTimeout, 300 s) but the bus can start it (its D-Bus service file is installed). NameHasOwner is false and ListActivatableNames lists PackageKit; NO_AUTO_START calls get NameHasNoOwner (design 4.7: \"the daemon is gone\"); the first call without the flag starts the daemon through the private bus's service directory, and the call is then answered. After SetDaemon(false) (the idle exit) the next call starts a new daemon with a new unique name. A service that treats \"not running\" as \"not installed\" fails here; daemon-absent is the uninstalled case.",
+ "states": [
+  "H01",
+  "H02",
+  "H03"
+ ],
+ "daemon": {
+  "present": false,
+  "activatable": true
+ },
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\n@@end\n"
+  }
+ },
+ "packages": {
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit"
+  },
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "JavaScript engine library from WebKitGTK",
+   "size": 31653888,
+   "row": "webkit"
+  }
+ },
+ "updates": [
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security"
+ ],
+ "client": [
+  {
+   "driver": "NameHasOwner",
+   "args": [
+    "org.freedesktop.PackageKit"
+   ],
+   "expect": {
+    "value": false
+   }
+  },
+  {
+   "driver": "ListActivatableNames",
+   "expect": {
+    "contains": "org.freedesktop.PackageKit"
+   }
+  },
+  {
+   "manager": "GetTransactionList",
+   "flags": "no-auto-start",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.NameHasNoOwner"
+   }
+  },
+  {
+   "get": [
+    "manager",
+    "BackendName"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.NameHasNoOwner"
+   }
+  },
+  {
+   "state": {
+    "daemon": false,
+    "activations": 0
+   }
+  },
+  {
+   "getAll": "manager",
+   "expect": {
+    "props": {
+     "BackendName": "apt",
+     "NetworkState": "online"
+    }
+   }
+  },
+  {
+   "state": {
+    "daemon": true,
+    "activations": 1
+   },
+   "save": "firstDaemon"
+  },
+  {
+   "driver": "NameHasOwner",
+   "args": [
+    "org.freedesktop.PackageKit"
+   ],
+   "expect": {
+    "value": true
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 2
+   }
+  },
+  {
+   "control": "SetDaemon",
+   "args": [
+    false
+   ]
+  },
+  {
+   "driver": "NameHasOwner",
+   "args": [
+    "org.freedesktop.PackageKit"
+   ],
+   "expect": {
+    "value": false
+   }
+  },
+  {
+   "driver": "ListActivatableNames",
+   "expect": {
+    "contains": "org.freedesktop.PackageKit"
+   }
+  },
+  {
+   "manager": "GetTransactionList",
+   "expect": {
+    "len": 0
+   }
+  },
+  {
+   "state": {
+    "daemon": true,
+    "activations": 2
+   },
+   "expect": {
+    "differsFrom": "firstDaemon"
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 5
+ }
+}

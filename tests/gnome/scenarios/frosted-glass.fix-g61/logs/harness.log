@@ -1,0 +1,33 @@
+18:01:08 GE0c run lang=nl switch=False seed=defaults MemAvailable=4112944 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/fix-g60-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
+18:02:36 private install: exit 0 in 72.0 s, 87858 mutated paths, 0 outside the run dir, ok=True
+18:02:39 GStreamer registry warmed in 2.6 s (['gst-inspect-1.0 version 1.28.2'])
+18:02:42 GNOME Shell 50.1 up (mode user, unsafe True)
+18:02:47 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
+18:02:47   check PASS: A: one taskbar blur for the 48 px strip
+18:02:48   check PASS: A: the panel page has the taskbar capability
+18:02:48   check PASS: A: the taskbar tint is 70 % (more see-through than the 90 % before)
+18:02:51   check PASS: B: the focused Settings window has one blur
+18:02:51   check PASS: B: the unblurred rim is 3 px (corner on the 8 px arc)
+18:02:52   check PASS: B: the window background is 90 %
+18:02:54   check PASS: C: open Start has one blur
+18:02:54   check PASS: C: Settings lost its blur with the focus
+18:02:54   check PASS: C: one window blur in all (Start)
+18:02:54   check PASS: C: the Start page has the Start capability
+18:02:54   check PASS: C: Start paints its tint at 90 %
+18:02:57   check PASS: D: closing Start releases its blur
+18:02:57   check PASS: D: Settings has its blur again
+18:02:58   check PASS: D: the hidden Start page keeps its capability
+18:02:58   check PASS: D2: reopened Start has its blur again
+18:02:58   check PASS: D2: the reopened Start page has the Start capability
+18:03:00   check PASS: F: the blur stays during the whole drag
+18:03:00   check PASS: F: no blur entry was rebuilt during the drag
+18:03:00   check PASS: F: the backdrop follows the drawn window
+18:03:01   check PASS: F: after the drag the blur is on the frame again
+18:03:01   check PASS: E: the window blur costs gnome-shell less than 64 MiB PSS
+18:03:01   check PASS: every check passed
+18:03:01 shutdown app: signalled own descendants 1389:win11-app, 1417:WebKitNetworkPr, 1418:WebKitWebProces
+18:03:01 shutdown shell clients: signalled own descendants 60:ibus-daemon, 76:glycin-svg, 169:glycin-image-rs, 425:win11-desktop, 426:win11-panel, 1375:glycin-image-rs, 583:WebKitNetworkPr, 585:WebKitWebProces, 597:glycin-svg, 660:win11-start, 828:WebKitNetworkPr, 829:WebKitWebProces, 837:glycin-svg, 582:WebKitNetworkPr, 584:WebKitWebProces, 599:glycin-svg, 663:glycin-image-rs, 226:ibus-memconf, 228:ibus-extension-, 437:ibus-engine-sim
+18:03:02 shutdown gnome-shell: signalled own descendants 39:gnome-shell
+18:03:02 shutdown system bus: signalled own descendants 38:dbus-daemon
+18:03:02 inner sweep: signalled own descendants 1385:glycin-image-rs
+18:03:02 inner done: 0 surfaces, 0 failed []

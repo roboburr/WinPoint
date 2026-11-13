@@ -1,0 +1,112 @@
+{
+ "name": "removals-in-simulate",
+ "group": "install",
+ "title": "The simulate removes and downgrades",
+ "description": "The simulate lists the updates (info 11) plus info 13 (removing), 28 (remove) and 30 (downgrade): confirm-worthy, so the service asks first; the reference client accepts and installs.",
+ "states": [
+  "H21"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
+  }
+ },
+ "packages": {
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit"
+  },
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "JavaScript engine library from WebKitGTK",
+   "size": 31653888,
+   "row": "webkit"
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+ ],
+ "methods": {
+  "UpdatePackages:simulate": [
+   {
+    "emitSimulate": {
+     "extra": [
+      [
+       "removing",
+       "libwebkit2gtk-4.0-37;2.48.3-1ubuntu1;amd64;installed",
+       "Web content engine library for GTK (old ABI)"
+      ],
+      [
+       "remove",
+       "libjavascriptcoregtk-4.0-18;2.48.3-1ubuntu1;amd64;installed",
+       "JavaScript engine library (old ABI)"
+      ],
+      [
+       "downgrade",
+       "tzdata-legacy;2026a-0ubuntu0.26.04;all;ubuntu-resolute-updates",
+       "time zone data (legacy names)"
+      ]
+     ]
+    }
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 3
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "infos": [
+     "updating",
+     "updating",
+     "updating",
+     "removing",
+     "remove",
+     "downgrade"
+    ]
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 9
+ }
+}

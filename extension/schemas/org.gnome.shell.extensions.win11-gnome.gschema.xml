@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.win11-gnome" path="/org/gnome/shell/extensions/win11-gnome/">
+    <key name="task-manager" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;Delete']</default>
+      <summary>Open the standalone Win11 Task Manager</summary>
+    </key>
+    <key name="task-view" type="as">
+      <default>['&lt;Alt&gt;Tab']</default>
+      <summary>Open the original Win11 task view</summary>
+    </key>
+    <key name="task-view-restore" type="s">
+      <default>''</default>
+      <summary>Original window-switcher shortcuts while task view is active</summary>
+    </key>
+    <key name="logout-restore" type="s">
+      <default>''</default>
+      <summary>Previous logout shortcut while the Win11 shortcut is active</summary>
+      <description>Internal recovery state, restored when this extension is disabled.</description>
+    </key>
+  </schema>
+</schemalist>

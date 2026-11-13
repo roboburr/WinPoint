@@ -1,0 +1,70 @@
+# tests/i18n/BASELINE-CHANGES.rust-r2d: R2-D's changes to frozen Rust host literals (format: the header of
+# tests/i18n/BASELINE-CHANGES.rust). None of these lines changes what a Dutch user sees: R2-D makes no Dutch text
+# change (no D-G1a plural applies to its texts, no D-G2 text is R2-D's).
+#
+# launcher-names dedupe (plan-critique H): apps/catalog-data.json kept a copy of Verkenner's name table. At 3b898e6
+# its "nlNames" equals files/launcher-names.json "NL_NAMES" (the same 57 ids, values and order) and its "twins"
+# equals "SAME_NAME_AS_OURS" (the same {nl, en} pair). apps/catalog.rs now reads that file (include_str!, unchanged,
+# R2-C's), so the copy is gone: the Dutch names are byte-identical.
+host/src/apps/catalog-data.json	118	6067a9a877375a28	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Bestanden', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	119	bb52a5469dbae4db	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Teksteditor', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	120	bb52a5469dbae4db	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Teksteditor', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	121	bb73d358ca045a8e	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Rekenmachine', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	122	0fdf485f5bfd3762	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Agenda', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	123	210fa21c20b2c914	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Klokken', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	124	03494b0d1f803522	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Camera', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	125	58684b5ad49415d9	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Afbeeldingenviewer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	160	58684b5ad49415d9	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Afbeeldingenviewer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	161	58684b5ad49415d9	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Afbeeldingenviewer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	126	6bb36114d66f2f84	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Documentviewer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	127	6bb36114d66f2f84	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Documentviewer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	128	e0926fdac700b094	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Terminal', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	129	e0926fdac700b094	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Terminal', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	130	29a40861bafe31e7	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Console', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	131	a211371566125c07	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Logboeken', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	132	50a46dfd5ba5879d	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Systeemmonitor', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	133	50a46dfd5ba5879d	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Systeemmonitor', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	134	a434c86cec947daa	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Schijfgebruik', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	135	9c80ae27c2787841	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Tekens', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	136	44037604e1501d49	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Lettertypen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	137	b96f4874e738c278	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Weer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	138	8d3962f241c4f354	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Kaarten', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	139	ae7f71bca96e0c28	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Contacten', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	140	1ae913b3c92feaab	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Archiefbeheer', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	141	d50d3fd9c9af761d	files/launcher-names.json NL_NAMES	dedupe: nlNames value "Video's", now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	142	d50d3fd9c9af761d	files/launcher-names.json NL_NAMES	dedupe: nlNames value "Video's", now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	143	01fe63f03ffda490	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Audiospeler', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	144	19198073fad1a0c2	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Muziek', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	145	6067e14918a78645	files/launcher-names.json NL_NAMES	dedupe: nlNames value "Foto's", now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	146	30a36bcc8174ad0d	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Schermafdruk', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	147	c5b8f17fe777b311	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Wachtwoorden en sleutels', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	148	02c1aba76f1f8916	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Uitbreidingen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	149	fe759947874e4123	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'GNOME-instellingen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	150	fe759947874e4123	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'GNOME-instellingen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	151	9b3289a385a5301e	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Software', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	152	84ea217ae25bc0a9	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Rondleiding', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	153	2a1861170eb7fb79	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Verbindingen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	154	5509dc678c234105	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Boxes', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	155	3dd141115c260d58	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Documentscanner', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	156	3dd141115c260d58	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Documentscanner', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	157	6534898de5d8e1e9	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Hulp', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	158	6534898de5d8e1e9	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Hulp', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	159	16e904393330b18b	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Energiestatistieken', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	162	c8b222712779cf9b	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Taalondersteuning', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	163	e7dcc7cc72a00887	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Software en updates', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	164	d0207cf3dca8ecdb	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Software-updater', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	165	99ebfb93d0fa5be8	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Firmware-updater', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	166	aeb79a643f51cb28	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'App Center', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	167	2975104784a401e3	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Web', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	168	f69a9cd95a8325b5	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Geary (e-mail)', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	169	3ca5a7e63633a9a4	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Netwerkverbindingen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	170	599498733e2101c2	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Schijfkopie koppelen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	171	067edb4e226ea01c	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Delen', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	172	170322a32f3c35b2	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Info', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	173	c71ba099f4405e40	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Vim', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	174	800b060696b8f27c	files/launcher-names.json NL_NAMES	dedupe: nlNames value 'Htop', now read from the identical files/launcher-names.json NL_NAMES; no visible change
+host/src/apps/catalog-data.json	175	18780ad1387155f5	files/launcher-names.json SAME_NAME_AS_OURS	dedupe: the twins nl of org.gnome.DiskUtility.desktop, now read from files/launcher-names.json SAME_NAME_AS_OURS (identical {nl, en}); no visible change
+host/src/apps/catalog.rs	62	fec86c29a99915a2	-	dedupe: the JSON key 'nlNames' of the removed copy; catalog.rs reads NL_NAMES / SAME_NAME_AS_OURS of files/launcher-names.json instead
+host/src/apps/catalog.rs	70	97590a84e25762db	-	dedupe: the JSON key 'twins' of the removed copy; catalog.rs reads NL_NAMES / SAME_NAME_AS_OURS of files/launcher-names.json instead
+host/src/apps/defaults.rs	74	dbd3a49d0d906b4e	apps.explorerName	technical: the inline pair's language test (lang == "en") is gone; the pair is the row apps.explorerName (nl and en mapped), same output in both languages
+host/src/apps/pertype.rs	14	dbd3a49d0d906b4e	apps.schemeLinks	technical: the inline pair's language test (lang == "en") is gone; the pair is the row apps.schemeLinks (nl and en mapped), same output in both languages

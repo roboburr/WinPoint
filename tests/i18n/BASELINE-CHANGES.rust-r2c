@@ -1,0 +1,16 @@
+# tests/i18n/BASELINE-CHANGES.rust-r2c: R2-C's lines for tests/i18n/BASELINE-CHANGES.rust (format: its header;
+# round2-gate.md §5). The coordinator merges this file.
+#
+# R2-C (round 2, files/**)
+# D-G1a: the singular for exactly one item (the only Dutch text change of R2-C; .other keeps 3b898e6's "item(s)")
+key:files.emptyTrashFailed.one	-	-	{n} item(s) konden niet worden verwijderd.	D-G1a plural fix: files.emptyTrash with exactly 1 item that could not be deleted now says "1 item kon niet worden verwijderd." (H's nl); n != 1 is unchanged
+# Technical literals removed with the inline {nl, en} pairs they selected (no text change: both halves are catalogue rows now)
+host/src/files/dry.rs	47	1843653496800edf	-	technical: the language test ctx.language == "nl" of the new-item name pair; the names are files.new.* (both halves mapped)
+host/src/files/dry.rs	50	2e1cfa82b035c26c	-	technical: one of the two "empty" match arms (nl/en) of that pair; one arm (_, "empty") selects files.new.empty now
+host/src/files/mutate.rs	17	1843653496800edf	-	technical: the language test ctx.language == "nl" of the new-item name pair (files.new.*)
+host/src/files/mutate.rs	28	2e1cfa82b035c26c	-	technical: one of the two "empty" match arms (nl/en) of that pair; one arm (_, "empty") selects files.new.empty now
+host/src/files/mutate.rs	78	1843653496800edf	-	technical: the language test of the copy word pair kopie/Copy (files.copyWord)
+host/src/files/places.rs	2	1843653496800edf	-	technical: the language test of the place name pairs (files.place.*)
+host/src/files/properties.rs	53	1843653496800edf	-	technical: the language test of the pair Alle van het type /All of type  (files.allOfTypePrefix)
+host/src/files/properties.rs	56	1843653496800edf	-	technical: the language test of the pair Meerdere typen/Multiple types (files.multipleTypes)
+host/src/files/read.rs	118	dbd3a49d0d906b4e	-	technical: the language test language == "en" of the pair This PC/Deze pc (files.thisPc)

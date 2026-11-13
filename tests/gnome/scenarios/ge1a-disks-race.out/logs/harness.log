@@ -1,0 +1,18 @@
+16:32:15 GE0c run lang=nl switch=False seed=defaults MemAvailable=8218928 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/3b898e6-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/ge1a-disks-race.py
+16:33:38 private install: exit 0 in 68.1 s, 87844 mutated paths, 0 outside the run dir, ok=True
+16:33:41 GStreamer registry warmed in 2.7 s (['gst-inspect-1.0 version 1.28.2'])
+16:33:44 GNOME Shell 50.1 up (mode user, unsafe True)
+16:33:48 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/ge1a-disks-race.py
+16:33:48   check PASS: session starts in Dutch
+16:33:50   check PASS: Schijven shows the host text in Dutch
+16:33:50   check PASS: Schijven reaches English after the evidence step
+16:33:52   check PASS: Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch
+16:33:54   check PASS: Schijven shows the host text in en within 3.0 s although disks.list ran just before the switch
+16:33:56   check PASS: Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch
+16:33:57   check PASS: every check passed
+16:33:58 shutdown app: signalled own descendants 1371:win11-app, 1394:WebKitNetworkPr, 1395:WebKitWebProces, 1402:glycin-svg
+16:33:58 shutdown shell clients: signalled own descendants 66:ibus-daemon, 78:glycin-svg, 121:glycin-image-rs, 429:win11-desktop, 430:win11-panel, 1616:glycin-image-rs, 587:WebKitNetworkPr, 588:WebKitWebProces, 602:glycin-svg, 668:win11-start, 830:WebKitNetworkPr, 831:WebKitWebProces, 838:glycin-svg, 582:WebKitNetworkPr, 583:WebKitWebProces, 600:glycin-svg, 647:glycin-image-rs, 231:ibus-memconf, 232:ibus-extension-, 441:ibus-engine-sim
+16:33:58 shutdown gnome-shell: signalled own descendants 41:gnome-shell
+16:33:58 shutdown system bus: signalled own descendants 40:dbus-daemon
+16:33:58 inner sweep: signalled own descendants 1627:glycin-image-rs
+16:33:58 inner done: 0 surfaces, 0 failed []

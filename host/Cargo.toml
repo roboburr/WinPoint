@@ -1,0 +1,60 @@
+[package]
+name = "win11-host"
+version = "0.8.0"
+edition = "2024"
+autobins = false
+license = "MIT"
+
+[dependencies]
+gtk = "0.18"
+gio = "0.18"
+glib = "0.18"
+wry = { version = "0.55", default-features = false, features = ["os-webview", "transparent", "devtools"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+url = "2"
+ureq = { version = "2.12", default-features = false, features = ["json"] }
+tiny_http = "0.12"
+libc = "0.2"
+roxmltree = "=0.19.0"
+webkit2gtk = "2.0"
+javascriptcore = { package = "javascriptcore-rs", version = "1.1" }
+
+[[bin]]
+name = "win11-explorer"
+path = "src/bin/explorer.rs"
+
+[[bin]]
+name = "win11-panel"
+path = "src/bin/panel.rs"
+
+[[bin]]
+name = "win11-app"
+path = "src/bin/app.rs"
+
+[[bin]]
+name = "win11-launch"
+path = "src/bin/launch.rs"
+
+[[bin]]
+name = "win11-index-worker"
+path = "src/bin/index_worker.rs"
+
+[[bin]]
+name = "win11-image-worker"
+path = "src/bin/image_worker.rs"
+
+[[bin]]
+name = "win11-default-apps"
+path = "src/bin/defaultapps.rs"
+
+[[bin]]
+name = "win11-file-portal"
+path = "src/bin/file_portal.rs"
+
+[[bin]]
+name = "win11-installer"
+path = "src/bin/installer.rs"
+
+[[bin]]
+name = "win11-software-worker"
+path = "src/bin/software_worker.rs"

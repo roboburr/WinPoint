@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!-- Win11 voor GNOME: Instellingen › Update en herstel › Nieuwe Ubuntu-versies (notes/claude/windows-update-gnome.md
+     §6.3, §7). Installed 0644 in /usr/share/polkit-1/actions/ by scripts/install-system.py, next to the helper
+     /usr/libexec/win11-gnome/release-upgrades-helper. GNOME Shell's password dialog shows this message in the
+     system language (D-G11). -->
+<policyconfig>
+  <vendor>Win11 Shell</vendor>
+  <action id="io.github.win11shell.gnome.release-upgrades">
+    <description>Choose which Ubuntu versions are offered</description>
+    <description xml:lang="nl">Kiezen welke Ubuntu-versies worden aangeboden</description>
+    <message>Win11 Shell wants to set whether you get only LTS versions or every new version of Ubuntu.</message>
+    <message xml:lang="nl">Win11 Shell wil instellen of je alleen LTS-versies of elke nieuwe versie van Ubuntu krijgt.</message>
+    <icon_name>system-software-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/win11-gnome/release-upgrades-helper</annotate>
+  </action>
+</policyconfig>

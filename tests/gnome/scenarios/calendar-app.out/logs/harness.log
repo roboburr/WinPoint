@@ -1,0 +1,24 @@
+03:56:54 GE0c run lang=nl switch=False seed=defaults MemAvailable=5572724 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py
+03:58:18 private install: exit 0 in 69.9 s, 87907 mutated paths, 0 outside the run dir, ok=True
+03:58:21 GStreamer registry warmed in 2.5 s (['gst-inspect-1.0 version 1.28.2'])
+03:58:24 GNOME Shell 50.1 up (mode user, unsafe True)
+03:58:29 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py
+03:58:29   check PASS: P: win11-calendar is installed in the private prefix
+03:58:29   check PASS: P: the Calendar desktop entry handles win11-calendar: and starts the private binary
+03:58:29   check PASS: P: GNOME knows io.github.win11shell.Calendar.desktop
+03:58:29   check PASS: P: win11-calendar: opens the Calendar app (the scheme default)
+03:58:31   check PASS: A: win11-calendar --date opens one Calendar window
+03:58:31   check PASS: A: the window belongs to the launched process
+03:58:31   check PASS: A: the launched window has the focus
+03:58:35   check PASS: B: still one Calendar window (single instance)
+03:58:35   check PASS: B: the same window and process as A
+03:58:35   check PASS: F: the extension blurs the focused Calendar window (kind calendar registered)
+03:58:35   check PASS: C: the --view week launch is handed over and exits
+03:58:37   check PASS: C: still the one Calendar window
+03:58:38   check PASS: D: the --view day --new launch is handed over and exits
+03:58:41   check PASS: every check passed
+03:58:41 shutdown shell clients: signalled own descendants 65:ibus-daemon, 85:glycin-svg, 126:glycin-image-rs, 440:win11-desktop, 441:win11-panel, 1407:glycin-image-rs, 595:WebKitNetworkPr, 596:WebKitWebProces, 610:glycin-svg, 673:win11-start, 839:WebKitNetworkPr, 840:WebKitWebProces, 855:glycin-svg, 590:WebKitNetworkPr, 592:WebKitWebProces, 609:glycin-svg, 667:glycin-image-rs, 237:ibus-memconf, 239:ibus-extension-, 249:ibus-engine-sim
+03:58:41 shutdown gnome-shell: signalled own descendants 46:gnome-shell
+03:58:41 shutdown system bus: signalled own descendants 45:dbus-daemon
+03:58:41 inner sweep: signalled own descendants 1421:glycin-image-rs
+03:58:41 inner done: 0 surfaces, 0 failed []

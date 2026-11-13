@@ -1,0 +1,132 @@
+{
+  "version": "0.7.0",
+  "checks": [
+    {
+      "case": "apps.launch-explorer-focuses-new-window-without-ready-notification",
+      "passed": true,
+      "pid": 1175661,
+      "evidence": [
+        {
+          "event": "attention",
+          "id": "io.github.win11shell.Explorer",
+          "pid": 1175661,
+          "at": 1793566342558
+        },
+        {
+          "event": "focus",
+          "pid": 1175661,
+          "at": 1793566342561
+        }
+      ],
+      "banners": []
+    },
+    {
+      "case": "apps.launch-settings-focuses-new-window-without-ready-notification",
+      "passed": true,
+      "pid": 1176050,
+      "evidence": [
+        {
+          "event": "focus",
+          "at": 1793566343147
+        },
+        {
+          "event": "focus",
+          "pid": 1176050,
+          "at": 1793566343506
+        }
+      ],
+      "banners": []
+    },
+    {
+      "case": "apps.launch-taskmgr-focuses-new-window-without-ready-notification",
+      "passed": true,
+      "pid": 1176269,
+      "evidence": [
+        {
+          "event": "focus",
+          "at": 1793566344096
+        },
+        {
+          "event": "focus",
+          "pid": 1176269,
+          "at": 1793566344615
+        }
+      ],
+      "banners": []
+    },
+    {
+      "case": "apps.launch-alles-focuses-new-window-without-ready-notification",
+      "passed": true,
+      "pid": 1176454,
+      "evidence": [
+        {
+          "event": "focus",
+          "at": 1793566345191
+        },
+        {
+          "event": "focus",
+          "pid": 1176454,
+          "at": 1793566345706
+        }
+      ],
+      "banners": []
+    },
+    {
+      "case": "apps.launch-disks-focuses-new-window-without-ready-notification",
+      "passed": true,
+      "pid": 1176655,
+      "evidence": [
+        {
+          "event": "focus",
+          "at": 1793566346300
+        },
+        {
+          "event": "focus",
+          "pid": 1176655,
+          "at": 1793566346772
+        }
+      ],
+      "banners": []
+    },
+    {
+      "case": "shell.openApp-direct-launch-also-focuses-without-ready-notification",
+      "passed": true
+    },
+    {
+      "case": "ordinary-installed-GIO-desktop-app-keeps-fresh-token-and-focuses-without-ready-notification",
+      "passed": true
+    },
+    {
+      "case": "already-running-DBusActivatable-GTK-app-receives-platform-token-and-focuses-without-banner",
+      "passed": true,
+      "platformDataKeys": [
+        "activation-token",
+        "desktop-startup-id"
+      ]
+    },
+    {
+      "case": "activation-token-request-rejects-unknown-apps-and-uninstalled-paths",
+      "passed": true
+    },
+    {
+      "case": "each-user-launch-receives-distinct-compositor-startup-token",
+      "passed": true
+    }
+  ],
+  "binaries": {
+    "win11-app": "d5d409a37e3b5a62745c18dfcb304233555f68cd0376662f08027d8854076143",
+    "win11-explorer": "c048383665bf6b5b8624dc6e06772f747e7fb853b2de748c30dbfdd0a468ea4d",
+    "win11-panel": "dd40da2fdbf2c1c6e4f96f296dbfd5cba81c6608b517ddbc8cb473ef4880bb71",
+    "win11-start": "d688576e22d9e213b8cd4dbc09db728ec7e78109510bdbe05cc00d93afc79b17",
+    "win11-desktop": "7afbd01dd50aadf96aeba3e0f81e68958d07be69d89e03f8cead797339463b07"
+  },
+  "panelBridgeSha256": "46021396b120eb854d003ea540d853ed4d46038a47b215b4ab99b733c1fe56fd",
+  "environment": "Private HOME/XDG/session D-Bus, GNOME50.1 Wayland,1440x900 GTK3/WebKit",
+  "measuredBannerCondition": "No new app-ready notification remained and Main.messageTray._bannerBin notify::opacity never reported opacity > 0 for any tested app launch.",
+  "attentionSignalNote": "Some GTK3 clients emit a transient window-demands-attention signal on mapping; fresh compositor activation focuses within a few milliseconds and removes the source before the banner becomes visible.",
+  "knownLimitations": [
+    "Private isolated session, not the live user desktop.",
+    "Normal foreground launches from a painted Explorer source were tested. Concurrent launches and a user changing focus during slow startup were not exercised.",
+    "GNOME notification preferences and global focus policy are unchanged."
+  ]
+}

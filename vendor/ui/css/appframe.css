@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Win11 Shell — app window frame (appframe.js). Owned by ui-core.
+   ========================================================================== */
+
+.af-window {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+/* A real (native) window gets the Win11 8px corners + hairline, square when it touches the
+   screen edges (maximized / fullscreen / tiled — appframe.js sets data-square). */
+html[data-native-window] .af-window:not([data-square="true"]) {
+  border-radius: var(--radius-window);
+  box-shadow: inset 0 0 0 1px var(--stroke-window);
+}
+html[data-native-window][data-surface="app"],
+html[data-native-window][data-surface="app"] body { background: transparent; }
+
+/* ---- Title bar ------------------------------------------------------------ */
+.af-titlebar {
+  position: relative;
+  z-index: 40;
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: var(--titlebar-height);
+  min-width: 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.af-titlebar.is-tall { height: var(--titlebar-height-tall); }
+.af-titlebar__left { flex: 0 1 auto; display: flex; align-items: center; min-width: 0; height: 100%; }
+.af-back { margin-left: 4px; }
+.af-back .fl-icon { --icon-stroke: 1.4; }
+.af-appicon { flex: none; display: grid; place-items: center; width: 16px; height: 16px; margin-left: 16px; color: var(--accent-fg-3); }
+.af-titlebar.has-back .af-appicon { margin-left: 8px; }
+.af-appicon[hidden] + .af-title { margin-left: 16px; }
+.af-titlebar.has-back .af-appicon[hidden] + .af-title { margin-left: 8px; }
+.af-title {
+  margin-left: 12px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--text-1);
+  transition: color var(--dur-faster) linear;
+}
+.af-titlebar__center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 100%;
+  padding: 0 16px;
+}
+.af-titlebar__center > * { width: min(100%, 520px); }
+.af-captions {
+  flex: none;
+  align-self: flex-start;
+  display: flex;
+  height: 32px;
+  margin-left: auto;
+}
+.af-cap {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-1);
+  transition: background-color var(--dur-faster) linear, color var(--dur-faster) linear;
+}
+.af-cap:hover { background: var(--fill-subtle-2); }
+.af-cap:active { background: var(--fill-subtle-3); color: var(--text-2); }
+.af-cap--close:hover { background: var(--close-hover); color: #fff; }
+.af-cap--close:active { background: var(--close-pressed); color: rgba(255, 255, 255, 0.7); }
+.af-cap:focus-visible { outline-offset: -2px; box-shadow: inset 0 0 0 3px var(--focus-inner); }
+.af-glyph { display: block; shape-rendering: geometricPrecision; }
+
+/* Inactive window: dim title, icon and caption glyphs (like Windows). */
+.af-window[data-active="false"] .af-title { color: var(--text-3); }
+.af-window[data-active="false"] .af-appicon { opacity: 0.5; }
+.af-window[data-active="false"] .af-cap:not(:hover) { color: var(--text-disabled); }
+
+/* ---- Body ---------------------------------------------------------------- */
+.af-body {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+.af-body > .fl-nav { height: 100%; }
+.af-content {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  outline: none;
+}
+.af-content:focus-visible { outline: none; box-shadow: none; }
+.af-content.is-layer {
+  border-top: 1px solid var(--stroke-card);
+  border-left: 1px solid var(--stroke-card);
+  border-top-left-radius: var(--radius-card);
+  background: var(--bg-layer);
+}
+.af-body:not(:has(> .fl-nav)) > .af-content.is-layer { border-left: 0; border-top-left-radius: 0; }
+
+/* Standard page padding for app pages (Win11 Settings style) */
+.af-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2px 40px 40px;
+}
+.af-page__title { margin: 0 0 24px; }
+@media (max-width: 640px) {
+  .af-page { padding: 2px 16px 24px; }
+}

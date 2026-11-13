@@ -1,0 +1,25 @@
+19:54:28 GE0c run lang=nl switch=False seed=defaults MemAvailable=4209728 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r2-d/t/g/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r2-d/tests/build/r2d-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r2-d/tests/gnome/scenarios/r2d-picker.py
+19:56:10 private install: exit 0 in 84.2 s, 87844 mutated paths, 0 outside the run dir, ok=True
+19:56:14 GStreamer registry warmed in 3.8 s (['gst-inspect-1.0 version 1.28.2'])
+19:56:17 GNOME Shell 50.1 up (mode user, unsafe True)
+19:56:22 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r2-d/tests/gnome/scenarios/r2d-picker.py
+19:56:22   check PASS: session starts in Dutch
+19:56:30   check PASS: picker 1 (MODAL_DIALOG): Meta WM class is io.github.win11shell.FilePicker (o2)
+19:56:30   check PASS: picker 1: transient for the Settings window
+19:56:30   check PASS: picker 1: GNOME groups it under Settings (WindowTracker, via the transient parent)
+19:56:30   check PASS: picker 2 (NORMAL): Meta WM class is io.github.win11shell.FilePicker (o2)
+19:56:30   check PASS: picker 2: transient for the Settings window
+19:56:30   check PASS: picker 2: GNOME groups it under Settings (WindowTracker, via the transient parent)
+19:56:30   check PASS: two pickers recorded
+19:56:30   check PASS: taskbar: Settings has one running button before the pickers
+19:56:30   check PASS: taskbar: picker 1 open: no button of its own (running buttons unchanged)
+19:56:30   check FAIL: taskbar: picker 2 open: no button of its own (running buttons unchanged)
+19:56:30   check FAIL: taskbar: the non-modal picker is grouped on the Settings button (2 windows)
+19:56:30   check PASS: both shell.pickFile calls settle as cancelled (path null)
+19:56:31   check FAIL: every check passed
+19:56:31   scenario FAILED: AssertionError: required check failed: every check passed
+19:56:31 shutdown shell clients: signalled own descendants 61:ibus-daemon, 80:glycin-svg, 389:win11-desktop, 390:win11-panel, 515:glycin-image-rs, 1671:glycin-image-rs, 585:WebKitNetworkPr, 587:WebKitWebProces, 611:glycin-svg, 665:win11-start, 814:WebKitNetworkPr, 815:WebKitWebProces, 822:glycin-svg, 586:WebKitNetworkPr, 588:WebKitWebProces, 612:glycin-svg, 664:glycin-image-rs, 191:ibus-memconf, 192:ibus-extension-, 391:ibus-engine-sim
+19:56:32 shutdown gnome-shell: signalled own descendants 41:gnome-shell
+19:56:32 shutdown system bus: signalled own descendants 40:dbus-daemon
+19:56:32 inner sweep: signalled own descendants 1681:glycin-image-rs
+19:56:32 inner done: 0 surfaces, 1 failed ['scenario']

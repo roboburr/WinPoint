@@ -1,0 +1,96 @@
+{
+ "name": "daemon-absent",
+ "group": "reattach",
+ "title": "packagekitd is not running",
+ "description": "PackageKit is not installed: no owner and not activatable (the service directory of the private bus is empty). With NO_AUTO_START the bus answers NameHasNoOwner, without it ServiceUnknown; neither reaches the fake. SetDaemon(true) brings it back, SetDaemon(false) takes it away again. The normal idle state (installed, not running) is daemon-idle-activatable.",
+ "states": [
+  "H13"
+ ],
+ "daemon": {
+  "present": false,
+  "activatable": false
+ },
+ "packages": {},
+ "updates": [],
+ "client": [
+  {
+   "driver": "NameHasOwner",
+   "args": [
+    "org.freedesktop.PackageKit"
+   ],
+   "expect": {
+    "value": false
+   }
+  },
+  {
+   "driver": "ListActivatableNames",
+   "expect": {
+    "lacks": "org.freedesktop.PackageKit"
+   }
+  },
+  {
+   "manager": "GetTransactionList",
+   "flags": "no-auto-start",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.NameHasNoOwner"
+   }
+  },
+  {
+   "manager": "GetTransactionList",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.ServiceUnknown"
+   }
+  },
+  {
+   "get": [
+    "manager",
+    "BackendName"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.NameHasNoOwner"
+   }
+  },
+  {
+   "control": "SetDaemon",
+   "args": [
+    true
+   ]
+  },
+  {
+   "manager": "GetTransactionList",
+   "flags": "no-auto-start",
+   "expect": {
+    "len": 0
+   }
+  },
+  {
+   "get": [
+    "manager",
+    "BackendName"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "BackendName": "apt"
+    }
+   }
+  },
+  {
+   "control": "SetDaemon",
+   "args": [
+    false
+   ]
+  },
+  {
+   "manager": "GetTransactionList",
+   "flags": "no-auto-start",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.NameHasNoOwner"
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 2
+ }
+}

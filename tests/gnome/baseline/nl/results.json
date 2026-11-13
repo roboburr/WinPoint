@@ -1,0 +1,2912 @@
+{
+ "harness": "GE0c tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": true,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-05 14:17:22",
+ "seconds": 154.2,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "memory": {
+  "samples": 118,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 1114269,
+   "rss_kb": 2653124,
+   "processes": 33,
+   "t": 30.6
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 1027473,
+   "rss_kb": 2530220
+  },
+  "minMemAvailableKb": 3940948,
+  "abortedForMemory": false,
+  "peakByName": {
+   "WebKitWebProces": {
+    "count": 5,
+    "pss_kb": 371314,
+    "rss_kb": 948700
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 264591,
+    "rss_kb": 378612
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 86372,
+    "rss_kb": 118872
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 71778,
+    "rss_kb": 197284
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 67230,
+    "rss_kb": 194052
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 64216,
+    "rss_kb": 190072
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 62798,
+    "rss_kb": 189324
+   },
+   "WebKitNetworkPr": {
+    "count": 5,
+    "pss_kb": 56664,
+    "rss_kb": 239480
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 27285,
+    "rss_kb": 80236
+   },
+   "glycin-image-rs": {
+    "count": 4,
+    "pss_kb": 18495,
+    "rss_kb": 39704
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15497,
+    "rss_kb": 34568
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4343,
+    "rss_kb": 11808
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1648,
+    "rss_kb": 10580
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 842,
+    "rss_kb": 7968
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 772,
+    "rss_kb": 7832
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 239,
+    "rss_kb": 1460
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 185,
+    "rss_kb": 2572
+   }
+  }
+ },
+ "install": {
+  "exit": 0,
+  "seconds": 70.1,
+  "mutatingSyscallPaths": 87844,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "ok": true
+ },
+ "guardStubCalls": [
+  "14:18:54\tpw-dump\t--monitor --no-colors",
+  "14:18:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:54\tpw-dump\t--monitor --no-colors",
+  "14:18:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:56\tpw-dump\t--monitor --no-colors",
+  "14:18:56\tpw-dump\t--monitor --no-colors",
+  "14:18:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:18:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:00\tpw-dump\t--monitor --no-colors",
+  "14:19:00\tpw-dump\t--monitor --no-colors",
+  "14:19:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:08\tpw-dump\t--monitor --no-colors",
+  "14:19:08\tpw-dump\t--monitor --no-colors",
+  "14:19:09\tpw-dump\t--monitor --no-colors",
+  "14:19:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:09\tapt\tlist --upgradable",
+  "14:19:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:11\tpw-dump\t--monitor --no-colors",
+  "14:19:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:15\tpw-dump\t--monitor --no-colors",
+  "14:19:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:23\tpw-dump\t--monitor --no-colors",
+  "14:19:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:24\tpw-dump\t--monitor --no-colors",
+  "14:19:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:24\tpw-dump\t--monitor --no-colors",
+  "14:19:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:31\tpw-dump\t--monitor --no-colors",
+  "14:19:31\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "14:19:31\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "14:19:31\tapt\tlist --upgradable",
+  "14:19:31\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "14:19:31\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "14:19:32\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "14:19:32\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "14:19:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:33\tpw-dump\t--monitor --no-colors",
+  "14:19:33\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "14:19:33\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "14:19:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:34\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "14:19:34\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "14:19:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:46\tpw-dump\t--monitor --no-colors",
+  "14:19:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:48\tpw-dump\t--monitor --no-colors",
+  "14:19:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:52\tpw-dump\t--monitor --no-colors",
+  "14:19:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:54\tpw-dump\t--monitor --no-colors",
+  "14:19:55\tpw-dump\t--monitor --no-colors",
+  "14:19:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "14:19:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "leftoverProcessesAfterInner": [],
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/rt/system-bus,guid=6108822a3de72c2fa8cc1b556aec823c",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "windowIds": {
+    "panel": "5ba4c758bc8a2cb71f6eac29292903bd",
+    "desktop": "df64e5d9bb3f22fc81fdb7e19992aa86",
+    "start": "b20ad23638a0f04c8b8e0995348029c8"
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [
+   {
+    "name": "desktop",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "desktop.png",
+    "pixels": {
+     "rect": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "distinctColours": 2000,
+     "meanLevel": 66.2,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\nDeze pc\n\nPrullenbak\n\nFolder\n\nalpha.txt\n\nbeta.txt\n",
+     "dutchWordHits": [
+      "deze",
+      "prullenbak"
+     ]
+    },
+    "langMatches": true,
+    "panelText": {
+     "lang": "nl",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\n\n\n\n\n\n\n\n\n\n\n14:19\n05-11-2026\n",
+     "dutchWordHits": []
+    },
+    "seconds": 2.5,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "panel",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "panel.png",
+    "pixels": {
+     "rect": [
+      0,
+      0,
+      1440,
+      48
+     ],
+     "distinctColours": 102,
+     "meanLevel": 35.1,
+     "looksBlank": false
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\n\n\n\n\n\n\n\n\n\n\n14:19\n05-11-2026\n",
+     "dutchWordHits": []
+    },
+    "langMatches": true,
+    "seconds": 0.1,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "start",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "start.png",
+    "pixels": {
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ],
+     "distinctColours": 390,
+     "meanLevel": 47.7,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Start",
+      "title": "Start",
+      "pid": 664,
+      "x": 399,
+      "y": 114,
+      "w": 642,
+      "h": 726,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\nVastgemaakt\n\nAlle apps\n\n\nFirefox webbrowser\n\n\nVerkenner\n\n\nInstellingen\n\n\nTaakbeheer\n\n\nAlles\n\n\nTerminal\n\n\nTeksteditor\n\n\nRekenmachine\n\n\nLibreOffice Writer\n\n\nLibreOffice Calc\n\n\nAfbeeldingenviewer\n\n\nAgenda\n\n\nSteam\n\n\nKlokken\nAanbevolen\nHoe meer je je computer gebruikt, hoe meer recente bestanden en nieuwe apps je hier ziet.\n\nR\nrobin\n\n\n\n\n",
+     "dutchWordHits": [
+      "aanbevolen",
+      "alle",
+      "bestanden",
+      "gebruikt",
+      "hier",
+      "hoe",
+      "instellingen",
+      "je",
+      "meer",
+      "nieuwe",
+      "recente",
+      "taakbeheer",
+      "teksteditor",
+      "vastgemaakt",
+      "verkenner",
+      "webbrowser",
+      "ziet"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.2,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "explorer",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "explorer.png",
+    "pixels": {
+     "rect": [
+      160,
+      66,
+      1120,
+      720
+     ],
+     "distinctColours": 96,
+     "meanLevel": 31.4,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Explorer",
+      "title": "File Explorer",
+      "pid": 1420,
+      "x": 160,
+      "y": 66,
+      "w": 1120,
+      "h": 720,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "robin - Verkenner",
+     "ready": "true",
+     "text": "\nrobin\n\n\n\n\n\n\n\n\n\n\n\nrobin\n\n\n\n\nNieuw\n\n\n\n\n\n\n\nSorteren\n\nWeergeven\n\n\nDetails\nStart\nGalerij\n\nBureaublad\n\nDownloads\n\nDocumenten\n\nAfbeeldingen\n\nMuziek\n\nVideo's\n\nDeze pc\n\nSysteemschijf (/)\n\n3TB\n\n22TB\n\n563 GB-schijf\n\nVirtuele machines (/srv/vm)\n\nBACKUP\n\nextra\n\nPrullenbak\nNaam\nGewijzigd op\nType\nGrootte\n\nDesktop\n05-11-2026 14:17\nBestandsmap\n\nDocuments\n05-11-2026 14:17\nBestandsmap\n\nDownloads\n05-11-2026 14:17\nBestandsmap\n\nMusic\n05-11-2026 14:17\nBestandsmap\n\nPictures\n05-11-2026 14:17\nBestandsmap\n\nPublic\n05-11-2026 14:17\nBestandsmap\n\nTemplates\n05-11-2026 14:17\nBestandsmap\n\nVideos\n05-11-2026 14:17\nBestandsmap\n8 items\n\n",
+     "dutchWordHits": [
+      "afbeeldingen",
+      "bestandsmap",
+      "bureaublad",
+      "deze",
+      "documenten",
+      "galerij",
+      "gewijzigd",
+      "grootte",
+      "muziek",
+      "naam",
+      "nieuw",
+      "prullenbak",
+      "sorteren",
+      "systeemschijf",
+      "virtuele",
+      "weergeven"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 4.7,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-home",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-home.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 476,
+     "meanLevel": 40.4,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Startpagina – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nStartpagina\nrobin\nGigabyte B550 GAMING X V2\n\nNaam wijzigen\n\nNetwerk\nNiet verbonden\n\nUpdates\nAanbevolen instellingen\nRecente en veelgebruikte instellingen\n\nBeeldscherm\nSysteem\n\nGeluid\nSysteem\n\nTaakbalk\nPersoonlijke instellingen\n\nAchtergrond\nPersoonlijke instellingen\nBluetooth-apparaten\nApparaten beheren, toevoegen en verbinden\nGeen Bluetooth gevonden op deze computer\n\nAlle apparaten weergeven\nPersoonlijke instellingen\nKies een thema, of pas je achtergrond en kleuren aan\n\n\n\n\n\n\nKleurmodus\n\nDonker\n\nMeer achtergronden, kleuren en thema’s\nOpslag\nRuimte op je systeemschijf\nSysteemschijf (/)\n90%\n22,1 GB vrij van 233 GB\n\nDetails\n\nRuimte vrijmaken",
+     "dutchWordHits": [
+      "aan",
+      "aanbevolen",
+      "achtergrond",
+      "achtergronden",
+      "alle",
+      "apparaten",
+      "beeldscherm",
+      "beheren",
+      "beveiliging",
+      "deze",
+      "donker",
+      "een",
+      "geen",
+      "geluid",
+      "gevonden",
+      "herstel",
+      "instellingen",
+      "je",
+      "kies",
+      "kleuren",
+      "kleurmodus",
+      "lokaal",
+      "meer",
+      "naam",
+      "netwerk",
+      "niet",
+      "opslag",
+      "persoonlijke",
+      "recente",
+      "ruimte",
+      "startpagina",
+      "systeem",
+      "systeemschijf",
+      "taakbalk",
+      "taal",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "toevoegen",
+      "van",
+      "veelgebruikte",
+      "verbinden",
+      "verbonden",
+      "vrij",
+      "vrijmaken",
+      "weergeven",
+      "wijzigen"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 3.6,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-system",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-system.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 444,
+     "meanLevel": 39.9,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Systeem – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nrobin\nGigabyte B550 GAMING X V2\n\nNaam wijzigen\n\nNetwerk\nNiet verbonden\n\nUpdates\nGecontroleerd zojuist\nBeeldscherm\nBeeldschermen, helderheid, nachtlampje, schaal en resolutie\nGeluid\nVolume, uitvoer en geluidsapparaten\nMeldingen\nWaarschuwingen van apps en systeem, niet storen\nEnergie en batterij\nEnergiestand, scherm uitschakelen, automatisch slapen en batterij\nOpslag\nOpslagruimte, stations, ruimte vrijmaken\nKlembord\nKnippen en kopiëren, klembordgeschiedenis\nInfo\nApparaatspecificaties, processor, geheugen, versie\n",
+     "dutchWordHits": [
+      "apparaatspecificaties",
+      "apparaten",
+      "automatisch",
+      "batterij",
+      "beeldscherm",
+      "beeldschermen",
+      "beveiliging",
+      "energie",
+      "gecontroleerd",
+      "geheugen",
+      "geluid",
+      "geluidsapparaten",
+      "helderheid",
+      "herstel",
+      "instellingen",
+      "klembord",
+      "klembordgeschiedenis",
+      "knippen",
+      "kopiëren",
+      "lokaal",
+      "meldingen",
+      "naam",
+      "nachtlampje",
+      "netwerk",
+      "niet",
+      "opslag",
+      "opslagruimte",
+      "persoonlijke",
+      "resolutie",
+      "ruimte",
+      "schaal",
+      "scherm",
+      "slapen",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taal",
+      "tijd",
+      "toegankelijkheid",
+      "uitschakelen",
+      "uitvoer",
+      "van",
+      "verbonden",
+      "versie",
+      "vrijmaken",
+      "waarschuwingen",
+      "wijzigen",
+      "zojuist"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.5,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-display",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-display.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 112,
+     "meanLevel": 41.1,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Beeldscherm – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nBeeldscherm\nHelderheid en kleur\n\nHelderheid\nAlleen beschikbaar voor ingebouwde schermen, zoals van een laptop\nNiet beschikbaar\nNachtlampje\nNachtlampje werkt alleen in de Win11 Shell-sessie.\nNiet beschikbaar\nSchaal en indeling\n\nBeeldschermen instellen kan alleen in de Win11 Shell-sessie. Gebruik hier de app Instellingen van Ubuntu.\nSchaal\nDe grootte van tekst, apps en andere items wijzigen\n\n100%\nBeeldschermresolutie\nDe resolutie aanpassen aan het aangesloten beeldscherm\n\n1440 × 900\nVernieuwingsfrequentie\nEen hogere frequentie geeft vloeiendere beweging, maar kost meer stroom\n\n60 Hz\nGerelateerde instellingen\n\nTekstgrootte\nTekst groter maken in Win11 Shell\nKleuren\nLicht of donker, accentkleur, transparantie\n",
+     "dutchWordHits": [
+      "aan",
+      "aangesloten",
+      "aanpassen",
+      "accentkleur",
+      "alleen",
+      "andere",
+      "apparaten",
+      "beeldscherm",
+      "beeldschermen",
+      "beeldschermresolutie",
+      "beschikbaar",
+      "beveiliging",
+      "beweging",
+      "donker",
+      "een",
+      "frequentie",
+      "gebruik",
+      "geeft",
+      "gerelateerde",
+      "grootte",
+      "groter",
+      "helderheid",
+      "herstel",
+      "het",
+      "hier",
+      "hogere",
+      "indeling",
+      "ingebouwde",
+      "instellen",
+      "instellingen",
+      "kan",
+      "kleur",
+      "kleuren",
+      "kost",
+      "licht",
+      "lokaal",
+      "maar",
+      "maken",
+      "meer",
+      "nachtlampje",
+      "netwerk",
+      "niet",
+      "persoonlijke",
+      "resolutie",
+      "schaal",
+      "schermen",
+      "startpagina",
+      "stroom",
+      "systeem",
+      "taal",
+      "tekst",
+      "tekstgrootte",
+      "tijd",
+      "toegankelijkheid",
+      "transparantie",
+      "van",
+      "vernieuwingsfrequentie",
+      "vloeiendere",
+      "voor",
+      "werkt",
+      "wijzigen",
+      "zoals"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.4,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-power",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-power.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 115,
+     "meanLevel": 41.6,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Energie en batterij – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nEnergie en batterij\nEnergie\n\nEnergiestand\nOp deze computer kan de energiestand niet worden aangepast.\n\nNiet beschikbaar\nScherm en slaapstand\n\nScherm uitschakelen na\nAls je de computer niet gebruikt\n\nNooit\nScherm dimmen bij inactiviteit\nDe helderheid van het ingebouwde scherm verlagen om stroom te besparen\nAan\n\nOp netstroom in slaapstand na\nDeze computer ondersteunt automatisch slapen momenteel niet.\n\nNooit\nAan/uit\n\nVergrendelen\nHet scherm vergrendelen; je apps blijven open\n\nVergrendelen\nAfmelden\nJe sessie afsluiten; open apps worden gesloten\n\nAfmelden\nSlaapstand\nZuinig pauzeren; je werk blijft open staan\n\nSlaapstand\nOpnieuw opstarten\nDe computer uit- en weer aanzetten\n\nOpnieuw opstarten\nAfsluiten\nDe computer helemaal uitzetten\n\nAfsluiten\nAltijd eerst vragen\nVragen voordat de computer wordt afgesloten, opnieuw opgestart of afgemeld\nAan\n\nBatterij\n\nNetstroom\nDeze computer heeft geen batterij en werkt altijd op netstroom.\n",
+     "dutchWordHits": [
+      "aan",
+      "aangepast",
+      "aanzetten",
+      "afgemeld",
+      "afgesloten",
+      "afmelden",
+      "afsluiten",
+      "als",
+      "altijd",
+      "apparaten",
+      "automatisch",
+      "batterij",
+      "beschikbaar",
+      "beveiliging",
+      "bij",
+      "blijft",
+      "blijven",
+      "deze",
+      "eerst",
+      "energie",
+      "gebruikt",
+      "geen",
+      "gesloten",
+      "heeft",
+      "helderheid",
+      "helemaal",
+      "herstel",
+      "het",
+      "ingebouwde",
+      "instellingen",
+      "je",
+      "kan",
+      "lokaal",
+      "netstroom",
+      "netwerk",
+      "niet",
+      "nooit",
+      "om",
+      "opgestart",
+      "opnieuw",
+      "opstarten",
+      "pauzeren",
+      "persoonlijke",
+      "scherm",
+      "sessie",
+      "slaapstand",
+      "slapen",
+      "staan",
+      "startpagina",
+      "stroom",
+      "systeem",
+      "taal",
+      "te",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "uitschakelen",
+      "uitzetten",
+      "van",
+      "vergrendelen",
+      "voordat",
+      "vragen",
+      "weer",
+      "werk",
+      "werkt",
+      "worden",
+      "wordt",
+      "zuinig"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.4,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-about",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-about.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 300,
+     "meanLevel": 41.3,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Info – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nInfo\nrobin\nGigabyte B550 GAMING X V2\n\nNaam van deze pc wijzigen\nApparaatspecificaties\n\nKopiëren\nApparaatnaam\nrobin\nModel\nGigabyte B550 GAMING X V2\nProcessor\nAMD Ryzen 7 5700X 8-Core Processor (8 kernen, 16 threads)\nGeïnstalleerd RAM\n15 GB\nVideokaart\nNVIDIA GeForce RTX 3080\nOpslag\nHGST HTS545050A7E680 (466 GB), KINGSTON SA400S37240G (224 GB), ST24000DM001-3Y7103 (21,8 TB), ST3000VX009-2AY10G (2,7 TB), Lexar SSD NM620 1TB (954 GB), GIGABYTE GP-GSM2NE8256GNTD (238 GB)\nBesturingssysteem\n\nKopiëren\nEditie\nUbuntu 26.04.1 LTS (Resolute Raccoon)\nKernel\n7.0.0-42-generic\nBureaublad\nGNOME\nWin11 Shell\n0.7.0 · los venster\nActief sinds opstarten\n8 uur en 49 minuten\nGebruiker\nrobin (robin)\nGerelateerd\n\nOpslag\nOpslagruimte, stations, ruimte vrijmaken\nPrestaties bekijken\nProcessor, geheugen en schijven live in Taakbeheer\nUpdate en herstel\nUpdates, back-up van instellingen, alles terugzetten\n",
+     "dutchWordHits": [
+      "actief",
+      "apparaatnaam",
+      "apparaatspecificaties",
+      "apparaten",
+      "bekijken",
+      "besturingssysteem",
+      "beveiliging",
+      "bureaublad",
+      "deze",
+      "editie",
+      "gebruiker",
+      "geheugen",
+      "gerelateerd",
+      "geïnstalleerd",
+      "herstel",
+      "instellingen",
+      "kernen",
+      "kopiëren",
+      "lokaal",
+      "minuten",
+      "naam",
+      "netwerk",
+      "opslag",
+      "opslagruimte",
+      "opstarten",
+      "persoonlijke",
+      "prestaties",
+      "ruimte",
+      "schijven",
+      "sinds",
+      "startpagina",
+      "systeem",
+      "taakbeheer",
+      "taal",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "uur",
+      "van",
+      "venster",
+      "videokaart",
+      "vrijmaken",
+      "wijzigen"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.5,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-personalization",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-personalization.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 1128,
+     "meanLevel": 43.2,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Persoonlijke instellingen – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPersoonlijke instellingen\nAa\nSelecteer een thema om toe te passen\n\n\n\n\n\n\nAchtergrond\nBureaubladachtergrond, foto of effen kleur\nKleuren\nLicht of donker, accentkleur, transparantie\nThema’s\nAchtergrond, kleur en modus in één keer\nStart\nIndeling van Start, recente apps, mappen\nTaakbalk\nUitlijning, zoeken, widgets, automatisch verbergen\nBureaubladpictogrammen\nDeze pc, Prullenbak en Persoonlijke map op het bureaublad\n",
+     "dutchWordHits": [
+      "accentkleur",
+      "achtergrond",
+      "apparaten",
+      "automatisch",
+      "beveiliging",
+      "bureaublad",
+      "bureaubladachtergrond",
+      "bureaubladpictogrammen",
+      "deze",
+      "donker",
+      "een",
+      "effen",
+      "foto",
+      "herstel",
+      "het",
+      "indeling",
+      "instellingen",
+      "keer",
+      "kleur",
+      "kleuren",
+      "licht",
+      "lokaal",
+      "mappen",
+      "modus",
+      "netwerk",
+      "om",
+      "passen",
+      "persoonlijke",
+      "prullenbak",
+      "recente",
+      "selecteer",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "te",
+      "thema",
+      "tijd",
+      "toe",
+      "toegankelijkheid",
+      "transparantie",
+      "uitlijning",
+      "van",
+      "verbergen",
+      "zoeken",
+      "één"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.6,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-language",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-language.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 112,
+     "meanLevel": 38.7,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Taal en regio – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTaal en regio\nWeergavetaal van Win11 Shell\nDe taal van Instellingen, Start, de taakbalk en de andere onderdelen van Win11 Shell\n\nNederlands\nApps van Ubuntu gebruiken hun eigen taalinstelling.\nNotaties\nZo worden datum, tijd en getallen weergegeven\nKorte datum\n25-10-2026\nLange datum\nzondag 25 oktober 2026\nTijd\n14:35\nGetal\n1.234.567,89\nBestandsgrootte\n1,2 GB",
+     "dutchWordHits": [
+      "andere",
+      "apparaten",
+      "bestandsgrootte",
+      "beveiliging",
+      "eigen",
+      "gebruiken",
+      "getal",
+      "getallen",
+      "herstel",
+      "hun",
+      "instellingen",
+      "korte",
+      "lange",
+      "lokaal",
+      "netwerk",
+      "notaties",
+      "onderdelen",
+      "persoonlijke",
+      "regio",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "taalinstelling",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "weergavetaal",
+      "weergegeven",
+      "worden",
+      "zo",
+      "zondag"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.4,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "settings-update",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "settings-update.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 136,
+     "meanLevel": 40.2,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Update en herstel – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nUpdate en herstel\nKan niet controleren op updates\nGebruik de Software-updater van Ubuntu om te kijken of er updates zijn.\n\nControleren\n\nSoftware-updater openen\nBack-up van instellingen\n\nBewaar je Win11 Shell-instellingen in een bestand, of zet ze terug\n\nInstellingen exporteren\nSla al je instellingen op in een bestand (bijvoorbeeld op een USB-stick)\n\nExporteren\nInstellingen importeren\nZet instellingen terug uit een eerder geëxporteerd bestand\n\nBestand kiezen\nAlles terugzetten\nAlle instellingen van Win11 Shell terugzetten naar de standaardwaarden. Je bestanden blijven bewaard.\n\nTerugzetten\nOver Win11 Shell\nEen Windows 11-achtig bureaublad voor Ubuntu\nVersie 0.7.0\n",
+     "dutchWordHits": [
+      "achtig",
+      "alle",
+      "apparaten",
+      "bestand",
+      "bestanden",
+      "beveiliging",
+      "bewaar",
+      "bewaard",
+      "bijvoorbeeld",
+      "blijven",
+      "bureaublad",
+      "controleren",
+      "een",
+      "eerder",
+      "exporteren",
+      "gebruik",
+      "geëxporteerd",
+      "herstel",
+      "importeren",
+      "instellingen",
+      "je",
+      "kan",
+      "kiezen",
+      "kijken",
+      "lokaal",
+      "naar",
+      "netwerk",
+      "niet",
+      "om",
+      "openen",
+      "persoonlijke",
+      "sla",
+      "standaardwaarden",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "versie",
+      "voor",
+      "ze",
+      "zet",
+      "zijn"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 2.4,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 1623,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "taskmgr",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "taskmgr.png",
+    "pixels": {
+     "rect": [
+      200,
+      66,
+      1040,
+      720
+     ],
+     "distinctColours": 221,
+     "meanLevel": 46.4,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.TaskManager",
+      "title": "Task Manager",
+      "pid": 1993,
+      "x": 200,
+      "y": 66,
+      "w": 1040,
+      "h": 720,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Taakbeheer – Samenvatting",
+     "ready": "true",
+     "text": "Taakbeheer\n\n\n\n\n\n\nSamenvatting\nProcessen\nPrestaties\nOpslag\nOpstart-apps\nServices\nDetails\nInstellingen\nSamenvatting\n\nJe pc werkt prima\nProcessor, geheugen, schijven en services zijn gecontroleerd. Alles ziet er goed uit.\nGecontroleerd om 14:19\n\nOpnieuw controleren\nNu in gebruik\n\nProcessor\n6%\n4,31 GHz · 49 °C\n\nGeheugen\n74%\n11,1 GB van 15 GB\n\nSchijf\n0%\nSysteemschijf · 0 bytes/s\n\nVideokaart\n1%\nRTX 3080 · 38 °C\n\nNetwerk\n0 bps\n↑ 0 bps · Ethernet\nApps die het meest gebruiken\nAlle processen\n\n\nClaude\nCPU 0,9% · 620,4 MB\nGemiddeld\nSchijven\nOpslag bekijken\n\n\nSysteemschijf\nBijna vol\n22,1 GB vrij van 233 GB\n90%\n\n\nVirtuele machines\nBijna vol\n8,2 GB vrij van 383 GB\n98%\n\n\nextra\n104 GB vrij van 465 GB\n78%\n\n\n563 GB-schijf\n151 GB vrij van 563 GB\n73%\n\n\n3TB\n1,5 TB vrij van 2,7 TB\n44%\n\n\nBACKUP\n134 GB vrij van 224 GB\n40%\n\n\n22TB\n21,6 TB vrij van 21,8 TB\n1%\nGoed om te weten\nOpslag\nEr is op al je schijven genoeg ruimte vrij.\nGeheugen\nEr is genoeg geheugen vrij (4,0 GB van 15,0 GB).\nWisselgeheugen\nHet wisselgeheugen wordt nauwelijks gebruikt.\nProcessor\nGeen enkele app gebruikt langdurig veel rekenkracht.\nTemperatuur\nDe processor is lekker koel (50 °C).\nAchtergronddiensten\nAlle achtergronddiensten werken.\nUpdates\nEr is nog niet gecontroleerd op updates.\nPrullenbak\nDe prullenbak neemt weinig ruimte in.",
+     "dutchWordHits": [
+      "achtergronddiensten",
+      "alle",
+      "bekijken",
+      "bijna",
+      "controleren",
+      "enkele",
+      "gebruik",
+      "gebruiken",
+      "gebruikt",
+      "gecontroleerd",
+      "geen",
+      "geheugen",
+      "gemiddeld",
+      "genoeg",
+      "goed",
+      "het",
+      "instellingen",
+      "je",
+      "koel",
+      "langdurig",
+      "lekker",
+      "meest",
+      "nauwelijks",
+      "neemt",
+      "netwerk",
+      "niet",
+      "nog",
+      "om",
+      "opnieuw",
+      "opslag",
+      "prestaties",
+      "prima",
+      "processen",
+      "prullenbak",
+      "rekenkracht",
+      "ruimte",
+      "samenvatting",
+      "schijf",
+      "schijven",
+      "systeemschijf",
+      "taakbeheer",
+      "te",
+      "temperatuur",
+      "uit",
+      "van",
+      "veel",
+      "videokaart",
+      "virtuele",
+      "vrij",
+      "weinig",
+      "werken",
+      "werkt",
+      "weten",
+      "wisselgeheugen",
+      "wordt",
+      "ziet",
+      "zijn"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 5.1,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "alles",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "alles.png",
+    "pixels": {
+     "rect": [
+      200,
+      86,
+      1040,
+      680
+     ],
+     "distinctColours": 137,
+     "meanLevel": 41.9,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Search",
+      "title": "Everything",
+      "pid": 2268,
+      "x": 200,
+      "y": 86,
+      "w": 1040,
+      "h": 680,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Alles",
+     "ready": "true",
+     "text": "Alles\n\n\n\n\n\nAlles\n\nAa\nHoofdletters\n\nab\nHeel woord\n\nPad\n\n.*\nPatroon\n\nSorteren\n\nZoektips\n\nVoorbeeld\n\nOpties\nVind alles, meteen\nTyp een deel van een naam. Alles zoekt terwijl je typt.\nSnel zoeken\n\nAfbeeldingen\n\nMuziek\n\nVideo's\n\nDocumenten\n\nGrote bestanden\n\nVandaag gewijzigd\n\nDownloads\n\nZoektips bekijken\nGeen objecten\nNog geen index",
+     "dutchWordHits": [
+      "afbeeldingen",
+      "bekijken",
+      "bestanden",
+      "deel",
+      "documenten",
+      "een",
+      "geen",
+      "gewijzigd",
+      "grote",
+      "heel",
+      "hoofdletters",
+      "je",
+      "meteen",
+      "muziek",
+      "naam",
+      "nog",
+      "objecten",
+      "opties",
+      "patroon",
+      "snel",
+      "sorteren",
+      "terwijl",
+      "typ",
+      "typt",
+      "van",
+      "vandaag",
+      "vind",
+      "voorbeeld",
+      "woord",
+      "zoeken",
+      "zoekt",
+      "zoektips"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 5.1,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "disks",
+    "group": "surface",
+    "lang": "nl",
+    "ok": true,
+    "png": "disks.png",
+    "pixels": {
+     "rect": [
+      190,
+      46,
+      1060,
+      760
+     ],
+     "distinctColours": 80,
+     "meanLevel": 33.8,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Disks",
+      "title": "Disks",
+      "pid": 2426,
+      "x": 190,
+      "y": 46,
+      "w": 1060,
+      "h": 760,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Schijven",
+     "ready": "true",
+     "text": "\nSchijven\n\n\n\nSchijven en volumes\n\nVernieuwen\nSchijfbeheer werkt niet\nSchijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.\n\nVernieuwen",
+     "dutchWordHits": [
+      "beschikbaar",
+      "deze",
+      "niet",
+      "schijfbeheer",
+      "schijven",
+      "vernieuwen",
+      "werkt"
+     ]
+    },
+    "langMatches": true,
+    "seconds": 5.1,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "switch-before",
+    "group": "switch",
+    "lang": "nl",
+    "ok": true,
+    "png": "switch-1-before-nl.png",
+    "pixels": {
+     "rect": [
+      0,
+      0,
+      1440,
+      900
+     ],
+     "distinctColours": 893,
+     "meanLevel": 40.7,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 2604,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Start",
+      "title": "Start",
+      "pid": 664,
+      "x": 399,
+      "y": 114,
+      "w": 642,
+      "h": 726,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "nl",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\nVastgemaakt\n\nAlle apps\n\n\nFirefox webbrowser\n\n\nVerkenner\n\n\nInstellingen\n\n\nTaakbeheer\n\n\nAlles\n\n\nTerminal\n\n\nTeksteditor\n\n\nRekenmachine\n\n\nLibreOffice Writer\n\n\nLibreOffice Calc\n\n\nAfbeeldingenviewer\n\n\nAgenda\n\n\nSteam\n\n\nKlokken\nAanbevolen\nHoe meer je je computer gebruikt, hoe meer recente bestanden en nieuwe apps je hier ziet.\n\nR\nrobin\n\n\n\n\n",
+     "dutchWordHits": [
+      "aanbevolen",
+      "alle",
+      "bestanden",
+      "gebruikt",
+      "hier",
+      "hoe",
+      "instellingen",
+      "je",
+      "meer",
+      "nieuwe",
+      "recente",
+      "taakbeheer",
+      "teksteditor",
+      "vastgemaakt",
+      "verkenner",
+      "webbrowser",
+      "ziet"
+     ]
+    },
+    "langMatches": true,
+    "settingsText": {
+     "lang": "nl",
+     "title": "Taal en regio – Instellingen",
+     "ready": "true",
+     "text": "\nInstellingen\n\n\n\n\n\nR\nrobin\nLokaal account\n\n\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTaal en regio\nWeergavetaal van Win11 Shell\nDe taal van Instellingen, Start, de taakbalk en de andere onderdelen van Win11 Shell\n\nNederlands\nApps van Ubuntu gebruiken hun eigen taalinstelling.\nNotaties\nZo worden datum, tijd en getallen weergegeven\nKorte datum\n25-10-2026\nLange datum\nzondag 25 oktober 2026\nTijd\n14:35\nGetal\n1.234.567,89\nBestandsgrootte\n1,2 GB",
+     "dutchWordHits": [
+      "andere",
+      "apparaten",
+      "bestandsgrootte",
+      "beveiliging",
+      "eigen",
+      "gebruiken",
+      "getal",
+      "getallen",
+      "herstel",
+      "hun",
+      "instellingen",
+      "korte",
+      "lange",
+      "lokaal",
+      "netwerk",
+      "notaties",
+      "onderdelen",
+      "persoonlijke",
+      "regio",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "taalinstelling",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "weergavetaal",
+      "weergegeven",
+      "worden",
+      "zo",
+      "zondag"
+     ]
+    },
+    "seconds": 4.7,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 2604,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Start",
+      "title": "Start",
+      "pid": 664,
+      "x": 399,
+      "y": 114,
+      "w": 642,
+      "h": 726,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "switch-after",
+    "group": "switch",
+    "lang": "nl",
+    "ok": true,
+    "png": "switch-2-after-en-start-open.png",
+    "pixels": {
+     "rect": [
+      0,
+      0,
+      1440,
+      900
+     ],
+     "distinctColours": 890,
+     "meanLevel": 40.8,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 2604,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Start",
+      "title": "Start",
+      "pid": 664,
+      "x": 399,
+      "y": 114,
+      "w": 642,
+      "h": 726,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "en",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\nVastgemaakt\n\nAlle apps\n\n\nFirefox Web Browser\n\n\nFile Explorer\n\n\nSettings\n\n\nTask Manager\n\n\nEverything\n\n\nTerminal\n\n\nText Editor\n\n\nCalculator\n\n\nLibreOffice Writer\n\n\nLibreOffice Calc\n\n\nImage Viewer\n\n\nCalendar\n\n\nSteam\n\n\nClocks\nAanbevolen\nThe more you use your computer, the more recent files and new apps you will see here.\n\nR\nrobin\n\n\n\n\n",
+     "dutchWordHits": [
+      "aanbevolen",
+      "alle",
+      "vastgemaakt"
+     ]
+    },
+    "langMatches": true,
+    "switchSeconds": {
+     "settings": 0.21,
+     "start": 0.31,
+     "panel": 0.41,
+     "desktop": 0.51,
+     "settingsTitle": 0.62
+    },
+    "settingsText": {
+     "lang": "en",
+     "title": "Language & region – Settings",
+     "ready": "true",
+     "text": "\nSettings\n\n\n\n\n\nR\nrobin\nLocal account\n\n\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nTime & language\nLanguage & region\nWin11 Shell display language\nThe language of Settings, Start, the taskbar and the other parts of Win11 Shell\n\nEnglish (United Kingdom)\nUbuntu apps use their own language setting.\nFormats\nHow dates, times and numbers are shown\nShort date\n25/10/2026\nLong date\nSunday, 25 October 2026\nTime\n14:35\nNumber\n1,234,567.89\nFile size\n1.2 GB",
+     "dutchWordHits": []
+    },
+    "panelText": {
+     "lang": "en",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\n\n\n\n\n\n\n\n\n\n\n14:19\n05/11/2026\n",
+     "dutchWordHits": []
+    },
+    "desktopText": {
+     "lang": "en",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\nThis PC\n\nRecycle Bin\n\nFolder\n\nalpha.txt\n\nbeta.txt\n",
+     "dutchWordHits": []
+    },
+    "seconds": 3.1,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 2604,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Start",
+      "title": "Start",
+      "pid": 664,
+      "x": 399,
+      "y": 114,
+      "w": 642,
+      "h": 726,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   },
+   {
+    "name": "switch-after-settings",
+    "group": "switch",
+    "lang": "en",
+    "ok": true,
+    "png": "switch-3-after-en-settings.png",
+    "pixels": {
+     "rect": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "distinctColours": 112,
+     "meanLevel": 38.8,
+     "looksBlank": false
+    },
+    "windowsAtShot": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 2604,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ],
+    "text": {
+     "lang": "en",
+     "title": "Language & region – Settings",
+     "ready": "true",
+     "text": "\nSettings\n\n\n\n\n\nR\nrobin\nLocal account\n\n\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nTime & language\nLanguage & region\nWin11 Shell display language\nThe language of Settings, Start, the taskbar and the other parts of Win11 Shell\n\nEnglish (United Kingdom)\nUbuntu apps use their own language setting.\nFormats\nHow dates, times and numbers are shown\nShort date\n25/10/2026\nLong date\nSunday, 25 October 2026\nTime\n14:35\nNumber\n1,234,567.89\nFile size\n1.2 GB",
+     "dutchWordHits": []
+    },
+    "langMatches": true,
+    "panelPng": "switch-4-after-en-panel.png",
+    "panelText": {
+     "lang": "en",
+     "title": "Win11 Shell",
+     "ready": "true",
+     "text": "\n\n\n\n\n\n\n\n\n\n\n14:19\n05/11/2026\n",
+     "dutchWordHits": []
+    },
+    "seconds": 2.0,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Win11 Desktop",
+      "pid": 428,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     },
+     {
+      "wm": "io.github.win11shell.Settings",
+      "title": "Settings",
+      "pid": 2604,
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "minimized": false,
+      "focus": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "title": "Win11 Taskbar",
+      "pid": 429,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "visible": true,
+      "minimized": false,
+      "focus": false
+     }
+    ]
+   }
+  ],
+  "shots": [
+   {
+    "file": "desktop.png",
+    "group": "surface",
+    "bytes": 1127549,
+    "area": null
+   },
+   {
+    "file": "panel.png",
+    "group": "surface",
+    "bytes": 12731,
+    "area": [
+     0,
+     852,
+     1440,
+     48
+    ]
+   },
+   {
+    "file": "start.png",
+    "group": "surface",
+    "bytes": 662884,
+    "area": null
+   },
+   {
+    "file": "explorer.png",
+    "group": "surface",
+    "bytes": 381681,
+    "area": null
+   },
+   {
+    "file": "settings-home.png",
+    "group": "surface",
+    "bytes": 442350,
+    "area": null
+   },
+   {
+    "file": "settings-system.png",
+    "group": "surface",
+    "bytes": 431672,
+    "area": null
+   },
+   {
+    "file": "settings-display.png",
+    "group": "surface",
+    "bytes": 399946,
+    "area": null
+   },
+   {
+    "file": "settings-power.png",
+    "group": "surface",
+    "bytes": 400550,
+    "area": null
+   },
+   {
+    "file": "settings-about.png",
+    "group": "surface",
+    "bytes": 429761,
+    "area": null
+   },
+   {
+    "file": "settings-personalization.png",
+    "group": "surface",
+    "bytes": 518748,
+    "area": null
+   },
+   {
+    "file": "settings-language.png",
+    "group": "surface",
+    "bytes": 379902,
+    "area": null
+   },
+   {
+    "file": "settings-update.png",
+    "group": "surface",
+    "bytes": 398619,
+    "area": null
+   },
+   {
+    "file": "taskmgr.png",
+    "group": "surface",
+    "bytes": 444224,
+    "area": null
+   },
+   {
+    "file": "alles.png",
+    "group": "surface",
+    "bytes": 439082,
+    "area": null
+   },
+   {
+    "file": "disks.png",
+    "group": "surface",
+    "bytes": 345111,
+    "area": null
+   },
+   {
+    "file": "switch-1-before-nl.png",
+    "group": "switch",
+    "bytes": 366326,
+    "area": null
+   },
+   {
+    "file": "switch-2-after-en-start-open.png",
+    "group": "switch",
+    "bytes": 364754,
+    "area": null
+   },
+   {
+    "file": "switch-3-after-en-settings.png",
+    "group": "switch",
+    "bytes": 380417,
+    "area": null
+   },
+   {
+    "file": "switch-4-after-en-panel.png",
+    "group": "switch",
+    "bytes": 13068,
+    "area": [
+     0,
+     852,
+     1440,
+     48
+    ]
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "explorer",
+    "source": "Win11 Verkenner",
+    "title": "Win11 Verkenner",
+    "body": "“File Explorer” is ready"
+   },
+   {
+    "app": "settings",
+    "source": "Win11 Instellingen",
+    "title": "Win11 Instellingen",
+    "body": "“Settings” is ready"
+   },
+   {
+    "app": "taskmgr",
+    "source": "Win11 Taakbeheer",
+    "title": "Win11 Taakbeheer",
+    "body": "“Task Manager” is ready"
+   },
+   {
+    "app": "alles",
+    "source": "Alles",
+    "title": "Alles",
+    "body": "“Everything” is ready"
+   },
+   {
+    "app": "disks",
+    "source": "Win11 Schijfbeheer",
+    "title": "Win11 Schijfbeheer",
+    "body": "“Disks” is ready"
+   },
+   {
+    "app": "settings-switch",
+    "source": "Win11 Instellingen",
+    "title": "Win11 Instellingen",
+    "body": "“Settings” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/baseline/nl/desktop.png",
+  "tests/gnome/baseline/nl/panel.png",
+  "tests/gnome/baseline/nl/start.png",
+  "tests/gnome/baseline/nl/explorer.png",
+  "tests/gnome/baseline/nl/settings-home.png",
+  "tests/gnome/baseline/nl/settings-system.png",
+  "tests/gnome/baseline/nl/settings-display.png",
+  "tests/gnome/baseline/nl/settings-power.png",
+  "tests/gnome/baseline/nl/settings-about.png",
+  "tests/gnome/baseline/nl/settings-personalization.png",
+  "tests/gnome/baseline/nl/settings-language.png",
+  "tests/gnome/baseline/nl/settings-update.png",
+  "tests/gnome/baseline/nl/taskmgr.png",
+  "tests/gnome/baseline/nl/alles.png",
+  "tests/gnome/baseline/nl/disks.png",
+  "tests/gnome/baseline/switch/switch-1-before-nl.png",
+  "tests/gnome/baseline/switch/switch-2-after-en-start-open.png",
+  "tests/gnome/baseline/switch/switch-3-after-en-settings.png",
+  "tests/gnome/baseline/switch/switch-4-after-en-panel.png"
+ ]
+}

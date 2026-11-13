@@ -1,0 +1,122 @@
+{
+ "comment": "GW2b: the bus tests of host/src/services/update/bus_tests.rs, one `tests/update/run.sh exec` each (tests/update/run.sh bus-tests -- BIN). stubs = the run's whole stub log in order (only the phasing classifier, python3 -I -c <script>, once per GetUpdates that listed packages; count = consecutive calls); calls = the fake's calls since the test's last Load() (its last scenario: PackageKit + NetworkManager + Notifications); datagrams = two hosts of the test share a runtime directory (events.rs fan-out, run.sh --allow-layer-dgrams). Each test also checks every scenario's own calls, stub calls and violations itself.",
+ "tests": {
+  "every_timeline_in_nl_and_en": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 82
+    }
+   ],
+   "calls": 32,
+   "timeout": 1500
+  },
+  "progress_under_the_flood_timeline": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 2
+    }
+   ],
+   "calls": 23,
+   "timeout": 420,
+   "datagrams": true
+  },
+  "two_services_one_owner_forwarding_and_takeover": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 1
+    }
+   ],
+   "calls": 27,
+   "timeout": 300,
+   "datagrams": true
+  },
+  "a_mirror_takes_over_by_its_retry_after_the_owner_crashed": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 1
+    }
+   ],
+   "calls": 27,
+   "timeout": 300
+  },
+  "upgrade_running_refuses_every_write": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 4
+    }
+   ],
+   "calls": 29,
+   "timeout": 300
+  },
+  "dry_run_makes_no_call_on_the_fake": {
+   "stubs": [],
+   "calls": 0,
+   "timeout": 120
+  },
+  "reader_mode_never_connects": {
+   "stubs": [],
+   "calls": 0,
+   "timeout": 120
+  },
+  "shutdown_is_fast_and_the_next_owner_reattaches": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 2
+    }
+   ],
+   "calls": 30,
+   "timeout": 300
+  },
+  "a_vanished_daemon_is_resolved_through_old_transactions": {
+   "stubs": [
+    {
+     "tool": "python3",
+     "dir": "tools",
+     "argvPrefix": [
+      "-I",
+      "-c"
+     ],
+     "count": 2
+    }
+   ],
+   "calls": 23,
+   "timeout": 300
+  }
+ }
+}

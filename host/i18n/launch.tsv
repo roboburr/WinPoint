@@ -1,0 +1,69 @@
+# host/i18n/launch.tsv: host texts of launch.rs, bin/launch.rs, launch_context.rs, process_scope.rs.
+# Owner: R2-D.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/process_scope.rs
+# environment(): starting an app as a systemd unit (process_scope.rs): the environment must be UTF-8 text; no full stop in nl
+#@ host/src/process_scope.rs 36 9928c75e027e898a plain
+launch.nonUtf8EnvName	Niet-UTF8 omgevingsnaam	Non-UTF-8 environment variable name
+# environment()
+#@ host/src/process_scope.rs 37 182222e1799d422c plain
+launch.nonUtf8EnvValue	Niet-UTF8 omgevingswaarde	Non-UTF-8 environment variable value
+# manager_environment(): the user manager's Environment property has an unexpected type
+#@ host/src/process_scope.rs 41 920649c28c19ce58 plain
+launch.invalidSystemdEnvironment	Ongeldige systemd-omgeving	Invalid systemd environment
+# start_unit(): the command is not in PATH
+#@ host/src/process_scope.rs 42 3f587f75c55118db plain
+launch.programNotFound	Programma niet gevonden	Program not found
+# start_unit()
+#@ host/src/process_scope.rs 43 d7d2f35b83a85a9f plain
+launch.nonUtf8ProgramPath	Niet-UTF8 programmapad	Non-UTF-8 program path
+# start_unit()
+#@ host/src/process_scope.rs 44 6bf65b6f3fad7091 plain
+#@ host/src/process_scope.rs 45 6bf65b6f3fad7091 plain
+launch.nonUtf8Argument	Niet-UTF8 programma-argument	Non-UTF-8 program argument
+# start_unit()
+#@ host/src/process_scope.rs 68 e055cf384b21e2d7 plain
+launch.nonUtf8WorkingDirectory	Niet-UTF8 werkmap	Non-UTF-8 working directory
+# spawn_pid_with_argv0(): systemd returned no unit object path ("adres": the D-Bus object path)
+#@ host/src/process_scope.rs 77 067253f6d52024c3 plain
+launch.invalidServicePath	Ongeldig serviceadres	Invalid service address
+# spawn_pid_with_argv0(): systemd's service properties have an unexpected type
+#@ host/src/process_scope.rs 81 4a6c0f46c32422bf plain
+launch.invalidServiceState	Ongeldige servicestatus	Invalid service status
+# spawn_pid_with_argv0(): the unit failed before it had a main process (Task Manager restart, shell.openApp)
+#@ host/src/process_scope.rs 86 a6b1e59f6cd03b85 plain
+launch.programFailed	Het programma kon niet worden gestart.	The program couldn’t be started.
+# spawn_pid_with_argv0(): no main process after 8 s
+#@ host/src/process_scope.rs 87 c33bff8494f52484 plain
+launch.programTimedOut	Het programma is niet op tijd gestart.	The program didn’t start in time.
+
+# --- host/src/launch.rs
+# command_in(): shell.openApp / Verkenner's "open in app": the app name is not one of Win11's own apps (branding Win11Shell kept, D-G16)
+#@ host/src/launch.rs 19 dedce3e230bb51da plain
+launch.unknownApp	Deze Win11Shell-app bestaat niet.	This Win11Shell app doesn’t exist.
+# command_in()
+#@ host/src/launch.rs 20 ef7b24b24edd8f10 plain
+launch.paramsNotObject	App-parameters moeten een JSON-object zijn.	App parameters must be a JSON object.
+# command_in(): the current executable's path (its folder holds win11-app …); {error} is the OS error
+#@ host/src/launch.rs 21 53caedcac7c2f543 fmt {error}=error
+launch.hostNotFound	Locatie van de Rust-apphost bepalen: {error}	Couldn’t find the Rust app host: {error}
+
+# --- host/src/bin/launch.rs
+# launch(): win11-launch (the GIO launcher helper): its answer goes back to the host that launched the app; no full stop in nl
+#@ host/src/bin/launch.rs 16 f1d23f666d2914ab plain
+launch.appNotFound	De app is niet gevonden	The app wasn’t found
+# launch(): a "default" launch without a uri
+#@ host/src/bin/launch.rs 19 ab955eb9d8ae56d9 plain
+launch.missingUri	Bestandsadres ontbreekt	The file address is missing
+# launch()
+#@ host/src/bin/launch.rs 20 b686638c1ac5ae81 plain
+launch.unknownRequest	Onbekende launch-opdracht	Unknown launch request

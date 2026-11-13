@@ -1,0 +1,96 @@
+# host/i18n/storage.tsv: host texts of services/storage.rs and services/storage/**.
+# Owner: R2-B.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/storage/cleanup.rs
+# run(): ApiError "bad_args": storage.cleanup.run: no ids, or an id that is not a cleanup item
+#@ host/src/services/storage/cleanup.rs 71 7137c76d66ae8124 plain
+#@ host/src/services/storage/cleanup.rs 74 7137c76d66ae8124 plain
+storage.nothingChosen	Kies wat je wilt opruimen.	Choose what you want to clean up.
+# run(): results[].error of storage.cleanup.run when files.emptyTrash / files.trash fails ("(ApiError)" is part of the 3b898e6 text)
+#@ host/src/services/storage/cleanup.rs 84 9c336862ac1b5a2d plain
+#@ host/src/services/storage/cleanup.rs 143 9c336862ac1b5a2d plain
+storage.trashFailed	Dat lukte niet (ApiError).	That didn’t work.
+# run(): results[].error of the browser cache when every browser to clean is running; {names} = browser names joined by " / "
+#@ host/src/services/storage/cleanup.rs 92 8176cf78adcd7517 fmt {}=names
+storage.closeFirst	Sluit eerst {names}.	Close {names} first.
+# run(): results[].error of flatpak-unused
+#@ host/src/services/storage/cleanup.rs 116 2831e6eb9d9f5c83 plain
+storage.noFlatpak	Flatpak is niet geïnstalleerd.	Flatpak isn’t installed.
+# run(): results[].error: flatpak uninstall --unused failed
+#@ host/src/services/storage/cleanup.rs 128 8e3243f5c9808d7b plain
+storage.flatpakFailed	Opruimen van Flatpak lukte niet.	Flatpak couldn’t be cleaned up.
+# trash_downloads(): results[].error of old-downloads
+#@ host/src/services/storage/cleanup.rs 155 32e1c5da8660a787 plain
+storage.someNotTrashed	Sommige bestanden konden niet naar de prullenbak.	Some files couldn’t be moved to the Recycle Bin.
+# res(): results[].error when nothing was freed and some files failed
+#@ host/src/services/storage/cleanup.rs 162 77e7a175e2a8697a plain
+storage.someNotDeleted	Sommige bestanden konden niet worden verwijderd.	Some files couldn’t be deleted.
+# run_admin(): results[].error: pkexec is missing
+#@ host/src/services/storage/cleanup.rs 244 17edffe16a3324f6 plain
+storage.noAdmin	Beheerdersrechten zijn hier niet beschikbaar.	Administrator rights aren’t available here.
+# run_admin(): results[].error: an admin step that is not apt, journal or snap:<name>=<revision>
+#@ host/src/services/storage/cleanup.rs 248 541d0028d88a3906 plain
+storage.badCommand	Ongeldige opdracht.	Invalid command.
+# run_admin(): results[].error: pkexec exit 126 (the password prompt was dismissed)
+#@ host/src/services/storage/cleanup.rs 261 5f17cad174176f5b plain
+storage.adminCancelled	Je hebt het wachtwoord niet ingevuld, dus er is niets veranderd.	You didn’t enter the password, so nothing was changed.
+# run_admin(): results[].error: pkexec exit 127
+#@ host/src/services/storage/cleanup.rs 262 ddb9623bbb188d1e plain
+storage.adminDenied	Het wachtwoord klopte niet. Er is niets veranderd.	The password was incorrect. Nothing was changed.
+# run_admin(): results[].error of an admin step that did not report @@ok
+#@ host/src/services/storage/cleanup.rs 277 2869c492f6586fd9 plain
+storage.failed	Dat lukte niet.	That didn’t work.
+
+# --- host/src/services/storage/scan.rs
+# start(): ApiError "bad_args": storage.scan / storage.largeFiles: maxDepth, topN, limit or minSize is not a number
+#@ host/src/services/storage/scan.rs 3 e8d6a12b8b58205f plain
+#@ host/src/services/storage/scan.rs 5 e8d6a12b8b58205f plain
+#@ host/src/services/storage/scan.rs 109 e8d6a12b8b58205f plain
+#@ host/src/services/storage/scan.rs 111 e8d6a12b8b58205f plain
+storage.badArgs	Ongeldige invoer.	Invalid input.
+# start(): ApiError "busy": storage.scan while three scans run
+#@ host/src/services/storage/scan.rs 18 c4dd9929c12e8ab6 plain
+storage.busy	Er lopen al een paar scans. Wacht even tot die klaar zijn.	A few scans are already running. Wait until they’ve finished.
+# start(): ApiError "cancelled": error of a cancelled scan (storage.scanResult, storage.scanDone); stored as the error and rendered when it is read
+#@ host/src/services/storage/scan.rs 20 de56c76ec4e0ecb6 plain
+storage.scanStopped	Het scannen is gestopt.	The scan was stopped.
+# result(): ApiError "not_found": storage.scanResult for a job id that is unknown or expired
+#@ host/src/services/storage/scan.rs 60 7aea8be4f0a9bb05 plain
+storage.unknownScan	Deze scan is niet (meer) bekend.	This scan is no longer available.
+# walk(): ApiError "denied": error of a scan (stored as key + params, rendered when read)
+#@ host/src/services/storage/scan.rs 63 4191bc44fad601e8 plain
+#@ host/src/services/storage/scan.rs 68 4191bc44fad601e8 plain
+storage.folderDenied	Je hebt geen toegang tot deze map.	You don’t have access to this folder.
+# walk(): ApiError "not_found": error of a scan: the folder vanished before or during the scan
+#@ host/src/services/storage/scan.rs 64 a7d5ecadc1ea3768 plain
+#@ host/src/services/storage/scan.rs 66 a7d5ecadc1ea3768 plain
+storage.folderGone	Deze map bestaat niet (meer).	This folder no longer exists.
+# large(): ApiError "not_found"
+#@ host/src/services/storage/scan.rs 113 bf726c0f1405539b plain
+#@ host/src/services/storage/common.rs 46 bf726c0f1405539b plain
+storage.noSuchFolder	Deze map bestaat niet.	This folder doesn’t exist.
+
+# --- host/src/services/storage/common.rs
+# check_dir(): ApiError "bad_args": check_dir() of storage.scan / storage.largeFiles: no path
+#@ host/src/services/storage/common.rs 34 7df9c03242d5dff1 plain
+storage.noFolder	Geef een map op.	Choose a folder.
+# check_dir(): ApiError "bad_args"
+#@ host/src/services/storage/common.rs 36 a559997b69c4de2e plain
+storage.notAbsolute	Geef een volledig pad op.	Enter a full path.
+# check_dir(): ApiError "unsupported": /proc, /sys, /dev and /run (except /run/media)
+#@ host/src/services/storage/common.rs 44 9e86c77febe0835a plain
+storage.notScannable	Deze map kan niet worden gescand.	This folder can’t be scanned.
+
+# --- host/src/services/storage/categories.rs
+# compute(): ApiError "not_found": storage.categories: the home folder cannot be read (the error is not shown: the categories scan then keeps its old data)
+#@ host/src/services/storage/categories.rs 23 86843058b5e12494 plain
+storage.noHome	Je persoonlijke map is niet gevonden.	Your home folder can’t be found.

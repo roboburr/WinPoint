@@ -1,0 +1,141 @@
+{
+ "name": "phased-as-normal",
+ "group": "phasing",
+ "title": "A phased package listed as a normal update",
+ "description": "GetUpdates lists ubuntu-drivers-common with info 5; the python3 phasing stub reports phasing_applied 1 for it, so neither a row nor UpdatePackages may contain it (forbiddenIds: the fake records a violation if it arrives). GW2b (review m1): the simulate reports DownloadSizeRemaining 0 (the apt backend’s \"unknown\"), so the total comes from the download.",
+ "states": [
+  "R04"
+ ],
+ "forbiddenIds": [
+  "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "openssl\t3.5.3-1ubuntu2.1\t0\t-\t0\nlibssl3t64\t3.5.3-1ubuntu2.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nubuntu-drivers-common\t1:0.10.4\t1\t30\t0\nopenssl\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\nlibssl3t64\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\nubuntu-drivers-common\tamd64\t1:0.10.4\t1\t30\t0\t1:0.10.3\n@@end\n"
+  }
+ },
+ "packages": {
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - cryptographic utility",
+   "size": 1478656,
+   "row": "security"
+  },
+  "libssl3t64;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - shared libraries",
+   "size": 6905856,
+   "row": "security"
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other"
+  },
+  "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "Detect and install additional Ubuntu driver packages",
+   "size": 1015808,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security",
+  "libssl3t64;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates",
+  "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates"
+ ],
+ "methods": {
+  "UpdatePackages:simulate": [
+   {
+    "emitSimulate": {
+     "downloadSize": 0
+    }
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "RefreshCache",
+   "args": [
+    false
+   ],
+   "expect": {
+    "exit": "success",
+    "statuses": [
+     "refresh-cache"
+    ]
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 4
+   }
+  },
+  {
+   "phasing": "$updates",
+   "save": "install",
+   "expect": {
+    "phased": [
+     "ubuntu-drivers-common"
+    ],
+    "install": 3
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$install"
+   ],
+   "expect": {
+    "exit": "success",
+    "count": {
+     "Package": 3
+    }
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$install"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 1,
+    "ids": [
+     "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates"
+    ]
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 15,
+  "stubs": [
+   "python3"
+  ],
+  "violations": []
+ }
+}

@@ -1,0 +1,169 @@
+{
+  "version": "0.7.0",
+  "actual_user_session_untouched": true,
+  "ui_source_unchanged": true,
+  "original_settings_controls": true,
+  "independent_gsettings_reader": true,
+  "private_session": true,
+  "checks": [
+    {
+      "case": "original-theme-card-bloom-light-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:bloom-light",
+      "theme": "light",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-theme-card-bloom-dark-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:bloom-dark",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-theme-card-flow-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:flow-dark",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-theme-card-glow-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:glow",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-theme-card-sunrise-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:sunrise",
+      "theme": "light",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-theme-card-aurora-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:aurora",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-background-photo-tile-updates-desktop-and-gnome",
+      "passed": true,
+      "desktop_path": "builtin:glow"
+    },
+    {
+      "case": "original-solid-color-dropdown-and-swatch-update-desktop-and-gnome",
+      "passed": true,
+      "color": "rgb(232, 17, 35)"
+    },
+    {
+      "case": "original-picture-dropdown-restores-selected-image",
+      "passed": true
+    },
+    {
+      "case": "original-background-fit-fill-matches-gnome",
+      "passed": true,
+      "css_size": "cover",
+      "gnome_fit": "zoom"
+    },
+    {
+      "case": "original-background-fit-fit-matches-gnome",
+      "passed": true,
+      "css_size": "contain",
+      "gnome_fit": "scaled"
+    },
+    {
+      "case": "original-background-fit-stretch-matches-gnome",
+      "passed": true,
+      "css_size": "100% 100%",
+      "gnome_fit": "stretched"
+    },
+    {
+      "case": "original-background-fit-tile-matches-gnome",
+      "passed": true,
+      "css_size": "auto",
+      "gnome_fit": "wallpaper"
+    },
+    {
+      "case": "original-background-fit-center-matches-gnome",
+      "passed": true,
+      "css_size": "auto",
+      "gnome_fit": "centered"
+    },
+    {
+      "case": "original-background-fit-span-matches-gnome",
+      "passed": true,
+      "css_size": "cover",
+      "gnome_fit": "spanned"
+    },
+    {
+      "case": "original-follow-toggle-off-keeps-explicit-photo-after-mode-change",
+      "passed": true
+    },
+    {
+      "case": "original-follow-toggle-on-applies-dark-twin-to-desktop-and-gnome",
+      "passed": true
+    },
+    {
+      "case": "original-browse-button-applies-local-photo-with-escaped-uri",
+      "passed": true,
+      "photo_name": "photo #1 %.png",
+      "file_chooser_result_fixture": true
+    },
+    {
+      "case": "wallpaper-crossfade-settles-to-one-layer-without-stale-image",
+      "passed": true
+    }
+  ],
+  "passed": 19,
+  "state_before_final_crossfade": {
+    "theme": "dark",
+    "wallpaper": {
+      "type": "image",
+      "path": "/tmp/win11-desktop-test/photo #1 %.png",
+      "color": "#E81123",
+      "fit": "span",
+      "followTheme": true,
+      "mode": "color",
+      "followSystem": false
+    },
+    "path": "/tmp/win11-desktop-test/photo #1 %.png",
+    "imagePath": "/tmp/win11-desktop-test/photo #1 %.png",
+    "image": "image",
+    "size": "cover",
+    "repeat": "no-repeat",
+    "color": "rgb(232, 17, 35)",
+    "layers": 2
+  },
+  "settled_layer_count": 1,
+  "notes": [
+    "The recorded state snapshot preceded the final crossfade wait; the last passing check observed exactly one remaining layer.",
+    "The custom-photo case supplied only the file chooser result as a fixture; its original Browse button and Rust settings API ran unchanged.",
+    "The separate Settings window changed the already-running native desktop; an independent gsettings process verified every GNOME wallpaper target."
+  ],
+  "unit_checks": {
+    "passed": 5,
+    "backend": "explicit private Gio memory backend for OS-write test",
+    "tests": [
+      "original_builtin_follow_theme_modes_and_manual_path",
+      "all_six_fit_modes_and_solid_color_match_original_controls",
+      "local_photo_uri_escapes_special_characters_and_rejects_missing_or_remote_paths",
+      "only_wallpaper_and_mode_changes_request_a_desktop_update",
+      "grouped_gnome_writes_are_visible_to_other_settings_clients"
+    ]
+  },
+  "source_sha256": {
+    "host/src/wallpaper.rs": "29de04b1d8928897c794708fe1f30d3333c055d00eb06552166ebcf557960dab",
+    "host/src/settings_runtime.rs": "0482f109d441772331ce9f4e687911d6be222e4c96436da31ab5bb52508a7e1a"
+  },
+  "binary_sha256": {
+    "win11-start": "a15e975eea6d33799a7f7c10b3525f9203bfffcc2a41435be31b0c974fafa236",
+    "win11-panel": "3eb674156240b19d76bdba8519ef9d1d0e47443c2c906b27d1e255086c1f2da7",
+    "win11-explorer": "f539521324064a91a28ee95374e47636542a31f5a9a4c0490026ebb9c608196f",
+    "win11-app": "2f2f07124042a468793079c4e2975418ecd9110911c4ec751d92d4429752f63f",
+    "win11-desktop": "dcee00ead32320436ff71bec4d3ae6af6b1fdd79d4aefcd3217d2e10c076560d"
+  },
+  "combined_desktop_report": "desktop-0.7.0.json"
+}

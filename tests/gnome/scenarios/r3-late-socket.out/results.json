@@ -1,0 +1,355 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-06 02:47:12",
+ "seconds": 122.2,
+ "innerExit": -15,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/build/r3-native-debug",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 21,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 856934,
+   "rss_kb": 1894156,
+   "processes": 27,
+   "t": 6.0
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 745993,
+   "rss_kb": 1747092
+  },
+  "minMemAvailableKb": 2125560,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 233898,
+    "rss_kb": 324820
+   },
+   "WebKitWebProces": {
+    "count": 3,
+    "pss_kb": 201246,
+    "rss_kb": 554504
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 108346,
+    "rss_kb": 138280
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 73495,
+    "rss_kb": 178832
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 71800,
+    "rss_kb": 177208
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 65679,
+    "rss_kb": 169760
+   },
+   "WebKitNetworkPr": {
+    "count": 3,
+    "pss_kb": 44087,
+    "rss_kb": 175928
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 28003,
+    "rss_kb": 81336
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15929,
+    "rss_kb": 33776
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 4722,
+    "rss_kb": 13400
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4123,
+    "rss_kb": 11596
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2061,
+    "rss_kb": 4588
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1418,
+    "rss_kb": 10060
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 829,
+    "rss_kb": 8044
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 764,
+    "rss_kb": 7828
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 347,
+    "rss_kb": 1572
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 187,
+    "rss_kb": 2624
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/build/r3-native-debug",
+  "exit": 0,
+  "seconds": 83.4,
+  "mutatingSyscallPaths": 87856,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native"
+  }
+ },
+ "guardStubCalls": [
+  "02:49:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:04\tpw-dump\t--monitor --no-colors",
+  "02:49:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:04\tpw-dump\t--monitor --no-colors",
+  "02:49:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:06\tpw-dump\t--monitor --no-colors",
+  "02:49:06\tpw-dump\t--monitor --no-colors",
+  "02:49:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:49:10\tpw-dump\t--monitor --no-colors",
+  "02:49:10\tpw-dump\t--monitor --no-colors"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/db"
+  ],
+  "left": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/logs/r3-late.s"
+  ],
+  "ok": false
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 6,
+  "maxScanSeconds": 0.285,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [
+   {
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/logs/r3-late.s",
+    "t": 10.7
+   }
+  ],
+  "ok": false,
+  "runSockets": [
+   "cache/ibus/db"
+  ],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/logs/install.strace",
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-late-socket.out/connect.strace.warm",
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-late-socket.out/connect.strace.warm2",
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-late-socket.out/connect.strace"
+  ],
+  "connects": 179,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 75
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 6
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/cache/ibus/db",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/home/.lttng/l",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "ENOENT",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/nvidia-mps/control",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 11
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 21
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 8
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/lttng/lttng-ust-sock-8",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 32
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 3
+   }
+  ]
+ },
+ "inner": {
+  "error": "inner stage wrote no results"
+ },
+ "copiedScreenshots": []
+}

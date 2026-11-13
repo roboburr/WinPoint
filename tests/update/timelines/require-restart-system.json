@@ -1,0 +1,249 @@
+{
+ "name": "require-restart-system",
+ "group": "restart",
+ "title": "Restart required (kernel)",
+ "description": "The install emits RequireRestart 4 (system) for linux-image-generic and the fixture gains run/reboot-required(.pkgs), as the kernel postinst writes them.",
+ "states": [
+  "H10",
+  "H11"
+ ],
+ "fixtures": {
+  "run/reboot-required": null,
+  "run/reboot-required.pkgs": null
+ },
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "linux-generic\t7.0.0.43.43\t0\t-\t0\nlinux-image-generic\t7.0.0.43.43\t0\t-\t0\nlinux-headers-generic\t7.0.0.43.43\t0\t-\t0\nopenssl\t3.5.3-1ubuntu2.1\t0\t-\t0\nlinux-generic\tamd64\t7.0.0.43.43\t0\t-\t0\t7.0.0.43.42\nlinux-image-generic\tamd64\t7.0.0.43.43\t0\t-\t0\t7.0.0.43.42\nlinux-headers-generic\tamd64\t7.0.0.43.43\t0\t-\t0\t7.0.0.43.42\nopenssl\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\n@@end\n"
+  }
+ },
+ "packages": {
+  "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Complete Generic Linux kernel and headers",
+   "size": 17408,
+   "row": "kernel"
+  },
+  "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Generic Linux kernel image",
+   "size": 17408,
+   "row": "kernel"
+  },
+  "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Generic Linux kernel headers",
+   "size": 17408,
+   "row": "kernel"
+  },
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - cryptographic utility",
+   "size": 1478656,
+   "row": "security"
+  }
+ },
+ "updates": [
+  "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+  "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+  "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security"
+ ],
+ "methods": {
+  "UpdatePackages": [
+   {
+    "props": {
+     "Status": "download",
+     "AllowCancel": true,
+     "Percentage": 0
+    }
+   },
+   {
+    "package": [
+     "downloading",
+     "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "downloading",
+     "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "downloading",
+     "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "downloading",
+     "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "props": {
+     "Status": "commit",
+     "AllowCancel": false,
+     "Percentage": 50
+    }
+   },
+   {
+    "props": {
+     "Status": "update"
+    }
+   },
+   {
+    "package": [
+     "updating",
+     "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "item": [
+     "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+     "update",
+     100
+    ]
+   },
+   {
+    "package": [
+     "finished",
+     "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "updating",
+     "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "item": [
+     "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+     "update",
+     100
+    ]
+   },
+   {
+    "package": [
+     "finished",
+     "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "updating",
+     "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "item": [
+     "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+     "update",
+     100
+    ]
+   },
+   {
+    "package": [
+     "finished",
+     "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "updating",
+     "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "item": [
+     "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security",
+     "update",
+     100
+    ]
+   },
+   {
+    "package": [
+     "finished",
+     "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "restart": [
+     "system",
+     "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "fixture": {
+     "run/reboot-required": "*** System restart required ***\n",
+     "run/reboot-required.pkgs": "linux-image-7.0.0-43-generic\nlinux-base\n"
+    }
+   },
+   {
+    "removeUpdates": [
+     "linux-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+     "linux-image-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+     "linux-headers-generic;7.0.0.43.43;amd64;ubuntu-resolute-security",
+     "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "props": {
+     "Status": "cleanup",
+     "Percentage": 100
+    }
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 4
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "restart": [
+     "system"
+    ]
+   }
+  },
+  {
+   "fixtureExists": "run/reboot-required"
+  },
+  {
+   "fixtureExists": "run/reboot-required.pkgs"
+  }
+ ],
+ "expect": {
+  "callCount": 9
+ }
+}

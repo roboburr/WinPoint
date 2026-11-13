@@ -1,0 +1,76 @@
+# Intended Dutch changes of the GNOME extension and the installer (GE1c; notes/claude/plan.md ground rule "Dutch
+# stays default and byte-identical"; format of tests/i18n/BASELINE-CHANGES). One line per change, tab-separated:
+#   STEP<TAB>key:ext.ID<TAB>the new nl text, exactly (\n \t escaped)<TAB>why
+#       ID is a row of tests/installer/ext/dump.mjs (the text the extension shows or returns, in nl);
+#       tests/installer/test_extension_text.py requires that the nl dump of extension/ differs from the nl dump of
+#       3b898e6's extension in exactly these rows, with exactly this text.
+#   STEP<TAB>key:install.ID<TAB>the new nl text<TAB>why
+#       a text of the T table of scripts/install.py (or uninstall.py) whose output differs from 3b898e6 in nl;
+#       tests/installer/test_installer.py asserts these outputs one by one; every other nl output is compared
+#       byte for byte with the 3b898e6 installer run in the same case directory.
+#   STEP<TAB>file(s)<TAB>a behaviour change without new text
+# Everything not listed is byte-identical in nl: the fallback taskbar's labels and accessible names, the
+# Ctrl+Alt+Tab name, the clock (%d-%m-%Y), Main.notify texts, the test notification, the two Dutch notification
+# failures, the installer's six closing lines, its error texts, and the desktop entries (Name=, Comment=).
+GE1c	key:ext.failure.argsObject	Argumenten moeten een JSON-object zijn.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.offline	De GNOME-integratie staat uit.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.sessionStart	Start is alleen beschikbaar in de ontgrendelde gebruikerssessie.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.sessionApps	Apps kunnen alleen worden geopend in de ontgrendelde gebruikerssessie.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.panelMissing	De taakbalk is niet beschikbaar.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.sessionLocked	De sessie is vergrendeld.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.sessionWindows	Vensterbeheer is alleen beschikbaar in de ontgrendelde gebruikerssessie.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.sessionUnavailable	De gebruikerssessie is vergrendeld of niet beschikbaar.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.startMissing	Win11 Start is niet geïnstalleerd.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.appMissing	De gevraagde app is niet geïnstalleerd.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.keyboardMode	Er is een toetsenbordmodus nodig.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.badHost	Ongeldig app-proces.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.hostUnmapped	Het venster van de app wordt nog niet weergegeven.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.hostUnpainted	De app heeft zijn venster nog niet getekend.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.badGeometry	Ongeldige opgeslagen vensterpositie.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.noDisplay	Er is geen beeldscherm beschikbaar.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.waitFrame	Wachten op het niet-gemaximaliseerde venster.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.windowGone	Het gevraagde app-venster bestaat niet meer.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.explorerGone	Het oorspronkelijke Verkenner-venster is niet meer beschikbaar.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.cantMinimize	Dit venster kan niet worden geminimaliseerd.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.cantClose	Dit venster kan niet worden gesloten.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.cantMaximize	Dit venster kan niet worden gemaximaliseerd.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.unknownMethod	Niet-ondersteunde GNOME-functie: windows.zap	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged; the dump calls windows.zap, {method} is the method name
+GE1c	key:ext.failure.badSnap	Onbekende uitlijnpositie voor het venster.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.cantResize	Het formaat van dit venster kan niet worden gewijzigd.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.badRects	Pictogramrechthoeken moeten een lijst zijn.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.badPid	Er is een geldig proces-ID van het bureaublad nodig.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.badIdentity	Ongeldige identiteit voor de vensterachtergrond.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.failure.identityMismatch	De identiteit van de achtergrond past niet bij het venster.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:ext.appInfo.settings	Win11 Instellingen	launch-context name when the own .desktop file is missing: the Dutch name of host/src/desktop-entries.json (C6) instead of an English one
+GE1c	key:ext.appInfo.taskmgr	Win11 Taakbeheer	launch-context name when the own .desktop file is missing: the Dutch name of host/src/desktop-entries.json (C6) instead of an English one
+GE1c	key:ext.appInfo.alles	Alles	launch-context name when the own .desktop file is missing: the Dutch name of host/src/desktop-entries.json (C6) instead of an English one; "Alles" instead of "Everything" (D-G5)
+GE1c	key:ext.appInfo.disks	Win11 Schijfbeheer	launch-context name when the own .desktop file is missing: the Dutch name of host/src/desktop-entries.json (C6) instead of an English one
+GE1c	key:ext.appInfo.defaultapps	Win11 Standaardapps	launch-context name when the own .desktop file is missing: the Dutch name of host/src/desktop-entries.json (C6) instead of an English one
+GE1c	key:ext.appInfo.installer	Win11 App-installatie	launch-context name when the own .desktop file is missing: the Dutch name of host/src/desktop-entries.json (C6) instead of an English one
+GE1c	key:ext.failure.notificationUnknown	Onbekende meldingsfunctie: notifications.zap	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged; the dump calls notifications.zap, {method} is the method name
+GE1c	key:ext.notificationUntitled.appName	""	contracts C5: a GNOME source without a name gets appName "" (the UI shows its own Melding/Notification) instead of the English "Notification"
+GE1c	key:ext.failure.notificationOffline	De meldingenkoppeling staat uit.	the toast text of this failure was English in nl (3b898e6 had no Dutch for it; plan-critique F4); code unchanged
+GE1c	key:install.langChosen	Taal: Nederlands. In English: choose English in Instellingen › Tijd en taal › Taal en regio.	new first line of a FIRST install only (no settings.json, no payload): the language was guessed from the locale (H D4) and is now stored; 3b898e6 printed nothing about the language
+GE1c	key:install.langZone	Taal: Nederlands, vanwege de tijdzone {zone}. In English: choose English in Instellingen › Tijd en taal › Taal en regio.	as langChosen, when an English locale gave nl through a Dutch time zone (H D4; Robin's en_US + Europe/Amsterdam)
+GE1c	key:install.langFormats	Taal: Nederlands, vanwege de Nederlandse notatie in {var}. In English: choose English in Instellingen › Tijd en taal › Taal en regio.	as langChosen, when an English locale gave nl through Dutch formats (H D4)
+GE1c	key:install.langMigrated	Taal: {name}, overgenomen van Win11 Shell voor Hyprland ({file}).	first install over H: H's language moved into a new complete settings.json (plan-critique F20)
+GE1c	key:install.langKept	Let op: --lang {lang} geldt alleen zonder opgeslagen keuze. Win11 blijft {name} ({file}); wijzig de taal in {path}.	new: --lang on an install that has a stored language (C6: the stored language wins)
+GE1c	key:install.missingBinary	Ontbreekt: {source}. Bouw eerst met scripts/build.sh.	same text; now one line for EVERY missing binary (3b898e6 named only the first); with WIN11_BUILD_DIR unset a complete target/release wins over a stale bin/
+GE1c	key:install.badLang	Onbekende taal ‘{lang}’: kies nl of en.	new (printed in nl and en): 3b898e6 ignored every argument after ROOT
+GE1c	key:install.badOption	Onbekende optie: {option}	new: an unknown option now stops with exit 2 instead of being ignored
+GE1c	key:install.usage	Gebruik: scripts/install.sh [--lang nl|en]\n  --lang nl|en  de taal van Win11 bij een eerste installatie; een keuze die al in settings.json staat, blijft gelden	new: --help
+GE1c	key:install.missingParts	Ontbrekende systeemonderdelen: {missing}.	new runtime preflight (libraries the binaries need, libarchive.so.13, python3-gi, glib-compile-schemas)
+GE1c	key:install.installParts	Installeer ze op Ubuntu met: sudo apt install {packages}	new, with missingParts
+GE1c	key:install.noDesktopDatabase	Let op: update-desktop-database ontbreekt (pakket desktop-file-utils); de app-database van GNOME wordt niet bijgewerkt.	new warning; 3b898e6 skipped update-desktop-database silently
+GE1c	key:install.configNotOwn	Niet overschreven: {path} moet een gewone map van deze gebruiker zijn.	new: only before writing a first settings.json, the host's own rule for its folder
+GE1c	key:install.badTable	Ontbrekend of ongeldig projectbestand: {file}	new: host/src/desktop-entries.json or settings-defaults.json missing or broken
+GE1c	key:install.uninstall.usage	Gebruik: scripts/uninstall.sh [--files-only] [--lang nl|en]	uninstall.py: --lang added (was "Gebruik: scripts/uninstall.sh [--files-only]")
+GE1c	key:install.staleRemoved	Verwijderd uit de extensiemap (geen bestand van deze versie): {path}	new (ge1c-review m3): install.py and uninstall.py name every top-level file of the own extension folder that they remove and that this version does not ship; printed only when such a file exists, so Robin's update output stays identical
+GE1c	scripts/install.py	a first install (no win11-gnome settings.json and no payload) writes config/win11-gnome/settings.json: the complete host/src/settings-defaults.json with the chosen language (GE0c F3), 0600 in a 0700 folder, under .settings.lock, by rename; never over an existing file; after every check and before the first change (ge1c-review m1), so a rerun after a failed install keeps the choice; its language line is printed at that moment (still the first line)
+GE1c	scripts/install.py	the extension is installed as the listing of extension/ minus schemas/ (C7, F18); a top-level file this tree no longer ships is removed from the own extension folder and named (key:install.staleRemoved)
+GE1c	scripts/install.py	Name= and Comment= of the 10 entries come from host/src/desktop-entries.json in the stored language (C6, F19); the nl values are the 3b898e6 literals byte for byte
+GE1c	scripts/uninstall.py	removes every top-level file of its own extension folder (was a fixed list of 9 names); each one outside that list and outside this version's extension/ is named (key:install.staleRemoved)
+GE1c	extension/extension.js	the language comes only from GLib.get_user_config_dir()/win11-gnome/settings.json and is followed live through a directory monitor (C1); theme/taskbar keys still use readSettings() unchanged
+GE1c	scripts/build.sh	cargo build --release --offline --locked -j "${WIN11_BUILD_JOBS:-2}" (was --locked -j 4, online; contracts C8, plan-critique F34, ge1c-review m7); messages unchanged
+R3-NATIVE	extension/extension.js	D-G21: Task Manager’s “Always on top” works in GNOME: while taskmgr.alwaysOnTop is true in Win11’s settings.json (read by the language watch and followed live, C1), every window with Task Manager’s WM class io.github.win11shell.TaskManager is above other windows (make_above) and on every workspace (stick), also one opened later; switched off, or with the extension disabled, each window gets back the above and sticky states it had before. No new text (the switch and its description are the UI’s, tests/i18n/BASELINE-CHANGES.ui)
+FIX-POWER	key:ext.added.powerAction	Onbekende energieactie.	new text: panel.power (Start hands a power action to the panel window, D-G58) refuses an action other than shutdown, reboot, logout, suspend or lock

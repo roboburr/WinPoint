@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-01",
+  "version": "0.6.0",
+  "native_methods": [
+    "apps.launch",
+    "apps.openUri"
+  ],
+  "native_response_header": "X-Win11-Service: rust-apps",
+  "isolated": true,
+  "python_equivalents_trapped": true,
+  "real_own_apps": [
+    "explorer",
+    "settings",
+    "taskmgr",
+    "alles",
+    "disks"
+  ],
+  "foreign_apps_are_only_recorders": true,
+  "intentional_difference": "Malformed bracketed HTTP authority returns typed bad_uri instead of the original internal ValueError envelope.",
+  "cases": [
+    {
+      "case": "native-app-launch-preserves-multiple-literal-uri-arguments-and-user-environment",
+      "passed": true
+    },
+    {
+      "case": "launch-and-uri-validation-match-original-error-contract",
+      "passed": true
+    },
+    {
+      "case": "native-open-uri-routes-http-mail-and-local-files-to-private-default-handler",
+      "passed": true
+    },
+    {
+      "case": "native-own-explorer-groups-selected-files-and-opens-ordered-extra-tabs",
+      "passed": true
+    },
+    {
+      "case": "all-five-own-apps-launch-as-independent-native-rust-windows",
+      "passed": true
+    },
+    {
+      "case": "public-apps-list-launch-and-openuri-work-with-python-equivalents-trapped",
+      "passed": true
+    }
+  ],
+  "active_desktop_untouched": true
+}

@@ -1,0 +1,140 @@
+# host/i18n/system.tsv: host texts of services/system.rs and services/system/** (audio, bluetooth, agent, network incl. the Wi-Fi texts, energy, hardware, power, info).
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/system.rs
+# number_arg(): ApiError "bad_args": a number, percentage or on/off argument of a system.* call is not valid
+#@ host/src/services/system.rs 175 9ca1fd1681602b22 plain
+#@ host/src/services/system.rs 177 9ca1fd1681602b22 plain
+#@ host/src/services/system.rs 190 9ca1fd1681602b22 plain
+system.invalidValue	Ongeldige waarde.	Invalid value.
+
+# --- host/src/services/system/audio.rs
+# set(): ApiError "unavailable": system.audio.set: no default PipeWire output (wpctl)
+#@ host/src/services/system/audio.rs 28 9cf32fbea5206e87 plain
+system.audio.noDevice	Er is geen geluidsapparaat gevonden.	No sound device was found.
+# set(): ApiError "failed"
+#@ host/src/services/system/audio.rs 42 150fe3087a9c1142 plain
+system.audio.volumeFailed	Het volume kon niet worden aangepast.	Couldn’t change the volume.
+# set(): ApiError "failed": wpctl set-mute failed (muting and unmuting)
+#@ host/src/services/system/audio.rs 50 294fc887a1e05caf plain
+system.audio.muteFailed	Dempen lukte niet.	Couldn’t mute or unmute the sound.
+# set_sink(): ApiError "bad_args": system.audio.setSink: the id is not a number
+#@ host/src/services/system/audio.rs 52 ee27acd01b0dbeba plain
+system.audio.unknownDevice	Onbekend geluidsapparaat.	Unknown sound device.
+# set_sink(): ApiError "not_found"
+#@ host/src/services/system/audio.rs 55 0d20360f0f93fb59 plain
+system.audio.deviceGone	Dit geluidsapparaat is niet (meer) aangesloten.	This sound device is no longer connected.
+# set_sink(): ApiError "failed": wpctl set-default failed
+#@ host/src/services/system/audio.rs 59 6a00a8f72f57ba75 plain
+system.audio.switchFailed	Overschakelen naar dit apparaat lukte niet.	Couldn’t switch to this device.
+
+# --- host/src/services/system/hardware.rs
+# brightness_set(): ApiError "unsupported": system.brightness.set: no backlight device in /sys/class/backlight
+#@ host/src/services/system/hardware.rs 33 8a68bb20cd8951ea plain
+system.brightness.unsupported	De helderheid van dit scherm kan hier niet worden aangepast.	The brightness of this screen can’t be changed here.
+# brightness_set(): ApiError "bad_args": system.brightness.set got neither value nor delta
+#@ host/src/services/system/hardware.rs 40 0faa20fc7d4e0446 plain
+system.brightness.missing	Geef een helderheid op.	Specify a brightness level.
+# brightness_set(): ApiError "failed": logind SetBrightness failed (also: no system bus)
+#@ host/src/services/system/hardware.rs 42 4a7d9fab92d2eaaa plain
+#@ host/src/services/system/hardware.rs 48 4a7d9fab92d2eaaa plain
+system.brightness.failed	De helderheid kon niet worden aangepast.	Couldn’t change the brightness.
+
+# --- host/src/services/system/network.rs
+# set_wifi(): ApiError "failed": nmcli radio wifi on/off failed
+#@ host/src/services/system/network.rs 184 70ac892184717c06 plain
+system.network.wifiFailed	Wi-Fi aan- of uitzetten lukte niet.	Couldn’t turn Wi-Fi on or off.
+# disconnect(): ApiError "internal": system.network.disconnect: NetworkManager's device list could not be read
+#@ host/src/services/system/network.rs 186 f93ec6cfc1178d15 plain
+system.network.internalError	Interne fout.	Internal error.
+# disconnect(): ApiError "not_found": system.network.disconnect: no device with this interface name
+#@ host/src/services/system/network.rs 189 df3697f92a72cdfe plain
+system.network.noAdapter	Deze netwerkadapter bestaat niet.	This network adapter doesn’t exist.
+# disconnect(): ApiError "failed": nmcli device disconnect failed
+#@ host/src/services/system/network.rs 202 2fe3984065fdaa63 plain
+system.network.disconnectFailed	Verbinding verbreken lukte niet.	Couldn’t disconnect.
+# connect(): ApiError "bad_args": system.network.connect: the SSID is empty or longer than 32 bytes
+#@ host/src/services/system/network.rs 206 9e7aa89b1cef2b81 plain
+system.network.badName	Ongeldige netwerknaam.	Invalid network name.
+# connect(): ApiError "bad_args": system.network.connect: the password is not a string of at most 64 characters; code bad_args opens the password field in the UI (shell/quicksettings.js)
+#@ host/src/services/system/network.rs 210 6bb865528c2aa479 plain
+system.network.badPassword	Ongeldig wachtwoord.	Invalid password.
+# set_airplane(): ApiError "failed": rfkill/NetworkManager did not take the change
+#@ host/src/services/system/network.rs 268 8fbdc754dab7b781 plain
+system.network.airplaneFailed	Vliegtuigmodus kon niet worden aangepast.	Couldn’t change flight mode.
+
+# --- host/src/services/system/power.rs
+# action(): ApiError "failed": system.power.action logout without gnome-session-quit, and logind has no session id
+#@ host/src/services/system/power.rs 27 0d4e3828570ef8ba plain
+system.power.noSession	Afmelden lukte niet: geen sessie gevonden.	Couldn’t sign out: no session was found.
+# action(): ApiError "bad_args": system.power.action: not shutdown, reboot, suspend, logout or lock
+#@ host/src/services/system/power.rs 44 4cd7f67ade2522c5 plain
+system.power.unknownAction	Onbekende actie.	Unknown action.
+# action(): ApiError "inhibited": systemd refused because of an inhibitor lock
+#@ host/src/services/system/power.rs 47 f7db7a20284740f8 plain
+system.power.inhibited	Een app houdt dit op dit moment tegen. Sluit die app en probeer het opnieuw.	An app is preventing this right now. Close that app and try again.
+# action(): ApiError "denied": polkit refused (interactive authentication required / access denied)
+#@ host/src/services/system/power.rs 51 1d86776822632f25 plain
+system.power.denied	Dit mag nu niet: er zijn misschien andere gebruikers aangemeld.	This isn’t allowed right now: other users might be signed in.
+# action(): ApiError "failed"
+#@ host/src/services/system/power.rs 53 9fcbe6bd4f391f0d plain
+system.power.failed	Dat lukte niet. Probeer het opnieuw.	That didn’t work. Try again.
+# open_updater(): ApiError "unsupported": system.openUpdater: none of update-manager, gnome-software, snap-store is installed
+#@ host/src/services/system/power.rs 63 fe5899fb9dc64830 plain
+system.updates.noApp	Er is geen programma voor updates gevonden.	Couldn’t find an app for updates.
+# set(): ApiError "failed": hyprsunset could not be started
+#@ host/src/services/system/power.rs 85 b5a67ff5347c2e05 plain
+system.nightLight.failed	Nachtlampje kon niet worden gestart.	Couldn’t start night light.
+# NightLight::set(): ApiError "unsupported": night light needs hyprsunset in a Hyprland session, which the GNOME version never has; GNOME's own night light is set in Ubuntu's Settings app. Same text as the UI's Display page note (display.js nightNA), D-G2
+#@ new
+system.nightLight.unsupported	Nachtlampje kan hier niet worden ingesteld. Gebruik daarvoor de app Instellingen van Ubuntu.	Night light can’t be set up here. Use Ubuntu’s Settings app instead.
+
+# --- host/src/services/system/energy.rs
+# set(): ApiError "unsupported": system.power.settings.set: sleep after a time-out was chosen while logind's CanSuspend is not yes/challenge
+#@ host/src/services/system/energy.rs 61 f28bd97d5a7ada10 plain
+system.energy.noSleep	Deze computer ondersteunt momenteel geen slaapstand.	This computer doesn’t support sleep right now.
+# set(): ApiError "bad_args": power-profiles-daemon does not offer the chosen profile
+#@ host/src/services/system/energy.rs 69 00bdb9ec610d424c plain
+system.energy.profileUnavailable	Deze energiestand is niet beschikbaar op deze computer.	This power mode isn’t available on this computer.
+# set(): ApiError "unsupported": the performance profile is inhibited (PerformanceInhibited)
+#@ host/src/services/system/energy.rs 72 9d1269fa26278c94 plain
+system.energy.profileDisabled	Deze energiestand is tijdelijk niet beschikbaar.	This power mode is temporarily unavailable.
+# set(): ApiError "failed": reading ActiveProfile back after the write failed
+#@ host/src/services/system/energy.rs 75 130d36c342263bfc plain
+system.energy.profileUnchecked	De energiestand kon na de wijziging niet worden gecontroleerd.	The power mode couldn’t be checked after the change.
+# set(): ApiError "failed": ActiveProfile read back is not the chosen one
+#@ host/src/services/system/energy.rs 78 c265400b8da6bbb9 plain
+system.energy.profileNotTaken	De computer heeft de gekozen energiestand niet overgenomen.	The computer didn’t accept the chosen power mode.
+# unavailable(): ApiError "unsupported": the GSettings schema or key is missing, or there is no system bus
+#@ host/src/services/system/energy.rs 86 9cfb7511065641b9 plain
+system.energy.unavailable	Deze energie-instelling is niet beschikbaar op deze computer.	This power setting isn’t available on this computer.
+# write(): ApiError "bad_args": wrong GVariant type or out of the schema's range
+#@ host/src/services/system/energy.rs 88 fdfceb133d7ecfbc plain
+system.energy.badValue	Deze waarde wordt niet ondersteund door de energie-instellingen.	This value isn’t supported by the power settings.
+# write(): ApiError "denied": the GSettings key is not writable (locked down)
+#@ host/src/services/system/energy.rs 90 6c0290fe51cbad30 plain
+system.energy.locked	Deze energie-instelling is vergrendeld door de beheerder.	This power setting has been locked by your administrator.
+# write(): ApiError "failed": GSettings set_value failed
+#@ host/src/services/system/energy.rs 92 1273c48dab72a044 plain
+system.energy.saveFailed	De energie-instelling kon niet worden opgeslagen.	The power setting couldn’t be saved.
+# write(): ApiError "failed": the value read back after apply() differs
+#@ host/src/services/system/energy.rs 94 280628e274c86de0 plain
+system.energy.notTaken	De computer heeft de energie-instelling niet overgenomen.	The computer didn’t accept the power setting.
+# parse(): ApiError "bad_args": system.power.settings.set takes exactly one of idleDelay, idleDim, sleepAC, sleepBattery, powerProfile
+#@ host/src/services/system/energy.rs 96 c6f64b89932742dd plain
+system.energy.badPatch	Geef één geldige energie-instelling op.	Specify exactly one valid power setting.
+# profile_error(): ApiError "denied": power-profiles-daemon refused (polkit)
+#@ host/src/services/system/energy.rs 139 3e96f825278a2789 plain
+system.energy.profileDenied	Je hebt geen toestemming om deze energiestand te wijzigen.	You don’t have permission to change this power mode.
+# profile_error(): ApiError "failed"
+#@ host/src/services/system/energy.rs 141 e5598e10a4e3ce4d plain
+system.energy.profileFailed	De energiestand kon niet worden gewijzigd. Probeer het opnieuw.	The power mode couldn’t be changed. Try again.

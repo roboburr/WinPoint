@@ -1,0 +1,78 @@
+{
+  "version": "0.4.0",
+  "isolated": true,
+  "native_methods": [
+    "settings.get",
+    "settings.set",
+    "settings.patch",
+    "settings.reset",
+    "settings.export",
+    "settings.import",
+    "settings.backupFile"
+  ],
+  "native_response_header": "X-Win11-Service: rust-settings",
+  "differential_python_contract": true,
+  "blocked_python_equivalents": true,
+  "real_webkit_settings_windows": 3,
+  "all_mutations_in_private_fixtures": true,
+  "cases": [
+    {
+      "case": "initial-default-merge-and-public-get-contract",
+      "passed": true
+    },
+    {
+      "case": "set-unknown-keys-path-arrays-unicode-and-mixed-types",
+      "passed": true
+    },
+    {
+      "case": "validation-errors-data-and-python-falsy-patch-contract",
+      "passed": true
+    },
+    {
+      "case": "partial-subtree-replacement-preserved-across-host-and-legacy-memory",
+      "passed": true
+    },
+    {
+      "case": "export-format-import-sanitize-reset-and-exact-error-parity",
+      "passed": true
+    },
+    {
+      "case": "backup-content-private-mode-unique-names-and-response-shape",
+      "passed": true
+    },
+    {
+      "case": "exact-local-cross-host-and-legacy-sse-plus-dependent-service-memory",
+      "passed": true
+    },
+    {
+      "case": "real-original-settings-toggle-and-live-cross-window-dom",
+      "passed": true,
+      "screenshot": "preview-settings.png"
+    },
+    {
+      "case": "concurrent-cross-process-writes-preserve-every-key",
+      "passed": true,
+      "workers": 12,
+      "writes": 24
+    },
+    {
+      "case": "concurrent-native-and-legacy-writers-share-one-transaction-lock",
+      "passed": true,
+      "workers": 12,
+      "writes": 24
+    },
+    {
+      "case": "production-gio-trash-and-native-restore-private-same-filesystem",
+      "passed": true,
+      "isolated_xdg_data_home": true,
+      "permanent_delete_api_used": false
+    },
+    {
+      "case": "all-seven-methods-work-with-python-equivalents-trapped",
+      "passed": true,
+      "methods": 7
+    }
+  ],
+  "date": "2026-11-01",
+  "gnome": "50.1"
+}

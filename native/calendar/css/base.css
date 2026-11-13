@@ -1,0 +1,929 @@
+/* ==========================================================================
+   Base: a copy of native/shell/css/base.css (the shell's palette and components) for win11-calendar; calendar.css follows.
+   Values from vendor/ui/css/tokens.css (WinUI theme resources), shell.css (--sh-*) and flyouts.css (--fo-*),
+   as custom properties on window.w11, per window.w11.w11-dark / window.w11.w11-light (theme.rs puts the
+   classes on every toplevel). theme.rs adds on top (a second provider): the accent palette from theme.accent
+   (--accent, --accent-2/3, --accent-text, --accent-fg, --accent-light-1..3, --accent-dark-1..3, ...), the text
+   ramp scaled by accessibility.textScale (--fs-*), the accent surfaces (theme.accentOnTaskbar) and tooltips.
+   Classes on the window: w11-transparent / w11-opaque (theme.transparency), w11-accent-surfaces,
+   w11-high-contrast, w11-reduce-motion.
+   ========================================================================== */
+
+window.w11-panel-window, window.w11-panel-window > overlay, .w11-dismiss { background: transparent; }
+
+/* ---- Palette: dark (the shell's default) ---------------------------------- */
+window.w11 {
+  /* geometry (tokens.css) */
+  --radius-control: 4px;
+  --radius-card: 8px;
+  --radius-overlay: 8px;
+  --radius-small: 2px;
+  --radius-pill: 999px;
+
+  /* text ramp (theme.rs scales it) */
+  --fs-caption: 12px;
+  --fs-body: 14px;
+  --fs-body-large: 18px;
+  --fs-subtitle: 20px;
+  --fs-title: 28px;
+  --fs-title-large: 40px;
+  --fs-display: 68px;
+
+  /* motion */
+  --dur-faster: 83ms;
+  --dur-fast: 167ms;
+  --dur-normal: 250ms;
+  --dur-slow: 333ms;
+
+  /* fixed colours */
+  --close-hover: #c42b1c;
+  --danger-fill: #c42b1c;
+  --danger-fill-2: #b52a1c;
+  --danger-fill-3: #a32718;
+  --danger-text: #ffffff;
+
+  /* accent: Windows blue until theme.rs sets the user's (dark mode fills use light-2) */
+  --accent-base: #0078d4;
+  --accent-light-1: #0091f8;
+  --accent-light-2: #4cc2ff;
+  --accent-light-3: #99ebff;
+  --accent-dark-1: #0067c0;
+  --accent-dark-2: #003e92;
+  --accent-dark-3: #001a68;
+  --accent-on-light: #ffffff;
+  --accent-on-dark: #000000;
+  --accent: #4cc2ff;
+  --accent-2: rgba(76, 194, 255, 0.9);
+  --accent-3: rgba(76, 194, 255, 0.8);
+  --accent-disabled: rgba(255, 255, 255, 0.1581);
+  --accent-text: #000000;
+  --accent-text-2: rgba(0, 0, 0, 0.5);
+  --accent-fg: #99ebff;
+  --accent-fg-2: #99ebff;
+  --accent-fg-3: #4cc2ff;
+  --accent-subtle: rgba(76, 194, 255, 0.14);
+
+  /* text */
+  --text-1: #ffffff;
+  --text-2: rgba(255, 255, 255, 0.786);
+  --text-3: rgba(255, 255, 255, 0.5442);
+  --text-disabled: rgba(255, 255, 255, 0.3628);
+  --text-on-accent-disabled: rgba(255, 255, 255, 0.5302);
+  --text-inverse: #000000;
+
+  /* control fills */
+  --fill-control: rgba(255, 255, 255, 0.0605);
+  --fill-control-2: rgba(255, 255, 255, 0.0837);
+  --fill-control-3: rgba(255, 255, 255, 0.0326);
+  --fill-control-disabled: rgba(255, 255, 255, 0.0419);
+  --fill-control-input: rgba(30, 30, 30, 0.7);
+  --fill-control-strong: rgba(255, 255, 255, 0.5442);
+  --fill-control-strong-disabled: rgba(255, 255, 255, 0.2465);
+  --fill-control-solid: #454545;
+  --fill-control-alt-2: rgba(0, 0, 0, 0.1);
+  --fill-control-alt-3: rgba(255, 255, 255, 0.0419);
+  --fill-control-alt-4: rgba(255, 255, 255, 0.0698);
+
+  /* subtle fills (list items, subtle buttons) */
+  --fill-subtle: rgba(255, 255, 255, 0);
+  --fill-subtle-2: rgba(255, 255, 255, 0.0605);
+  --fill-subtle-3: rgba(255, 255, 255, 0.0419);
+  --hover: rgba(255, 255, 255, 0.0605);
+  --press: rgba(255, 255, 255, 0.0419);
+
+  /* strokes */
+  --stroke-control: rgba(255, 255, 255, 0.0698);
+  --stroke-control-top: rgba(255, 255, 255, 0.093);
+  --stroke-control-bottom: rgba(255, 255, 255, 0.0698);
+  --stroke-control-2: rgba(255, 255, 255, 0.093);
+  --stroke-control-strong: rgba(255, 255, 255, 0.5442);
+  --stroke-control-strong-disabled: rgba(255, 255, 255, 0.1581);
+  --stroke-on-accent: rgba(255, 255, 255, 0.08);
+  --stroke-on-accent-bottom: rgba(0, 0, 0, 0.14);
+  --stroke-card: rgba(0, 0, 0, 0.1);
+  --stroke-card-solid: #1c1c1c;
+  --stroke-divider: rgba(255, 255, 255, 0.0837);
+  --stroke-surface: rgba(117, 117, 117, 0.4);
+  --stroke-flyout: rgba(0, 0, 0, 0.2);
+  --stroke: rgba(0, 0, 0, 0.2);
+  --stroke-window: rgba(255, 255, 255, 0.08);
+  --focus-outer: #ffffff;
+  --focus-inner: rgba(0, 0, 0, 0.7);
+
+  /* surfaces */
+  --bg-solid-base: #202020;
+  --bg-solid-2: #1c1c1c;
+  --bg-solid-3: #282828;
+  --bg-solid-4: #2c2c2c;
+  --bg-mica-solid: #202020;
+  --bg-card: rgba(255, 255, 255, 0.0512);
+  --bg-card-2: rgba(255, 255, 255, 0.0326);
+  --bg-card-3: rgba(255, 255, 255, 0.0209);
+  --bg-card-solid: #2b2b2b;
+  --bg-layer-alt: rgba(255, 255, 255, 0.0538);
+  --bg-smoke: rgba(0, 0, 0, 0.3);
+  --bg-tooltip: rgba(44, 44, 44, 0.96);
+  --bg-tooltip-solid: #2c2c2c;
+  --bg-avatar: #4a4a4a;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.5442);
+  --selection-bg: #4cc2ff;
+  --selection-text: #000000;
+  --selection-subtle: rgba(76, 194, 255, 0.22);
+
+  /* Acrylic (flyouts, menus, Start): the 1 px top-lit stroke, the solid fill (transparency off) and the
+     90 % glass over the extension's blur (native-backdrop.css, Robin's D-G60 choice) */
+  --acrylic-stroke: rgba(255, 255, 255, 0.08);
+  --acrylic-solid: #2c2c2c;
+  --layer-solid: #2c2c2c;
+  --layer-glass: rgba(32, 32, 32, 0.9);
+  --layer: rgba(32, 32, 32, 0.9);
+  --layer-accent: rgba(32, 32, 32, 0.9);
+  --menu-bg: rgba(32, 32, 32, 0.9);
+
+  /* system colours */
+  --sys-success: #6ccb5f;
+  --sys-caution: #fce100;
+  --sys-critical: #ff99a4;
+  --sys-neutral: rgba(255, 255, 255, 0.5442);
+  --sys-attention: #4cc2ff;
+  --sys-success-bg: #393d1b;
+  --sys-caution-bg: #433519;
+  --sys-critical-bg: #442726;
+  --sys-icon-fg: #000000;
+
+  /* elevation */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.13);
+  --shadow-control: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-tooltip: 0 4px 8px rgba(0, 0, 0, 0.26);
+  --shadow-flyout: 0 8px 16px rgba(0, 0, 0, 0.26);
+  --shadow-menu: 0 8px 16px rgba(0, 0, 0, 0.26);
+  --shadow-dialog: 0 32px 64px rgba(0, 0, 0, 0.37), 0 2px 21px rgba(0, 0, 0, 0.37);
+  --shadow-start: 0 32px 64px rgba(0, 0, 0, 0.42), 0 2px 21px rgba(0, 0, 0, 0.34);
+
+  /* taskbar (shell.css --sh-tb-*): solid, its 70 % over the extension's blur (.w11-glass), buttons */
+  --tb-solid: #1c1c1c;
+  --tb-tint: rgba(28, 28, 28, 0.7);
+  --tb-glass: rgba(28, 28, 28, 0.7);
+  --tb-stroke: rgba(255, 255, 255, 0.075);
+  --tb-hover: rgba(255, 255, 255, 0.075);
+  --tb-hover-stroke: rgba(255, 255, 255, 0.055);
+  --tb-press: rgba(255, 255, 255, 0.045);
+  --tb-active: rgba(255, 255, 255, 0.065);
+  --tb-active-stroke: rgba(255, 255, 255, 0.07);
+  --tb-ind: rgba(255, 255, 255, 0.55);
+  --tv-front: #2b2b2b;
+  --tbsearch-bg: rgba(255, 255, 255, 0.06);
+  --tbsearch-hover: rgba(255, 255, 255, 0.09);
+  --tbsearch-stroke: rgba(255, 255, 255, 0.07);
+
+  /* Start and search (shell.css --sh-*) */
+  --sbox-bg: rgba(255, 255, 255, 0.045);
+  --sbox-bg-hover: rgba(255, 255, 255, 0.07);
+  --sbox-bg-focus: rgba(28, 28, 28, 0.72);
+  --sbox-stroke: rgba(255, 255, 255, 0.075);
+  --sbox-bottom: rgba(255, 255, 255, 0.4);
+  --card: rgba(255, 255, 255, 0.04);
+  --card-stroke: rgba(255, 255, 255, 0.055);
+  --row-sel: rgba(255, 255, 255, 0.07);
+  --row-hover: rgba(255, 255, 255, 0.045);
+  --footer: rgba(0, 0, 0, 0.14);
+  --footer-stroke: rgba(255, 255, 255, 0.045);
+  --acr-stroke: rgba(0, 0, 0, 0.36);
+
+  /* flyouts (flyouts.css --fo-*) */
+  --qs-footer: rgba(0, 0, 0, 0.16);
+  --tile-divider-on: rgba(0, 0, 0, 0.16);
+  --tv-tint: rgba(24, 24, 24, 0.55);
+  --tv-solid: #1c1c1c;
+  --thumb-body: #272727;
+  --thumb-bar: #202020;
+  --select-ring: #ffffff;
+
+  font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: var(--fs-body);
+  font-weight: 400;
+  color: var(--text-1);
+}
+
+/* ---- Palette: light -------------------------------------------------------- */
+window.w11.w11-light {
+  --accent: #0067c0;
+  --accent-2: rgba(0, 103, 192, 0.9);
+  --accent-3: rgba(0, 103, 192, 0.8);
+  --accent-disabled: rgba(0, 0, 0, 0.2169);
+  --accent-text: #ffffff;
+  --accent-text-2: rgba(255, 255, 255, 0.7);
+  --accent-fg: #003e92;
+  --accent-fg-2: #001a68;
+  --accent-fg-3: #0067c0;
+  --accent-subtle: rgba(0, 103, 192, 0.12);
+
+  --text-1: rgba(0, 0, 0, 0.8956);
+  --text-2: rgba(0, 0, 0, 0.6063);
+  --text-3: rgba(0, 0, 0, 0.4458);
+  --text-disabled: rgba(0, 0, 0, 0.3614);
+  --text-on-accent-disabled: #ffffff;
+  --text-inverse: #ffffff;
+
+  --fill-control: rgba(255, 255, 255, 0.7);
+  --fill-control-2: rgba(249, 249, 249, 0.5);
+  --fill-control-3: rgba(249, 249, 249, 0.3);
+  --fill-control-disabled: rgba(249, 249, 249, 0.3);
+  --fill-control-input: #ffffff;
+  --fill-control-strong: rgba(0, 0, 0, 0.4458);
+  --fill-control-strong-disabled: rgba(0, 0, 0, 0.3173);
+  --fill-control-solid: #ffffff;
+  --fill-control-alt-2: rgba(0, 0, 0, 0.0241);
+  --fill-control-alt-3: rgba(0, 0, 0, 0.0578);
+  --fill-control-alt-4: rgba(0, 0, 0, 0.0924);
+
+  --fill-subtle: rgba(0, 0, 0, 0);
+  --fill-subtle-2: rgba(0, 0, 0, 0.0373);
+  --fill-subtle-3: rgba(0, 0, 0, 0.0241);
+  --hover: rgba(0, 0, 0, 0.0373);
+  --press: rgba(0, 0, 0, 0.0241);
+
+  --stroke-control: rgba(0, 0, 0, 0.0578);
+  --stroke-control-top: rgba(0, 0, 0, 0.0578);
+  --stroke-control-bottom: rgba(0, 0, 0, 0.1622);
+  --stroke-control-2: rgba(0, 0, 0, 0.1622);
+  --stroke-control-strong: rgba(0, 0, 0, 0.4458);
+  --stroke-control-strong-disabled: rgba(0, 0, 0, 0.2169);
+  --stroke-on-accent: rgba(255, 255, 255, 0.08);
+  --stroke-on-accent-bottom: rgba(0, 0, 0, 0.4);
+  --stroke-card: rgba(0, 0, 0, 0.0578);
+  --stroke-card-solid: #ebebeb;
+  --stroke-divider: rgba(0, 0, 0, 0.0803);
+  --stroke-surface: rgba(117, 117, 117, 0.4);
+  --stroke-flyout: rgba(0, 0, 0, 0.0578);
+  --stroke: rgba(0, 0, 0, 0.0578);
+  --stroke-window: rgba(0, 0, 0, 0.12);
+  --focus-outer: rgba(0, 0, 0, 0.8956);
+  --focus-inner: #ffffff;
+
+  --bg-solid-base: #f3f3f3;
+  --bg-solid-2: #eeeeee;
+  --bg-solid-3: #f9f9f9;
+  --bg-solid-4: #ffffff;
+  --bg-mica-solid: #f3f3f3;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-card-2: rgba(246, 246, 246, 0.5);
+  --bg-card-3: rgba(249, 249, 249, 0.3);
+  --bg-card-solid: #fbfbfb;
+  --bg-layer-alt: #ffffff;
+  --bg-tooltip: rgba(249, 249, 249, 0.96);
+  --bg-tooltip-solid: #f9f9f9;
+  --bg-avatar: #d9d9d9;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.4458);
+  --selection-bg: #0067c0;
+  --selection-text: #ffffff;
+  --selection-subtle: rgba(0, 103, 192, 0.18);
+
+  --acrylic-stroke: rgba(255, 255, 255, 0.5);
+  --acrylic-solid: #fcfcfc;
+  --layer-solid: #fcfcfc;
+  --layer-glass: rgba(243, 243, 243, 0.9);
+  --layer: rgba(243, 243, 243, 0.9);
+  --layer-accent: rgba(243, 243, 243, 0.9);
+  --menu-bg: rgba(243, 243, 243, 0.9);
+
+  --sys-success: #0f7b0f;
+  --sys-caution: #9d5d00;
+  --sys-critical: #c42b1c;
+  --sys-neutral: rgba(0, 0, 0, 0.4458);
+  --sys-attention: #0067c0;
+  --sys-success-bg: #dff6dd;
+  --sys-caution-bg: #fff4ce;
+  --sys-critical-bg: #fde7e9;
+  --sys-icon-fg: #ffffff;
+
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-control: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-tooltip: 0 4px 8px rgba(0, 0, 0, 0.14);
+  --shadow-flyout: 0 8px 16px rgba(0, 0, 0, 0.14);
+  --shadow-menu: 0 8px 16px rgba(0, 0, 0, 0.14);
+  --shadow-dialog: 0 32px 64px rgba(0, 0, 0, 0.1876), 0 2px 21px rgba(0, 0, 0, 0.1474);
+  --shadow-start: 0 32px 64px rgba(0, 0, 0, 0.16), 0 2px 21px rgba(0, 0, 0, 0.12);
+
+  --tb-solid: #eeeeee;
+  --tb-tint: rgba(238, 238, 238, 0.7);
+  --tb-glass: rgba(238, 238, 238, 0.7);
+  --tb-stroke: rgba(0, 0, 0, 0.075);
+  --tb-hover: rgba(255, 255, 255, 0.6);
+  --tb-hover-stroke: rgba(0, 0, 0, 0.045);
+  --tb-press: rgba(255, 255, 255, 0.38);
+  --tb-active: rgba(255, 255, 255, 0.7);
+  --tb-active-stroke: rgba(0, 0, 0, 0.06);
+  --tb-ind: rgba(0, 0, 0, 0.42);
+  --tv-front: #f6f6f6;
+  --tbsearch-bg: rgba(255, 255, 255, 0.72);
+  --tbsearch-hover: rgba(255, 255, 255, 0.92);
+  --tbsearch-stroke: rgba(0, 0, 0, 0.07);
+
+  --sbox-bg: rgba(255, 255, 255, 0.72);
+  --sbox-bg-hover: rgba(255, 255, 255, 0.9);
+  --sbox-bg-focus: #ffffff;
+  --sbox-stroke: rgba(0, 0, 0, 0.07);
+  --sbox-bottom: rgba(0, 0, 0, 0.32);
+  --card: rgba(255, 255, 255, 0.55);
+  --card-stroke: rgba(0, 0, 0, 0.055);
+  --row-sel: rgba(0, 0, 0, 0.05);
+  --row-hover: rgba(0, 0, 0, 0.032);
+  --footer: rgba(0, 0, 0, 0.032);
+  --footer-stroke: rgba(0, 0, 0, 0.06);
+  --acr-stroke: rgba(0, 0, 0, 0.1);
+
+  --qs-footer: rgba(0, 0, 0, 0.035);
+  --tile-divider-on: rgba(255, 255, 255, 0.22);
+  --tv-tint: rgba(232, 232, 232, 0.5);
+  --tv-solid: #e8e8e8;
+  --thumb-body: #fbfbfb;
+  --thumb-bar: #f0f0f0;
+  --select-ring: rgba(0, 0, 0, 0.8956);
+}
+
+/* Transparency off (Instellingen > Kleuren > Transparantie-effecten): the solid fills of tokens.css
+   data-blur="none" */
+window.w11.w11-opaque {
+  --layer: var(--layer-solid);
+  --layer-glass: var(--layer-solid);
+  --layer-accent: var(--layer-solid);
+  --menu-bg: var(--layer-solid);
+  --tb-glass: var(--tb-solid);
+  --tb-tint: var(--tb-solid);
+}
+window.w11.w11-opaque.w11-accent-surfaces { --layer-accent: var(--layer-accent-solid); }
+
+/* "Accentkleur weergeven op Start en taakbalk" (dark only): the taskbar's tokens change on the window
+   (theme.rs), Start, search, the notification centre and the calendar carry .w11-accent-surface */
+window.w11.w11-accent-surfaces .w11-accent-surface,
+window.w11.w11-accent-surfaces.w11-accent-surface { --layer: var(--layer-accent); }
+
+/* ---- Type ramp ------------------------------------------------------------ */
+.w11-caption { font-size: var(--fs-caption); }
+.w11-body { font-size: var(--fs-body); font-weight: 400; }
+.w11-body-strong { font-size: var(--fs-body); font-weight: 600; }
+.w11-body-large { font-size: var(--fs-body-large); }
+.w11-subtitle, .w11-title, .w11-title-large, .w11-display {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-weight: 600;
+}
+.w11-subtitle { font-size: var(--fs-subtitle); }
+.w11-title { font-size: var(--fs-title); }
+.w11-title-large { font-size: var(--fs-title-large); }
+.w11-display { font-size: var(--fs-display); }
+.w11-semibold { font-weight: 600; }
+.w11-text-1 { color: var(--text-1); }
+.w11-text-2 { color: var(--text-2); }
+.w11-text-3 { color: var(--text-3); }
+.w11-text-disabled { color: var(--text-disabled); }
+.w11-text-accent { color: var(--accent-fg); }
+.w11-text-critical { color: var(--sys-critical); }
+.w11-mono { font-family: "Cascadia Mono", "Cascadia Code", "Ubuntu Sans Mono", "Ubuntu Mono", "Noto Sans Mono", monospace; }
+.w11-tabular { font-feature-settings: "tnum"; }
+
+/* ---- Glyphs and app icons --------------------------------------------------- */
+image.w11-glyph, image.w11-app-icon { -gtk-icon-shadow: none; -gtk-icon-filter: none; }
+.w11-glyph.w11-text-2 { color: var(--text-2); }
+
+/* ---- Taskbar material (base.css .taskbar-material): solid with a 1 px top border; the extension's blur
+   puts .w11-glass on the strip (panel/mod.rs), which then has the 70 % tint ---------------------------- */
+.w11-tb-material {
+  background-color: var(--tb-solid);
+  background-image: none;
+  box-shadow: inset 0 1px 0 var(--tb-stroke);
+}
+window.w11 .w11-glass, window.w11 .w11-tb-material.w11-glass { background-color: var(--tb-glass); }
+
+/* ---- Flyout (Acrylic panel: rounded 8 px, 1 px stroke, top-lit edge, shadow) ------------------------ */
+.w11-flyout, .w11-acrylic {
+  background-color: var(--layer);
+  background-image: none;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-overlay);
+  box-shadow: inset 0 1px 0 var(--acrylic-stroke), var(--shadow-flyout);
+  color: var(--text-1);
+}
+.w11-flyout-footer {
+  min-height: 47px;
+  padding: 0 4px 0 12px;
+  border-top: 1px solid var(--stroke-divider);
+  background-color: var(--qs-footer);
+  border-radius: 0 0 7px 7px;
+}
+
+/* ---- Card --------------------------------------------------------------------- */
+.w11-card {
+  background-color: var(--bg-card);
+  background-image: none;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+}
+.w11-card.w11-shell-card { background-color: var(--card); border-color: var(--card-stroke); }
+
+/* ---- Divider -------------------------------------------------------------------- */
+.w11-divider, separator.w11-divider {
+  min-height: 1px;
+  min-width: 1px;
+  margin: 0;
+  background-color: var(--stroke-divider);
+  background-image: none;
+}
+
+/* ---- Button (components.css .fl-btn) ------------------------------------------- */
+.w11-button {
+  min-height: 30px;
+  min-width: 0;
+  margin: 0;
+  padding: 0 11px;
+  border: 1px solid var(--stroke-control);
+  border-top-color: var(--stroke-control-top);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  transition: background-color 83ms linear, border-color 83ms linear, color 83ms linear;
+}
+.w11-button:hover { background-color: var(--fill-control-2); }
+.w11-button:active, .w11-button:checked {
+  background-color: var(--fill-control-3);
+  color: var(--text-2);
+  border-color: var(--stroke-control);
+}
+.w11-button:disabled {
+  background-color: var(--fill-control-disabled);
+  color: var(--text-disabled);
+  border-color: var(--stroke-control);
+}
+.w11-button:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+.w11-button > box { border-spacing: 8px; }
+
+.w11-button.w11-accent, .w11-accent-button {
+  background-color: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--stroke-on-accent);
+  border-bottom-color: var(--stroke-on-accent-bottom);
+}
+.w11-button.w11-accent:hover, .w11-accent-button:hover { background-color: var(--accent-2); }
+.w11-button.w11-accent:active, .w11-accent-button:active {
+  background-color: var(--accent-3);
+  color: var(--accent-text-2);
+  border-color: transparent;
+}
+.w11-button.w11-accent:disabled, .w11-accent-button:disabled {
+  background-color: var(--accent-disabled);
+  color: var(--text-on-accent-disabled);
+  border-color: transparent;
+}
+
+.w11-button.w11-danger {
+  background-color: var(--danger-fill);
+  color: var(--danger-text);
+  border-color: var(--stroke-on-accent);
+  border-bottom-color: var(--stroke-on-accent-bottom);
+}
+.w11-button.w11-danger:hover { background-color: var(--danger-fill-2); }
+.w11-button.w11-danger:active { background-color: var(--danger-fill-3); color: rgba(255, 255, 255, 0.78); border-color: transparent; }
+
+.w11-button.w11-subtle, .w11-subtle-button, .w11-icon-button {
+  background-color: transparent;
+  border-color: transparent;
+}
+.w11-button.w11-subtle:hover, .w11-subtle-button:hover, .w11-icon-button:hover { background-color: var(--fill-subtle-2); }
+.w11-button.w11-subtle:active, .w11-subtle-button:active, .w11-icon-button:active {
+  background-color: var(--fill-subtle-3);
+  color: var(--text-2);
+  border-color: transparent;
+}
+.w11-button.w11-subtle:disabled, .w11-icon-button:disabled { background-color: transparent; border-color: transparent; }
+.w11-button.w11-small { min-height: 22px; padding: 0 8px; font-size: var(--fs-caption); }
+.w11-button.w11-large { min-height: 38px; padding: 0 16px; }
+
+/* Icon button: subtle, square (components.css .fl-icon-btn) */
+.w11-icon-button {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+}
+.w11-icon-button:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+
+/* Hyperlink button (components.css .fl-link) */
+.w11-link {
+  min-height: 0;
+  margin: 0;
+  padding: 5px 11px 6px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--accent-fg);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+.w11-link:hover { background-color: var(--fill-subtle-2); }
+.w11-link:active { background-color: var(--fill-subtle-3); color: var(--accent-fg-3); }
+
+/* ---- Quick settings tile (flyouts.css .fo-tile): 96 x 48, accent when on ---------------------------
+   A plain tile is a button / togglebutton .w11-toggle-tile (on = :checked or .w11-on); a tile with a
+   ">" part is a box .w11-toggle-tile.w11-split holding button.w11-tile-main and button.w11-tile-more. */
+.w11-toggle-tile {
+  min-width: 94px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--stroke-control);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  transition: background-color 83ms linear, border-color 83ms linear, color 83ms linear;
+}
+.w11-toggle-tile:hover { background-color: var(--fill-control-2); }
+.w11-toggle-tile:active { background-color: var(--fill-control-3); color: var(--text-2); }
+.w11-toggle-tile:checked, .w11-toggle-tile.w11-on {
+  background-color: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--stroke-on-accent);
+  border-bottom-color: var(--stroke-on-accent-bottom);
+}
+.w11-toggle-tile:checked:hover, .w11-toggle-tile.w11-on:hover { background-color: var(--accent-2); }
+.w11-toggle-tile:checked:active, .w11-toggle-tile.w11-on:active { background-color: var(--accent-3); color: var(--accent-text-2); }
+.w11-toggle-tile:disabled, .w11-toggle-tile.w11-disabled { background-color: var(--fill-control-disabled); color: var(--text-disabled); }
+.w11-toggle-tile:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+
+.w11-toggle-tile.w11-split, .w11-toggle-tile.w11-split:hover, .w11-toggle-tile.w11-split:active { background-color: transparent; }
+.w11-toggle-tile.w11-split.w11-on, .w11-toggle-tile.w11-split.w11-on:hover { background-color: transparent; }
+.w11-toggle-tile.w11-split > button {
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 0;
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+}
+.w11-toggle-tile.w11-split > button.w11-tile-main { border-radius: 3px 0 0 3px; }
+.w11-toggle-tile.w11-split > button.w11-tile-more {
+  min-width: 33px;
+  border-left: 1px solid var(--stroke-divider);
+  border-radius: 0 3px 3px 0;
+}
+.w11-toggle-tile.w11-split > button:hover { background-color: var(--fill-control-2); }
+.w11-toggle-tile.w11-split > button:active { background-color: var(--fill-control-3); color: var(--text-2); }
+.w11-toggle-tile.w11-split.w11-on > button { background-color: var(--accent); color: var(--accent-text); }
+.w11-toggle-tile.w11-split.w11-on > button:hover { background-color: var(--accent-2); }
+.w11-toggle-tile.w11-split.w11-on > button:active { background-color: var(--accent-3); color: var(--accent-text-2); }
+.w11-toggle-tile.w11-split.w11-on > button.w11-tile-more { border-left-color: var(--tile-divider-on); }
+.w11-toggle-tile.w11-split.w11-disabled > button.w11-tile-main { color: var(--text-disabled); background-color: var(--fill-control-disabled); }
+.w11-tile-label {
+  padding: 0 2px;
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+
+/* ---- Slider (components.css .fl-slider): 4 px rail, accent fill, 20 px thumb with an accent dot ------- */
+scale.w11-slider {
+  min-height: 32px;
+  min-width: 80px;
+  margin: 0;
+  padding: 0 10px;
+}
+scale.w11-slider > trough {
+  min-height: 4px;
+  margin: 0;
+  border: 0 solid transparent;
+  border-radius: 2px;
+  background-color: var(--fill-control-strong);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+}
+scale.w11-slider > trough > highlight {
+  min-height: 4px;
+  margin: 0;
+  border: 0 solid transparent;
+  border-radius: 2px;
+  background-color: var(--accent);
+  background-image: none;
+  box-shadow: none;
+}
+scale.w11-slider > trough > fill { background-color: transparent; background-image: none; }
+scale.w11-slider > trough > slider {
+  min-width: 18px;
+  min-height: 18px;
+  margin: -8px;
+  border: 1px solid var(--stroke-control);
+  border-top-color: var(--stroke-control-top);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: 10px;
+  background-color: var(--accent);
+  background-image: none;
+  box-shadow: inset 0 0 0 3px var(--fill-control-solid), var(--shadow-control);
+  outline: 0 solid transparent;
+  transition: box-shadow 167ms cubic-bezier(0, 0, 0, 1);
+}
+scale.w11-slider:hover > trough > slider { box-shadow: inset 0 0 0 2px var(--fill-control-solid), var(--shadow-control); }
+scale.w11-slider > trough > slider:active { box-shadow: inset 0 0 0 4px var(--fill-control-solid), var(--shadow-control); }
+scale.w11-slider:focus-visible > trough > slider { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+scale.w11-slider:disabled > trough { background-color: var(--fill-control-strong-disabled); }
+scale.w11-slider:disabled > trough > highlight { background-color: var(--accent-disabled); }
+scale.w11-slider:disabled > trough > slider {
+  background-color: var(--fill-control-strong-disabled);
+  box-shadow: inset 0 0 0 3px var(--fill-control-solid);
+}
+scale.w11-slider > value { color: var(--text-1); font-size: var(--fs-caption); }
+
+/* ---- Toggle switch (components.css .fl-toggle, 40 x 20) -------------------------------------------- */
+switch.w11-switch {
+  min-width: 38px;
+  min-height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--stroke-control-strong);
+  border-radius: 10px;
+  background-color: var(--fill-control-alt-2);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: transparent;
+}
+switch.w11-switch:hover { background-color: var(--fill-control-alt-3); }
+switch.w11-switch:active { background-color: var(--fill-control-alt-4); }
+switch.w11-switch > image { color: transparent; opacity: 0; }
+switch.w11-switch > slider {
+  min-width: 12px;
+  min-height: 12px;
+  margin: 2px;
+  border: 0 solid transparent;
+  border-radius: 7px;
+  background-color: var(--text-2);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+}
+switch.w11-switch:hover > slider { margin: 1px; min-width: 14px; min-height: 14px; }
+switch.w11-switch:checked { background-color: var(--accent); border-color: var(--accent); }
+switch.w11-switch:checked:hover { background-color: var(--accent-2); border-color: transparent; }
+switch.w11-switch:checked:active { background-color: var(--accent-3); border-color: transparent; }
+switch.w11-switch:checked > slider { background-color: var(--accent-text); }
+switch.w11-switch:disabled { background-color: transparent; border-color: var(--stroke-control-strong-disabled); }
+switch.w11-switch:disabled > slider { background-color: var(--fill-control-strong-disabled); }
+switch.w11-switch:checked:disabled { background-color: var(--accent-disabled); border-color: transparent; }
+switch.w11-switch:checked:disabled > slider { background-color: var(--text-on-accent-disabled); }
+switch.w11-switch:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+
+/* ---- Check box (components.css .fl-check) ------------------------------------------------------- */
+checkbutton.w11-check { padding: 0; border-spacing: 8px; color: var(--text-1); font-size: var(--fs-body); }
+checkbutton.w11-check > check {
+  min-width: 18px;
+  min-height: 18px;
+  margin: 0;
+  border: 1px solid var(--stroke-control-strong);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control-alt-2);
+  background-image: none;
+  box-shadow: none;
+  color: var(--accent-text);
+}
+checkbutton.w11-check:hover > check { background-color: var(--fill-control-alt-3); }
+checkbutton.w11-check > check:checked { background-color: var(--accent); border-color: var(--accent); }
+checkbutton.w11-check:hover > check:checked { background-color: var(--accent-2); border-color: transparent; }
+
+/* ---- List rows (components.css .fl-list-row / .fl-list-item) ------------------------------------ */
+.w11-list-row, .w11-list-item {
+  margin: 0;
+  padding: 8px 12px;
+  min-height: 22px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+.w11-list-item { min-height: 20px; margin: 2px 4px; padding: 6px 11px; }
+.w11-list-row:hover, .w11-list-item:hover, .w11-list-row.w11-active, .w11-list-item.w11-active { background-color: var(--fill-subtle-2); }
+.w11-list-row:active, .w11-list-item:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+.w11-list-row.w11-selected, .w11-list-item.w11-selected, .w11-list-row:selected, .w11-list-item:selected {
+  background-color: var(--fill-subtle-2);
+  background-image: linear-gradient(to right, var(--accent), var(--accent));
+  background-size: 3px 16px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  color: var(--text-1);
+}
+.w11-list-row.w11-selected:hover, .w11-list-item.w11-selected:hover { background-color: var(--fill-subtle-3); }
+.w11-list-row:disabled, .w11-list-item:disabled { color: var(--text-disabled); }
+.w11-list-row:focus-visible, .w11-list-item:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+.w11-list-row-desc, .w11-list-row .w11-desc { color: var(--text-2); font-size: var(--fs-caption); }
+list.w11-list, listview.w11-list, .w11-list { background-color: transparent; background-image: none; border: none; }
+list.w11-list > row, listview.w11-list > row {
+  margin: 0;
+  padding: 0;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  outline: 0 solid transparent;
+  box-shadow: none;
+}
+list.w11-list > row:hover, listview.w11-list > row:hover { background-color: var(--fill-subtle-2); }
+list.w11-list > row:active, listview.w11-list > row:active { background-color: var(--fill-subtle-3); }
+list.w11-list > row:selected, listview.w11-list > row:selected { background-color: var(--fill-subtle-2); color: var(--text-1); }
+
+/* ---- Context menu (components.css .fl-menu, Win11 MenuFlyout) ----------------------------------
+   A box .w11-menu (inside a flyout or a popover) or a popover.w11-menu, with .w11-menu-item buttons,
+   .w11-menu-sep separators, .w11-menu-header captions; an item holds .w11-menu-icon, a label and
+   .w11-menu-shortcut / .w11-menu-sub. */
+.w11-menu, popover.w11-menu > contents {
+  min-width: 200px;
+  margin: 0;
+  padding: 4px 0;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-overlay);
+  background-color: var(--menu-bg);
+  background-image: none;
+  box-shadow: inset 0 1px 0 var(--acrylic-stroke), var(--shadow-menu);
+  color: var(--text-1);
+  font-size: var(--fs-body);
+}
+popover.w11-menu {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+popover.w11-menu > arrow { background-color: transparent; border: none; min-width: 0; min-height: 0; }
+popover.w11-menu .w11-menu { border: none; box-shadow: none; background-color: transparent; padding: 0; min-width: 0; }
+.w11-menu-item {
+  min-height: 20px;
+  margin: 2px 4px;
+  padding: 6px 12px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+.w11-menu-item > box { border-spacing: 12px; }
+.w11-menu-item:hover, .w11-menu-item.w11-active, .w11-menu-item:focus-visible { background-color: var(--fill-subtle-2); }
+.w11-menu-item:active, .w11-menu-item.w11-pressed { background-color: var(--fill-subtle-3); color: var(--text-2); }
+.w11-menu-item:disabled, .w11-menu-item.w11-disabled { color: var(--text-disabled); background-color: transparent; }
+.w11-menu-item.w11-danger, .w11-menu-item.w11-danger .w11-menu-icon { color: var(--sys-critical); }
+.w11-menu-icon { min-width: 16px; min-height: 16px; color: var(--text-1); }
+.w11-menu-item:disabled .w11-menu-icon, .w11-menu-item.w11-disabled .w11-menu-icon { color: var(--text-disabled); }
+.w11-menu-shortcut { margin-left: 24px; color: var(--text-2); font-size: var(--fs-caption); }
+.w11-menu-sub { margin-left: 8px; margin-right: -4px; color: var(--text-2); }
+.w11-menu-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.w11-menu-sep, separator.w11-menu-sep {
+  min-height: 1px;
+  margin: 4px 0;
+  background-color: var(--stroke-divider);
+  background-image: none;
+}
+.w11-menu-header { padding: 8px 16px 4px; color: var(--text-2); font-size: var(--fs-caption); font-weight: 600; }
+/* the row of icon buttons on top of a desktop/Explorer context menu (cut, copy, rename, ...) */
+.w11-menu-top { padding: 0 4px 4px; border-spacing: 2px; }
+.w11-menu-top > button {
+  min-width: 40px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+}
+.w11-menu-top > button:hover { background-color: var(--fill-subtle-2); }
+.w11-menu-top > button:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+.w11-menu-top > button:disabled { color: var(--text-disabled); background-color: transparent; }
+
+/* ---- Text box and search box (components.css .fl-textbox, shell.css .sh-sbox) --------------------- */
+entry.w11-entry, text.w11-entry, .w11-entry {
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px 1px 11px;
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: inset 0 -1px 0 var(--stroke-control-strong);
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  caret-color: var(--text-1);
+  font-size: var(--fs-body);
+  transition: background-color 83ms linear;
+}
+.w11-entry:hover { background-color: var(--fill-control-2); }
+.w11-entry:focus-within { background-color: var(--fill-control-input); box-shadow: inset 0 -2px 0 var(--accent); }
+.w11-entry:disabled { background-color: var(--fill-control-disabled); color: var(--text-disabled); box-shadow: none; }
+.w11-entry > text { background-color: transparent; color: var(--text-1); caret-color: var(--text-1); }
+.w11-entry placeholder { color: var(--text-2); }
+.w11-entry:focus-within placeholder { color: var(--text-3); }
+.w11-entry selection { background-color: var(--selection-bg); color: var(--selection-text); }
+.w11-entry > image { color: var(--text-2); min-width: 16px; }
+
+/* Start's search box: a 36 px pill */
+.w11-entry.w11-search {
+  min-height: 34px;
+  padding: 0 6px 0 16px;
+  border: 1px solid var(--sbox-stroke);
+  border-radius: 18px;
+  background-color: var(--sbox-bg);
+  box-shadow: none;
+}
+.w11-entry.w11-search:hover { background-color: var(--sbox-bg-hover); }
+.w11-entry.w11-search:focus-within { background-color: var(--sbox-bg-focus); box-shadow: none; }
+.w11-entry.w11-search > image { color: var(--text-2); margin-right: 10px; }
+
+/* The taskbar's search pill (Win11 24H2): 32 px, radius 16 */
+.w11-entry.w11-tb-search {
+  min-height: 30px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--tbsearch-stroke);
+  border-radius: 16px;
+  background-color: var(--tbsearch-bg);
+  box-shadow: none;
+}
+.w11-entry.w11-tb-search:hover, .w11-entry.w11-tb-search:focus-within { background-color: var(--tbsearch-hover); box-shadow: none; }
+
+/* ---- Badge (the notification count on the clock, shell.css .sh-clock__count) ------------------------ */
+.w11-badge {
+  min-width: 8px;
+  min-height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background-color: var(--accent);
+  color: var(--accent-text);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---- Avatar (Start's user button, the lock screen) ------------------------------------------------ */
+.w11-avatar { border-radius: 999px; background-color: var(--bg-avatar); color: var(--text-1); }
+
+/* ---- Scroll bars (Win11: a thin line that grows when hovered) ------------------------------------- */
+window.w11 scrollbar { background-color: transparent; background-image: none; border: none; box-shadow: none; }
+window.w11 scrollbar slider {
+  min-width: 6px;
+  min-height: 6px;
+  border: 3px solid transparent;
+  border-radius: 6px;
+  background-clip: padding-box;
+  background-color: var(--scrollbar-thumb);
+}
+window.w11 scrollbar.hovering slider, window.w11 scrollbar:hover slider { border-width: 2px; }
+window.w11 scrollbar slider:active { background-color: var(--text-2); }
+window.w11 scrolledwindow, window.w11 viewport { background-color: transparent; background-image: none; }
+window.w11 undershoot, window.w11 overshoot { background-color: transparent; background-image: none; box-shadow: none; }
+
+/* ---- Selection and labels ---------------------------------------------------------------------------- */
+window.w11 label selection, window.w11 text selection { background-color: var(--selection-bg); color: var(--selection-text); }
+window.w11 label:disabled { color: var(--text-disabled); }
+
+/* ---- Info bar (the quick settings notice, flyouts.css .fo-qs__notice) ---------------------------- */
+.w11-notice {
+  padding: 8px 12px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-control);
+  background-color: var(--sys-caution-bg);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+.w11-notice image { color: var(--sys-caution); }

@@ -1,0 +1,92 @@
+{
+  "version": "0.6.0",
+  "isolated": true,
+  "native_methods": [
+    "apps.recent",
+    "apps.clearRecent"
+  ],
+  "native_response_header": "X-Win11-Service: rust-apps",
+  "differential_python_contract": true,
+  "blocked_python_equivalents": true,
+  "real_webkit_windows": 3,
+  "all_history_reads_and_mutations_use_explicit_private_fixture": true,
+  "cases": [
+    {
+      "case": "missing-fixture-history-is-empty-with-native-header",
+      "passed": true
+    },
+    {
+      "case": "full-reference-order-fields-duplicates-limits-mime-symlinks-and-trash-filter",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-default-namespace",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-cdata-internal-entity",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-invalid-entity-percent",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-utf16",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-latin1",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-utf8-bom",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-malformed",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-invalid-utf8",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-external-entity",
+      "passed": true
+    },
+    {
+      "case": "xml-reference-recursive-entity",
+      "passed": true
+    },
+    {
+      "case": "python-iso-timestamp-offset-week-basic-naive-fold-gap-and-negative-truncation",
+      "passed": true,
+      "formats": 17
+    },
+    {
+      "case": "native-settings-privacy-gates-native-and-legacy-history-across-hosts",
+      "passed": true
+    },
+    {
+      "case": "clear-malformed-readonly-source-and-backup-keeps-exact-bytes-and-private-modes",
+      "passed": true
+    },
+    {
+      "case": "failed-backup-and-readonly-parent-preserve-source-and-clean-staging-files",
+      "passed": true
+    },
+    {
+      "case": "cross-host-apps-changed-refreshes-original-start-with-all-python-apps-methods-trapped",
+      "passed": true
+    },
+    {
+      "case": "original-start-focus-dismiss-joins-native-services-cleanly",
+      "passed": true,
+      "exit_code": 0
+    }
+  ],
+  "date": "2026-11-01",
+  "gnome": "50.1",
+  "python_reference": "3.14"
+}

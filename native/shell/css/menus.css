@@ -1,0 +1,193 @@
+/* menus: jump lists and context menus (.fl-menu), Win+X (.sh-winx), the tray overflow (.sh-ni-flyout) and
+   Task View (.fo-tv / .fo-win). Values from vendor/ui/css/tokens.css, components.css, shell.css, flyouts.css. */
+window.w11 {
+  --mn-bg: #2c2c2c;
+  --mn-stroke: rgba(0, 0, 0, 0.36);
+  --mn-top: rgba(255, 255, 255, 0.08);
+  --mn-hover: rgba(255, 255, 255, 0.0605);
+  --mn-press: rgba(255, 255, 255, 0.0419);
+  --mn-divider: rgba(255, 255, 255, 0.0837);
+  --mn-shadow: rgba(0, 0, 0, 0.26);
+  --mn-disabled: rgba(255, 255, 255, 0.3628);
+  --mn-focus: #ffffff;
+  --mn-tv: rgba(28, 28, 28, 0.94);
+  --mn-thumb: #272727;
+  --mn-thumb-bar: #202020;
+  --mn-window-stroke: rgba(255, 255, 255, 0.08);
+  --mn-close-hover: #c42b1c;
+  --mn-close-press: #c84031;
+}
+window.w11.w11-light {
+  --mn-bg: #fcfcfc;
+  --mn-stroke: rgba(0, 0, 0, 0.1);
+  --mn-top: rgba(255, 255, 255, 0.5);
+  --mn-hover: rgba(0, 0, 0, 0.0373);
+  --mn-press: rgba(0, 0, 0, 0.0241);
+  --mn-divider: rgba(0, 0, 0, 0.0803);
+  --mn-shadow: rgba(0, 0, 0, 0.14);
+  --mn-disabled: rgba(0, 0, 0, 0.3614);
+  --mn-focus: rgba(0, 0, 0, 0.8956);
+  --mn-tv: rgba(232, 232, 232, 0.94);
+  --mn-thumb: #fbfbfb;
+  --mn-thumb-bar: #f0f0f0;
+  --mn-window-stroke: rgba(0, 0, 0, 0.12);
+}
+
+/* the host's frames: the menus draw their own surface */
+.w11-flyout.w11-flyout-jumplist,
+.w11-flyout.w11-flyout-winx,
+.w11-flyout.w11-flyout-tray,
+.w11-flyout.w11-flyout-taskview {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* ---- MenuFlyout (.fl-menu) ---- */
+.w11-mn {
+  min-width: 200px;
+  padding: 4px 0;
+  border: 1px solid var(--mn-stroke);
+  border-radius: var(--radius-overlay);
+  background-color: var(--mn-bg);
+  box-shadow: inset 0 1px 0 var(--mn-top), 0 8px 16px var(--mn-shadow);
+  color: var(--text-1);
+  font-size: 14px;
+}
+.w11-mn:focus-visible { outline: none; }
+button.w11-mn-item {
+  min-height: 20px;
+  min-width: 0;
+  margin: 2px 4px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+  color: var(--text-1);
+  font-weight: normal;
+  transition: none;
+}
+button.w11-mn-item label { color: inherit; }
+button.w11-mn-item:hover,
+button.w11-mn-item.has-open-submenu { background-color: var(--mn-hover); }
+button.w11-mn-item:active { background-color: var(--mn-press); color: var(--text-2); }
+button.w11-mn-item:focus-visible {
+  background-color: var(--mn-hover);
+  box-shadow: inset 0 0 0 2px var(--mn-focus);
+  outline: none;
+}
+button.w11-mn-item:disabled,
+button.w11-mn-item:disabled label,
+button.w11-mn-item:disabled .w11-glyph { color: var(--mn-disabled); }
+.w11-mn.has-state button.w11-mn-item { padding-left: 8px; }
+.w11-mn-icon, .w11-mn-icon .w11-glyph { color: var(--text-1); }
+.w11-mn-state { color: var(--text-1); }
+.w11-mn-radio { min-width: 6px; min-height: 6px; border-radius: 9999px; background-color: currentColor; }
+.w11-mn-label { color: var(--text-1); }
+.w11-mn-shortcut { color: var(--text-2); font-size: 12px; }
+.w11-mn-sub { margin-left: 8px; color: var(--text-2); }
+.w11-mn-sep { min-height: 1px; margin: 4px 0; background-color: var(--mn-divider); }
+.w11-mn-empty { padding: 6px 16px; color: var(--mn-disabled); }
+.w11-mn-back .w11-glyph { color: var(--text-2); }
+
+/* ---- Win+X (.sh-winx) ---- */
+.w11-winx-wrap { background: none; }
+.w11-mn.w11-winx { min-width: 248px; box-shadow: inset 0 1px 0 var(--mn-top), 0 8px 16px var(--mn-shadow); }
+.w11-winx button.w11-mn-item { min-height: 20px; padding: 5px 12px 5px 14px; }
+.w11-winx button.w11-mn-item:focus-visible { box-shadow: none; }
+.w11-winx.show-accel button.w11-mn-item:focus-visible { box-shadow: inset 0 0 0 2px var(--mn-focus); }
+.w11-mn.w11-winx-sub { min-width: 200px; margin-left: 0; }
+
+/* ---- tray overflow (.sh-ni-flyout) ---- */
+.w11-tray-flyout {
+  padding: 4px;
+  border: 1px solid var(--mn-stroke);
+  border-radius: var(--radius-overlay);
+  background-color: var(--mn-bg);
+  box-shadow: inset 0 1px 0 var(--mn-top), 0 8px 16px var(--mn-shadow);
+  color: var(--text-1);
+}
+button.w11-tray-cell {
+  min-width: 40px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-control);
+  background: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+button.w11-tray-cell:hover { background-color: var(--mn-hover); }
+button.w11-tray-cell:active { background-color: var(--mn-press); }
+button.w11-tray-cell:focus-visible { box-shadow: inset 0 0 0 2px var(--mn-focus); }
+.w11-tray-dot {
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--mn-bg);
+}
+
+/* ---- Task View (.fo-tv, .fo-win) ---- */
+.w11-taskview {
+  padding: 40px 48px 32px;
+  background-color: var(--mn-tv);
+  color: var(--text-1);
+}
+.w11-taskview:focus-visible { outline: none; }
+scrolledwindow.w11-tv-scroll, scrolledwindow.w11-tv-scroll > viewport { background: none; }
+flowbox.w11-tv-grid { background: none; padding: 8px; }
+flowbox.w11-tv-grid > flowboxchild {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.w11-tv-card {
+  padding: 6px 6px 8px;
+  border-radius: 8px;
+  transition: background-color 83ms linear, opacity 167ms ease-in;
+}
+.w11-tv-card:hover { background-color: var(--mn-hover); }
+.w11-tv-card.is-selected { box-shadow: 0 0 0 3px var(--mn-focus); }
+.w11-tv-card.is-closing { opacity: 0; }
+.w11-tv-head { padding-left: 4px; }
+.w11-tv-title { font-size: 12px; color: var(--text-1); }
+button.w11-tv-close {
+  min-width: 24px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-control);
+  background: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+  color: var(--text-1);
+  opacity: 0;
+}
+button.w11-tv-close .w11-glyph { color: inherit; }
+.w11-tv-card:hover button.w11-tv-close,
+.w11-tv-card.is-selected button.w11-tv-close { opacity: 1; }
+button.w11-tv-close:hover { background-color: var(--mn-close-hover); color: #ffffff; }
+button.w11-tv-close:active { background-color: var(--mn-close-press); color: rgba(255, 255, 255, 0.8); }
+.w11-tv-thumb {
+  border: 1px solid var(--mn-window-stroke);
+  border-radius: 8px;
+  background-color: var(--mn-thumb);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
+}
+.w11-tv-thumb-bar { padding: 0 10px; background-color: var(--mn-thumb-bar); }
+.w11-tv-thumb-mark { min-width: 7px; min-height: 2px; border-radius: 1px; background-color: var(--text-3); }
+.w11-tv-empty-title { font-size: 20px; font-weight: 600; color: var(--text-1); }
+.w11-tv-empty-hint { font-size: 14px; color: var(--text-2); }

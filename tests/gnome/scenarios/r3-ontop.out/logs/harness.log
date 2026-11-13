@@ -1,0 +1,63 @@
+02:49:19 GE0c run lang=nl switch=False seed=defaults MemAvailable=2759028 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/build/r3-native-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-ontop.py
+02:51:16 private install: exit 0 in 96.9 s, 87856 mutated paths, 0 outside the run dir, ok=True
+02:51:20 GStreamer registry warmed in 3.5 s (['gst-inspect-1.0 version 1.28.2'])
+02:51:23 GNOME Shell 50.1 up (mode user, unsafe True)
+02:51:28 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-ontop.py
+02:51:28   check PASS: settings.json starts with always-on-top off
+02:51:32   check PASS: nl: the always-on-top switch is enabled
+02:51:32   check PASS: nl: its description is the D-G21 text, without a note
+02:51:32   check PASS: nl: the switch starts off
+02:51:32   check PASS: nl: off: Task Manager is not above and not on all workspaces
+02:51:32   check PASS: nl: off: the focused File Explorer is above Task Manager
+02:51:33   check PASS: nl: on: settings.json taskmgr.alwaysOnTop is true
+02:51:33   check PASS: nl: on: Task Manager is above and on all workspaces
+02:51:33   check PASS: nl: on: Task Manager stays above the focused File Explorer
+02:51:35   check PASS: nl: on: Task Manager is on the next workspace too, File Explorer is not
+02:51:38   check PASS: nl: on: a Task Manager opened now is above and on all workspaces at once
+02:51:43   check PASS: nl: off again: settings.json taskmgr.alwaysOnTop is false
+02:51:43   check PASS: nl: off again: Task Manager is a normal window (not above, not on all workspaces)
+02:51:43   check PASS: nl: off again: the focused File Explorer is above Task Manager
+02:51:43   check PASS: nl: off again: Task Manager is not on the next workspace
+02:51:46   check PASS: the language switched to en
+02:51:46   check PASS: en: the always-on-top switch is enabled
+02:51:46   check PASS: en: its description is the D-G21 text, without a note
+02:51:46   check PASS: en: the switch starts off
+02:51:47   check PASS: en: off: Task Manager is not above and not on all workspaces
+02:51:47   check PASS: en: off: the focused File Explorer is above Task Manager
+02:51:48   check PASS: en: on: settings.json taskmgr.alwaysOnTop is true
+02:51:48   check PASS: en: on: Task Manager is above and on all workspaces
+02:51:48   check PASS: en: on: Task Manager stays above the focused File Explorer
+02:51:49   check PASS: en: on: Task Manager is on the next workspace too, File Explorer is not
+02:51:53   check PASS: en: on: a Task Manager opened now is above and on all workspaces at once
+02:51:57   check PASS: en: off again: settings.json taskmgr.alwaysOnTop is false
+02:51:57   check PASS: en: off again: Task Manager is a normal window (not above, not on all workspaces)
+02:51:57   check PASS: en: off again: the focused File Explorer is above Task Manager
+02:51:58   check PASS: en: off again: Task Manager is not on the next workspace
+02:52:00   check PASS: every check passed
+02:52:00 shutdown app: signalled own descendants 1380:win11-explorer, 1403:WebKitNetworkPr, 1404:WebKitWebProces
+02:52:00 shutdown app: signalled own descendants 2386:win11-app, 2409:WebKitNetworkPr, 2410:WebKitWebProces
+02:52:00 shutdown shell clients: signalled own descendants 78:ibus-daemon, 442:win11-desktop, 443:win11-panel, 1713:glycin-image-rs, 600:WebKitNetworkPr, 601:WebKitWebProces, 680:win11-start, 1006:WebKitNetworkPr, 1009:WebKitWebProces, 599:WebKitNetworkPr, 602:WebKitWebProces, 95:ibus-memconf, 97:ibus-extension-, 444:ibus-engine-sim
+02:52:00 shutdown gnome-shell: signalled own descendants 51:gnome-shell
+02:52:00 shutdown system bus: signalled own descendants 50:dbus-daemon
+02:52:00 inner sweep: signalled own descendants 1724:glycin-image-rs
+02:52:00 inner done: 0 surfaces, 0 failed []
+02:52:04 strace connect:    276 x AF_INET 127.0.0.1 -> EINPROGRESS
+02:52:04 strace connect:      7 x AF_INET 127.0.0.1 -> UNFINISHED
+02:52:04 strace connect:      2 x AF_INET 127.0.0.1 -> ok
+02:52:04 strace connect:      4 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/cache/ibus/db -> ok
+02:52:04 strace connect:      1 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/home/.lttng/l -> ENOENT
+02:52:04 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+02:52:04 strace connect:      2 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+02:52:04 strace connect:      1 x AF_UNIX /tmp/nvidia-mps/control -> ENOENT
+02:52:04 strace connect:     19 x AF_UNIX /tmp/w11-rt/bus -> ok
+02:52:04 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+02:52:04 strace connect:     10 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+02:52:04 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> ENOENT
+02:52:04 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+02:52:04 strace connect:     41 x AF_UNIX /tmp/w11-rt/sbus -> ok
+02:52:04 strace connect:      8 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+02:52:04 strace connect:     10 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+02:52:04 strace connect:      1 x AF_UNIX /var/run/lttng/lttng-ust-sock-8 -> ENOENT
+02:52:04 strace connect:     42 x AF_UNIX /var/run/nscd/socket -> ENOENT
+02:52:04 strace connect:     10 x AF_UNIX /var/run/pulse/native -> ENOENT
+02:52:04 strace connect check: 442 connect() calls, OK

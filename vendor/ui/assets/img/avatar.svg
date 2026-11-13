@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- default profile picture (original artwork): neutral person on a soft disc -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9dee6"/>
+      <stop offset="1" stop-color="#aeb6c2"/>
+    </linearGradient>
+    <clipPath id="disc"><circle cx="128" cy="128" r="128"/></clipPath>
+  </defs>
+  <circle cx="128" cy="128" r="128" fill="url(#bg)"/>
+  <g clip-path="url(#disc)" fill="#f4f6f9">
+    <circle cx="128" cy="100" r="46"/>
+    <ellipse cx="128" cy="250" rx="92" ry="88"/>
+  </g>
+</svg>

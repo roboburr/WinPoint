@@ -1,0 +1,390 @@
+{
+  "PRIORITY": 60,
+  "_STR": {
+    "nl": {
+      "system": "Systeemschijf",
+      "home": "Persoonlijke bestanden",
+      "vm": "Virtuele machines",
+      "sized": "{size}-schijf",
+      "other": "Overige",
+      "c_documents": "Documenten",
+      "c_pictures": "Afbeeldingen",
+      "c_videos": "Video's",
+      "c_music": "Muziek",
+      "c_downloads": "Downloads",
+      "c_desktop": "Bureaublad",
+      "c_trash": "Prullenbak",
+      "c_browser": "Browsers",
+      "c_chat": "Chat-apps",
+      "c_dev": "Ontwikkelaarsbestanden",
+      "c_appdata": "App-gegevens",
+      "c_snaps": "Snap-apps",
+      "c_flatpak": "Flatpak-apps",
+      "c_cache": "Tijdelijke bestanden",
+      "c_other": "Overig",
+      "k_trash": "Prullenbak",
+      "d_trash": "Bestanden die je hebt verwijderd. Na het legen zijn ze echt weg.",
+      "k_thumbnails": "Miniaturen",
+      "d_thumbnails": "Kleine voorbeeldplaatjes van je foto's en video's. Die worden vanzelf opnieuw gemaakt.",
+      "k_user-cache-safe": "Tijdelijke app-bestanden",
+      "d_user-cache-safe": "Caches die apps zelf opnieuw aanmaken, zoals shader- en downloadcaches.",
+      "k_browser-cache": "Tijdelijke internetbestanden",
+      "d_browser-cache": "De cache van je browsers. Wachtwoorden, bladwijzers en geschiedenis blijven bewaard.",
+      "d_browser-running": " Sluit eerst {names}, anders wordt die overgeslagen.",
+      "k_old-downloads": "Oude downloads",
+      "d_old-downloads": "Bestanden in Downloads die je al meer dan 90 dagen niet hebt geopend. Bekijk ze eerst: ze gaan naar de prullenbak.",
+      "k_apt-cache": "Opgeslagen updatebestanden",
+      "d_apt-cache": "Installatiebestanden van updates die al zijn geïnstalleerd. Vraagt om je wachtwoord.",
+      "k_old-snaps": "Oude versies van Snap-apps",
+      "d_old-snaps": "Eerdere versies die Snap bewaart om terug te kunnen gaan. Vraagt om je wachtwoord.",
+      "k_journal": "Oude systeemlogboeken",
+      "d_journal": "Logboeken van meer dan 14 dagen oud. Alleen nodig om oude problemen te onderzoeken. Vraagt om je wachtwoord.",
+      "k_flatpak-unused": "Ongebruikte Flatpak-onderdelen",
+      "d_flatpak-unused": "Onderdelen die geen enkele Flatpak-app meer gebruikt.",
+      "k_crash-reports": "Foutrapporten",
+      "d_crash-reports": "Rapporten van apps die zijn vastgelopen.",
+      "b_firefox": "Firefox",
+      "b_zen": "Zen",
+      "b_chrome": "Google Chrome",
+      "b_chromium": "Chromium",
+      "b_brave": "Brave",
+      "b_vivaldi": "Vivaldi",
+      "b_edge": "Microsoft Edge",
+      "b_librewolf": "LibreWolf",
+      "b_opera": "Opera"
+    },
+    "en": {
+      "system": "System drive",
+      "home": "Personal files",
+      "vm": "Virtual machines",
+      "sized": "{size} Drive",
+      "other": "Other",
+      "c_documents": "Documents",
+      "c_pictures": "Pictures",
+      "c_videos": "Videos",
+      "c_music": "Music",
+      "c_downloads": "Downloads",
+      "c_desktop": "Desktop",
+      "c_trash": "Recycle Bin",
+      "c_browser": "Browsers",
+      "c_chat": "Chat apps",
+      "c_dev": "Developer files",
+      "c_appdata": "App data",
+      "c_snaps": "Snap apps",
+      "c_flatpak": "Flatpak apps",
+      "c_cache": "Temporary files",
+      "c_other": "Other",
+      "k_trash": "Recycle Bin",
+      "d_trash": "Files you deleted. Once emptied they are gone for good.",
+      "k_thumbnails": "Thumbnails",
+      "d_thumbnails": "Small previews of your photos and videos. They are made again automatically.",
+      "k_user-cache-safe": "Temporary app files",
+      "d_user-cache-safe": "Caches that apps rebuild by themselves, such as shader and download caches.",
+      "k_browser-cache": "Temporary Internet Files",
+      "d_browser-cache": "Your browsers' cache. Passwords, bookmarks and history are kept.",
+      "d_browser-running": " Close {names} first, otherwise it is skipped.",
+      "k_old-downloads": "Old downloads",
+      "d_old-downloads": "Files in Downloads you have not opened for more than 90 days. Review them first: they go to the Recycle Bin.",
+      "k_apt-cache": "Saved update files",
+      "d_apt-cache": "Installation files of updates that are already installed. Asks for your password.",
+      "k_old-snaps": "Old versions of Snap apps",
+      "d_old-snaps": "Earlier versions Snap keeps so it can roll back. Asks for your password.",
+      "k_journal": "Old system logs",
+      "d_journal": "Logs older than 14 days. Only needed to investigate old problems. Asks for your password.",
+      "k_flatpak-unused": "Unused Flatpak parts",
+      "d_flatpak-unused": "Parts that no Flatpak app uses any more.",
+      "k_crash-reports": "Error reports",
+      "d_crash-reports": "Reports of apps that crashed.",
+      "b_firefox": "Firefox",
+      "b_zen": "Zen",
+      "b_chrome": "Google Chrome",
+      "b_chromium": "Chromium",
+      "b_brave": "Brave",
+      "b_vivaldi": "Vivaldi",
+      "b_edge": "Microsoft Edge",
+      "b_librewolf": "LibreWolf",
+      "b_opera": "Opera"
+    }
+  },
+  "_PSEUDO_ROOTS": [
+    "/proc",
+    "/sys",
+    "/dev",
+    "/run"
+  ],
+  "_REAL_FS": [
+    "apfs",
+    "bcachefs",
+    "btrfs",
+    "exfat",
+    "ext2",
+    "ext3",
+    "ext4",
+    "f2fs",
+    "fuseblk",
+    "hfs",
+    "hfsplus",
+    "iso9660",
+    "jfs",
+    "msdos",
+    "nilfs2",
+    "ntfs",
+    "ntfs3",
+    "reiserfs",
+    "udf",
+    "vfat",
+    "xfs",
+    "zfs"
+  ],
+  "_FS_LABEL": {
+    "vfat": "FAT32",
+    "msdos": "FAT",
+    "exfat": "exFAT",
+    "ntfs": "NTFS",
+    "ntfs3": "NTFS",
+    "fuseblk": "NTFS",
+    "ext4": "ext4",
+    "ext3": "ext3",
+    "ext2": "ext2",
+    "btrfs": "Btrfs",
+    "xfs": "XFS",
+    "f2fs": "F2FS",
+    "zfs": "ZFS",
+    "iso9660": "CDFS",
+    "udf": "UDF",
+    "hfsplus": "HFS+",
+    "bcachefs": "bcachefs"
+  },
+  "_SKIP_MOUNT": [
+    "/snap/",
+    "/var/snap/",
+    "/var/lib/docker/",
+    "/var/lib/snapd/",
+    "/var/lib/containers/",
+    "/proc",
+    "/sys",
+    "/dev"
+  ],
+  "_HIDDEN_MOUNTS": [
+    "/boot",
+    "/boot/efi",
+    "/efi",
+    "/recovery"
+  ],
+  "_CATEGORY_IDS": [
+    "documents",
+    "pictures",
+    "videos",
+    "music",
+    "downloads",
+    "desktop",
+    "trash",
+    "browser",
+    "chat",
+    "dev",
+    "appdata",
+    "snaps",
+    "flatpak",
+    "cache",
+    "other"
+  ],
+  "_BROWSER_ROOTS": {
+    ".mozilla": "Firefox",
+    ".cache/mozilla": "Firefox",
+    "snap/firefox": "Firefox",
+    ".var/app/org.mozilla.firefox": "Firefox",
+    ".zen": "Zen",
+    ".cache/zen": "Zen",
+    ".var/app/app.zen_browser.zen": "Zen",
+    ".config/google-chrome": "Google Chrome",
+    ".cache/google-chrome": "Google Chrome",
+    ".var/app/com.google.Chrome": "Google Chrome",
+    ".config/chromium": "Chromium",
+    ".cache/chromium": "Chromium",
+    "snap/chromium": "Chromium",
+    ".var/app/org.chromium.Chromium": "Chromium",
+    ".config/BraveSoftware": "Brave",
+    ".cache/BraveSoftware": "Brave",
+    "snap/brave": "Brave",
+    ".var/app/com.brave.Browser": "Brave",
+    ".config/vivaldi": "Vivaldi",
+    ".cache/vivaldi": "Vivaldi",
+    ".config/microsoft-edge": "Microsoft Edge",
+    ".cache/microsoft-edge": "Microsoft Edge",
+    ".librewolf": "LibreWolf",
+    ".cache/librewolf": "LibreWolf",
+    ".config/opera": "Opera",
+    "snap/opera": "Opera"
+  },
+  "_CHAT_ROOTS": {
+    ".config/discord": "Discord",
+    "snap/discord": "Discord",
+    ".var/app/com.discordapp.Discord": "Discord",
+    ".local/share/TelegramDesktop": "Telegram",
+    "snap/telegram-desktop": "Telegram",
+    ".var/app/org.telegram.desktop": "Telegram",
+    ".config/Slack": "Slack",
+    "snap/slack": "Slack",
+    ".var/app/com.slack.Slack": "Slack",
+    ".config/Signal": "Signal",
+    "snap/signal-desktop": "Signal",
+    ".var/app/org.signal.Signal": "Signal",
+    "snap/whatsapp-desktop-linux": "WhatsApp",
+    ".config/whatsapp-desktop-linux": "WhatsApp",
+    ".var/app/io.github.mimbrero.WhatsAppDesktop": "WhatsApp",
+    ".config/Element": "Element",
+    ".var/app/im.riot.Riot": "Element",
+    ".config/teams-for-linux": "Teams",
+    ".config/zoom.us": "Zoom",
+    ".zoom": "Zoom",
+    ".var/app/us.zoom.Zoom": "Zoom"
+  },
+  "_DEV_ROOTS": {
+    ".cargo": "Rust (cargo)",
+    ".rustup": "Rust (rustup)",
+    ".npm": "npm",
+    ".cache/pip": "pip",
+    ".gradle": "Gradle",
+    ".m2": "Maven",
+    "go": "Go",
+    ".cache/go-build": "Go",
+    ".cache/yarn": "Yarn",
+    ".nvm": "Node (nvm)",
+    ".pyenv": "Python (pyenv)",
+    ".local/share/pnpm": "pnpm",
+    ".bun": "Bun",
+    ".deno": "Deno",
+    ".dotnet": ".NET",
+    ".nuget": ".NET (NuGet)",
+    ".cache/node-gyp": "node-gyp",
+    ".android": "Android",
+    "Android/Sdk": "Android SDK"
+  },
+  "_CLEANUP_IDS": [
+    "trash",
+    "thumbnails",
+    "user-cache-safe",
+    "browser-cache",
+    "old-downloads",
+    "apt-cache",
+    "old-snaps",
+    "journal",
+    "flatpak-unused",
+    "crash-reports"
+  ],
+  "_SAFE_CACHES": [
+    [
+      ".cache/pip",
+      "pip"
+    ],
+    [
+      ".npm/_cacache",
+      "npm"
+    ],
+    [
+      ".cache/yarn",
+      "Yarn"
+    ],
+    [
+      ".cache/go-build",
+      "Go"
+    ],
+    [
+      ".cache/mesa_shader_cache",
+      "Mesa-shaders"
+    ],
+    [
+      ".cache/mesa_shader_cache_db",
+      "Mesa-shaders"
+    ],
+    [
+      ".cache/nvidia/GLCache",
+      "NVIDIA-shaders"
+    ],
+    [
+      ".cache/radv_builtin_shaders64",
+      "AMD-shaders"
+    ],
+    [
+      ".cache/fontconfig",
+      "Lettertypen"
+    ],
+    [
+      ".cache/gstreamer-1.0",
+      "GStreamer"
+    ],
+    [
+      ".cache/typescript",
+      "TypeScript"
+    ],
+    [
+      ".cache/jedi",
+      "Jedi"
+    ],
+    [
+      ".cache/matplotlib",
+      "Matplotlib"
+    ],
+    [
+      ".cache/node-gyp",
+      "node-gyp"
+    ],
+    [
+      ".cache/electron",
+      "Electron"
+    ],
+    [
+      ".cache/babel",
+      "Babel"
+    ],
+    [
+      ".cache/vscode-cpptools",
+      "VS Code C++"
+    ]
+  ],
+  "_SAFE_CACHE_GLOBS": [
+    [
+      ".cache",
+      "qtshadercache-*",
+      "Qt-shaders"
+    ]
+  ],
+  "_BROWSER_CACHES": {
+    "firefox": [
+      ".cache/mozilla/firefox",
+      "snap/firefox/common/.cache/mozilla/firefox",
+      ".var/app/org.mozilla.firefox/cache/mozilla/firefox"
+    ],
+    "zen": [
+      ".cache/zen",
+      ".var/app/app.zen_browser.zen/cache/zen"
+    ],
+    "chrome": [
+      ".cache/google-chrome",
+      ".var/app/com.google.Chrome/cache/google-chrome"
+    ],
+    "chromium": [
+      ".cache/chromium",
+      "snap/chromium/common/.cache/chromium",
+      ".var/app/org.chromium.Chromium/cache/chromium"
+    ],
+    "brave": [
+      ".cache/BraveSoftware",
+      "snap/brave/common/.cache/BraveSoftware",
+      ".var/app/com.brave.Browser/cache/BraveSoftware"
+    ],
+    "vivaldi": [
+      ".cache/vivaldi"
+    ],
+    "edge": [
+      ".cache/microsoft-edge"
+    ],
+    "librewolf": [
+      ".cache/librewolf"
+    ],
+    "opera": [
+      ".cache/opera"
+    ]
+  },
+  "ADMIN_HELPER": "/usr/libexec/win11shell/cleanup-helper"
+}

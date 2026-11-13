@@ -1,0 +1,20 @@
+20:53:24 GE0c run lang=nl switch=False seed=defaults MemAvailable=3516028 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/a1-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2b-disks-race.py
+20:54:54 private install: exit 0 in 73.6 s, 87856 mutated paths, 0 outside the run dir, ok=True
+20:54:57 GStreamer registry warmed in 2.8 s (['gst-inspect-1.0 version 1.28.2'])
+20:55:00 GNOME Shell 50.1 up (mode user, unsafe True)
+20:55:05 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2b-disks-race.py
+20:55:05   check PASS: session starts in Dutch
+20:55:06   check PASS: Schijven shows the host text in Dutch
+20:55:06   check PASS: host: disks.list right after the switch is already English (the 1 s snapshot is kept per language)
+20:55:06   check PASS: host: the English body does not repeat the heading and uses ’
+20:55:07   check PASS: Schijven reaches English after the evidence step
+20:55:08   check PASS: Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch
+20:55:10   check PASS: Schijven shows the host text in en within 3.0 s although disks.list ran just before the switch
+20:55:12   check PASS: Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch
+20:55:13   check PASS: every check passed
+20:55:13 shutdown app: signalled own descendants 1374:win11-app, 1397:WebKitNetworkPr, 1398:WebKitWebProces, 1405:glycin-svg
+20:55:13 shutdown shell clients: signalled own descendants 60:ibus-daemon, 78:glycin-svg, 128:glycin-image-rs, 429:win11-desktop, 430:win11-panel, 1617:glycin-image-rs, 586:WebKitNetworkPr, 588:WebKitWebProces, 602:glycin-svg, 666:win11-start, 829:WebKitNetworkPr, 830:WebKitWebProces, 857:glycin-svg, 587:WebKitNetworkPr, 589:WebKitWebProces, 603:glycin-svg, 665:glycin-image-rs, 231:ibus-memconf, 232:ibus-extension-, 441:ibus-engine-sim
+20:55:14 shutdown gnome-shell: signalled own descendants 41:gnome-shell
+20:55:14 shutdown system bus: signalled own descendants 40:dbus-daemon
+20:55:14 inner sweep: signalled own descendants 1632:glycin-image-rs
+20:55:14 inner done: 0 surfaces, 0 failed []

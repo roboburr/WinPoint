@@ -1,0 +1,734 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 03:56:53",
+ "seconds": 109.5,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 38,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 835039,
+   "rss_kb": 2109424,
+   "processes": 30,
+   "t": 19.7
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 756046,
+   "rss_kb": 1993896
+  },
+  "minMemAvailableKb": 4826820,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 246816,
+    "rss_kb": 378588
+   },
+   "WebKitWebProces": {
+    "count": 3,
+    "pss_kb": 202127,
+    "rss_kb": 624760
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 78550,
+    "rss_kb": 111464
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 64007,
+    "rss_kb": 194176
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 57154,
+    "rss_kb": 187352
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 55051,
+    "rss_kb": 182140
+   },
+   "WebKitNetworkPr": {
+    "count": 3,
+    "pss_kb": 41323,
+    "rss_kb": 177576
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 27423,
+    "rss_kb": 81280
+   },
+   "win11-calendar": {
+    "count": 2,
+    "pss_kb": 22632,
+    "rss_kb": 57768
+   },
+   "glycin-image-rs": {
+    "count": 4,
+    "pss_kb": 17416,
+    "rss_kb": 38652
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15122,
+    "rss_kb": 34020
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4058,
+    "rss_kb": 11524
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1411,
+    "rss_kb": 10280
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 789,
+    "rss_kb": 7924
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 717,
+    "rss_kb": 7856
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 256,
+    "rss_kb": 1472
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 187,
+    "rss_kb": 2592
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 69.9,
+  "mutatingSyscallPaths": 87907,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "03:58:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:24\tpw-dump\t--monitor --no-colors",
+  "03:58:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:24\tpw-dump\t--monitor --no-colors",
+  "03:58:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:26\tpw-dump\t--monitor --no-colors",
+  "03:58:26\tpw-dump\t--monitor --no-colors",
+  "03:58:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:30\tpw-dump\t--monitor --no-colors",
+  "03:58:30\tpw-dump\t--monitor --no-colors",
+  "03:58:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:38\tpw-dump\t--monitor --no-colors",
+  "03:58:38\tpw-dump\t--monitor --no-colors",
+  "03:58:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:58:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-l5001UPm"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 8,
+  "maxScanSeconds": 0.707,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-l5001UPm"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.8,
+    "args": {
+     "key": "P.entry"
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.8,
+    "args": {
+     "key": "P.mimeapps"
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.51,
+    "args": {
+     "key": "A.token"
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.51,
+    "args": {
+     "key": "A.windows"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 3.17,
+    "args": {
+     "name": "a-calendar-2026-12-24"
+    },
+    "result": {
+     "png": "a-calendar-2026-12-24.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 866,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 3.2,
+    "args": {
+     "key": "B.launch"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.2,
+    "args": {
+     "key": "B.windows"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.2,
+    "args": {
+     "key": "B.titleChanged"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 6.83,
+    "args": {
+     "name": "b-calendar-2027-01-15"
+    },
+    "result": {
+     "png": "b-calendar-2027-01-15.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 825,
+      "meanLevel": 39.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.83,
+    "args": {
+     "key": "F.frosted"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.53,
+    "args": {
+     "name": "c-calendar-week-2026-12-22"
+    },
+    "result": {
+     "png": "c-calendar-week-2026-12-22.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 961,
+      "meanLevel": 41.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 12.28,
+    "args": {
+     "name": "d-calendar-day-new-2026-12-24"
+    },
+    "result": {
+     "png": "d-calendar-day-new-2026-12-24.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 837,
+      "meanLevel": 36.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 12.29,
+    "args": {
+     "key": "failed"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "P: win11-calendar is installed in the private prefix",
+    "ok": true,
+    "t": 0.8,
+    "binary": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/bin/win11-calendar"
+   },
+   {
+    "check": "P: the Calendar desktop entry handles win11-calendar: and starts the private binary",
+    "ok": true,
+    "t": 0.8
+   },
+   {
+    "check": "P: GNOME knows io.github.win11shell.Calendar.desktop",
+    "ok": true,
+    "t": 0.81
+   },
+   {
+    "check": "P: win11-calendar: opens the Calendar app (the scheme default)",
+    "ok": true,
+    "t": 0.81,
+    "handler": "io.github.win11shell.Calendar.desktop"
+   },
+   {
+    "check": "A: win11-calendar --date opens one Calendar window",
+    "ok": true,
+    "t": 2.51,
+    "windows": [
+     {
+      "id": "1367756964",
+      "pid": 1382,
+      "title": "Agenda",
+      "focused": true,
+      "minimized": false,
+      "x": 130,
+      "y": 36,
+      "w": 1180,
+      "h": 780
+     }
+    ],
+    "exit": null
+   },
+   {
+    "check": "A: the window belongs to the launched process",
+    "ok": true,
+    "t": 2.51,
+    "window": {
+     "id": "1367756964",
+     "pid": 1382,
+     "title": "Agenda",
+     "focused": true,
+     "minimized": false,
+     "x": 130,
+     "y": 36,
+     "w": 1180,
+     "h": 780
+    },
+    "pid": 1382
+   },
+   {
+    "check": "A: the launched window has the focus",
+    "ok": true,
+    "t": 2.52,
+    "window": {
+     "id": "1367756964",
+     "pid": 1382,
+     "title": "Agenda",
+     "focused": true,
+     "minimized": false,
+     "x": 130,
+     "y": 36,
+     "w": 1180,
+     "h": 780
+    }
+   },
+   {
+    "check": "B: still one Calendar window (single instance)",
+    "ok": true,
+    "t": 6.2,
+    "windows": [
+     {
+      "id": "1367756964",
+      "pid": 1382,
+      "title": "Agenda",
+      "focused": true,
+      "minimized": false,
+      "x": 130,
+      "y": 36,
+      "w": 1180,
+      "h": 780
+     }
+    ]
+   },
+   {
+    "check": "B: the same window and process as A",
+    "ok": true,
+    "t": 6.2,
+    "before": {
+     "id": "1367756964",
+     "pid": 1382,
+     "title": "Agenda",
+     "focused": true,
+     "minimized": false,
+     "x": 130,
+     "y": 36,
+     "w": 1180,
+     "h": 780
+    },
+    "after": [
+     {
+      "id": "1367756964",
+      "pid": 1382,
+      "title": "Agenda",
+      "focused": true,
+      "minimized": false,
+      "x": 130,
+      "y": 36,
+      "w": 1180,
+      "h": 780
+     }
+    ]
+   },
+   {
+    "check": "F: the extension blurs the focused Calendar window (kind calendar registered)",
+    "ok": true,
+    "t": 6.83,
+    "frosted": [
+     {
+      "pid": 1382,
+      "kind": "window",
+      "blur": true,
+      "shadow": true,
+      "focused": true
+     }
+    ]
+   },
+   {
+    "check": "C: the --view week launch is handed over and exits",
+    "ok": true,
+    "t": 6.9,
+    "exit": 0
+   },
+   {
+    "check": "C: still the one Calendar window",
+    "ok": true,
+    "t": 8.9,
+    "windows": [
+     {
+      "id": "1367756964",
+      "pid": 1382,
+      "title": "Agenda",
+      "focused": true,
+      "minimized": false,
+      "x": 130,
+      "y": 36,
+      "w": 1180,
+      "h": 780
+     }
+    ]
+   },
+   {
+    "check": "D: the --view day --new launch is handed over and exits",
+    "ok": true,
+    "t": 9.65,
+    "exit": 0
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 12.29,
+    "failed": []
+   }
+  ],
+  "records": {
+   "P.entry": "[Desktop Entry]\nType=Application\nName=Agenda\nComment=Bestaande Win11Shell-interface in een zelfstandige Rust-host voor GNOME\nExec=/usr/bin/env -- \"/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/bin/win11-calendar\" %u\nIcon=/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/office-calendar.svg\nTerminal=false\nStartupNotify=true\nStartupWMClass=io.github.win11shell.Calendar\nCategories=Office;Calendar;\nMimeType=x-scheme-handler/win11-calendar;\n",
+   "P.mimeapps": "\n[Default Applications]\nx-scheme-handler/win11-calendar=io.github.win11shell.Calendar.desktop\n",
+   "A.token": true,
+   "A.windows": [
+    {
+     "id": "1367756964",
+     "pid": 1382,
+     "title": "Agenda",
+     "focused": true,
+     "minimized": false,
+     "x": 130,
+     "y": 36,
+     "w": 1180,
+     "h": 780
+    }
+   ],
+   "B.launch": {
+    "gnome": true,
+    "spawned": false
+   },
+   "B.windows": [
+    {
+     "id": "1367756964",
+     "pid": 1382,
+     "title": "Agenda",
+     "focused": true,
+     "minimized": false,
+     "x": 130,
+     "y": 36,
+     "w": 1180,
+     "h": 780
+    }
+   ],
+   "B.titleChanged": false,
+   "F.frosted": [
+    {
+     "pid": 1382,
+     "kind": "window",
+     "blur": true,
+     "shadow": true,
+     "focused": true
+    }
+   ],
+   "failed": []
+  },
+  "shots": [
+   "a-calendar-2026-12-24.png",
+   "b-calendar-2027-01-15.png",
+   "c-calendar-week-2026-12-22.png",
+   "d-calendar-day-new-2026-12-24.png"
+  ],
+  "error": null,
+  "seconds": 12.29,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "9e7be6596282f993f08b773b356b772e",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "097457cc416539e657dfc11e52a038b8",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "10f4cc4c06270c38619e985ff43ece06",
+    "pid": null,
+    "page": null,
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=422396b5d3243aeced683f9c6af67cce",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "windowIds": {
+    "panel": "9e7be6596282f993f08b773b356b772e",
+    "desktop": "097457cc416539e657dfc11e52a038b8",
+    "start": "10f4cc4c06270c38619e985ff43ece06"
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "a-calendar-2026-12-24.png",
+    "group": "scenario",
+    "bytes": 340836,
+    "area": null
+   },
+   {
+    "file": "b-calendar-2027-01-15.png",
+    "group": "scenario",
+    "bytes": 327417,
+    "area": null
+   },
+   {
+    "file": "c-calendar-week-2026-12-22.png",
+    "group": "scenario",
+    "bytes": 355445,
+    "area": null
+   },
+   {
+    "file": "d-calendar-day-new-2026-12-24.png",
+    "group": "scenario",
+    "bytes": 353886,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/calendar-app.out/a-calendar-2026-12-24.png",
+  "tests/gnome/scenarios/calendar-app.out/b-calendar-2027-01-15.png",
+  "tests/gnome/scenarios/calendar-app.out/c-calendar-week-2026-12-22.png",
+  "tests/gnome/scenarios/calendar-app.out/d-calendar-day-new-2026-12-24.png"
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "name": "only-phased",
+ "group": "check",
+ "title": "Only phased updates",
+ "description": "GetUpdates lists only two phased packages; the hero stays \"up to date\" and nothing is installed.",
+ "states": [
+  "H16"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "ubuntu-drivers-common\t1:0.10.4\t1\t30\t0\nfwupd\t2.0.17-1ubuntu1\t1\t10\t0\nubuntu-drivers-common\tamd64\t1:0.10.4\t1\t30\t0\t1:0.10.3\nfwupd\tamd64\t2.0.17-1ubuntu1\t1\t10\t0\t2.0.17-1ubuntu0\n@@end\n"
+  }
+ },
+ "packages": {
+  "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "Detect and install additional Ubuntu driver packages",
+   "size": 1015808,
+   "row": "other"
+  },
+  "fwupd;2.0.17-1ubuntu1;amd64;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "Firmware update daemon",
+   "size": 8986624,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates",
+  "fwupd;2.0.17-1ubuntu1;amd64;ubuntu-resolute-updates"
+ ],
+ "client": [
+  {
+   "tx": "RefreshCache",
+   "args": [
+    false
+   ],
+   "expect": {
+    "exit": "success",
+    "statuses": [
+     "refresh-cache"
+    ]
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 2
+   }
+  },
+  {
+   "phasing": "$updates",
+   "save": "install",
+   "expect": {
+    "phased": [
+     "fwupd",
+     "ubuntu-drivers-common"
+    ],
+    "install": 0
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 6,
+  "stubs": [
+   "python3"
+  ]
+ }
+}

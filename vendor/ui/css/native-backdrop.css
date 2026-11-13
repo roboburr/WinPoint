@@ -1,0 +1,16 @@
+/* Only a live native GNOME capability enables these background fills. The original
+   layout, chrome, in-page menus, flyouts, text and icons keep their own painting.
+   App windows are 90 %, Robin's choice (D-G60; Mica was 80 %). A data-blur="none" page has the
+   solid variants. The taskbar and Start rules went with the HTML shell (D-G70): those surfaces are
+   the native GTK 4 shell now (native/shell), which paints its own glass tint. */
+html[data-native-backdrop="window"][data-transparency="on"][data-surface="app"] .af-window {
+  background-color: color-mix(in srgb, var(--bg-mica-solid) 90%, transparent) !important;
+}
+html[data-native-backdrop="window"][data-transparency="on"][data-surface="app"] .af-window.xp-window {
+  --xp-content: transparent;
+  background-color: light-dark(rgba(255,255,255,0.90), rgba(25,25,25,0.90)) !important;
+}
+@media (forced-colors: active) {
+  html[data-native-backdrop="window"][data-surface="app"] .af-window { background-color: var(--bg-mica-solid) !important; }
+  html[data-native-backdrop="window"][data-surface="app"] .af-window.xp-window { --xp-content: light-dark(#fff,#191919); }
+}

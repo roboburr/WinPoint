@@ -1,0 +1,56 @@
+{
+  "passed": 12,
+  "cases": [
+    {
+      "case": "parse-gnome-kde-bus-name-and-path-registrations",
+      "passed": true
+    },
+    {
+      "case": "malformed-gnome-registrations-rejected",
+      "passed": true
+    },
+    {
+      "case": "gnome-watcher-initial-list-resolves-live-item-and-icon",
+      "passed": true,
+      "items": 1
+    },
+    {
+      "case": "tray-changed-event-reaches-subscribers",
+      "passed": true
+    },
+    {
+      "case": "activation-secondary-context-and-scroll-forward-to-live-item",
+      "passed": true
+    },
+    {
+      "case": "passive-status-propagates-without-removing-item",
+      "passed": true
+    },
+    {
+      "case": "attention-status-propagates",
+      "passed": true
+    },
+    {
+      "case": "gnome-registration-signal-adds-new-item",
+      "passed": true
+    },
+    {
+      "case": "duplicate-registration-does-not-duplicate-icon",
+      "passed": true
+    },
+    {
+      "case": "gnome-unregistration-signal-removes-same-item",
+      "passed": true
+    },
+    {
+      "case": "item-bus-disconnect-removes-stale-icon",
+      "passed": true
+    },
+    {
+      "case": "service-stop-releases-resources",
+      "passed": true
+    }
+  ],
+  "version": "0.6.2",
+  "scope": "Isolated real D-Bus SNI watcher/item integration, no live app actions"
+}

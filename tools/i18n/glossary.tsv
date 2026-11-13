@@ -1,0 +1,126 @@
+# tools/i18n/glossary.tsv: nl phrase → Windows 11 en-GB phrase (notes/english-option-design.md §4.2), for the
+# glossary rule of tools/i18n/check.py: when an nl text contains the phrase (longest first, at word boundaries),
+# its en text must contain the English one. An error since the round-3 lock-in (R3-UI; check.py, check_ui.py,
+# check_pairs.py; check_rust.py reads this file too). Columns: nl, en, flags ("name": case-sensitive).
+# Where a second rendering is right (a progress form, Windows' own sentence, another sense of the word), a context
+# row in tools/i18n/glossary-context.tsv names the places and the en phrase there; it is a separate file because
+# check_rust.py takes every row of this one as a rule for the whole host.
+# Rows the design marks "(check)" (Snelle instellingen, Batterijbesparing) and context-dependent words (Schijf:
+# Disk or Drive; Info; Weergave; Afsluiten; Start: the menu or Verkenner's Home; Alles: the name or "everything") are
+# left out on purpose; E0b's glossary report settles them. The en phrase may be inflected ("Format" in "Formatting").
+Taakbalk	Taskbar
+Taakweergave	Task view
+Meldingscentrum	Notification centre
+Meldingen	Notifications
+Systeemvak	System tray
+Verborgen pictogrammen weergeven	Show hidden icons
+Bureaublad weergeven	Show desktop
+Bureaublad	Desktop
+Prullenbak leegmaken	Empty Recycle Bin
+Prullenbak	Recycle Bin
+Vastmaken aan Start	Pin to Start
+Vastmaken aan taakbalk	Pin to taskbar
+Losmaken van taakbalk	Unpin from taskbar
+Alle apps	All apps
+Afmelden	Sign out
+Vergrendelen	Lock
+Slaapstand	Sleep
+Afsluiten of afmelden	Shut down or sign out
+Opnieuw opstarten	Restart
+Niet storen	Do not disturb
+Klembordgeschiedenis	Clipboard history
+Nachtlampje	Night light
+Vliegtuigmodus	Flight mode
+Helderheid	Brightness
+Bluetooth en apparaten	Bluetooth & devices
+Netwerk en internet	Network & internet
+Persoonlijke instellingen	Personalisation
+Tijd en taal	Time & language
+Toegankelijkheid	Accessibility
+Privacy en beveiliging	Privacy & security
+Energie en batterij	Power & battery
+Opslaginzicht	Storage Sense
+Achtergrond	Background
+Kleuren	Colours
+Thema's	Themes
+Vergrendelingsscherm	Lock screen
+Minimaliseren	Minimise
+Maximaliseren	Maximise
+Lokale schijf	Local Disk
+Bestandslocatie openen	Open file location
+Ongedaan maken	Undo
+Sorteren op	Sort by
+Groeperen op	Group by
+Schermafbeelding	Screenshot
+Verkenner	File Explorer	name
+Taakbeheer	Task Manager	name
+Instellingen	Settings
+Schijfbeheer	Disk Management	name
+Alles selecteren	Select all
+Alles uitpakken	Extract all
+Startpagina	Home
+Snelle toegang	Quick access
+Deze pc	This PC
+Galerie	Gallery
+Documenten	Documents
+Afbeeldingen	Pictures
+Muziek	Music
+Video's	Videos
+Nieuwe map	New folder
+Knippen	Cut
+Kopiëren als pad	Copy as path
+Plakken	Paste
+Naam wijzigen	Rename
+Eigenschappen	Properties
+Openen met	Open with
+Meer opties weergeven	Show more options
+Comprimeren naar ZIP-bestand	Compress to ZIP file
+Navigatievenster	Navigation pane
+Detailvenster	Details pane
+Voorbeeldvenster	Preview pane
+Verborgen items	Hidden items
+Bestandsnaamextensies	File name extensions
+Processen	Processes
+Prestaties	Performance
+App-geschiedenis	App history
+Opstart-apps	Startup apps
+Gebruikers	Users
+Taak beëindigen	End task
+Nieuwe taak uitvoeren	Run new task
+Efficiëntiemodus	Efficiency mode
+Reageert niet	Not responding
+Achtergrondprocessen	Background processes
+Schijven en volumes	Disks & volumes
+Niet-toegewezen	Unallocated
+Stationsletter	Drive letter
+Formatteren	Format
+Vernieuwen	Refresh
+Annuleren	Cancel
+Opslaan	Save
+Toepassen	Apply
+Er ging iets mis	Something went wrong
+Probeer het opnieuw	Try again
+Geïnstalleerde apps	Installed apps
+Standaard-apps	Default apps
+Datum en tijd	Date & time
+Taal en regio	Language & region
+Weergavetaal	Display language
+Regionale notatie	Regional format
+Snelkoppeling	Shortcut
+Terugzetten	Restore
+Pincode of wachtwoord	PIN or password
+# Windows Update (GW3, notes/claude/windows-update-gnome.md §8). "Opnieuw proberen": the round-3 lock-in (D-G41)
+# keeps "Try again" (the 8 existing UI buttons) and gives the Update page Windows 11's "Retry" through a context row.
+Controleren op updates	Check for updates
+Alles downloaden en installeren	Download & install all
+Downloaden en installeren	Download and install
+Opnieuw opstarten vereist	Restart required
+Nu opnieuw opstarten	Restart now
+Updategeschiedenis	Update history
+Geavanceerde opties	Advanced options
+Meer opties	More options
+Wachten op downloaden	Pending download
+Wachten op installatie	Pending install
+Wachten op opnieuw opstarten	Pending restart
+Technische details	Technical details
+Opnieuw proberen	Try again

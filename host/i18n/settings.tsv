@@ -1,0 +1,57 @@
+# host/i18n/settings.tsv: host texts of settings.rs, settings_runtime.rs, settings_effects.rs (its CSS marker lines are never translated, C9).
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/settings.rs
+# new(): the text of the io error inside save_failed's data: ~/.config/win11-gnome is no directory of this user (or a symlink)
+#@ host/src/settings.rs 1 d3ba35a07a12a9e8 plain
+settings.dirNotOwned	De instellingenmap moet van deze gebruiker zijn.	The settings folder must belong to this user.
+# call(): ApiError "bad_args": settings.*: the arguments are not an object
+#@ host/src/settings.rs 11 e8d6a12b8b58205f plain
+settings.badArgs	Ongeldige invoer.	Invalid input.
+# call(): ApiError "bad_args": settings.set without a path
+#@ host/src/settings.rs 16 d7d3fabd90406e43 plain
+settings.noPath	Geef aan welke instelling je wilt wijzigen.	Specify which setting to change.
+# call(): settings.export: the suggested file name; {date} is YYYY-MM-DD
+#@ host/src/settings.rs 27 32e1b85f699edf0e fmt {}=date
+settings.exportName	win11shell-instellingen-{date}.json	win11shell-settings-{date}.json
+# set(): ApiError "read_only": settings.set of version
+#@ host/src/settings.rs 34 4e7bf12a5fa66ca2 plain
+settings.readOnly	Deze instelling kan niet worden gewijzigd.	This setting can’t be changed.
+# patch(): ApiError "bad_value": settings.patch: the patch is not an object
+#@ host/src/settings.rs 37 c220cff7a79e7ccb plain
+settings.badPatch	Ongeldige wijziging.	Invalid change.
+# patch(): a value of the wrong type for a known setting (data: path or paths); also code invalid_value for a language other than nl or en (D-G24)
+#@ host/src/settings.rs 40 b3647de4da09cf92 plain
+#@ host/src/settings.rs 76 b3647de4da09cf92 plain
+#@ host/src/settings.rs 79 b3647de4da09cf92 plain
+settings.badValue	Deze waarde past niet bij deze instelling.	This value isn’t valid for this setting.
+# lock(): the text of the io error inside save_failed's data: .settings.lock is not a private regular file of this user
+#@ host/src/settings.rs 61 7e956a092f2cb18a plain
+settings.lockNotPrivate	Het instellingen-slot moet privé zijn.	The settings lock file must be private.
+# save_error(): code save_failed; data is the io error text
+#@ host/src/settings.rs 65 3cc0ee56ae4ab69a plain
+settings.saveFailed	De instellingen konden niet worden opgeslagen.	Couldn’t save the settings.
+# invalid_settings(): ApiError "invalid_settings": settings.import: no JSON object with at least one known setting
+#@ host/src/settings.rs 67 b43757b2a6315b10 plain
+settings.invalidFile	Dit bestand bevat geen geldige instellingen.	This file doesn’t contain valid settings.
+# pretty(): ApiError "bad_value": the settings could not be written as JSON
+#@ host/src/settings.rs 69 05ea9bd90d11b749 plain
+settings.notSavable	Deze waarde kan niet worden opgeslagen.	This value can’t be saved.
+# split_path(): ApiError "bad_path": the path is not a string or list, or has an empty, too long or control-character segment
+#@ host/src/settings.rs 82 80843cf6835bcf0b plain
+#@ host/src/settings.rs 84 80843cf6835bcf0b plain
+settings.badPath	Ongeldige instelling.	Invalid setting.
+
+# --- host/src/settings_runtime.rs
+# call(): ApiError "offline": settings.* after this host's settings service stopped
+#@ host/src/settings_runtime.rs 10 8d5e3ddd3c787b9b plain
+settings.stopping	De instellingendienst wordt afgesloten.	The settings service is shutting down.

@@ -1,0 +1,63 @@
+{
+  "version": "0.6.0",
+  "date": "2026-11-01",
+  "isolated": true,
+  "native_header": "X-Win11-Service: rust-apps",
+  "python_full_metadata_and_order": true,
+  "native_apps_changed": true,
+  "original_start_all_apps": true,
+  "cases": [
+    {
+      "case": "english-full-metadata-order-and-first-run-added-zero",
+      "passed": true,
+      "apps": 72
+    },
+    {
+      "case": "own-five-installed-icon-and-hidden-flags",
+      "passed": true
+    },
+    {
+      "case": "unicode-accent-natural-order-and-integers-larger-than-u64",
+      "passed": true
+    },
+    {
+      "case": "dutch-inline-gettext-mo-builtins-twin-and-keyword-order",
+      "passed": true,
+      "gettext_domain": "WebKitGTK-4.1",
+      "gettext_sample_sha256": "64d373cde7c99d47b09c07359a53f338d0b2e1c3b5985ad2583d3438a4a429f3"
+    },
+    {
+      "case": "language-switch-invalidates-native-catalog",
+      "passed": true
+    },
+    {
+      "case": "install-event-and-shared-first-seen-timestamp",
+      "passed": true,
+      "hosts": 2
+    },
+    {
+      "case": "uninstall-events-and-list-refresh",
+      "passed": true,
+      "hosts": 2
+    },
+    {
+      "case": "concurrent-cross-host-catalogs-keep-all-seen-entries",
+      "passed": true,
+      "new_apps": 12,
+      "hosts": 2
+    },
+    {
+      "case": "catalog-works-while-all-eight-python-app-methods-are-trapped",
+      "passed": true,
+      "methods": 8
+    },
+    {
+      "case": "original-start-all-apps-renders-native-catalog",
+      "passed": true,
+      "visible_apps": 84
+    }
+  ],
+  "case_count": 10,
+  "reference_invalidation_hook": true,
+  "no_external_app_launches": true
+}

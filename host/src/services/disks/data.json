@@ -1,0 +1,459 @@
+{
+  "_STR": {
+    "nl": {
+      "disk": "Schijf {n}",
+      "v_root": "Systeemschijf",
+      "v_home": "Persoonlijke bestanden",
+      "v_boot": "Opstartpartitie",
+      "v_efi": "EFI-systeempartitie",
+      "v_swap": "Wisselgeheugen",
+      "v_msr": "Gereserveerd door Microsoft",
+      "v_recovery": "Herstelpartitie",
+      "v_ldm_meta": "Dynamische schijf (metagegevens)",
+      "v_ldm_data": "Dynamische schijf",
+      "v_bios": "BIOS-opstartpartitie",
+      "v_locked": "Versleuteld volume",
+      "v_raw": "Niet-geformatteerd",
+      "v_local": "Lokaal station",
+      "v_usb": "USB-station",
+      "v_lvm": "LVM-volume",
+      "v_raid": "RAID-onderdeel",
+      "v_extended": "Uitgebreide partitie",
+      "v_disc": "Cd/dvd",
+      "v_loop": "Virtuele schijf",
+      "t_efi": "EFI-systeempartitie",
+      "t_basic": "Basisgegevenspartitie",
+      "t_msr": "Gereserveerde partitie van Microsoft",
+      "t_recovery": "Herstelpartitie van Windows",
+      "t_ldm_meta": "Metagegevens van een dynamische schijf",
+      "t_ldm_data": "Gegevens van een dynamische schijf",
+      "t_linux": "Linux-bestandssysteem",
+      "t_linux_root": "Linux-hoofdpartitie",
+      "t_linux_home": "Linux-persoonlijke map",
+      "t_swap": "Linux-wisselgeheugen",
+      "t_lvm": "Linux LVM",
+      "t_raid": "Linux RAID",
+      "t_luks": "Linux LUKS (versleuteld)",
+      "t_bios": "BIOS-opstartpartitie",
+      "t_xbootldr": "Linux-opstartpartitie",
+      "t_hfs": "Apple HFS+",
+      "t_apfs": "Apple APFS",
+      "t_extended": "Uitgebreide partitie",
+      "t_fat": "FAT",
+      "t_ntfs": "NTFS of exFAT",
+      "t_other": "Partitietype {t}",
+      "fs_ntfs": "Voor Windows-pc's en grote bestanden",
+      "fs_exfat": "Werkt op bijna alle apparaten (Windows, Mac, Linux)",
+      "fs_vfat": "Voor oudere apparaten; bestanden tot 4 GB",
+      "fs_ext4": "Voor Linux (aanbevolen voor Ubuntu)",
+      "fs_btrfs": "Linux, met momentopnamen",
+      "fs_xfs": "Linux, voor heel grote bestanden",
+      "r_root": "Ubuntu draait vanaf dit volume.",
+      "r_boot": "Dit volume is nodig om de computer op te starten.",
+      "r_efi": "Dit volume is nodig om de computer op te starten.",
+      "r_home": "Je persoonlijke map staat op dit volume.",
+      "r_usr": "Onderdelen van Ubuntu staan op dit volume.",
+      "r_var": "Onderdelen van Ubuntu staan op dit volume.",
+      "r_swap": "Dit volume wordt gebruikt als wisselgeheugen.",
+      "r_shell": "Win11 Shell draait vanaf dit volume.",
+      "r_disk": "Ubuntu heeft deze schijf nodig om te werken.",
+      "r_boot_entry": "De computer kan vanaf dit volume opstarten ({names}).",
+      "r_disk_boot": "Op deze schijf staat een volume waarmee de computer opstart ({names}).",
+      "no_format": "Je kunt het daarom niet formatteren.",
+      "no_delete": "Je kunt het daarom niet verwijderen.",
+      "no_unmount": "Je kunt het daarom niet ontkoppelen.",
+      "no_label": "Je kunt de naam daarom niet wijzigen.",
+      "no_lock": "Je kunt het daarom niet vergrendelen.",
+      "no_eject": "Je kunt hem daarom niet verwijderen.",
+      "no_initialize": "Je kunt hem daarom niet initialiseren.",
+      "unavailable": "Schijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.",
+      "gone_volume": "Dit volume bestaat niet meer. Misschien is de schijf losgekoppeld.",
+      "gone_disk": "Deze schijf bestaat niet meer. Misschien is hij losgekoppeld.",
+      "changed": "Deze schijf is veranderd sinds je hem koos. Kijk opnieuw en probeer het nog eens.",
+      "expect": "Kies het volume opnieuw en probeer het nog eens.",
+      "busy": "‘{name}’ is nog in gebruik. Sluit de bestanden en apps die het gebruiken en probeer het opnieuw.",
+      "not_authorized": "Je hebt geen toestemming gegeven. Er is niets veranderd.",
+      "cancelled": "Geannuleerd. Er is niets veranderd.",
+      "bad_passphrase": "Het wachtwoord klopt niet. Probeer het opnieuw.",
+      "failed": "Dat is niet gelukt: {detail}",
+      "timeout": "UDisks reageert niet op tijd. Kijk of het toch is gelukt en probeer het zo nodig opnieuw.",
+      "readonly": "Alleen-lezen testmodus: er wordt niets aan de schijven veranderd.",
+      "fs_missing": "{fs} kan op deze computer niet worden gemaakt: het programma daarvoor ontbreekt.",
+      "fs_unknown": "Kies een bestandssysteem.",
+      "label_long": "Deze naam is te lang voor {fs} (maximaal {n} tekens).",
+      "label_bad": "Deze naam bevat tekens die {fs} niet toestaat.",
+      "not_mounted": "Dit volume is niet gekoppeld.",
+      "no_fs": "Op dit volume staat geen bestandssysteem dat kan worden gekoppeld.",
+      "no_label_fs": "Dit volume heeft geen bestandssysteem met een naam.",
+      "not_encrypted": "Dit volume is niet versleuteld.",
+      "locked": "Ontgrendel dit volume eerst.",
+      "table_full": "Op deze schijf kan geen partitie meer bij: een MBR-schijf heeft er maximaal vier.",
+      "no_free": "Deze vrije ruimte bestaat niet meer. Kijk opnieuw en probeer het nog eens.",
+      "too_small": "Een volume moet minstens 8 MB groot zijn.",
+      "not_partition": "Alleen een partitie kan worden verwijderd. Formatteer dit volume in plaats daarvan.",
+      "has_logical": "Verwijder eerst de logische stations in deze partitie.",
+      "no_table": "Deze schijf is nog niet geïnitialiseerd. Initialiseer hem eerst.",
+      "system_part": "Dit is een systeempartitie ({type}). Die kun je hier niet formatteren of verwijderen. Wil je de hele schijf opnieuw gebruiken, kies dan ‘Schijf wissen en initialiseren’.",
+      "dynamic_part": "Dit volume hoort bij een dynamische schijf van Windows. Verwijder het in Windows (Schijfbeheer), anders raakt Windows de gegevens op deze schijf kwijt.",
+      "op_running": "Er loopt al een bewerking op deze schijf. Wacht tot die klaar is.",
+      "busy_job": "Er loopt nog een bewerking op ‘{name}’. Wacht tot die klaar is.",
+      "still_running": "De bewerking op ‘{name}’ loopt nog. Je ziet de voortgang in Schijven; zet de computer niet uit en koppel de schijf niet los.",
+      "fstab_label": "Ubuntu koppelt dit volume bij het opstarten aan de hand van zijn naam. Daarom kun je de naam hier niet wijzigen.",
+      "passphrase": "Kies een wachtwoord van minstens 8 tekens.",
+      "passphrase_empty": "Typ het wachtwoord.",
+      "no_smart": "Deze schijf geeft geen gezondheidsgegevens door.",
+      "bad_table": "Kies GPT of MBR.",
+      "bad_args": "Ongeldige invoer.",
+      "not_removable": "Deze schijf kan niet worden uitgeworpen."
+    },
+    "en": {
+      "disk": "Disk {n}",
+      "v_root": "System drive",
+      "v_home": "Personal files",
+      "v_boot": "Boot partition",
+      "v_efi": "EFI System Partition",
+      "v_swap": "Swap",
+      "v_msr": "Microsoft reserved",
+      "v_recovery": "Recovery partition",
+      "v_ldm_meta": "Dynamic disk (metadata)",
+      "v_ldm_data": "Dynamic disk",
+      "v_bios": "BIOS boot partition",
+      "v_locked": "Encrypted volume",
+      "v_raw": "Unformatted",
+      "v_local": "Local Disk",
+      "v_usb": "USB Drive",
+      "v_lvm": "LVM volume",
+      "v_raid": "RAID member",
+      "v_extended": "Extended partition",
+      "v_disc": "CD/DVD",
+      "v_loop": "Virtual disk",
+      "t_efi": "EFI System Partition",
+      "t_basic": "Basic data partition",
+      "t_msr": "Microsoft reserved partition",
+      "t_recovery": "Windows recovery partition",
+      "t_ldm_meta": "Dynamic disk metadata",
+      "t_ldm_data": "Dynamic disk data",
+      "t_linux": "Linux filesystem",
+      "t_linux_root": "Linux root partition",
+      "t_linux_home": "Linux home partition",
+      "t_swap": "Linux swap",
+      "t_lvm": "Linux LVM",
+      "t_raid": "Linux RAID",
+      "t_luks": "Linux LUKS (encrypted)",
+      "t_bios": "BIOS boot partition",
+      "t_xbootldr": "Linux boot partition",
+      "t_hfs": "Apple HFS+",
+      "t_apfs": "Apple APFS",
+      "t_extended": "Extended partition",
+      "t_fat": "FAT",
+      "t_ntfs": "NTFS or exFAT",
+      "t_other": "Partition type {t}",
+      "fs_ntfs": "For Windows PCs and large files",
+      "fs_exfat": "Works on almost every device (Windows, Mac, Linux)",
+      "fs_vfat": "For older devices; files up to 4 GB",
+      "fs_ext4": "For Linux (recommended for Ubuntu)",
+      "fs_btrfs": "Linux, with snapshots",
+      "fs_xfs": "Linux, for very large files",
+      "r_root": "Ubuntu runs from this volume.",
+      "r_boot": "This volume is needed to start the computer.",
+      "r_efi": "This volume is needed to start the computer.",
+      "r_home": "Your personal folder is on this volume.",
+      "r_usr": "Parts of Ubuntu are on this volume.",
+      "r_var": "Parts of Ubuntu are on this volume.",
+      "r_swap": "This volume is used as swap.",
+      "r_shell": "Win11 Shell runs from this volume.",
+      "r_disk": "Ubuntu needs this disk to work.",
+      "r_boot_entry": "The computer can start from this volume ({names}).",
+      "r_disk_boot": "This disk holds a volume the computer starts from ({names}).",
+      "no_format": "That's why it can't be formatted.",
+      "no_delete": "That's why it can't be deleted.",
+      "no_unmount": "That's why it can't be unmounted.",
+      "no_label": "That's why its name can't be changed.",
+      "no_lock": "That's why it can't be locked.",
+      "no_eject": "That's why it can't be removed.",
+      "no_initialize": "That's why it can't be initialised.",
+      "unavailable": "Disk management doesn't work: UDisks isn't available on this computer.",
+      "gone_volume": "This volume no longer exists. Maybe the disk was disconnected.",
+      "gone_disk": "This disk no longer exists. Maybe it was disconnected.",
+      "changed": "This disk changed since you chose it. Have another look and try again.",
+      "expect": "Choose the volume again and try again.",
+      "busy": "‘{name}’ is still in use. Close the files and apps that use it and try again.",
+      "not_authorized": "Permission wasn't given. Nothing was changed.",
+      "cancelled": "Cancelled. Nothing was changed.",
+      "bad_passphrase": "The password is wrong. Please try again.",
+      "failed": "That didn't work: {detail}",
+      "timeout": "UDisks didn't answer in time. Check whether it worked anyway and try again if needed.",
+      "readonly": "Read-only test mode: nothing is changed on the disks.",
+      "fs_missing": "{fs} can't be created on this computer: the program for it is missing.",
+      "fs_unknown": "Choose a file system.",
+      "label_long": "This name is too long for {fs} (at most {n} characters).",
+      "label_bad": "This name contains characters {fs} doesn't allow.",
+      "not_mounted": "This volume isn't mounted.",
+      "no_fs": "This volume has no file system that can be mounted.",
+      "no_label_fs": "This volume has no file system with a name.",
+      "not_encrypted": "This volume isn't encrypted.",
+      "locked": "Unlock this volume first.",
+      "table_full": "No more partitions fit on this disk: an MBR disk holds at most four.",
+      "no_free": "This free space no longer exists. Have another look and try again.",
+      "too_small": "A volume must be at least 8 MB.",
+      "not_partition": "Only a partition can be deleted. Format this volume instead.",
+      "has_logical": "Delete the logical drives in this partition first.",
+      "no_table": "This disk isn't initialised yet. Initialise it first.",
+      "system_part": "This is a system partition ({type}). It can't be formatted or deleted here. To reuse the whole disk, choose ‘Erase and initialise disk’.",
+      "dynamic_part": "This volume belongs to a Windows dynamic disk. Delete it in Windows (Disk Management), otherwise Windows loses track of the data on this disk.",
+      "op_running": "Another operation is running on this disk. Wait until it has finished.",
+      "busy_job": "An operation is still running on ‘{name}’. Wait until it has finished.",
+      "still_running": "The operation on ‘{name}’ is still running. You can follow it in Disks; don't turn the computer off or unplug the disk.",
+      "fstab_label": "Ubuntu mounts this volume at startup by its name. That's why it can't be renamed here.",
+      "passphrase": "Choose a password of at least 8 characters.",
+      "passphrase_empty": "Type the password.",
+      "no_smart": "This disk doesn't report health data.",
+      "bad_table": "Choose GPT or MBR.",
+      "bad_args": "Invalid input.",
+      "not_removable": "This disk can't be ejected."
+    }
+  },
+  "GPT_TYPES": {
+    "c12a7328-f81f-11d2-ba4b-00a0c93ec93b": [
+      "efi",
+      "system"
+    ],
+    "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7": [
+      "basic",
+      "data"
+    ],
+    "e3c9e316-0b5c-4db8-817d-f92df00215ae": [
+      "msr",
+      "system"
+    ],
+    "de94bba4-06d1-4d40-a16a-bfd50179d6ac": [
+      "recovery",
+      "system"
+    ],
+    "5808c8aa-7e8f-42e0-85d2-e1e90434cfb3": [
+      "ldm_meta",
+      "system"
+    ],
+    "af9b60a0-1431-4f62-bc68-3311714a69ad": [
+      "ldm_data",
+      "data"
+    ],
+    "0fc63daf-8483-4772-8e79-3d69d8477de4": [
+      "linux",
+      "data"
+    ],
+    "4f68bce3-e8cd-4db1-96e7-fbcaf984b709": [
+      "linux_root",
+      "data"
+    ],
+    "933ac7e1-2eb4-4f13-b844-0e14e2aef915": [
+      "linux_home",
+      "data"
+    ],
+    "0657fd6d-a4ab-43c4-84e5-0933c84b4f4f": [
+      "swap",
+      "swap"
+    ],
+    "e6d6d379-f507-44c2-a23c-238f2a3df928": [
+      "lvm",
+      "data"
+    ],
+    "a19d880f-05fc-4d3b-a006-743f0f84911e": [
+      "raid",
+      "data"
+    ],
+    "ca7d7ccb-63ed-4c53-861c-1742536059cc": [
+      "luks",
+      "data"
+    ],
+    "21686148-6449-6e6f-744e-656564454649": [
+      "bios",
+      "system"
+    ],
+    "bc13c2ff-59e6-4262-a352-b275fd6f7172": [
+      "xbootldr",
+      "system"
+    ],
+    "48465300-0000-11aa-aa11-00306543ecac": [
+      "hfs",
+      "data"
+    ],
+    "7c3457ef-0000-11aa-aa11-00306543ecac": [
+      "apfs",
+      "data"
+    ]
+  },
+  "DOS_TYPES": {
+    "0x05": [
+      "extended",
+      "container"
+    ],
+    "0x0f": [
+      "extended",
+      "container"
+    ],
+    "0x85": [
+      "extended",
+      "container"
+    ],
+    "0x07": [
+      "ntfs",
+      "data"
+    ],
+    "0x0b": [
+      "fat",
+      "data"
+    ],
+    "0x0c": [
+      "fat",
+      "data"
+    ],
+    "0x0e": [
+      "fat",
+      "data"
+    ],
+    "0x06": [
+      "fat",
+      "data"
+    ],
+    "0x01": [
+      "fat",
+      "data"
+    ],
+    "0x04": [
+      "fat",
+      "data"
+    ],
+    "0x83": [
+      "linux",
+      "data"
+    ],
+    "0x82": [
+      "swap",
+      "swap"
+    ],
+    "0x8e": [
+      "lvm",
+      "data"
+    ],
+    "0xfd": [
+      "raid",
+      "data"
+    ],
+    "0xef": [
+      "efi",
+      "system"
+    ],
+    "0x27": [
+      "recovery",
+      "system"
+    ],
+    "0xee": [
+      "other",
+      "system"
+    ]
+  },
+  "FILESYSTEMS": {
+    "ntfs": [
+      "NTFS",
+      [
+        "mkfs.ntfs"
+      ],
+      128,
+      "chars",
+      false
+    ],
+    "exfat": [
+      "exFAT",
+      [
+        "mkfs.exfat"
+      ],
+      15,
+      "chars",
+      false
+    ],
+    "vfat": [
+      "FAT32",
+      [
+        "mkfs.vfat",
+        "mkfs.fat"
+      ],
+      11,
+      "fat",
+      false
+    ],
+    "ext4": [
+      "ext4",
+      [
+        "mkfs.ext4"
+      ],
+      16,
+      "bytes",
+      true
+    ],
+    "btrfs": [
+      "Btrfs",
+      [
+        "mkfs.btrfs"
+      ],
+      255,
+      "bytes",
+      true
+    ],
+    "xfs": [
+      "XFS",
+      [
+        "mkfs.xfs"
+      ],
+      12,
+      "bytes",
+      true
+    ]
+  },
+  "FS_ORDER": [
+    "ntfs",
+    "exfat",
+    "vfat",
+    "ext4",
+    "btrfs",
+    "xfs"
+  ],
+  "GPT_FOR_FS": {
+    "ntfs": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+    "exfat": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+    "vfat": "ebd0a0a2-b9e5-4433-87c0-68b6b72699c7",
+    "ext4": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+    "btrfs": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+    "xfs": "0fc63daf-8483-4772-8e79-3d69d8477de4"
+  },
+  "DOS_FOR_FS": {
+    "ntfs": "0x07",
+    "exfat": "0x07",
+    "vfat": "0x0c",
+    "ext4": "0x83",
+    "btrfs": "0x83",
+    "xfs": "0x83"
+  },
+  "FS_NAMES": {
+    "ntfs": "NTFS",
+    "exfat": "exFAT",
+    "vfat": "FAT32",
+    "ext2": "ext2",
+    "ext3": "ext3",
+    "ext4": "ext4",
+    "btrfs": "Btrfs",
+    "xfs": "XFS",
+    "f2fs": "F2FS",
+    "swap": "Wisselgeheugen",
+    "crypto_LUKS": "LUKS",
+    "iso9660": "CDFS",
+    "udf": "UDF",
+    "squashfs": "SquashFS",
+    "LVM2_member": "LVM",
+    "hfsplus": "HFS+",
+    "apfs": "APFS",
+    "linux_raid_member": "RAID",
+    "BitLocker": "BitLocker",
+    "zfs_member": "ZFS"
+  }
+}

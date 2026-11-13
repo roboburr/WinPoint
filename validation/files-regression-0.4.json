@@ -1,0 +1,177 @@
+{
+  "version": "0.4.0",
+  "date": "2026-11-01",
+  "gnome": "50.1",
+  "isolated": true,
+  "native_methods": [
+    "files.list",
+    "files.stat",
+    "files.desktop",
+    "files.createFolder",
+    "files.createFile",
+    "files.rename",
+    "files.copy",
+    "files.move",
+    "files.clipboardSet",
+    "files.clipboardGet",
+    "files.clipboardClear",
+    "files.paste"
+  ],
+  "native_response_header": "X-Win11-Service: rust-files",
+  "differential_python_contract": true,
+  "blocked_python_equivalents": true,
+  "real_webkit_windows": 3,
+  "input": "DOM keyboard events and authenticated HTTP",
+  "all_mutations_in_temporary_fixtures": true,
+  "cases": [
+    {
+      "case": "http-rpc-method-body-origin-and-args-boundaries",
+      "passed": true
+    },
+    {
+      "case": "list-reference-parity-hidden-false",
+      "passed": true,
+      "items": 12
+    },
+    {
+      "case": "list-reference-parity-hidden-true",
+      "passed": true,
+      "items": 16
+    },
+    {
+      "case": "stat-reference-parity-file2.txt",
+      "passed": true
+    },
+    {
+      "case": "stat-reference-parity-link-file",
+      "passed": true
+    },
+    {
+      "case": "stat-reference-parity-link-dir",
+      "passed": true
+    },
+    {
+      "case": "stat-reference-parity-broken-link",
+      "passed": true
+    },
+    {
+      "case": "stat-reference-parity-named-pipe",
+      "passed": true
+    },
+    {
+      "case": "desktop-reference-parity",
+      "passed": true
+    },
+    {
+      "case": "file-uri-and-lexical-path-normalization",
+      "passed": true
+    },
+    {
+      "case": "invalid-path-and-not-directory-errors",
+      "passed": true
+    },
+    {
+      "case": "desktop-launcher-trust-native-reference-parity",
+      "passed": true
+    },
+    {
+      "case": "exclusive-create-numbered-compound-extension-parity",
+      "passed": true
+    },
+    {
+      "case": "invalid-name-parity",
+      "passed": true
+    },
+    {
+      "case": "concurrent-create-and-rename-never-clobber",
+      "passed": true,
+      "create_workers": 8,
+      "rename_workers": 8
+    },
+    {
+      "case": "rename-parity-and-existing-dangling-no-clobber",
+      "passed": true
+    },
+    {
+      "case": "copy-conflict-and-same-folder-name-parity",
+      "passed": true
+    },
+    {
+      "case": "recursive-copy-preserves-links",
+      "passed": true
+    },
+    {
+      "case": "recursive-copy-to-self-rejected",
+      "passed": true
+    },
+    {
+      "case": "copy-partial-success-with-special-file-rejection",
+      "passed": true
+    },
+    {
+      "case": "move-and-same-folder-noop-parity",
+      "passed": true
+    },
+    {
+      "case": "actual-cross-filesystem-move-roundtrip-preserves-symlink-and-hardlink-target",
+      "passed": true
+    },
+    {
+      "case": "native-sse-progress-start-and-finish",
+      "passed": true,
+      "events": 2
+    },
+    {
+      "case": "cross-process-clipboard-copy-and-real-ui-paste",
+      "passed": true
+    },
+    {
+      "case": "cross-process-cut-paste-and-shared-clear",
+      "passed": true
+    },
+    {
+      "case": "cross-process-directory-event-and-dom-refresh",
+      "passed": true
+    },
+    {
+      "case": "empty-paste-error",
+      "passed": true
+    },
+    {
+      "case": "old-versioned-and-legacy-clipboard-sse-cannot-erase-new-cut-state",
+      "passed": true
+    },
+    {
+      "case": "delayed-clipboard-get-old-result-keeps-newer-sse-state",
+      "passed": true
+    },
+    {
+      "case": "delayed-clipboard-get-failure-keeps-newer-sse-state",
+      "passed": true
+    },
+    {
+      "case": "delayed-clipboard-set-result-keeps-newer-sse-state",
+      "passed": true
+    },
+    {
+      "case": "large-clipboard-cross-process-event-get-and-paste",
+      "passed": true,
+      "selected_files": 700,
+      "payload_exceeds_datagram_limit": true
+    },
+    {
+      "case": "ported-methods-work-while-python-equivalents-trapped",
+      "passed": true,
+      "methods": 12
+    },
+    {
+      "case": "caption-close-waits-for-active-native-copy",
+      "passed": true,
+      "source_files": 10000,
+      "destination_files": 10000,
+      "host_exit_code": 0,
+      "http_reply_delivered": true,
+      "final_progress_observed": true
+    }
+  ]
+}

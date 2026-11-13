@@ -1,0 +1,13 @@
+[workspace]
+members = ["host"]
+# native/ is its own workspace (GTK 4, a newer glib); see native/Cargo.toml.
+exclude = ["native"]
+resolver = "2"
+
+[profile.dev]
+debug = 0
+incremental = false
+
+[profile.release]
+strip = true
+lto = "thin"

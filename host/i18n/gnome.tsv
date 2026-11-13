@@ -1,0 +1,28 @@
+# host/i18n/gnome.tsv: host texts of gnome.rs (calls into the GNOME Shell extension).
+# Owner: R2-D.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/gnome.rs
+# call_api(): the extension refused a call without a message of its own; no full stop in nl
+#@ host/src/gnome.rs 10 b9ac20b5eeaaeb6d plain
+gnome.actionFailed	De GNOME-actie is mislukt	The GNOME action failed
+# call_raw(): {error} is GIO's D-Bus error text (system language)
+#@ host/src/gnome.rs 13 d4ceeccaa1b242af fmt {error}=error
+gnome.sessionUnreachable	GNOME-sessie niet bereikbaar: {error}	Can’t reach the GNOME session: {error}
+# call_raw(): the extension's D-Bus reply is not one string ("GNOME-koppeling": the D-Bus connection to the extension)
+#@ host/src/gnome.rs 16 c7f7095a1f2d4dcb plain
+gnome.invalidReply	Ongeldig antwoord van de GNOME-koppeling	Invalid reply from the GNOME connection
+# call_raw(): {error} is serde_json's English parse error
+#@ host/src/gnome.rs 17 20ac72b53b339e94 fmt {error}=error
+gnome.invalidJson	Ongeldige GNOME-JSON: {error}	Invalid GNOME JSON: {error}
+# decode_reply()
+#@ host/src/gnome.rs 59 c9835ea3af3cf02b plain
+gnome.windowActionFailed	De GNOME-vensteractie is mislukt	The GNOME window action failed

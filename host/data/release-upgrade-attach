@@ -1,0 +1,28 @@
+#!/bin/sh
+# Win11 voor GNOME: "Venster weer openen" for a running Ubuntu release upgrade (notes/claude/windows-update-gnome.md
+# section 6.4 step 6 and 7). Installed root-owned 0755 as /usr/libexec/win11-gnome/release-upgrade-attach together with the
+# polkit action io.github.win11shell.gnome.release-upgrade-attach (scripts/install-system.py). Settings starts it as
+# `pkexec /usr/libexec/win11-gnome/release-upgrade-attach` inside a terminal window (host upgrade.rs).
+#
+# Ubuntu's text upgrader runs inside root's screen session "ubuntu-release-upgrade-screen-window" (screen -e \0\0,
+# DistUpgradeMain.py), so the attached session can open a root shell: the action is auth_admin and never kept.
+# No arguments. Output on a refusal: @@fail usage | notroot | noscreen (ASCII machine markers). The locale stays the
+# caller's (pkexec keeps LANG, LC_* and TERM), so screen shows the upgrader's UTF-8 text as it is.
+set -u
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+umask 022
+
+if [ "$#" -ne 0 ]; then
+  echo "@@fail usage"
+  exit 2
+fi
+if [ "$(id -u)" != 0 ]; then
+  echo "@@fail notroot"
+  exit 3
+fi
+if [ ! -x /usr/bin/screen ]; then
+  echo "@@fail noscreen"
+  exit 3
+fi
+exec /usr/bin/screen -d -r ubuntu-release-upgrade-screen-window

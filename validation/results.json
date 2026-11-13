@@ -1,0 +1,477 @@
+{
+  "date": "2026-11-01",
+  "version": "0.2.0",
+  "environment": {
+    "gnome": "50.1",
+    "session": "isolated headless Wayland",
+    "ui": "original HTML/CSS with documented patches",
+    "services": "temporary Python compatibility backend"
+  },
+  "ui": {
+    "baseline_files": 161,
+    "current_files": 162,
+    "changed_modules": 3,
+    "added_modules": 1,
+    "manifest": "vendor/ui-sha256.json"
+  },
+  "explorer_window_controls": {
+    "buttons": [
+      "minimize",
+      "maximize",
+      "restore",
+      "close"
+    ],
+    "exit_code": 0,
+    "native_window_states_checked": true,
+    "input": "DOM click"
+  },
+  "standalone_apps": {
+    "all_four_coexist": true,
+    "apps": [
+      {
+        "app": "settings",
+        "id": "io.github.win11shell.Settings",
+        "buttons": [
+          "Minimise",
+          "Maximise",
+          "Close"
+        ],
+        "original_ui_ready": true,
+        "maximize": true,
+        "restore": true,
+        "minimize": true,
+        "unminimize": true,
+        "close": true,
+        "exit_code": 0
+      },
+      {
+        "app": "taskmgr",
+        "id": "io.github.win11shell.TaskManager",
+        "buttons": [
+          "Minimise",
+          "Maximise",
+          "Close"
+        ],
+        "original_ui_ready": true,
+        "maximize": true,
+        "restore": true,
+        "minimize": true,
+        "unminimize": true,
+        "close": true,
+        "exit_code": 0
+      },
+      {
+        "app": "alles",
+        "id": "io.github.win11shell.Search",
+        "buttons": [
+          "Minimise",
+          "Maximise",
+          "Close"
+        ],
+        "original_ui_ready": true,
+        "maximize": true,
+        "restore": true,
+        "minimize": true,
+        "unminimize": true,
+        "close": true,
+        "exit_code": 0
+      },
+      {
+        "app": "disks",
+        "id": "io.github.win11shell.Disks",
+        "buttons": [
+          "Minimise",
+          "Maximise",
+          "Close"
+        ],
+        "original_ui_ready": true,
+        "maximize": true,
+        "restore": true,
+        "minimize": true,
+        "unminimize": true,
+        "close": true,
+        "exit_code": 0
+      }
+    ],
+    "input": "DOM click; native GNOME window state checked"
+  },
+  "html_panel": {
+    "original_taskbar_ui": true,
+    "native_dock": true,
+    "input_regions": true,
+    "center": {
+      "height": 720,
+      "ready": true,
+      "viewport": 1280,
+      "w": 436,
+      "x": 422
+    },
+    "strut_px": 48,
+    "fallback_hidden": true,
+    "native_window_list": true,
+    "start_separate_process": true,
+    "disable_closes_panel_only": true,
+    "start_ui": {
+      "h": 616,
+      "menu": {
+        "bottom": 616,
+        "height": 616,
+        "left": 0,
+        "right": 642,
+        "top": 0,
+        "width": 642,
+        "x": 0,
+        "y": 0
+      },
+      "w": 642
+    },
+    "native_icon_minimize_restore": true,
+    "resolution": "2560x1440",
+    "scale": 2,
+    "start_geometry": {
+      "x": 319,
+      "y": 44,
+      "width": 642,
+      "height": 616
+    },
+    "start_toggle": true,
+    "start_focus_dismiss": true,
+    "panel_frame": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 720
+    },
+    "monitor": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 720
+    }
+  },
+  "basic_tabs": {
+    "scenario_count": 18,
+    "last_tab_exit_code": 0,
+    "per_tab_path_and_history": true,
+    "input": "DOM events"
+  },
+  "tab_transfer": {
+    "scenarios": 18,
+    "source_preserved_before_commit": true,
+    "selection_history_path_transferred": true,
+    "same_window_reorder": true,
+    "escape_cancel_preserves_source": true,
+    "detach_starts_rust_process": true,
+    "reattach_closes_last_tab_source": true,
+    "physical_pointer_drag_tested": false,
+    "drag_events": "synthetic DOM events in real WebKit processes",
+    "drop_effect_test_override": true,
+    "trusted_native_pointer_drag_confirmed": false,
+    "input": "synthetic DOM drag events in real Rust/WebKit processes",
+    "scenario_names": [
+      "ready-A",
+      "ready-B",
+      "source-has-two-tabs",
+      "source-history-and-path",
+      "source-file-selected",
+      "source-preserved-before-drop",
+      "destination-loaded-before-commit",
+      "source-preserved-until-commit",
+      "source-closes-after-commit",
+      "destination-has-transferred-tab",
+      "transferred-history-back",
+      "transferred-history-forward",
+      "same-window-reorders",
+      "cancel-keeps-source-tab",
+      "selected-before-detach",
+      "detached-window-restores-state",
+      "detach-source-keeps-other-tab",
+      "detached-tab-reattached"
+    ]
+  },
+  "gjs_fallback_centering": {
+    "measurement_count": 49,
+    "groups": [
+      "1440x900",
+      "1024x768-search",
+      "2560x1440",
+      "1920x1080",
+      "1280x720",
+      "1024x768"
+    ],
+    "max_center_error": 0.0,
+    "applies_to_original_html_panel": false
+  },
+  "pending_validation": [],
+  "limitations": [
+    "No physical input hardware tested",
+    "All application functions and file actions have not been exhaustively tested",
+    "Not a complete Rust port or a proven full one-to-one shell replacement",
+    "Fractional monitor scaling not tested",
+    "Physical monitor hotplug not tested"
+  ],
+  "build": {
+    "cargo_profile": "dev",
+    "debug_symbols": false,
+    "incremental": false,
+    "performance_comparison_performed": false
+  },
+  "rust_unit_tests": {
+    "passed": 13,
+    "failed": 0
+  },
+  "backend_crash_cleanup": {
+    "cases": [
+      {
+        "host_signal": "SIGTERM",
+        "owned_python_exited": true,
+        "python_exit_code": 0,
+        "elapsed_seconds": 0.252,
+        "external_attachment_preserved_backend": true
+      },
+      {
+        "host_signal": "SIGKILL",
+        "owned_python_exited": true,
+        "python_exit_code": 0,
+        "elapsed_seconds": 0.252,
+        "external_attachment_preserved_backend": true
+      }
+    ],
+    "runtime_log_directory_may_remain": true,
+    "instance_file_removed": true
+  },
+  "native_tab_drag": {
+    "scenarios": 10,
+    "native_cross_window_move": true,
+    "native_source_closes_after_commit": true,
+    "native_desktop_detach": true,
+    "native_reattach_to_original_window": true,
+    "native_last_tab_closes_detached_window": true,
+    "physical_hardware_drag_tested": false,
+    "trusted_wayland_virtual_pointer_drag": true,
+    "scenario_names": [
+      "ready-A",
+      "ready-B",
+      "keep-home-for-source",
+      "source-native-ready",
+      "source-native-selected",
+      "trusted-native-drop-accepted",
+      "trusted-native-source-closed-after-commit",
+      "trusted-native-detached-window",
+      "trusted-native-detach-removes-acknowledged-source",
+      "trusted-native-reattached-to-original"
+    ],
+    "input": "trusted Wayland virtual pointer events",
+    "trusted_source_dragstart_observed": true,
+    "trusted_target_drop_observed": true,
+    "trusted_source_dragend_move_observed": true,
+    "desktop_detach_requires_gnome_bridge": true
+  },
+  "html_panel_cases": [
+    {
+      "original_taskbar_ui": true,
+      "native_dock": true,
+      "input_regions": true,
+      "center": {
+        "height": 900,
+        "ready": true,
+        "viewport": 1440,
+        "w": 436,
+        "x": 502
+      },
+      "strut_px": 48,
+      "fallback_hidden": true,
+      "native_window_list": true,
+      "start_separate_process": true,
+      "disable_closes_panel_only": true,
+      "start_ui": {
+        "h": 726,
+        "menu": {
+          "bottom": 726,
+          "height": 726,
+          "left": 0,
+          "right": 642,
+          "top": 0,
+          "width": 642,
+          "x": 0,
+          "y": 0
+        },
+        "w": 642
+      },
+      "native_icon_minimize_restore": true,
+      "resolution": "1440x900",
+      "scale": 1
+    },
+    {
+      "original_taskbar_ui": true,
+      "native_dock": true,
+      "input_regions": true,
+      "center": {
+        "height": 1080,
+        "ready": true,
+        "viewport": 1920,
+        "w": 436,
+        "x": 742
+      },
+      "strut_px": 48,
+      "fallback_hidden": true,
+      "native_window_list": true,
+      "start_separate_process": true,
+      "disable_closes_panel_only": true,
+      "start_ui": {
+        "h": 726,
+        "menu": {
+          "bottom": 726,
+          "height": 726,
+          "left": 0,
+          "right": 642,
+          "top": 0,
+          "width": 642,
+          "x": 0,
+          "y": 0
+        },
+        "w": 642
+      },
+      "native_icon_minimize_restore": true,
+      "resolution": "1920x1080",
+      "scale": 1,
+      "start_geometry": {
+        "x": 639,
+        "y": 294,
+        "width": 642,
+        "height": 726
+      },
+      "start_toggle": true,
+      "start_focus_dismiss": true
+    },
+    {
+      "original_taskbar_ui": true,
+      "native_dock": true,
+      "input_regions": true,
+      "center": {
+        "height": 768,
+        "ready": true,
+        "viewport": 1024,
+        "w": 436,
+        "x": 294
+      },
+      "strut_px": 48,
+      "fallback_hidden": true,
+      "native_window_list": true,
+      "start_separate_process": true,
+      "disable_closes_panel_only": true,
+      "start_ui": {
+        "h": 664,
+        "menu": {
+          "bottom": 664,
+          "height": 664,
+          "left": 0,
+          "right": 642,
+          "top": 0,
+          "width": 642,
+          "x": 0,
+          "y": 0
+        },
+        "w": 642
+      },
+      "native_icon_minimize_restore": true,
+      "resolution": "1024x768",
+      "scale": 1,
+      "start_geometry": {
+        "x": 191,
+        "y": 44,
+        "width": 642,
+        "height": 664
+      },
+      "start_toggle": true,
+      "start_focus_dismiss": true
+    },
+    {
+      "original_taskbar_ui": true,
+      "native_dock": true,
+      "input_regions": true,
+      "center": {
+        "height": 720,
+        "ready": true,
+        "viewport": 1280,
+        "w": 436,
+        "x": 422
+      },
+      "strut_px": 48,
+      "fallback_hidden": true,
+      "native_window_list": true,
+      "start_separate_process": true,
+      "disable_closes_panel_only": true,
+      "start_ui": {
+        "h": 616,
+        "menu": {
+          "bottom": 616,
+          "height": 616,
+          "left": 0,
+          "right": 642,
+          "top": 0,
+          "width": 642,
+          "x": 0,
+          "y": 0
+        },
+        "w": 642
+      },
+      "native_icon_minimize_restore": true,
+      "resolution": "2560x1440",
+      "scale": 2,
+      "start_geometry": {
+        "x": 319,
+        "y": 44,
+        "width": 642,
+        "height": 616
+      },
+      "start_toggle": true,
+      "start_focus_dismiss": true,
+      "panel_frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 720
+      },
+      "monitor": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 720
+      }
+    }
+  ],
+  "html_panel_centering": {
+    "max_center_error_logical_px": 0.0,
+    "native_scale2_method": "Mutter DisplayConfig applied monitor scale 2.0; mode 2560x1440, logical viewport1280x720",
+    "hardware_monitor_hotplug_tested": false
+  },
+  "native_escape_cancellation": {
+    "fast_escape_then_mouse_release": true,
+    "assertions_passed": true,
+    "source_tab_count_preserved": 2,
+    "desktop_detach_requested": false,
+    "transfer_released": true,
+    "input": "virtual Wayland keyboard and pointer"
+  },
+  "packaging_archive": {
+    "archive": "win11-gnome-0.2.0-linux-x86_64.tar.gz",
+    "real_binary_hashes_match_build": true,
+    "four_executable_binaries": true,
+    "current_ui_manifest_verified": true,
+    "reports_and_compact_evidence_present": true,
+    "isolated_archive_install_uninstall": true,
+    "desktop_files_validated": 3,
+    "preview_images_verified": 2,
+    "private_config_and_build_caches_absent": true,
+    "gui_apps_launched_by_this_audit": false
+  },
+  "evidence_scope": "historical_release_0.2.0",
+  "current_results": [
+    "apps-catalog-results.json",
+    "apps-defaults-results.json",
+    "apps-recent-results.json",
+    "apps-launch-results.json",
+    "regressions-0.6.json"
+  ]
+}

@@ -1,0 +1,11 @@
+# tests/i18n/allow-host-r2c.txt: R2-C's additions to tests/i18n/allow-host.txt (contracts C9; round2-gate.md §6, §7).
+# Same columns: path<TAB>selector<TAB>reason. The coordinator merges this file into allow-host.txt.
+#
+# --- files/** start-up errors: Err(String) of Files::new → Runtime::new (runtime.rs) → lib.rs run(), which prints
+#     "Win11 voor GNOME: {err}" on stderr and exits; like the lib.rs/runtime.rs start-up errors of allow-host.txt
+host/src/files/mod.rs	text:Bestandsgebeurtenissen starten: {error}	start-up error, stderr only (Files::new → Runtime::new → run)
+host/src/files/watch.rs	fn:start&text:Mapbewaking starten: {error}	start-up error, stderr only (Watcher::new → Files::new → run)
+host/src/files/watch.rs	fn:start&text:Mapbewaking kon niet worden gestart.	start-up error, stderr only (Watcher::new → Files::new → run)
+#
+# --- machine format written into user files (H D11: byte-identical)
+host/src/files/trash.rs	fn:manual_one&sha:cbeda396a2b2d938	the .trashinfo file format of the freedesktop.org Trash spec ([Trash Info], Path=, DeletionDate=)

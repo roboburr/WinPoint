@@ -1,0 +1,1248 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-12 22:00:46",
+ "seconds": 114.3,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 48,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 813108,
+   "rss_kb": 1974164,
+   "processes": 26,
+   "t": 3.2
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 736915,
+   "rss_kb": 1866360
+  },
+  "minMemAvailableKb": 9609080,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 227325,
+    "rss_kb": 340696
+   },
+   "WebKitWebProces": {
+    "count": 3,
+    "pss_kb": 219153,
+    "rss_kb": 629892
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 75692,
+    "rss_kb": 103572
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 66517,
+    "rss_kb": 186744
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 66231,
+    "rss_kb": 186816
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 57653,
+    "rss_kb": 175080
+   },
+   "WebKitNetworkPr": {
+    "count": 3,
+    "pss_kb": 46295,
+    "rss_kb": 181512
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 27323,
+    "rss_kb": 81360
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 13933,
+    "rss_kb": 32672
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 5238,
+    "rss_kb": 14040
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4232,
+    "rss_kb": 11628
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1462,
+    "rss_kb": 10188
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 792,
+    "rss_kb": 7904
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 761,
+    "rss_kb": 7828
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 317,
+    "rss_kb": 1536
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 184,
+    "rss_kb": 2696
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 69.8,
+  "mutatingSyscallPaths": 87864,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "22:02:16\tpw-dump\t--monitor --no-colors",
+  "22:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:16\tpw-dump\t--monitor --no-colors",
+  "22:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:18\tpw-dump\t--monitor --no-colors",
+  "22:02:18\tpw-dump\t--monitor --no-colors",
+  "22:02:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:22\tpw-dump\t--monitor --no-colors",
+  "22:02:22\tpw-dump\t--monitor --no-colors",
+  "22:02:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:27\tpw-dump\t--monitor --no-colors",
+  "22:02:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:29\tpw-dump\t--monitor --no-colors",
+  "22:02:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:33\tpw-dump\t--monitor --no-colors",
+  "22:02:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:02:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-uIDJyr4l"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 10,
+  "maxScanSeconds": 0.716,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-uIDJyr4l"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.84,
+    "args": {
+     "key": "M.webkit"
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.85,
+    "args": {
+     "key": "A.settings"
+    }
+   },
+   {
+    "step": "extension_labels",
+    "t": 4.85,
+    "result": {
+     "present": true,
+     "barVisible": false,
+     "barMapped": false,
+     "nativePanelActive": true,
+     "panelPresent": true,
+     "clock": "22:02\n12-11-2026",
+     "accessibleNames": [
+      "Start",
+      "Zoeken",
+      "Taakweergave",
+      "Win11 Verkenner",
+      "Settings",
+      "Netwerk, geluid en snelle instellingen"
+     ],
+     "labels": [
+      "⌕   Zoeken",
+      "22:02\n12-11-2026"
+     ],
+     "nodes": [
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Start"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button win11-task-search",
+       "visible": true,
+       "accessibleName": "Zoeken"
+      },
+      {
+       "type": "St_Label",
+       "style": null,
+       "visible": true,
+       "text": "⌕   Zoeken"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Taakweergave"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Win11 Verkenner"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Settings"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Netwerk, geluid en snelle instellingen"
+      },
+      {
+       "type": "St_Label",
+       "style": "win11-clock",
+       "visible": true,
+       "text": "22:02\n12-11-2026"
+      }
+     ],
+     "ctrlAltTab": [
+      "Win11-taakbalk"
+     ],
+     "ctrlAltTabAll": [
+      "Top Bar",
+      "Dash",
+      "Search",
+      "Apps",
+      "Windows",
+      "Win11-taakbalk"
+     ],
+     "dutchWordHits": [
+      "geluid",
+      "instellingen",
+      "netwerk",
+      "snelle",
+      "taakbalk",
+      "taakweergave",
+      "verkenner",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 6.01,
+    "args": {
+     "name": "fallback-bar"
+    },
+    "result": {
+     "png": "fallback-bar.png",
+     "area": [
+      0,
+      852,
+      1440,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       48
+      ],
+      "distinctColours": 54,
+      "meanLevel": 37.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "extension_labels",
+    "t": 6.02,
+    "result": {
+     "present": true,
+     "barVisible": true,
+     "barMapped": true,
+     "nativePanelActive": false,
+     "panelPresent": false,
+     "clock": "22:02\n12-11-2026",
+     "accessibleNames": [
+      "Start",
+      "Zoeken",
+      "Taakweergave",
+      "Win11 Verkenner",
+      "Settings",
+      "Netwerk, geluid en snelle instellingen"
+     ],
+     "labels": [
+      "⌕   Zoeken",
+      "22:02\n12-11-2026"
+     ],
+     "nodes": [
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Start"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button win11-task-search",
+       "visible": true,
+       "accessibleName": "Zoeken"
+      },
+      {
+       "type": "St_Label",
+       "style": null,
+       "visible": true,
+       "text": "⌕   Zoeken"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Taakweergave"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Win11 Verkenner"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Settings"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Netwerk, geluid en snelle instellingen"
+      },
+      {
+       "type": "St_Label",
+       "style": "win11-clock",
+       "visible": true,
+       "text": "22:02\n12-11-2026"
+      }
+     ],
+     "ctrlAltTab": [
+      "Win11-taakbalk"
+     ],
+     "ctrlAltTabAll": [
+      "Top Bar",
+      "Dash",
+      "Search",
+      "Apps",
+      "Windows",
+      "Win11-taakbalk"
+     ],
+     "dutchWordHits": [
+      "geluid",
+      "instellingen",
+      "netwerk",
+      "snelle",
+      "taakbalk",
+      "taakweergave",
+      "verkenner",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "kill_panel",
+    "t": 6.02,
+    "result": {
+     "pid": 388,
+     "fallbackShownSeconds": 0.13,
+     "png": "fallback-bar.png"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.02,
+    "args": {
+     "key": "A.killPanel"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.14,
+    "args": {
+     "key": "A.launch"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.74,
+    "args": {
+     "key": "A.boot"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.9,
+    "args": {
+     "key": "B.toplevels"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 7.43,
+    "args": {
+     "name": "b-native-taskbar"
+    },
+    "result": {
+     "png": "b-native-taskbar.png",
+     "area": [
+      0,
+      780,
+      1440,
+      120
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       120
+      ],
+      "distinctColours": 334,
+      "meanLevel": 37.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 8.24,
+    "args": {
+     "name": "b-native-desktop"
+    },
+    "result": {
+     "png": "b-native-desktop.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2151,
+      "meanLevel": 61.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 8.29,
+    "args": {
+     "key": "C.quick.open"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.39,
+    "args": {
+     "name": "c-quick-open"
+    },
+    "result": {
+     "png": "c-quick-open.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2179,
+      "meanLevel": 61.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.49,
+    "args": {
+     "key": "C.quick.close"
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.64,
+    "args": {
+     "key": "C.notifications.open"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 10.72,
+    "args": {
+     "name": "c-notifications-open"
+    },
+    "result": {
+     "png": "c-notifications-open.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2215,
+      "meanLevel": 61.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.77,
+    "args": {
+     "key": "C.notifications.close"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.87,
+    "args": {
+     "key": "D.click"
+    }
+   },
+   {
+    "step": "record",
+    "t": 11.07,
+    "args": {
+     "key": "D.capabilities"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 12.1,
+    "args": {
+     "name": "d-native-start-open"
+    },
+    "result": {
+     "png": "d-native-start-open.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1568,
+      "meanLevel": 42.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 12.21,
+    "args": {
+     "key": "D.visibleToplevels"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 13.32,
+    "args": {
+     "name": "d-native-start-closed"
+    },
+    "result": {
+     "png": "d-native-start-closed.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2151,
+      "meanLevel": 61.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 17.33,
+    "args": {
+     "key": "N.native"
+    }
+   },
+   {
+    "step": "record",
+    "t": 17.33,
+    "args": {
+     "key": "N.compare"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "M: the WebKit panel, Start and desktop run",
+    "ok": true,
+    "t": 4.84,
+    "roots": [
+     387,
+     388
+    ]
+   },
+   {
+    "check": "A: win11-shell reported its boot",
+    "ok": true,
+    "t": 6.74
+   },
+   {
+    "check": "A: the panel process is win11-shell now",
+    "ok": true,
+    "t": 6.74,
+    "pid": 1409,
+    "comm": "win11-shell"
+   },
+   {
+    "check": "A: no WebKit host runs any more (Start and desktop exit at once)",
+    "ok": true,
+    "t": 6.74,
+    "roots": [],
+    "comms": []
+   },
+   {
+    "check": "B: a visible taskbar window",
+    "ok": true,
+    "t": 6.9,
+    "titles": [
+     "Bureaublad",
+     "Start",
+     "Taakbalk"
+    ]
+   },
+   {
+    "check": "B: the taskbar has tb-start",
+    "ok": true,
+    "t": 6.9
+   },
+   {
+    "check": "B: the taskbar has tb-clock",
+    "ok": true,
+    "t": 6.9
+   },
+   {
+    "check": "B: the taskbar has tb-sys",
+    "ok": true,
+    "t": 6.9
+   },
+   {
+    "check": "B: GNOME sees a Panel window of the native pid",
+    "ok": true,
+    "t": 6.9,
+    "window": {
+     "wm": "io.github.win11shell.Panel",
+     "title": "Taakbalk",
+     "pid": 1409,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "visible": true,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "B: the extension registered the native pid as Panel",
+    "ok": true,
+    "t": 6.9,
+    "hosts": {
+     "664": [
+      "io.github.win11shell.Start"
+     ],
+     "1409": [
+      "io.github.win11shell.Panel",
+      "io.github.win11shell.Start"
+     ]
+    }
+   },
+   {
+    "check": "C: the quick flyout opens",
+    "ok": true,
+    "t": 8.29,
+    "result": {
+     "open": "quick"
+    }
+   },
+   {
+    "check": "C: the quick flyout closes again",
+    "ok": true,
+    "t": 9.49,
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "check": "C: the notifications flyout opens",
+    "ok": true,
+    "t": 9.64,
+    "result": {
+     "open": "notifications"
+    }
+   },
+   {
+    "check": "C: the notifications flyout closes again",
+    "ok": true,
+    "t": 10.77,
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "check": "D: tb-start opens a Start window of the same pid",
+    "ok": true,
+    "t": 11.07,
+    "click": {
+     "clicked": "tb-start"
+    }
+   },
+   {
+    "check": "D: the extension holds Panel and Start under one pid",
+    "ok": true,
+    "t": 11.07,
+    "hosts": {
+     "664": [
+      "io.github.win11shell.Start"
+     ],
+     "1409": [
+      "io.github.win11shell.Panel",
+      "io.github.win11shell.Start"
+     ]
+    }
+   },
+   {
+    "check": "D: the backdrop capabilities list the taskbar and Start of that pid",
+    "ok": true,
+    "t": 11.08,
+    "kinds": [
+     "start",
+     "taskbar"
+    ]
+   },
+   {
+    "check": "D: a second click closes Start",
+    "ok": true,
+    "t": 12.51
+   },
+   {
+    "check": "N: the native shell uses less memory (PSS + SwapPss) than the WebKit panel, Start and desktop",
+    "ok": true,
+    "t": 17.33,
+    "webkitPssMiB": 443.5,
+    "nativePssMiB": 243.5,
+    "webkitAnonMiB": 269.1,
+    "nativeAnonMiB": 113.1,
+    "savedPssMiB": 200.0,
+    "savedAnonMiB": 156.0
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 17.33,
+    "failed": []
+   }
+  ],
+  "records": {
+   "M.webkit": {
+    "roots": [
+     387,
+     388
+    ],
+    "pssMiB": 443.5,
+    "anonMiB": 269.1,
+    "processes": [
+     {
+      "pid": 387,
+      "comm": "win11-desktop",
+      "pssKb": 66131,
+      "anonKb": 37004
+     },
+     {
+      "pid": 582,
+      "comm": "WebKitNetworkPr",
+      "pssKb": 13961,
+      "anonKb": 9672
+     },
+     {
+      "pid": 586,
+      "comm": "WebKitWebProces",
+      "pssKb": 71811,
+      "anonKb": 48716
+     },
+     {
+      "pid": 601,
+      "comm": "glycin-svg",
+      "pssKb": 4020,
+      "anonKb": 2400
+     },
+     {
+      "pid": 663,
+      "comm": "glycin-image-rs",
+      "pssKb": 2617,
+      "anonKb": 568
+     },
+     {
+      "pid": 388,
+      "comm": "win11-panel",
+      "pssKb": 68073,
+      "anonKb": 38492
+     },
+     {
+      "pid": 585,
+      "comm": "WebKitNetworkPr",
+      "pssKb": 13976,
+      "anonKb": 9732
+     },
+     {
+      "pid": 587,
+      "comm": "WebKitWebProces",
+      "pssKb": 64960,
+      "anonKb": 39976
+     },
+     {
+      "pid": 600,
+      "comm": "glycin-svg",
+      "pssKb": 3952,
+      "anonKb": 2376
+     },
+     {
+      "pid": 664,
+      "comm": "win11-start",
+      "pssKb": 59636,
+      "anonKb": 31868
+     },
+     {
+      "pid": 829,
+      "comm": "WebKitNetworkPr",
+      "pssKb": 14163,
+      "anonKb": 9896
+     },
+     {
+      "pid": 830,
+      "comm": "WebKitWebProces",
+      "pssKb": 66809,
+      "anonKb": 42452
+     },
+     {
+      "pid": 837,
+      "comm": "glycin-svg",
+      "pssKb": 4013,
+      "anonKb": 2372
+     }
+    ]
+   },
+   "A.settings": null,
+   "A.killPanel": {
+    "pid": 388,
+    "fallbackShownSeconds": 0.13,
+    "png": "fallback-bar.png"
+   },
+   "A.launch": true,
+   "A.boot": {
+    "kind": "native-shell",
+    "pid": 1409,
+    "tag": "boot"
+   },
+   "B.toplevels": [
+    {
+     "title": "Bureaublad",
+     "visible": true,
+     "width": 1440,
+     "height": 820
+    },
+    {
+     "title": "Start",
+     "visible": false,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "title": "Taakbalk",
+     "visible": true,
+     "width": 1440,
+     "height": 900
+    }
+   ],
+   "C.quick.open": {
+    "open": "quick"
+   },
+   "C.quick.close": {
+    "open": null
+   },
+   "C.notifications.open": {
+    "open": "notifications"
+   },
+   "C.notifications.close": {
+    "open": null
+   },
+   "D.click": {
+    "clicked": "tb-start"
+   },
+   "D.capabilities": {
+    "available": true,
+    "generation": "20673989847",
+    "serial": 12,
+    "windows": [
+     {
+      "pid": 1409,
+      "kind": "taskbar",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     },
+     {
+      "pid": 1409,
+      "kind": "start",
+      "blur": true,
+      "shadow": false,
+      "focused": true
+     },
+     {
+      "pid": 664,
+      "kind": "start",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     }
+    ]
+   },
+   "D.visibleToplevels": [
+    {
+     "title": "Bureaublad",
+     "width": 1440,
+     "height": 852
+    },
+    {
+     "title": "Start",
+     "width": 642,
+     "height": 726
+    },
+    {
+     "title": "Taakbalk",
+     "width": 1440,
+     "height": 900
+    }
+   ],
+   "N.native": {
+    "root": 1409,
+    "pssMiB": 243.5,
+    "anonMiB": 113.1,
+    "processes": [
+     {
+      "pid": 1409,
+      "comm": "win11-shell",
+      "pssKb": 202545,
+      "anonKb": 92916
+     },
+     {
+      "pid": 1415,
+      "comm": "win11-panel",
+      "pssKb": 32404,
+      "anonKb": 11820
+     },
+     {
+      "pid": 1501,
+      "comm": "glycin-svg",
+      "pssKb": 14433,
+      "anonKb": 11104
+     }
+    ]
+   },
+   "N.compare": {
+    "webkitPssMiB": 443.5,
+    "nativePssMiB": 243.5,
+    "webkitAnonMiB": 269.1,
+    "nativeAnonMiB": 113.1,
+    "savedPssMiB": 200.0,
+    "savedAnonMiB": 156.0
+   }
+  },
+  "shots": [
+   "fallback-bar.png",
+   "b-native-taskbar.png",
+   "b-native-desktop.png",
+   "c-quick-open.png",
+   "c-notifications-open.png",
+   "d-native-start-open.png",
+   "d-native-start-closed.png"
+  ],
+  "error": null,
+  "seconds": 17.33,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "e3ff9b531212cc86ed297ab51f5bfb36",
+    "pid": null,
+    "page": null,
+    "alive": false
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "475a6526c7f1404565bfc70fc40bc4d7",
+    "pid": null,
+    "page": null,
+    "alive": false
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "1e79e67d241ee492a6210e32034857b3",
+    "pid": null,
+    "page": null,
+    "alive": false
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=1221a979df9bbd4484614e056af62956",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "windowIds": {
+    "panel": "e3ff9b531212cc86ed297ab51f5bfb36",
+    "desktop": "475a6526c7f1404565bfc70fc40bc4d7",
+    "start": "1e79e67d241ee492a6210e32034857b3"
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "fallback-bar.png",
+    "group": "scenario",
+    "bytes": 10211,
+    "area": [
+     0,
+     852,
+     1440,
+     48
+    ]
+   },
+   {
+    "file": "b-native-taskbar.png",
+    "group": "scenario",
+    "bytes": 79660,
+    "area": [
+     0,
+     780,
+     1440,
+     120
+    ]
+   },
+   {
+    "file": "b-native-desktop.png",
+    "group": "scenario",
+    "bytes": 1052945,
+    "area": null
+   },
+   {
+    "file": "c-quick-open.png",
+    "group": "scenario",
+    "bytes": 1000841,
+    "area": null
+   },
+   {
+    "file": "c-notifications-open.png",
+    "group": "scenario",
+    "bytes": 954463,
+    "area": null
+   },
+   {
+    "file": "d-native-start-open.png",
+    "group": "scenario",
+    "bytes": 728846,
+    "area": null
+   },
+   {
+    "file": "d-native-start-closed.png",
+    "group": "scenario",
+    "bytes": 1052945,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/native-shell.out/fallback-bar.png",
+  "tests/gnome/scenarios/native-shell.out/b-native-taskbar.png",
+  "tests/gnome/scenarios/native-shell.out/b-native-desktop.png",
+  "tests/gnome/scenarios/native-shell.out/c-quick-open.png",
+  "tests/gnome/scenarios/native-shell.out/c-notifications-open.png",
+  "tests/gnome/scenarios/native-shell.out/d-native-start-open.png",
+  "tests/gnome/scenarios/native-shell.out/d-native-start-closed.png"
+ ]
+}

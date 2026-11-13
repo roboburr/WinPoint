@@ -1,0 +1,11 @@
+# tests/i18n/allow-host-r2a.txt: R2-A's additions to tests/i18n/allow-host.txt (contracts C9), same format
+# (path<TAB>selector<TAB>reason). Literals here are never translated; the coordinator merges this file.
+#
+# a machine identifier, stored in settings.json (taskbar.tray.known) and compared across runs; never shown
+host/src/services/tray/helpers.rs	fn:item_key&text:onbekend	the persistent key "sni:onbekend" of a tray icon without an id (item_key → taskbar.tray.known in settings.json); renaming it per language would forget the icon's remembered name and icon
+# a D-Bus property name, not a text
+host/src/services/system/bluetooth.rs	fn:get&text:Alias	the BlueZ Adapter1 property "Alias" (props["Alias"]), read as the adapter's name
+# an io::Error text that nobody shows or logs: sync_gtk4_block() turns every Err into {"ok":false,"action":"error"}
+host/src/settings_effects.rs	fn:gtk4_add&text:{} ontbreekt	the io::Error message of a missing Fluent gtk-4.0 CSS file; its only caller (sync_gtk4_block) discards it (Err(_) → action "error"), so it is never shown or logged
+# a settings path in error data, not a text (the classifier pairs it with the "nl" | "en" of valid_language)
+host/src/settings.rs	fn:patch&text:language	the setting path "language" in the data of the D-G24 invalid_value error ({"paths":["language"]})

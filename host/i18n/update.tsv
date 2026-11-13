@@ -1,0 +1,334 @@
+# host/i18n/update.tsv: host texts of the update.* service (notes/claude/windows-update-gnome.md).
+# Owner: rounds 4-6 (Windows Update, GW steps).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- errors of the update.* service (GW2, design §3.7)
+# {product} in every update text (design §3.1, C7: the product name until Robin decides branding)
+#@ new
+update.product	Win11 Shell	Win11 Shell
+# PackageKit no-network 2, no-more-mirrors 43, repo-not-available 37 (an Ubuntu URI, or GetUpdates failed too)
+#@ new
+update.err.network	Er is geen verbinding met de updateserver. Controleer je internetverbinding en probeer het opnieuw.	Can’t reach the update server. Check your internet connection and try again.
+# the same codes for a non-Ubuntu source while GetUpdates succeeds; {source} is the host name of the source
+#@ new
+update.warn.source	Een updatebron kon niet worden bijgewerkt: {source}. De andere updates zijn wel gecontroleerd.	One update source couldn’t be refreshed: {source}. The other updates were checked.
+# NetworkManager connectivity none before a check
+#@ new
+update.err.offline	Je bent offline. Maak verbinding met internet en probeer het opnieuw.	You’re offline. Connect to the internet and try again.
+# exit repair-required 11, error unfinished-transaction 66, or a failed configure that leaves half-done packages
+#@ new
+update.err.repair	Een eerdere installatie is niet afgerond. Ubuntu moet dit eerst herstellen.	An earlier installation didn’t finish. Ubuntu needs to repair this first.
+# cannot-cancel 25, or Cancel while AllowCancel is false
+#@ new
+update.err.cannotCancel	De installatie is al begonnen en kan nu niet meer worden gestopt.	Installing has already started and can’t be stopped now.
+# not-authorized 48 (polkit)
+#@ new
+update.err.notAuthorized	Je hebt geen toestemming gegeven, dus er is niets veranderd.	Permission wasn’t given, so nothing was changed.
+# no-space-on-device 46
+#@ new
+update.err.noSpace	Er is niet genoeg ruimte op de systeemschijf. Maak ruimte vrij en probeer het opnieuw.	There isn’t enough space on the system drive. Free up some space and try again.
+# package-download-failed 10
+#@ new
+update.err.download	Een update kon niet worden gedownload. Probeer het later opnieuw.	An update couldn’t be downloaded. Try again later.
+# cannot-get-lock 26, lock-required 67, cancelled-priority 65 / exit cancelled-priority 9
+#@ new
+update.err.locked	Er wordt al software geïnstalleerd. Probeer het over een paar minuten opnieuw.	Software is already being installed. Try again in a few minutes.
+# gpg-failure 5, bad/missing-gpg-signature 30/31, cannot-update-repo-unsigned 51, exit need-untrusted 8
+#@ new
+update.err.untrusted	Deze update is niet ondertekend en wordt daarom niet geïnstalleerd.	This update isn’t signed, so it won’t be installed.
+# dep-resolution-failed 13, package-conflicts 36, file-conflicts 35, package-install-blocked 39
+#@ new
+update.err.conflict	Ubuntu kan deze updates nu niet samen installeren. Probeer het later opnieuw, of gebruik de Software-updater.	Ubuntu can’t install these updates together right now. Try again later, or use Software Updater.
+# package-failed-to-configure 56, -install 58, update-failed-due-to-running-process 60
+#@ new
+update.err.dpkg	Een update is niet goed geïnstalleerd. Probeer het opnieuw; helpt dat niet, open dan de Software-updater.	An update didn’t install correctly. Try again; if that doesn’t help, open Software Updater.
+# transaction-cancelled 17, exit cancelled 3 (cancel is only offered during the download)
+#@ new
+update.err.cancelled	Het installeren is gestopt. Er is niets half geïnstalleerd.	Installing was stopped. Nothing was left half-installed.
+# anything else, incl. EulaRequired, MediaChangeRequired, RepoSignatureRequired
+#@ new
+update.err.failed	Het installeren van de updates is mislukt.	The updates couldn’t be installed.
+# RefreshCache and GetUpdates both failed for a non-network reason
+#@ new
+update.err.checkFailed	Controleren op updates is mislukt.	Checking for updates didn’t work.
+# no PackageKit name on the bus and not activatable
+#@ new
+update.err.noPackageKit	PackageKit ontbreekt, dus {product} kan zelf geen updates installeren.	PackageKit is missing, so {product} can’t install updates itself.
+# PackageKit vanished mid-transaction and GetOldTransactions has no record
+#@ new
+update.err.unknownOutcome	Het is niet bekend of de updates zijn geïnstalleerd. Controleer opnieuw op updates.	It isn’t known whether the updates were installed. Check for updates again.
+# our own job already runs (the job lock is held)
+#@ new
+update.err.busy	Er wordt al een update geïnstalleerd.	An update is already being installed.
+# ids or rows not in the current snapshot; package-database-changed 61
+#@ new
+update.err.stale	De lijst met updates is veranderd. Controleer opnieuw op updates.	The list of updates changed. Check for updates again.
+# invalid arguments of an update.* method
+#@ new
+update.err.badArgs	Ongeldige invoer voor updates.	Invalid update input.
+# a WIN11_UPDATE_* variable is set but fails its check (design §4.11); only tests ever see it
+#@ new
+update.err.testSeam	Een testinstelling voor updates klopt niet, dus er is niets gedaan.	An update test setting is wrong, so nothing was done.
+# GetUpdateDetail failed
+#@ new
+update.err.details	De details van deze update zijn niet beschikbaar.	The details of this update aren’t available.
+# an update write method in a host that is not Settings (reader mode, design §4.1); not in §3.7 (GW2 deviation)
+#@ new
+update.err.notHere	Updates installeren kan alleen vanuit Instellingen.	Updates can only be installed from Settings.
+# WU-FIX (GW2b review n6): update.install refused while a check runs (a check replaces the ids under a job, review F16); code busy, update.err.busy stays for a running job
+#@ new
+update.err.checking	Er wordt nog op updates gecontroleerd. Probeer het daarna opnieuw.	Still checking for updates. Try again afterwards.
+# WU-FIX (GW4 review m8): update.setAutoOpen could not write update-notifier's key (no schema: code unsupported; a failed write: failed); was sysmon.startup.saveFailed
+#@ new
+update.options.err.autoOpen	De instelling voor de Software-updater kon niet worden opgeslagen.	The setting for Software Updater couldn’t be saved.
+
+# --- power and restart guards (design §4.9)
+# a power action while our job is past AllowCancel (committing)
+#@ new
+update.guard.power	Er worden updates geïnstalleerd. Opnieuw opstarten kan zodra dat klaar is.	Updates are being installed. You can restart as soon as that’s done.
+# a power action, shell.restartAll or any update write while Ubuntu's release upgrader runs
+#@ new
+update.guard.upgrade	Ubuntu wordt bijgewerkt naar een nieuwe versie. Wacht tot het upgradevenster om een herstart vraagt.	Ubuntu is being upgraded to a new version. Wait until the upgrade window asks you to restart.
+# shell.restartAll while one of our update jobs is active (any phase)
+#@ new
+update.guard.restart	Er worden updates geïnstalleerd. {product} kan opnieuw starten zodra dat klaar is.	Updates are being installed. {product} can restart as soon as that’s done.
+# shell.restartAll while a Software job is queued, running or authenticating
+#@ new
+update.guard.software	Er wordt nog een app geïnstalleerd of verwijderd. Probeer het daarna opnieuw.	An app is still being installed or removed. Try again afterwards.
+
+# --- notifications of the owning Settings host (design §3.8)
+# notification title: our job is done
+#@ new
+update.notify.installed	Updates zijn geïnstalleerd	Updates installed
+# notification body under update.notify.installed
+#@ new
+update.notify.installedBody	Je pc is up-to-date.	Your PC is up to date.
+# notification title: our job is done and needs a restart (settings.update.notifyRestart)
+#@ new
+update.notify.restart	Opnieuw opstarten vereist	Restart required
+# notification body under update.notify.restart
+#@ new
+update.notify.restartBody	Start je pc opnieuw op om de updates af te ronden.	Restart your PC to finish installing updates.
+# notification action button
+#@ new
+update.notify.restartNow	Nu opnieuw opstarten	Restart now
+# notification action button (the same word in both languages)
+#@ new
+update.notify.later	Later	Later
+# notification title: our job failed
+#@ new
+update.notify.failed	Updates konden niet worden geïnstalleerd	Updates couldn’t be installed
+# notification action button: opens Settings on the update page
+#@ new
+update.notify.view	Bekijken	View
+
+# --- release upgrade (design §6.4, GW5/GW7)
+# title of the terminal window that runs Ubuntu's release upgrader
+#@ new
+update.release.terminalTitle	Ubuntu-upgrade	Ubuntu upgrade
+# release start refused: a non-phased update is pending (do-release-upgrade's own rule)
+#@ new
+update.release.err.updatesPending	Installeer eerst de beschikbare updates.	Install the available updates first.
+# release start refused: reboot-required lists libc6, linux-base or linux-image-*
+#@ new
+update.release.err.rebootFirst	Start je pc eerst opnieuw op.	Restart your PC first.
+# release start refused: a transaction or dpkg runs
+#@ new
+update.release.err.busy	Er wordt nog software geïnstalleerd. Probeer het daarna opnieuw.	Software is still being installed. Try again afterwards.
+# release start refused: the compatibility verdict is hold or blocked
+#@ new
+update.release.err.hold	{product} is nog niet klaar voor deze Ubuntu-versie.	{product} isn’t ready for this Ubuntu version yet.
+# release start refused: nothing offered
+#@ new
+update.release.err.notOffered	Ubuntu biedt op dit moment geen nieuwe versie aan.	Ubuntu isn’t offering a new version right now.
+# no xdg-terminal-exec
+#@ new
+update.release.err.noTerminal	Er is geen terminal gevonden. Installeer Ptyxis (Terminal) en probeer het opnieuw.	No terminal was found. Install Ptyxis (Terminal) and try again.
+# attach refused: the upgrader is gone
+#@ new
+update.release.err.notRunning	De upgrade van Ubuntu loopt niet meer.	The Ubuntu upgrade isn’t running any more.
+# attach without the root helper; the command is typed by the user, never by our code
+#@ new
+update.release.err.noAttachHelper	Open een terminal en typ: sudo screen -d -r ubuntu-release-upgrade-screen-window	Open a terminal and type: sudo screen -d -r ubuntu-release-upgrade-screen-window
+# pkexec rc 126
+#@ new
+update.release.err.noPassword	Je hebt het wachtwoord niet ingevuld, dus er is niets veranderd.	You didn’t enter the password, so nothing was changed.
+# pkexec rc 127
+#@ new
+update.release.err.wrongPassword	Het wachtwoord klopte niet. Er is niets veranderd.	The password was wrong. Nothing was changed.
+# the Prompt helper printed @@fail
+#@ new
+update.release.err.promptFailed	De instelling voor nieuwe Ubuntu-versies kon niet worden opgeslagen.	The setting for new Ubuntu versions couldn’t be saved.
+# check-new-release failed
+#@ new
+update.release.err.checkFailed	Controleren op een nieuwe Ubuntu-versie is mislukt.	Checking for a new Ubuntu version didn’t work.
+# the wrapper's rc is not 0, 126 or 127 before the upgrader appeared
+#@ new
+update.release.err.refused	Ubuntu heeft de upgrade niet gestart. De reden staat in het terminalvenster.	Ubuntu didn’t start the upgrade. The reason is in the terminal window.
+# no upgrader and no status file 120 s after the start
+#@ new
+update.release.err.noWindow	Het upgradevenster is niet verschenen. Probeer het opnieuw.	The upgrade window didn’t appear. Try again.
+# last line of the terminal wrapper when it keeps the window open
+#@ new
+update.release.pressEnter	Druk op Enter om dit venster te sluiten.	Press Enter to close this window.
+# update.release.ubuntuHold could not write the update-manager keys
+#@ new
+update.release.err.ubuntuHold	De melding van Ubuntu kon niet worden uitgesteld.	Ubuntu’s own prompt couldn’t be postponed.
+# update.release.ubuntuHold {on:true} refused: nothing offered, or the verdict is not hold/blocked (GW5)
+#@ new
+update.release.err.notHeld	Dit kan alleen zolang {product} nog niet klaar is voor de nieuwe Ubuntu-versie.	This is only possible while {product} isn’t ready for the new Ubuntu version yet.
+
+# --- compatibility check (design §6.2, GW6)
+# compatibility reason: a blocking part has no candidate; {part} is an update.part.* text
+#@ new
+update.compat.missing	{part} zit niet in Ubuntu {version}.	{part} isn’t in Ubuntu {version}.
+# compatibility reason: the simulation removes a blocking part
+#@ new
+update.compat.removed	Ubuntu {version} verwijdert {part}.	Ubuntu {version} removes {part}.
+# compatibility reason: a degraded part is missing or removed; {feature} is an update.feature.* text
+#@ new
+update.compat.degraded	{part} ontbreekt in Ubuntu {version}; {feature} werkt dan niet.	{part} is missing from Ubuntu {version}; {feature} won’t work then.
+# compatibility note: third-party sources exist; {name} is the first source's name
+#@ new
+update.compat.thirdParty.one	Ubuntu zet tijdens de upgrade 1 extra softwarebron uit ({name}).	Ubuntu turns off 1 extra software source during the upgrade ({name}).
+# plural of update.compat.thirdParty
+#@ new
+update.compat.thirdParty.other	Ubuntu zet tijdens de upgrade {n} extra softwarebronnen uit, zoals {name}.	Ubuntu turns off {n} extra software sources during the upgrade, such as {name}.
+# compatibility unknown: offline
+#@ new
+update.compat.offline	Je bent offline.	You’re offline.
+# compatibility unknown: metered and settings.update.metered is off; names the Advanced options toggle
+#@ new
+update.compat.metered	Je gebruikt een verbinding met een datalimiet; zet Updates downloaden via verbindingen met een datalimiet aan om toch te controleren.	You’re on a metered connection; turn on Download updates over metered connections to check anyway.
+# compatibility unknown: the private apt tree failed
+#@ new
+update.compat.apt	Het pakketoverzicht van Ubuntu {version} kon niet worden geladen.	The package list of Ubuntu {version} couldn’t be loaded.
+
+# --- parts and features of the compatibility check (GW6)
+# part label (compatibility reasons)
+#@ new
+update.part.webkit	WebKitGTK (webweergave)	WebKitGTK (web view)
+# part label (a name, the same in both languages)
+#@ new
+update.part.jsc	JavaScriptCore	JavaScriptCore
+# part label (a name)
+#@ new
+update.part.gtk	GTK 3	GTK 3
+# part label (a name)
+#@ new
+update.part.soup	libsoup	libsoup
+# part label (a name)
+#@ new
+update.part.glib	GLib	GLib
+# part label
+#@ new
+update.part.pixbuf	GDK Pixbuf (afbeeldingen)	GDK Pixbuf (images)
+# part label
+#@ new
+update.part.cairo	cairo (tekenen)	cairo (drawing)
+# part label (a name)
+#@ new
+update.part.zlib	zlib	zlib
+# part label
+#@ new
+update.part.archive	libarchive (archieven openen)	libarchive (opening archives)
+# part label (a name)
+#@ new
+update.part.gnomeShell	GNOME Shell	GNOME Shell
+# degraded part (a name)
+#@ new
+update.part.ffmpeg	ffmpeg	ffmpeg
+# what does not work without ffmpeg ({feature} in update.compat.degraded)
+#@ new
+update.feature.ffmpeg	video-miniaturen	video thumbnails
+# degraded part (a name)
+#@ new
+update.part.bubblewrap	bubblewrap	bubblewrap
+# what does not work without bubblewrap
+#@ new
+update.feature.bubblewrap	veilige voorbeelden	safe previews
+# degraded part (a name)
+#@ new
+update.part.squashfs	squashfs-tools	squashfs-tools
+# what does not work without squashfs-tools
+#@ new
+update.feature.squashfs	snap-pakketten bekijken	inspecting snap packages
+# degraded part (a name)
+#@ new
+update.part.flatpak	flatpak	flatpak
+# what does not work without flatpak
+#@ new
+update.feature.flatpak	Flatpak-apps installeren	installing Flatpak apps
+# degraded part (a name)
+#@ new
+update.part.packagekit	PackageKit	PackageKit
+# what does not work without PackageKit
+#@ new
+update.feature.packagekit	updates en software installeren	installing updates and software
+# degraded part: ptyxis, gnome-terminal or gnome-console
+#@ new
+update.part.terminal	een terminal	a terminal
+# what does not work without a terminal
+#@ new
+update.feature.terminal	de volgende Ubuntu-upgrade	the next Ubuntu upgrade
+# degraded part (a name)
+#@ new
+update.part.screen	screen	screen
+# what does not work without screen
+#@ new
+update.feature.screen	de volgende Ubuntu-upgrade	the next Ubuntu upgrade
+# degraded part (a name)
+#@ new
+update.part.dock	Ubuntu Dock	Ubuntu Dock
+# what does not work without the Ubuntu Dock
+#@ new
+update.feature.dock	het vangnet na een upgrade	the safety net after an upgrade
+
+# --- after a release upgrade: win11-launch --post-upgrade-check (design §6.6, GW7)
+# post-upgrade notification title: first login on a new release, extension active
+#@ new
+update.post.upgraded	Ubuntu is bijgewerkt naar {version}	Ubuntu was upgraded to {version}
+# post-upgrade notification title: the extension is OUT_OF_DATE (4) or INACTIVE (2) although enabled
+#@ new
+update.post.extOff	GNOME {major} heeft {product} uitgezet	GNOME {major} turned {product} off
+# post-upgrade notification body
+#@ new
+update.post.extOffBody	De taakbalk van {product} werkt nog niet met deze GNOME-versie. Zet de Ubuntu Dock aan tot er een update is.	{product}’s taskbar doesn’t work with this GNOME version yet. Turn on the Ubuntu Dock until there’s an update.
+# post-upgrade notification action
+#@ new
+update.post.dockOn	Ubuntu Dock aanzetten	Turn on Ubuntu Dock
+# post-upgrade notification action (the same word in both languages)
+#@ new
+update.post.later	Later	Later
+# post-upgrade notification title: the extension is in ERROR (3)
+#@ new
+update.post.extError	{product} kon niet starten	{product} couldn’t start
+# post-upgrade notification body
+#@ new
+update.post.extErrorBody	GNOME meldt een fout in {product}. Zet de Ubuntu Dock aan of installeer {product} opnieuw.	GNOME reports an error in {product}. Turn on the Ubuntu Dock or reinstall {product}.
+# post-upgrade notification title: org.gnome.shell disable-user-extensions is true
+#@ new
+update.post.extsOff	GNOME heeft extensies uitgezet	GNOME turned extensions off
+# post-upgrade notification body
+#@ new
+update.post.extsOffBody	Na een fout heeft GNOME alle extensies uitgezet, ook {product}.	After an error, GNOME turned off all extensions, including {product}.
+# post-upgrade notification action
+#@ new
+update.post.extsOn	Extensies weer aanzetten	Turn extensions back on
+# post-upgrade notification title: blocking parts are missing after the upgrade
+#@ new
+update.post.missing	{product} mist onderdelen	{product} is missing components
+# post-upgrade notification body; {parts} is a joined list of update.part.* texts
+#@ new
+update.post.missingBody	Na de upgrade ontbreekt: {parts}.	Missing after the upgrade: {parts}.
+# post-upgrade notification action
+#@ new
+update.post.installParts	Onderdelen installeren…	Install components…

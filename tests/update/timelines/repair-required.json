@@ -1,0 +1,149 @@
+{
+ "name": "repair-required",
+ "group": "failure",
+ "title": "Repair required, then RepairSystem",
+ "description": "UpdatePackages ends with error 66 (unfinished-transaction) and exit 11 (repair-required); RepairSystem(only-trusted) then succeeds.",
+ "states": [
+  "H15"
+ ],
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
+  }
+ },
+ "packages": {
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit"
+  },
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "JavaScript engine library from WebKitGTK",
+   "size": 31653888,
+   "row": "webkit"
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+ ],
+ "methods": {
+  "UpdatePackages": [
+   {
+    "props": {
+     "Status": "setup",
+     "AllowCancel": false
+    }
+   },
+   {
+    "error": [
+     "unfinished-transaction",
+     "E: dpkg was interrupted, you must manually run 'dpkg --configure -a' to correct the problem."
+    ]
+   },
+   {
+    "finish": "repair-required"
+   }
+  ],
+  "RepairSystem": [
+   {
+    "props": {
+     "Status": "run-hook",
+     "AllowCancel": false,
+     "Percentage": 10
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "install",
+     "Percentage": 70
+    },
+    "ms": 40
+   },
+   {
+    "props": {
+     "Status": "cleanup",
+     "Percentage": 100
+    }
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 3
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "repair-required",
+    "errors": [
+     "unfinished-transaction"
+    ]
+   }
+  },
+  {
+   "tx": "RepairSystem",
+   "args": [
+    "flags:only-trusted"
+   ],
+   "expect": {
+    "exit": "success",
+    "statuses": [
+     "run-hook",
+     "install",
+     "cleanup"
+    ]
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 3
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 15
+ }
+}

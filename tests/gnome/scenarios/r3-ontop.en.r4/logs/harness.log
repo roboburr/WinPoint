@@ -1,0 +1,43 @@
+06:58:57 GE0c run lang=en switch=False seed=defaults MemAvailable=8591672 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/r4-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r3-ontop.py
+07:00:18 private install: exit 0 in 66.1 s, 87858 mutated paths, 0 outside the run dir, ok=True
+07:00:21 GStreamer registry warmed in 2.6 s (['gst-inspect-1.0 version 1.28.2'])
+07:00:25 GNOME Shell 50.1 up (mode user, unsafe True)
+07:00:30 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r3-ontop.py
+07:00:30   check PASS: settings.json starts with always-on-top off
+07:00:33   check PASS: en: the always-on-top switch is enabled
+07:00:33   check PASS: en: its description is the D-G21 text, without a note
+07:00:33   check PASS: en: the switch starts off
+07:00:33   check PASS: en: off: Task Manager is not above and not on all workspaces
+07:00:33   check PASS: en: off: the focused File Explorer is above Task Manager
+07:00:34   check PASS: en: on: settings.json taskmgr.alwaysOnTop is true
+07:00:34   check PASS: en: on: Task Manager is above and on all workspaces
+07:00:34   check PASS: en: on: Task Manager stays above the focused File Explorer
+07:00:36   check PASS: en: on: Task Manager is on the next workspace too, File Explorer is not
+07:00:40   check PASS: en: on: a Task Manager opened now is above and on all workspaces at once
+07:00:44   check PASS: en: off again: settings.json taskmgr.alwaysOnTop is false
+07:00:44   check PASS: en: off again: Task Manager is a normal window (not above, not on all workspaces)
+07:00:44   check PASS: en: off again: the focused File Explorer is above Task Manager
+07:00:45   check PASS: en: off again: Task Manager is not on the next workspace
+07:00:47   check PASS: the language switched to nl
+07:00:48   check PASS: nl: the always-on-top switch is enabled
+07:00:48   check PASS: nl: its description is the D-G21 text, without a note
+07:00:48   check PASS: nl: the switch starts off
+07:00:48   check PASS: nl: off: Task Manager is not above and not on all workspaces
+07:00:48   check PASS: nl: off: the focused File Explorer is above Task Manager
+07:00:49   check PASS: nl: on: settings.json taskmgr.alwaysOnTop is true
+07:00:49   check PASS: nl: on: Task Manager is above and on all workspaces
+07:00:49   check PASS: nl: on: Task Manager stays above the focused File Explorer
+07:00:50   check PASS: nl: on: Task Manager is on the next workspace too, File Explorer is not
+07:00:54   check PASS: nl: on: a Task Manager opened now is above and on all workspaces at once
+07:00:58   check PASS: nl: off again: settings.json taskmgr.alwaysOnTop is false
+07:00:58   check PASS: nl: off again: Task Manager is a normal window (not above, not on all workspaces)
+07:00:58   check PASS: nl: off again: the focused File Explorer is above Task Manager
+07:00:59   check PASS: nl: off again: Task Manager is not on the next workspace
+07:01:00   check PASS: every check passed
+07:01:00 shutdown app: signalled own descendants 1370:win11-explorer, 1393:WebKitNetworkPr, 1394:WebKitWebProces
+07:01:00 shutdown app: signalled own descendants 2305:win11-app, 2328:WebKitNetworkPr, 2329:WebKitWebProces
+07:01:01 shutdown shell clients: signalled own descendants 62:ibus-daemon, 426:win11-desktop, 427:win11-panel, 1698:glycin-image-rs, 583:WebKitNetworkPr, 586:WebKitWebProces, 663:win11-start, 828:WebKitNetworkPr, 829:WebKitWebProces, 584:WebKitNetworkPr, 585:WebKitWebProces, 227:ibus-memconf, 229:ibus-extension-, 545:ibus-engine-sim
+07:01:01 shutdown gnome-shell: signalled own descendants 39:gnome-shell
+07:01:01 shutdown system bus: signalled own descendants 38:dbus-daemon
+07:01:01 inner sweep: signalled own descendants 1708:glycin-image-rs
+07:01:01 inner done: 0 surfaces, 0 failed []

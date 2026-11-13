@@ -1,0 +1,37 @@
+# host/i18n/display.tsv: host texts of services/display.rs.
+# Owner: R2-A.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/display.rs
+# set(): ApiError "bad_args": display.set: the monitor name is empty, too long or has other characters
+#@ host/src/services/display.rs 15 9b11e17dea9511a5 plain
+display.unknown	Onbekend beeldscherm.	Unknown display.
+# set(): ApiError "not_found"
+#@ host/src/services/display.rs 20 cf9606c38340afe0 plain
+display.gone	Dit beeldscherm is niet (meer) aangesloten.	This display is no longer connected.
+# set(): ApiError "bad_args": the mode is not WIDTHxHEIGHT[@RATE], preferred, highrr or highres
+#@ host/src/services/display.rs 29 dca601027e8bbb80 plain
+display.badMode	Ongeldige resolutie.	Invalid resolution.
+# set(): ApiError "bad_args"
+#@ host/src/services/display.rs 35 b9a79dbd1d827f81 plain
+display.modeUnsupported	Deze resolutie wordt niet ondersteund door dit beeldscherm.	This display doesn’t support this resolution.
+# set(): ApiError "bad_args"
+#@ host/src/services/display.rs 42 24a4cca0f5c9ee2f plain
+display.badScale	Ongeldige schaal.	Invalid scale.
+# set(): ApiError "bad_args": the scale must be 0.5-4
+#@ host/src/services/display.rs 44 93bdbbc08f287914 plain
+display.scaleRange	Kies een schaal tussen 50 en 400 procent.	Choose a scale between 50% and 400%.
+# set(): ApiError "failed": Hyprland did not answer ok to keyword monitor
+#@ host/src/services/display.rs 52 66a9163925668896 plain
+display.failed	Het beeldscherm kon niet worden aangepast.	Couldn’t change the display.
+# set(): ApiError "unsupported": monitors can only be changed through Hyprland's IPC, which the GNOME version never has; GNOME's displays are set in Ubuntu's Settings app. Same text as the UI's Display page note (display.js displaysNA), D-G2
+#@ new
+display.unsupported	Beeldscherminstellingen wijzigen kan hier niet. Gebruik daarvoor de app Instellingen van Ubuntu.	Display settings can’t be changed here. Use Ubuntu’s Settings app instead.

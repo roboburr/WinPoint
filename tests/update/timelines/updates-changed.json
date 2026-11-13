@@ -1,0 +1,89 @@
+{
+ "name": "updates-changed",
+ "group": "reattach",
+ "title": "UpdatesChanged after an apt hook",
+ "description": "apt installed libsoup-3.0-common outside PackageKit and its 20packagekit hook calls StateHasChanged(\"cache-update\"); the fake broadcasts UpdatesChanged (and, as if packagekit itself had been updated, RestartSchedule), which every connection (client and observer) receives. GW2b (review m2): the list then has 1 update left.",
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libsoup-3.0-0\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-common\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-0\tamd64\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\nlibsoup-3.0-common\tall\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\n@@end\n"
+  }
+ },
+ "packages": {
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Shared library",
+   "size": 1257472,
+   "row": "soup"
+  },
+  "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Common files",
+   "size": 63488,
+   "row": "soup"
+  }
+ },
+ "updates": [
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security",
+  "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security"
+ ],
+ "methods": {
+  "StateHasChanged": [
+   {
+    "removeUpdates": [
+     "libsoup-3.0-common;3.6.6-1ubuntu0.3;all;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "manager": "UpdatesChanged",
+    "ms": 100
+   },
+   {
+    "manager": "RestartSchedule",
+    "ms": 20
+   }
+  ]
+ },
+ "client": [
+  {
+   "manager": "StateHasChanged",
+   "args": [
+    "cache-update"
+   ]
+  },
+  {
+   "waitSignal": "UpdatesChanged"
+  },
+  {
+   "waitSignal": "RestartSchedule"
+  },
+  {
+   "observerExpect": {
+    "path": "/org/freedesktop/PackageKit",
+    "expect": {
+     "count": {
+      "UpdatesChanged": 1,
+      "RestartSchedule": 1
+     }
+    }
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 1,
+    "ids": [
+     "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security"
+    ]
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 4
+ }
+}

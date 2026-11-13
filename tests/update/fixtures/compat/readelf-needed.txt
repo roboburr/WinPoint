@@ -1,0 +1,13 @@
+# readelf -d target/debug/win11-* (NEEDED, in order), recorded by tests/update/test_compat.sh --record-readelf; test_compat.sh checks it again on every run, elf.rs's unit test compares the parser with it
+win11-app: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-default-apps: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-desktop: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-explorer: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-file-portal: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-image-worker: libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-index-worker: libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-installer: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-launch: libgobject-2.0.so.0 libgio-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-panel: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-software-worker: libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2
+win11-start: libgdk-3.so.0 libz.so.1 libwebkit2gtk-4.1.so.0 libgtk-3.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libsoup-3.0.so.0 libgio-2.0.so.0 libjavascriptcoregtk-4.1.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6 ld-linux-x86-64.so.2

@@ -1,0 +1,77 @@
+libmutter-Message: 04:01:15.329: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:46): libmutter-WARNING **: 04:01:15.330: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:46): libmutter-WARNING **: 04:01:15.330: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 04:01:15.422: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 04:01:15.423: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 04:01:15.423: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 04:01:15.423: Obtained a high priority EGL context
+libmutter-Message: 04:01:15.437: Added virtual monitor Meta-0
+libmutter-Message: 04:01:15.439: Using Wayland display name 'w11-wl'
+
+(gnome-shell:46): libmutter-WARNING **: 04:01:15.478: There is no colord server available
+GNOME Shell-Message: 04:01:15.916: Registering session with GDM
+GNOME Shell-Message: 04:01:15.927: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+
+(gnome-shell:46): GNOME Shell-CRITICAL **: 04:01:15.985: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+
+(gnome-shell:46): GNOME Shell-CRITICAL **: 04:01:15.985: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+GNOME Shell-Message: 04:01:15.998: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 04:01:16.021: Failed to register AuthenticationAgent
+portal is not running: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.portal.IBus was not provided by any .service files
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+
+(gnome-shell:46): GnomeDesktop-WARNING **: 04:01:16.985: Could not create transient scope for PID 391: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+
+(gnome-shell:46): GnomeDesktop-WARNING **: 04:01:16.986: Could not create transient scope for PID 392: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+GNOME Shell-Message: 04:01:16.986: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 04:01:16.986: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+** Message: 04:01:16.998: Failed to start camera monitor
+GNOME Shell-Message: 04:01:17.036: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 04:01:17.037: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:46): accountsservice-WARNING **: 04:01:17.154: ActUserManager: user (null) has no username (uid: -1)
+WARNING: Glycin running without sandbox.
+WARNING: Glycin running without sandbox.
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:46): libmutter-CRITICAL **: 04:01:17.349: meta_window_set_stack_position_no_sync: assertion 'window->stack_position >= 0' failed
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 04:01:18.127: GNOME Shell started at Fri Nov 13 2026 04:01:15 GMT+0100 (Central European Standard Time)
+GNOME Shell-Message: 04:01:18.127: Registering display with GDM
+GNOME Shell-Message: 04:01:18.136: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+WARNING: Glycin running without sandbox.
+** Message: 04:01:40.697: Shutting down GNOME Shell
+
+(gnome-shell:46): Gjs-CRITICAL **: 04:01:40.727: Object MetaWindowActorWayland (0x5b7c3eef9a40), has been already disposed — impossible to access it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x5b7c3c58a4d0 ==
+#0   7ffdd1b4ea30 b   resource:///org/gnome/gjs/modules/core/overrides/GObject.js:710 (ca8b91caec0 @ 25)
+#1   7ffdd1b4f1a0 b   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:244 (28ee744c830 @ 596)
+#2   5b7c3c68bbb8 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:94 (28ee744c1f0 @ 84)
+#3   5b7c3c68bb18 i   resource:///org/gnome/shell/ui/main.js:292 (ca8b91fb7e0 @ 119)
+
+(gnome-shell:46): GLib-GObject-CRITICAL **: 04:01:40.727: ../../../gobject/gsignal.c:2723: instance '0x5b7c3eef9a40' has no handler with id '24528'
+
+(gnome-shell:46): Gjs-CRITICAL **: 04:01:40.727: Object MetaWindowActorWayland (0x5b7c3eef9a40), has been already disposed — impossible to access it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x5b7c3c58a4d0 ==
+#0   7ffdd1b4f0b0 b   resource:///org/gnome/gjs/modules/core/overrides/GObject.js:710 (ca8b91caec0 @ 25)
+#1   7ffdd1b4f1a0 b   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:244 (28ee744c830 @ 596)
+#2   5b7c3c68bbb8 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:94 (28ee744c1f0 @ 84)
+#3   5b7c3c68bb18 i   resource:///org/gnome/shell/ui/main.js:292 (ca8b91fb7e0 @ 119)
+
+(gnome-shell:46): GLib-GObject-CRITICAL **: 04:01:40.727: ../../../gobject/gsignal.c:2723: instance '0x5b7c3eef9a40' has no handler with id '24529'
+libmutter-Message: 04:01:40.805: Removed virtual monitor Meta-0

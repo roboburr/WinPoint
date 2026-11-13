@@ -1,0 +1,135 @@
+{
+  "date": "2026-11-01",
+  "isolated": true,
+  "native_methods": [
+    "files.trash",
+    "files.trashInfo",
+    "files.emptyTrash",
+    "files.restoreTrash",
+    "files.compress",
+    "files.extract",
+    "files.properties",
+    "files.setAttributes"
+  ],
+  "python_differential": true,
+  "trash_override": "<test-root>/fixtures/Trash",
+  "real_webkit_windows": 2,
+  "cases": [
+    {
+      "case": "properties-reference-single-mixed-links-and-counts",
+      "passed": true
+    },
+    {
+      "case": "attributes-reference-readonly-hidden-and-safe-link-errors",
+      "passed": true
+    },
+    {
+      "case": "desktop-launcher-factory-is-native-with-reference-metadata",
+      "passed": true
+    },
+    {
+      "case": "zip-store-reference-tree",
+      "passed": true
+    },
+    {
+      "case": "zip-deflate-reference-tree",
+      "passed": true
+    },
+    {
+      "case": "zip-bzip2-reference-tree",
+      "passed": true
+    },
+    {
+      "case": "zip-lzma-reference-tree",
+      "passed": true
+    },
+    {
+      "case": "zip-zstd-reference-tree",
+      "passed": true
+    },
+    {
+      "case": "zip-cp437-and-utf8-names",
+      "passed": true
+    },
+    {
+      "case": "zip-unix-link-attrs-extract-as-binary-regular-file",
+      "passed": true
+    },
+    {
+      "case": "compress-reference-members-data-deflate-and-link-semantics",
+      "passed": true
+    },
+    {
+      "case": "tar-tar-safe-links-metadata-and-filter",
+      "passed": true
+    },
+    {
+      "case": "tar-tar.gz-safe-links-metadata-and-filter",
+      "passed": true
+    },
+    {
+      "case": "tar-tar.bz2-safe-links-metadata-and-filter",
+      "passed": true
+    },
+    {
+      "case": "tar-tar.xz-safe-links-metadata-and-filter",
+      "passed": true
+    },
+    {
+      "case": "tar-tar.zst-safe-links-metadata-and-filter",
+      "passed": true
+    },
+    {
+      "case": "unsafe-traversal-links-and-device-archives-rejected",
+      "passed": true
+    },
+    {
+      "case": "crc-failure-cleans-private-stage-preserves-existing-target",
+      "passed": true
+    },
+    {
+      "case": "trash-undo-conflicts-tree-and-broken-link-reference-parity",
+      "passed": true
+    },
+    {
+      "case": "empty-only-explicit-isolated-test-trash",
+      "passed": true
+    },
+    {
+      "case": "native-archive-progress-and-trash-directory-sse",
+      "passed": true
+    },
+    {
+      "case": "all-eight-new-methods-work-with-python-traps",
+      "passed": true,
+      "methods": [
+        "files.trash",
+        "files.trashInfo",
+        "files.emptyTrash",
+        "files.restoreTrash",
+        "files.compress",
+        "files.extract",
+        "files.properties",
+        "files.setAttributes"
+      ]
+    }
+  ],
+  "version": "0.4.0",
+  "native_files_method_count": 20,
+  "new_native_method_count": 8,
+  "active_desktop_configuration_untouched": true,
+  "user_trash_untouched": true,
+  "physical_input_tested": false,
+  "full_visual_identity_proven": false,
+  "python_equivalents_trapped": true,
+  "native_response_header": "X-Win11-Service: rust-files",
+  "property_comparison_excluded_fields": [
+    "accessed"
+  ],
+  "limitations": [
+    "No live mount/drive deletion exercise; mount-ID safety uses unit fixtures.",
+    "No exhaustive network-share, filesystem, hostile-race or corrupt-archive coverage.",
+    "No complete physical-input dialog or visual regression sweep.",
+    "ZIP member order/content/compression method compared; compressed byte identity not asserted."
+  ]
+}

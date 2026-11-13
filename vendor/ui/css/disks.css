@@ -1,0 +1,297 @@
+/* ==========================================================================
+   Win11 Shell — Schijven (ui/js/apps/disks). Windows 11 Instellingen › Schijven en volumes
+   + the Schijfbeheer partition bar. Mica window (appframe), cards on it, light and dark.
+   ========================================================================== */
+
+.dk-app {
+  --dk-data: var(--accent);
+  --dk-system: #5b7088;
+  --dk-swap: #8764b8;
+  --dk-encrypted: #c78a00;
+  --dk-free: #3b3b3b;
+  --dk-raw: #9aa4af;
+  --dk-busy: #0f9d8a;
+  --dk-container: #2f9e5e;
+  --dk-hatch: rgba(0, 0, 0, 0.07);
+}
+:root[data-theme="dark"] .dk-app, [data-theme="dark"] .dk-app {
+  --dk-system: #8fa3ba;
+  --dk-swap: #b69ce6;
+  --dk-encrypted: #f2c14b;
+  --dk-free: #cfcfcf;
+  --dk-raw: #8b949e;
+  --dk-busy: #33d1c6;
+  --dk-container: #62d08f;
+  --dk-hatch: rgba(255, 255, 255, 0.075);
+}
+
+.dk-page {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2px 40px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.dk-page > .fl-settings-group + .fl-settings-group { margin-top: 6px; }
+.dk-page > .fl-infobar { margin: 0; }
+@media (max-width: 680px) { .dk-page { padding: 2px 16px 28px; } }
+
+.dk-head { display: flex; align-items: center; gap: 16px; min-height: 52px; padding-top: 4px; }
+.dk-head .fl-breadcrumb { flex: 1 1 auto; }
+.dk-cmds { flex: none; display: flex; gap: 4px; }
+
+.dk-loading { display: grid; justify-items: center; gap: 16px; padding: 96px 0; color: var(--text-2); }
+.dk-disks { display: flex; flex-direction: column; gap: 16px; }
+.dk-mono { font-family: var(--font-mono); font-size: 12px; word-break: break-all; }
+.dk-ctl-row { display: flex; align-items: center; gap: 8px; }
+.dk-art { display: block; flex: none; }
+
+/* ---- disk card ------------------------------------------------------------ */
+.dk-disk {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  background-clip: padding-box;
+  overflow: hidden;
+}
+.dk-disk__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 16px 14px 18px;
+}
+.dk-disk__art { flex: none; display: grid; place-items: center; width: 44px; height: 44px; }
+.dk-disk__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.dk-disk__title { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.dk-disk__name { flex: none; font-size: var(--fs-subtitle); line-height: 26px; font-weight: var(--fw-semibold); font-family: var(--font-display); }
+.dk-disk__model { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); }
+.dk-disk__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); }
+.dk-disk__actions { flex: none; display: flex; align-items: center; gap: 8px; }
+.dk-disk__bar { padding: 0 16px 14px; }
+
+.dk-health { display: inline-flex; align-items: center; gap: 6px; color: var(--text-1); }
+.dk-health__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-3); }
+.dk-health.is-ok .dk-health__dot { background: var(--sys-success); }
+.dk-health.is-warning .dk-health__dot { background: var(--sys-caution); }
+.dk-health.is-critical .dk-health__dot { background: var(--sys-critical); }
+.dk-health.is-critical { color: var(--sys-critical); font-weight: var(--fw-semibold); }
+.dk-busy { color: var(--accent-fg); font-weight: var(--fw-semibold); }
+
+/* ---- the Schijfbeheer bar ---------------------------------------------------- */
+.dk-bar {
+  display: flex;
+  gap: 3px;
+  min-height: 70px;
+  padding: 3px;
+  border: 1px solid var(--stroke-control);
+  border-radius: 6px;
+  background: var(--fill-subtle-2);
+}
+.dk-bar.is-compact { min-height: 58px; }
+.dk-seg {
+  --seg: var(--dk-data);
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  background: var(--bg-card-solid, var(--bg-card));
+  box-shadow: inset 0 0 0 1px var(--stroke-card);
+  border-top: 5px solid var(--seg);
+  overflow: hidden;
+  cursor: default;
+  container-type: inline-size;
+  transition: background-color var(--dur-faster) linear, box-shadow var(--dur-faster) linear;
+  outline: none;
+}
+.dk-seg:hover { background: var(--fill-control-2); }
+.dk-seg.is-selected {
+  box-shadow: inset 0 0 0 2px var(--accent), inset 0 0 0 3px var(--bg-card-solid, transparent);
+  background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--dk-hatch) 5px 7px);
+}
+.dk-seg:focus-visible { box-shadow: inset 0 0 0 2px var(--focus-outer, #000), inset 0 0 0 3px var(--focus-inner, #fff); }
+.dk-seg--system { --seg: var(--dk-system); }
+.dk-seg--swap { --seg: var(--dk-swap); }
+.dk-seg--encrypted { --seg: var(--dk-encrypted); }
+.dk-seg--raw { --seg: var(--dk-raw); }
+.dk-seg--busy { --seg: var(--dk-busy); }
+.dk-seg--free, .dk-seg--empty {
+  --seg: var(--dk-free);
+  background: repeating-linear-gradient(135deg, transparent 0 6px, var(--dk-hatch) 6px 8px), var(--fill-subtle);
+}
+.dk-seg--free.is-selected { background: repeating-linear-gradient(135deg, transparent 0 4px, var(--dk-hatch) 4px 7px), var(--fill-subtle-2); }
+.dk-seg__body { display: flex; flex-direction: column; gap: 1px; padding: 6px 9px 7px; min-width: 0; }
+.dk-seg__name {
+  display: flex; align-items: center; gap: 4px; min-width: 0;
+  font-size: var(--fs-caption); line-height: 16px; font-weight: var(--fw-semibold); color: var(--text-1);
+}
+.dk-seg__name > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-seg__name .fl-icon { flex: none; color: var(--dk-encrypted); }
+.dk-seg__line { font-size: 11px; line-height: 15px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dk-seg__status { color: var(--text-3); }
+.dk-seg--busy .dk-seg__status { color: var(--accent-fg); font-weight: var(--fw-semibold); }
+/* MBR extended partition: a green frame around its logical drives and the free space in it (Schijfbeheer) */
+.dk-seg-group {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 3px 3px;
+  border: 2px solid var(--dk-container);
+  border-radius: 5px;
+  cursor: default;
+}
+.dk-seg-group.is-selected { box-shadow: 0 0 0 1px var(--accent); }
+.dk-seg-group__label {
+  display: flex; gap: 6px; align-items: baseline; min-width: 0; padding: 1px 3px 0;
+  font-size: 11px; line-height: 15px; font-weight: var(--fw-semibold); color: var(--text-2); white-space: nowrap; overflow: hidden;
+}
+.dk-seg-group__label > span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.dk-seg-group__size { font-weight: normal; color: var(--text-3); }
+.dk-seg-group__inner { flex: 1 1 auto; display: flex; gap: 3px; min-height: 0; }
+.dk-seg--free.is-in-extended {
+  --seg: var(--dk-container);
+  background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--dk-container) 14%, transparent) 6px 8px), var(--fill-subtle);
+}
+.dk-seg--container { --seg: var(--dk-container); }
+.dk-seg__progress { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--dk-busy); transition: width var(--dur-normal) var(--ease); }
+@container (max-width: 64px) {
+  .dk-seg__line { display: none; }
+  .dk-seg__body { padding: 6px 4px; }
+}
+@container (max-width: 28px) {
+  .dk-seg__body { display: none; }
+}
+
+.dk-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 0 2px; color: var(--text-2); font-size: var(--fs-caption); }
+.dk-legend__item { display: inline-flex; align-items: center; gap: 6px; }
+.dk-legend__sw { display: inline-block; width: 14px; height: 10px; border-radius: 2px; border-top: 3px solid var(--seg); background: var(--bg-card-solid, var(--bg-card)); box-shadow: inset 0 0 0 1px var(--stroke-card); }
+.dk-legend__sw.dk-seg--data { --seg: var(--dk-data); }
+.dk-legend__sw.dk-seg--system { --seg: var(--dk-system); }
+.dk-legend__sw.dk-seg--swap { --seg: var(--dk-swap); }
+.dk-legend__sw.dk-seg--encrypted { --seg: var(--dk-encrypted); }
+.dk-legend__sw.dk-seg--container { --seg: var(--dk-container); }
+.dk-legend__sw.dk-seg--free { --seg: var(--dk-free); background: repeating-linear-gradient(135deg, transparent 0 2px, var(--dk-hatch) 2px 4px), var(--fill-subtle); }
+
+/* ---- volume rows ------------------------------------------------------------- */
+.dk-vols { display: flex; flex-direction: column; border-top: 1px solid var(--stroke-divider); }
+.dk-vols.is-standalone {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  background-clip: padding-box;
+  overflow: hidden;
+}
+.dk-vol {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) minmax(150px, 240px) 172px;
+  align-items: center;
+  column-gap: 16px;
+  min-height: 60px;
+  padding: 8px 16px 8px 28px;
+  outline: none;
+  transition: background-color var(--dur-faster) linear;
+}
+.dk-vol + .dk-vol { border-top: 1px solid var(--stroke-divider); }
+.dk-vol:hover { background: var(--fill-subtle-2); }
+.dk-vol.is-selected { background: var(--fill-subtle-2); box-shadow: inset 3px 0 0 var(--accent); }
+.dk-vol:focus-visible { box-shadow: inset 0 0 0 2px var(--focus-outer, #000); }
+.dk-vol__icon { display: grid; place-items: center; color: var(--text-1); }
+.dk-vol__icon.is-encrypted { color: var(--dk-encrypted); }
+.dk-vol__icon.is-system, .dk-vol__icon.is-free { color: var(--text-2); }
+.dk-vol__text { min-width: 0; }
+.dk-vol__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-vol__desc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); }
+.dk-vol__usage { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dk-vol__usage-text { color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); white-space: nowrap; }
+.dk-vol__end { display: flex; justify-content: flex-end; }
+.dk-vol.is-busy .dk-vol__desc { color: var(--accent-fg); }
+.dk-vol.is-contained { padding-left: 56px; }
+.dk-vol__icon.is-container { color: var(--dk-container); }
+@media (max-width: 760px) {
+  .dk-vol { grid-template-columns: 24px minmax(0, 1fr) auto; padding-left: 16px; }
+  .dk-vol.is-contained { padding-left: 36px; }
+  .dk-vol__end { min-width: 0; }
+  .dk-vol__usage { display: none; }
+  .dk-disk__head { flex-wrap: wrap; }
+  .dk-disk__actions { width: 100%; justify-content: flex-end; }
+}
+
+.dk-usage { position: relative; display: block; width: 100%; height: 4px; overflow: hidden; border-radius: 2px; background: var(--chart-track); }
+.dk-usage.is-large { height: 8px; border-radius: 4px; }
+.dk-usage__fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: inherit; background: var(--accent); transition: width var(--dur-slow) var(--ease); }
+.dk-usage.is-full .dk-usage__fill { background: var(--sys-critical); }
+
+/* ---- properties pages --------------------------------------------------------- */
+.dk-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  background-clip: padding-box;
+}
+.dk-hero__top { display: flex; align-items: center; gap: 18px; }
+.dk-hero__art { flex: none; display: grid; place-items: center; width: 60px; height: 60px; }
+.dk-hero__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.dk-hero__title { font-family: var(--font-display); font-size: var(--fs-subtitle); line-height: var(--lh-subtitle); font-weight: var(--fw-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-hero__sub { color: var(--text-2); }
+.dk-hero__state { color: var(--text-3); font-size: var(--fs-caption); }
+.dk-hero__end { flex: none; }
+.dk-hero__usage { display: flex; flex-direction: column; gap: 8px; }
+.dk-hero__nums { display: flex; justify-content: space-between; color: var(--text-2); font-size: var(--fs-caption); }
+.dk-hero__nums b { color: var(--text-1); font-weight: var(--fw-semibold); font-size: var(--fs-body); }
+
+.dk-details-card { padding: 14px 18px; }
+.dk-details { display: grid; grid-template-columns: minmax(140px, max-content) minmax(0, 1fr); gap: 8px 28px; }
+.dk-details__k { color: var(--text-2); }
+.dk-details__v { min-width: 0; overflow-wrap: anywhere; }
+.dk-linkbtn { padding: 0; border: 0; background: none; font: inherit; color: var(--accent-fg); cursor: pointer; text-align: left; }
+.dk-linkbtn:hover { text-decoration: underline; }
+
+.dk-healthcard { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.dk-healthcard__head { display: flex; align-items: center; gap: 14px; }
+.dk-healthcard__icon { flex: none; display: grid; place-items: center; }
+.dk-healthcard__text { flex: 1 1 auto; min-width: 0; }
+.dk-healthcard__title { font-weight: var(--fw-semibold); font-size: 16px; line-height: 22px; }
+.dk-healthcard__desc { color: var(--text-2); }
+.dk-healthcard.is-critical .dk-healthcard__title { color: var(--sys-critical); }
+.dk-healthcard__grid:empty { display: none; }
+.dk-healthcard__grid .dk-details { padding-left: 38px; }
+.dk-healthcard__adv:empty { display: none; }
+.dk-attrs { width: 100%; border-collapse: collapse; font-size: var(--fs-caption); }
+.dk-attrs th, .dk-attrs td { padding: 4px 10px; text-align: left; border-bottom: 1px solid var(--stroke-divider); white-space: nowrap; }
+.dk-attrs th { color: var(--text-2); font-weight: var(--fw-semibold); }
+.dk-attrs tr.is-failing td { color: var(--sys-critical); font-weight: var(--fw-semibold); }
+.dk-attrs td:nth-child(n+3) { text-align: right; }
+.dk-attrs th:nth-child(n+3) { text-align: right; }
+.dk-healthcard .fl-expander__inner { overflow-x: auto; }
+
+/* ---- dialogs ------------------------------------------------------------------ */
+.dk-dlg { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.dk-dlg__text { margin: 0; color: var(--text-1); }
+.dk-dlg__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.dk-dlg__fs { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.dk-fs-desc { color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); }
+.dk-dlg__grid .fl-field, .dk-dlg__grid .fl-textbox { min-width: 0; }
+.dk-dlg__grid .fl-dropdown { width: 100%; }
+.dk-dlg__pw { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-left: 28px; }
+.dk-dlg__pw[hidden] { display: none; }
+.dk-dlg__size { display: grid; grid-template-columns: 140px 1fr; gap: 16px; align-items: center; }
+.dk-dlg__size .fl-slider { margin-top: 18px; }
+.dk-dlg__error:empty { display: none; }
+.dk-dlg__progress { display: flex; flex-direction: column; gap: 8px; }
+.dk-dlg__progress[hidden] { display: none; }
+.dk-dlg__progress-text { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-confirm .fl-field__header { font-weight: var(--fw-semibold); }
+.dk-dlg .fl-infobar { margin: 0; }
+@media (max-width: 560px) {
+  .dk-dlg__grid, .dk-dlg__pw, .dk-dlg__size { grid-template-columns: 1fr; }
+}

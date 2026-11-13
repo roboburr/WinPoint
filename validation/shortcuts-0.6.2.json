@@ -1,0 +1,53 @@
+{
+  "checks": [
+    "Super handler installed after startup",
+    "task manager binding registered",
+    "default logout shortcut temporarily removed",
+    "sole Super invokes new Start without GNOME overview",
+    "second Super toggles same Start route",
+    "Super closes overview before invoking Start",
+    "sticky keys accessibility does not invoke Start",
+    "Super chord does not invoke Start",
+    "Ctrl Alt Delete opens standalone native Task Manager",
+    "Ctrl Alt Delete reactivates existing Task Manager",
+    "only Ctrl Alt Delete removed from edited logout shortcuts",
+    "disable restores exact custom logout shortcuts",
+    "running media daemon owns restored logout accelerator",
+    "disable restores GNOME Super overview",
+    "reenable takes Ctrl Alt Delete back from running media daemon",
+    "Ctrl Alt Delete still reaches Task Manager after daemon previously owned it",
+    "new user logout edit observed",
+    "disable preserves user logout edits made during takeover",
+    "original default restored as default, without explicit user override",
+    "crash recovery retains original default backup",
+    "lock disables shortcut bridge and restores logout shortcut",
+    "locked session cannot open Start",
+    "unlock reinstalls shortcut bridge",
+    "failed shortcut registration preserves original logout action"
+  ],
+  "private_home_xdg": true,
+  "gnome": "50.1",
+  "task_manager_pid": 1154449,
+  "gsd_media_keys_running": true,
+  "version": "0.6.2",
+  "integration_count": 24,
+  "uninstall_checks": [
+    "default",
+    "custom",
+    "user_changed"
+  ],
+  "uninstall_count": 3,
+  "count": 27,
+  "native_task_manager_binary_sha256": "f1b94cf2de7b76825836cc44ca81d6dbe1f941f24d2469bfc7f54adc02a09250",
+  "source_sha256": {
+    "extension/shortcutBridge.js": "f74c332856dc4914c8dab503c8ba29c65e176bbd6d98f86ee91c6070a4c25b18",
+    "extension/schemas/org.gnome.shell.extensions.win11-gnome.gschema.xml": "fd35f10b341d6d28392b771de4c105d5ba0adfa09ee8cbd3b9b66c90afa05946",
+    "scripts/install.py": "183242965d3dad4e812ff0b000c4e7a5664a49542db79629cc2b958482831a71",
+    "scripts/uninstall.py": "94736fe28da0dac026c770baa08ec6c036a0c3032f6cfcc2bebb3b442729735a"
+  },
+  "limits": [
+    "Super routing was exercised with real virtual keyboard input and an instrumented callback in a minimal extension; resident Start behavior has separate integration coverage.",
+    "No current user session or its shortcuts were changed by these private tests.",
+    "Compare-owned restore cannot distinguish a user intentionally choosing exactly the temporary owned value without a settings change."
+  ]
+}

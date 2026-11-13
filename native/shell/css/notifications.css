@@ -1,0 +1,214 @@
+/* Notification centre, calendar and toasts (vendor/ui/css/flyouts.css: NOTIFICATION CENTRE + CALENDAR, TOASTS).
+   Own tokens per theme (tokens.css values), scoped to the module's roots so the module looks right on its own. */
+.fo-nc-wrap, .fo-toasts {
+  --nc-text-1: rgba(255, 255, 255, 0.96);
+  --nc-text-2: rgba(255, 255, 255, 0.79);
+  --nc-text-3: rgba(255, 255, 255, 0.54);
+  --nc-surface: #2c2c2c;
+  --nc-surface-stroke: rgba(0, 0, 0, 0.2);
+  --nc-top: rgba(255, 255, 255, 0.08);
+  --nc-shadow: rgba(0, 0, 0, 0.26);
+  --nc-card: rgba(255, 255, 255, 0.0512);
+  --nc-card-stroke: rgba(0, 0, 0, 0.1);
+  --nc-control: rgba(255, 255, 255, 0.0605);
+  --nc-control-2: rgba(255, 255, 255, 0.0837);
+  --nc-control-3: rgba(255, 255, 255, 0.0326);
+  --nc-control-stroke: rgba(255, 255, 255, 0.0698);
+  --nc-control-top: rgba(255, 255, 255, 0.093);
+  --nc-control-bottom: rgba(255, 255, 255, 0.0698);
+  --nc-subtle-2: rgba(255, 255, 255, 0.0605);
+  --nc-subtle-3: rgba(255, 255, 255, 0.0419);
+  --nc-divider: rgba(255, 255, 255, 0.0837);
+  --nc-critical: #ff99a4;
+  --nc-on-accent: #ffffff;
+  --nc-tint: rgba(255, 255, 255, 0.1);
+  --nc-focus: #ffffff;
+  font-family: "Segoe UI Variable", "Segoe UI", "Inter", sans-serif;
+  font-size: 14px;
+  color: var(--nc-text-1);
+}
+window.w11-light .fo-nc-wrap, window.w11-light .fo-toasts {
+  --nc-text-1: rgba(0, 0, 0, 0.9);
+  --nc-text-2: rgba(0, 0, 0, 0.61);
+  --nc-text-3: rgba(0, 0, 0, 0.45);
+  --nc-surface: #fcfcfc;
+  --nc-surface-stroke: rgba(0, 0, 0, 0.0578);
+  --nc-top: rgba(255, 255, 255, 0.5);
+  --nc-shadow: rgba(0, 0, 0, 0.14);
+  --nc-card: rgba(255, 255, 255, 0.7);
+  --nc-card-stroke: rgba(0, 0, 0, 0.0578);
+  --nc-control: rgba(255, 255, 255, 0.7);
+  --nc-control-2: rgba(249, 249, 249, 0.5);
+  --nc-control-3: rgba(249, 249, 249, 0.3);
+  --nc-control-stroke: rgba(0, 0, 0, 0.0578);
+  --nc-control-top: rgba(0, 0, 0, 0.0578);
+  --nc-control-bottom: rgba(0, 0, 0, 0.1622);
+  --nc-subtle-2: rgba(0, 0, 0, 0.0373);
+  --nc-subtle-3: rgba(0, 0, 0, 0.0241);
+  --nc-divider: rgba(0, 0, 0, 0.0803);
+  --nc-critical: #c42b1c;
+  --nc-on-accent: #ffffff;
+  --nc-tint: rgba(0, 0, 0, 0.1);
+  --nc-focus: rgba(0, 0, 0, 0.9);
+}
+
+/* The host's frame stays bare: the flyout is two stacked cards with 12 px between them. */
+window.w11-panel-window > overlay > .w11-flyout.w11-flyout-notifications {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Text */
+.fo-nc-wrap .nc-body, .fo-toasts .nc-body { font-size: 14px; }
+.fo-nc-wrap .nc-caption, .fo-toasts .nc-caption { font-size: 12px; }
+.fo-nc-wrap .nc-strong, .fo-toasts .nc-strong { font-weight: 600; }
+.fo-nc-wrap .nc-text-2, .fo-toasts .nc-text-2 { color: var(--nc-text-2); }
+.fo-nc-wrap .nc-text-3, .fo-toasts .nc-text-3 { color: var(--nc-text-3); }
+
+/* Elevated surface (surface-flyout + fo-acrylic without blur: the solid colour) */
+.fo-nc-wrap .nc-surface, .fo-toasts .nc-surface {
+  background-color: var(--nc-surface);
+  border: 1px solid var(--nc-surface-stroke);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 var(--nc-top), 0 8px 16px var(--nc-shadow);
+}
+
+/* Buttons: plain base, then the Fluent kinds */
+.fo-nc-wrap button, .fo-toasts button {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: none;
+  text-shadow: none;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  color: var(--nc-text-1);
+  outline-color: var(--nc-focus);
+  transition: background-color 83ms linear, opacity 83ms linear;
+}
+.fo-nc-wrap .nc-iconbtn:hover, .fo-toasts .nc-iconbtn:hover { background-color: var(--nc-subtle-2); }
+.fo-nc-wrap .nc-iconbtn:active, .fo-toasts .nc-iconbtn:active { background-color: var(--nc-subtle-3); color: var(--nc-text-2); }
+.fo-nc-wrap .nc-btn, .fo-toasts .nc-btn {
+  min-height: 30px;
+  padding: 0 11px;
+  font-size: 14px;
+  background-color: var(--nc-control);
+  border: 1px solid var(--nc-control-stroke);
+  border-top-color: var(--nc-control-top);
+  border-bottom-color: var(--nc-control-bottom);
+}
+.fo-nc-wrap .nc-btn:hover, .fo-toasts .nc-btn:hover { background-color: var(--nc-control-2); }
+.fo-nc-wrap .nc-btn:active, .fo-toasts .nc-btn:active {
+  background-color: var(--nc-control-3);
+  color: var(--nc-text-2);
+  border-color: var(--nc-control-stroke);
+}
+.fo-nc-wrap .nc-btn.nc-btn-subtle { background-color: transparent; border-color: transparent; }
+.fo-nc-wrap .nc-btn.nc-btn-subtle:hover { background-color: var(--nc-subtle-2); }
+.fo-nc-wrap .nc-btn.nc-btn-subtle:active { background-color: var(--nc-subtle-3); color: var(--nc-text-2); }
+.fo-nc-wrap .nc-btn.nc-btn-small { min-height: 22px; padding: 0 10px; font-size: 12px; }
+
+/* Notification card */
+.fo-nc-header { min-height: 48px; padding: 4px 10px 0 16px; }
+.fo-nc-wrap .fo-nc-dnd.is-on { background-color: var(--accent); color: var(--nc-on-accent); }
+.fo-nc-wrap .fo-nc-dnd.is-on:hover { background-color: var(--accent); background-image: linear-gradient(var(--nc-tint), var(--nc-tint)); }
+.fo-nc-note {
+  margin: 0 12px 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: var(--nc-subtle-2);
+  color: var(--nc-text-2);
+}
+.fo-nc-scroll undershoot.top, .fo-nc-scroll undershoot.bottom { background: none; }
+.fo-nc-list { padding: 0 12px 12px; }
+.fo-nc-empty { padding: 14px 16px 30px; }
+.fo-nc-ghead { min-height: 28px; padding-left: 4px; }
+.fo-nc-gname { color: var(--nc-text-1); }
+.fo-nc-wrap .fo-nc-gclose { opacity: 0; }
+.fo-nc-wrap .fo-nc-group:hover .fo-nc-gclose, .fo-nc-wrap .fo-nc-gclose:focus-visible { opacity: 1; }
+
+.fo-notif {
+  border: 1px solid var(--nc-card-stroke);
+  border-radius: 8px;
+  background-color: var(--nc-card);
+  transition: background-color 83ms linear;
+}
+.fo-notif.is-clickable:hover { background-color: var(--nc-control-2); }
+.fo-notif.is-critical { box-shadow: inset 3px 0 0 var(--nc-critical); }
+.fo-notif:focus-visible { outline: 2px solid var(--nc-focus); outline-offset: -1px; }
+.fo-notif-inner { padding: 11px 12px 13px 15px; }
+.fo-notif-time { transition: opacity 83ms linear; }
+.fo-nc-wrap .fo-notif-close { opacity: 0; }
+.fo-nc-wrap .fo-notif:hover .fo-notif-close, .fo-nc-wrap .fo-notif:focus-within .fo-notif-close { opacity: 1; }
+.fo-notif:hover .fo-notif-time, .fo-notif:focus-within .fo-notif-time { opacity: 0; }
+.fo-notif-logo, .fo-toast-logo { border-radius: 4px; margin-top: 2px; }
+.fo-notif-logo.is-round, .fo-toast-logo.is-round { border-radius: 9999px; }
+.fo-notif-hero, .fo-toast-hero { border-radius: 4px; }
+
+/* Calendar */
+.fo-nc-wrap .fo-cal-header {
+  min-height: 47px;
+  padding: 0 10px 0 16px;
+  border: none;
+  border-bottom: 1px solid var(--nc-divider);
+  border-radius: 8px 8px 0 0;
+  background: none;
+}
+.fo-nc-wrap .fo-cal.is-collapsed .fo-cal-header { border-bottom-color: transparent; border-radius: 8px; }
+.fo-nc-wrap .fo-cal-header:focus-visible { outline: 2px solid var(--nc-focus); outline-offset: -2px; }
+.fo-cal-chev { border-radius: 4px; color: var(--nc-text-1); transition: background-color 83ms linear; }
+.fo-cal-header:hover .fo-cal-chev { background-color: var(--nc-subtle-2); }
+.fo-cal-header:active .fo-cal-chev { background-color: var(--nc-subtle-3); }
+.fo-cal-body { padding: 6px 12px 12px; }
+.fo-cal-monthrow { min-height: 44px; padding-left: 12px; }
+.fo-cal-weekdays { min-height: 40px; color: var(--nc-text-1); }
+.fo-nc-wrap .fo-cal-day {
+  border-radius: 9999px;
+  font-size: 14px;
+  font-feature-settings: "tnum";
+  color: var(--nc-text-1);
+}
+.fo-nc-wrap .fo-cal-day:hover { background-color: var(--nc-subtle-2); }
+.fo-nc-wrap .fo-cal-day:active { background-color: var(--nc-subtle-3); }
+.fo-nc-wrap .fo-cal-day.is-other { color: var(--nc-text-3); }
+.fo-nc-wrap .fo-cal-day.is-today { background-color: var(--accent); color: var(--nc-on-accent); font-weight: 600; }
+.fo-nc-wrap .fo-cal-day.is-today:hover { background-image: linear-gradient(var(--nc-tint), var(--nc-tint)); }
+.fo-nc-wrap .fo-cal-day.is-selected { box-shadow: inset 0 0 0 2px var(--accent); }
+.fo-nc-wrap .fo-cal-day.is-today.is-selected { box-shadow: inset 0 0 0 2px var(--accent), inset 0 0 0 4px var(--nc-on-accent); }
+.fo-nc-wrap .fo-cal-day:focus-visible { outline: 2px solid var(--nc-focus); outline-offset: 1px; }
+
+/* Toasts */
+.fo-toast { padding-bottom: 16px; }
+.fo-toasts .fo-toast.is-clickable:hover { background-image: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)); }
+.fo-toasts .fo-toast.is-critical {
+  box-shadow: inset 3px 0 0 var(--nc-critical), inset 0 1px 0 var(--nc-top), 0 8px 16px var(--nc-shadow);
+}
+.fo-toast-head { min-height: 34px; padding: 6px 6px 0 16px; }
+.fo-toasts .fo-toast-close { opacity: 0.85; }
+.fo-toasts .fo-toast:hover .fo-toast-close { opacity: 1; }
+.fo-toast-content { padding: 2px 16px 0; }
+.fo-toast-hero-slot { padding: 12px 16px 0; }
+.fo-toast-actions { padding: 14px 16px 0; }
+
+/* The Windows logo of the shell's own notifications */
+.fo-startlogo { background-color: #1a8ae6; border-radius: 1px; }
+
+/* Motion (notifcenter.js collapseOut / play, toasts.js present / close) */
+.nc-anim { transition: opacity 250ms ease-out, transform 250ms cubic-bezier(0, 0, 0, 1); }
+.nc-anim.is-entering { opacity: 0; transform: translateY(-8px); }
+.nc-anim.fo-toast-slot { transition: transform 333ms cubic-bezier(0, 0, 0, 1), opacity 250ms linear; }
+.nc-anim.fo-toast-slot.is-arriving { opacity: 0; transform: translateX(388px); }
+.nc-anim.is-leaving, .nc-anim.fo-toast-slot.is-leaving {
+  opacity: 0;
+  transform: translateX(48px);
+  transition: opacity 167ms cubic-bezier(0.7, 0, 1, 0.5), transform 167ms cubic-bezier(0.7, 0, 1, 0.5);
+}
+.nc-anim.is-leaving-far {
+  opacity: 0;
+  transform: translateX(64px);
+  transition: opacity 200ms cubic-bezier(0.7, 0, 1, 0.5), transform 200ms cubic-bezier(0.7, 0, 1, 0.5);
+}

@@ -1,0 +1,23 @@
+# tests/i18n/BASELINE-CHANGES.rust-r2b: R2-B (sysmon, storage, disks, index), round 2. Format: the header of
+# tests/i18n/BASELINE-CHANGES.rust (five tab-separated fields). Read by python3 -B tools/i18n/drift_rust.py.
+# Every line below is a technical literal removed by a refactor (no Dutch text changes: the Dutch output is
+# byte-identical for every value), unless its reason says otherwise.
+#
+# --- services/sysmon
+host/src/services/sysmon/actions.rs	185	0925141cd1d7571d	-	matcher on the Dutch message of check_own ("bestaat niet" picked the refusal code not_found): check_own now returns the reason (actions::Own) and Own::refusal picks the code, so the English message keeps not_found too; no Dutch change
+host/src/services/sysmon/actions.rs	196	dbd3a49d0d906b4e	-	`ctx.language() == "en"` around the own_names pair of restart_plan: now i18n::pick(lang, nl, en) (same halves); no Dutch change
+host/src/services/sysmon/process.rs	59	dbd3a49d0d906b4e	-	`lang == "en"` around the own_names pair of processes() (the app name of a Win11 window): now crate::i18n::pick(&lang, nl, en), as in restart_plan (same halves; review n2); no Dutch change
+host/src/services/sysmon/common.rs	17	dbd3a49d0d906b4e	-	unit_friendly's `if lang == "en" { return None; }`: D-G9, the unit friendly names now have English rows (sysmon.unit.*), so English shows them too instead of systemd's description; no Dutch change
+host/src/services/sysmon/common.rs	105	dbd3a49d0d906b4e	sysmon.duration.seconds	fmt_duration's `lang == "en"` (seconds): the inline pair is one row; no Dutch change
+host/src/services/sysmon/common.rs	108	dbd3a49d0d906b4e	sysmon.duration.minutes.one	fmt_duration's ("en", 1) arm: the pair is the plural row sysmon.duration.minutes (.one = 3b898e6's "1 minuut" / "1 minute"); no Dutch change
+host/src/services/sysmon/common.rs	110	dbd3a49d0d906b4e	sysmon.duration.minutes.other	fmt_duration's ("en", _) arm: sysmon.duration.minutes.other; no Dutch change
+host/src/services/sysmon/common.rs	115	dbd3a49d0d906b4e	sysmon.duration.hourUnit	fmt_duration's `lang == "en"` around the hour unit u/h: one row; no Dutch change
+host/src/services/sysmon/common.rs	20	adc9574a796648d9	-	the JSON table name _GSD_NL: text.json's Dutch-only table became _GSD, {nl, en} per part (the nl values are byte-identical and still frozen there), so English has part names (D-G9); no Dutch change
+host/src/services/sysmon/common.rs	26	dc8337f23d327a12	-	the JSON table name _GVFS_NL: now _GVFS with {nl, en} per part (nl byte-identical); no Dutch change
+# --- services/index
+host/src/services/index.rs	184	d03502c43d74a30b	-	size_label()'s `.replace('.', ",")`: now i18n::decimal(lang, …), so Dutch keeps "1,5 TB" ("1,5 TB-schijf"); 3b898e6 showed the Dutch location labels in both languages, so the English labels ("System drive", "1.5 TB Drive", with a decimal point) are new English; no Dutch change
+host/src/services/index.rs	185	bcf5735a1e73af9d	-	size_label()'s `ends_with(",0")`: the test now runs on the number before the separator is applied (".0"); Dutch output byte-identical ("2 TB", "1,5 TB")
+host/src/services/index/query.rs	1	5694d08a2e53ffca	-	the json key "code" of query::Error::json(): query::Error is now the API error itself (pub type Error = ApiError, C2), whose json() gives code, message, key and params; the worker protocol keeps code and message
+host/src/services/index/query.rs	2	ab530a13e4591498	-	the json key "message" of query::Error::json(), as the line above
+# --- services/disks
+key:disks.unavailableBody	-	-	Schijfbeheer werkt niet: UDisks is op deze computer niet beschikbaar.	no Dutch change: the Schijven body under its heading (disks.list error when UDisks is missing) shows 3b898e6's text byte for byte, now from a row of its own (nl copied from data.json _STR unavailable by script, host/src/services/disks/data.json#66 in rust-frozen-all.tsv) so that English can have a body that does not repeat its heading ("UDisks isn’t available on this computer."); the API error unavailable keeps _STR's text in both languages (pinned by the disks reference tests). '#@ new' because drift_rust.py cannot map a row to a literal that stays in place: a '#@ host/src/services/disks/data.json 66 …' line is an error ("data.json does not use this key", drift_rust.py:862) plus a warning ("literal is still present"); disks::tests pins nl to the data.json text (decision 2)

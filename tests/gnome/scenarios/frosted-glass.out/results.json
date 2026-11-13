@@ -1,0 +1,800 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-12 10:38:04",
+ "seconds": 110.4,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/fix-power-debug",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 35,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 1024577,
+   "rss_kb": 2550508,
+   "processes": 31,
+   "t": 16.4
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 920577,
+   "rss_kb": 2412644
+  },
+  "minMemAvailableKb": 5198116,
+  "abortedForMemory": false,
+  "peakByName": {
+   "WebKitWebProces": {
+    "count": 4,
+    "pss_kb": 281138,
+    "rss_kb": 859024
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 243814,
+    "rss_kb": 355832
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 103498,
+    "rss_kb": 133712
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 74081,
+    "rss_kb": 197156
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 70300,
+    "rss_kb": 193972
+   },
+   "win11-start": {
+    "count": 1,
+    "pss_kb": 68985,
+    "rss_kb": 194364
+   },
+   "win11-desktop": {
+    "count": 1,
+    "pss_kb": 65274,
+    "rss_kb": 188648
+   },
+   "WebKitNetworkPr": {
+    "count": 4,
+    "pss_kb": 53851,
+    "rss_kb": 237080
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 27370,
+    "rss_kb": 81172
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15516,
+    "rss_kb": 34124
+   },
+   "glycin-image-rs": {
+    "count": 4,
+    "pss_kb": 12782,
+    "rss_kb": 33744
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4127,
+    "rss_kb": 11564
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1678,
+    "rss_kb": 10184
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 857,
+    "rss_kb": 7956
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 804,
+    "rss_kb": 7824
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 309,
+    "rss_kb": 1536
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 193,
+    "rss_kb": 2616
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/fix-power-debug",
+  "exit": 0,
+  "seconds": 70.4,
+  "mutatingSyscallPaths": 87858,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-start": true,
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-desktop": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Desktop.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.Start.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "10:39:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:37\tpw-dump\t--monitor --no-colors",
+  "10:39:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:37\tpw-dump\t--monitor --no-colors",
+  "10:39:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:39\tpw-dump\t--monitor --no-colors",
+  "10:39:39\tpw-dump\t--monitor --no-colors",
+  "10:39:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:43\tpw-dump\t--monitor --no-colors",
+  "10:39:43\tpw-dump\t--monitor --no-colors",
+  "10:39:44\tpw-dump\t--monitor --no-colors",
+  "10:39:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:44\tapt\tlist --upgradable",
+  "10:39:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:46\tpw-dump\t--monitor --no-colors",
+  "10:39:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:50\tpw-dump\t--monitor --no-colors",
+  "10:39:51\tpw-dump\t--monitor --no-colors",
+  "10:39:51\tpw-dump\t--monitor --no-colors",
+  "10:39:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "10:39:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-cHwY3aB0"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 8,
+  "maxScanSeconds": 0.7,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-cHwY3aB0"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 1.52,
+    "args": {
+     "name": "a-taskbar"
+    },
+    "result": {
+     "png": "a-taskbar.png",
+     "area": [
+      0,
+      780,
+      1440,
+      120
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       120
+      ],
+      "distinctColours": 476,
+      "meanLevel": 43.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 2.92,
+    "args": {
+     "spec": "settings"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "9fc83f595ef7580d050200f6c0919bed",
+     "pid": 1399,
+     "page": "home",
+     "alive": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.93,
+    "args": {
+     "key": "E.configureOff"
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.74,
+    "args": {
+     "key": "E.configureOn"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.61,
+    "args": {
+     "name": "b-settings-focused"
+    },
+    "result": {
+     "png": "b-settings-focused.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1339,
+      "meanLevel": 41.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 7.63,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "7dc35342137543cfd7bf0d4b3de53c86",
+     "pid": null,
+     "page": null,
+     "alive": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 8.49,
+    "args": {
+     "name": "c-start-open"
+    },
+    "result": {
+     "png": "c-start-open.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1079,
+      "meanLevel": 36.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "close",
+    "t": 10.5,
+    "args": {
+     "name": "start"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.51,
+    "args": {
+     "key": "E.memory"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "A: one taskbar blur for the 48 px strip",
+    "ok": true,
+    "t": 0.8,
+    "entries": [
+     {
+      "kind": "taskbar",
+      "focused": false,
+      "rect": {
+       "x": 0,
+       "y": 852,
+       "w": 1440,
+       "h": 48
+      },
+      "blurRect": {
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 48
+      },
+      "effect": true,
+      "shadow": false,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "A: the panel page has the taskbar capability",
+    "ok": true,
+    "t": 0.85
+   },
+   {
+    "check": "A: the taskbar tint is 70 % (more see-through than the 90 % before)",
+    "ok": true,
+    "t": 0.96,
+    "bg": {
+     "color": "rgba(0, 0, 0, 0)",
+     "image": "linear-gradient(rgba(255, 255, 255, 0.075) 0px, rgba(255, 255, 255, 0.075) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(color(srgb 0.109804 0.109804 0.109804 / 0.7), color(srgb 0.109804 0.109804 0.109804 / 0.7))"
+    }
+   },
+   {
+    "check": "B: the focused Settings window has one blur",
+    "ok": true,
+    "t": 4.75,
+    "entries": [
+     {
+      "kind": "window",
+      "focused": true,
+      "rect": {
+       "x": 170,
+       "y": 56,
+       "w": 1100,
+       "h": 740
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 1094,
+       "h": 734
+      },
+      "effect": true,
+      "shadow": true,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "B: the unblurred rim is 3 px (corner on the 8 px arc)",
+    "ok": true,
+    "t": 4.75,
+    "rim": [
+     3,
+     3
+    ]
+   },
+   {
+    "check": "B: the window background is 80 %",
+    "ok": true,
+    "t": 4.9,
+    "bg": {
+     "color": "color(srgb 0.12549 0.12549 0.12549 / 0.8)",
+     "image": "none"
+    }
+   },
+   {
+    "check": "C: open Start has one blur",
+    "ok": true,
+    "t": 7.63,
+    "entries": [
+     {
+      "kind": "start",
+      "focused": true,
+      "rect": {
+       "x": 399,
+       "y": 114,
+       "w": 642,
+       "h": 726
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 636,
+       "h": 720
+      },
+      "effect": true,
+      "shadow": false,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "C: Settings lost its blur with the focus",
+    "ok": true,
+    "t": 7.63,
+    "entries": [
+     {
+      "kind": "window",
+      "focused": false,
+      "rect": {
+       "x": 170,
+       "y": 56,
+       "w": 1100,
+       "h": 740
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 1094,
+       "h": 734
+      },
+      "effect": false,
+      "shadow": true,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "C: one window blur in all (Start)",
+    "ok": true,
+    "t": 7.63,
+    "status": {
+     "experimental": true,
+     "enabled": true,
+     "options": {
+      "blur": true,
+      "windowBlur": true,
+      "shadows": true,
+      "taskbarAutoHide": false,
+      "radius": 14
+     },
+     "entries": [
+      {
+       "kind": "taskbar",
+       "focused": false,
+       "rect": {
+        "x": 0,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "blurRect": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true,
+       "shadow": false,
+       "reactive": false,
+       "clips": true
+      },
+      {
+       "kind": "window",
+       "focused": false,
+       "rect": {
+        "x": 170,
+        "y": 56,
+        "w": 1100,
+        "h": 740
+       },
+       "blurRect": {
+        "x": 3,
+        "y": 3,
+        "w": 1094,
+        "h": 734
+       },
+       "effect": false,
+       "shadow": true,
+       "reactive": false,
+       "clips": true
+      },
+      {
+       "kind": "start",
+       "focused": true,
+       "rect": {
+        "x": 399,
+        "y": 114,
+        "w": 642,
+        "h": 726
+       },
+       "blurRect": {
+        "x": 3,
+        "y": 3,
+        "w": 636,
+        "h": 720
+       },
+       "effect": true,
+       "shadow": false,
+       "reactive": false,
+       "clips": true
+      }
+     ]
+    }
+   },
+   {
+    "check": "C: the Start page has the Start capability",
+    "ok": true,
+    "t": 7.73
+   },
+   {
+    "check": "C: Start paints the Acrylic tint (0.72)",
+    "ok": true,
+    "t": 7.84,
+    "bg": {
+     "color": "rgba(0, 0, 0, 0)",
+     "image": "linear-gradient(rgba(32, 32, 32, 0.72), rgba(32, 32, 32, 0.72)), linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18))"
+    }
+   },
+   {
+    "check": "D: closing Start releases its blur",
+    "ok": true,
+    "t": 10.5
+   },
+   {
+    "check": "D: Settings has its blur again",
+    "ok": true,
+    "t": 10.51,
+    "entries": [
+     {
+      "kind": "window",
+      "focused": true,
+      "rect": {
+       "x": 170,
+       "y": 56,
+       "w": 1100,
+       "h": 740
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 1094,
+       "h": 734
+      },
+      "effect": true,
+      "shadow": true,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "E: the window blur costs gnome-shell less than 64 MiB PSS",
+    "ok": true,
+    "t": 10.51,
+    "withoutWindowBlurMiB": 229.2,
+    "settingsFocusedMiB": 233.0,
+    "startOpenMiB": 238.1,
+    "extraMiB": 8.900000000000006
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 10.51,
+    "failed": []
+   }
+  ],
+  "records": {
+   "E.configureOff": "{\"experimental\":true,\"enabled\":true,\"options\":{\"blur\":true,\"windowBlur\":false,\"shadows\":true,\"taskbarAutoHide\":false,\"radius\":14},\"entries\":[{\"kind\":\"taskbar\",\"focused\":false,\"rect\":{\"x\":0,\"y\":852,\"w\":1440,\"h\":48},\"blurRect\":{\"x\":0,\"y\":0,\"w\":1440,\"h\":48},\"effect\":true,\"shadow\":false,\"reactive\":false,\"clips\":true},{\"kind\":\"window\",\"focused\":true,\"rect\":{\"x\":170,\"y\":56,\"w\":1100,\"h\":740},\"blurRect\":{\"x\":3,\"y\":3,\"w\":1094,\"h\":734},\"effect\":false,\"shadow\":true,\"reactive\":false,\"clips\":true}]}",
+   "E.configureOn": "{\"experimental\":true,\"enabled\":true,\"options\":{\"blur\":true,\"windowBlur\":true,\"shadows\":true,\"taskbarAutoHide\":false,\"radius\":14},\"entries\":[{\"kind\":\"taskbar\",\"focused\":false,\"rect\":{\"x\":0,\"y\":852,\"w\":1440,\"h\":48},\"blurRect\":{\"x\":0,\"y\":0,\"w\":1440,\"h\":48},\"effect\":true,\"shadow\":false,\"reactive\":false,\"clips\":true},{\"kind\":\"window\",\"focused\":true,\"rect\":{\"x\":170,\"y\":56,\"w\":1100,\"h\":740},\"blurRect\":{\"x\":3,\"y\":3,\"w\":1094,\"h\":734},\"effect\":true,\"shadow\":true,\"reactive\":false,\"clips\":true}]}",
+   "E.memory": {
+    "withoutWindowBlurMiB": 229.2,
+    "settingsFocusedMiB": 233.0,
+    "startOpenMiB": 238.1,
+    "extraMiB": 8.900000000000006
+   }
+  },
+  "shots": [
+   "a-taskbar.png",
+   "b-settings-focused.png",
+   "c-start-open.png"
+  ],
+  "error": null,
+  "seconds": 10.51,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "33ae3d98cec8836b318e5673ce76e390",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "f875708b8d2cdf52bd999e6e428261f6",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "7dc35342137543cfd7bf0d4b3de53c86",
+    "pid": null,
+    "page": null,
+    "alive": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "9fc83f595ef7580d050200f6c0919bed",
+    "pid": 1399,
+    "page": "home",
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=7057451f8f81bffffd87b9a46af58957",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "windowIds": {
+    "panel": "33ae3d98cec8836b318e5673ce76e390",
+    "desktop": "f875708b8d2cdf52bd999e6e428261f6",
+    "start": "7dc35342137543cfd7bf0d4b3de53c86"
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "a-taskbar.png",
+    "group": "scenario",
+    "bytes": 96610,
+    "area": [
+     0,
+     780,
+     1440,
+     120
+    ]
+   },
+   {
+    "file": "b-settings-focused.png",
+    "group": "scenario",
+    "bytes": 664100,
+    "area": null
+   },
+   {
+    "file": "c-start-open.png",
+    "group": "scenario",
+    "bytes": 424060,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/frosted-glass.out/a-taskbar.png",
+  "tests/gnome/scenarios/frosted-glass.out/b-settings-focused.png",
+  "tests/gnome/scenarios/frosted-glass.out/c-start-open.png"
+ ]
+}

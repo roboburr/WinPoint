@@ -1,0 +1,87 @@
+# host/i18n/files_launch.tsv: host texts of the launch and open paths of files/actions.rs.
+# Owner: R2-C.
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/files/actions.rs
+# missing_app(): ApiError "not_found": an app id or .desktop path that is not installed (data.id)
+#@ host/src/files/actions.rs 6 5bba480b42e40289 plain
+files_launch.appNotFound	Deze app is niet gevonden. Misschien is hij verwijderd.	This app wasn’t found. It might have been uninstalled.
+# open_with(): ApiError "bad_args": files.openWith without an app
+#@ host/src/files/actions.rs 19 abeada8cc077731a plain
+files_launch.noApp	Kies een app.	Choose an app.
+# launch_file(): ApiError "no_app": files.open: no default app for the file type (data: the launcher’s error)
+#@ host/src/files/actions.rs 32 0d4246d0abff1144 plain
+files_launch.noAppForFile	Er is geen app geïnstalleerd die dit bestand kan openen.	There’s no app installed that can open this file.
+# launch_own(): ApiError "launch_failed": a Win11 app or an installed app did not start (data: the error)
+#@ host/src/files/actions.rs 48 673c964c77032b38 plain
+#@ host/src/files/actions.rs 55 673c964c77032b38 plain
+files_launch.appFailed	Deze app kon niet worden gestart.	This app couldn’t be started.
+# enter(): ApiError "bad_entry": a link shortcut nested more than 32 deep, or a .desktop file of a type other than Application or Link
+#@ host/src/files/actions.rs 57 6f6e49e3e54aa4a2 plain
+#@ host/src/files/actions.rs 117 6f6e49e3e54aa4a2 plain
+files_launch.cannotOpenShortcut	Deze snelkoppeling kan niet worden geopend.	This shortcut can’t be opened.
+# untrusted(): ApiError "untrusted": a .desktop file on a drive without Unix permissions (FAT, NTFS, network …)
+#@ host/src/files/actions.rs 101 b756a3e1db59f95a plain
+files_launch.untrustedDrive	Snelkoppelingen op deze schijf worden uit veiligheid niet gestart.	For your security, shortcuts on this drive can’t be started.
+# untrusted(): ApiError "untrusted": a .desktop file that is not marked trusted; “Allow launching” is the button of the UI’s question (bridge.js launchAllow)
+#@ host/src/files/actions.rs 102 39ce610edc27d8b6 plain
+files_launch.untrusted	Deze snelkoppeling wordt (nog) niet vertrouwd, dus starten is uit veiligheid geblokkeerd. Vertrouw je de bron? Kies dan ‘Starten toestaan’.	This shortcut isn’t trusted yet, so it was blocked for your security. If you trust its source, choose “Allow launching”.
+# launch_desktop_file(): ApiError "bad_entry": a .desktop file that is no key file with a [Desktop Entry] group
+#@ host/src/files/actions.rs 113 07f045c3c1e15e12 plain
+files_launch.damagedShortcut	Deze snelkoppeling is beschadigd.	This shortcut is damaged.
+# open_uri(): ApiError "bad_uri": an empty, too long or malformed URI
+#@ host/src/files/actions.rs 119 d298109c614160fe plain
+files_launch.cannotOpenLink	Deze link kan niet worden geopend.	This link can’t be opened.
+# open_uri(): ApiError "bad_uri": a scheme other than http, https, mailto or file (data.scheme)
+#@ host/src/files/actions.rs 125 259923aab23ef278 plain
+files_launch.unsupportedLink	Dit soort link kan niet worden geopend.	This kind of link can’t be opened.
+# open_uri(): ApiError "bad_uri": an http(s) link without a valid host
+#@ host/src/files/actions.rs 133 9cc87fb3a0fcd814 plain
+#@ host/src/files/actions.rs 135 9cc87fb3a0fcd814 plain
+#@ host/src/files/actions.rs 138 9cc87fb3a0fcd814 plain
+files_launch.invalidLink	Deze link is ongeldig.	This link isn’t valid.
+# open_uri(): ApiError "not_found": a file:// link to a file that is gone
+#@ host/src/files/actions.rs 141 31477d03472cb7ca plain
+files_launch.fileGone	Dit bestand bestaat niet (meer).	This file no longer exists.
+# open_uri(): ApiError "no_app": no default app for the link’s scheme (data: the launcher’s error)
+#@ host/src/files/actions.rs 146 aa23c5206c3b2adb plain
+files_launch.noAppForLink	Er is geen app om deze link te openen.	There’s no app to open this link.
+# trust_launcher(): ApiError "bad_args": files.trustLauncher on something that is no .desktop file
+#@ host/src/files/actions.rs 154 807f0ea3a0c2d0b7 plain
+#@ host/src/files/actions.rs 158 807f0ea3a0c2d0b7 plain
+files_launch.notShortcut	Dit is geen snelkoppeling.	This isn’t a shortcut.
+# trust_launcher(): ApiError "filesystem": files.trustLauncher for a .desktop file on a drive without Unix permissions
+#@ host/src/files/actions.rs 156 191d55af3c0210a8 plain
+files_launch.untrustedDriveTrust	Snelkoppelingen op deze schijf kunnen uit veiligheid niet worden gestart. Kopieer de snelkoppeling eerst naar je eigen map.	For your security, shortcuts on this drive can’t be started. Copy the shortcut to your own folder first.
+# trust_launcher(): ApiError "no_access": files.trustLauncher for a .desktop file of another user
+#@ host/src/files/actions.rs 160 84b758d913f5b709 plain
+files_launch.foreignShortcut	Deze snelkoppeling is van iemand anders en kan niet worden vertrouwd.	This shortcut belongs to someone else and can’t be trusted.
+# trust_launcher(): ApiError "failed": GIO could not set metadata::trusted (data: its error)
+#@ host/src/files/actions.rs 165 f65339822fb8bd57 plain
+files_launch.trustFailed	Vertrouwen instellen lukte niet.	Couldn’t mark this shortcut as trusted.
+# open_terminal(): ApiError "no_terminal"
+#@ host/src/files/actions.rs 216 4807bc1d6b2e7306 plain
+files_launch.noTerminal	Er is geen terminal-app geïnstalleerd.	No terminal app is installed.
+# open_terminal(): ApiError "no_terminal": the default terminal’s program is not on PATH
+#@ host/src/files/actions.rs 218 3fd53dcacfa1b355 plain
+files_launch.terminalNotFound	De terminal-app is niet gevonden.	The terminal app can’t be found.
+# open_terminal(): ApiError "launch_failed"
+#@ host/src/files/actions.rs 225 0173a3df3fbdbe61 plain
+files_launch.terminalFailed	De terminal kon niet worden gestart.	The terminal couldn’t be started.
+# launch_gio(): win11-launch is not next to this program (data of files_launch.noAppForFile and others)
+#@ host/src/files/actions.rs 232 2bc6bd5d0a5b8148 plain
+files_launch.launcherMissing	De zelfstandige appstarter ontbreekt. Installeer het volledige pakket opnieuw.	The standalone app launcher is missing. Reinstall the full package.
+# launch_gio(): win11-launch reported a failure without its own text (data)
+#@ host/src/files/actions.rs 240 ea5926d215ba9737 plain
+files_launch.launchFailed	De app kon niet worden gestart.	The app couldn’t be started.
+# launch_gio(): win11-launch did not answer within 12 s (data)
+#@ host/src/files/actions.rs 241 91724214c33cf07d plain
+files_launch.launcherNoReply	De zelfstandige appstarter reageerde niet.	The standalone app launcher didn’t respond.

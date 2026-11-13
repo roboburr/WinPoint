@@ -1,0 +1,247 @@
+{
+ "name": "update-details",
+ "group": "check",
+ "title": "Wat is er nieuw (update details)",
+ "description": "GetUpdateDetail with changelog, CVE and Launchpad bug URLs: without the supports-plural-signals=true hint three UpdateDetail signals, with it one UpdateDetails signal, and a single-package answer stays a singular UpdateDetail even with the hint (the XML allows both). GetDetails here includes download-size. NetworkManager is absent in this timeline (NO_AUTO_START Get -> NameHasNoOwner).",
+ "states": [
+  "R05"
+ ],
+ "nm": null,
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libsoup-3.0-0\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nlibsoup-3.0-0\tamd64\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
+  }
+ },
+ "packages": {
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "HTTP library implementation in C -- Shared library",
+   "size": 1257472,
+   "row": "soup",
+   "downloadSize": 336532
+  },
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit",
+   "downloadSize": 21734410
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other",
+   "downloadSize": 274808
+  }
+ },
+ "updates": [
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security",
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+ ],
+ "updateDetails": {
+  "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security": {
+   "updates": [
+    "libsoup-3.0-0;3.6.6-1ubuntu0.2;amd64;installed"
+   ],
+   "vendorUrls": [
+    "https://ubuntu.com/security/notices/USN-7999-1"
+   ],
+   "bugUrls": [],
+   "cveUrls": [
+    "https://www.cve.org/CVERecord?id=CVE-2026-2443",
+    "https://www.cve.org/CVERecord?id=CVE-2026-2784"
+   ],
+   "restart": "none",
+   "text": "Security fixes for libsoup.",
+   "changelog": "libsoup3 (3.6.6-1ubuntu0.3) resolute-security; urgency=medium\n\n  * SECURITY UPDATE: out-of-bounds read in multipart parsing\n    - CVE-2026-2443\n  * SECURITY UPDATE: header injection\n    - CVE-2026-2784\n",
+   "state": 1,
+   "issued": "2026-11-03T10:12:00Z",
+   "updated": ""
+  },
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "updates": [
+    "libwebkit2gtk-4.1-0;2.52.6-0ubuntu0.26.04.1;amd64;installed"
+   ],
+   "vendorUrls": [
+    "https://ubuntu.com/security/notices/USN-8001-1"
+   ],
+   "bugUrls": [
+    "https://launchpad.net/bugs/2131047"
+   ],
+   "cveUrls": [
+    "https://www.cve.org/CVERecord?id=CVE-2026-1101"
+   ],
+   "restart": "application",
+   "text": "New upstream stable release 2.52.7.",
+   "changelog": "webkit2gtk (2.52.7-0ubuntu0.26.04.1) resolute-security; urgency=medium\n\n  * New upstream release (LP: #2131047)\n",
+   "state": 1,
+   "issued": "2026-11-04T08:00:00Z",
+   "updated": ""
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "updates": [
+    "tzdata;2026a-0ubuntu0.26.04;all;installed"
+   ],
+   "bugUrls": [
+    "https://launchpad.net/bugs/2130555"
+   ],
+   "restart": "none",
+   "text": "New time zone data release 2026b.",
+   "changelog": "tzdata (2026b-0ubuntu0.26.04) resolute; urgency=medium\n\n  * New upstream release 2026b (LP: #2130555)\n",
+   "state": 1,
+   "issued": "2026-10-30T12:00:00Z",
+   "updated": ""
+  }
+ },
+ "methods": {
+  "GetUpdateDetail": {
+   "each": [
+    [
+     {
+      "props": {
+       "Status": "download-changelog"
+      }
+     },
+     {
+      "emitUpdateDetails": true
+     },
+     {
+      "finish": "success"
+     }
+    ],
+    [
+     {
+      "props": {
+       "Status": "download-changelog"
+      }
+     },
+     {
+      "emitUpdateDetails": true
+     },
+     {
+      "finish": "success"
+     }
+    ],
+    [
+     {
+      "props": {
+       "Status": "download-changelog"
+      }
+     },
+     {
+      "updateDetail": {
+       "id": "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security",
+       "updates": [
+        "libsoup-3.0-0;3.6.6-1ubuntu0.2;amd64;installed"
+       ],
+       "cveUrls": [
+        "https://www.cve.org/CVERecord?id=CVE-2026-2443",
+        "https://www.cve.org/CVERecord?id=CVE-2026-2784"
+       ],
+       "restart": "none",
+       "text": "Security fixes for libsoup.",
+       "state": 1,
+       "issued": "2026-11-03T10:12:00Z"
+      }
+     },
+     {
+      "finish": "success"
+     }
+    ]
+   ]
+  }
+ },
+ "client": [
+  {
+   "get": [
+    "nm",
+    "Connectivity"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "dbusError": "org.freedesktop.DBus.Error.NameHasNoOwner"
+   }
+  },
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 3
+   }
+  },
+  {
+   "tx": "GetUpdateDetail",
+   "args": [
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "count": {
+     "UpdateDetail": 3,
+     "UpdateDetails": 0
+    },
+    "updateDetails": 3,
+    "cves": 3,
+    "bugs": 2,
+    "changelogs": 3
+   }
+  },
+  {
+   "tx": "GetDetails",
+   "args": [
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "details": 3,
+    "downloadSize": true
+   }
+  },
+  {
+   "tx": "GetUpdateDetail",
+   "args": [
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success",
+    "count": {
+     "UpdateDetails": 1,
+     "UpdateDetail": 0
+    },
+    "updateDetails": 3,
+    "cves": 3,
+    "bugs": 2,
+    "changelogs": 3
+   },
+   "plural": true
+  },
+  {
+   "tx": "GetUpdateDetail",
+   "args": [
+    [
+     "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security"
+    ]
+   ],
+   "expect": {
+    "exit": "success",
+    "count": {
+     "UpdateDetail": 1,
+     "UpdateDetails": 0
+    },
+    "updateDetails": 1,
+    "cves": 2
+   },
+   "plural": true
+  }
+ ],
+ "expect": {
+  "callCount": 15
+ }
+}

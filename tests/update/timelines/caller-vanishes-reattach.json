@@ -1,0 +1,200 @@
+{
+ "name": "caller-vanishes-reattach",
+ "group": "reattach",
+ "title": "Settings closes mid-download, a new Settings reattaches",
+ "description": "Client A starts the install and disconnects at 40 %; the transaction keeps running (CallerActive false). Client B calls GetTransactionList with NO_AUTO_START, reads Role 22 and its own Uid, and follows the broadcast signals to Finished.",
+ "onVanish": "continue",
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
+  }
+ },
+ "packages": {
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Web content engine library for GTK",
+   "size": 90841088,
+   "row": "webkit"
+  },
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "JavaScript engine library from WebKitGTK",
+   "size": 31653888,
+   "row": "webkit"
+  },
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates": {
+   "info": "normal",
+   "summary": "time zone and daylight-saving time data",
+   "size": 1347584,
+   "row": "other"
+  }
+ },
+ "updates": [
+  "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+  "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+ ],
+ "methods": {
+  "UpdatePackages": [
+   {
+    "props": {
+     "Status": "download",
+     "AllowCancel": true,
+     "Percentage": 10
+    }
+   },
+   {
+    "package": [
+     "downloading",
+     "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "props": {
+     "Percentage": 40
+    },
+    "ms": 40
+   },
+   {
+    "until": "vanish"
+   },
+   {
+    "until": "call:GetTransactionList"
+   },
+   {
+    "props": {
+     "Percentage": 60
+    },
+    "ms": 300
+   },
+   {
+    "props": {
+     "Status": "commit",
+     "AllowCancel": false,
+     "Percentage": 70
+    }
+   },
+   {
+    "props": {
+     "Status": "update",
+     "Percentage": 90
+    }
+   },
+   {
+    "package": [
+     "finished",
+     "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "finished",
+     "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security"
+    ]
+   },
+   {
+    "package": [
+     "finished",
+     "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+    ]
+   },
+   {
+    "removeUpdates": [
+     "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+     "libjavascriptcoregtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security",
+     "tzdata;2026b-0ubuntu0.26.04;all;ubuntu-resolute-updates"
+    ]
+   },
+   {
+    "finish": "success"
+   }
+  ]
+ },
+ "client": [
+  {
+   "tx": "GetUpdates",
+   "args": [
+    "filter:none"
+   ],
+   "save": "updates",
+   "expect": {
+    "exit": "success",
+    "packages": 3
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:simulate|only-trusted",
+    "$updates"
+   ],
+   "expect": {
+    "exit": "success"
+   }
+  },
+  {
+   "tx": "UpdatePackages",
+   "args": [
+    "flags:only-trusted",
+    "$updates"
+   ],
+   "detachWhen": {
+    "PercentageMin": 40
+   }
+  },
+  {
+   "disconnect": "A"
+  },
+  {
+   "connect": "B"
+  },
+  {
+   "manager": "GetTransactionList",
+   "flags": "no-auto-start",
+   "save": "list",
+   "expect": {
+    "len": 1,
+    "contains": "$tid"
+   }
+  },
+  {
+   "getAll": "$tid",
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "Role": "update-packages",
+     "Uid": "$uid",
+     "CallerActive": false
+    }
+   }
+  },
+  {
+   "attach": "$tid",
+   "expect": {
+    "exit": "success",
+    "statuses": [
+     "commit",
+     "update"
+    ]
+   }
+  },
+  {
+   "observerExpect": {
+    "path": "$tid",
+    "generic": true,
+    "expect": {
+     "exit": "success",
+     "statuses": [
+      "download",
+      "commit",
+      "update"
+     ]
+    }
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 11
+ }
+}

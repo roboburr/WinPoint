@@ -1,0 +1,30 @@
+# GE0a dump runs, 2026-11-05T13:31:03+01:00, HEAD 7fc86a6d
+$ tests/i18n/run.sh --twice
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: two nl dumps identical (15956 lines, sha256 5db4b8f9b5c79303)
+exit 0 (26 s)
+$ tests/i18n/run.sh --twice --lang en
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: two en dumps identical (15952 lines, sha256 912ee8b75043deab)
+exit 0 (25 s)
+$ tests/i18n/run.sh 
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: nl dump equals baseline-nl.txt (15956 lines)
+exit 0 (13 s)
+$ tests/i18n/run.sh --lang en
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: en dump equals baseline-en.txt (15952 lines)
+exit 0 (12 s)
+$ (a copy of vendor/ui and tests/i18n with an extra first line in core/bridge.js and core/theme.js) tests/i18n/run.sh; tests/i18n/run.sh --lang en
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: nl dump equals baseline-nl.txt (15956 lines)
+exit 0
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: en dump equals baseline-en.txt (15952 lines)
+exit 0
+$ tests/i18n/run.sh   (after the private.sh work-dir hardening)
+run.sh: note: 139 of 139 frames without window.__i18n (core/i18n.js has no ?i18ncheck=1 before GE1a)
+run.sh: nl dump equals baseline-nl.txt (15956 lines)
+exit 0

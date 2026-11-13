@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Name=Calendar
+Name[nl]=Agenda
+GenericName=Calendar
+GenericName[nl]=Agenda
+Comment=Windows 11 style calendar for Win11 GNOME
+Comment[nl]=Agenda in Windows 11-stijl voor Win11 GNOME
+Icon=x-office-calendar
+Exec=win11-calendar %u
+TryExec=win11-calendar
+Terminal=false
+StartupNotify=true
+StartupWMClass=io.github.win11shell.Calendar
+Categories=Office;Calendar;Utility;
+Keywords=calendar;agenda;event;afspraak;
+MimeType=x-scheme-handler/win11-calendar;
+Actions=new-event;
+
+[Desktop Action new-event]
+Name=New event
+Name[nl]=Nieuwe gebeurtenis
+Exec=win11-calendar --new

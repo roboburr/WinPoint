@@ -1,0 +1,727 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 12:28:38",
+ "seconds": 115.2,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 53,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 858666,
+   "rss_kb": 1729112,
+   "processes": 24,
+   "t": 27.0
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 779992,
+   "rss_kb": 1614248
+  },
+  "minMemAvailableKb": 7017144,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 255108,
+    "rss_kb": 371168
+   },
+   "WebKitWebProces": {
+    "count": 2,
+    "pss_kb": 187770,
+    "rss_kb": 434664
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 79412,
+    "rss_kb": 117696
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 78233,
+    "rss_kb": 110692
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 68969,
+    "rss_kb": 182688
+   },
+   "win11-explorer": {
+    "count": 1,
+    "pss_kb": 66707,
+    "rss_kb": 181592
+   },
+   "glycin-svg": {
+    "count": 2,
+    "pss_kb": 31562,
+    "rss_kb": 56856
+   },
+   "WebKitNetworkPr": {
+    "count": 2,
+    "pss_kb": 30779,
+    "rss_kb": 116808
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 23944,
+    "rss_kb": 53160
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15700,
+    "rss_kb": 34160
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 13034,
+    "rss_kb": 27812
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4062,
+    "rss_kb": 11604
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1409,
+    "rss_kb": 10188
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 798,
+    "rss_kb": 8004
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 738,
+    "rss_kb": 7848
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 257,
+    "rss_kb": 1484
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 184,
+    "rss_kb": 2688
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 68.3,
+  "mutatingSyscallPaths": 87785,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "12:30:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:06\tpw-dump\t--monitor --no-colors",
+  "12:30:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:08\tpw-dump\t--monitor --no-colors",
+  "12:30:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:12\tpw-dump\t--monitor --no-colors",
+  "12:30:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:18\tpw-dump\t--monitor --no-colors",
+  "12:30:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:18\tapt\tlist --upgradable",
+  "12:30:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:20\tpw-dump\t--monitor --no-colors",
+  "12:30:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:20\tpw-dump\t--monitor --no-colors",
+  "12:30:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:24\tpw-dump\t--monitor --no-colors",
+  "12:30:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "12:30:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-Wf2YRA07"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 11,
+  "maxScanSeconds": 0.713,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-Wf2YRA07"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-apps.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "boot"
+    }
+   },
+   {
+    "step": "open",
+    "t": 6.76,
+    "args": {
+     "spec": "settings"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "f5b0fe32b78e4396e1eae96b2ab46550",
+     "pid": 1458,
+     "page": "home",
+     "alive": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 8.86,
+    "args": {
+     "key": "settings.captions"
+    }
+   },
+   {
+    "step": "record",
+    "t": 8.87,
+    "args": {
+     "key": "before"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.57,
+    "args": {
+     "name": "a-settings-before-drag"
+    },
+    "result": {
+     "png": "a-settings-before-drag.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1099,
+      "meanLevel": 38.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.22,
+    "args": {
+     "key": "drag"
+    }
+   },
+   {
+    "step": "record",
+    "t": 14.73,
+    "args": {
+     "key": "after"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 15.4,
+    "args": {
+     "name": "b-settings-after-drag"
+    },
+    "result": {
+     "png": "b-settings-after-drag.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1205,
+      "meanLevel": 39.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 16.52,
+    "args": {
+     "spec": "explorer"
+    },
+    "result": {
+     "name": "explorer",
+     "kind": "explorer",
+     "window": "e7484fe9a3c281176dd926124cce9d72",
+     "pid": 1658,
+     "page": null,
+     "alive": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 18.62,
+    "args": {
+     "key": "explorer.captions"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 19.24,
+    "args": {
+     "name": "c-explorer"
+    },
+    "result": {
+     "png": "c-explorer.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 646,
+      "meanLevel": 32.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 19.24,
+    "args": {
+     "key": "gtk.css"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "Settings shows its three caption buttons",
+    "ok": true,
+    "t": 8.86,
+    "caps": {
+     "visible": 3,
+     "innerWidth": 1100,
+     "innerHeight": 740
+    }
+   },
+   {
+    "check": "no own-window backdrop away from its window after the drag",
+    "ok": true,
+    "t": 15.4,
+    "stray": [],
+    "after": {
+     "window": {
+      "x": 266,
+      "y": 112,
+      "w": 1174,
+      "h": 740
+     },
+     "backdrops": [
+      {
+       "name": "win11-frosted-own-window",
+       "x": 266,
+       "y": 112,
+       "w": 1174,
+       "h": 740,
+       "visible": true,
+       "constraints": 2,
+       "style": "background-color: rgba(28,28,28,0.01); border-radius: 8px; box-shadow: 0 8px 26p"
+      },
+      {
+       "name": "win11-frosted-taskbar",
+       "x": 0,
+       "y": 852,
+       "w": 1440,
+       "h": 48,
+       "visible": true,
+       "constraints": 0,
+       "style": "background-color: rgba(28,28,28,0.01); border-radius: 0px; box-shadow: none;"
+      }
+     ]
+    }
+   },
+   {
+    "check": "the drag moved Settings",
+    "ok": true,
+    "t": 15.4,
+    "real": {
+     "moved": {
+      "dx": 96,
+      "dy": 56
+     },
+     "resized": {
+      "dw": 74
+     },
+     "frame": {
+      "w": 1174,
+      "h": 740
+     },
+     "buffer": {
+      "w": 1174,
+      "h": 740
+     },
+     "actor": {
+      "w": 1174,
+      "h": 740
+     }
+    }
+   },
+   {
+    "check": "Explorer shows its three caption buttons",
+    "ok": true,
+    "t": 18.62,
+    "caps": {
+     "visible": 3,
+     "innerWidth": 1120,
+     "innerHeight": 720
+    }
+   },
+   {
+    "check": "GTK 3 apps import the Windows 11 caption buttons",
+    "ok": true,
+    "t": 19.24,
+    "tail": "Win11 Shell (uitzetten: Instellingen > Persoonlijke instellingen > Kleuren). Niet wijzigen. */\n@import url(\"file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/config/gtk/caption-buttons-gtk3.css\");\n/* <<< win11shell caption-buttons <<< */\n"
+   },
+   {
+    "check": "GTK 4 apps import the Windows 11 caption buttons",
+    "ok": true,
+    "t": 19.24,
+    "tail": "Win11 Shell (uitzetten: Instellingen > Persoonlijke instellingen > Kleuren). Niet wijzigen. */\n@import url(\"file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/config/gtk/caption-buttons-gtk4.css\");\n/* <<< win11shell caption-buttons <<< */\n"
+   }
+  ],
+  "records": {
+   "boot": {
+    "kind": "native-shell",
+    "pid": 391,
+    "tag": "boot"
+   },
+   "settings.captions": {
+    "visible": 3,
+    "innerWidth": 1100,
+    "innerHeight": 740
+   },
+   "before": {
+    "window": {
+     "x": 170,
+     "y": 56,
+     "w": 1100,
+     "h": 740
+    },
+    "backdrops": [
+     {
+      "name": "win11-frosted-own-window",
+      "x": 170,
+      "y": 56,
+      "w": 1100,
+      "h": 740,
+      "visible": true,
+      "constraints": 2,
+      "style": "background-color: rgba(28,28,28,0.01); border-radius: 8px; box-shadow: 0 8px 26p"
+     },
+     {
+      "name": "win11-frosted-taskbar",
+      "x": 0,
+      "y": 852,
+      "w": 1440,
+      "h": 48,
+      "visible": true,
+      "constraints": 0,
+      "style": "background-color: rgba(28,28,28,0.01); border-radius: 0px; box-shadow: none;"
+     }
+    ]
+   },
+   "drag": {
+    "moved": {
+     "dx": 96,
+     "dy": 56
+    },
+    "resized": {
+     "dw": 74
+    },
+    "frame": {
+     "w": 1174,
+     "h": 740
+    },
+    "buffer": {
+     "w": 1174,
+     "h": 740
+    },
+    "actor": {
+     "w": 1174,
+     "h": 740
+    }
+   },
+   "after": {
+    "window": {
+     "x": 266,
+     "y": 112,
+     "w": 1174,
+     "h": 740
+    },
+    "backdrops": [
+     {
+      "name": "win11-frosted-own-window",
+      "x": 266,
+      "y": 112,
+      "w": 1174,
+      "h": 740,
+      "visible": true,
+      "constraints": 2,
+      "style": "background-color: rgba(28,28,28,0.01); border-radius: 8px; box-shadow: 0 8px 26p"
+     },
+     {
+      "name": "win11-frosted-taskbar",
+      "x": 0,
+      "y": 852,
+      "w": 1440,
+      "h": 48,
+      "visible": true,
+      "constraints": 0,
+      "style": "background-color: rgba(28,28,28,0.01); border-radius: 0px; box-shadow: none;"
+     }
+    ]
+   },
+   "explorer.captions": {
+    "visible": 3,
+    "innerWidth": 1120,
+    "innerHeight": 720
+   },
+   "gtk.css": {
+    "3": "/* >>> win11shell caption-buttons >>> Windows 11-vensterknoppen, beheerd door Win11 Shell (uitzetten: Instellingen > Persoonlijke instellingen > Kleuren). Niet wijzigen. */\n@import url(\"file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/config/gtk/caption-buttons-gtk3.css\");\n/* <<< win11shell caption-buttons <<< */\n",
+    "4": "/* >>> win11shell caption-buttons >>> Windows 11-vensterknoppen, beheerd door Win11 Shell (uitzetten: Instellingen > Persoonlijke instellingen > Kleuren). Niet wijzigen. */\n@import url(\"file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/config/gtk/caption-buttons-gtk4.css\");\n/* <<< win11shell caption-buttons <<< */\n"
+   }
+  },
+  "shots": [
+   "a-settings-before-drag.png",
+   "b-settings-after-drag.png",
+   "c-explorer.png"
+  ],
+  "error": null,
+  "seconds": 19.24,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 391,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 391,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 391,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "f5b0fe32b78e4396e1eae96b2ab46550",
+    "pid": 1458,
+    "page": "home",
+    "alive": true
+   },
+   "explorer": {
+    "name": "explorer",
+    "kind": "explorer",
+    "window": "e7484fe9a3c281176dd926124cce9d72",
+    "pid": 1658,
+    "page": null,
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=57c4f5317681a15a195ebc456af6f4bd",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 391,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 391
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "a-settings-before-drag.png",
+    "group": "scenario",
+    "bytes": 570371,
+    "area": null
+   },
+   {
+    "file": "b-settings-after-drag.png",
+    "group": "scenario",
+    "bytes": 551595,
+    "area": null
+   },
+   {
+    "file": "c-explorer.png",
+    "group": "scenario",
+    "bytes": 289743,
+    "area": null
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "explorer",
+    "source": "Win11 Verkenner",
+    "title": "Win11 Verkenner",
+    "body": "“Verkenner” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/native-apps.gtk4/a-settings-before-drag.png",
+  "tests/gnome/scenarios/native-apps.gtk4/b-settings-after-drag.png",
+  "tests/gnome/scenarios/native-apps.gtk4/c-explorer.png"
+ ]
+}

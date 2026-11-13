@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-01",
+  "version": "0.6.0",
+  "isolated": true,
+  "private_configs": 2,
+  "native_methods": [
+    "apps.forFile",
+    "apps.defaults",
+    "apps.setDefault"
+  ],
+  "native_response_header": "X-Win11-Service: rust-apps",
+  "python_differential": true,
+  "python_equivalents_trapped": true,
+  "mock_apps_only": true,
+  "user_associations_untouched": true,
+  "cases": [
+    {
+      "case": "defaults-and-candidates-full-reference-parity-private-xdg",
+      "passed": true
+    },
+    {
+      "case": "open-with-menu-reference-default-first-directory-own-explorer-and-icons",
+      "passed": true
+    },
+    {
+      "case": "forfile-and-setdefault-errors-match-reference",
+      "passed": true
+    },
+    {
+      "case": "text-default-gio-handler-and-secondary-skips-reference-parity",
+      "passed": true
+    },
+    {
+      "case": "hidden-default-shown-for-file-without-adding-hidden-candidate",
+      "passed": true
+    },
+    {
+      "case": "files-default-clears-old-explorer-secondary-default-and-association",
+      "passed": true
+    },
+    {
+      "case": "own-explorer-alias-and-independent-native-id-actual-gio-directory-handler",
+      "passed": true
+    },
+    {
+      "case": "image-secondary-skip-and-browser-all-types-reference-parity",
+      "passed": true
+    },
+    {
+      "case": "desktop-specific-override-reports-effective-current-and-path",
+      "passed": true
+    },
+    {
+      "case": "terminal-default-atomic-config-comments-mode-and-native-open-terminal",
+      "passed": true
+    },
+    {
+      "case": "two-host-concurrent-terminal-writes-preserve-all-preferences",
+      "passed": true,
+      "requests": 6
+    },
+    {
+      "case": "all-three-default-methods-work-with-python-equivalents-trapped",
+      "passed": true
+    }
+  ],
+  "cross_process_terminal_requests": 6,
+  "separate_native_python_configurations": true,
+  "reference_mode": "private Python serve --no-gtk",
+  "native_implementation": "Rust/GIO",
+  "private_lock_serializes_native_writers": true,
+  "physical_dialog_input_tested": false,
+  "full_visual_identity_proven": false,
+  "limitations": [
+    "Recorder fixtures only; no real user applications or personal associations modified.",
+    "No complete distro/Flatpak/Snap/remote-app or filesystem coverage.",
+    "No full physical-input or visual regression sweep.",
+    "Two native hosts share one private profile; a separate Python server owns the reference profile.",
+    "External desktop writers do not use the native lockfile.",
+    "Rare terminal IO/UTF8 internal errors omit the legacy technical detail envelope field."
+  ]
+}

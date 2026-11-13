@@ -1,0 +1,333 @@
+/* Start (startmenu.js, search.js; shell.css .sh-start*, .sh-tile, .sh-rec*, .sh-allapps*, .sh-sbox, .sh-sr*;
+   native-backdrop.css). The window is exactly the menu: transparent, the panel inside carries the glass. With the
+   extension's blur the tint is 90 % (D-G60), without it the solid Acrylic fallback. */
+
+window.w11-start-window {
+  background: transparent;
+  box-shadow: none;
+  --st-solid: #242424;
+  --st-glass: rgba(32, 32, 32, 0.90);
+  --st-stroke: rgba(0, 0, 0, 0.36);
+  --st-top: rgba(255, 255, 255, 0.08);
+  --st-footer: rgba(0, 0, 0, 0.14);
+  --st-footer-stroke: rgba(255, 255, 255, 0.045);
+  --st-sbox: rgba(255, 255, 255, 0.045);
+  --st-sbox-hover: rgba(255, 255, 255, 0.07);
+  --st-sbox-focus: rgba(28, 28, 28, 0.72);
+  --st-sbox-stroke: rgba(255, 255, 255, 0.075);
+  --st-card: rgba(255, 255, 255, 0.04);
+  --st-card-stroke: rgba(255, 255, 255, 0.055);
+  --st-row-sel: rgba(255, 255, 255, 0.07);
+  --st-row-hover: rgba(255, 255, 255, 0.045);
+  --st-fill: rgba(255, 255, 255, 0.0605);
+  --st-fill-2: rgba(255, 255, 255, 0.0837);
+  --st-fill-3: rgba(255, 255, 255, 0.0326);
+  --st-fill-subtle: rgba(255, 255, 255, 0.0605);
+  --st-fill-alt: rgba(255, 255, 255, 0.0698);
+  --st-control-stroke: rgba(255, 255, 255, 0.0698);
+  --st-control-bottom: rgba(255, 255, 255, 0.0698);
+  --st-divider: rgba(255, 255, 255, 0.0837);
+  --st-disabled: rgba(255, 255, 255, 0.3628);
+  --st-avatar: #4a4a4a;
+  --st-menu: #2c2c2c;
+  --st-menu-stroke: rgba(0, 0, 0, 0.2);
+  --st-accent-fg: color-mix(in srgb, var(--accent) 45%, white);
+  --st-accent-subtle: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+window.w11-start-window.w11-light {
+  --st-solid: #f3f3f3;
+  --st-glass: rgba(243, 243, 243, 0.90);
+  --st-stroke: rgba(0, 0, 0, 0.1);
+  --st-top: rgba(255, 255, 255, 0.5);
+  --st-footer: rgba(0, 0, 0, 0.032);
+  --st-footer-stroke: rgba(0, 0, 0, 0.06);
+  --st-sbox: rgba(255, 255, 255, 0.72);
+  --st-sbox-hover: rgba(255, 255, 255, 0.9);
+  --st-sbox-focus: #ffffff;
+  --st-sbox-stroke: rgba(0, 0, 0, 0.07);
+  --st-card: rgba(255, 255, 255, 0.55);
+  --st-card-stroke: rgba(0, 0, 0, 0.055);
+  --st-row-sel: rgba(0, 0, 0, 0.05);
+  --st-row-hover: rgba(0, 0, 0, 0.032);
+  --st-fill: rgba(255, 255, 255, 0.7);
+  --st-fill-2: rgba(249, 249, 249, 0.5);
+  --st-fill-3: rgba(249, 249, 249, 0.3);
+  --st-fill-subtle: rgba(0, 0, 0, 0.0373);
+  --st-fill-alt: rgba(0, 0, 0, 0.0924);
+  --st-control-stroke: rgba(0, 0, 0, 0.0578);
+  --st-control-bottom: rgba(0, 0, 0, 0.1622);
+  --st-divider: rgba(0, 0, 0, 0.0803);
+  --st-disabled: rgba(0, 0, 0, 0.3614);
+  --st-avatar: #d9d9d9;
+  --st-menu: #f9f9f9;
+  --st-menu-stroke: rgba(0, 0, 0, 0.0578);
+  --st-accent-fg: color-mix(in srgb, var(--accent) 60%, black);
+  --st-accent-subtle: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* every button in Start starts flat; the rules below give each kind its look */
+.w11-start-window button {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  font-weight: normal;
+  transition: background-color 83ms linear, border-color 83ms linear;
+}
+.w11-start-window button:focus-visible { outline: 2px solid var(--text-1); outline-offset: -2px; }
+.w11-start-window button:disabled { color: var(--st-disabled); }
+.w11-start-window button:disabled label { color: var(--st-disabled); }
+.w11-start-window .w11-glyph { color: inherit; }
+
+/* ---- the panel (sh-start sh-acrylic) ------------------------------------- */
+.w11-start-window .w11-start {
+  background-color: var(--st-solid);
+  border: 1px solid var(--st-stroke);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 var(--st-top);
+  color: var(--text-1);
+  font-size: 14px;
+}
+.w11-start-window .w11-start.w11-glass { background-color: var(--st-glass); }
+.w11-start-window .w11-start.w11-accent-surface {
+  background-color: color-mix(in srgb, color-mix(in srgb, var(--accent) 50%, black) 40%, rgb(28, 28, 28));
+}
+.w11-start-window .w11-start.w11-accent-surface.w11-glass {
+  background-color: color-mix(in srgb, color-mix(in srgb, color-mix(in srgb, var(--accent) 50%, black) 40%, rgb(24, 24, 24)) 90%, transparent);
+}
+.w11-start-window .w11-start.w11-hc { background-color: var(--st-solid); }
+
+/* ---- search box ----------------------------------------------------------- */
+.w11-start-window .w11-start-top { padding: 32px 32px 0; }
+.w11-start-window .w11-sbox {
+  min-height: 34px;
+  padding: 0 6px 0 16px;
+  border: 1px solid var(--st-sbox-stroke);
+  border-radius: 18px;
+  background-color: var(--st-sbox);
+  transition: background-color 83ms linear;
+}
+.w11-start-window .w11-sbox:hover { background-color: var(--st-sbox-hover); }
+.w11-start-window .w11-sbox:focus-within { background-color: var(--st-sbox-focus); }
+.w11-start-window .w11-sbox-icon { color: var(--text-2); }
+.w11-start-window text.w11-sbox-input {
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  color: var(--text-1);
+  caret-color: var(--text-1);
+  font-size: 14px;
+}
+.w11-start-window text.w11-sbox-input > placeholder { color: var(--text-2); opacity: 1; }
+.w11-start-window text.w11-sbox-input selection { background-color: var(--accent); color: #ffffff; }
+.w11-start-window .w11-sbox-clear { min-width: 26px; min-height: 26px; border-radius: 13px; border: none; color: var(--text-2); }
+.w11-start-window .w11-sbox-clear:hover { background-color: var(--st-fill-subtle); color: var(--text-1); }
+
+/* ---- heads and pill buttons ------------------------------------------------ */
+.w11-start-window .w11-start-home,
+.w11-start-window .w11-start-all,
+.w11-start-window .w11-start-recmore { padding-top: 26px; }
+.w11-start-window .w11-start-head { min-height: 28px; padding: 0 52px; }
+.w11-start-window .w11-start-title { font-size: 14px; font-weight: 600; }
+.w11-start-window .w11-pillbtn {
+  min-height: 22px;
+  padding: 0 8px 0 10px;
+  border: 1px solid var(--st-control-stroke);
+  border-bottom-color: var(--st-control-bottom);
+  border-radius: 4px;
+  background-color: var(--st-fill);
+  font-size: 12px;
+}
+.w11-start-window .w11-pillbtn.is-back { padding: 0 10px 0 8px; }
+.w11-start-window .w11-pillbtn:hover { background-color: var(--st-fill-2); }
+.w11-start-window .w11-pillbtn:active { background-color: var(--st-fill-3); color: var(--text-2); }
+
+/* ---- pinned grid ------------------------------------------------------------ */
+.w11-start-window .w11-pinned { margin-top: 12px; padding: 0 32px; }
+.w11-start-window .w11-tile { padding: 15px 6px 0; }
+.w11-start-window .w11-tile:hover { background-color: var(--st-row-sel); border-color: var(--st-card-stroke); }
+.w11-start-window .w11-tile:active { background-color: var(--st-row-hover); }
+.w11-start-window .w11-tile:active .w11-tile-icon { -gtk-icon-transform: scale(0.88); }
+.w11-start-window .w11-tile-label { font-size: 12px; }
+.w11-start-window .w11-tile.is-dragging { opacity: 0.4; }
+.w11-start-window .w11-tile:drop(active) { background-color: var(--st-accent-subtle); border-color: var(--accent); }
+.w11-start-window .w11-pinned-empty { padding: 24px 20px; color: var(--text-2); font-size: 12px; }
+.w11-start-window .w11-dot { min-width: 12px; min-height: 12px; border: none; border-radius: 6px; }
+.w11-start-window .w11-dot-mark {
+  min-width: 4px;
+  min-height: 4px;
+  border-radius: 2px;
+  background-color: var(--text-3);
+  transition: background-color 167ms linear;
+}
+.w11-start-window .w11-dot:hover .w11-dot-mark { background-color: var(--text-2); }
+.w11-start-window .w11-dot.is-active .w11-dot-mark { min-width: 6px; min-height: 6px; border-radius: 3px; background-color: var(--text-1); }
+
+/* ---- recommended ------------------------------------------------------------ */
+.w11-start-window .w11-start-rec { margin-top: 22px; }
+.w11-start-window .w11-rec-grid { margin-top: 8px; padding: 0 40px; }
+.w11-start-window .w11-rec-grid.is-all { margin-top: 0; padding-bottom: 16px; }
+.w11-start-window .w11-rec { min-height: 54px; padding: 0 12px; }
+.w11-start-window .w11-rec:hover { background-color: var(--st-row-sel); border-color: var(--st-card-stroke); }
+.w11-start-window .w11-rec:active { background-color: var(--st-row-hover); }
+.w11-start-window .w11-rec-title, .w11-start-window .w11-rec-sub { font-size: 12px; }
+.w11-start-window .w11-rec-sub { color: var(--text-2); }
+.w11-start-window .w11-rec-empty { padding: 8px 40px; color: var(--text-2); font-size: 12px; }
+.w11-start-window .w11-linkbtn { border: none; color: var(--st-accent-fg); font-size: 12px; }
+.w11-start-window .w11-linkbtn label { color: var(--st-accent-fg); }
+.w11-start-window .w11-linkbtn:hover label { text-decoration-line: underline; }
+.w11-start-window .w11-recmore-scroll { margin-top: 8px; }
+
+/* ---- all apps ----------------------------------------------------------------- */
+.w11-start-window .w11-allapps-wrap { margin-top: 10px; }
+.w11-start-window .w11-allapps-list { padding: 0 28px 16px 40px; }
+.w11-start-window .w11-allapps { transition: opacity 167ms linear; }
+.w11-start-window .w11-allapps.is-dimmed { opacity: 0; }
+.w11-start-window .w11-letter { min-width: 34px; min-height: 30px; margin-top: 6px; padding: 0 12px; font-size: 14px; font-weight: 600; }
+.w11-start-window .w11-letter label { font-weight: 600; }
+.w11-start-window .w11-allapp { min-height: 38px; padding: 0 12px; font-size: 12px; }
+.w11-start-window .w11-letter:hover,
+.w11-start-window .w11-allapp:hover { background-color: var(--st-row-sel); border-color: var(--st-card-stroke); }
+.w11-start-window .w11-letter:active,
+.w11-start-window .w11-allapp:active { background-color: var(--st-row-hover); }
+.w11-start-window .w11-letters-btn { font-size: 18px; font-weight: 600; }
+.w11-start-window .w11-letters-btn label { font-weight: 600; }
+.w11-start-window .w11-letters-btn:hover { background-color: var(--st-row-sel); }
+
+/* ---- footer ------------------------------------------------------------------- */
+.w11-start-window .w11-start-footer {
+  min-height: 63px;
+  padding: 0 40px;
+  border-top: 1px solid var(--st-footer-stroke);
+  background-color: var(--st-footer);
+}
+.w11-start-window .w11-start-user { min-height: 38px; padding: 0 12px; font-size: 12px; }
+.w11-start-window .w11-footbtn { min-width: 38px; min-height: 38px; }
+.w11-start-window .w11-start-user:hover,
+.w11-start-window .w11-footbtn:hover { background-color: var(--st-row-sel); border-color: var(--st-card-stroke); }
+.w11-start-window .w11-start-user:active,
+.w11-start-window .w11-footbtn:active { background-color: var(--st-row-hover); }
+.w11-start-window .w11-footbtn:active .w11-glyph { -gtk-icon-transform: scale(0.88); }
+.w11-start-window .w11-avatar { border-radius: 9999px; background-color: var(--st-avatar); }
+.w11-start-window .w11-avatar-initials { font-size: 13px; font-weight: 600; color: var(--text-1); }
+
+/* ---- search view (embedded search.js panel) ----------------------------------- */
+.w11-start-window .w11-search-tabs { padding: 12px 28px 0; }
+.w11-start-window .w11-tab { min-height: 32px; padding: 0 12px; border: none; color: var(--text-2); font-size: 14px; }
+.w11-start-window .w11-tab label { color: var(--text-2); }
+.w11-start-window .w11-tab:hover { background-color: var(--st-row-hover); }
+.w11-start-window .w11-tab:hover label { color: var(--text-1); }
+.w11-start-window .w11-tab.is-active label { color: var(--text-1); font-weight: 600; }
+.w11-start-window .w11-tab-ind { margin-bottom: 1px; border-radius: 2px; background-color: transparent; }
+.w11-start-window .w11-tab.is-active .w11-tab-ind { background-color: var(--accent); }
+.w11-start-window .w11-search-content { padding: 8px 24px 24px; }
+.w11-start-window .w11-sr-list { padding: 0 4px 8px 0; }
+.w11-start-window .w11-sr-head { padding: 10px 12px 6px; font-size: 14px; font-weight: 600; }
+.w11-start-window .w11-sr-head.is-first { padding-top: 4px; }
+.w11-start-window .w11-sr-row { min-height: 40px; padding: 4px 12px 4px 0; border-radius: 4px; }
+.w11-start-window .w11-sr-row:hover { background-color: var(--st-row-hover); }
+.w11-start-window .w11-sr-row.is-selected { background-color: var(--st-row-sel); }
+.w11-start-window .w11-sr-ind { border-radius: 2px; background-color: transparent; }
+.w11-start-window .w11-sr-row.is-selected .w11-sr-ind { background-color: var(--accent); }
+.w11-start-window .w11-sr-row.is-best { min-height: 64px; }
+.w11-start-window .w11-sr-row.is-alles { margin-top: 8px; }
+.w11-start-window .w11-sr-title { font-size: 14px; }
+.w11-start-window .w11-sr-row.is-best .w11-sr-title { font-weight: 600; }
+.w11-start-window .w11-sr-sub { color: var(--text-2); font-size: 12px; }
+.w11-start-window .w11-sr-chev { color: var(--text-2); }
+.w11-start-window .w11-sr-loading { padding: 8px 12px; color: var(--text-2); font-size: 12px; }
+.w11-start-window .w11-sr-empty { padding: 16px 12px 8px; }
+.w11-start-window .w11-sr-empty-title { font-weight: 600; }
+.w11-start-window .w11-sr-empty-hint { margin-top: 4px; color: var(--text-2); font-size: 12px; }
+.w11-start-window .w11-glyph-tile { border-radius: 22%; background-color: var(--st-fill-alt); color: var(--text-1); }
+.w11-start-window .w11-glyph-tile.is-setting { background-color: var(--accent); color: #ffffff; }
+.w11-start-window .w11-glyph-tile.is-action { background-color: var(--st-accent-subtle); color: var(--st-accent-fg); }
+.w11-start-window .w11-glyph-tile.is-web { background-image: linear-gradient(135deg, #4cc2ff, #0067c0); color: #ffffff; }
+.w11-start-window .w11-detail {
+  border: 1px solid var(--st-card-stroke);
+  border-radius: 8px;
+  background-color: var(--st-card);
+}
+.w11-start-window .w11-detail-hero { padding: 32px 24px 20px; border-bottom: 1px solid var(--st-divider); }
+.w11-start-window .w11-detail-name { font-size: 20px; font-weight: 600; }
+.w11-start-window .w11-detail-type,
+.w11-start-window .w11-detail-desc { color: var(--text-2); font-size: 12px; }
+.w11-start-window .w11-detail-desc { margin-top: 8px; }
+.w11-start-window .w11-detail-info { padding: 14px 20px; border-bottom: 1px solid var(--st-divider); font-size: 12px; }
+.w11-start-window .w11-detail-k { color: var(--text-2); }
+.w11-start-window .w11-detail-actions { padding: 8px; }
+.w11-start-window .w11-detail-action { min-height: 34px; padding: 0 12px; border: none; font-size: 14px; }
+.w11-start-window .w11-detail-action:hover { background-color: var(--st-row-sel); }
+
+/* ---- Start's own menus (core/contextmenu.js look) ------------------------------ */
+.w11-start-window .w11-smenu {
+  min-width: 200px;
+  padding: 4px;
+  border: 1px solid var(--st-menu-stroke);
+  border-radius: 8px;
+  background-color: var(--st-menu);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.26);
+  color: var(--text-1);
+}
+.w11-start-window .w11-smenu-item { min-height: 30px; margin: 1px 0; padding: 0 12px; border: none; font-size: 14px; }
+.w11-start-window .w11-smenu-item:hover,
+.w11-start-window .w11-smenu-item:focus-visible { background-color: var(--st-row-sel); outline: none; }
+.w11-start-window .w11-smenu-item:active { background-color: var(--st-row-hover); }
+.w11-start-window .w11-smenu-header { padding: 8px 12px 6px; font-size: 14px; font-weight: 600; }
+.w11-start-window separator.w11-smenu-sep { min-height: 1px; margin: 4px 0; background: var(--st-divider); }
+
+/* ---- motion (Fluent): restarted by switching between the -a and -b names ------- */
+@keyframes w11-rise-a { from { transform: translateY(40px); } to { transform: none; } }
+@keyframes w11-rise-b { from { transform: translateY(40px); } to { transform: none; } }
+.w11-start-window .w11-start.w11-rise-a { animation: w11-rise-a 250ms cubic-bezier(0, 0, 0, 1); }
+.w11-start-window .w11-start.w11-rise-b { animation: w11-rise-b 250ms cubic-bezier(0, 0, 0, 1); }
+
+/* the close: a quick accelerating drop behind the taskbar, fading in its second half */
+@keyframes w11-drop-a { 0% { transform: none; opacity: 1; } 50% { opacity: 1; } 100% { transform: translateY(80px); opacity: 0; } }
+@keyframes w11-drop-b { 0% { transform: none; opacity: 1; } 50% { opacity: 1; } 100% { transform: translateY(80px); opacity: 0; } }
+.w11-start-window .w11-start.w11-drop-a { animation: w11-drop-a 167ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+.w11-start-window .w11-start.w11-drop-b { animation: w11-drop-b 167ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+
+@keyframes w11-fadeup-a { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes w11-fadeup-b { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.w11-start-window .w11-fadeup-a { animation: w11-fadeup-a 300ms cubic-bezier(0.1, 0.9, 0.2, 1) 30ms backwards; }
+.w11-start-window .w11-fadeup-b { animation: w11-fadeup-b 300ms cubic-bezier(0.1, 0.9, 0.2, 1) 30ms backwards; }
+
+@keyframes w11-from-right-a { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes w11-from-right-b { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes w11-from-left-a { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes w11-from-left-b { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+.w11-start-window .w11-from-right-a { animation: w11-from-right-a 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-from-right-b { animation: w11-from-right-b 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-from-left-a { animation: w11-from-left-a 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-from-left-b { animation: w11-from-left-b 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+
+@keyframes w11-fade-a { from { opacity: 0; } to { opacity: 1; } }
+@keyframes w11-fade-b { from { opacity: 0; } to { opacity: 1; } }
+.w11-start-window .w11-fade-a { animation: w11-fade-a 167ms linear; }
+.w11-start-window .w11-fade-b { animation: w11-fade-b 167ms linear; }
+
+@keyframes w11-page-next-a { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+@keyframes w11-page-next-b { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+@keyframes w11-page-prev-a { from { opacity: 0; transform: translateY(-32px); } to { opacity: 1; transform: none; } }
+@keyframes w11-page-prev-b { from { opacity: 0; transform: translateY(-32px); } to { opacity: 1; transform: none; } }
+.w11-start-window .w11-page-next-a { animation: w11-page-next-a 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-page-next-b { animation: w11-page-next-b 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-page-prev-a { animation: w11-page-prev-a 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-page-prev-b { animation: w11-page-prev-b 250ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+
+@keyframes w11-zoom-a { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: none; } }
+@keyframes w11-zoom-b { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: none; } }
+.w11-start-window .w11-zoom-a { animation: w11-zoom-a 200ms cubic-bezier(0.1, 0.9, 0.2, 1); }
+.w11-start-window .w11-zoom-b { animation: w11-zoom-b 200ms cubic-bezier(0.1, 0.9, 0.2, 1); }

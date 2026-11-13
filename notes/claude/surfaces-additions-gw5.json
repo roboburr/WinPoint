@@ -1,0 +1,56 @@
+{
+ "comment": [
+  "GW5 side file for tests/i18n/surfaces.json: append these entries to its \"surfaces\" list, and this line to its \"comment\" list:",
+  "settings-update-prompt.<id>: the \"Nieuwe Ubuntu-versies\" row of the Update page in the mock states M01-M04 of mock/update.js (?updateScenario=M…, GW5: M01 normal with the /bin/sh InfoBar of a PC without the root helper (today), M01b never, M02 lts on an interim release, M03 overridden by a release-upgrades.d file, M04 a change waiting for Ubuntu's password dialog without the root helper (the ComboBox disabled, the InfoBar stays), M04b a change with the root helper and a dismissed password dialog); the page itself is idle (H01). Not under settings-update.: test_update_mock_rows.py pairs that prefix with the [HR] scenario ids."
+ ],
+ "surfaces": [
+  {
+   "id": "settings-update-prompt.M01",
+   "q": "surface=app&app=settings&page=update&updateScenario=M01",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M01b",
+   "q": "surface=app&app=settings&page=update&updateScenario=M01b",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M02",
+   "q": "surface=app&app=settings&page=update&updateScenario=M02",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M03",
+   "q": "surface=app&app=settings&page=update&updateScenario=M03",
+   "wait": 3500
+  },
+  {
+   "id": "settings-update-prompt.M04",
+   "q": "surface=app&app=settings&page=update&updateScenario=M04",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updprompt .fl-dropdown"
+    },
+    {
+     "click": ".fl-dropdown__item",
+     "nth": 0
+    }
+   ]
+  },
+  {
+   "id": "settings-update-prompt.M04b",
+   "q": "surface=app&app=settings&page=update&updateScenario=M04b",
+   "wait": 3500,
+   "do": [
+    {
+     "click": ".st-updprompt .fl-dropdown"
+    },
+    {
+     "click": ".fl-dropdown__item",
+     "nth": 0
+    }
+   ]
+  }
+ ]
+}

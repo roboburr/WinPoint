@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!-- Win11 voor GNOME: "Venster weer openen" for a running Ubuntu release upgrade (notes/claude/windows-update-gnome.md
+     §6.4 step 6, §7). Installed 0644 in /usr/share/polkit-1/actions/ by scripts/install-system.py, next to the helper
+     /usr/libexec/win11-gnome/release-upgrade-attach. Always a password, never kept: the attached screen session of
+     Ubuntu's upgrader can open a root shell. GNOME Shell's password dialog shows this message in the system language
+     (D-G11). -->
+<policyconfig>
+  <vendor>Win11 Shell</vendor>
+  <action id="io.github.win11shell.gnome.release-upgrade-attach">
+    <description>Show the Ubuntu upgrade window again</description>
+    <description xml:lang="nl">Het venster van de Ubuntu-upgrade weer tonen</description>
+    <message>Win11 Shell wants to show the window of the running Ubuntu upgrade again.</message>
+    <message xml:lang="nl">Win11 Shell wil het venster van de lopende Ubuntu-upgrade weer tonen.</message>
+    <icon_name>system-software-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/win11-gnome/release-upgrade-attach</annotate>
+  </action>
+</policyconfig>

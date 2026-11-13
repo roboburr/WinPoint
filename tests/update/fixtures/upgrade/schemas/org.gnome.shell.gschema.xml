@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GW7 test fixture: the two keys of GNOME Shell 50's org.gnome.shell schema that the post-upgrade check reads
+     (same id, path, types and defaults); compiled with glib-compile-schemas into gschemas.compiled next to it. -->
+<schemalist>
+  <schema id="org.gnome.shell" path="/org/gnome/shell/">
+    <key name="enabled-extensions" type="as">
+      <default>[]</default>
+    </key>
+    <key name="disable-user-extensions" type="b">
+      <default>false</default>
+    </key>
+  </schema>
+</schemalist>

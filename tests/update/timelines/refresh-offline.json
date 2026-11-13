@@ -1,0 +1,100 @@
+{
+ "name": "refresh-offline",
+ "group": "check",
+ "title": "Offline",
+ "description": "NetworkManager Connectivity 1 (none), PackageKit NetworkState 1 (offline). A correct service refuses before any transaction; the last client step only checks the fake's answer if a client sends RefreshCache anyway (no-network).",
+ "states": [
+  "H14"
+ ],
+ "daemon": {
+  "networkState": "offline"
+ },
+ "nm": {
+  "Connectivity": "none",
+  "State": "disconnected",
+  "Metered": "unknown"
+ },
+ "stubs": {
+  "python3": {
+   "rc": 0,
+   "stdout": "openssl\t3.5.3-1ubuntu2.1\t0\t-\t0\nlibssl3t64\t3.5.3-1ubuntu2.1\t0\t-\t0\nopenssl\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\nlibssl3t64\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\n@@end\n"
+  }
+ },
+ "packages": {
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - cryptographic utility",
+   "size": 1478656,
+   "row": "security"
+  },
+  "libssl3t64;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {
+   "info": "security",
+   "summary": "Secure Sockets Layer toolkit - shared libraries",
+   "size": 6905856,
+   "row": "security"
+  }
+ },
+ "updates": [
+  "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security",
+  "libssl3t64;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security"
+ ],
+ "methods": {
+  "RefreshCache": [
+   {
+    "props": {
+     "Status": "refresh-cache"
+    }
+   },
+   {
+    "error": [
+     "no-network",
+     "Cannot refresh the package lists while offline"
+    ]
+   },
+   {
+    "finish": "failed"
+   }
+  ]
+ },
+ "client": [
+  {
+   "get": [
+    "nm",
+    "Connectivity"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "Connectivity": "none"
+    }
+   }
+  },
+  {
+   "get": [
+    "manager",
+    "NetworkState"
+   ],
+   "flags": "no-auto-start",
+   "expect": {
+    "props": {
+     "NetworkState": "offline"
+    }
+   }
+  },
+  {
+   "tx": "RefreshCache",
+   "args": [
+    false
+   ],
+   "expect": {
+    "exit": "failed",
+    "errors": [
+     "no-network"
+    ]
+   }
+  }
+ ],
+ "expect": {
+  "callCount": 5
+ }
+}

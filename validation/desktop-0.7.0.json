@@ -1,0 +1,326 @@
+{
+  "version": "0.7.0",
+  "count": 54,
+  "checks": [
+    {
+      "name": "two native desktop surfaces belong to the private DING process"
+    },
+    {
+      "name": "DING stays mapped until original desktop reports ready"
+    },
+    {
+      "name": "ready painted original desktop inhibits both DING surfaces"
+    },
+    {
+      "name": "GNOME hot corners are suppressed without changing preferences"
+    },
+    {
+      "name": "native desktop has DESKTOP type, sticky state and no task-list entry"
+    },
+    {
+      "name": "single original desktop spans both monitor rectangles",
+      "geometry": {
+        "available": true,
+        "x": 0,
+        "y": 0,
+        "w": 2304,
+        "h": 800,
+        "width": 2304,
+        "height": 800,
+        "logical": {
+          "x": 0,
+          "y": 0,
+          "w": 2304,
+          "h": 800
+        },
+        "monitor": 0,
+        "monitors": [
+          {
+            "index": 0,
+            "x": 0,
+            "y": 0,
+            "w": 1280,
+            "h": 800
+          },
+          {
+            "index": 1,
+            "x": 1280,
+            "y": 0,
+            "w": 1024,
+            "h": 768
+          }
+        ]
+      },
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 2304,
+        "h": 800
+      }
+    },
+    {
+      "name": "desktop is excluded from native taskbar window listing"
+    },
+    {
+      "name": "real mouse drag displays the original rectangular selection band",
+      "band": {
+        "hidden": false,
+        "w": 40,
+        "h": 250
+      },
+      "pointer_events": [
+        {
+          "type": "pointermove",
+          "x": 400,
+          "y": 550,
+          "button": -1,
+          "buttons": 0,
+          "trusted": true,
+          "target": "dt-grid"
+        },
+        {
+          "type": "pointermove",
+          "x": 160,
+          "y": 600,
+          "button": -1,
+          "buttons": 0,
+          "trusted": true,
+          "target": "dt-grid"
+        },
+        {
+          "type": "pointerdown",
+          "x": 160,
+          "y": 600,
+          "button": 0,
+          "buttons": 1,
+          "trusted": true,
+          "target": "dt-grid"
+        },
+        {
+          "type": "pointermove",
+          "x": 120,
+          "y": 350,
+          "button": -1,
+          "buttons": 1,
+          "trusted": true,
+          "target": "dt is-active"
+        }
+      ]
+    },
+    {
+      "name": "releasing selection rectangle retains every intersected original desktop item",
+      "selected": [
+        "::thispc",
+        "::trash",
+        "Folder",
+        "alpha.txt",
+        "beta.txt"
+      ]
+    },
+    {
+      "name": "dragging to top-left edge never resizes the desktop host"
+    },
+    {
+      "name": "Escape clears selection through native keyboard focus"
+    },
+    {
+      "name": "Ctrl+A selects all original desktop items"
+    },
+    {
+      "name": "clicking empty desktop clears selection"
+    },
+    {
+      "name": "Ctrl plus mouse rectangle preserves prior selection and adds intersected items"
+    },
+    {
+      "name": "right click opens original Win11 desktop context menu"
+    },
+    {
+      "name": "original-theme-card-bloom-light-updates-desktop-and-gnome",
+      "desktop_path": "builtin:bloom-light",
+      "theme": "light",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-theme-card-bloom-dark-updates-desktop-and-gnome",
+      "desktop_path": "builtin:bloom-dark",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-theme-card-flow-updates-desktop-and-gnome",
+      "desktop_path": "builtin:flow-dark",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-theme-card-glow-updates-desktop-and-gnome",
+      "desktop_path": "builtin:glow",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-theme-card-sunrise-updates-desktop-and-gnome",
+      "desktop_path": "builtin:sunrise",
+      "theme": "light",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-theme-card-aurora-updates-desktop-and-gnome",
+      "desktop_path": "builtin:aurora",
+      "theme": "dark",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-background-photo-tile-updates-desktop-and-gnome",
+      "desktop_path": "builtin:glow"
+    },
+    {
+      "name": "original-solid-color-dropdown-and-swatch-update-desktop-and-gnome",
+      "color": "rgb(232, 17, 35)"
+    },
+    {
+      "name": "original-picture-dropdown-restores-selected-image"
+    },
+    {
+      "name": "original-background-fit-fill-matches-gnome",
+      "css_size": "cover",
+      "gnome_fit": "zoom"
+    },
+    {
+      "name": "original-background-fit-fit-matches-gnome",
+      "css_size": "contain",
+      "gnome_fit": "scaled"
+    },
+    {
+      "name": "original-background-fit-stretch-matches-gnome",
+      "css_size": "100% 100%",
+      "gnome_fit": "stretched"
+    },
+    {
+      "name": "original-background-fit-tile-matches-gnome",
+      "css_size": "auto",
+      "gnome_fit": "wallpaper"
+    },
+    {
+      "name": "original-background-fit-center-matches-gnome",
+      "css_size": "auto",
+      "gnome_fit": "centered"
+    },
+    {
+      "name": "original-background-fit-span-matches-gnome",
+      "css_size": "cover",
+      "gnome_fit": "spanned"
+    },
+    {
+      "name": "original-follow-toggle-off-keeps-explicit-photo-after-mode-change"
+    },
+    {
+      "name": "original-follow-toggle-on-applies-dark-twin-to-desktop-and-gnome"
+    },
+    {
+      "name": "original-browse-button-applies-local-photo-with-escaped-uri",
+      "photo_name": "photo #1 %.png",
+      "file_chooser_result_fixture": true
+    },
+    {
+      "name": "wallpaper-crossfade-settles-to-one-layer-without-stale-image"
+    },
+    {
+      "name": "independent Explorer maps above desktop"
+    },
+    {
+      "name": "normal application can hold compositor focus"
+    },
+    {
+      "name": "raising desktop cannot cover an ordinary application"
+    },
+    {
+      "name": "desktop reposition preserves application focus"
+    },
+    {
+      "name": "desktop failure restores both existing DING surfaces"
+    },
+    {
+      "name": "desktop exit preserves independent application processes"
+    },
+    {
+      "name": "desktop relaunch takes DING surfaces back only after ready"
+    },
+    {
+      "name": "terminated desktop renderer restores real DING fallback"
+    },
+    {
+      "name": "renderer failure preserves independent application processes"
+    },
+    {
+      "name": "desktop recovers after renderer failure"
+    },
+    {
+      "name": "rapid disable and enable waits for prior desktop to exit"
+    },
+    {
+      "name": "lock removes own desktop surface"
+    },
+    {
+      "name": "locking preserves independent application processes"
+    },
+    {
+      "name": "unlock launches fresh desktop and retakes DING after ready"
+    },
+    {
+      "name": "GNOME hot corners restore original barriers after disable"
+    },
+    {
+      "name": "extension disable restores DING and removes only own desktop"
+    },
+    {
+      "name": "extension disable preserves independent Explorer and Settings windows"
+    },
+    {
+      "name": "DING enabled preference is never modified"
+    },
+    {
+      "name": "double clicking desktop folder opens separate native Explorer in foreground"
+    },
+    {
+      "name": "desktop folder launch preserves the selected folder path"
+    }
+  ],
+  "private_home_xdg": true,
+  "real_private_ding": true,
+  "gnome": "50.1",
+  "binary_sha256": {
+    "win11-start": "a15e975eea6d33799a7f7c10b3525f9203bfffcc2a41435be31b0c974fafa236",
+    "win11-panel": "3eb674156240b19d76bdba8519ef9d1d0e47443c2c906b27d1e255086c1f2da7",
+    "win11-explorer": "f539521324064a91a28ee95374e47636542a31f5a9a4c0490026ebb9c608196f",
+    "win11-app": "2f2f07124042a468793079c4e2975418ecd9110911c4ec751d92d4429752f63f",
+    "win11-desktop": "dcee00ead32320436ff71bec4d3ae6af6b1fdd79d4aefcd3217d2e10c076560d"
+  },
+  "runs": [
+    {
+      "name": "combined",
+      "count": 52,
+      "includes_wallpaper": true
+    },
+    {
+      "name": "focused-desktop-with-folder-double-click",
+      "count": 35,
+      "includes_wallpaper": false
+    }
+  ],
+  "source_sha256": {
+    "extension/desktopBridge.js": "22dce197c5423a8ae58426129179b4c4a0255c07d724329d9f2fcec0aa7be5e1",
+    "extension/panelBridge.js": "46021396b120eb854d003ea540d853ed4d46038a47b215b4ab99b733c1fe56fd",
+    "extension/extension.js": "a82ff495c5d2459aabf443cd9152243793bf1dca564e539057b2e8512e2cd412",
+    "scripts/install.py": "97c3de8280d8a1a5929b349e5a1ac3940fde0d53bd05df2d3e90c7684824624f",
+    "scripts/uninstall.py": "d4afae7bd2f39e31106e18b7df0b03f5865ee00f2629051c22fc8482740ccc39"
+  },
+  "limits": [
+    "Both virtual monitors used scale 1. Mixed DPI, negative origins and monitor gaps were not verified.",
+    "A single native desktop surface spans the monitor bounding rectangle; per-monitor independent desktop grids are not implemented.",
+    "This private integration test did not alter the current user desktop or preferences.",
+    "The custom wallpaper file chooser result was a private fixture; original UI Browse and apply code were exercised.",
+    "GNOME/DING test logs contain expected private-session service warnings and warnings caused by deliberately terminating the private desktop renderer."
+  ]
+}

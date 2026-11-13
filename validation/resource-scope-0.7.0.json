@@ -1,0 +1,98 @@
+{
+  "version": "0.7.0",
+  "scope": "Only new owned services and the new owned app-win11shell.slice; existing user app scopes untouched",
+  "systemd": "259.9-0ubuntu0.1",
+  "shell_memory_max_bytes": 1048576000,
+  "shell_memory_high_bytes": 805306368,
+  "shell_memory_max_mib": 1000,
+  "aggregate_members": [
+    "Panel and compatibility backend",
+    "preloaded Start and WebKit/backend children",
+    "Desktop and WebKit/backend children",
+    "manually started Start"
+  ],
+  "cap_below_one_gib": true,
+  "new_processes_created_by_manager_before_app_execution": true,
+  "existing_panel_scope_modified": false,
+  "existing_user_apps_modified": false,
+  "literal_arguments_preserved": true,
+  "private_session_without_manager": "Explicit warning; direct launch fallback has no cgroup cap",
+  "unit_checks": {
+    "passed": 3,
+    "tests": [
+      "only_own_correct_slice_counts_as_managed",
+      "aggregate_cap_is_below_one_gib_and_high_below_max",
+      "explicit_clean_environment_preserves_fresh_command_overrides"
+    ]
+  },
+  "actual_manager_probe": {
+    "explicitly_run_ignored_test": "actual_manager_separates_app_from_bounded_shell_slice",
+    "passed": true,
+    "shell": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/app-win11shell.slice/app-win11-probe-shell-1247251-1793567634903948540-1.service",
+      "parent_memory_max": "1048576000",
+      "parent_memory_high": "805306368",
+      "cwd": "/tmp/win11-cgroup-proof-1247251-0",
+      "token": "fresh-probe-token",
+      "stale": null,
+      "literal": "quote ' \" $(touch SHOULDNTEVALUATE) `no-shell` ${HOME} $HOME %n %u %% %h {\"path\":\"/tmp/${HOME}/%u\"}"
+    },
+    "app": {
+      "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/app-win11-probe-app-1247251-1793567634965826372-2.service",
+      "parent_memory_max": "max",
+      "parent_memory_high": "max",
+      "cwd": "/tmp/win11-cgroup-proof-1247251-0",
+      "token": "fresh-probe-token",
+      "stale": null,
+      "literal": "quote ' \" $(touch SHOULDNTEVALUATE) `no-shell` ${HOME} $HOME %n %u %% %h {\"path\":\"/tmp/${HOME}/%u\"}"
+    },
+    "notes": [
+      "Only short-lived own Python fixture services were started.",
+      "Kernel cgroup files verified the aggregate hard/high limits.",
+      "ExecStart originally expanded ${HOME}; ExecStartEx no-env-expand now preserves all literal argv.",
+      "No memory exhaustion test or existing user scope limit change was performed."
+    ]
+  },
+  "actual_helper_probe": {
+    "version": "0.7.0",
+    "checks": [
+      {
+        "case": "isolated-helper-launches-child-with-literal-URI-environment-and-cwd",
+        "passed": true,
+        "unit": "app-win11-helper-proof-1254283-success.service",
+        "appPid": 1254292
+      },
+      {
+        "case": "app-stays-in-independent-service-after-short-lived-helper-ACK-exits",
+        "passed": true,
+        "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/app-win11-helper-proof-1254283-success.service"
+      },
+      {
+        "case": "GIO-helper-error-is-returned-over-private-ack-channel",
+        "passed": true,
+        "error": "De app is niet gevonden"
+      }
+    ],
+    "helperSha256": "fbd41c0b09806ccdb9eec0f770bfa639e84c23827e34980b498bb407e443218c",
+    "scope": "Actual user manager; only own short-lived fixture services/app; no real user app or preexisting cgroup changed."
+  },
+  "fresh_activation_preserved": true,
+  "desktop_exec_and_dbus_activation": "Original GIO desktop-entry parsing and activation through the same custom fresh-token launch context",
+  "helper_private_ack": "0700 private directory, local Unix socket, bounded wait; GIO success/error returned to native API",
+  "helper_runtime_libraries": "GIO/GLib/GObject/libc; no GTK/WebKit dependency or initialization",
+  "source_sha256": {
+    "host/src/process_scope.rs": "55ae828dc60874b4c81db571c6671fcda3a19ff0fcab6f84e2096c5722480a64",
+    "host/src/launch.rs": "5758e40d84b031cb79627270edcbb4b87fda30173d84977357b95e7ca53c00b1",
+    "host/src/launch_context.rs": "d2c745b1237339b90ad48d6712f368a60639b283da57793e8731b3f7a315fe6a",
+    "host/src/bin/launch.rs": "22e3bdfa562ded3c19a63f4af031ab01162408df317daad7f7ee7dc9bec1c44c",
+    "host/src/files/actions.rs": "f9f5565395e65f206e7690ae4f06853b9185b5369a2565e3751193b181cf4a92"
+  },
+  "binary_sha256": {
+    "win11-panel": "9f05d46f744a9c9d2514b0c5b03f98a16eb87b502c05baad0ab50058b55e9e5c",
+    "win11-start": "efd795496287ee4bc242db82f0ce1db6493cf03fbedac1de911c5ae4d53e81d6",
+    "win11-desktop": "75d1fe4d358c612ae7f39c86e5fc2118b04de9cdfdc9df98beb81da5c42457c9",
+    "win11-explorer": "49359a943e8a76fd6f3aeefdb2cb7e2b9bea9e8a9e5d083de2974794815311b5",
+    "win11-app": "932269575a36f00c88c3941b4b47048886d39e7fdadd99bc0c2039558cb7b019",
+    "win11-launch": "fbd41c0b09806ccdb9eec0f770bfa639e84c23827e34980b498bb407e443218c"
+  }
+}

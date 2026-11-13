@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Win11 Calendar: the Windows 11 Calendar app (Mail and Calendar / Outlook) in GTK 4.
+   On top of base.css (the shell's palette and components). theme.rs adds the accent, the text ramp and the
+   calendars' colours (.cal-c-<id>).
+   ========================================================================== */
+
+window.w11 {
+  --cal-layer: #282828;
+  --cal-other: rgba(0, 0, 0, 0.12);
+  --cal-dialog-bg: #2b2b2b;
+  --cal-dialog-footer: #202020;
+  --cal-flyout: #2c2c2c;
+  --cal-smoke: rgba(0, 0, 0, 0.3);
+  --cal-hairline: rgba(255, 255, 255, 0.0837);
+}
+window.w11.w11-light {
+  --cal-layer: #f9f9f9;
+  --cal-other: rgba(0, 0, 0, 0.025);
+  --cal-dialog-bg: #ffffff;
+  --cal-dialog-footer: #f3f3f3;
+  --cal-flyout: #f9f9f9;
+  --cal-smoke: rgba(0, 0, 0, 0.3);
+  --cal-hairline: rgba(0, 0, 0, 0.0803);
+}
+
+/* ---- Window: Mica (solid here; the extension adds blur and the shadow), 8 px corners and a hairline,
+   square when maximized, fullscreen or tiled ----------------------------------------------------------- */
+window.cal-window, window.cal-window.background {
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+}
+.cal-root {
+  background-color: var(--bg-mica-solid);
+  border: 1px solid var(--stroke-window);
+  border-radius: 8px;
+  color: var(--text-1);
+}
+window.cal-square .cal-root { border-radius: 0; border-width: 0; }
+/* The extension's blur behind the focused window (backdrop.rs): Mica at 90 % over it, as the HTML apps
+   (vendor/ui/css/native-backdrop.css, D-G60). */
+window.cal-window.cal-glass .cal-root { background-color: rgba(32, 32, 32, 0.90); }
+window.cal-window.w11-light.cal-glass .cal-root { background-color: rgba(243, 243, 243, 0.90); }
+.cal-edge { background-color: transparent; }
+
+/* ---- Title bar (appframe.css) ------------------------------------------------------------------------ */
+.cal-titlebar { min-height: 32px; }
+.cal-appicon { margin-left: 16px; color: var(--accent-fg-3); }
+.cal-apptitle { margin-left: 12px; font-size: var(--fs-caption); color: var(--text-1); }
+window.cal-window:backdrop .cal-apptitle { color: var(--text-3); }
+button.cal-cap {
+  min-width: 46px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  transition: background-color 83ms linear, color 83ms linear;
+}
+button.cal-cap:hover { background-color: var(--fill-subtle-2); }
+button.cal-cap:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.cal-cap.cal-cap-close:hover { background-color: #c42b1c; color: #ffffff; }
+button.cal-cap.cal-cap-close:active { background-color: #c84031; color: rgba(255, 255, 255, 0.7); }
+window.cal-window:backdrop button.cal-cap:not(:hover) { color: var(--text-disabled); }
+
+/* ---- Navigation pane --------------------------------------------------------------------------------- */
+.cal-pane { min-width: 272px; padding: 0 8px 8px 8px; }
+.cal-pane.is-collapsed { min-width: 0; padding: 0 6px 8px 6px; }
+button.cal-ham, button.cal-new-small { min-width: 36px; min-height: 36px; margin: 2px 0 4px 0; }
+button.cal-new-small { color: var(--accent-fg-3); }
+button.cal-new { min-height: 34px; margin: 2px 4px 14px 4px; }
+.cal-pane-mini { margin: 0 4px; }
+.cal-pane-sep { margin: 12px 8px 4px 8px; }
+.cal-pane-header {
+  padding: 10px 8px 4px 8px;
+  color: var(--text-2);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+}
+checkbutton.cal-cal-check {
+  margin: 1px 0;
+  padding: 6px 8px;
+  border-radius: var(--radius-control);
+  border-spacing: 10px;
+}
+checkbutton.cal-cal-check:hover { background-color: var(--fill-subtle-2); }
+checkbutton.cal-cal-check:active { background-color: var(--fill-subtle-3); }
+checkbutton.cal-cal-check label { font-size: var(--fs-body); color: var(--text-1); }
+
+/* ---- Mini month (CalendarView) ------------------------------------------------------------------------- */
+.cal-mini-head { min-height: 36px; }
+.cal-mini-title { padding-left: 8px; font-size: var(--fs-body); font-weight: 600; color: var(--text-1); }
+.cal-mini-wd { min-height: 30px; font-size: var(--fs-caption); color: var(--text-2); }
+button.cal-mini-day {
+  min-width: 32px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+button.cal-mini-day:hover { background-color: var(--fill-subtle-2); }
+button.cal-mini-day:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.cal-mini-day.is-other { color: var(--text-3); }
+button.cal-mini-day.in-range { background-color: var(--accent-subtle); }
+button.cal-mini-day.is-selected { border-color: var(--accent); }
+button.cal-mini-day.is-today { background-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+button.cal-mini-day.is-today:hover { background-color: var(--accent-2); }
+button.cal-mini-day.is-today.is-selected { border-color: var(--accent-text); box-shadow: 0 0 0 1px var(--accent); }
+
+/* ---- Main layer and toolbar ------------------------------------------------------------------------------ */
+.cal-main {
+  background-color: var(--cal-layer);
+  border-top: 1px solid var(--stroke-card);
+  border-left: 1px solid var(--stroke-card);
+  border-top-left-radius: 8px;
+}
+window.w11-light .cal-main { border-color: rgba(0, 0, 0, 0.0578); }
+.cal-toolbar { min-height: 48px; padding: 4px 12px 4px 12px; border-bottom: 1px solid var(--cal-hairline); }
+button.cal-tool { min-height: 30px; }
+button.cal-icon-button { min-width: 32px; min-height: 32px; }
+label.cal-title {
+  margin-left: 8px;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--text-1);
+}
+togglebutton.cal-viewbtn, button.cal-viewbtn {
+  min-height: 30px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+.cal-viewbtn:hover { background-color: var(--fill-subtle-2); }
+.cal-viewbtn:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+.cal-viewbtn:checked {
+  background-color: var(--fill-subtle-2);
+  background-image: linear-gradient(to right, var(--accent), var(--accent));
+  background-size: 16px 3px;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ---- Month view ------------------------------------------------------------------------------------------ */
+.cal-month-head { border-bottom: 1px solid var(--cal-hairline); }
+.cal-month-wd { padding: 8px 8px 6px 8px; font-size: var(--fs-caption); color: var(--text-2); }
+.cal-mcell {
+  padding: 2px 0 4px 0;
+  border-right: 1px solid var(--cal-hairline);
+  border-bottom: 1px solid var(--cal-hairline);
+}
+.cal-mcell.is-last-col { border-right-width: 0; }
+.cal-mcell.is-other { background-color: var(--cal-other); }
+.cal-mcell.is-today { background-color: var(--accent-subtle); }
+.cal-mcell.is-selected { box-shadow: inset 0 0 0 2px var(--accent); }
+.cal-mcell-head { min-height: 24px; padding: 2px 4px 2px 4px; }
+.cal-mday {
+  min-width: 12px;
+  min-height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  font-size: var(--fs-caption);
+  color: var(--text-1);
+}
+.cal-mcell.is-other .cal-mday { color: var(--text-3); }
+.cal-mcell.is-today .cal-mday { background-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+
+/* Event chips (month cells and the all-day row) */
+button.cal-chip {
+  min-height: 20px;
+  min-width: 0;
+  margin: 0 4px;
+  padding: 0 6px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+  font-weight: 400;
+}
+button.cal-chip:hover { background-color: var(--fill-subtle-2); }
+button.cal-chip:active { background-color: var(--fill-subtle-3); }
+button.cal-chip:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+button.cal-chip.is-banner { padding-left: 8px; }
+.cal-chip-time { font-size: var(--fs-caption); color: var(--text-2); }
+.cal-chip-title { font-size: var(--fs-caption); }
+button.cal-more {
+  min-height: 18px;
+  min-width: 0;
+  margin: 0 4px;
+  padding: 0 6px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+}
+button.cal-more:hover { background-color: var(--fill-subtle-2); color: var(--text-1); }
+
+/* ---- Week and day views ------------------------------------------------------------------------------------ */
+.cal-tl-head { border-bottom: 1px solid var(--cal-hairline); }
+.cal-tl-dayhead { padding: 6px 10px 6px 10px; border-left: 1px solid var(--cal-hairline); }
+.cal-tl-dayhead:hover { background-color: var(--fill-subtle-2); }
+.cal-tl-dayhead.is-selected { box-shadow: inset 0 -2px 0 var(--accent); }
+.cal-tl-dname { font-size: var(--fs-caption); color: var(--text-2); }
+.cal-tl-dnum {
+  min-width: 20px;
+  min-height: 30px;
+  padding: 0 6px;
+  border-radius: 15px;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.cal-tl-dayhead.is-today .cal-tl-dname { color: var(--accent-fg-3); font-weight: 600; }
+.cal-tl-dayhead.is-today .cal-tl-dnum { background-color: var(--accent); color: var(--accent-text); }
+.cal-tl-allday { min-height: 28px; border-bottom: 1px solid var(--cal-hairline); }
+.cal-tl-allday-label { padding: 6px 8px 0 0; font-size: 11px; color: var(--text-3); }
+.cal-tl-allday-col { padding: 3px 0 4px 0; border-left: 1px solid var(--cal-hairline); }
+.cal-tl-gutter { }
+.cal-tl-hour { padding: 2px 8px 0 0; font-size: var(--fs-caption); color: var(--text-2); }
+.cal-tl-col { border-left: 1px solid var(--cal-hairline); }
+.cal-tl-col.is-today { background-color: var(--fill-subtle-3); }
+.cal-tl-lines { color: var(--cal-hairline); }
+button.cal-block {
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 2px 6px 2px 6px;
+  border: 0 solid transparent;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-control);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+  font-weight: 400;
+}
+button.cal-block:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+.cal-block-title { font-size: var(--fs-caption); font-weight: 600; }
+.cal-block-time { font-size: var(--fs-caption); color: var(--text-2); }
+
+/* ---- Event dialog (ContentDialog) ------------------------------------------------------------------------------ */
+.cal-smoke { background-color: var(--cal-smoke); }
+.cal-dialog {
+  background-color: var(--cal-dialog-bg);
+  border: 1px solid var(--stroke-surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-dialog);
+  color: var(--text-1);
+}
+.cal-dialog-body { padding: 24px 24px 20px 24px; }
+.cal-dialog-title {
+  margin-bottom: 4px;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Ubuntu Sans", "Noto Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+}
+.cal-dialog-footer {
+  padding: 24px;
+  background-color: var(--cal-dialog-footer);
+  border-top: 1px solid var(--stroke-card);
+}
+entry.cal-title-entry { min-height: 34px; font-size: var(--fs-body-large); }
+.cal-field-glyph { color: var(--text-2); }
+.cal-field-label { min-width: 48px; color: var(--text-2); font-size: var(--fs-body); }
+.cal-dialog-note { color: var(--text-2); font-size: var(--fs-caption); }
+.cal-dialog-error { color: var(--sys-critical); font-size: var(--fs-caption); }
+
+/* Drop-downs and the date buttons look like Windows combo boxes */
+dropdown.cal-dd > button, menubutton.cal-datebtn > button {
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px 0 11px;
+  border: 1px solid var(--stroke-control);
+  border-top-color: var(--stroke-control-top);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+dropdown.cal-dd > button:hover, menubutton.cal-datebtn > button:hover { background-color: var(--fill-control-2); }
+dropdown.cal-dd > button:active, dropdown.cal-dd > button:checked,
+menubutton.cal-datebtn > button:active, menubutton.cal-datebtn > button:checked {
+  background-color: var(--fill-control-3);
+  color: var(--text-2);
+}
+dropdown.cal-dd > button:disabled, menubutton.cal-datebtn > button:disabled {
+  background-color: var(--fill-control-disabled);
+  color: var(--text-disabled);
+}
+dropdown.cal-dd > button arrow { color: var(--text-2); min-width: 12px; min-height: 12px; }
+dropdown.cal-time { min-width: 110px; }
+
+.cal-notes-frame {
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  box-shadow: inset 0 -1px 0 var(--stroke-control-strong);
+}
+.cal-notes-frame:focus-within { background-color: var(--fill-control-input); box-shadow: inset 0 -2px 0 var(--accent); }
+textview.cal-notes, textview.cal-notes > text {
+  padding: 4px 6px;
+  background-color: transparent;
+  background-image: none;
+  color: var(--text-1);
+  caret-color: var(--text-1);
+  font-size: var(--fs-body);
+}
+
+/* Popovers (date picker, drop-down lists) as Windows flyouts */
+window.w11 popover > contents {
+  padding: 4px;
+  border: 1px solid var(--stroke-flyout);
+  border-radius: var(--radius-overlay);
+  background-color: var(--cal-flyout);
+  background-image: none;
+  box-shadow: var(--shadow-flyout);
+  color: var(--text-1);
+}
+window.w11 popover > arrow { background-color: var(--cal-flyout); border: 1px solid var(--stroke-flyout); }
+window.w11 popover.cal-popover > contents { padding: 8px 8px 10px 8px; }
+window.w11 popover listview, window.w11 popover list { background-color: transparent; color: var(--text-1); }
+window.w11 popover listview > row, window.w11 popover list > row {
+  min-height: 28px;
+  padding: 2px 10px;
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  font-size: var(--fs-body);
+}
+window.w11 popover listview > row:hover, window.w11 popover list > row:hover { background-color: var(--fill-subtle-2); }
+window.w11 popover listview > row:selected, window.w11 popover list > row:selected {
+  background-color: var(--fill-subtle-2);
+  color: var(--text-1);
+}
+.cal-pop-mini { min-width: 252px; }

@@ -1,0 +1,10 @@
+/* The regular Explorer chrome/content are reused; only the selector footer is added. */
+.xp-picker .af-titlebar__left { display: flex; }
+.xp-picker .af-titlebar__center { display: none; }
+.xp-picker__footer { flex: none; display: flex; gap: 20px; align-items: flex-start; padding: 16px 20px; border-top: 1px solid var(--stroke-divider); background: var(--xp-layer); }
+.xp-picker__fields { flex: 1; min-width: 0; display: grid; gap: 10px; max-height: 38vh; overflow: auto; }
+.xp-picker__label { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 12px; align-items: center; min-width: 0; }
+.xp-picker__name { width: 100%; min-width: 0; }
+.xp-picker__buttons { display: grid; gap: 10px; min-width: 100px; }
+.xp-picker__error { color: var(--sys-critical); font-size: var(--fs-caption); }
+.xp-picker__label[hidden] { display: none; }
