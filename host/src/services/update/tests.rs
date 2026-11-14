@@ -1009,6 +1009,7 @@ fn arguments_go_through_a_per_method_allowlist() {
         ("update.confirm", json!({"jobId":token,"accept":false})),
         ("update.history", json!({"before":1762341720000u64,"limit":200})),
         ("update.release.setPrompt", json!({"prompt":"never"})),
+        ("update.setWatching", json!({"on":false})),
     ];
     for (method, args) in good {
         assert!(check_args(method, &args), "{method} {args}");
@@ -1034,6 +1035,8 @@ fn arguments_go_through_a_per_method_allowlist() {
         ("update.history", json!({"limit":0})),
         ("update.release.setPrompt", json!({"prompt":"always"})),
         ("update.release.ubuntuHold", json!({})),
+        ("update.setWatching", json!({"on":"no"})),
+        ("update.setWatching", json!({})),
         ("update.unknown", json!({})),
     ];
     for (method, args) in bad {
@@ -1045,6 +1048,15 @@ fn arguments_go_through_a_per_method_allowlist() {
     assert_eq!((error.code.as_str(), error.message.as_str()), ("bad_args", "Invalid update input."));
     assert!(service.call("system.updates", &json!({})).is_none(), "not an update method");
     assert!(service.call("update.nope", &json!({})).is_none());
+    // the native Settings' window report: local, in every mode, read by pk.rs notify (ServiceContext::watching)
+    let ctx = f.ctx("settings", false, "en");
+    let settings = Update::with_env(ctx.clone(), &f.env_no_bus());
+    assert!(!ctx.watching());
+    assert_eq!(settings.call("update.setWatching", &json!({"on":true})).unwrap().unwrap(), json!({"on":true}));
+    assert!(ctx.watching());
+    assert_eq!(settings.call("update.setWatching", &json!({"on":false})).unwrap().unwrap(), json!({"on":false}));
+    assert!(!ctx.watching(), "the GUI has no window: its open event stream does not count");
+    settings.shutdown();
 }
 
 // ------------------------------------------------------------------------------------- model

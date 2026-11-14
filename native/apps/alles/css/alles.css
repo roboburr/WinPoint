@@ -1,0 +1,381 @@
+/* ==========================================================================
+   Win11 GNOME Alles (Everything-style instant search) in GTK 4: vendor/ui/css/alles.css as GTK CSS on the
+   kit's tokens; light, dark and transparency come from the kit. GTK's min-height is the content box: a
+   32 px control with a 1 px border is min-height 30px.
+   ========================================================================== */
+
+/* ---- Title bar with the big search box ----------------------------------- */
+.alles-titlebar .w11-titlebar-center { padding: 0 12px; }
+.alles-titlebar .w11-apptitle { font-size: var(--fs-caption); }
+
+box.w11-searchbox.alles-search {
+  min-height: 32px;
+  padding: 0 2px 1px 0;
+  border-radius: var(--radius-control);
+  font-size: var(--fs-body);
+}
+box.w11-searchbox.alles-search > text {
+  min-height: 30px;
+  padding: 0 8px 0 8px;
+  font-size: var(--fs-body);
+}
+.alles-search-icon { margin-left: 12px; color: var(--text-2); }
+box.w11-searchbox.alles-search:focus-within .alles-search-icon { color: var(--accent-fg-3); }
+
+/* ---- Window body ------------------------------------------------------------ */
+.alles { font-size: var(--fs-caption); }
+
+/* command bar (Win11 Explorer style: subtle buttons, 12 px labels) */
+.alles-cmd { min-height: 48px; padding: 0 12px; }
+.alles-cmd-sep {
+  min-width: 1px;
+  min-height: 20px;
+  margin: 0 8px;
+  background-color: var(--stroke-divider);
+}
+button.w11-dropdown.alles-filter .w11-dropdown-text { font-size: var(--fs-caption); }
+
+button.w11-button.w11-subtle.alles-toggle,
+button.w11-button.w11-subtle.alles-cmdbtn {
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: var(--fs-caption);
+  color: var(--text-1);
+}
+button.w11-button.w11-subtle.alles-toggle.alles-narrow,
+button.w11-button.w11-subtle.alles-cmdbtn.alles-narrow { padding: 0 8px; }
+.alles-cmdbtn-chev { margin-left: -1px; color: var(--text-2); }
+button.w11-button.w11-subtle.alles-toggle:checked,
+button.w11-button.w11-subtle.alles-cmdbtn:checked {
+  background-color: var(--accent-subtle);
+  color: var(--accent-fg);
+  border-color: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+button.w11-button.w11-subtle.alles-toggle:checked:hover,
+button.w11-button.w11-subtle.alles-cmdbtn:checked:hover {
+  background-color: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+button.w11-button.w11-subtle.alles-toggle:checked .w11-glyph,
+button.w11-button.w11-subtle.alles-cmdbtn:checked .w11-glyph,
+button.w11-button.w11-subtle.alles-toggle:checked .alles-tglyph { color: var(--accent-fg); }
+
+/* the text glyphs of the toggles: Aa, ab with its bracket, .* */
+.alles-tglyph {
+  min-width: 16px;
+  min-height: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.26px;
+  color: var(--text-1);
+}
+.alles-tglyph.alles-tglyph-word { min-height: 12px; padding: 0 2px; font-size: 12px; }
+.alles-tglyph-box { min-height: 16px; }
+.alles-tglyph-bracket {
+  min-height: 2px;
+  margin: 0 1px;
+  border: 1px solid currentColor;
+  border-top-width: 0;
+  border-radius: 0 0 2px 2px;
+}
+.alles-tglyph.alles-tglyph-mono {
+  font-family: "Cascadia Mono", "Cascadia Code", "Ubuntu Sans Mono", "Ubuntu Mono", "Noto Sans Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+/* ---- Content layer (lighter surface on the Mica) ----------------------------- */
+.alles-layer {
+  background-color: var(--bg-layer);
+  border-top: 1px solid var(--stroke-card);
+}
+window.w11-dark .alles-layer { border-top-color: var(--stroke-divider); }
+
+/* ---- Results table -------------------------------------------------------------- */
+columnview.w11-table.alles-table { font-size: var(--fs-caption); color: var(--text-1); }
+columnview.w11-table.alles-table > header { border-bottom-width: 0; }
+/* The insets live inside the cells: a margin or padding on a row or on the header makes it wider than the
+   columns, which GTK warns about whenever the columns need horizontal scrolling. */
+columnview.w11-table.alles-table > header > button {
+  min-height: 32px;
+  padding: 0 10px;
+  border-width: 0;
+  border-radius: var(--radius-control);
+  color: var(--text-2);
+  font-size: var(--fs-caption);
+  transition: background-color 83ms linear;
+}
+columnview.w11-table.alles-table > header > button:first-child { margin-left: 8px; }
+columnview.w11-table.alles-table > header > button:last-child { margin-right: 8px; }
+columnview.w11-table.alles-table > header > button:hover { background-color: var(--fill-subtle-2); color: var(--text-1); }
+columnview.w11-table.alles-table > header > button:active { background-color: var(--fill-subtle-3); }
+columnview.w11-table.alles-table > header > button > box > sort-indicator { color: var(--text-2); min-width: 8px; -gtk-icon-size: 8px; }
+columnview.w11-table.alles-table > listview > row,
+columnview.w11-table.alles-table > listview > row:hover,
+columnview.w11-table.alles-table > listview > row:selected,
+columnview.w11-table.alles-table > listview > row:selected:hover {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  outline: 0 solid transparent;
+}
+columnview.w11-table.alles-table > listview > row > cell {
+  min-height: 32px;
+  padding: 0 10px;
+  transition: background-color 83ms linear;
+}
+columnview.w11-table.alles-table > listview > row > cell:first-child {
+  margin-left: 4px;
+  padding-left: 14px;
+  border-top-left-radius: var(--radius-control);
+  border-bottom-left-radius: var(--radius-control);
+}
+columnview.w11-table.alles-table > listview > row > cell:last-child {
+  margin-right: 4px;
+  border-top-right-radius: var(--radius-control);
+  border-bottom-right-radius: var(--radius-control);
+}
+columnview.w11-table.alles-table > listview > row:hover > cell { background-color: var(--fill-subtle-2); }
+columnview.w11-table.alles-table > listview > row:selected > cell { background-color: color-mix(in srgb, var(--accent) 17%, transparent); }
+columnview.w11-table.alles-table > listview > row:selected:hover > cell { background-color: color-mix(in srgb, var(--accent) 24%, transparent); }
+/* the focus rectangle only after keyboard use, like Windows (GTK's :focus-visible), across the cells */
+columnview.w11-table.alles-table > listview > row:focus-visible > cell {
+  box-shadow: inset 0 1px var(--focus-outer), inset 0 -1px var(--focus-outer), inset 0 2px var(--focus-inner), inset 0 -2px var(--focus-inner);
+}
+columnview.w11-table.alles-table > listview > row:focus-visible > cell:first-child {
+  box-shadow: inset 1px 0 var(--focus-outer), inset 0 1px var(--focus-outer), inset 0 -1px var(--focus-outer),
+    inset 2px 0 var(--focus-inner), inset 0 2px var(--focus-inner), inset 0 -2px var(--focus-inner);
+}
+columnview.w11-table.alles-table > listview > row:focus-visible > cell:last-child {
+  box-shadow: inset -1px 0 var(--focus-outer), inset 0 1px var(--focus-outer), inset 0 -1px var(--focus-outer),
+    inset -2px 0 var(--focus-inner), inset 0 2px var(--focus-inner), inset 0 -2px var(--focus-inner);
+}
+columnview.w11-table.alles-table.w11-compact > listview > row > cell { min-height: 24px; }
+
+.alles-cell { color: var(--text-2); }
+.alles-cell label { color: inherit; }
+.alles-cell.alles-col-name { color: var(--text-1); }
+.alles-cell.alles-hidden-item .alles-ic { opacity: 0.5; }
+.alles-cell.alles-hidden-item .alles-nm { color: var(--text-2); }
+
+/* rows whose page is still loading */
+.alles-ph {
+  min-height: 8px;
+  border-radius: 4px;
+  background-color: var(--fill-subtle-2);
+  animation: alles-pulse 1.4s ease-in-out infinite;
+}
+@keyframes alles-pulse { 0% { opacity: 0.55; } 50% { opacity: 1; } 100% { opacity: 0.55; } }
+window.w11-reduce-motion .alles-ph { animation: none; }
+
+/* ---- Overlays: welcome, first run, nothing found, errors ---------------------- */
+scrolledwindow.alles-overlay { background-color: transparent; }
+.alles-overlay-box { padding: 64px 24px 24px 24px; }
+.alles-has-empty .alles-overlay-box { padding-top: 48px; }
+.alles-state-title {
+  margin-top: 14px;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.alles-state-title.alles-small { font-size: var(--fs-body-large); }
+.alles-state-body { font-size: var(--fs-body); color: var(--text-2); }
+.alles-state-label { margin-top: 22px; font-size: var(--fs-caption); font-weight: 600; color: var(--text-2); }
+.alles-quick { margin: 4px 0 14px 0; }
+
+button.alles-chip {
+  min-height: 30px;
+  margin: 0;
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--stroke-control);
+  border-top-color: var(--stroke-control-top);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: 999px;
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+  font-weight: 400;
+  transition: background-color 83ms linear;
+}
+button.alles-chip:hover { background-color: var(--fill-control-2); }
+button.alles-chip:active { background-color: var(--fill-control-3); color: var(--text-2); }
+button.alles-chip:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+button.alles-chip .w11-glyph { color: var(--accent-fg-3); }
+button.alles-chip.alles-chip-code {
+  min-height: 24px;
+  padding: 0 9px;
+  border-radius: var(--radius-control);
+  font-family: "Cascadia Mono", "Cascadia Code", "Ubuntu Sans Mono", "Ubuntu Mono", "Noto Sans Mono", monospace;
+  font-size: 12px;
+  color: var(--text-1);
+}
+.alles-welcome button.w11-link { font-size: var(--fs-body); }
+.alles-welcome button.w11-link .w11-glyph { color: var(--accent-fg); }
+
+/* first run */
+.alles-first-bar { margin-top: 18px; }
+.alles-first-count { margin-top: 6px; color: var(--text-2); }
+.alles-first-pct { color: var(--text-1); font-weight: 600; }
+.alles-first-path { color: var(--text-3); }
+.alles-first-note {
+  margin-top: 22px;
+  padding: 10px 14px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  color: var(--text-2);
+}
+.alles-first-note .w11-glyph { margin-top: 1px; color: var(--accent-fg-3); }
+
+/* nothing found */
+.alles-empty-icon {
+  border-radius: 999px;
+  background-color: var(--fill-subtle-2);
+  color: var(--text-3);
+}
+.alles-empty-hints { margin-top: 14px; color: var(--text-2); }
+.alles-empty-hint { min-height: 28px; }
+.alles-empty-hint button.w11-link { padding: 2px 6px; font-size: var(--fs-caption); }
+
+/* ---- Side panes --------------------------------------------------------------------- */
+.alles-panehost { border-left: 1px solid var(--stroke-divider); }
+scrolledwindow.alles-pane-host { background-color: transparent; }
+
+.alles-preview { padding: 16px; }
+.alles-pv-media {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.alles-pv-media.alles-empty-media {
+  background-color: transparent;
+  border-style: dashed;
+  border-color: var(--stroke-divider);
+}
+.alles-pv-glyph { color: var(--text-2); }
+.alles-pv-glyph.alles-muted { color: var(--text-3); }
+.alles-pv-hint { margin: 16px 4px 0 4px; color: var(--text-2); font-size: var(--fs-caption); }
+.alles-pv-name {
+  margin-top: 16px;
+  font-size: var(--fs-body-large);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.alles-pv-type { margin-top: 2px; color: var(--text-2); }
+.alles-pv-props { margin-top: 18px; }
+.alles-pv-dt { color: var(--text-2); }
+.alles-pv-dd { color: var(--text-1); }
+button.alles-pv-link {
+  min-height: 0;
+  margin: 0 0 0 -6px;
+  padding: 3px 6px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--accent-fg);
+  font-size: var(--fs-caption);
+  font-weight: 400;
+}
+button.alles-pv-link label { color: inherit; }
+button.alles-pv-link:hover { background-color: var(--fill-subtle-2); }
+.alles-pv-link-icon { margin-top: 1px; }
+.alles-pv-actions { margin-top: 22px; }
+.alles-pv-actions button.w11-button { font-size: var(--fs-caption); }
+
+.alles-tips-head { padding: 12px 8px 4px 20px; }
+.alles-tips-title { font-size: var(--fs-body-large); font-weight: 600; color: var(--text-1); }
+.alles-tips-scroll { padding: 0 20px 20px 20px; }
+.alles-tips-intro { margin-bottom: 6px; color: var(--text-2); }
+.alles-tips-group { margin-top: 18px; }
+.alles-tips-heading { margin-bottom: 8px; font-size: var(--fs-caption); font-weight: 600; color: var(--text-1); }
+.alles-tips-row { padding: 8px 0; border-top: 1px solid var(--stroke-divider); }
+.alles-tips-row.alles-tips-first { padding-top: 2px; border-top-width: 0; }
+.alles-tips-desc, .alles-tips-dd { color: var(--text-2); }
+.alles-kbd {
+  min-width: 20px;
+  padding: 1px 6px;
+  border: 1px solid var(--stroke-control-2);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  font-size: 11px;
+  color: var(--text-1);
+}
+.alles-kbd-plus { color: var(--text-3); font-size: 11px; }
+
+/* ---- Status bar ------------------------------------------------------------------------ */
+.alles-status {
+  min-height: 30px;
+  padding: 0 16px;
+  border-top: 1px solid var(--stroke-divider);
+  color: var(--text-2);
+  font-size: var(--fs-caption);
+}
+.alles-status-count { color: var(--text-1); }
+.alles-status-ms { color: var(--text-3); }
+.alles-status-sep {
+  min-width: 1px;
+  min-height: 12px;
+  margin: 0 10px;
+  background-color: var(--stroke-divider);
+}
+.alles-idx { color: var(--text-2); }
+.alles-idx.alles-ready .alles-idx-ok { color: var(--sys-success); }
+.alles-idx-live { color: var(--accent-fg-3); }
+.alles-idx-dot { margin: 0 2px; color: var(--text-3); }
+button.alles-idx.alles-idx-error {
+  min-height: 0;
+  margin: 0 -6px 0 0;
+  padding: 2px 6px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: var(--sys-caution);
+  font-size: var(--fs-caption);
+  font-weight: 400;
+}
+button.alles-idx.alles-idx-error label { color: inherit; }
+button.alles-idx.alles-idx-error:hover { background-color: var(--fill-subtle-2); }
+
+/* ---- Dialogs: options, properties, confirm ---------------------------------------------- */
+.alles-opt-intro { margin: -4px 0 18px 0; color: var(--text-2); }
+.alles-opt-error { margin-bottom: 16px; }
+.alles-opt .w11-settings-group + .w11-settings-group { margin-top: 22px; }
+.alles-opt-actions { padding-top: 6px; }
+.alles-opt-note { color: var(--text-2); font-size: var(--fs-caption); }
+.alles-opt-empty {
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  color: var(--text-2);
+}
+.alles-opt-stats { margin-top: 2px; color: var(--text-3); font-size: var(--fs-caption); }
+
+.alles-props { font-size: var(--fs-caption); }
+.alles-props-icon { min-width: 32px; min-height: 32px; }
+.alles-props-name {
+  padding: 6px 10px;
+  border: 1px solid var(--stroke-control);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  font-size: var(--fs-body);
+  color: var(--text-1);
+}
+separator.alles-props-sep { min-height: 1px; margin: 2px 0; background-color: var(--stroke-divider); background-image: none; }
+.alles-props-dt { min-width: 110px; color: var(--text-2); }
+.alles-props-dd { color: var(--text-1); }
+.alles-props-attrlabel { color: var(--text-2); }
+.alles-props-note { margin-top: 4px; color: var(--text-3); }
+.alles-confirm-note { color: var(--text-2); }

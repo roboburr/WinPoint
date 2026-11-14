@@ -405,6 +405,19 @@ Coordinator decisions:
   -default-apps, -installer and the workers), native/calendar and what they import from vendor/ui. The old code
   stays readable as `git show 418ea594:<path>`. README, VALIDATION.md and gtk-native.md describe the new state; the
   gaps that are now the default are in gtk-native.md (shell.restartAll, shell.command, the slice, no fallback).
+* D-G71: Robin (2026-11-13): "WinPoint als optie bij inloggen als keuze", "zodat nieuwe pc's netjes het kunnen
+  installeren". WinPoint is its own login session next to GNOME and Ubuntu, made the way Ubuntu makes its own:
+  scripts/install-session.py (pkexec, four files: wayland-sessions/winpoint.desktop with DesktopNames WinPoint;GNOME,
+  gnome-session/sessions/winpoint.session, the gnome-session@winpoint.target drop-in that pulls
+  org.gnome.Shell@winpoint.service, gnome-shell/modes/winpoint.json = user mode, Yaru shell theme when present, the
+  extension as the mode's only extension). install.py runs it on a terminal unless --no-session; with the session the
+  FileChooser choice moves to winpoint-portals.conf and the autostart entry GnomeLook (NotShowIn=WinPoint) runs
+  `win11-app --gnome-look` in every other session: host/src/gnome_look.rs keeps GNOME's value of every key WinPoint
+  writes (interface, wm button layout, background) and puts it back when the key still holds WinPoint's, strips the
+  caption and theme blocks from gtk.css, restores the extension's logout and Task View keybindings, and takes the
+  extension out of enabled-extensions. The panel host now also applies WinPoint's colour scheme and GTK/icon theme at
+  its start (captions_at_start), as a GNOME session may have put GNOME's back. Harness: --session-mode winpoint
+  (gnome-shell --mode=winpoint from a private RUN/sysdata, empty enabled-extensions); scenario session-mode 9/9.
 ### Rounds 4-6: Windows Update per `windows-update-gnome.md` (GW steps, its own ownership table), own-app window
 memory hardening (D-G14) alongside round 4.
 

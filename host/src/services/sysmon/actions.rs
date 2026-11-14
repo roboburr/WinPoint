@@ -475,12 +475,18 @@ fn ancestors(pid: u32, limit: usize) -> Vec<u32> {
     }
     out
 }
+/// The own app window `pid` is or runs below, and its pid: a native app's backend (`--http-only`) and a WebKit
+/// window's web processes restart their window; the portal's file picker is no Explorer (process::own_app).
 fn own_window(pid: u32) -> Option<(String, u32)> {
-    for p in std::iter::once(pid).chain(ancestors(pid, 8)) {
-        if let Some(app) = process::own_app(&argv_of(p)) {
-            return Some((app, p));
+    let chain = std::iter::once(pid)
+        .chain(ancestors(pid, 9))
+        .collect::<Vec<_>>();
+    for (i, p) in chain.iter().take(9).enumerate() {
+        let parent = chain.get(i + 1).map(|q| argv_of(*q)).unwrap_or_default();
+        if let Some(app) = process::own_app(&argv_of(*p), &parent) {
+            return Some((app, *p));
         }
-        if p == std::process::id() {
+        if *p == std::process::id() {
             break;
         }
     }
@@ -778,8 +784,8 @@ pub(super) fn restart_plan(
         ));
     }
     if let Some((app, wpid)) = own_window(pid) {
-        let (nl, en, _) = process::own_names(&app);
-        let mut plan = Plan::new("app", Some(i18n::pick(lang, nl, en).into()));
+        let (name, _) = process::own_names(lang, &app);
+        let mut plan = Plan::new("app", Some(name));
         plan.desktop = Some(format!("win11shell-{app}.desktop"));
         plan.pids = vec![wpid];
         plan.own_window = true;
@@ -1067,5 +1073,62 @@ mod tests {
         assert_eq!(e.code, "confirm_required");
         assert_eq!(e.data, json!({"pid":42,"reason":"terminal"}).into());
         assert!(confirm(&p, true, 42, Lang::Nl).is_ok());
+    }
+    // A native app runs as its window `win11-gtk-<kind>` with the backend `win11-app --app <kind> --http-only` below
+    // it (native/kit backend.rs, PR_SET_PDEATHSIG): restarting the backend or its child restarts the window (the
+    // backend follows it), and an Explorer that win11-file-portal started (the file picker) is never restarted as
+    // Explorer. Only plans are made here; nothing is ended.
+    #[test]
+    fn a_native_backend_restarts_its_window_and_the_picker_is_no_explorer() {
+        use super::process::tree::Tree;
+        let dir = "/nonexistent/winpoint-test";
+        let app = Tree::spawn(
+            &format!("{dir}/win11-gtk-explorer"),
+            &format!(
+                "(exec -a {dir}/win11-app bash -c 'sleep 30; :' x --app explorer --http-only) & wait"
+            ),
+        );
+        let backend = app.child(app.root(), &format!("{dir}/win11-app"));
+        let worker = app.child(backend, "sleep");
+        let portal = Tree::spawn(
+            &format!("{dir}/win11-file-portal"),
+            &format!("(exec -a {dir}/win11-gtk-explorer sleep 30) & wait"),
+        );
+        let picker = portal.child(portal.root(), &format!("{dir}/win11-gtk-explorer"));
+        for pid in [app.root(), backend, worker] {
+            assert_eq!(own_window(pid), Some(("explorer".into(), app.root())), "{pid}");
+        }
+        assert_eq!(own_window(picker), None);
+        assert_eq!(own_window(portal.root()), None);
+        let root = std::env::temp_dir().join(format!(
+            "win11-sysmon-restart-{}",
+            crate::events::nonce()
+        ));
+        let config = root.join("config");
+        fs::create_dir_all(&config).unwrap();
+        fs::write(
+            config.join("settings.json"),
+            json!({"language":"en"}).to_string(),
+        )
+        .unwrap();
+        let ctx = ServiceContext::new(
+            crate::events::Events::new(&root.join("events")).unwrap(),
+            config,
+            root.join("cache"),
+            root.join("ui"),
+            "taskmgr".into(),
+            false,
+        )
+        .unwrap();
+        let mut pm = ProcessState::default();
+        let plan = restart_plan(backend, &mut pm, &ctx).unwrap();
+        assert_eq!(
+            (plan.how.as_str(), plan.name.as_deref(), plan.desktop.as_deref()),
+            ("app", Some("File Explorer"), Some("win11shell-explorer.desktop"))
+        );
+        assert_eq!(plan.via.as_deref(), Some("bash"));
+        assert_eq!((plan.pids, plan.own_window), (vec![app.root()], true));
+        ctx.events.shutdown();
+        let _ = fs::remove_dir_all(root);
     }
 }

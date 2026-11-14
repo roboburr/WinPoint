@@ -25,7 +25,8 @@ fi
 # Offline, locked, two jobs by default (notes/claude/contracts.md C8, plan-critique F34): no download, and a
 # release build with thin LTO stays inside the memory plan. WIN11_BUILD_JOBS still overrides the job count.
 cargo build --release --offline --locked -j "${WIN11_BUILD_JOBS:-2}"
-# D-G70: the native GTK 4 shell and Calendar (native/, its own workspace: gtk4-rs needs another glib than the host),
-# into the same target directory, so target/release holds all 12 binaries scripts/install.py installs.
+# D-G70: the native GTK 4 shell, Calendar and apps (native/, its own workspace: gtk4-rs needs another glib than the
+# host; native/APPS.md), into the same target directory, so target/release holds all 19 binaries scripts/install.py
+# installs: the workspace builds win11-shell, win11-calendar and the seven win11-gtk-<kind> apps.
 cargo build --release --offline --locked -j "${WIN11_BUILD_JOBS:-2}" --manifest-path native/Cargo.toml \
     --target-dir "${CARGO_TARGET_DIR:-$ROOT/target}"

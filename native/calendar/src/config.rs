@@ -1,7 +1,7 @@
 //! The user's choices from ~/.config/win11-gnome/settings.json (XDG_CONFIG_HOME respected), the same file the
 //! shell and the HTML apps read: theme.mode (dark / light, otherwise GNOME's colour scheme), theme.accent,
 //! language ("nl" default, "en"), time.h24 and accessibility.textScale. Also the text helper `t(nl, en)` and
-//! the data folder (~/.local/share/win11-gnome/calendar, XDG_DATA_HOME respected).
+//! the data folder (~/.local/share/win11-gnome-calendar, XDG_DATA_HOME respected).
 use gtk::{gio, glib};
 use gtk::prelude::*;
 use serde_json::Value;
@@ -48,12 +48,23 @@ pub fn settings_path() -> PathBuf {
     base.join("win11-gnome").join("settings.json")
 }
 
+/// Until 13-11 the folder was win11-gnome/calendar: with the default prefix that is the install payload, which an
+/// update swaps and an uninstall removes. The first call moves it here (scripts/install.py `rescue_calendar` does
+/// the same before it touches the payload).
 pub fn data_dir() -> PathBuf {
+    static MOVED: std::sync::Once = std::sync::Once::new();
     let base = std::env::var_os("XDG_DATA_HOME")
         .map(PathBuf::from)
         .filter(|p| p.is_absolute())
         .unwrap_or_else(glib::user_data_dir);
-    base.join("win11-gnome").join("calendar")
+    let dir = base.join("win11-gnome-calendar");
+    MOVED.call_once(|| {
+        let old = base.join("win11-gnome").join("calendar");
+        if old.is_dir() && !old.is_symlink() && !dir.exists() {
+            let _ = std::fs::rename(&old, &dir);
+        }
+    });
+    dir
 }
 
 /// Read settings.json now (missing or broken: the defaults) and make its language current.

@@ -17,6 +17,7 @@ import file_portal
 T = {
     "nothingRemoved": {"nl": "Niets verwijderd: {payload} bevat geen installatiemarker van dit project.", "en": "Nothing removed: {payload} has no installation marker of this project."},
     "usage": {"nl": "Gebruik: scripts/uninstall.sh [--files-only] [--lang nl|en]", "en": "Usage: scripts/uninstall.sh [--files-only] [--lang nl|en]"},
+    "sessionHint": {"nl": "WinPoint staat nog als keuze bij het inloggen. Weghalen: {command}", "en": "WinPoint is still a choice at the login screen. To remove it: {command}"},
     "removed": {"nl": "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.", "en": "Win11 for GNOME removed. Your settings and the original Win11Shell were kept."},
 }
 
@@ -76,6 +77,9 @@ if not (payload/MARKER).is_file() or (payload/MARKER).read_text() != MAGIC:
     raise SystemExit(t("nothingRemoved", payload=payload))
 if arguments not in ([], ["--files-only"]):
     raise SystemExit(t("usage"))
+# WinPoint's own login session (install-session.py): GNOME's own look back now, while win11-app is still there
+if "--files-only" not in arguments and (prefix/"bin/win11-app").is_file() and (config/"autostart"/install.GNOME_LOOK).is_file():
+    subprocess.run([str(prefix/"bin/win11-app"), "--gnome-look"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 if "--files-only" not in arguments and shutil.which("gnome-extensions"):
     subprocess.run(["gnome-extensions", "disable", UUID], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 # A previous Shell crash or an unavailable extension service can leave the owned
@@ -131,10 +135,12 @@ for binary in (*BINS, *LEGACY_BINS):  # D-G70: an earlier version's WebKit Start
 for name in (*ENTRIES, *LEGACY_ENTRIES):
     (data/"applications"/f"io.github.win11shell.{name}.desktop").unlink(missing_ok=True)
 drop_scheme_default(config)
-# GW7: the post-upgrade check's autostart entry (install.py AUTOSTART); every other autostart entry stays
-autostart = config/"autostart"/install.AUTOSTART
-if autostart.is_symlink() or autostart.is_file():
-    autostart.unlink()
+# GW7: the post-upgrade check's autostart entry (install.py AUTOSTART) and the GNOME look's (GNOME_LOOK); every other
+# autostart entry stays
+for name in (install.AUTOSTART, install.GNOME_LOOK):
+    autostart = config/"autostart"/name
+    if autostart.is_symlink() or autostart.is_file():
+        autostart.unlink()
 extension = data/"gnome-shell/extensions"/UUID
 # Every top-level file of the own extension folder. A file that this version does not ship (the listing of
 # extension/ next to this script, minus the schemas, contracts C7) and that 3b898e6 did not remove either is
@@ -160,6 +166,7 @@ try:
     extension.rmdir()
 except OSError:
     pass
+install.rescue_calendar(payload, data)
 shutil.rmtree(payload)
 if shutil.which("update-desktop-database") and (data/"applications").is_dir():
     subprocess.run(["update-desktop-database", str(data/"applications")], check=True)
@@ -168,3 +175,6 @@ print(t("removed"))
 hint = install.system_hint(True)
 if hint and sys.stdout.isatty():
     print(hint)
+# The login session's four system files stay until removed on purpose (they need the password)
+if install.session_script().installed() and sys.stdout.isatty():
+    print(t("sessionHint", command="python3 " + str(Path(__file__).resolve().with_name("install-session.py")) + " --remove"))

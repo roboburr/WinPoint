@@ -57,6 +57,7 @@ import ctypes
 import fcntl
 import glob
 import hashlib
+import importlib.util
 import json
 import os
 import pwd
@@ -83,17 +84,26 @@ BASELINE = HERE / 'baseline'
 LIB = HERE / 'lib'
 # The machine-wide heavy lock (tools/heavy.sh honours the same override; outside the sandbox only).
 LOCK = Path(os.environ.get('WIN11_HEAVY_LOCK') or G / '.heavy.lock')
-# D-G70: a build dir with the host binaries plus win11-shell and win11-calendar copied from the native workspace's
-# target (an older dir may still hold win11-start/-desktop: they are not installed, install.py BINS no longer has them)
+# D-G70: a build dir with the host binaries plus win11-shell, win11-calendar and the win11-gtk-<kind> apps (native/APPS.md)
+# copied from the native workspace's target (an older dir may still hold win11-start/-desktop: they are not installed,
+# install.py BINS no longer has them)
 DEFAULT_BUILD = G / 'tests' / 'build' / 'native-release'
 BUILD = DEFAULT_BUILD                             # set from --build-dir (set_build_dir) before private_env()
+# --session-mode winpoint (13-11): GNOME Shell in WinPoint's own login session mode (scripts/install-session.py), from
+# a private system data dir RUN/sysdata, with the extension turned on by that mode only (not in enabled-extensions)
+SESSION_MODE = None
 SRC = G                                           # tree that is installed: G, or RUN/src for --source <rev>
 BINS_FALLBACK = ('win11-shell', 'win11-explorer', 'win11-panel', 'win11-app', 'win11-calendar', 'win11-launch',
                  'win11-index-worker', 'win11-image-worker', 'win11-default-apps', 'win11-file-portal',
-                 'win11-installer', 'win11-software-worker')
-# D-G70: the native GTK 4 shell is the only shell (no WebKit panel, Start or desktop); it and the Calendar app are
-# required, part of install.py BINS, and verified after the install even if an install.py still lists them apart.
-NATIVE_BINS = ('win11-shell', 'win11-calendar')
+                 'win11-installer', 'win11-software-worker',
+                 'win11-gtk-explorer', 'win11-gtk-settings', 'win11-gtk-taskmgr', 'win11-gtk-alles',
+                 'win11-gtk-disks', 'win11-gtk-defaultapps', 'win11-gtk-installer')
+# D-G70: the native GTK 4 shell is the only shell (no WebKit panel, Start or desktop); it, the Calendar app and the
+# native GTK 4 apps (13-11, native/APPS.md) are required, part of install.py BINS, and verified after the install even
+# if an install.py still lists them apart.
+NATIVE_BINS = ('win11-shell', 'win11-calendar',
+               'win11-gtk-explorer', 'win11-gtk-settings', 'win11-gtk-taskmgr', 'win11-gtk-alles',
+               'win11-gtk-disks', 'win11-gtk-defaultapps', 'win11-gtk-installer')
 LEGACY_BINS = ('win11-start', 'win11-desktop')    # the WebKit Start and desktop hosts, gone with D-G70
 # install.py's desktop entries: Explorer, Panel, TaskManager, Settings, Search, Disks, DefaultApps, Installer and
 # Calendar (no Start and no Desktop entry since D-G70)
@@ -172,8 +182,9 @@ def private_env() -> dict[str, str]:
         'LANG': 'en_US.UTF-8', 'TERM': 'dumb',          # the live gnome-shell runs LANG=en_US (plan D-G3)
         'XDG_CONFIG_HOME': str(RUN / 'config'), 'XDG_DATA_HOME': str(RUN / 'data'),
         'XDG_CACHE_HOME': str(RUN / 'cache'), 'XDG_RUNTIME_DIR': str(RT),
-        'XDG_DATA_DIRS': '/usr/local/share:/usr/share', 'XDG_CONFIG_DIRS': '/etc/xdg',
-        'XDG_CURRENT_DESKTOP': 'GNOME', 'XDG_SESSION_TYPE': 'wayland',
+        'XDG_DATA_DIRS': (f"{RUN / 'sysdata'}:" if SESSION_MODE else '') + '/usr/local/share:/usr/share',
+        'XDG_CONFIG_DIRS': '/etc/xdg',
+        'XDG_CURRENT_DESKTOP': 'WinPoint:GNOME' if SESSION_MODE else 'GNOME', 'XDG_SESSION_TYPE': 'wayland',
         'TMPDIR': str(RUN / 'tmp'),
         'GSETTINGS_BACKEND': 'keyfile', 'NO_AT_BRIDGE': '1', 'GTK_A11Y': 'none',
         # D-G44 (gw4.md N1): GIO's local VFS only, so no GVfs client contacts a session bus on its own
@@ -445,13 +456,18 @@ def guard(stage: str) -> list[tuple[str, str]]:
 
 
 def install_bins(root: Path | None = None) -> list[str]:
-    """The binaries scripts/install.py installs (its BINS tuple); the 12 known names if it cannot be parsed."""
+    """The binaries scripts/install.py installs (its BINS tuple); the 19 known names if it cannot be parsed."""
     try:
         text = ((root or SRC) / 'scripts' / 'install.py').read_text()
         bins = re.findall(r'"(win11-[a-z-]+)"', re.search(r'^BINS = \((.*?)\)', text, re.S | re.M).group(1))
         return bins or list(BINS_FALLBACK)
     except (OSError, AttributeError):
         return list(BINS_FALLBACK)
+
+
+def set_session_mode(value: str | None) -> None:
+    global SESSION_MODE
+    SESSION_MODE = value or None
 
 
 def set_build_dir(value: str | None) -> Path:
@@ -466,7 +482,7 @@ def build_dir_problems(path: Path) -> list[tuple[str, str]]:
     missing = [b for b in BINS_FALLBACK if not (path / b).is_file() or not os.access(path / b, os.X_OK)]
     if missing:
         return [('build-dir-incomplete', f'--build-dir {path} lacks {len(missing)} of {len(BINS_FALLBACK)} binaries '
-                                         f'(the host binaries plus win11-shell and win11-calendar): {", ".join(missing)}')]
+                                         f'(the host binaries plus win11-shell, win11-calendar and win11-gtk-*): {", ".join(missing)}')]
     return []
 
 
@@ -773,6 +789,7 @@ def out_problem(out: Path) -> bool:
 def launch_problems(opts) -> list[tuple[str, str]]:
     """Checks of the run options before any lock or sandbox: build dir, source, scenario and output paths."""
     p = []
+    set_session_mode(getattr(opts, 'session_mode', None))
     if not opts.guard_only:
         p += build_dir_problems(set_build_dir(opts.build_dir))
     p += source_problems(opts.source)
@@ -1721,7 +1738,16 @@ def prepare(lang: str, seed: str = 'defaults') -> None:
         os.chmod(RUN / 'logs' / name, 0o600)
     keyfile = RUN / 'config/glib-2.0/settings/keyfile'
     keyfile.parent.mkdir(parents=True)
-    keyfile.write_text(KEYFILE.replace('{uuid}', UUID))
+    keyfile.write_text(KEYFILE.replace("enabled-extensions=['{uuid}']", 'enabled-extensions=@as []')
+                       if SESSION_MODE else KEYFILE.replace('{uuid}', UUID))
+    if SESSION_MODE:
+        # the mode file scripts/install-session.py installs, generated by the same code
+        spec = importlib.util.spec_from_file_location('install_session', SRC / 'scripts' / 'install-session.py')
+        session = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(session)
+        modes = RUN / 'sysdata' / 'gnome-shell' / 'modes'
+        modes.mkdir(parents=True, exist_ok=True)
+        (modes / f'{SESSION_MODE}.json').write_text(session.mode_json())
     home = RUN / 'home'
     dirs = {'DESKTOP': 'Desktop', 'DOCUMENTS': 'Documents', 'DOWNLOAD': 'Downloads', 'MUSIC': 'Music',
             'PICTURES': 'Pictures', 'VIDEOS': 'Videos', 'TEMPLATES': 'Templates', 'PUBLICSHARE': 'Public'}
@@ -2040,6 +2066,7 @@ def scenario_out(args) -> Path:
 
 def cmd_run(args) -> int:
     set_build_dir(args.build_dir)
+    set_session_mode(args.session_mode)
     guard_or_exit('outer')
     if os.environ.get('WIN11_BUILD_DIR') != str(BUILD):
         print(f'GUARD REFUSED [build-dir-mismatch] WIN11_BUILD_DIR={os.environ.get("WIN11_BUILD_DIR")!r} '
@@ -2138,6 +2165,8 @@ def cmd_run(args) -> int:
              '--build-dir', str(BUILD), '--source', args.source]
     if args.switch:
         inner.append('--switch')
+    if args.session_mode:
+        inner += ['--session-mode', args.session_mode]
     if args.surfaces:
         inner += ['--surfaces', args.surfaces]
     if args.patch_extension:
@@ -2295,6 +2324,8 @@ class Session:
             raise RuntimeError(f'private system bus reported {address!r}')
         self.facts['systemBus'] = address
         argv = ['gnome-shell', '--headless', f'--virtual-monitor={WIDTH}x{HEIGHT}', f'--wayland-display={WL}', '--no-x11']
+        if SESSION_MODE:
+            argv.append(f'--mode={SESSION_MODE}')
         if not self.args.patch_extension:
             argv.insert(2, '--unsafe-mode')
         self.facts['shellArgv'] = argv
@@ -2426,6 +2457,31 @@ class Session:
         """win11-shell's toplevels: title, visible, size and the widget tree (name, classes, label, rect)."""
         value = self.native({'native': 'state'})
         return value if isinstance(value, list) else []
+
+    def native_app_boot(self, app: str, after: int = 0, timeout: float = 60) -> dict:
+        """The boot row of a native GTK 4 app (native/kit dev.rs): windowId "native-<app>", kind "native-app"."""
+        return until(lambda: next((r['data'] for r in self.rows()[after:] if r.get('event') == 'test'
+                                   and r.get('windowId') == f'native-{app}' and r['data'].get('tag') == 'boot'), None),
+                     f'native app {app} boot report', timeout, 0.2)
+
+    def native_app(self, app: str, command: dict, timeout: float = 15):
+        """One dev command for a native app ({"native": "state"|"click"|"type"|"key", "app": app, ...}); the shell
+        skips commands with an "app" key, each app takes only its own."""
+        self.counter += 1
+        tag = f'native-{app}-{self.counter}'
+        try:
+            until(lambda: self.command.read_text() == '', 'previous dev command consumed', 10, 0.05)
+        except TimeoutError:
+            self.command.write_text('')
+        self.command.write_text(json.dumps({**command, 'app': app, 'tag': tag}))
+        try:
+            row = until(lambda: next((r['data'] for r in self.rows() if r.get('event') == 'test'
+                                      and r.get('windowId') == f'native-{app}' and r['data'].get('tag') == tag), None),
+                        f'native {app} {command.get("native")} {tag}', timeout, 0.05)
+        except TimeoutError:
+            self.command.write_text('')
+            raise
+        return row.get('value')
 
     def native_texts(self, tops: list[dict] | None = None, visible_only: bool = True) -> dict:
         """The labels and tooltips of the shell's (visible) toplevels, with Dutch-word hits: the native counterpart
@@ -2823,6 +2879,7 @@ def load_lib(name: str):
 def cmd_inner(args) -> int:
     global SRC
     set_build_dir(args.build_dir)
+    set_session_mode(args.session_mode)
     SRC = G if args.source == 'worktree' else RUN / 'src'
     guard_or_exit('inner')
     set_subreaper()
@@ -2901,6 +2958,9 @@ def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
                                       'state), explorer,settings[-page],taskmgr,alles,disks (HTML apps: text and screenshots)')
     p.add_argument('--patch-extension', action='store_true', help='fallback: unsafe_mode patch in the PRIVATE copy')
     p.add_argument('--guard-only', action='store_true', help='stop after the guard (self-test)')
+    p.add_argument('--session-mode', choices=('winpoint',),
+                   help="GNOME Shell in WinPoint's login session mode (scripts/install-session.py), the extension "
+                        'turned on by that mode only')
     p.add_argument('--out', help='output directory inside tests/gnome (default: baseline/<lang>, or '
                                  '<scenario dir>/<scenario stem>.out with --scenario)')
     p.add_argument('--lock', help=argparse.SUPPRESS)        # set by launch: "parent[:kind]" or "fd:N"

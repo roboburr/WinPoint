@@ -1,6 +1,6 @@
 //! Native settings API, OS effects, and cross-app notifications.
 #[path = "settings_effects.rs"]
-mod effects;
+pub(crate) mod effects;
 use crate::{
     backend::Backend,
     events::Events,

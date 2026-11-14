@@ -1,4 +1,4 @@
-//! Events and calendars. Local events live in ~/.local/share/win11-gnome/calendar/events.json (XDG_DATA_HOME
+//! Events and calendars. Local events live in ~/.local/share/win11-gnome-calendar/events.json (XDG_DATA_HOME
 //! respected), written atomically (a temporary file in the same folder, fsync, rename). Read-only events from
 //! GNOME's calendars (gnome.rs) sit beside them under the calendar id "gnome".
 //!

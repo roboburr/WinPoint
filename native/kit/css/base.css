@@ -1,0 +1,75 @@
+/* ==========================================================================
+   win11-kit base: type ramp (vendor/ui/css/base.css, tokens.css), glyphs, scroll bars, selection, cards,
+   dividers. Every rule is scoped under window.w11 or a w11- class, so GTK's own theme stays for anything else.
+   ========================================================================== */
+
+window.w11 label { color: inherit; }
+window.w11 label selection, window.w11 text selection { background-color: var(--selection-bg); color: var(--selection-text); }
+window.w11 label:disabled { color: var(--text-disabled); }
+window.w11 popover, window.w11 popover > contents { color: var(--text-1); }
+
+/* ---- Type ramp ------------------------------------------------------------------------------------ */
+.w11-caption { font-size: var(--fs-caption); }
+.w11-body { font-size: var(--fs-body); font-weight: 400; }
+.w11-body-strong { font-size: var(--fs-body); font-weight: 600; }
+.w11-body-large { font-size: var(--fs-body-large); }
+.w11-subtitle, .w11-title, .w11-title-large, .w11-display {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-weight: 600;
+}
+.w11-subtitle { font-size: var(--fs-subtitle); }
+.w11-title { font-size: var(--fs-title); }
+.w11-title-large { font-size: var(--fs-title-large); }
+.w11-display { font-size: var(--fs-display); }
+.w11-semibold { font-weight: 600; }
+.w11-text-1 { color: var(--text-1); }
+.w11-text-2 { color: var(--text-2); }
+.w11-text-3 { color: var(--text-3); }
+.w11-text-disabled { color: var(--text-disabled); }
+.w11-text-accent { color: var(--accent-fg); }
+.w11-text-critical { color: var(--sys-critical); }
+.w11-text-success { color: var(--sys-success); }
+.w11-text-caution { color: var(--sys-caution); }
+.w11-mono { font-family: "Cascadia Mono", "Cascadia Code", "Ubuntu Sans Mono", "Ubuntu Mono", "Noto Sans Mono", monospace; }
+.w11-tabular { font-feature-settings: "tnum"; }
+
+/* ---- Glyphs and icons -------------------------------------------------------------------------------- */
+image.w11-glyph, image.w11-app-icon, image.w11-file-icon { -gtk-icon-shadow: none; -gtk-icon-filter: none; }
+.w11-glyph.w11-accent-glyph { color: var(--accent-fg-3); }
+
+/* ---- Card, divider ------------------------------------------------------------------------------------- */
+.w11-card {
+  background-color: var(--bg-card);
+  background-image: none;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+}
+.w11-divider, separator.w11-divider {
+  min-height: 1px;
+  min-width: 1px;
+  margin: 0;
+  background-color: var(--stroke-divider);
+  background-image: none;
+}
+
+/* ---- Scroll bars (Win11: a thin line that grows when hovered) ------------------------------------------ */
+window.w11 scrollbar { background-color: transparent; background-image: none; border: none; box-shadow: none; }
+window.w11 scrollbar slider {
+  min-width: 6px;
+  min-height: 6px;
+  border: 3px solid transparent;
+  border-radius: 6px;
+  background-clip: padding-box;
+  background-color: var(--scrollbar-thumb);
+}
+window.w11 scrollbar.hovering slider, window.w11 scrollbar:hover slider { border-width: 2px; }
+window.w11 scrollbar slider:active { background-color: var(--text-2); }
+window.w11 scrolledwindow, window.w11 viewport { background-color: transparent; background-image: none; }
+window.w11 undershoot, window.w11 overshoot { background-color: transparent; background-image: none; box-shadow: none; }
+window.w11 scrolledwindow > junction { background: transparent; }
+
+/* ---- Page (appframe.css .af-page) --------------------------------------------------------------------- */
+.w11-page { padding: 2px 40px 40px 40px; }
+.w11-page-title { margin: 0 0 24px 0; }
+.w11-page-header { margin: 0 0 28px 0; }
+.w11-page-header-desc { margin-top: 4px; color: var(--text-2); }

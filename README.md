@@ -162,18 +162,26 @@ WIN11_BUILD_DIR="$CARGO_TARGET_DIR/release" ./scripts/install.sh --lang en
 ./scripts/install.sh --lang en
 ```
 
-The installer checks the required programs and libraries first, then installs for your user only: programs in `~/.local/bin`, the rest in `~/.local/share/win11-gnome`, and the app entries, icons and extension under `~/.local/share`. It never runs `sudo` and keeps existing settings. `--lang en` sets English on a first install; without it the installer guesses from your locale, and a language already stored in `settings.json` always wins. It sets no default apps, except the handler for its own `win11-calendar:` links, and it makes its file picker your FileChooser portal backend.
+The installer checks the required programs and libraries first, then installs for your user: programs in `~/.local/bin`, the rest in `~/.local/share/win11-gnome`, and the app entries, icons and extension under `~/.local/share`. It keeps existing settings. `--lang en` sets English on a first install; without it the installer guesses from your locale, and a language already stored in `settings.json` always wins. It sets no default apps, except the handler for its own `win11-calendar:` links.
 
-Sign out and back in once, so GNOME Shell loads the new extension, then enable it:
+WinPoint becomes its own choice at the login screen, next to GNOME and Ubuntu. For that the installer runs `scripts/install-session.py`, which adds four small system files (a session entry for GDM, a gnome-session session, its systemd drop-in and a GNOME Shell session mode). `pkexec` asks for your password once. Then sign out, click your name, choose **WinPoint** with the gear at the bottom right, and sign in.
+
+- **WinPoint** is GNOME with the WinPoint shell. Its session mode turns the extension on, without Ubuntu Dock, and WinPoint's file picker is the file chooser there.
+- **GNOME** and **Ubuntu** stay as they were. At every login there, WinPoint puts back what it changed in GNOME (theme, icons, colour scheme, wallpaper, window buttons and the caption-button CSS) and turns its extension off.
+
+`--no-session` skips this step, so no password is needed. WinPoint then runs inside your normal GNOME session: sign out and back in once, so GNOME Shell loads the new extension, and enable it:
 
 ```bash
 gnome-extensions enable win11-gnome@win11shell.local
 ```
 
-Ubuntu Dock or another dock extension stays on and can show next to the taskbar. To turn Ubuntu Dock off:
+Ubuntu Dock stays on in that case and can show next to the taskbar; `gnome-extensions disable ubuntu-dock@ubuntu.com` turns it off.
+
+You can add the login choice later, or remove it again (`--dry-run` shows what it would do):
 
 ```bash
-gnome-extensions disable ubuntu-dock@ubuntu.com
+python3 scripts/install-session.py
+python3 scripts/install-session.py --remove
 ```
 
 <details>
@@ -202,7 +210,7 @@ python3 scripts/install-system.py --remove
 ./scripts/uninstall.sh
 ```
 
-This disables the extension, removes the files the installer marked as its own and undoes its file picker and `win11-calendar:` registrations. Your settings in `~/.config/win11-gnome` stay. The caption buttons for other GTK apps are an import line in `~/.config/gtk-3.0/gtk.css` and `~/.config/gtk-4.0/gtk.css`; to remove it, turn off **Settings › Personalisation › Colours › Windows 11 caption buttons in apps** before you uninstall. `--files-only` is for isolated test installs: it removes the files without touching the desktop session.
+This disables the extension, puts GNOME's own look back, removes the files the installer marked as its own and undoes its file picker and `win11-calendar:` registrations. The WinPoint login choice stays until you remove it with `python3 scripts/install-session.py --remove`. Your settings in `~/.config/win11-gnome` stay. The caption buttons for other GTK apps are an import line in `~/.config/gtk-3.0/gtk.css` and `~/.config/gtk-4.0/gtk.css`; to remove it, turn off **Settings › Personalisation › Colours › Windows 11 caption buttons in apps** before you uninstall. `--files-only` is for isolated test installs: it removes the files without touching the desktop session.
 
 ## Configuration
 

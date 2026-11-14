@@ -1,8 +1,12 @@
 //! The harness's dev channel for native surfaces (tests/gnome): WIN11_DEV_COMMAND is a file the harness writes
 //! one JSON command to, WIN11_DEV_REPORT a JSON-lines file the shell appends to. Only commands with a "native"
-//! key are ours (the WebKit hosts share the file); each report is {"event":"test","data":{"tag",...}}.
-//!   {"native":"state","tag":t}             the surfaces' widget trees (name, css classes, label, allocation)
+//! key and no "app" key are ours (the WebKit hosts and the native apps, native/kit dev.rs, share the file); each
+//! report is {"event":"test","data":{"tag",...}}.
+//!   {"native":"state","tag":t}             the surfaces' widget trees (name, css classes, label, allocation; an
+//!                                           image's icon: its theme name or file, "paintable" for a fetched one)
 //!   {"native":"click","name":n,"tag":t}     activate the widget with this name (gtk::Widget::set_widget_name)
+//!   {"native":"type","name":n,"text":s,"tag":t}  set the text of the editable with this name (Start's
+//!                                           "start-search")
 //!   {"native":"flyout","name":n,"tag":t}    toggle a flyout
 use crate::core::Shell;
 use gtk::glib;
@@ -24,6 +28,7 @@ pub fn install(_shell: &Rc<Shell>) {
         if let Ok(text) = std::fs::read_to_string(&command)
             && let Ok(v) = serde_json::from_str::<Value>(&text)
             && v.get("native").is_some()
+            && v.get("app").is_none()
         {
             let _ = std::fs::write(&command, "");
             let tag = v["tag"].clone();
@@ -65,6 +70,18 @@ fn run(v: &Value) -> Value {
                 None => json!({"error": format!("no widget {name}")}),
             }
         }
+        "type" => {
+            let name = v["name"].as_str().unwrap_or("");
+            let found = gtk::Window::list_toplevels().into_iter().find_map(|w| find(&w, name));
+            match found.as_ref().and_then(|w| w.dynamic_cast_ref::<gtk::Editable>()) {
+                Some(editable) => {
+                    editable.set_text(v["text"].as_str().unwrap_or(""));
+                    json!({"typed": name})
+                }
+                None if found.is_some() => json!({"error": format!("{name} takes no text")}),
+                None => json!({"error": format!("no widget {name}")}),
+            }
+        }
         "flyout" => {
             let shell = crate::core::shell();
             let name: &'static str = Box::leak(v["name"].as_str().unwrap_or("").to_owned().into_boxed_str());
@@ -103,9 +120,31 @@ fn tree(widget: &gtk::Widget) -> Value {
         .map(|l| l.label().to_string())
         .or_else(|| widget.tooltip_text().map(|t| t.to_string()));
     let bounds = widget.root().and_then(|r| widget.compute_bounds(&r));
-    json!({"type": widget.type_().name(), "name": widget.widget_name().to_string(),
+    let icon = widget.downcast_ref::<gtk::Image>().and_then(image_icon);
+    let mut node = json!({"type": widget.type_().name(), "name": widget.widget_name().to_string(),
         "classes": widget.css_classes().iter().map(|c| c.to_string()).collect::<Vec<_>>(),
         "label": label,
         "rect": bounds.map(|b| [b.x() as i32, b.y() as i32, b.width() as i32, b.height() as i32]),
-        "children": children})
+        "children": children});
+    if let Some(icon) = icon {
+        node["icon"] = json!(icon);
+    }
+    node
+}
+
+/// What an image shows, for the tree: the icon the taskbar asked for (panel/taskbar/util.rs `set_icon` keeps
+/// "<name>|<px>" on the image as "w11-icon"; it shows the backend's /icon answer for that name), else its theme
+/// icon name or file, "paintable" for another picture.
+fn image_icon(image: &gtk::Image) -> Option<String> {
+    // SAFETY: "w11-icon" is only ever set to a String (util.rs set_icon)
+    if let Some(key) = unsafe { image.data::<String>("w11-icon") } {
+        let key = unsafe { key.as_ref() };
+        return Some(key.rsplit_once('|').map_or(key.as_str(), |(name, _)| name).to_owned());
+    }
+    match image.storage_type() {
+        gtk::ImageType::IconName => image.icon_name().map(|n| n.to_string()),
+        gtk::ImageType::Paintable => Some(image.file().map(|f| f.to_string()).unwrap_or_else(|| "paintable".into())),
+        gtk::ImageType::Gicon => image.gicon().and_then(|g| gtk::gio::prelude::IconExt::to_string(&g)).map(|s| s.to_string()),
+        _ => None,
+    }
 }

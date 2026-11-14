@@ -57,3 +57,10 @@ core.unknownMethod	Deze functie bestaat niet.	This function doesn’t exist.
 # call(): ApiError "offline": a call before this window's dispatcher is connected (start-up)
 #@ host/src/services/mod.rs 8 f36c493726aa834b plain
 core.starting	De dienst wordt gestart.	The service is starting.
+
+# --- host/src/lib.rs
+# native_app_switch(): one line on stderr: the native GTK 4 app win11-gtk-<kind> is not next to the host binaries, so
+# the WebKit app of that kind starts instead (it stays the fallback until WebKit is removed); {path} is the full path
+# of the missing binary
+#@ new
+core.nativeAppMissing	Win11 voor GNOME: {path} ontbreekt; de WebKit-versie van de app start.	Win11 for GNOME: {path} is missing; the WebKit version of the app starts instead.

@@ -1,4 +1,5 @@
-//! Generic entry point for the existing Settings, Task Manager, Alles and Disks UIs.
+//! Generic entry point for the apps: the WebKit UIs, and with `--http-only` the backend of the native GTK 4 apps
+//! (native/apps, which start `win11-app --app <kind> --http-only`).
 //! The shared library removes this `--app <name>` prefix before reading UI parameters.
 
 use std::{ffi::OsStr, process::ExitCode};
@@ -6,15 +7,20 @@ use std::{ffi::OsStr, process::ExitCode};
 fn main() -> ExitCode {
     let mut args = std::env::args_os().skip(1);
     let first = args.next();
+    if first.as_deref() == Some(OsStr::new("--gnome-look")) {
+        // The autostart entry of every session but WinPoint's (scripts/session.py): GNOME's own look again.
+        return ExitCode::from(win11_host::restore_gnome_look() as u8);
+    }
     if first.as_deref() == Some(OsStr::new("--help")) {
-        println!("Gebruik: win11-app --app settings|taskmgr|alles|disks [--params JSON]");
+        println!("Gebruik: win11-app --app explorer|settings|taskmgr|alles|disks|defaultapps|installer [--params JSON]");
         return ExitCode::SUCCESS;
     }
     if first.as_deref() != Some(OsStr::new("--app")) {
-        eprintln!("Gebruik: win11-app --app settings|taskmgr|alles|disks [--params JSON]");
+        eprintln!("Gebruik: win11-app --app explorer|settings|taskmgr|alles|disks|defaultapps|installer [--params JSON]");
         return ExitCode::from(2);
     }
     let kind: &'static str = match args.next().as_deref().and_then(OsStr::to_str) {
+        Some("explorer") => "explorer",
         Some("settings") => "settings",
         Some("taskmgr") => "taskmgr",
         Some("alles") => "alles",

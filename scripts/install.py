@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 """Install only this project's files; do not change the current desktop session.
 
-Usage: scripts/install.sh [--lang nl|en]   (install.sh runs: install.py ROOT [--lang nl|en])
+Usage: scripts/install.sh [--lang nl|en] [--no-session]   (install.sh runs: install.py ROOT [...])
+
+WinPoint's own choice at the login screen (Robin, 13-11): when the four system files of scripts/install-session.py
+are missing and this runs in a terminal, it runs that script first (pkexec asks the password once; --no-session or
+WIN11_NO_SESSION=1 skips it). With the session the extension runs in the WinPoint session only (its shell mode turns
+it on), the FileChooser portal choice goes to winpoint-portals.conf, and the autostart entry GnomeLook
+(NotShowIn=WinPoint) gives GNOME and Ubuntu their own look back at every login (host/src/gnome_look.rs). Without the
+session everything stays as before: the extension is turned on by hand and runs in every GNOME session.
 
 Win11's language (notes/claude/contracts.md C1, C6): an existing win11-gnome settings.json always decides; without
 one, --lang; on an update of an existing install without a stored choice, nl (H D13); on a first install, the
@@ -11,6 +18,7 @@ Messages follow --lang when it is given, else that language.
 """
 from __future__ import annotations
 import fcntl
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -27,17 +35,34 @@ import file_portal
 MARKER = ".win11-gnome-owned"
 MAGIC = "win11-gnome-rust-host-v1\n"
 UUID = "win11-gnome@win11shell.local"
-BINS = ("win11-explorer", "win11-panel", "win11-app", "win11-launch", "win11-index-worker", "win11-image-worker", "win11-default-apps", "win11-file-portal", "win11-installer", "win11-software-worker", "win11-shell", "win11-calendar")
+BINS = ("win11-explorer", "win11-panel", "win11-app", "win11-launch", "win11-index-worker", "win11-image-worker", "win11-default-apps", "win11-file-portal", "win11-installer", "win11-software-worker", "win11-shell", "win11-calendar",
+        "win11-gtk-explorer", "win11-gtk-settings", "win11-gtk-taskmgr", "win11-gtk-alles", "win11-gtk-disks", "win11-gtk-defaultapps", "win11-gtk-installer")
 # D-G70: the native GTK 4 shell (native/shell: taskbar, flyouts, Start, desktop) is the shell; win11-panel execs it.
 # win11-calendar (Robin 2026-11-13): the native Calendar app (native/calendar), opened on a day by the taskbar calendar.
-# Both are built in their own workspace (native/; scripts/build.sh puts them next to the others), so they are looked
+# win11-gtk-<kind> (Robin 2026-11-13, native/APPS.md): the native GTK 4 apps (native/apps). The host binaries that
+# launch an app (win11-app --app <kind>, win11-explorer, win11-default-apps, win11-installer) exec them from their own
+# directory; without them, or with WIN11_WEBKIT_APPS=1, the WebKit app runs.
+# All are built in their own workspace (native/; scripts/build.sh puts them next to the others), so they are looked
 # up in WIN11_NATIVE_BUILD_DIR first, then in the build directory.
-NATIVE_BINS = ("win11-shell", "win11-calendar")
+NATIVE_BINS = ("win11-shell", "win11-calendar",
+               "win11-gtk-explorer", "win11-gtk-settings", "win11-gtk-taskmgr", "win11-gtk-alles", "win11-gtk-disks", "win11-gtk-defaultapps", "win11-gtk-installer")
 ENTRIES = ("Explorer", "Panel", "TaskManager", "Settings", "Search", "Disks", "DefaultApps", "Installer", "Calendar")
 # D-G70: the WebKit Start and desktop hosts of earlier versions. An install over an own payload removes them (they are
 # no longer built); they are not conflicts of a fresh install.
 LEGACY_BINS = ("win11-start", "win11-desktop")
 LEGACY_ENTRIES = ("Start", "Desktop")
+# Icon= of these entries: a file of the bundled Win11 icon theme in the payload (icons/Win11/<path>), the icons the
+# apps show under Win11Shell, so that GNOME's own UI (Alt+Tab, the overview) finds them under any icon theme; the
+# stock Adwaita has none of these names but drive-harddisk. The theme name is the fallback when the file is missing.
+# Settings and DefaultApps use the payload's ui/assets/icons/settings.svg, Calendar office-calendar.svg (below);
+# Panel's view-app-grid-symbolic is in Adwaita.
+BUNDLED_ICONS = {
+    "Installer": "apps/scalable/system-software-install.svg",
+    "Search": "apps/scalable/system-search.svg",
+    "Disks": "devices/scalable/drive-harddisk.svg",
+    "TaskManager": "apps/scalable/utilities-system-monitor.svg",
+    "Explorer": "apps/scalable/system-file-manager.svg",
+}
 # The Calendar's own URI scheme: win11-calendar:YYYY-MM-DD opens that day. Only this scheme gets a default here.
 CALENDAR_SCHEME = "x-scheme-handler/win11-calendar"
 CALENDAR_DESKTOP = "io.github.win11shell.Calendar.desktop"
@@ -61,8 +86,8 @@ T = {
                           "en": "Note: update-desktop-database is missing (package desktop-file-utils); GNOME’s app database is not updated."},
     "configNotOwn": {"nl": "Niet overschreven: {path} moet een gewone map van deze gebruiker zijn.", "en": "Not overwritten: {path} must be a plain folder of this user."},
     "badLang": {"nl": "Onbekende taal ‘{lang}’: kies nl of en.", "en": "Unknown language ‘{lang}’: choose nl or en."},
-    "usage": {"nl": "Gebruik: scripts/install.sh [--lang nl|en]\n  --lang nl|en  de taal van Win11 bij een eerste installatie; een keuze die al in settings.json staat, blijft gelden",
-              "en": "Usage: scripts/install.sh [--lang nl|en]\n  --lang nl|en  Win11’s language on a first install; a choice already in settings.json is kept"},
+    "usage": {"nl": "Gebruik: scripts/install.sh [--lang nl|en] [--no-session]\n  --lang nl|en  de taal van Win11 bij een eerste installatie; een keuze die al in settings.json staat, blijft gelden\n  --no-session  WinPoint niet als eigen keuze bij het inloggen toevoegen (dan geen wachtwoord nodig)",
+              "en": "Usage: scripts/install.sh [--lang nl|en] [--no-session]\n  --lang nl|en  Win11’s language on a first install; a choice already in settings.json is kept\n  --no-session  don’t add WinPoint as its own choice at the login screen (no password needed then)"},
     "badOption": {"nl": "Onbekende optie: {option}", "en": "Unknown option: {option}"},
     "langChosen": {"nl": "Taal: Nederlands. In English: choose English in Instellingen › Tijd en taal › Taal en regio.",
                    "en": "Language: English. In het Nederlands: kies Nederlands in Settings › Time & language › Language & region."},
@@ -85,6 +110,11 @@ T = {
     "done3": {"nl": "De taakbalk is geïnstalleerd, maar nog niet aangezet.", "en": "The taskbar is installed, but not turned on yet."},
     "done4": {"nl": "Meld je aan bij Ubuntu/GNOME; na eerste installatie zo nodig af- en aanmelden.", "en": "Sign in to Ubuntu/GNOME; after a first installation, sign out and back in if needed."},
     "done5": {"nl": "Taakbalk aan: gnome-extensions enable {uuid}", "en": "Turn the taskbar on: gnome-extensions enable {uuid}"},
+    "session1": {"nl": "WinPoint is een eigen keuze bij het inloggen. GNOME en Ubuntu blijven zoals ze waren.", "en": "WinPoint is its own choice at the login screen. GNOME and Ubuntu stay as they were."},
+    "session2": {"nl": "Meld je af en kies WinPoint bij het inloggen: klik op je naam en daarna op het tandwiel rechtsonder.", "en": "Sign out and choose WinPoint at the login screen: click your name, then the gear at the bottom right."},
+    "sessionAsk": {"nl": "WinPoint krijgt een eigen keuze bij het inloggen, naast GNOME en Ubuntu (overslaan: --no-session).", "en": "WinPoint gets its own choice at the login screen, next to GNOME and Ubuntu (skip it: --no-session)."},
+    "sessionSkipped": {"nl": "WinPoint is geen eigen keuze bij het inloggen geworden; dat kan later met: python3 {command}", "en": "WinPoint didn’t become its own choice at the login screen; you can do that later with: python3 {command}"},
+    "gnomeLookName": {"nl": "GNOME-uiterlijk terugzetten (WinPoint)", "en": "Restore the GNOME look (WinPoint)"},
     "done6": {"nl": "Je huidige Win11Shell, standaardbestandsbeheerder en desktopinstellingen zijn niet gewijzigd.", "en": "Your current Win11Shell, default file manager and desktop settings have not been changed."},
     # GW5: the one hint line about scripts/install-system.py (install: the files are missing; uninstall: still there)
     "systemHint": {"nl": "Optioneel, één keer met je wachtwoord: {command} installeert de systeembestanden voor ‘Nieuwe Ubuntu-versies’ en ‘Venster weer openen’.",
@@ -146,6 +176,42 @@ def autostart_entry(prefix: Path, language: str) -> str:
             f"Name={t('postUpgradeName', language)}\n"
             f"Exec=/usr/bin/env -- {desktop_exec(prefix/'bin'/'win11-launch')} --post-upgrade-check\n"
             "OnlyShowIn=GNOME;\nNoDisplay=true\n")
+
+
+GNOME_LOOK = "io.github.win11shell.GnomeLook.desktop"
+
+
+def gnome_look_entry(prefix: Path, language: str) -> str:
+    """Every session but WinPoint's: GNOME's own look again (host/src/gnome_look.rs, win11-app --gnome-look)."""
+    return ("[Desktop Entry]\nType=Application\n"
+            f"Name={t('gnomeLookName', language)}\n"
+            f"Exec=/usr/bin/env -- {desktop_exec(prefix/'bin'/'win11-app')} --gnome-look\n"
+            "NotShowIn=WinPoint;\nNoDisplay=true\n")
+
+
+def session_script():
+    spec = importlib.util.spec_from_file_location("install_session", Path(__file__).with_name("install-session.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def session_ready() -> bool:
+    """The WinPoint login session is installed, after running install-session.py when it is missing and allowed
+    (a terminal, no --no-session or WIN11_NO_SESSION=1, gnome-session and pkexec present)."""
+    session = session_script()
+    if session.installed():
+        return True
+    if (NO_SESSION or os.environ.get("WIN11_NO_SESSION") == "1" or not sys.stdin.isatty()
+            or not Path("/usr/bin/gnome-session").is_file() or not shutil.which("pkexec")):
+        return False
+    print(t("sessionAsk"))
+    sys.stdout.flush()
+    subprocess.run([sys.executable, str(Path(__file__).with_name("install-session.py"))])
+    if session.installed():
+        return True
+    print(t("sessionSkipped", command=Path(__file__).with_name("install-session.py")))
+    return False
 
 
 def system_hint(remove: bool, root: Path = Path("/")) -> str | None:
@@ -260,14 +326,21 @@ def resolve_language(explicit: str | None, config: Path, data: Path, payload: Pa
     return {"lang": lang, "source": source, "detail": signal, "store": True}
 
 
+NO_SESSION = False   # --no-session (or WIN11_NO_SESSION=1): never run install-session.py from here
+
+
 def parse_arguments(argv: list[str]) -> str | None:
-    """--lang nl|en (also --lang=X, any case); -h/--help prints the usage. Exit 2 on a bad value or option."""
+    """--lang nl|en (also --lang=X, any case), --no-session; -h/--help prints the usage. Exit 2 on a bad value or
+    option."""
+    global NO_SESSION
     explicit = None
     rest = []
     index = 0
     while index < len(argv):
         argument = argv[index]
-        if argument == "--lang" or argument.startswith("--lang="):
+        if argument == "--no-session":
+            NO_SESSION = True
+        elif argument == "--lang" or argument.startswith("--lang="):
             if argument == "--lang":
                 index += 1
                 value = argv[index] if index < len(argv) else ""
@@ -313,7 +386,7 @@ def missing_binaries(build: Path) -> list[Path]:
 
 def choose_build(root: Path) -> Path:
     """WIN11_BUILD_DIR, else the first complete one of target/release and bin/ (a checkout's bin/ is stale; a
-    package has only bin/). All 12 binaries are required; every missing one is named."""
+    package has only bin/). All 19 binaries are required; every missing one is named."""
     if os.environ.get("WIN11_BUILD_DIR"):
         build = Path(os.environ["WIN11_BUILD_DIR"])
     else:
@@ -332,8 +405,10 @@ PACKAGES = {   # the Ubuntu 26.04 package of each library the binaries need (dpk
     "libgdk_pixbuf-2.0.so.0": "libgdk-pixbuf-2.0-0", "libcairo.so.2": "libcairo2", "libz.so.1": "zlib1g",
     "libglib-2.0.so.0": "libglib2.0-0t64", "libgio-2.0.so.0": "libglib2.0-0t64", "libgobject-2.0.so.0": "libglib2.0-0t64",
     "libarchive.so.13": "libarchive13t64", "libgcc_s.so.1": "libgcc-s1",
-    "libgtk-4.so.1": "libgtk-4-1", "libgraphene-1.0.so.0": "libgraphene-1.0-0",   # win11-shell, win11-calendar
+    "libgtk-4.so.1": "libgtk-4-1", "libgraphene-1.0.so.0": "libgraphene-1.0-0",   # win11-shell, win11-calendar, win11-gtk-*
+    "libpango-1.0.so.0": "libpango-1.0-0",   # win11-gtk-{explorer,settings,taskmgr,alles} (dpkg -S, 2026-11-13)
 }
+# The rest of DT_NEEDED is libc6 (libc.so.6, libm.so.6, ld-linux-*.so.2): every Ubuntu has it.
 DLOPENED = ("libarchive.so.13",)          # host/src/files/archive_ffi.rs opens it at run time
 
 
@@ -531,6 +606,15 @@ def install_extension(root: Path, extension: Path) -> None:
     subprocess.run(["glib-compile-schemas", "--strict", str(schemas)], check=True)
 
 
+def rescue_calendar(payload: Path, data: Path) -> None:
+    """The Calendar's events: $XDG_DATA_HOME/win11-gnome/calendar until 13-11, which is this payload with the default
+    prefix, so a payload swap or an uninstall removed them. Move them to win11-gnome-calendar, the Calendar's folder
+    now (native/calendar/src/config.rs data_dir, which also moves them itself when it starts first)."""
+    old, new = payload/"calendar", data/"win11-gnome-calendar"
+    if payload == data/"win11-gnome" and old.is_dir() and not old.is_symlink() and not new.exists():
+        old.rename(new)
+
+
 def remove_legacy(prefix: Path, applications: Path) -> None:
     """D-G70: the binaries and entries of an earlier version's WebKit Start and desktop (LEGACY_BINS, LEGACY_ENTRIES).
     Only files and links are removed; anything else at those paths is left alone."""
@@ -573,7 +657,8 @@ def main(root: Path, argv: list[str] | None = None) -> None:
         check_config_dir(config/"win11-gnome")
     icon_bundle.validate(root/"vendor")
     previous_icons = icon_bundle.preflight_aliases(payload, data)
-    portal_plan = file_portal.preflight(payload, prefix, data, config)
+    session = session_ready()
+    portal_plan = file_portal.preflight(payload, prefix, data, config, session)
     # The choice is stored after every check and before the first change (ge1c-review m1): when a later step
     # fails (glib-compile-schemas, update-desktop-database, a portal or icon step), the rerun finds settings.json
     # and keeps this language, instead of taking the update-without-choice path (nl, H D13). It never replaces
@@ -582,6 +667,7 @@ def main(root: Path, argv: list[str] | None = None) -> None:
         store_language(config/"win11-gnome", defaults, language)
     for line in language_lines(choice, explicit):
         print(line)
+    rescue_calendar(payload, data)
     payload.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".win11-gnome-install-", dir=payload.parent))
     try:
@@ -632,15 +718,20 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     comment = entries["comment"][language]
     # The Windows 11 calendar of the bundled Win11 icon theme (vendor/icons, icon_bundle.py), else the theme's own
     calendar_icon = payload/"icons/Win11/apps/scalable/office-calendar.svg"
+
+    def bundled(name: str, fallback: str) -> str:
+        path = payload/"icons/Win11"/BUNDLED_ICONS[name]
+        return str(path) if path.is_file() else fallback
+
     rows = [
         ("Panel", "win11-panel", "view-app-grid-symbolic", "NoDisplay=true\nCategories=Utility;\n"),
         ("Settings", "win11-app", str(payload/"ui/assets/icons/settings.svg"), "NoDisplay=true\nCategories=Settings;\n"),
         ("DefaultApps", "win11-default-apps", str(payload/"ui/assets/icons/settings.svg"), "Categories=Settings;System;\n"),
-        ("Installer", "win11-installer", "system-software-install", "Categories=System;PackageManager;\n"),
-        ("Search", "win11-app", "system-search", "NoDisplay=true\nCategories=Utility;\n"),
-        ("Disks", "win11-app", "drive-harddisk", "NoDisplay=true\nCategories=System;\n"),
-        ("TaskManager", "win11-app", "utilities-system-monitor", "NoDisplay=true\nCategories=System;Monitor;\n"),
-        ("Explorer", "win11-explorer", "system-file-manager",
+        ("Installer", "win11-installer", bundled("Installer", "system-software-install"), "Categories=System;PackageManager;\n"),
+        ("Search", "win11-app", bundled("Search", "system-search"), "NoDisplay=true\nCategories=Utility;\n"),
+        ("Disks", "win11-app", bundled("Disks", "drive-harddisk"), "NoDisplay=true\nCategories=System;\n"),
+        ("TaskManager", "win11-app", bundled("TaskManager", "utilities-system-monitor"), "NoDisplay=true\nCategories=System;Monitor;\n"),
+        ("Explorer", "win11-explorer", bundled("Explorer", "system-file-manager"),
          "Categories=System;FileTools;FileManager;\nMimeType=inode/directory;\n"),
         ("Calendar", "win11-calendar", str(calendar_icon) if calendar_icon.is_file() else "x-office-calendar",
          f"Categories=Office;Calendar;\nMimeType={CALENDAR_SCHEME};\n"),
@@ -656,14 +747,22 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     autostart = config/"autostart"
     autostart.mkdir(parents=True, exist_ok=True)
     (autostart/AUTOSTART).write_text(autostart_entry(prefix, language))
+    if session:
+        (autostart/GNOME_LOOK).write_text(gnome_look_entry(prefix, language))
+    else:
+        (autostart/GNOME_LOOK).unlink(missing_ok=True)
     if shutil.which("update-desktop-database"):
         subprocess.run(["update-desktop-database", str(applications)], check=True)
     set_scheme_default(config, CALENDAR_DESKTOP, CALENDAR_SCHEME)
     print(t("done1", prefix=prefix))
     print(t("done2"))
-    print(t("done3"))
-    print(t("done4"))
-    print(t("done5", uuid=UUID))
+    if session:
+        print(t("session1"))
+        print(t("session2"))
+    else:
+        print(t("done3"))
+        print(t("done4"))
+        print(t("done5", uuid=UUID))
     print(t("done6"))
     hint = system_hint(False)
     if hint and sys.stdout.isatty():

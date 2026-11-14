@@ -1,0 +1,72 @@
+/* ==========================================================================
+   win11-gtk-explorer, builder B's widgets: the details and preview pane, the Eigenschappen / Delen /
+   Mapopties dialogs, the progress cards of long jobs and the drag and drop hint (vendor/ui/css/explorer.css
+   "details pane", "dialogs", .xp-job, .xp-drophint) on the kit's tokens. Loaded by dialogs.rs install_css
+   above explorer.css; classes are the WebKit app's with "-" for "__".
+   ========================================================================== */
+
+/* ---- details pane --------------------------------------------------------------------------------- */
+/* 300 px wide with its 1 px border (240 px below 860 px); GTK's min-width is the content box */
+.xp-details { padding: 0; min-width: 299px; }
+.xp-narrow-860 .xp-details { min-width: 239px; }
+.xp-details.is-preview { min-width: 259px; }
+.xp-narrow-860 .xp-details.is-preview { min-width: 199px; }
+.xp-details-content { padding: 20px 20px 24px 20px; }
+.xp-details-preview { margin-bottom: 14px; }
+.xp-details-thumb { border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); }
+.xp-details-name { font-size: var(--fs-body); font-weight: 600; color: var(--text-1); }
+.xp-details-type { margin-top: 2px; color: var(--text-2); }
+.xp-details-hint { margin-top: 14px; color: var(--text-3); }
+.xp-details-props { margin-top: 16px; }
+.xp-dprop-label { color: var(--text-2); }
+.xp-dprop-value { color: var(--text-1); }
+/* Voorbeeldvenster: the picture fills the pane; otherwise Windows' centred message */
+.xp-details.is-preview { padding: 20px 20px 24px 20px; }
+.xp-preview-img { border-radius: 4px; }
+.xp-preview-msg { padding: 0 12px; color: var(--text-2); }
+
+/* ---- progress card for long copy / move / zip operations (files.progress) -------------------------- */
+.xp-job {
+  padding: 12px 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.xp-job-icon { min-width: 20px; min-height: 20px; color: var(--accent-fg); }
+.xp-job-title { font-weight: 600; color: var(--text-1); }
+.xp-job-pct { color: var(--text-2); }
+.xp-job-sub { color: var(--text-2); }
+
+/* ---- drag and drop ---------------------------------------------------------------------------------- */
+.xp-drophint {
+  padding: 4px 10px 5px 6px;
+  border: 1px solid var(--stroke-flyout);
+  border-radius: var(--radius-overlay);
+  background-color: var(--layer-solid);
+  box-shadow: inset 0 1px 0 var(--acrylic-stroke), var(--shadow-flyout);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+.xp-drophint-icon { min-width: 16px; min-height: 16px; border-radius: 3px; background-color: var(--accent); color: var(--accent-text); }
+.xp-tabwrap.is-drop .xp-tab { background-color: var(--xp-sel); }
+button.xp-crumb.is-drop { background-color: var(--xp-sel); }
+
+/* ---- dialogs ---------------------------------------------------------------------------------------- */
+.xp-props-tabs { margin: -4px 0 14px 0; }
+.xp-props { font-size: var(--fs-caption); }
+.xp-props-head { padding: 2px 0 10px 0; }
+.xp-props-error { color: var(--sys-critical); font-size: var(--fs-caption); }
+entry.xp-props-bad { border-bottom-color: var(--sys-critical); }
+separator.xp-props-sep { margin: 8px 0; }
+.xp-prop { padding: 4px 0; }
+.xp-prop-label { color: var(--text-2); }
+.xp-prop-value { color: var(--text-1); }
+.xp-prop-checks checkbutton { font-size: var(--fs-caption); }
+.xp-props-donut { padding-top: 12px; }
+.xp-share-list {
+  padding: 8px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.xp-share-item { font-size: var(--fs-caption); }

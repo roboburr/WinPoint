@@ -187,7 +187,7 @@ def seed_events(h, today):
         ('r8', 'Weekend away', 'family', True, day(26), day(28), ''),
         ('r9', 'Book club', 'family', False, f'{day(24)}T19:30', f'{day(24)}T21:00', ''),
     ]
-    folder = h.hm.RUN / 'data' / 'win11-gnome' / 'calendar'
+    folder = h.hm.RUN / 'data' / 'win11-gnome-calendar'
     folder.mkdir(parents=True, exist_ok=True)
     (folder / 'events.json').write_text(json.dumps({'version': 1, 'events': [
         {'id': i, 'title': title, 'calendar': cal, 'allDay': all_day, 'start': start, 'end': end,

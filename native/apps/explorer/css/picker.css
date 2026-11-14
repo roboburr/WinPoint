@@ -1,0 +1,23 @@
+/* ==========================================================================
+   win11-gtk-explorer picker: vendor/ui/css/picker.css in GTK CSS (picker.rs). The Explorer's chrome and content
+   stay; the title bar shows the title instead of the tabs (picker.rs swaps them) and the footer below the status
+   bar holds the fields and the buttons. Classes are the WebKit ones with "-" for "__".
+   ========================================================================== */
+
+/* .xp-picker__footer: flex, gap 20px, padding 16px 20px, a divider on top, on the toolbar's layer */
+.xp-picker-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--stroke-divider);
+  background-color: var(--xp-layer);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+/* .xp-picker__fields: grid, gap 10px (the box's spacing), scrolling past 38vh */
+.xp-picker-fields { min-width: 0; }
+/* .xp-picker__label: 110px caption, gap 12px, the control fills the rest */
+.xp-picker-label > label { color: var(--text-1); }
+.xp-picker-name { min-width: 0; }
+/* .xp-picker__buttons: stacked, gap 10px, at least 100px */
+.xp-picker-buttons > button { min-width: 100px; }
+/* .xp-picker__error */
+.xp-picker-error { color: var(--sys-critical); font-size: var(--fs-caption); }

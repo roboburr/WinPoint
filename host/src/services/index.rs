@@ -175,7 +175,7 @@ impl Index {
                 Ok(())
             });
         }
-        let mut child = command.spawn().map_err(|e| e.to_string())?;
+        let mut child = spawn_worker(command).map_err(|e| e.to_string())?;
         let pid = child.id();
         let mut stdin = child
             .stdin
@@ -649,6 +649,42 @@ impl Index {
         }
     }
 }
+type SpawnRequest = (Command, mpsc::SyncSender<std::io::Result<Child>>);
+
+/// Start the worker from one long-lived thread. PR_SET_PDEATHSIG fires when the *thread* that forked the child
+/// ends, and requests run on short-lived HTTP threads (runtime.rs serve), so a worker spawned by a request was
+/// killed right after its answer (and Alles gave up after five "crashes").
+fn spawn_worker(mut command: Command) -> std::io::Result<Child> {
+    static SPAWNER: std::sync::OnceLock<Option<Mutex<mpsc::Sender<SpawnRequest>>>> =
+        std::sync::OnceLock::new();
+    let spawner = SPAWNER.get_or_init(|| {
+        let (tx, rx) = mpsc::channel::<SpawnRequest>();
+        thread::Builder::new()
+            .name("index-spawner".into())
+            .spawn(move || {
+                for (mut command, reply) in rx {
+                    let _ = reply.send(command.spawn());
+                }
+            })
+            .ok()
+            .map(|_| Mutex::new(tx))
+    });
+    let Some(tx) = spawner else {
+        return command.spawn();
+    };
+    let (reply, answer) = mpsc::sync_channel(1);
+    if let Err(mpsc::SendError((mut command, _))) = tx
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .send((command, reply))
+    {
+        return command.spawn();
+    }
+    answer
+        .recv()
+        .unwrap_or_else(|_| Err(std::io::Error::other("index-spawner")))
+}
+
 /// The worker's status in `lang`. The worker sends a root error as text plus its catalogue key (`errorKey`,
 /// `errorParams`); the host renders it again in its own language (C1) whenever it relays or returns a status, so a
 /// status kept for later is never frozen in the language it was made in (round2-gate §2).

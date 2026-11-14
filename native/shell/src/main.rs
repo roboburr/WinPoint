@@ -6,6 +6,9 @@
 //!   WIN11_SHELL_SURFACES   comma list of surfaces to run (default "panel,start,desktop")
 //!   WIN11_SHELL_BACKEND    "port:token" of a running backend instead of starting one (tests)
 //!   WIN11_DEV_COMMAND / WIN11_DEV_REPORT   the harness's dev channel (dev.rs)
+//!
+//! shell.restartAll (Windows Update): the backend ends with a restart note and the shell execs itself again
+//! (`restart`, backend.rs), so the taskbar runs the new build and the new GTK libraries.
 mod backend;
 mod core;
 mod desktop;
@@ -48,6 +51,7 @@ fn main() -> glib::ExitCode {
             }
         };
         let shell = core::Shell::new(app, backend);
+        shell.on("backend.restart", |_, _| restart());
         theme::install(&shell);
         let surfaces = std::env::var("WIN11_SHELL_SURFACES").unwrap_or_else(|_| "panel,start,desktop".into());
         let wanted = |s: &str| surfaces.split(',').any(|x| x.trim() == s);
@@ -66,4 +70,90 @@ fn main() -> glib::ExitCode {
     });
     app.connect_activate(|_| {});
     app.run_with_args::<&str>(&[])
+}
+
+/// `shell.restartAll` reached the backend (backend.rs): exec win11-shell again, the installed build with the same
+/// arguments, which starts a new backend. The pid, GNOME's launch scope and the Panel identity stay; the windows
+/// are gone only while the new image starts. When the exec fails the shell stays, on a new backend, with its
+/// Panel name taken back (`after_failed_exec`).
+fn restart() {
+    let shell = core::shell();
+    let Some(note) = shell.backend.take_restart() else {
+        shell.backend.answer_restart(true);
+        return;
+    };
+    let error = exec_self(&shell.app, note.token.as_deref());
+    eprintln!("win11-shell: restart: {error}; staying on a new backend");
+    after_failed_exec(&shell.app);
+    shell.backend.answer_restart(true);
+}
+
+/// The shell stays after a failed exec: undo what `exec_self` and `Command::exec` changed. The Panel id back on the
+/// session bus (exec_self released it for the new image; GApplication's objects are still exported on this
+/// connection, so the name is all that is missing): the extension's org.gtk.Actions calls (task view, the power
+/// dialog) reach this process again and a later launch of the Panel is not a second taskbar. SIGPIPE ignored again,
+/// as Rust's runtime set it at start (a failed `Command::exec` leaves it at SIG_DFL). The same as native/kit
+/// app.rs `after_failed_exec` (the shell has no kit dependency).
+fn after_failed_exec(app: &gtk::Application) {
+    // SAFETY: signal(2) with SIG_IGN; nothing in this process installs a SIGPIPE handler of its own
+    unsafe { libc::signal(libc::SIGPIPE, libc::SIG_IGN) };
+    let (Some(bus), Some(id)) = (app.dbus_connection(), app.application_id()) else { return };
+    // flags 4: DBUS_NAME_FLAG_DO_NOT_QUEUE
+    let reply = bus.call_sync(
+        Some("org.freedesktop.DBus"),
+        "/org/freedesktop/DBus",
+        "org.freedesktop.DBus",
+        "RequestName",
+        Some(&(id.as_str(), 4u32).to_variant()),
+        Some(glib::VariantTy::new("(u)").expect("static type")),
+        gio::DBusCallFlags::NONE,
+        2000,
+        gio::Cancellable::NONE,
+    );
+    match reply.map(|r| r.child_value(0).get::<u32>()) {
+        // 1 PRIMARY_OWNER, 4 ALREADY_OWNER
+        Ok(Some(1 | 4)) => {}
+        Ok(code) => eprintln!("win11-shell: restart: {id} was taken by another instance while the exec failed (RequestName {code:?})"),
+        Err(error) => eprintln!("win11-shell: restart: taking {id} back: {error}"),
+    }
+}
+
+/// The binary a restart execs: this one's path (a binary replaced by rename shows as "<path> (deleted)": that
+/// path holds the new build), or the running image when the path is gone (host lib.rs exec_target).
+fn exec_target() -> std::path::PathBuf {
+    use std::os::unix::ffi::OsStrExt;
+    let path = std::env::current_exe().ok().map(|exe| match exe.as_os_str().as_bytes().strip_suffix(b" (deleted)") {
+        Some(path) => std::path::PathBuf::from(std::ffi::OsStr::from_bytes(path)),
+        None => exe,
+    });
+    match path {
+        Some(path) if path.is_file() => path,
+        _ => std::path::PathBuf::from("/proc/self/exe"),
+    }
+}
+
+fn exec_self(app: &gtk::Application, token: Option<&str>) -> std::io::Error {
+    use std::os::unix::process::CommandExt;
+    let target = exec_target();
+    // the new image must become the primary instance of the Panel id again
+    if let (Some(bus), Some(id)) = (app.dbus_connection(), app.application_id()) {
+        let _ = bus.call_sync(
+            Some("org.freedesktop.DBus"),
+            "/org/freedesktop/DBus",
+            "org.freedesktop.DBus",
+            "ReleaseName",
+            Some(&(id.as_str(),).to_variant()),
+            None,
+            gio::DBusCallFlags::NONE,
+            2000,
+            gio::Cancellable::NONE,
+        );
+        let _ = bus.flush_sync(gio::Cancellable::NONE);
+    }
+    let mut command = std::process::Command::new(&target);
+    command.args(std::env::args_os().skip(1)).env_remove("XDG_ACTIVATION_TOKEN").env_remove("DESKTOP_STARTUP_ID");
+    if let Some(token) = token {
+        command.env("XDG_ACTIVATION_TOKEN", token).env("DESKTOP_STARTUP_ID", token);
+    }
+    command.exec()
 }

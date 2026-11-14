@@ -231,6 +231,7 @@ Committed results:
 | `findings/minimal-seed-live-switch/` | The same switch with a partial `settings.json`: theme and pins are lost. |
 | `lib/scenario.py` | The scenario helper (`h`), loaded by path (GE1h) |
 | `scenarios/native-shell.py`, `scenarios/native-shell.out/` | The native shell smoke and its last results (D-G63, D-G70) |
+| `scenarios/native-gtk-apps.py`, `native-restart.py`, `taskbar-app-icons.py`, `kit-ui.py` | The native GTK 4 apps (13-11): launch, memory against WebKit, a short use of each app through the dev channel (Disks with a UDisks2 stand-in on the private system bus) and Task Manager's Processen rows; `shell.restartAll` re-execs every native program (Explorer with two windows, Settings back on its update page); each app's icon on the taskbar, in GNOME's window list, in the catalogue and in Start (All apps, search), each own app listed once; the kit UI fixes (Explorer's column headers, one colour under Alles's command bar, manual font rendering under cairo) |
 | `scenarios/<step>-*.py`, `scenarios/<step>-*.out/` | Later steps' scenarios and results (owned by those steps) |
 
 The `baseline/` results and the scenario outputs from before D-G70 show the WebKit panel, Start and desktop; they

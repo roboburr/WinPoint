@@ -1465,13 +1465,15 @@ impl Engine {
         }
     }
     /// The design's notifications (§3.8), only from the owner: failed / installed when no page listens,
-    /// restart required when `settings.update.notifyRestart` is on.
+    /// restart required when `settings.update.notifyRestart` is on. "No page listens": no event stream (a WebKit
+    /// Settings window closed), or the native Settings said it has no window (`update.setWatching`; its stream stays
+    /// open while its keep-alive holds the process, ServiceContext::watching).
     fn notify(&self, failed: bool, restart: bool) {
         if self.shared.ctx.dry_run {
             return;
         }
         let lang = lang_of(&self.shared);
-        let watching = self.shared.ctx.subscriber_count() > 0;
+        let watching = self.shared.ctx.watching();
         let notify_restart = self.shared.ctx.settings()["update"]["notifyRestart"] != false;
         let (title, body) = if failed {
             if watching {

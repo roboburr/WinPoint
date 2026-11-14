@@ -6,6 +6,13 @@
 //!   stays usable: the apps 300 ms → panel 1200 ms (`win11-panel --http-only`, win11-shell's backend) → the origin
 //!   2000 ms. We never signal another process. win11-file-portal exits instead (D-Bus activation brings the new
 //!   build on the next request).
+//! * The backend of a native program (`--http-only` with WIN11_NATIVE_INSTANCE: win11-shell's and each
+//!   win11-gtk-<kind>'s) does not re-exec itself: after every wait below (and Explorer's own file operations,
+//!   lib.rs `http_only_shutdown`) it writes `<instance>.restart` {all, origin, token} and exits with
+//!   `RESTART_EXIT` (75). Its GUI waits on it, saves its state and execs itself with its own restart argv and the
+//!   token (native/kit/src/app.rs, native/shell/src/main.rs), so the GUI and a new backend both run the new build;
+//!   the order of the delays above is kept. A native app without a window (Settings kept alive by its update job)
+//!   quits instead of reopening.
 //! * Just before its exec a receiver re-checks the update job and its own Software jobs. If one is active it
 //!   defers until that job ends: it listens to the job's events (`software.changed`, `update.changed`,
 //!   `update.owner`) and to the job owner's exit (a pidfd), never polls, and announces the deferral as

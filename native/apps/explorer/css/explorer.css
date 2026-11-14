@@ -1,0 +1,357 @@
+/* ==========================================================================
+   win11-gtk-explorer: vendor/ui/css/explorer.css (Windows 11 24H2 File Explorer) in GTK CSS on the kit's
+   tokens. Tab row on Mica; the toolbar on a lighter layer that the active tab flows into; content and
+   navigation pane on the "content" fill (white / #191919). Classes are the WebKit app's with xp- and "-"
+   for "__" (.xp-tab__close is .xp-tab-close).
+   ========================================================================== */
+
+window.xp-window {
+  --xp-content: #191919;
+  --xp-layer: var(--bg-layer);
+  --xp-hover: var(--fill-subtle-2);
+  --xp-press: var(--fill-subtle-3);
+  --xp-sel: var(--selection-subtle);
+  --xp-sel-hover: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+window.xp-window.w11-light { --xp-content: #ffffff; }
+/* no blur from the extension: the layer is a mix of Mica and white / grey */
+window.xp-window:not(.w11-glass) { --xp-layer: color-mix(in srgb, var(--bg-mica-solid) 55%, #3a3a3a); }
+window.xp-window.w11-light:not(.w11-glass) { --xp-layer: color-mix(in srgb, var(--bg-mica-solid) 55%, #ffffff); }
+
+.xp { font-size: var(--fs-caption); }
+window.xp-window .w11-titlebar-center { padding: 0 8px 0 0; }
+
+/* ---- tab strip --------------------------------------------------------------------------------------- */
+.xp-tabs { padding-left: 8px; }
+.xp-tabs-list { margin-left: 8px; }
+.xp-tabwrap { margin: 0 -8px; outline: 0 solid transparent; }
+.xp-tab {
+  min-height: 32px;
+  padding: 0 4px 0 12px;
+  border-radius: 8px 8px 0 0;
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+  transition: background-color 83ms linear;
+}
+.xp-tabwrap:not(.is-active) .xp-tab:hover { background-color: var(--xp-hover); }
+.xp-tabwrap:not(.is-active) .xp-tab:active { background-color: var(--xp-press); }
+.xp-tabwrap.is-active .xp-tab { background-color: var(--xp-layer); }
+.xp-tabwrap:focus-visible .xp-tab { box-shadow: inset 0 0 0 2px var(--focus-outer); }
+.xp-tab-flare { color: var(--xp-layer); opacity: 0; }
+.xp-tabwrap.is-active .xp-tab-flare { opacity: 1; }
+.xp-tab-sep { background-color: var(--stroke-divider); opacity: 0; transition: opacity 83ms linear; }
+.xp-tabwrap.has-sep .xp-tab-sep { opacity: 1; }
+.xp-tabwrap.has-sep:hover .xp-tab-sep { opacity: 0; }
+.xp-tab-icon { min-width: 16px; min-height: 16px; }
+.xp-tab-label { color: var(--text-1); }
+button.xp-tab-close {
+  min-width: 24px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 4px;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+  opacity: 0;
+}
+.xp-tabwrap.is-active button.xp-tab-close, .xp-tab:hover button.xp-tab-close, .xp-tabs.is-single button.xp-tab-close { opacity: 1; }
+button.xp-tab-close:hover { background-color: var(--xp-hover); color: var(--text-1); }
+button.xp-tab-close:active { background-color: var(--xp-press); }
+button.xp-tabs-add {
+  min-width: 32px;
+  min-height: 28px;
+  margin: 0 0 2px 4px;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 4px;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+}
+button.xp-tabs-add:hover { background-color: var(--xp-hover); }
+button.xp-tabs-add:active { background-color: var(--xp-press); color: var(--text-2); }
+
+/* ---- toolbar: address row + command bar ------------------------------------------------------------- */
+.xp-toolbar { background-color: var(--xp-layer); border-bottom: 1px solid var(--stroke-divider); }
+.xp-addrrow { min-height: 48px; padding: 0 12px 0 8px; }
+button.xp-navbtn, button.xp-cmd, button.xp-status-btn,
+button.xp-crumb, button.xp-crumb-chev, button.xp-crumbs-more, button.xp-addr-hist, button.xp-sec-head {
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-weight: 400;
+  transition: background-color 83ms linear, color 83ms linear;
+}
+button.xp-navbtn { min-width: 36px; min-height: 32px; }
+button.xp-navbtn:hover, button.xp-cmd:hover, button.xp-status-btn:hover { background-color: var(--xp-hover); }
+button.xp-navbtn:active, button.xp-cmd:active, button.xp-status-btn:active { background-color: var(--xp-press); color: var(--text-2); }
+button.xp-navbtn:disabled, button.xp-cmd:disabled { background-color: transparent; color: var(--text-disabled); }
+button.xp-navbtn:focus-visible, button.xp-cmd:focus-visible, button.xp-status-btn:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+
+/* address bar */
+.xp-addr {
+  min-height: 30px;
+  min-width: 120px;
+  padding: 0 2px 0 8px;
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  transition: background-color 83ms linear;
+}
+.xp-addr:hover { background-color: var(--fill-control-2); }
+.xp-addr.is-editing { background-color: var(--fill-control-input); box-shadow: inset 0 -2px 0 var(--accent); }
+.xp-crumbs-icon { margin-right: 2px; min-width: 16px; min-height: 16px; }
+button.xp-crumb, button.xp-crumb-chev, button.xp-crumbs-more, button.xp-addr-hist { min-height: 24px; font-size: var(--fs-caption); }
+button.xp-crumb { padding: 0 6px; }
+button.xp-crumb-chev { min-width: 20px; color: var(--text-2); }
+button.xp-crumbs-more { padding: 0 2px; color: var(--text-2); }
+.xp-crumbs-more-2 { margin-left: -7px; }
+button.xp-crumb:hover, button.xp-crumb-chev:hover, button.xp-crumbs-more:hover, button.xp-addr-hist:hover { background-color: var(--xp-hover); }
+button.xp-crumb:active, button.xp-crumb-chev:active, button.xp-addr-hist:active, button.xp-crumb-chev.is-open { background-color: var(--xp-press); }
+button.xp-addr-hist { min-width: 28px; color: var(--text-2); }
+text.xp-addr-input { min-height: 28px; padding: 0 4px; background-color: transparent; color: var(--text-1); caret-color: var(--text-1); font-size: var(--fs-caption); }
+text.xp-addr-input selection { background-color: var(--selection-bg); color: var(--selection-text); }
+.xp-sug { padding: 2px 0; }
+button.xp-sug-item { font-size: var(--fs-caption); }
+button.xp-sug-item .w11-item-body { margin: 5px 11px; }
+
+/* search box */
+box.xp-search > text { font-size: var(--fs-caption); }
+
+/* command bar */
+.xp-cmdbar { min-height: 48px; padding: 0 8px; }
+button.xp-cmd { min-width: 36px; min-height: 32px; padding: 0 10px; font-size: var(--fs-caption); }
+button.xp-cmd.has-text { padding: 0 8px 0 10px; }
+.xp-cmd-icon { min-width: 16px; min-height: 16px; }
+.xp-cmd-chev { margin-left: -2px; color: var(--text-2); }
+button.xp-cmd:disabled .xp-cmd-chev { color: var(--text-disabled); }
+button.xp-cmd.is-open, button.xp-cmd.is-on { background-color: var(--xp-hover); }
+.xp-cmdsep { min-width: 1px; min-height: 24px; margin: 0 6px; background-color: var(--stroke-divider); }
+
+/* ---- body -------------------------------------------------------------------------------------------- */
+.xp-body { background-color: var(--xp-content); }
+.xp-infobars { padding: 0 12px; }
+.xp-infobars > * { margin-top: 8px; }
+.xp-splitter-line { background-color: var(--stroke-divider); }
+.xp-splitter:hover .xp-splitter-line, .xp-splitter:focus-visible .xp-splitter-line { background-color: var(--stroke-control-strong); }
+
+/* ---- navigation pane ----------------------------------------------------------------------------------- */
+.xp-tree { padding: 6px 0 12px 0; }
+.xp-tree-sep { min-height: 1px; margin: 6px 12px; background-color: var(--stroke-divider); }
+.xp-node {
+  min-height: 28px;
+  margin: 0 4px 2px 4px;
+  padding: 0 8px 0 0;
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+  outline: 0 solid transparent;
+  transition: background-color 83ms linear;
+}
+.xp-node:hover { background-color: var(--xp-hover); }
+.xp-node:active { background-color: var(--xp-press); }
+.xp-node.is-selected { background-color: var(--xp-hover); }
+.xp-node.is-selected:hover { background-color: var(--fill-control-alt-3); }
+.xp-node:focus-visible { box-shadow: inset 0 0 0 2px var(--focus-outer); }
+.xp-node.is-drop { background-color: var(--xp-sel); box-shadow: inset 0 0 0 1px var(--accent); }
+.xp-node.is-loading { color: var(--text-3); }
+.xp-node.is-loading:hover { background-color: transparent; }
+.xp-node-pill { background-color: var(--accent); border-radius: 2px; opacity: 0; }
+.xp-node.is-selected .xp-node-pill { opacity: 1; }
+.xp-node-chev { margin-left: 2px; border-radius: var(--radius-control); color: var(--text-2); opacity: 0; transition: opacity 167ms linear; }
+.xp-nav:hover .xp-node-chev, .xp-nav:focus-within .xp-node-chev { opacity: 1; }
+.xp-nav .xp-node .xp-node-chev.is-none { opacity: 0; }
+.xp-node-chev:hover { background-color: var(--xp-hover); color: var(--text-1); }
+.xp-node-icon { margin: 0 10px 0 2px; }
+.xp-node-glyph { color: var(--text-1); }
+.xp-node-glyph.is-gallery, .xp-glyphicon.is-gallery, .xp-glyphicon.is-home { color: var(--accent-fg-3); }
+.xp-node-pin { color: var(--text-3); opacity: 0; transition: opacity 167ms linear; }
+.xp-node:hover .xp-node-pin, .xp-node:focus-visible .xp-node-pin { opacity: 1; }
+
+/* ---- icons --------------------------------------------------------------------------------------------- */
+.xp-ficon { color: var(--text-2); }
+.xp-glyphicon { color: var(--text-1); }
+
+/* ---- file view ----------------------------------------------------------------------------------------- */
+.xp-view.is-drop .xp-scroll { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent); }
+.xp-canvas { outline: 0 solid transparent; }
+.xp-band { border: 1px solid var(--accent); background-color: color-mix(in srgb, var(--accent) 22%, transparent); }
+.xp-item {
+  color: var(--text-1);
+  border-radius: var(--radius-control);
+  transition: background-color 83ms linear;
+}
+.xp-item:hover { background-color: var(--xp-hover); }
+.xp-item.is-selected { background-color: var(--xp-sel); }
+.xp-item.is-selected:hover { background-color: var(--xp-sel-hover); }
+/* the focus rectangle only after keyboard use (the window gets xp-kbd), like Windows */
+window.xp-kbd .xp-canvas:focus-within .xp-item.is-focus { box-shadow: inset 0 0 0 1px var(--focus-outer); }
+.xp-item.is-cut .xp-ficon, .xp-item.is-cut .xp-item-name { opacity: 0.45; }
+.xp-item.is-hidden .xp-ficon { opacity: 0.6; }
+.xp-item.is-dragging { opacity: 0.6; }
+.xp-item.is-drop { background-color: var(--xp-sel-hover); box-shadow: inset 0 0 0 1px var(--accent); }
+.xp-item-name { color: var(--text-1); }
+.xp-item-sub { color: var(--text-2); }
+.xp-empty-text { color: var(--text-2); font-size: var(--fs-caption); }
+
+/* check boxes */
+.xp-check {
+  min-width: 14px;
+  min-height: 14px;
+  border: 1px solid var(--stroke-control-strong);
+  border-radius: 3px;
+  background-color: var(--fill-control-alt-2);
+  opacity: 0;
+  transition: opacity 83ms linear;
+}
+.xp-check-glyph { color: var(--accent-text); opacity: 0; }
+.xp-item:hover .xp-check, .xp-item.is-selected .xp-check, .xp-view.has-selection .xp-check, .xp-head-check:hover, .xp-head-check.is-on { opacity: 1; }
+.xp-item.is-selected .xp-check, .xp-head-check.is-on { background-color: var(--accent); border-color: var(--accent); }
+.xp-item.is-selected .xp-check-glyph, .xp-head-check.is-on .xp-check-glyph { opacity: 1; }
+
+/* details */
+.xp-head { min-height: 32px; padding-left: 8px; background-color: var(--xp-content); color: var(--text-2); }
+.xp-head-cell {
+  padding: 0 0 0 8px;
+  border-right: 1px solid transparent;
+  transition: background-color 83ms linear;
+}
+.xp-head:hover .xp-head-cell { border-right-color: var(--stroke-divider); }
+.xp-head-cell:hover { background-color: var(--xp-hover); color: var(--text-1); }
+.xp-head-cell:active { background-color: var(--xp-press); }
+.xp-head-label { margin-right: 1px; }
+.xp-sortglyph { color: var(--text-3); margin-top: 1px; }
+.xp-head-grip { background-color: transparent; }
+.xp-cell { padding: 0 8px; color: var(--text-2); }
+.xp-cell.xp-cell-name { color: var(--text-1); }
+.xp-mode-details .xp-item.is-cut .xp-cell { opacity: 0.6; }
+
+/* group headers */
+.xp-group {
+  min-height: 36px;
+  padding: 0 8px;
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+.xp-group:hover { background-color: var(--xp-hover); }
+.xp-group-chev { color: var(--text-2); }
+.xp-group-count { color: var(--text-2); }
+.xp-group-line { min-height: 1px; margin-left: 4px; background-color: var(--stroke-divider); }
+
+/* icon grids, list, tiles, content */
+.xp-mode-medium .xp-item-content, .xp-mode-large .xp-item-content { padding: 6px 4px; }
+.xp-mode-xl .xp-item-content { padding: 8px; }
+.xp-mode-small .xp-item-content, .xp-mode-list .xp-item-content { padding: 0 6px; }
+.xp-mode-tiles .xp-item-content { padding: 4px 8px; }
+.xp-mode-content .xp-item-content { padding: 0 12px; }
+.xp-mode-content .xp-item { border-radius: 0; border-bottom: 1px solid var(--stroke-divider); }
+.xp-mode-content .xp-item.is-selected, .xp-mode-content .xp-item:hover { border-radius: var(--radius-control); }
+.xp-content-name { font-size: var(--fs-body); }
+
+/* inline rename */
+text.xp-rename-input, textview.xp-rename-input {
+  min-height: 0;
+  margin: 0;
+  padding: 1px 4px;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  background-color: var(--xp-content);
+  color: var(--text-1);
+  caret-color: var(--text-1);
+  font-size: var(--fs-caption);
+  box-shadow: var(--shadow-control);
+}
+textview.xp-rename-input > text { background-color: transparent; color: var(--text-1); }
+text.xp-rename-input selection, textview.xp-rename-input > text > selection { background-color: var(--selection-bg); color: var(--selection-text); }
+popover.xp-rename-tip { margin: 0; padding: 0; border: none; background-color: transparent; background-image: none; box-shadow: none; }
+popover.xp-rename-tip > arrow { background-color: transparent; border: none; min-width: 0; min-height: 0; }
+popover.xp-rename-tip > contents {
+  min-width: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--stroke-flyout);
+  border-radius: var(--radius-control);
+  background-color: var(--bg-tooltip-solid);
+  box-shadow: var(--shadow-tooltip);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+
+/* the filter / search result bar */
+.xp-searchbar { padding: 6px 16px; border-bottom: 1px solid var(--stroke-divider); color: var(--text-2); font-size: var(--fs-caption); }
+.xp-searchbar-text { color: var(--text-1); }
+.xp-searchbar-note { color: var(--text-3); }
+.xp-searchbar button.w11-link { min-height: 0; padding: 2px 6px; font-size: var(--fs-caption); }
+
+/* loading / empty / error */
+.xp-bigempty { padding: 48px 24px; font-size: var(--fs-body); }
+.xp-bigempty-icon { margin-bottom: 4px; color: var(--text-3); }
+.xp-bigempty.is-error .xp-bigempty-icon { color: var(--sys-caution); }
+.xp-bigempty .w11-text-2 { color: var(--text-2); }
+
+/* ---- pages: Start / Deze pc / Galerij ------------------------------------------------------------------- */
+.xp-page { padding: 4px 16px 24px 16px; }
+.xp-sec { margin-bottom: 6px; }
+button.xp-sec-head { min-height: 36px; margin: 4px 0 2px -4px; padding: 0 10px 0 6px; font-size: var(--fs-body); font-weight: 600; }
+button.xp-sec-head:hover { background-color: var(--xp-hover); }
+button.xp-sec-head:active { background-color: var(--xp-press); }
+.xp-sec-chev { color: var(--text-2); }
+.xp-sec-count { font-weight: 400; color: var(--text-2); }
+.xp-sec-body { padding-bottom: 6px; }
+.xp-page-empty { padding: 6px 4px 10px 4px; color: var(--text-2); }
+.xp-page-loading { min-height: 64px; }
+
+.xp-pitem { border-radius: var(--radius-control); outline: 0 solid transparent; transition: background-color 83ms linear; }
+.xp-pitem:hover { background-color: var(--xp-hover); }
+.xp-pitem.is-selected { background-color: var(--xp-sel); }
+.xp-pitem.is-selected:hover { background-color: var(--xp-sel-hover); }
+window.xp-kbd .xp-pitem:focus { box-shadow: inset 0 0 0 1px var(--focus-outer); }
+.xp-pitem.is-drop { background-color: var(--xp-sel-hover); box-shadow: inset 0 0 0 1px var(--accent); }
+
+flowbox.xp-ftiles > flowboxchild { margin: 0; padding: 0; background: none; outline: 0 solid transparent; border-radius: var(--radius-control); }
+.xp-ftile { padding: 8px 10px; color: var(--text-1); }
+.xp-ftile-sub, .xp-dtile-sub { color: var(--text-2); }
+.xp-ftile-pin { color: var(--text-3); }
+.xp-dtile { padding: 8px 12px 8px 10px; color: var(--text-1); }
+.xp-dtile-bar { margin: 4px 0 2px 0; }
+
+.xp-rec { min-height: 32px; padding: 0 4px; color: var(--text-1); }
+.xp-rec.xp-rec-head { min-height: 30px; color: var(--text-2); }
+.xp-rec-cell { padding: 0 8px; }
+.xp-rec-dim { color: var(--text-2); }
+
+.xp-page.xp-page-gallery { padding-top: 0; }
+.xp-gallery-month {
+  padding: 14px 4px 10px 4px;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+}
+.xp-photo { border-radius: var(--radius-control); background-color: var(--fill-control-alt-3); }
+.xp-photo.is-selected { background-color: transparent; outline: 2px solid var(--accent); outline-offset: -2px; }
+.xp-photo.is-selected:hover { background-color: transparent; }
+
+/* ---- details pane (details.rs extends this) ------------------------------------------------------------ */
+.xp-details { padding: 20px 20px 24px 20px; border-left: 1px solid var(--stroke-divider); background-color: var(--xp-content); }
+.xp-details-name { font-size: var(--fs-body); font-weight: 600; }
+.xp-details-type { margin-top: 2px; color: var(--text-2); }
+
+/* ---- status bar ------------------------------------------------------------------------------------------ */
+.xp-status { min-height: 26px; padding: 0 6px 0 14px; background-color: var(--xp-content); color: var(--text-1); font-size: var(--fs-caption); }
+.xp-status-sep { min-width: 1px; min-height: 12px; margin: 0 10px; background-color: var(--stroke-control-strong); opacity: 0.6; }
+.xp-status-size { margin-left: 10px; }
+button.xp-status-btn { min-width: 26px; min-height: 22px; color: var(--text-2); }
+button.xp-status-btn.is-on { background-color: var(--xp-hover); color: var(--text-1); }

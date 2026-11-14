@@ -37,13 +37,17 @@ fn norm(s: &str) -> String {
     s.to_lowercase().trim_end_matches(".desktop").to_owned()
 }
 
-/// The backend path of an icon (bridge.iconUrl): our Settings has its own asset, our apps a themed fallback,
-/// other apps the theme's generic program icon (`themed` false: no fallback, e.g. tray icons).
+/// The backend path of an icon (bridge.iconUrl): our Settings (and Default apps, whose entry has the same icon)
+/// has its own asset, our apps by id (catalogue id or app id, when no entry gave an icon) the themed icon of their
+/// desktop entry as the fallback, other apps the theme's generic program icon (`themed` false: no fallback, e.g.
+/// tray icons). The backend looks a name up in the user's icon theme, then in the Win11 icons we install.
 pub fn icon_path(name: &str, px: i32, themed: bool) -> String {
     let n = norm(name);
     if [
         "win11shell-settings",
         "io.github.win11shell.settings",
+        "win11shell-defaultapps",
+        "io.github.win11shell.defaultapps",
         "preferences-system",
         "org.gnome.settings",
         "gnome-control-center",
@@ -56,10 +60,13 @@ pub fn icon_path(name: &str, px: i32, themed: bool) -> String {
     if name.starts_with("/ui/") {
         return name.to_owned();
     }
+    // the Icon= of the entries scripts/install.py writes (io.github.win11shell.<Name>.desktop)
     let own = match n.as_str() {
-        "win11shell-taskmgr" => Some("utilities-system-monitor"),
-        "win11shell-explorer" => Some("system-file-manager"),
-        "win11shell-alles" => Some("system-search"),
+        "win11shell-taskmgr" | "io.github.win11shell.taskmanager" => Some("utilities-system-monitor"),
+        "win11shell-explorer" | "io.github.win11shell.explorer" => Some("system-file-manager"),
+        "win11shell-alles" | "io.github.win11shell.search" => Some("system-search"),
+        "win11shell-disks" | "io.github.win11shell.disks" => Some("drive-harddisk"),
+        "win11shell-installer" | "io.github.win11shell.installer" => Some("system-software-install"),
         _ => None,
     };
     let fallback = own.or(if themed && !n.starts_with("win11shell-") { Some("application-x-executable") } else { None });

@@ -1,4 +1,5 @@
-//! On-demand xdg-desktop-portal FileChooser backend using the existing native Explorer picker.
+//! On-demand xdg-desktop-portal FileChooser backend using the native Explorer picker: the GTK 4 Explorer's
+//! picker mode (picker.rs show_native) when win11-gtk-explorer is installed, else the WebKit picker window.
 mod external;
 mod model;
 #[cfg(test)]
@@ -40,6 +41,8 @@ struct Pending {
     key: Option<String>,
     parent: Option<gtk::ApplicationWindow>,
     external: Option<Rc<external::Parent>>,
+    /// The native GTK 4 picker process (picker.rs show_native); dropping it ends the process.
+    native: Option<crate::picker::NativePicker>,
 }
 struct Portal {
     app: glib::WeakRef<gtk::Application>,
@@ -194,6 +197,7 @@ impl Portal {
                 key: None,
                 parent: None,
                 external: None,
+                native: None,
             },
         );
     }
@@ -205,6 +209,18 @@ impl Portal {
         let Some(request) = self.pending.borrow().get(handle).map(|p| p.request.clone()) else {
             return;
         };
+        // The native GTK 4 picker (win11-gtk-explorer) when it is installed: it parents itself to the caller's
+        // window; the WebKit picker below is the fallback.
+        if let Some((native, rx)) =
+            crate::picker::show_native(&options, &request.parent, &self.address)
+        {
+            trace("native picker started");
+            if let Some(pending) = self.pending.borrow_mut().get_mut(handle) {
+                pending.native = Some(native);
+                pending.phase = Phase::Choosing(rx);
+            }
+            return;
+        }
         let external = match external::Parent::new(&request.parent) {
             Ok(p) => Rc::new(p),
             Err(e) => {

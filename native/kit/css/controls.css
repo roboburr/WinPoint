@@ -1,0 +1,839 @@
+/* ==========================================================================
+   win11-kit controls: vendor/ui/css/components.css (WinUI 3 metrics) in GTK CSS. GTK's min-height is the
+   content box: a 32 px WinUI control with a 1 px border is min-height 30px.
+   ========================================================================== */
+
+/* ---- Button (.fl-btn) ------------------------------------------------------------------------------- */
+button.w11-button {
+  min-height: 30px;
+  min-width: 0;
+  margin: 0;
+  padding: 0 11px;
+  border: 1px solid var(--stroke-control);
+  border-top-color: var(--stroke-control-top);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  transition: background-color 83ms linear, border-color 83ms linear, color 83ms linear;
+}
+button.w11-button:hover { background-color: var(--fill-control-2); }
+button.w11-button:active, button.w11-button:checked {
+  background-color: var(--fill-control-3);
+  color: var(--text-2);
+  border-color: var(--stroke-control);
+}
+button.w11-button:disabled {
+  background-color: var(--fill-control-disabled);
+  color: var(--text-disabled);
+  border-color: var(--stroke-control);
+}
+button.w11-button:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+button.w11-button label { color: inherit; }
+
+button.w11-button.w11-accent {
+  background-color: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--stroke-on-accent);
+  border-bottom-color: var(--stroke-on-accent-bottom);
+}
+button.w11-button.w11-accent:hover { background-color: var(--accent-2); }
+button.w11-button.w11-accent:active { background-color: var(--accent-3); color: var(--accent-text-2); border-color: transparent; }
+button.w11-button.w11-accent:disabled { background-color: var(--accent-disabled); color: var(--text-on-accent-disabled); border-color: transparent; }
+
+button.w11-button.w11-danger {
+  background-color: var(--danger-fill);
+  color: var(--danger-text);
+  border-color: var(--stroke-on-accent);
+  border-bottom-color: var(--stroke-on-accent-bottom);
+}
+button.w11-button.w11-danger:hover { background-color: var(--danger-fill-2); }
+button.w11-button.w11-danger:active { background-color: var(--danger-fill-3); color: rgba(255, 255, 255, 0.78); border-color: transparent; }
+button.w11-button.w11-danger:disabled { background-color: var(--accent-disabled); color: var(--text-on-accent-disabled); border-color: transparent; }
+
+button.w11-button.w11-subtle { background-color: transparent; border-color: transparent; }
+button.w11-button.w11-subtle:hover { background-color: var(--fill-subtle-2); }
+button.w11-button.w11-subtle:active { background-color: var(--fill-subtle-3); color: var(--text-2); border-color: transparent; }
+button.w11-button.w11-subtle:disabled { background-color: transparent; border-color: transparent; }
+button.w11-button.w11-subtle:checked { background-color: var(--fill-subtle-2); color: var(--text-1); }
+
+button.w11-button.w11-small { min-height: 22px; padding: 0 8px; font-size: var(--fs-caption); }
+button.w11-button.w11-large { min-height: 38px; padding: 0 16px; }
+button.w11-button.w11-icon-only { padding: 0 7px; }
+
+/* Icon button (.fl-icon-btn): subtle and square, 32 px unless sized */
+button.w11-icon-button {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  transition: background-color 83ms linear, color 83ms linear;
+}
+button.w11-icon-button:hover, button.w11-icon-button:checked { background-color: var(--fill-subtle-2); }
+button.w11-icon-button:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.w11-icon-button:disabled { background-color: transparent; color: var(--text-disabled); }
+button.w11-icon-button:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+
+/* Hyperlink button (.fl-link) */
+button.w11-link {
+  min-height: 0;
+  margin: 0;
+  padding: 5px 11px 6px 11px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--accent-fg);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+button.w11-link:hover { background-color: var(--fill-subtle-2); }
+button.w11-link:active { background-color: var(--fill-subtle-3); color: var(--accent-fg-3); }
+button.w11-link:disabled { color: var(--text-disabled); background-color: transparent; }
+
+/* Drop-down button and split button (WinUI DropDownButton / SplitButton) */
+.w11-dropdown-chevron { color: var(--text-2); }
+button.w11-button.w11-accent .w11-dropdown-chevron { color: var(--accent-text); }
+.w11-split-button { border-spacing: 0; }
+.w11-split-button > button.w11-button.w11-split-main { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right-width: 0; }
+.w11-split-button > button.w11-button.w11-split-more {
+  min-width: 0;
+  padding: 0 9px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.w11-split-button > separator { min-width: 1px; background-color: var(--stroke-divider); margin: 0; }
+.w11-split-button.w11-accent > separator { background-color: var(--stroke-on-accent-bottom); }
+
+/* ---- Toggle switch (.fl-toggle, 40 x 20) with its On/Off text -------------------------------------- */
+.w11-toggle { min-height: 32px; color: var(--text-1); }
+.w11-toggle-state { min-width: 22px; color: var(--text-1); font-size: var(--fs-body); }
+.w11-toggle-state:disabled, .w11-toggle.w11-disabled .w11-toggle-state { color: var(--text-disabled); }
+switch.w11-switch {
+  min-width: 38px;
+  min-height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--stroke-control-strong);
+  border-radius: 10px;
+  background-color: var(--fill-control-alt-2);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: transparent;
+  transition: background-color 83ms linear, border-color 83ms linear;
+}
+switch.w11-switch:hover { background-color: var(--fill-control-alt-3); }
+switch.w11-switch:active { background-color: var(--fill-control-alt-4); }
+switch.w11-switch > image { color: transparent; opacity: 0; }
+switch.w11-switch > slider {
+  min-width: 12px;
+  min-height: 12px;
+  margin: 2px;
+  border: 0 solid transparent;
+  border-radius: 7px;
+  background-color: var(--text-2);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+}
+switch.w11-switch:hover > slider { margin: 1px; min-width: 14px; min-height: 14px; }
+switch.w11-switch:checked { background-color: var(--accent); border-color: var(--accent); }
+switch.w11-switch:checked:hover { background-color: var(--accent-2); border-color: transparent; }
+switch.w11-switch:checked:active { background-color: var(--accent-3); border-color: transparent; }
+switch.w11-switch:checked > slider { background-color: var(--accent-text); }
+switch.w11-switch:disabled { background-color: transparent; border-color: var(--stroke-control-strong-disabled); }
+switch.w11-switch:disabled > slider { background-color: var(--fill-control-strong-disabled); margin: 2px; min-width: 12px; min-height: 12px; }
+switch.w11-switch:checked:disabled { background-color: var(--accent-disabled); border-color: transparent; }
+switch.w11-switch:checked:disabled > slider { background-color: var(--text-on-accent-disabled); }
+switch.w11-switch:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+
+/* ---- Check box (.fl-check) and radio (.fl-radio) ------------------------------------------------- */
+checkbutton.w11-check, checkbutton.w11-radio {
+  min-height: 20px;
+  padding: 6px 0;
+  border-spacing: 8px;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  outline: 0 solid transparent;
+}
+checkbutton.w11-check > check, checkbutton.w11-radio > radio {
+  min-width: 18px;
+  min-height: 18px;
+  margin: 0;
+  border: 1px solid var(--stroke-control-strong);
+  background-color: var(--fill-control-alt-2);
+  background-image: none;
+  box-shadow: none;
+  color: var(--accent-text);
+  -gtk-icon-size: 12px;
+  transition: background-color 83ms linear, border-color 83ms linear;
+}
+checkbutton.w11-check > check { border-radius: var(--radius-control); }
+checkbutton.w11-check:hover > check, checkbutton.w11-radio:hover > radio { background-color: var(--fill-control-alt-3); }
+checkbutton.w11-check:active > check, checkbutton.w11-radio:active > radio { background-color: var(--fill-control-alt-4); }
+checkbutton.w11-check > check:checked, checkbutton.w11-check > check:indeterminate { background-color: var(--accent); border-color: var(--accent); }
+checkbutton.w11-check:hover > check:checked, checkbutton.w11-check:hover > check:indeterminate { background-color: var(--accent-2); border-color: transparent; }
+checkbutton.w11-check:active > check:checked { background-color: var(--accent-3); }
+checkbutton.w11-check:disabled, checkbutton.w11-radio:disabled { color: var(--text-disabled); }
+checkbutton.w11-check:disabled > check, checkbutton.w11-radio:disabled > radio { background-color: transparent; border-color: var(--stroke-control-strong-disabled); }
+checkbutton.w11-check:disabled > check:checked { background-color: var(--accent-disabled); border-color: transparent; color: var(--text-on-accent-disabled); }
+checkbutton.w11-check:focus-visible > check, checkbutton.w11-radio:focus-visible > radio { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+checkbutton.w11-check label, checkbutton.w11-radio label { color: inherit; }
+
+checkbutton.w11-radio > radio { border-radius: 10px; -gtk-icon-source: none; }
+checkbutton.w11-radio > radio:checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  background-image: radial-gradient(circle closest-side, var(--accent-text) 64%, transparent 70%);
+}
+checkbutton.w11-radio:hover > radio:checked { background-image: radial-gradient(circle closest-side, var(--accent-text) 74%, transparent 80%); }
+checkbutton.w11-radio:active > radio:checked { background-image: radial-gradient(circle closest-side, var(--accent-text) 54%, transparent 60%); }
+checkbutton.w11-radio:disabled > radio:checked { background-color: var(--accent-disabled); border-color: transparent; background-image: radial-gradient(circle closest-side, var(--text-on-accent-disabled) 64%, transparent 70%); }
+.w11-field-header { color: var(--text-1); font-size: var(--fs-body); }
+.w11-field-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.w11-field.w11-error .w11-field-desc { color: var(--sys-critical); }
+
+/* ---- Drop-down (ComboBox, .fl-dropdown) ----------------------------------------------------------- */
+button.w11-dropdown { min-width: 98px; padding: 0 11px 0 11px; }
+button.w11-dropdown .w11-dropdown-text { color: var(--text-1); }
+button.w11-dropdown.w11-placeholder .w11-dropdown-text { color: var(--text-2); }
+button.w11-dropdown:disabled .w11-dropdown-text, button.w11-dropdown:disabled .w11-dropdown-chevron { color: var(--text-disabled); }
+
+/* ---- Popups (Acrylic list popups, menus) ---------------------------------------------------------- */
+popover.w11-popup, popover.w11-menu {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+popover.w11-popup > arrow, popover.w11-menu > arrow { background-color: transparent; border: none; min-width: 0; min-height: 0; }
+popover.w11-popup > contents, popover.w11-menu > contents {
+  min-width: 0;
+  margin: 0;
+  padding: 2px 0;
+  border: 1px solid var(--stroke-flyout);
+  border-radius: var(--radius-overlay);
+  background-color: var(--layer-solid);
+  background-image: none;
+  box-shadow: inset 0 1px 0 var(--acrylic-stroke), var(--shadow-flyout);
+  color: var(--text-1);
+  font-size: var(--fs-body);
+}
+popover.w11-menu > contents { min-width: 200px; padding: 4px 0; background-color: var(--menu-bg); box-shadow: inset 0 1px 0 var(--acrylic-stroke), var(--shadow-menu); }
+
+/* list items (.fl-list-item): dropdown options, suggestions, simple lists */
+button.w11-list-item, .w11-list-item {
+  min-height: 20px;
+  margin: 2px 4px;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+.w11-list-item .w11-item-body { margin: 6px 11px; }
+button.w11-list-item:hover, .w11-list-item.w11-active, button.w11-list-item:focus-visible { background-color: var(--fill-subtle-2); }
+button.w11-list-item:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+.w11-list-item.w11-selected { background-color: var(--fill-subtle-2); }
+.w11-list-item.w11-selected:hover { background-color: var(--fill-subtle-3); }
+.w11-list-item:disabled { color: var(--text-disabled); }
+.w11-item-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.w11-popup-empty { padding: 10px 15px; color: var(--text-2); }
+
+/* the 3 x 16 accent pill of a selected list or navigation item */
+.w11-pill {
+  min-width: 3px;
+  min-height: 16px;
+  border-radius: 2px;
+  background-color: var(--accent);
+}
+.w11-pill.w11-pill-h { min-width: 16px; min-height: 3px; }
+
+/* ---- Slider (.fl-slider) ---------------------------------------------------------------------------- */
+scale.w11-slider { min-height: 32px; min-width: 80px; margin: 0; padding: 0 10px; }
+scale.w11-slider > trough {
+  min-height: 4px;
+  margin: 0;
+  border: 0 solid transparent;
+  border-radius: 2px;
+  background-color: var(--fill-control-strong);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+}
+scale.w11-slider > trough > highlight {
+  min-height: 4px;
+  margin: 0;
+  border: 0 solid transparent;
+  border-radius: 2px;
+  background-color: var(--accent);
+  background-image: none;
+  box-shadow: none;
+}
+scale.w11-slider > trough > fill { background-color: transparent; background-image: none; }
+scale.w11-slider > trough > slider {
+  min-width: 18px;
+  min-height: 18px;
+  margin: -8px;
+  border: 1px solid var(--stroke-control);
+  border-top-color: var(--stroke-control-top);
+  border-bottom-color: var(--stroke-control-bottom);
+  border-radius: 10px;
+  background-color: var(--accent);
+  background-image: none;
+  box-shadow: inset 0 0 0 3px var(--fill-control-solid), var(--shadow-control);
+  outline: 0 solid transparent;
+  transition: box-shadow 167ms cubic-bezier(0, 0, 0, 1);
+}
+scale.w11-slider:hover > trough > slider { box-shadow: inset 0 0 0 2px var(--fill-control-solid), var(--shadow-control); }
+scale.w11-slider > trough > slider:active { box-shadow: inset 0 0 0 4px var(--fill-control-solid), var(--shadow-control); }
+scale.w11-slider:focus-visible > trough > slider { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+scale.w11-slider:disabled > trough { background-color: var(--fill-control-strong-disabled); }
+scale.w11-slider:disabled > trough > highlight { background-color: var(--accent-disabled); }
+scale.w11-slider:disabled > trough > slider { background-color: var(--fill-control-strong-disabled); box-shadow: inset 0 0 0 3px var(--fill-control-solid); }
+scale.w11-slider > value { color: var(--text-1); font-size: var(--fs-caption); }
+.w11-slider-value { min-width: 28px; color: var(--text-1); font-size: var(--fs-body); }
+
+/* ---- Text box, search box, number box (.fl-textbox, .fl-search) ------------------------------------ */
+entry.w11-entry, spinbutton.w11-numberbox {
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px 1px 11px;
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  background-image: none;
+  box-shadow: inset 0 -1px 0 var(--stroke-control-strong);
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  caret-color: var(--text-1);
+  font-size: var(--fs-body);
+  transition: background-color 83ms linear;
+}
+entry.w11-entry:hover, spinbutton.w11-numberbox:hover { background-color: var(--fill-control-2); }
+entry.w11-entry:focus-within, spinbutton.w11-numberbox:focus-within { background-color: var(--fill-control-input); box-shadow: inset 0 -2px 0 var(--accent); }
+entry.w11-entry:disabled, spinbutton.w11-numberbox:disabled { background-color: var(--fill-control-disabled); color: var(--text-disabled); box-shadow: inset 0 -1px 0 var(--stroke-control); }
+entry.w11-entry.w11-error { box-shadow: inset 0 -1px 0 var(--sys-critical); }
+entry.w11-entry.w11-error:focus-within { box-shadow: inset 0 -2px 0 var(--sys-critical); }
+entry.w11-entry > text, spinbutton.w11-numberbox > text { background-color: transparent; color: var(--text-1); caret-color: var(--text-1); }
+entry.w11-entry placeholder, spinbutton.w11-numberbox placeholder { color: var(--text-2); }
+entry.w11-entry:focus-within placeholder { color: var(--text-3); }
+entry.w11-entry selection, spinbutton.w11-numberbox selection { background-color: var(--selection-bg); color: var(--selection-text); }
+entry.w11-entry > image { color: var(--text-2); min-width: 16px; min-height: 16px; padding: 4px 7px; margin: 0; border-radius: var(--radius-control); }
+entry.w11-entry > image:hover { background-color: var(--fill-subtle-2); }
+entry.w11-entry > image:active { background-color: var(--fill-subtle-3); color: var(--text-3); }
+entry.w11-entry > image.left { margin: 0 4px 0 -2px; padding: 0; background: none; }
+textview.w11-textarea {
+  padding: 5px 11px 6px 11px;
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  box-shadow: inset 0 -1px 0 var(--stroke-control-strong);
+  color: var(--text-1);
+}
+textview.w11-textarea > text { background-color: transparent; color: var(--text-1); }
+textview.w11-textarea:focus-within { background-color: var(--fill-control-input); box-shadow: inset 0 -2px 0 var(--accent); }
+
+spinbutton.w11-numberbox { padding: 0 2px 1px 0; }
+spinbutton.w11-numberbox > text { padding-left: 11px; }
+spinbutton.w11-numberbox > button {
+  min-width: 26px;
+  min-height: 22px;
+  margin: 3px 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: var(--text-2);
+  -gtk-icon-size: 12px;
+}
+spinbutton.w11-numberbox > button:hover { background-color: var(--fill-subtle-2); }
+spinbutton.w11-numberbox > button:active { background-color: var(--fill-subtle-3); color: var(--text-3); }
+spinbutton.w11-numberbox > button:disabled { color: var(--text-disabled); background-color: transparent; }
+
+/* ---- Progress bar and ring are drawn (controls/progress.rs) in these colours ----------------------- */
+.w11-progress { min-height: 3px; min-width: 60px; color: var(--accent); }
+.w11-progress.w11-paused { color: var(--sys-caution); }
+.w11-progress.w11-error { color: var(--sys-critical); }
+.w11-ring { color: var(--accent); }
+
+/* ---- Info bar (.fl-infobar) ---------------------------------------------------------------------------- */
+.w11-infobar {
+  min-height: 46px;
+  padding-left: 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-control);
+  background-color: var(--sys-attention-bg);
+  color: var(--text-1);
+  font-size: var(--fs-body);
+}
+.w11-infobar.w11-success { background-color: var(--sys-success-bg); }
+.w11-infobar.w11-warning { background-color: var(--sys-caution-bg); }
+.w11-infobar.w11-error { background-color: var(--sys-critical-bg); }
+.w11-infobar-icon { margin: 15px 14px 0 0; }
+.w11-infobar-body { padding: 13px 16px 13px 0; }
+/* title (semibold, in the markup) and message are one wrapping label, as the HTML's inline spans */
+.w11-infobar-text { color: var(--text-1); }
+.w11-infobar-action { margin: 0; }
+button.w11-infobar-close { min-width: 36px; min-height: 36px; margin: 4px 4px 0 0; }
+
+/* ---- Settings card, expander, group (.fl-settings-card, .fl-expander, .fl-settings-group) --------- */
+.w11-settings-card, button.w11-settings-card {
+  min-height: 40px;
+  margin: 0;
+  padding: 13px 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  transition: background-color 83ms linear;
+}
+button.w11-settings-card:hover { background-color: var(--fill-control-2); }
+button.w11-settings-card:active { background-color: var(--fill-control-3); }
+button.w11-settings-card:active .w11-sc-title, button.w11-settings-card:active .w11-sc-icon,
+button.w11-settings-card:active .w11-sc-chevron { color: var(--text-2); }
+button.w11-settings-card:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+.w11-settings-card:disabled .w11-sc-title, .w11-settings-card:disabled .w11-sc-desc,
+.w11-settings-card:disabled .w11-sc-icon, .w11-settings-card:disabled .w11-sc-chevron { color: var(--text-disabled); }
+.w11-sc-icon { min-width: 20px; margin: 0 20px 0 2px; color: var(--text-1); }
+.w11-sc-title { font-size: var(--fs-body); color: var(--text-1); }
+.w11-sc-desc { font-size: var(--fs-caption); color: var(--text-2); }
+.w11-sc-control { margin-left: 16px; color: var(--text-2); }
+.w11-sc-chevron { min-width: 20px; margin-left: 12px; color: var(--text-1); }
+
+.w11-expander > .w11-expander-header {
+  border-radius: var(--radius-card);
+  transition: background-color 83ms linear;
+}
+.w11-expander.w11-expanded > .w11-expander-header { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.w11-expander:not(.w11-settings-expander) > .w11-expander-header { min-height: 20px; padding: 12px 16px; }
+.w11-expander-chevron {
+  min-width: 32px;
+  min-height: 32px;
+  margin: 0 0 0 8px;
+  border-radius: var(--radius-control);
+  color: var(--text-1);
+}
+.w11-expander-content {
+  border: 1px solid var(--stroke-card);
+  border-top-width: 0;
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+  background-color: var(--bg-card-2);
+}
+.w11-expander-inner { padding: 16px; }
+.w11-settings-expander .w11-expander-inner { padding: 0; }
+.w11-settings-expander .w11-expander-inner > .w11-settings-card {
+  min-height: 26px;
+  padding: 13px 16px 13px 58px;
+  border: 0 solid transparent;
+  border-top: 1px solid var(--stroke-divider);
+  border-radius: 0;
+  background-color: transparent;
+}
+.w11-settings-expander .w11-expander-inner > .w11-settings-card:first-child { border-top-width: 0; }
+.w11-settings-expander .w11-expander-inner > button.w11-settings-card:hover { background-color: var(--fill-control-2); }
+.w11-settings-expander .w11-expander-inner > button.w11-settings-card:active { background-color: var(--fill-control-3); }
+.w11-settings-expander .w11-expander-inner > .w11-nested-other { padding: 12px 16px 12px 58px; border-top: 1px solid var(--stroke-divider); }
+.w11-settings-expander .w11-expander-inner > .w11-nested-other:first-child { border-top-width: 0; }
+
+.w11-settings-group + .w11-settings-group { margin-top: 28px; }
+.w11-settings-group-title { margin: 0 0 8px 1px; font-size: var(--fs-body); font-weight: 600; color: var(--text-1); }
+.w11-settings-group-title.w11-has-desc { margin-bottom: 4px; }
+.w11-settings-group-desc { margin: 0 0 8px 1px; font-size: var(--fs-caption); color: var(--text-2); }
+
+/* ---- Content dialog (.fl-dialog) ---------------------------------------------------------------------- */
+.w11-smoke { background-color: var(--bg-smoke); }
+.w11-dialog {
+  min-width: 320px;
+  border: 1px solid var(--stroke-surface);
+  border-radius: var(--radius-overlay);
+  background-color: var(--bg-dialog-bottom);
+  box-shadow: var(--shadow-dialog);
+  color: var(--text-1);
+}
+.w11-dialog-body { padding: 24px; background-color: var(--bg-dialog-top); border-radius: 7px 7px 0 0; }
+.w11-dialog-title {
+  margin: 0 0 12px 0;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.w11-dialog-text { font-size: var(--fs-body); color: var(--text-1); }
+.w11-dialog-footer {
+  padding: 24px;
+  border-top: 1px solid var(--stroke-card);
+  border-radius: 0 0 7px 7px;
+  background-color: var(--bg-dialog-bottom);
+}
+
+/* ---- Navigation view (.fl-nav) ---------------------------------------------------------------------- */
+.w11-nav { min-width: 280px; padding-bottom: 4px; color: var(--text-1); }
+.w11-nav.w11-compact { min-width: 48px; }
+.w11-nav-header { padding: 0 16px 8px 16px; }
+.w11-nav-toggle-row { padding: 2px 4px 4px 4px; }
+button.w11-nav-item {
+  min-height: 36px;
+  margin: 2px 4px;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  transition: background-color 83ms linear;
+}
+button.w11-nav-item:hover { background-color: var(--fill-subtle-2); }
+button.w11-nav-item:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.w11-nav-item.w11-selected { background-color: var(--fill-subtle-2); }
+button.w11-nav-item.w11-selected:hover { background-color: var(--fill-subtle-3); }
+button.w11-nav-item:disabled { color: var(--text-disabled); background-color: transparent; }
+button.w11-nav-item:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+.w11-nav-item-body { margin-right: 10px; }
+.w11-nav-chevron { min-width: 24px; min-height: 24px; border-radius: var(--radius-control); color: var(--text-2); }
+.w11-nav-chevron:hover { background-color: var(--fill-subtle-2); }
+.w11-nav-sep { min-height: 1px; margin: 4px 0; background-color: var(--stroke-divider); }
+.w11-nav-heading { padding: 12px 16px 4px 16px; font-weight: 600; color: var(--text-1); }
+.w11-nav-footer { padding-top: 4px; }
+.w11-nav.w11-overlay-open {
+  border: 1px solid var(--stroke-flyout);
+  border-left-width: 0;
+  border-radius: 0 var(--radius-overlay) var(--radius-overlay) 0;
+  background-color: var(--layer-solid);
+  box-shadow: var(--shadow-flyout);
+}
+
+/* ---- Pivot / tabs (.fl-tabs, SelectorBar) and segmented control ---------------------------------- */
+.w11-pivot { min-height: 40px; }
+button.w11-pivot-item {
+  min-height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  transition: color 83ms linear, background-color 83ms linear;
+}
+button.w11-pivot-item .w11-pivot-body { margin: 0 12px; }
+button.w11-pivot-item:hover { background-color: var(--fill-subtle-2); color: var(--text-1); }
+button.w11-pivot-item:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.w11-pivot-item.w11-selected { color: var(--text-1); font-weight: 600; }
+button.w11-pivot-item:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+
+.w11-segmented {
+  padding: 2px;
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control-alt-2);
+}
+button.w11-segment {
+  min-height: 26px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+  font-size: var(--fs-body);
+}
+button.w11-segment .w11-segment-body { margin: 0 12px; }
+button.w11-segment:hover { background-color: var(--fill-subtle-2); color: var(--text-1); }
+button.w11-segment:active { background-color: var(--fill-subtle-3); }
+button.w11-segment.w11-selected {
+  background-color: var(--fill-control);
+  border-color: var(--stroke-control);
+  border-bottom-color: var(--stroke-control-bottom);
+  color: var(--text-1);
+}
+
+/* ---- Breadcrumb (.fl-breadcrumb) ----------------------------------------------------------------------- */
+.w11-breadcrumb { color: var(--text-1); }
+.w11-breadcrumb.w11-breadcrumb-title {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-title);
+  font-weight: 600;
+}
+.w11-breadcrumb.w11-breadcrumb-body { font-size: var(--fs-body); }
+button.w11-breadcrumb-item {
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0 2px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+  font: inherit;
+}
+button.w11-breadcrumb-item:hover { color: var(--text-1); }
+button.w11-breadcrumb-item:active { color: var(--text-3); }
+button.w11-breadcrumb-item label { font: inherit; color: inherit; }
+.w11-breadcrumb-current { padding: 0 2px; color: var(--text-1); }
+.w11-breadcrumb-sep { margin: 0 10px; color: var(--text-2); }
+.w11-breadcrumb-body .w11-breadcrumb-sep { margin: 0 4px; }
+
+/* ---- Context menu (contextmenu.js, Win11 MenuFlyout) ---------------------------------------------- */
+button.w11-menu-item {
+  min-height: 20px;
+  margin: 2px 4px;
+  padding: 6px 12px;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+}
+.w11-menu.w11-has-state button.w11-menu-item { padding-left: 8px; }
+button.w11-menu-item:hover, button.w11-menu-item.w11-active, button.w11-menu-item:focus-visible { background-color: var(--fill-subtle-2); }
+button.w11-menu-item:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.w11-menu-item:disabled { color: var(--text-disabled); background-color: transparent; }
+button.w11-menu-item.w11-danger, button.w11-menu-item.w11-danger .w11-menu-icon { color: var(--sys-critical); }
+.w11-menu-icon { min-width: 16px; min-height: 16px; color: var(--text-1); }
+button.w11-menu-item:disabled .w11-menu-appicon { opacity: 0.4; }
+button.w11-menu-item:disabled .w11-menu-icon, button.w11-menu-item:disabled .w11-menu-shortcut, button.w11-menu-item:disabled .w11-menu-state { color: var(--text-disabled); }
+.w11-menu-state { min-width: 12px; color: var(--text-1); }
+.w11-menu-radio { min-width: 6px; min-height: 6px; border-radius: 3px; background-color: currentColor; }
+.w11-menu-shortcut { margin-left: 24px; color: var(--text-2); font-size: var(--fs-caption); }
+.w11-menu-sub { margin-left: 8px; color: var(--text-2); }
+.w11-menu-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.w11-menu-sep, separator.w11-menu-sep { min-height: 1px; margin: 4px 0; background-color: var(--stroke-divider); background-image: none; }
+.w11-menu-header { padding: 8px 16px 4px 16px; color: var(--text-2); font-size: var(--fs-caption); font-weight: 600; }
+.w11-menu-top { padding: 0 4px 4px 4px; }
+.w11-menu-top > button {
+  min-width: 40px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+}
+.w11-menu-top > button:hover { background-color: var(--fill-subtle-2); }
+.w11-menu-top > button:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+.w11-menu-top > button:disabled { color: var(--text-disabled); background-color: transparent; }
+.w11-menu-top > button.w11-danger { color: var(--sys-critical); }
+
+/* ---- Toast (.fl-toast) ------------------------------------------------------------------------------------ */
+.w11-toast-stack { margin: 0 16px 24px 16px; }
+.w11-toast {
+  min-width: 300px;
+  padding: 12px 8px 12px 16px;
+  border: 1px solid var(--stroke-flyout);
+  border-radius: var(--radius-overlay);
+  background-color: var(--layer-solid);
+  box-shadow: inset 0 1px 0 var(--acrylic-stroke), var(--shadow-flyout);
+  color: var(--text-1);
+}
+.w11-toast-title { font-weight: 600; }
+.w11-toast-message { color: var(--text-2); }
+.w11-toast-action { margin-top: 8px; }
+button.w11-toast-close { min-width: 26px; min-height: 26px; }
+
+/* ---- Badge, avatar, empty state ------------------------------------------------------------------------ */
+.w11-badge {
+  min-width: 8px;
+  min-height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background-color: var(--accent);
+  color: var(--accent-text);
+  font-size: 11px;
+  font-weight: 600;
+  font-feature-settings: "tnum";
+}
+.w11-badge.w11-informational { background-color: var(--sys-solid-neutral); color: #ffffff; }
+.w11-badge.w11-success { background-color: var(--sys-success); color: var(--sys-icon-fg); }
+.w11-badge.w11-caution { background-color: var(--sys-caution); color: var(--sys-icon-fg); }
+.w11-badge.w11-critical { background-color: var(--sys-critical); color: var(--sys-icon-fg); }
+.w11-badge.w11-dot { min-width: 6px; min-height: 6px; padding: 0; border-radius: 3px; font-size: 1px; }
+.w11-avatar { border-radius: 999px; background-color: var(--bg-avatar); color: var(--text-1); font-weight: 600; }
+.w11-empty { padding: 40px 24px; color: var(--text-1); }
+.w11-empty-icon {
+  min-width: 64px;
+  min-height: 64px;
+  margin-bottom: 10px;
+  border-radius: 32px;
+  background-color: var(--fill-control-alt-3);
+  color: var(--accent-fg-3);
+}
+.w11-empty-title { font-weight: 600; }
+.w11-empty-message { color: var(--text-2); }
+.w11-empty-action { margin-top: 14px; }
+
+/* ---- Lists (gtk::ListBox / ListView) ---------------------------------------------------------------- */
+list.w11-list, listview.w11-list, .w11-list { background-color: transparent; background-image: none; border: none; }
+list.w11-list > row, listview.w11-list > row {
+  margin: 0;
+  padding: 0;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  outline: 0 solid transparent;
+  box-shadow: none;
+}
+list.w11-list > row:hover, listview.w11-list > row:hover { background-color: var(--fill-subtle-2); }
+list.w11-list > row:active, listview.w11-list > row:active { background-color: var(--fill-subtle-3); }
+list.w11-list > row:selected, listview.w11-list > row:selected { background-color: var(--fill-subtle-2); color: var(--text-1); }
+list.w11-list > row:focus-visible, listview.w11-list > row:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: -2px; }
+.w11-list-row { min-height: 24px; padding: 8px 12px; }
+.w11-list-row-desc { color: var(--text-2); font-size: var(--fs-caption); }
+
+/* ---- Table (kit::table on gtk::ColumnView) ------------------------------------------------------------ */
+columnview.w11-table { background-color: transparent; background-image: none; color: var(--text-1); font-size: var(--fs-body); }
+columnview.w11-table > header { background-color: transparent; border-bottom: 1px solid var(--stroke-divider); box-shadow: none; }
+columnview.w11-table > header > button {
+  min-height: 30px;
+  padding: 0 8px 0 12px;
+  border: 0 solid transparent;
+  border-right: 1px solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+  font-weight: 400;
+}
+columnview.w11-table > header > button:hover { background-color: var(--fill-subtle-2); border-right-color: var(--stroke-divider); }
+columnview.w11-table > header > button:active { background-color: var(--fill-subtle-3); }
+columnview.w11-table > header > button > box > sort-indicator { color: var(--text-2); min-width: 12px; -gtk-icon-size: 10px; }
+columnview.w11-table > listview { background-color: transparent; background-image: none; }
+columnview.w11-table > listview > row {
+  min-height: 0;
+  padding: 0;
+  margin: 0 4px;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  outline: 0 solid transparent;
+  box-shadow: none;
+  color: var(--text-1);
+}
+columnview.w11-table > listview > row:hover { background-color: var(--fill-subtle-2); }
+columnview.w11-table > listview > row:selected { background-color: var(--selection-subtle); color: var(--text-1); }
+columnview.w11-table > listview > row:selected:hover { background-color: var(--accent-subtle); }
+columnview.w11-table > listview > row:focus-visible { outline: 1px solid var(--focus-outer); outline-offset: -1px; }
+columnview.w11-table > listview > row > cell { min-height: 32px; padding: 0 8px 0 12px; }
+columnview.w11-table .w11-cell label { color: inherit; }
+columnview.w11-table .w11-cell-dim { color: var(--text-2); }
+columnview.w11-table.w11-compact > listview > row > cell { min-height: 24px; }
+columnview.w11-table > listview > rubberband { border: 1px solid var(--accent); background-color: var(--accent-subtle); }
+
+/* ---- Swatches (.fl-swatch) --------------------------------------------------------------------------- */
+button.w11-swatch {
+  min-width: 40px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: #ffffff;
+}
+button.w11-swatch:hover { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35); }
+button.w11-swatch.w11-selected { box-shadow: inset 0 0 0 2px var(--ring), inset 0 0 0 4px var(--bg-solid-base); }
+
+/* ---- Search box (.fl-search: the text box with clear and search buttons) ------------------------ */
+box.w11-searchbox {
+  min-height: 30px;
+  margin: 0;
+  padding: 0 2px 1px 0;
+  border: 1px solid var(--stroke-control);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  box-shadow: inset 0 -1px 0 var(--stroke-control-strong);
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  transition: background-color 83ms linear;
+}
+box.w11-searchbox:hover { background-color: var(--fill-control-2); }
+box.w11-searchbox:focus-within, box.w11-searchbox.w11-focused { background-color: var(--fill-control-input); box-shadow: inset 0 -2px 0 var(--accent); }
+box.w11-searchbox > text { margin: 0; padding: 0 8px 0 11px; background-color: transparent; color: var(--text-1); caret-color: var(--text-1); }
+box.w11-searchbox > text placeholder { color: var(--text-2); }
+box.w11-searchbox:focus-within > text placeholder { color: var(--text-3); }
+box.w11-searchbox > text selection { background-color: var(--selection-bg); color: var(--selection-text); }
+button.w11-searchbox-button {
+  min-width: 30px;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+}
+button.w11-searchbox-button:hover { background-color: var(--fill-subtle-2); }
+button.w11-searchbox-button:active { background-color: var(--fill-subtle-3); color: var(--text-3); }
+
+/* ---- "Deze snelkoppeling starten?" (bridge.js; components.css .fl-launcher-warn) --------------------- */
+.w11-launcher-cmd {
+  padding: 8px 10px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-control);
+  background-color: var(--fill-subtle-2);
+  font-size: 12px;
+}

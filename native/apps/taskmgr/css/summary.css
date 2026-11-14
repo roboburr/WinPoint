@@ -1,0 +1,101 @@
+/* ==========================================================================
+   Win11 GNOME Task Manager: the Samenvatting (Summary) page, after vendor/ui/css/taskmgr.css "Samenvatting"
+   (classes prefixed taskmgr-, the --tm-* tokens are in taskmgr.css).
+   ========================================================================== */
+
+/* ---- Shared by Samenvatting and Opslag ---------------------------------------------------------------- */
+.taskmgr-scroll { padding: 4px 28px 32px 28px; }
+.taskmgr-text-2 { color: var(--text-2); }
+.taskmgr-text-3 { color: var(--text-3); }
+.taskmgr-tabular { font-feature-settings: "tnum"; }
+.taskmgr-list { padding: 4px; }
+.taskmgr-list-empty { padding: 20px 16px; color: var(--text-2); }
+button.w11-link.taskmgr-section-link { font-size: var(--fs-body); padding: 2px 6px; }
+.taskmgr-section-spaced, .taskmgr-two { margin-top: 24px; }
+
+/* ---- The hero ------------------------------------------------------------------------------------------ */
+.taskmgr-hero {
+  padding: 22px 24px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  background-image: radial-gradient(ellipse 120% 160% at 0% 0%, var(--tm-hero-ok-a), transparent 60%),
+                    linear-gradient(90deg, transparent 40%, var(--tm-hero-ok-b));
+}
+.taskmgr-hero.taskmgr-hero-warn {
+  background-image: radial-gradient(ellipse 120% 160% at 0% 0%, var(--tm-hero-warn-a), transparent 60%),
+                    linear-gradient(90deg, transparent 40%, var(--tm-hero-warn-b));
+}
+.taskmgr-hero-title {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.taskmgr-hero-body { margin-top: 4px; color: var(--text-2); }
+.taskmgr-hero-meta { color: var(--text-2); }
+
+/* ---- What needs attention -------------------------------------------------------------------------- */
+.taskmgr-attn { margin-top: 12px; }
+.taskmgr-attn-card {
+  min-height: 44px;
+  padding: 14px 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.taskmgr-attn-card.taskmgr-attn-warning {
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--sys-caution-bg) 70%, transparent), var(--bg-card) 70%);
+}
+.taskmgr-attn-card.taskmgr-attn-critical {
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--sys-critical-bg) 80%, transparent), var(--bg-card) 70%);
+}
+.taskmgr-attn-title { font-weight: 600; color: var(--text-1); }
+.taskmgr-attn-msg { font-size: var(--fs-caption); color: var(--text-2); }
+
+/* ---- The live tiles ---------------------------------------------------------------------------------- */
+button.taskmgr-flat.taskmgr-mini {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+button.taskmgr-flat.taskmgr-mini:hover { background-color: var(--tm-card-hover); }
+button.taskmgr-flat.taskmgr-mini:active { background-color: var(--bg-card-2); }
+button.taskmgr-flat.taskmgr-mini:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+.taskmgr-mini-content { padding: 12px 14px 0 14px; }
+.taskmgr-mini-head { color: var(--text-2); font-size: var(--fs-caption); }
+.taskmgr-mini-chev { opacity: 0; transition: opacity 167ms linear; }
+button.taskmgr-mini:hover .taskmgr-mini-chev { opacity: 1; }
+.taskmgr-mini-value {
+  margin-top: 6px;
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  color: var(--text-1);
+}
+.taskmgr-mini-sub { font-size: var(--fs-caption); color: var(--text-2); min-height: 16px; }
+.taskmgr-mini-graph { margin-top: 8px; }
+
+/* ---- Apps and disks --------------------------------------------------------------------------------- */
+button.taskmgr-flat.taskmgr-app-row, button.taskmgr-flat.taskmgr-vol-row { min-height: 40px; padding: 8px 12px; }
+button.taskmgr-flat.taskmgr-app-row:hover, button.taskmgr-flat.taskmgr-vol-row:hover { background-color: var(--fill-subtle-2); }
+button.taskmgr-flat.taskmgr-app-row:active, button.taskmgr-flat.taskmgr-vol-row:active { background-color: var(--fill-subtle-3); }
+.taskmgr-app-row-name, .taskmgr-vol-row-name { color: var(--text-1); }
+.taskmgr-app-row-meta, .taskmgr-vol-row-meta { font-size: var(--fs-caption); color: var(--text-2); font-feature-settings: "tnum"; }
+.taskmgr-impact-label { font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-impact-label.taskmgr-impact-high { color: var(--sys-caution); }
+.taskmgr-vol-row-mount { color: var(--text-2); }
+.taskmgr-vol-row-pct { color: var(--text-2); font-feature-settings: "tnum"; }
+button.taskmgr-vol-row.taskmgr-is-warning .taskmgr-vol-row-pct,
+button.taskmgr-vol-row.taskmgr-is-critical .taskmgr-vol-row-pct { color: var(--sys-critical); font-weight: 600; }
+
+/* ---- Good to know ------------------------------------------------------------------------------------ */
+.taskmgr-good-item {
+  padding: 12px 14px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card-2);
+}
+.taskmgr-good-title { font-size: var(--fs-body); color: var(--text-1); }
+.taskmgr-good-msg { font-size: var(--fs-caption); color: var(--text-2); }

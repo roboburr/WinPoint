@@ -1,0 +1,246 @@
+/* ==========================================================================
+   Win11 GNOME Disks (native): vendor/ui/css/disks.css in GTK CSS on the kit's tokens. Windows 11
+   Instellingen > Schijven en volumes plus the Schijfbeheer partition bar; Mica window, cards on it, dark and
+   light. Sizes are the HTML's border-box sizes turned into GTK content sizes (min-height without padding and
+   border). The container and media queries are done in code (widgets.rs Segment, app.rs widths).
+   ========================================================================== */
+
+window.dk-app {
+  --dk-data: var(--accent);
+  --dk-system: #8fa3ba;
+  --dk-swap: #b69ce6;
+  --dk-encrypted: #f2c14b;
+  --dk-free: #cfcfcf;
+  --dk-raw: #8b949e;
+  --dk-busy: #33d1c6;
+  --dk-container: #62d08f;
+  --dk-hatch: rgba(255, 255, 255, 0.075);
+}
+window.dk-app.w11-light {
+  --dk-system: #5b7088;
+  --dk-swap: #8764b8;
+  --dk-encrypted: #c78a00;
+  --dk-free: #3b3b3b;
+  --dk-raw: #9aa4af;
+  --dk-busy: #0f9d8a;
+  --dk-container: #2f9e5e;
+  --dk-hatch: rgba(0, 0, 0, 0.07);
+}
+
+/* ---- title bar: util.js appGlyph and the name (appframe.css .af-title) ------------------------------ */
+.dk-apptitle { margin-left: 12px; font-size: var(--fs-caption); color: var(--text-1); transition: color 83ms linear; }
+window.w11-app-window:backdrop .dk-apptitle { color: var(--text-3); }
+
+/* ---- page --------------------------------------------------------------------------------------- */
+.dk-page { padding: 2px 40px 44px 40px; }
+.dk-page.dk-narrow { padding: 2px 16px 28px 16px; }
+.dk-page > .w11-settings-group + .w11-settings-group { margin-top: 6px; }
+.dk-page > .w11-infobar { margin: 0; }
+.dk-page.dk-enter { animation: dk-page-in 300ms cubic-bezier(0, 0, 0, 1); }
+@keyframes dk-page-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+window.w11-reduce-motion .dk-page.dk-enter { animation: none; }
+
+.dk-head { min-height: 48px; padding-top: 4px; }
+.dk-loading { padding: 96px 0; color: var(--text-2); }
+.dk-mono {
+  font-family: "Cascadia Mono", "Cascadia Code", "Ubuntu Sans Mono", "Ubuntu Mono", "Noto Sans Mono", monospace;
+  font-size: 12px;
+}
+
+/* ---- disk card ------------------------------------------------------------------------------------ */
+.dk-disk {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.dk-disk-head { padding: 16px 16px 14px 18px; }
+.dk-disk-name {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+}
+.dk-disk-model { color: var(--text-2); }
+.dk-disk-meta { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-disk-bar { padding: 0 16px 14px 16px; }
+
+.dk-health { color: var(--text-1); }
+.dk-health-dot { min-width: 8px; min-height: 8px; border-radius: 999px; background-color: var(--text-3); }
+.dk-health.is-ok .dk-health-dot { background-color: var(--sys-success); }
+.dk-health.is-warning .dk-health-dot { background-color: var(--sys-caution); }
+.dk-health.is-critical .dk-health-dot { background-color: var(--sys-critical); }
+.dk-health.is-critical { color: var(--sys-critical); font-weight: 600; }
+.dk-busy-text { color: var(--accent-fg); font-weight: 600; }
+
+/* ---- the Schijfbeheer bar ------------------------------------------------------------------------------ */
+.dk-bar {
+  min-height: 62px;
+  padding: 3px;
+  border: 1px solid var(--stroke-control);
+  border-radius: 6px;
+  background-color: var(--fill-subtle-2);
+}
+.dk-bar.dk-compact { min-height: 50px; }
+.dk-seg {
+  --seg: var(--dk-data);
+  border-radius: 4px;
+  border-top: 5px solid var(--seg);
+  background-color: var(--bg-card-solid);
+  background-image: none;
+  box-shadow: inset 0 0 0 1px var(--stroke-card);
+  outline: 0 solid transparent;
+  transition: background-color 83ms linear, box-shadow 83ms linear;
+}
+.dk-seg--system { --seg: var(--dk-system); }
+.dk-seg--swap { --seg: var(--dk-swap); }
+.dk-seg--encrypted { --seg: var(--dk-encrypted); }
+.dk-seg--raw { --seg: var(--dk-raw); }
+.dk-seg--busy { --seg: var(--dk-busy); }
+.dk-seg--container { --seg: var(--dk-container); }
+.dk-seg--free, .dk-seg--empty {
+  --seg: var(--dk-free);
+  background-color: var(--fill-subtle);
+  background-image: repeating-linear-gradient(135deg, transparent 0px, transparent 6px, var(--dk-hatch) 6px, var(--dk-hatch) 8px);
+}
+.dk-seg:hover { background-color: var(--fill-control-2); background-image: none; }
+.dk-seg.dk-selected {
+  box-shadow: inset 0 0 0 2px var(--accent), inset 0 0 0 3px var(--bg-card-solid);
+  background-image: repeating-linear-gradient(135deg, transparent 0px, transparent 5px, var(--dk-hatch) 5px, var(--dk-hatch) 7px);
+}
+.dk-seg:focus-visible { box-shadow: inset 0 0 0 2px var(--focus-outer), inset 0 0 0 3px var(--focus-inner); }
+.dk-seg--free.dk-selected {
+  background-color: var(--fill-subtle-2);
+  background-image: repeating-linear-gradient(135deg, transparent 0px, transparent 4px, var(--dk-hatch) 4px, var(--dk-hatch) 7px);
+}
+/* MBR extended partition: the free space inside it, in the frame's green */
+.dk-seg--free.dk-in-extended {
+  --seg: var(--dk-container);
+  background-color: var(--fill-subtle);
+  background-image: repeating-linear-gradient(135deg, transparent 0px, transparent 6px,
+    color-mix(in srgb, var(--dk-container) 14%, transparent) 6px, color-mix(in srgb, var(--dk-container) 14%, transparent) 8px);
+}
+.dk-seg-name-text { font-size: var(--fs-caption); font-weight: 600; color: var(--text-1); }
+.dk-seg-lock { color: var(--dk-encrypted); }
+.dk-seg-line { font-size: 11px; color: var(--text-2); }
+.dk-seg-status { color: var(--text-3); }
+.dk-seg--busy .dk-seg-status { color: var(--accent-fg); font-weight: 600; }
+.dk-seg-progress { min-height: 3px; background-color: var(--dk-busy); }
+
+.dk-seg-group {
+  padding: 0 3px 3px 3px;
+  border: 2px solid var(--dk-container);
+  border-radius: 5px;
+}
+.dk-seg-group.dk-selected { box-shadow: 0 0 0 1px var(--accent); }
+.dk-seg-group-label { padding: 1px 3px 0 3px; font-size: 11px; font-weight: 600; color: var(--text-2); }
+.dk-seg-group-size { font-weight: 400; color: var(--text-3); }
+
+.dk-legend { padding: 0 2px; color: var(--text-2); font-size: var(--fs-caption); }
+.dk-legend > flowboxchild { padding: 0; margin: 0; min-height: 0; border: none; background: none; box-shadow: none; outline: none; }
+.dk-legend-sw {
+  --seg: var(--dk-data);
+  min-width: 14px;
+  min-height: 7px;
+  border-radius: 2px;
+  border-top: 3px solid var(--seg);
+  background-color: var(--bg-card-solid);
+  box-shadow: inset 0 0 0 1px var(--stroke-card);
+}
+.dk-legend-sw.dk-sw-system { --seg: var(--dk-system); }
+.dk-legend-sw.dk-sw-swap { --seg: var(--dk-swap); }
+.dk-legend-sw.dk-sw-encrypted { --seg: var(--dk-encrypted); }
+.dk-legend-sw.dk-sw-container { --seg: var(--dk-container); }
+.dk-legend-sw.dk-sw-free {
+  --seg: var(--dk-free);
+  background-color: var(--fill-subtle);
+  background-image: repeating-linear-gradient(135deg, transparent 0px, transparent 2px, var(--dk-hatch) 2px, var(--dk-hatch) 4px);
+}
+
+/* ---- volume rows ------------------------------------------------------------------------------------ */
+.dk-vols { border-top: 1px solid var(--stroke-divider); }
+.dk-vols.dk-standalone {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.dk-vol {
+  min-height: 44px;
+  padding: 8px 16px 8px 28px;
+  outline: 0 solid transparent;
+  transition: background-color 83ms linear;
+}
+.dk-vol + .dk-vol { border-top: 1px solid var(--stroke-divider); }
+.dk-vol:hover { background-color: var(--fill-subtle-2); }
+.dk-vol.dk-selected { background-color: var(--fill-subtle-2); box-shadow: inset 3px 0 0 var(--accent); }
+.dk-vol:focus-visible { box-shadow: inset 0 0 0 2px var(--focus-outer); }
+.dk-vol.dk-contained { padding-left: 56px; }
+.dk-n760 .dk-vol { padding-left: 16px; }
+.dk-n760 .dk-vol.dk-contained { padding-left: 36px; }
+.dk-vol-icon { color: var(--text-1); }
+.dk-vol-icon.is-encrypted { color: var(--dk-encrypted); }
+.dk-vol-icon.is-system, .dk-vol-icon.is-free { color: var(--text-2); }
+.dk-vol-icon.is-container { color: var(--dk-container); }
+.dk-vol-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-vol-usage-text { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-vol.dk-busy .dk-vol-desc { color: var(--accent-fg); }
+
+/* ---- properties pages ------------------------------------------------------------------------------- */
+.dk-hero {
+  padding: 18px 20px 20px 20px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.dk-hero-title {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+}
+.dk-hero-sub { color: var(--text-2); }
+.dk-hero-state { color: var(--text-3); font-size: var(--fs-caption); }
+.dk-hero-nums { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-hero-num { color: var(--text-1); font-weight: 600; font-size: var(--fs-body); }
+
+.dk-card {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  color: var(--text-1);
+}
+.dk-details-card { padding: 14px 18px; }
+.dk-details-k { color: var(--text-2); }
+button.dk-linkbtn {
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--accent-fg);
+  font-weight: 400;
+}
+button.dk-linkbtn label { color: inherit; }
+button.dk-linkbtn:hover label { text-decoration-line: underline; }
+button.dk-linkbtn:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+
+.dk-healthcard { padding: 16px 18px; }
+.dk-healthcard-title { font-weight: 600; font-size: 16px; }
+.dk-healthcard-desc { color: var(--text-2); }
+.dk-healthcard.is-critical .dk-healthcard-title { color: var(--sys-critical); }
+.dk-attrs { font-size: var(--fs-caption); }
+.dk-attr-head, .dk-attr-cell { padding: 4px 10px; border-bottom: 1px solid var(--stroke-divider); }
+.dk-attr-head { color: var(--text-2); font-weight: 600; }
+.dk-attr-cell.dk-failing { color: var(--sys-critical); font-weight: 600; }
+
+/* ---- dialogs ----------------------------------------------------------------------------------------- */
+.dk-dlg-text { color: var(--text-1); }
+.dk-fs-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-dlg-progress-text { color: var(--text-2); font-size: var(--fs-caption); }
+.dk-confirm .w11-field-header { font-weight: 600; }
+.dk-dlg .w11-infobar { margin: 0; }

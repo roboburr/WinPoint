@@ -1,0 +1,39 @@
+/* App Installer (vendor/ui/css/installer.css and css/software.css) on the kit's tokens and controls. The page's
+   max-width (1000, centred) is src/clamp.rs; the media query is the installer-narrow class (<= 650 px) main.rs sets
+   from the window width. */
+.installer-page { padding: 24px 40px 40px 40px; }
+.installer-page.installer-narrow { padding: 20px 16px 28px 16px; }
+.installer-title { margin: 0; font-size: 28px; line-height: 1.35; font-weight: 600; color: var(--text-1); }
+.installer-intro, .installer-formats { margin: 0; color: var(--text-2); }
+
+.installer-drop {
+  padding: 28px 24px;
+  border: 1px dashed var(--stroke-control);
+  border-radius: 8px;
+  background-color: var(--bg-card);
+}
+.installer-narrow .installer-drop { padding: 24px 16px; }
+.installer-drop.installer-dragging { border-color: var(--accent); background-color: var(--fill-subtle-3); }
+.installer-drop-title { margin: 0; font-size: 18px; font-weight: 600; color: var(--text-1); }
+
+.installer-provider { color: var(--text-2); }
+.installer-loading { padding: 20px; color: var(--text-2); }
+.installer-section-title { margin: 0 0 12px 0; font-size: 20px; font-weight: 600; color: var(--text-1); }
+.installer-progress {
+  padding: 24px;
+  border: 1px solid var(--stroke-control);
+  border-radius: 8px;
+  background-color: var(--bg-card);
+}
+.installer-narrow .installer-progress { padding: 16px; }
+/* .si-detail .fl-sc__icon 40 px, .fl-sc__inner min-height 78 px (13 px padding) */
+.installer-detail .w11-sc-icon { min-width: 40px; min-height: 40px; }
+.installer-detail .w11-settings-card { min-height: 52px; }
+
+/* software.css: the review and the job view */
+.installer-sw-name { margin: 0; font-size: 18px; font-weight: 600; color: var(--text-1); }
+.installer-sw-description, .installer-sw-note, .installer-sw-job-action, .installer-sw-job-message { color: var(--text-2); }
+.installer-sw-job-state { color: var(--text-1); }
+.installer-sw-note { font-size: 12px; }
+.installer-sw-dt { color: var(--text-2); }
+.installer-sw-dd { color: var(--text-1); }

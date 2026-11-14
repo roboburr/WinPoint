@@ -17,6 +17,25 @@ pub const OWN_APPS: &[&str] = &[
     "installer",
 ];
 
+/// Each own app's GApplication id: its windows' app id and StartupWMClass, and the name of the desktop entry
+/// scripts/install.py writes for it (`<id>.desktop`, `ENTRIES` there). The app catalogue (apps/catalog.rs) lists
+/// that entry as the own app `win11shell-<app>.desktop` and names it in `entry`, which the native taskbar uses
+/// (native/shell/src/panel/taskbar/apps.rs); the native apps carry the same id in their kit::AppSpec.
+pub const OWN_APP_IDS: &[(&str, &str)] = &[
+    ("explorer", "io.github.win11shell.Explorer"),
+    ("settings", "io.github.win11shell.Settings"),
+    ("taskmgr", "io.github.win11shell.TaskManager"),
+    ("alles", "io.github.win11shell.Search"),
+    ("disks", "io.github.win11shell.Disks"),
+    ("defaultapps", "io.github.win11shell.DefaultApps"),
+    ("installer", "io.github.win11shell.Installer"),
+];
+
+/// The GApplication id of an own app ([`OWN_APP_IDS`]).
+pub fn app_id(app: &str) -> Option<&'static str> {
+    OWN_APP_IDS.iter().find(|(kind, _)| *kind == app).map(|(_, id)| *id)
+}
+
 /// Construct argv directly, preserving one JSON argument without any shell
 /// evaluation. Creating this command performs no application or file action.
 pub fn command(app: &str, params: Option<&Value>) -> Result<Command, String> {
@@ -77,6 +96,17 @@ pub(crate) fn activation_token(app: &Value) -> Option<String> {
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn every_own_app_has_its_application_id() {
+        let ids: Vec<_> = OWN_APPS.iter().map(|app| app_id(app).unwrap_or_else(|| panic!("{app}"))).collect();
+        assert_eq!(OWN_APP_IDS.len(), OWN_APPS.len());
+        assert!(ids.iter().all(|id| id.starts_with("io.github.win11shell.")), "{ids:?}");
+        assert_eq!(ids.iter().collect::<std::collections::BTreeSet<_>>().len(), ids.len());
+        assert_eq!(app_id("taskmgr"), Some("io.github.win11shell.TaskManager"));
+        assert_eq!(app_id("alles"), Some("io.github.win11shell.Search"));
+        assert_eq!(app_id("calendar"), None);
+    }
 
     fn argv(command: &Command) -> Vec<String> {
         command

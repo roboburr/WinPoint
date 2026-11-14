@@ -223,9 +223,11 @@ def stub_build(directory: Path) -> Path:
     return directory
 
 
-def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None) -> Path:
+def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
+                 icons: dict[str, str] | None = None) -> Path:
     """A small source tree install.py accepts: a real copy of extension/ and host/src's two JSON tables, plus a
-    tiny but valid vendor/ (ui, host, a two-theme icon bundle with its manifest and source archive)."""
+    tiny but valid vendor/ (ui, host, a two-theme icon bundle with its manifest and source archive). ``icons``: more
+    files of the Win11 theme (path below vendor/icons/Win11 -> text), in the bundle's manifest too."""
     if directory.exists():
         shutil.rmtree(directory)
     shutil.copytree(G/"extension", directory/"extension")
@@ -251,6 +253,9 @@ def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None)
             (base/rel).write_text(text)
         entries[theme] = None
     (vendor/"icons/Win11/16x16/apps/alias.svg").symlink_to("ge1c.svg")
+    for rel, text in (icons or {}).items():
+        (vendor/"icons/Win11"/rel).parent.mkdir(parents=True, exist_ok=True)
+        (vendor/"icons/Win11"/rel).write_text(text)
     manifest_entries = {}
     for path in sorted((vendor/"icons").rglob("*")):
         rel = path.relative_to(vendor/"icons").as_posix()

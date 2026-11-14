@@ -93,7 +93,7 @@ def run(h):
     h.record('native.boot', h.s.facts.get('nativeBoot'))
 
     # Seeded events (store.rs format), so the month, week and day views have something to draw.
-    events_dir = data / 'win11-gnome' / 'calendar'
+    events_dir = data / 'win11-gnome-calendar'
     events_dir.mkdir(parents=True, exist_ok=True)
     seed = [
         ('e1', 'Teamoverleg', 'work', False, '2026-12-21T09:30', '2026-12-21T10:30', 'Kantoor'),

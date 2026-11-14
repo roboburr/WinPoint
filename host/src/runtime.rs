@@ -28,6 +28,9 @@ pub(crate) struct Runtime {
     kind: &'static str,
     ui_sender: std::sync::mpsc::Sender<UiRequest>,
     gui: bool,
+    /// The last beat of the owner's GLib main loop (a 500 ms timer in every owner: lib.rs `run_inner` and
+    /// `run_http_only`, portal.rs); `shell.info` reports its age as `mainLoopLagMs`. The `--http-only`
+    /// backends run a main loop too since the native programs (lib.rs), so every runtime has one.
     beat: Mutex<Option<Instant>>,
 }
 impl Runtime {
@@ -84,7 +87,7 @@ impl Runtime {
             kind,
             ui_sender,
             gui,
-            beat: Mutex::new(gui.then(Instant::now)),
+            beat: Mutex::new(Some(Instant::now())),
         });
         let weak = Arc::downgrade(&runtime);
         ctx.set_caller(Arc::new(move |method, args| {

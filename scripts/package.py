@@ -27,7 +27,7 @@ subprocess.run([sys.executable, str(root/"scripts/verify-ui.py")], check=True,
                env=dict(os.environ, WIN11_LANG=install.LANGUAGE))
 icon_bundle.validate(root/"vendor")
 build = Path(os.environ.get("WIN11_BUILD_DIR", str(root/"target/release")))
-# all 12, the native shell and Calendar included (WIN11_NATIVE_BUILD_DIR first for those two, as install.py does)
+# all 19, the native shell, Calendar and apps included (WIN11_NATIVE_BUILD_DIR first for those, as install.py does)
 missing = install.missing_binaries(build)
 if missing:
     raise SystemExit("\n".join(install.t("missingBinary", source=path) for path in missing))
@@ -38,7 +38,7 @@ archive = destination/f"win11-gnome-{version}-linux-{platform.machine()}.tar.gz"
 with tempfile.TemporaryDirectory(prefix="win11-gnome-package-") as temp:
     stage = Path(temp)/"win11-gnome"
     stage.mkdir()
-    # native/: the GTK 4 shell and Calendar sources (their own workspace), next to host/
+    # native/: the GTK 4 shell, Calendar, kit and app sources (their own workspace), next to host/
     for name in ("scripts", "extension", "host", "native", "vendor"):
         shutil.copytree(root/name, stage/name, symlinks=True,
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "target", ".git"))

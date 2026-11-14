@@ -133,6 +133,9 @@ const METHODS: &[(&str, &[&str], bool)] = &[
     // GW7: `anyway` is the page's "Toch upgraden…" after its warning (hold with allowAnyway only, design §6.4)
     ("update.release.start", &["anyway"], true),
     ("update.release.attach", &[], true),
+    // the native Settings: whether it shows a window (its keep-alive, native/apps/settings/src/keepalive.rs); local to
+    // this host, never forwarded
+    ("update.setWatching", &["on"], false),
 ];
 const MAX_DETAIL_IDS: usize = 20;
 const MIRROR_RETRY_SECONDS: u32 = 30;
@@ -209,7 +212,7 @@ pub(crate) fn check_args(method: &str, args: &Value) -> bool {
         }),
         "update.confirm" => token(&args["jobId"]) && args["accept"].is_boolean(),
         "update.cancel" => token(&args["jobId"]),
-        "update.setAutoOpen" | "update.release.ubuntuHold" => args["on"].is_boolean(),
+        "update.setAutoOpen" | "update.release.ubuntuHold" | "update.setWatching" => args["on"].is_boolean(),
         "update.release.compat" => object.get("refresh").is_none_or(Value::is_boolean),
         "update.release.setPrompt" => matches!(args["prompt"].as_str(), Some("lts" | "normal" | "never")),
         // GW7
@@ -249,7 +252,11 @@ impl Update {
         });
         if mode == Mode::Mirror {
             // this host shows the update page: update.progress and update.reply reach its WebViews; every other
-            // host only parses them (design §4.4, review F6)
+            // host only parses them (design §4.4, review F6). The backend of the native Settings
+            // (`win11-app --app settings --http-only`) is such a host: its event stream carries them to
+            // win11-gtk-settings, whose keep-alive follows them (native/apps/settings/src/keepalive.rs, design C2
+            // below at `hold_application`). retry_later's timeout runs on that backend's main loop (lib.rs
+            // run_http_only).
             ctx.events.show_update_events();
             service.observe();
             if !service.take_over() {
@@ -364,6 +371,11 @@ impl Update {
         let lang = self.ctx.lang();
         if !check_args(method, args) {
             return Some(Err(bad_args(lang)));
+        }
+        if method == "update.setWatching" {
+            // the job's notification (pk.rs notify) asks ServiceContext::watching
+            self.ctx.set_windows_shown(args["on"] == true);
+            return Some(Ok(json!({"on": args["on"]})));
         }
         let mode = self.mode();
         if mode == Mode::Unsupported {
@@ -671,6 +683,13 @@ thread_local! {
 /// The keep-alive of design §4.1 (C2): `Application::hold()` on the GTK main thread while our job runs, so
 /// closing the Settings window drops the window but keeps the process until `Finished`. No application
 /// (tests, `--http-only`): nothing happens.
+///
+/// The native Settings: the job's owner is its backend (`win11-app --app settings --http-only`), which has no
+/// GApplication and dies with the Settings process (PR_SET_PDEATHSIG, native/kit/src/backend.rs). So
+/// win11-gtk-settings holds its own GApplication (native/apps/settings/src/keepalive.rs): it follows `update.changed`,
+/// `update.progress` and `update.owner` and reads `update.status`; while its backend is the owner and a job of ours
+/// runs (not paused for a confirm), and after it until the re-check answered (`refreshing`, at most 60 s as
+/// HOLD_AFTER_JOB), closing the window keeps the process and its backend. Then it exits.
 pub(crate) fn hold_application(on: bool) {
     glib::MainContext::default().invoke(move || {
         use gio::prelude::*;

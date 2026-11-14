@@ -19,7 +19,10 @@ use crate::{
 use serde_json::Value;
 use std::{
     path::PathBuf,
-    sync::{Arc, Mutex},
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicU8, Ordering},
+    },
 };
 
 type Dispatcher = dyn Fn(&str, &Value) -> ApiResult + Send + Sync;
@@ -32,7 +35,13 @@ pub(crate) struct ServiceContext {
     pub dry_run: bool,
     store: SettingsStore,
     caller: Mutex<Option<Arc<Dispatcher>>>,
+    /// What the native GUI of this backend said about its windows (`update.setWatching`): WINDOWS_UNKNOWN until it
+    /// says, then WINDOWS_SHOWN or WINDOWS_NONE ([`Self::watching`]).
+    windows: AtomicU8,
 }
+const WINDOWS_UNKNOWN: u8 = 0;
+const WINDOWS_SHOWN: u8 = 1;
+const WINDOWS_NONE: u8 = 2;
 impl ServiceContext {
     pub fn new(
         events: Arc<Events>,
@@ -52,6 +61,7 @@ impl ServiceContext {
             dry_run,
             store,
             caller: Mutex::new(None),
+            windows: AtomicU8::new(WINDOWS_UNKNOWN),
         }))
     }
     pub fn settings(&self) -> Value {
@@ -74,6 +84,23 @@ impl ServiceContext {
     }
     pub fn subscriber_count(&self) -> usize {
         self.events.subscriber_count()
+    }
+    /// The native GUI of this backend (`--http-only`, its event stream open for as long as the process lives) says
+    /// whether it shows a window (native/apps/settings/src/keepalive.rs: closing the window while an update job
+    /// runs keeps the process).
+    pub fn set_windows_shown(&self, shown: bool) {
+        self.windows.store(if shown { WINDOWS_SHOWN } else { WINDOWS_NONE }, Ordering::SeqCst);
+    }
+    /// Whether someone sees what this host shows (update/pk.rs `notify`: no "installed" or "failed" notification
+    /// then). A native GUI's own word once it has said it ([`Self::set_windows_shown`]): its event stream stays open
+    /// without a window, so it is no sign of one. Else (a WebKit host: a page's EventSource closes with its
+    /// window) an open event stream.
+    pub fn watching(&self) -> bool {
+        match self.windows.load(Ordering::SeqCst) {
+            WINDOWS_SHOWN => true,
+            WINDOWS_NONE => false,
+            _ => self.subscriber_count() > 0,
+        }
     }
     pub fn set_caller(&self, call: Arc<Dispatcher>) {
         *self.caller.lock().unwrap_or_else(|e| e.into_inner()) = Some(call);
@@ -299,6 +326,20 @@ mod lazy_service_tests {
     use super::*;
     use std::sync::atomic::{AtomicUsize, Ordering};
     #[test]
+    fn a_native_gui_says_whether_it_shows_a_window() {
+        let root = std::env::temp_dir().join(format!("watching-{}", crate::events::nonce()));
+        std::fs::create_dir_all(&root).unwrap();
+        let events = crate::events::Events::new(&root.join("events")).unwrap();
+        let ctx = ServiceContext::new(events, root.join("config"), root.join("cache"), root.clone(), "settings".into(), true)
+            .unwrap();
+        assert!(!ctx.watching(), "no GUI word and no event stream");
+        ctx.set_windows_shown(true);
+        assert!(ctx.watching());
+        ctx.set_windows_shown(false);
+        assert!(!ctx.watching(), "the GUI's word, whatever its stream");
+        let _ = std::fs::remove_dir_all(root);
+    }
+    #[test]
     fn expensive_services_start_once_on_demand_and_retry_failed_initialization() {
         let root = std::env::temp_dir().join(format!("lazy-service-{}", crate::events::nonce()));
         std::fs::create_dir_all(&root).unwrap();
@@ -357,6 +398,11 @@ mod lazy_service_tests {
         let events = crate::events::Events::new(&root.join("events")).unwrap();
         let ctx = ServiceContext::new(events.clone(), config, root.join("cache"), root.clone(), "taskmgr".into(), true)
             .unwrap();
+        assert_eq!(ctx.language(), "en");
+        // set_modified moved the file's ctime to now: a parse within i18n.rs RACY (50 ms) of a change is not trusted
+        // and the next call reads the file again. Past that window, one more call caches it for good (as i18n.rs's
+        // own cache test does); without the wait, the loop below parsed the file until 50 ms had gone by.
+        std::thread::sleep(std::time::Duration::from_millis(120));
         assert_eq!(ctx.language(), "en");
         let parses = crate::i18n::language_parses();
         let started = std::time::Instant::now();

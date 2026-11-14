@@ -376,9 +376,9 @@ class Installer(unittest.TestCase):
         self.assertEqual(bad.stderr, "Onbekende taal ‘fr’: kies nl of en.\nUnknown language ‘fr’: choose nl or en.\n")
         self.assertEqual(self.install(case, ["--lang"]).returncode, 2)
         help_nl = self.install(case, ["--help"])
-        self.assertEqual((help_nl.returncode, help_nl.stdout.splitlines()[0]), (0, "Gebruik: scripts/install.sh [--lang nl|en]"))
+        self.assertEqual((help_nl.returncode, help_nl.stdout.splitlines()[0]), (0, "Gebruik: scripts/install.sh [--lang nl|en] [--no-session]"))
         help_en = self.install(case, ["--help", "--lang", "en"])
-        self.assertEqual((help_en.returncode, help_en.stdout.splitlines()[0]), (0, "Usage: scripts/install.sh [--lang nl|en]"))
+        self.assertEqual((help_en.returncode, help_en.stdout.splitlines()[0]), (0, "Usage: scripts/install.sh [--lang nl|en] [--no-session]"))
         self.assertEqual(dutch_words(help_en.stdout), [])
         unknown = self.install(case, ["--prefix", "/x"])
         self.assertEqual(unknown.returncode, 2)
@@ -430,6 +430,24 @@ class Installer(unittest.TestCase):
         self.assertEqual(english.stdout.splitlines()[0],
                          f"Removed from the extension folder (not a file of this version): {target}/old.js")
 
+    def test_entries_have_icons_the_stock_theme_finds(self):
+        """O2: with the bundled Win11 icons in the payload every entry's Icon= is a file there (or Adwaita's name for
+        the Panel); a bundle without those files keeps the theme names 3b898e6 wrote."""
+        svg = "<svg xmlns='http://www.w3.org/2000/svg'/>\n"
+        icons = {rel: svg for rel in [*install.BUNDLED_ICONS.values(), "apps/scalable/office-calendar.svg"]}
+        root = sandbox.fixture_root(RUN/"fixture-entry-icons", icons=icons)
+        case = Case("entry-icons")
+        self.assertOk(self.install(case, root=root, locale=NL_LOCALE))
+        check_entry_icons(self, case)
+        entries = entries_in(case)
+        for name, rel in install.BUNDLED_ICONS.items():
+            self.assertEqual(entries[name]["Icon"], str(case.prefix/"share/win11-gnome/icons/Win11"/rel))
+        self.assertEqual(entries["Calendar"]["Icon"], str(case.prefix/"share/win11-gnome/icons/Win11/apps/scalable/office-calendar.svg"))
+        case = Case("entry-icons-fallback")
+        self.assertOk(self.install(case, locale=NL_LOCALE))
+        self.assertEqual({name: entries_in(case)[name]["Icon"] for name in install.BUNDLED_ICONS},
+                         {name: Path(rel).stem for name, rel in install.BUNDLED_ICONS.items()})
+
     def test_build_directory_choice(self):
         """WIN11_BUILD_DIR unset: target/release wins over a stale bin/; a package (bin/ only) uses bin/."""
         base = RUN/"build-choice"
@@ -477,6 +495,27 @@ class Installer(unittest.TestCase):
         again = case.run(SCRIPTS/"uninstall.py", None, ["--lang", "nl"], env)
         self.assertEqual(again.returncode, 1)
         self.assertEqual(again.stderr, f"Niets verwijderd: {case.prefix}/share/win11-gnome bevat geen installatiemarker van dit project.\n")
+
+    def test_calendar_events_survive_an_update_and_an_uninstall(self):
+        """13-11: with the default prefix the Calendar's old folder (win11-gnome/calendar) is the payload; an update and
+        an uninstall move it to win11-gnome-calendar first (install.rescue_calendar)."""
+        case = Case("calendar-data")
+        share = {"XDG_DATA_HOME": str(case.prefix/"share")}
+        events = '{"version": 1, "events": []}\n'
+        old, new = case.prefix/"share/win11-gnome/calendar", case.prefix/"share/win11-gnome-calendar"
+        self.assertOk(self.install(case, ["--lang", "en"], NL_LOCALE, extra=share))
+        old.mkdir()
+        (old/"events.json").write_text(events)
+        self.assertOk(self.install(case, ["--lang", "en"], NL_LOCALE, extra=share))
+        self.assertEqual((new/"events.json").read_text(), events)
+        self.assertFalse(old.exists())
+        shutil.rmtree(new)
+        old.mkdir()
+        (old/"events.json").write_text(events)
+        proc = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE, share))
+        self.assertOk(proc)
+        self.assertFalse((case.prefix/"share/win11-gnome").exists())
+        self.assertEqual((new/"events.json").read_text(), events)
 
     def test_sandbox_negative_control(self):
         """The sandbox itself: the repo is read-only, the live config is invisible, and strace flags an outside write."""
@@ -531,7 +570,9 @@ class Installer(unittest.TestCase):
         self.assertOk(old)
         self.assertOk(new)
         self.assertEqual((new.stdout, new.stderr), (as_now(old.stdout), old.stderr))
-        self.assertEqual(new_tree, old_tree)
+        self.assertEqual(without_moved_icons(new_tree), without_moved_icons(old_tree))
+        check_moved_icons(self, case, old_tree, new_tree)
+        check_entry_icons(self, case)
         self.assertEqual(calls, [])
         writes = self.assertNoOutsideWrites(case, new)
         print(f"\n  real nl update: {writes} mutating syscall paths, 0 outside the case dir", file=sys.stderr)
@@ -551,6 +592,7 @@ class Installer(unittest.TestCase):
         print(f"\n  real en first install: {writes} mutating syscall paths, 0 outside the case dir", file=sys.stderr)
         self.assertEqual({n: e["Name"] for n, e in entries_in(case).items()}, entry_names("en"))
         check_exec_lines(self, case)
+        check_entry_icons(self, case)
 
 
 class Autostart(unittest.TestCase):
@@ -831,8 +873,61 @@ def check_exec_lines(test: unittest.TestCase, case: Case) -> None:
     test.assertEqual(shlex.split(line[5:].replace("\\\\", "\\")), [str(case.prefix/"bin/win11-file-portal")])
 
 
+# O2 (13-11): the entries whose Icon= is a file of the bundled Win11 icons when the payload has it (install.py
+# BUNDLED_ICONS); 3b898e6 wrote the theme name (the file's stem). The Panel keeps a name the stock Adwaita has.
+MOVED_ICONS = {f"data/applications/io.github.win11shell.{name}.desktop": name for name in install.BUNDLED_ICONS}
+ADWAITA_ICONS = {"Panel": "view-app-grid-symbolic"}
+
+
+def without_moved_icons(tree: dict[str, str]) -> dict[str, str]:
+    return {k: v for k, v in tree.items() if k not in MOVED_ICONS}
+
+
+def check_moved_icons(test: unittest.TestCase, case: Case, old_tree: dict[str, str], new_tree: dict[str, str]) -> None:
+    """Each of MOVED_ICONS is 3b898e6's entry byte for byte but for its Icon= line, the bundled file."""
+    import hashlib
+    for rel, name in MOVED_ICONS.items():
+        text = (case.dir/rel).read_text()
+        icon = case.prefix/"share/win11-gnome/icons/Win11"/install.BUNDLED_ICONS[name]
+        test.assertIn(f"\nIcon={icon}\n", text, name)
+        as_baseline = text.replace(f"\nIcon={icon}\n", f"\nIcon={icon.stem}\n")
+        mode = new_tree[rel].split()[1]
+        test.assertEqual(old_tree[rel], f"file {mode} {hashlib.sha256(as_baseline.encode()).hexdigest()}", name)
+
+
+def check_entry_icons(test: unittest.TestCase, case: Case) -> None:
+    """O2: every installed io.github.win11shell.* entry has an icon GNOME's own UI (Alt+Tab, the overview) finds
+    under the stock Adwaita: a file of the payload (the bundled Win11 icons, ui/assets), or a name Adwaita has."""
+    payload = case.prefix/"share/win11-gnome"
+    for name, entry in entries_in(case).items():
+        icon = entry["Icon"]
+        if name in ADWAITA_ICONS:
+            test.assertEqual(icon, ADWAITA_ICONS[name])
+            continue
+        test.assertTrue(icon.startswith(f"{payload}/"), (name, icon))
+        test.assertTrue(Path(icon).is_file(), (name, icon))
+    adwaita = Path("/usr/share/icons/Adwaita")
+    if adwaita.is_dir():
+        for name in ADWAITA_ICONS.values():
+            test.assertTrue(list(adwaita.glob(f"*/*/{name}.*")), name)
+
+
 class Units(unittest.TestCase):
     """In-process checks of install.py's helpers (nothing is installed)."""
+
+    def test_bundled_entry_icons_are_files_of_the_win11_theme(self):
+        """O2: each BUNDLED_ICONS path is an SVG of vendor/icons/Win11 (a link inside the theme is fine), named
+        after the theme name it replaces."""
+        base = G/"vendor/icons/Win11"
+        self.assertEqual(sorted(install.BUNDLED_ICONS), sorted(set(install.BUNDLED_ICONS) & set(install.ENTRIES)))
+        for name, rel in install.BUNDLED_ICONS.items():
+            path = base/rel
+            self.assertTrue(path.is_file(), rel)
+            self.assertTrue(path.resolve().is_relative_to(base.resolve()), rel)
+            self.assertIn(b"<svg", path.read_bytes()[:4096], rel)
+        self.assertEqual({Path(rel).stem for rel in install.BUNDLED_ICONS.values()},
+                         {"system-software-install", "system-search", "drive-harddisk", "utilities-system-monitor",
+                          "system-file-manager"})
 
     def test_guess_language(self):
         here = RUN/"units"
@@ -901,6 +996,32 @@ class Units(unittest.TestCase):
                 install.set_language(lang)
                 with self.assertRaises(SystemExit) as raised:
                     install.preflight_runtime(binary)
+                self.assertEqual(str(raised.exception.code), want)
+        finally:
+            install.known_libraries = real
+            install.set_language("nl")
+
+    def test_preflight_names_the_gtk4_packages(self):
+        """Every library the 19 binaries need (DT_NEEDED) has its Ubuntu package in PACKAGES, except libc6's own; a
+        missing libgtk-4.so.1 (the native shell, Calendar and apps) names libgtk-4-1."""
+        build = G/"tests/build/native-release"
+        if not all((build/name).is_file() for name in install.BINS):
+            self.skipTest("no native release build")
+        needed = {library for name in install.BINS for library in install.elf_needed(build/name) or []}
+        self.assertTrue({"libgtk-4.so.1", "libgraphene-1.0.so.0", "libpango-1.0.so.0"} <= needed, needed)
+        libc6 = re.compile(r"lib(c|m|pthread|dl|rt|resolv)\.so\.\d+|ld-linux-[\w-]+\.so\.\d+")
+        self.assertEqual(sorted(lib for lib in needed if lib not in install.PACKAGES and not libc6.fullmatch(lib)), [])
+        install.preflight_runtime(build)                       # this machine has everything
+        real = install.known_libraries
+        try:
+            install.known_libraries = lambda: real() - {"libgtk-4.so.1"}
+            for lang, want in [("nl", "Ontbrekende systeemonderdelen: libgtk-4.so.1.\n"
+                                      "Installeer ze op Ubuntu met: sudo apt install libgtk-4-1"),
+                               ("en", "Missing system components: libgtk-4.so.1.\n"
+                                      "On Ubuntu, install them with: sudo apt install libgtk-4-1")]:
+                install.set_language(lang)
+                with self.assertRaises(SystemExit) as raised:
+                    install.preflight_runtime(build)
                 self.assertEqual(str(raised.exception.code), want)
         finally:
             install.known_libraries = real

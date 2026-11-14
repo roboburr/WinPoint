@@ -1,0 +1,67 @@
+/* ==========================================================================
+   win11-kit window frame: vendor/ui/js/apps/appframe.js and css/appframe.css. An undecorated window whose
+   .w11-frame is the Mica (solid #202020 / #f3f3f3; with the extension's blur, window.w11-glass, 90 % over it
+   as native-backdrop.css), with 8 px corners and a hairline, square while maximized, tiled or fullscreen
+   (window.w11-square). The GNOME extension draws the shadow.
+   ========================================================================== */
+
+window.w11-app-window, window.w11-app-window.background {
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+}
+.w11-frame {
+  background-color: var(--bg-mica-solid);
+  border: 1px solid var(--stroke-window);
+  border-radius: var(--radius-window);
+  color: var(--text-1);
+}
+window.w11-square .w11-frame { border-radius: 0; border-width: 0; }
+window.w11-app-window.w11-glass .w11-frame { background-color: var(--bg-mica-glass); }
+.w11-edge { background-color: transparent; }
+
+/* ---- Title bar (.af-titlebar) --------------------------------------------------------------------------- */
+.w11-titlebar { min-height: 32px; }
+.w11-titlebar-left { min-height: 32px; }
+.w11-appicon { margin-left: 16px; color: var(--accent-fg-3); }
+.w11-titlebar.w11-has-back .w11-appicon { margin-left: 8px; }
+.w11-apptitle { margin-left: 12px; font-size: var(--fs-caption); color: var(--text-1); transition: color 83ms linear; }
+.w11-titlebar.w11-no-icon .w11-apptitle { margin-left: 16px; }
+.w11-titlebar.w11-has-back.w11-no-icon .w11-apptitle { margin-left: 8px; }
+.w11-titlebar-center { padding: 0 16px; }
+button.w11-back { min-width: 38px; min-height: 34px; margin: 0 0 0 4px; }
+button.w11-cap {
+  min-width: 46px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  transition: background-color 83ms linear, color 83ms linear;
+}
+button.w11-cap:hover { background-color: var(--fill-subtle-2); }
+button.w11-cap:active { background-color: var(--fill-subtle-3); color: var(--text-2); }
+button.w11-cap.w11-cap-close:hover { background-color: var(--close-hover); color: #ffffff; }
+button.w11-cap.w11-cap-close:active { background-color: var(--close-pressed); color: rgba(255, 255, 255, 0.7); }
+window.w11:not(.w11-square) button.w11-cap.w11-cap-close { border-top-right-radius: 7px; }
+
+/* Inactive window: dim title, icon and caption glyphs (like Windows). */
+window.w11-app-window:backdrop .w11-apptitle { color: var(--text-3); }
+window.w11-app-window:backdrop .w11-appicon { opacity: 0.5; }
+window.w11-app-window:backdrop button.w11-cap:not(:hover) { color: var(--text-disabled); }
+
+/* ---- Content (.af-content, .is-layer) --------------------------------------------------------------- */
+.w11-content { color: var(--text-1); }
+.w11-content.w11-layer {
+  border-top: 1px solid var(--stroke-card);
+  border-left: 1px solid var(--stroke-card);
+  border-top-left-radius: var(--radius-card);
+  background-color: var(--bg-layer);
+}
+.w11-content.w11-layer.w11-no-nav { border-left-width: 0; border-top-left-radius: 0; }

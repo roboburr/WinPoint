@@ -16,6 +16,7 @@ mod desktop_entries;
 mod events;
 mod files;
 mod gnome;
+mod gnome_look;
 mod i18n;
 mod images;
 mod launch;
@@ -213,8 +214,8 @@ fn watch_language(runtime: &runtime::Runtime) {
 }
 
 /// C6 under the native shell: `win11-panel --http-only` (win11-shell's backend) writes the own desktop entries'
-/// `Name=`/`Comment=` at start and, debounced, after a language switch. No GLib main loop runs in this mode;
-/// [`desktop_entries::schedule`] runs on its own thread and reads the language from the settings file when it
+/// `Name=`/`Comment=` at start and, debounced, after a language switch. [`desktop_entries::schedule`] runs on its
+/// own thread (not on this mode's main loop, run_http_only) and reads the language from the settings file when it
 /// runs, so two quick switches seen out of order still end in the language of the file.
 fn watch_entries(runtime: &runtime::Runtime) {
     let ctx = runtime.ctx.clone();
@@ -241,7 +242,13 @@ pub fn run(kind: &'static str) {
     let handoff = take_handoff();
     // The handed-over lock is close-on-exec again: an exec into win11-shell releases it.
     native_shell_switch(kind);
-    match process_scope::ensure_native(kind) {
+    // The backend of a native GTK 4 app (native/kit backend.rs: `--app <kind> --http-only` with
+    // WIN11_NATIVE_INSTANCE) stays the app's child, in the app's own unit. Moved into a unit of its own, this
+    // process would end at once and the app would report its backend as gone (an app started outside its launcher).
+    let app_backend = kind != "panel"
+        && std::env::args().any(|arg| arg == "--http-only")
+        && std::env::var_os("WIN11_NATIVE_INSTANCE").is_some();
+    match if app_backend { Ok(false) } else { process_scope::ensure_native(kind) } {
         Ok(true) => return,
         Ok(false) => {}
         Err(error) => {
@@ -249,6 +256,7 @@ pub fn run(kind: &'static str) {
             std::process::exit(1);
         }
     }
+    native_app_switch(kind);
     reap_inherited_children();
     if let Err(err) = run_inner(kind, handoff) {
         eprintln!("Win11 voor GNOME: {err}");
@@ -278,19 +286,66 @@ fn native_shell_switch(kind: &str) {
     std::process::exit(1);
 }
 
+/// `win11-app --gnome-look`: GNOME's own look again in a session that is not WinPoint's (gnome_look.rs).
+pub fn restore_gnome_look() -> i32 {
+    gnome_look::restore()
+}
+
+/// The native GTK 4 app of a kind (native/apps): `win11-gtk-<kind>`, installed next to the host binaries.
+fn native_app_binary(kind: &str) -> Option<&'static str> {
+    Some(match kind {
+        "explorer" => "win11-gtk-explorer",
+        "settings" => "win11-gtk-settings",
+        "taskmgr" => "win11-gtk-taskmgr",
+        "alles" => "win11-gtk-alles",
+        "disks" => "win11-gtk-disks",
+        "defaultapps" => "win11-gtk-defaultapps",
+        "installer" => "win11-gtk-installer",
+        _ => return None,
+    })
+}
+
+/// The apps are native GTK 4 programs (native/apps): a GUI launch of an app kind, already inside its own scope
+/// (ensure_native), execs `win11-gtk-<kind>` from this binary's directory with the same arguments (without the
+/// `--app <kind>` of win11-app), so the pid, the launch scope and the slice stay. That app starts `win11-app --app
+/// <kind> --http-only` as its backend. Without the native binary, or with WIN11_WEBKIT_APPS=1, the WebKit app runs.
+fn native_app_switch(kind: &str) {
+    if std::env::args().any(|arg| arg == "--http-only")
+        || std::env::var("WIN11_WEBKIT_APPS").as_deref() == Ok("1")
+    {
+        return;
+    }
+    let Some(binary) = native_app_binary(kind) else { return };
+    let app = std::env::current_exe()
+        .map(exec_path)
+        .unwrap_or_default()
+        .with_file_name(binary);
+    if !app.is_file() {
+        // the WebKit app stays the fallback until it is removed; say which native app is missing
+        eprintln!(
+            "{}",
+            i18n::trf(
+                i18n::current_language(),
+                "core.nativeAppMissing",
+                &json!({"path": app.display().to_string()})
+            )
+        );
+        return;
+    }
+    let mut args: Vec<std::ffi::OsString> = std::env::args_os().skip(1).collect();
+    if args.first().map(|arg| arg.as_os_str()) == Some(std::ffi::OsStr::new("--app")) {
+        args.drain(..args.len().min(2));
+    }
+    use std::os::unix::process::CommandExt;
+    let error = std::process::Command::new(&app).args(args).exec();
+    eprintln!("Win11 voor GNOME: {}: {error}", app.display());
+}
+
 fn run_inner(kind: &'static str, handoff: Option<std::fs::File>) -> Result<(), String> {
     if std::env::args().any(|arg| arg == "--http-only") {
         return run_http_only(kind);
     }
-    let id = match kind {
-        "settings" => "io.github.win11shell.Settings",
-        "taskmgr" => "io.github.win11shell.TaskManager",
-        "alles" => "io.github.win11shell.Search",
-        "disks" => "io.github.win11shell.Disks",
-        "defaultapps" => "io.github.win11shell.DefaultApps",
-        "installer" => "io.github.win11shell.Installer",
-        _ => "io.github.win11shell.Explorer",
-    };
+    let id = launch::app_id(kind).unwrap_or("io.github.win11shell.Explorer");
     glib::set_prgname(Some(id));
     let program_class = std::ffi::CString::new(id).expect("static application ID");
     // GDK chooses the Wayland application ID during initialization.
@@ -741,6 +796,8 @@ fn exec_target(current: std::io::Result<PathBuf>) -> std::io::Result<PathBuf> {
 }
 
 /// The argv (without argv[0]) of a `shell.restartAll` re-exec. The flags `--dry-run`/`--http-only` stay.
+/// * a `--http-only` host keeps its own argv: it has no page or location, and `win11-app` needs its
+///   `--app <kind>` (without it the re-exec printed its usage and exited 2);
 /// * the origin Settings reopens on its update page: `--app settings … --params {"page":"update"}`;
 /// * Explorer drops its navigation arguments (a path, `--params`, a used `--tab-ticket`), so the page restores
 ///   its tabs from the saved window state (an explicit location would win over the session);
@@ -750,6 +807,9 @@ pub(crate) fn restart_args(
     args: &[std::ffi::OsString],
     origin: bool,
 ) -> Vec<std::ffi::OsString> {
+    if args.iter().any(|arg| arg == "--http-only") {
+        return args.to_vec();
+    }
     let flags = args
         .iter()
         .filter(|arg| matches!(arg.to_str(), Some("--dry-run" | "--http-only")))
@@ -958,43 +1018,140 @@ pub fn run_software_worker() {
     std::process::exit(services::software::run_worker());
 }
 
+/// The exit status of a native program's backend that restarts (`shell.restartAll`, `shell.restart`; EX_TEMPFAIL).
+/// It wrote `<instance>.restart` ([`restart_note`]) first. Its GUI (native/kit/src/backend.rs for the win11-gtk-*
+/// apps, native/shell/src/backend.rs for win11-shell) waits on its child: on this status it saves its own state and
+/// execs itself, new build and new backend in one go (restartAll), or starts a new backend (a plain
+/// `shell.restart`). Any other exit of the backend makes the GUI start a new one.
+pub(crate) const RESTART_EXIT: i32 = 75;
+
+/// `<instance>.restart`, next to the instance file the GUI named in WIN11_NATIVE_INSTANCE.
+pub(crate) fn restart_note_path(instance: &Path) -> PathBuf {
+    let mut name = instance.as_os_str().to_owned();
+    name.push(".restart");
+    PathBuf::from(name)
+}
+
+/// What the GUI of a native backend needs for its restart: `all` (a `shell.restartAll`; false: a plain
+/// `shell.restart`), `origin` (this backend called `shell.restartAll`: Settings reopens on its update page) and the
+/// activation `token` for the new window (XDG_ACTIVATION_TOKEN / DESKTOP_STARTUP_ID), `pid` of the backend.
+pub(crate) fn restart_note(plan: Option<&RestartAll>) -> Value {
+    json!({
+        "version": 1,
+        "pid": std::process::id(),
+        "all": plan.is_some(),
+        "origin": plan.is_some_and(|plan| plan.origin),
+        "token": plan.and_then(|plan| plan.token.clone()),
+    })
+}
+
+/// The note, written as backend.rs writes the instance file: a private temp file in the same folder, renamed.
+pub(crate) fn write_restart_note(instance: &Path, note: &Value) -> std::io::Result<()> {
+    use std::os::unix::fs::OpenOptionsExt;
+    let path = restart_note_path(instance);
+    let dir = path.parent().ok_or(std::io::ErrorKind::NotFound)?;
+    let tmp = dir.join(format!(".restart-{}-{}", std::process::id(), events::nonce()));
+    let result = (|| {
+        let mut file = std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .custom_flags(libc::O_NOFOLLOW | libc::O_CLOEXEC)
+            .open(&tmp)?;
+        file.write_all(note.to_string().as_bytes())?;
+        file.sync_all()?;
+        std::fs::rename(&tmp, &path)
+    })();
+    if result.is_err() {
+        let _ = std::fs::remove_file(&tmp);
+    }
+    result
+}
+
+/// What a `--http-only` host does on `request_shutdown(again)`: `stop` at once, except a `shell.restartAll` restart
+/// of the native Explorer's backend, which first waits for Explorer's own file operations (D-G45, the same
+/// [`defer_while_busy`] as the GUI path; announced as `shell.restartDeferred {wait:'files'}` and
+/// `shell.restartResumed`).
+fn http_only_shutdown(
+    kind: &str,
+    again: bool,
+    files: Option<&files::Files>,
+    pending: &PendingRestart,
+    stop: Box<dyn FnOnce() + Send>,
+) {
+    match files.filter(|_| again && kind == "explorer" && restart_all_plan().is_some()) {
+        Some(files) => defer_while_busy(files, pending, stop),
+        None => stop(),
+    }
+}
+
 /// Native serve mode, with no GTK surface or display connection: the backend of win11-shell (`win11-panel
-/// --http-only`, started by native/shell/src/backend.rs with WIN11_NATIVE_INSTANCE), API diagnostics and CI.
+/// --http-only`, started by native/shell/src/backend.rs) and of the native apps (`win11-app --app <kind>
+/// --http-only`, native/kit/src/backend.rs), both with WIN11_NATIVE_INSTANCE; API diagnostics and CI.
+///
+/// The main thread runs a GLib main loop on the default context, as a GUI host does: the services' timeouts
+/// (update.rs: the mirror's owner retry, the release hand-over watch) and `MainContext::default().invoke` run
+/// there, and a 500 ms timer beats the runtime, so `shell.info` reports `mainLoopLagMs`.
+///
+/// Restarts: a native program's backend never re-execs itself (a new port and token would leave its GUI offline,
+/// and the GUI itself would keep the old build). It writes `<instance>.restart` and exits with [`RESTART_EXIT`];
+/// the GUI does the rest. Without WIN11_NATIVE_INSTANCE (diagnostics) the host re-execs itself as before.
 fn run_http_only(kind: &'static str) -> Result<(), String> {
     let ui = ui_root()?;
     let (sender, _receiver) = std::sync::mpsc::channel();
-    let quit = Arc::new(AtomicBool::new(false));
+    let main_loop = glib::MainLoop::new(None, false);
     let restart = Arc::new(AtomicBool::new(false));
-    let exiting = quit.clone();
-    let again = restart.clone();
-    let runtime = runtime::Runtime::new(
-        ui,
-        kind,
-        sender,
-        Arc::new(move |value| {
-            again.store(value, Ordering::Relaxed);
-            exiting.store(true, Ordering::Relaxed);
-        }),
-        false,
-    )?;
+    let explorer_files: Arc<std::sync::OnceLock<Arc<files::Files>>> = Arc::default();
+    let pending_restart: Arc<PendingRestart> = Arc::default();
+    let shutdown = {
+        let (main_loop, restart) = (main_loop.clone(), restart.clone());
+        let (files, pending) = (explorer_files.clone(), pending_restart.clone());
+        Arc::new(move |again: bool| {
+            let (main_loop, restart) = (main_loop.clone(), restart.clone());
+            let stop: Box<dyn FnOnce() + Send> = Box::new(move || {
+                restart.store(again, Ordering::Relaxed);
+                // a source on the loop's context, never run in this thread: also a quit that comes before
+                // run() starts ends the loop (invoke() would run it here at once while nobody owns the context)
+                glib::idle_add_once(move || main_loop.quit());
+            });
+            http_only_shutdown(kind, again, files.get().map(|files| &**files), &pending, stop);
+        })
+    };
+    let runtime = runtime::Runtime::new(ui, kind, sender, shutdown, false)?;
+    if kind == "explorer" {
+        let _ = explorer_files.set(runtime.files.clone());
+        watch_files_idle(&runtime.files, pending_restart);
+    }
     if kind == "panel" && DESKTOP_ENTRIES.load(Ordering::Relaxed) && !backend::dry_run() {
         watch_entries(&runtime);
     }
     let (port, stop) = runtime.server()?;
-    let instance = std::env::var_os("WIN11_NATIVE_INSTANCE")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| {
-            glib::user_runtime_dir().join(format!("win11-gnome/http-{}.json", std::process::id()))
-        });
+    let native = std::env::var_os("WIN11_NATIVE_INSTANCE").map(PathBuf::from);
+    let instance = native.clone().unwrap_or_else(|| {
+        glib::user_runtime_dir().join(format!("win11-gnome/http-{}.json", std::process::id()))
+    });
     backend::write_instance(&instance, port, &runtime.backend.token)?;
-    while !quit.load(Ordering::Relaxed) {
-        std::thread::sleep(Duration::from_millis(25));
-    }
+    let beat = Arc::downgrade(&runtime);
+    glib::timeout_add_local(Duration::from_millis(500), move || match beat.upgrade() {
+        Some(runtime) => {
+            runtime.beat();
+            glib::ControlFlow::Continue
+        }
+        None => glib::ControlFlow::Break,
+    });
+    main_loop.run();
     stop.store(true, Ordering::Relaxed);
     runtime.shutdown();
     backend::remove_instance(&instance);
     if restart.load(Ordering::Relaxed) {
         let plan = take_restart_all();
+        if let Some(instance) = native {
+            if let Err(error) = write_restart_note(&instance, &restart_note(plan.as_ref())) {
+                // without the note the GUI takes this for a crash and starts a new backend
+                eprintln!("Win11 restart: {}: {error}", restart_note_path(&instance).display());
+            }
+            std::process::exit(RESTART_EXIT);
+        }
         return Err(reexec(kind, plan.as_ref(), None).to_string());
     }
     Ok(())
@@ -1161,6 +1318,107 @@ mod restart_tests {
         ] {
             assert_eq!(restart_args(kind, &args, false), args, "{kind}");
         }
+    }
+
+    #[test]
+    fn an_http_only_backend_keeps_its_app_argv() {
+        // `win11-app --http-only` alone prints the usage and exits 2: the --app pair must stay
+        for (kind, args) in [
+            ("explorer", os(&["--app", "explorer", "--http-only"])),
+            ("settings", os(&["--app", "settings", "--http-only"])),
+            ("taskmgr", os(&["--app", "taskmgr", "--http-only", "--dry-run"])),
+            ("panel", os(&["--http-only"])),
+        ] {
+            for origin in [false, true] {
+                assert_eq!(restart_args(kind, &args, origin), args, "{kind} origin={origin}");
+            }
+        }
+    }
+
+    #[test]
+    fn a_native_backend_leaves_a_restart_note_for_its_gui() {
+        let dir = scratch("restart-note");
+        let instance = dir.join("native-settings-42.json");
+        assert_eq!(
+            restart_note_path(&instance),
+            dir.join("native-settings-42.json.restart")
+        );
+        let plan = RestartAll {
+            origin: true,
+            token: Some("tok".into()),
+        };
+        let note = restart_note(Some(&plan));
+        assert_eq!(
+            (&note["all"], &note["origin"], &note["token"], &note["pid"]),
+            (&json!(true), &json!(true), &json!("tok"), &json!(std::process::id()))
+        );
+        // a plain shell.restart: a new backend only
+        let plain = restart_note(None);
+        assert_eq!(
+            (&plain["all"], &plain["origin"], &plain["token"]),
+            (&json!(false), &json!(false), &Value::Null)
+        );
+        write_restart_note(&instance, &plain).unwrap();
+        write_restart_note(&instance, &note).unwrap();
+        let path = restart_note_path(&instance);
+        let read: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        assert_eq!(read, note, "the last note replaces the first");
+        use std::os::unix::fs::PermissionsExt;
+        assert_eq!(
+            std::fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+        let names: Vec<_> = std::fs::read_dir(&dir)
+            .unwrap()
+            .flatten()
+            .map(|e| e.file_name())
+            .collect();
+        assert_eq!(names, [OsString::from("native-settings-42.json.restart")], "no temp file left");
+        assert_ne!(RESTART_EXIT, 0);
+        assert_ne!(RESTART_EXIT, 1, "not the status of a failed start");
+        let _ = std::fs::remove_dir_all(dir);
+    }
+
+    #[test]
+    fn the_native_explorer_backend_waits_for_its_file_operations_before_it_restarts() {
+        // D-G45 in run_http_only: the backend of win11-gtk-explorer does its file operations itself
+        let _serial = RESTART_TESTS.lock().unwrap_or_else(|e| e.into_inner());
+        let _ = take_restart_all();
+        let root = std::env::temp_dir().join(format!("win11-http-files-{}", events::nonce()));
+        std::fs::create_dir(&root).unwrap();
+        let files = files::Files::for_tests(&root);
+        let pending: Arc<PendingRestart> = Arc::default();
+        watch_files_idle(&files, pending.clone());
+        let (tx, stops) = std::sync::mpsc::channel();
+        let stop = |label: &'static str| -> Box<dyn FnOnce() + Send> {
+            let tx = tx.clone();
+            Box::new(move || tx.send(label).unwrap())
+        };
+        let quiet = |stops: &std::sync::mpsc::Receiver<&'static str>| {
+            stops.recv_timeout(Duration::from_millis(400)).is_err()
+        };
+        let copy = files.job_for_tests();
+        // a plain shell.restart / shell.quit, and any other kind: at once, also with a copy in flight
+        http_only_shutdown("explorer", true, Some(&files), &pending, stop("plain"));
+        assert_eq!(stops.try_recv(), Ok("plain"));
+        http_only_shutdown("explorer", false, Some(&files), &pending, stop("quit"));
+        assert_eq!(stops.try_recv(), Ok("quit"));
+        prepare_restart_all(RestartAll::default(), None);
+        http_only_shutdown("taskmgr", true, Some(&files), &pending, stop("taskmgr"));
+        assert_eq!(stops.try_recv(), Ok("taskmgr"));
+        // shell.restartAll in Explorer's backend: after the copy
+        http_only_shutdown("explorer", true, Some(&files), &pending, stop("explorer"));
+        assert!(quiet(&stops), "no restart while the copy runs");
+        drop(copy);
+        assert_eq!(stops.recv_timeout(Duration::from_secs(2)), Ok("explorer"));
+        assert!(quiet(&stops), "exactly once");
+        // nothing in flight: at once
+        http_only_shutdown("explorer", true, Some(&files), &pending, stop("idle"));
+        assert_eq!(stops.recv_timeout(Duration::from_secs(1)), Ok("idle"));
+        let _ = take_restart_all();
+        files.events.shutdown();
+        drop(files);
+        std::fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

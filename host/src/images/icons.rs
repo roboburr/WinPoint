@@ -8,6 +8,9 @@ use std::{
     time::{Duration, Instant},
 };
 const EXTS: [&str; 3] = ["svg", "png", "xpm"];
+/// The shipped Win11 icon theme's alias (scripts/icon_bundle.py ALIASES) and its full-colour scalable contexts.
+const BUNDLE: &str = "Win11Shell";
+const BUNDLE_CONTEXTS: [&str; 4] = ["apps", "devices", "places", "mimes"];
 const GLYPHS: [&str; 6] = [
     "actions",
     "animations",
@@ -348,6 +351,27 @@ impl Lookup {
         }
         None
     }
+    /// The last resort of an app icon name after the user's theme chain, its generic forms and the pixmaps: the
+    /// full-colour icons of the Win11 theme the install ships (scripts/icon_bundle.py links the payload's copy
+    /// into a data dir's icons folder as BUNDLE). Our own apps' desktop entries name icons such as
+    /// utilities-system-monitor, system-search and system-software-install, which a stock theme (Adwaita) does
+    /// not have: without this they showed the generic program icon on the taskbar, in Start and in Task View.
+    /// A few file probes, no index; the caller's cache keeps the answer.
+    fn bundled(&mut self, name: &str) -> Option<PathBuf> {
+        for base in self.bases() {
+            let root = base.join(BUNDLE);
+            if !root.join("index.theme").is_file() {
+                continue;
+            }
+            for context in BUNDLE_CONTEXTS {
+                let path = root.join(context).join("scalable").join(format!("{name}.svg"));
+                if path.is_file() {
+                    return Some(path);
+                }
+            }
+        }
+        None
+    }
     fn one(&mut self, name: &str, size: i64, chain: &[String], refresh: bool) -> Option<PathBuf> {
         for t in chain {
             if let Some(p) = self.themes.get_mut(t)?.lookup(name, size, refresh, false) {
@@ -437,6 +461,9 @@ impl Lookup {
                     break;
                 }
             }
+        }
+        if result.is_none() && generic {
+            result = clean.iter().find_map(|n| self.bundled(n));
         }
         self.cache.retain(|x| x.0 != key);
         self.cache.push_back((key, result.clone(), Instant::now()));

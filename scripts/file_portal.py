@@ -194,9 +194,21 @@ def _load(payload: Path, prefix: Path, data: Path, config: Path):
         raise SystemExit(_t('badRecord', path=path, error=error))
 
 
-def preflight(payload: Path, prefix: Path, data: Path, config: Path):
+def session_selector(config: Path):
+    """The WinPoint login session's own choice (XDG_CURRENT_DESKTOP WinPoint:GNOME, scripts/install-session.py)."""
+    return config/'xdg-desktop-portal/winpoint-portals.conf'
+
+
+def preflight(payload: Path, prefix: Path, data: Path, config: Path, session: bool = False):
+    """With the WinPoint session (session=True) the FileChooser choice lives in winpoint-portals.conf, so GNOME and
+    Ubuntu keep their own file chooser; a record that names the other file is undone first (an install from before
+    the session, or a session removed since)."""
     previous = _load(payload,prefix,data,config)
-    selector = Path(previous['files']['selector']['path']) if previous else _selector(config)
+    wanted = session_selector(config)
+    if previous and (Path(previous['files']['selector']['path']) == wanted) != session:
+        unregister(payload,prefix,data,config)
+        previous = None
+    selector = Path(previous['files']['selector']['path']) if previous else (wanted if session else _selector(config))
     paths = _paths(prefix,data,config,selector)
     generated = _contents(prefix)
     _, effective = _effective(config,data)

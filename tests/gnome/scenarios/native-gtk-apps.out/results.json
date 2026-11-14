@@ -1,0 +1,3629 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 21:41:51",
+ "seconds": 267.4,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 330,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 760214,
+   "rss_kb": 1386928,
+   "processes": 28,
+   "t": 117.5
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 667620,
+   "rss_kb": 1259960
+  },
+  "minMemAvailableKb": 3636332,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 242212,
+    "rss_kb": 362064
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 98313,
+    "rss_kb": 128948
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 79567,
+    "rss_kb": 122608
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 66827,
+    "rss_kb": 122752
+   },
+   "win11-app": {
+    "count": 4,
+    "pss_kb": 62432,
+    "rss_kb": 200696
+   },
+   "win11-index-wor": {
+    "count": 1,
+    "pss_kb": 61009,
+    "rss_kb": 64380
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 26977,
+    "rss_kb": 63892
+   },
+   "win11-gtk-taskm": {
+    "count": 1,
+    "pss_kb": 26493,
+    "rss_kb": 63296
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 24328,
+    "rss_kb": 53876
+   },
+   "win11-gtk-explo": {
+    "count": 1,
+    "pss_kb": 18832,
+    "rss_kb": 55324
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15867,
+    "rss_kb": 34712
+   },
+   "win11-gtk-alles": {
+    "count": 1,
+    "pss_kb": 14925,
+    "rss_kb": 48000
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 14837,
+    "rss_kb": 24340
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4060,
+    "rss_kb": 11644
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1512,
+    "rss_kb": 10244
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 767,
+    "rss_kb": 7920
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 715,
+    "rss_kb": 7952
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 355,
+    "rss_kb": 1596
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 186,
+    "rss_kb": 2684
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 73.2,
+  "mutatingSyscallPaths": 87828,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "21:43:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:25\tpw-dump\t--monitor --no-colors",
+  "21:43:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:27\tpw-dump\t--monitor --no-colors",
+  "21:43:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:31\tpw-dump\t--monitor --no-colors",
+  "21:43:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:39\tpw-dump\t--monitor --no-colors",
+  "21:43:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:50\tpw-dump\t--monitor --no-colors",
+  "21:43:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:50\tapt\tlist --upgradable",
+  "21:43:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:52\tpw-dump\t--monitor --no-colors",
+  "21:43:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:55\tpw-dump\t--monitor --no-colors",
+  "21:43:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:56\tpw-dump\t--monitor --no-colors",
+  "21:43:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:43:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:03\tpw-dump\t--monitor --no-colors",
+  "21:44:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:03\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "21:44:03\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "21:44:03\tapt\tlist --upgradable",
+  "21:44:03\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:03\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:04\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:04\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:05\tpw-dump\t--monitor --no-colors",
+  "21:44:05\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:05\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:06\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:06\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:07\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:07\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:08\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:08\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:09\tpw-dump\t--monitor --no-colors",
+  "21:44:09\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:09\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:10\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:10\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:11\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:11\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:13\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:13\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:14\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:14\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:15\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:44:15\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:44:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:17\tpw-dump\t--monitor --no-colors",
+  "21:44:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:25\tpw-dump\t--monitor --no-colors",
+  "21:44:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:44:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:13\tapt\tlist --upgradable",
+  "21:45:13\tpw-dump\t--monitor --no-colors",
+  "21:45:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:13\tpw-dump\t--monitor --no-colors",
+  "21:45:13\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:13\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:13\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "21:45:13\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "21:45:13\tapt\tlist --upgradable",
+  "21:45:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:14\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:14\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:15\tpw-dump\t--monitor --no-colors",
+  "21:45:15\tpw-dump\t--monitor --no-colors",
+  "21:45:15\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:15\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:16\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:16\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:17\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:17\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:18\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:18\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:19\tpw-dump\t--monitor --no-colors",
+  "21:45:19\tpw-dump\t--monitor --no-colors",
+  "21:45:19\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:19\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:20\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:20\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:21\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:21\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:22\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:23\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:24\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:24\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:24\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:24\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:33\tpw-dump\t--monitor --no-colors",
+  "21:45:33\tapt\tlist --upgradable",
+  "21:45:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:35\tpw-dump\t--monitor --no-colors",
+  "21:45:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:40\tpw-dump\t--monitor --no-colors",
+  "21:45:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:40\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "21:45:40\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "21:45:40\tapt\tlist --upgradable",
+  "21:45:40\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:40\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:41\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:41\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:42\tpw-dump\t--monitor --no-colors",
+  "21:45:42\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:42\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:43\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:43\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:44\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:44\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:45\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:45:45\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:45:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:58\tpw-dump\t--monitor --no-colors",
+  "21:45:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:45:58\tapt\tlist --upgradable",
+  "21:45:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:00\tpw-dump\t--monitor --no-colors",
+  "21:46:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:04\tpw-dump\t--monitor --no-colors",
+  "21:46:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:07\tpw-dump\t--monitor --no-colors",
+  "21:46:07\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "21:46:07\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "21:46:07\tapt\tlist --upgradable",
+  "21:46:07\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:07\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:08\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:08\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:09\tpw-dump\t--monitor --no-colors",
+  "21:46:09\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:09\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:10\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:10\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:11\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:11\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:12\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:12\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:13\tpw-dump\t--monitor --no-colors",
+  "21:46:13\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:13\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:46:14\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "21:46:14\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "21:46:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-RyB0S9Cd"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 65,
+  "maxScanSeconds": 0.831,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-RyB0S9Cd"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.82,
+    "args": {
+     "key": "boot"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.62,
+    "args": {
+     "key": "explorer.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.79,
+    "args": {
+     "name": "explorer"
+    },
+    "result": {
+     "png": "explorer.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 722,
+      "meanLevel": 31.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.8,
+    "args": {
+     "key": "memory.native.explorer"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 15.7,
+    "args": {
+     "name": "explorer-use-open"
+    },
+    "result": {
+     "png": "explorer-use-open.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 724,
+      "meanLevel": 30.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 16.9,
+    "args": {
+     "name": "explorer-use-back"
+    },
+    "result": {
+     "png": "explorer-use-back.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 737,
+      "meanLevel": 32.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 18.93,
+    "args": {
+     "name": "explorer-use-enter"
+    },
+    "result": {
+     "png": "explorer-use-enter.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 724,
+      "meanLevel": 30.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 22.47,
+    "args": {
+     "key": "settings.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 25.63,
+    "args": {
+     "name": "settings"
+    },
+    "result": {
+     "png": "settings.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1065,
+      "meanLevel": 38.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 29.64,
+    "args": {
+     "key": "memory.native.settings"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 30.98,
+    "args": {
+     "name": "settings-use-system"
+    },
+    "result": {
+     "png": "settings-use-system.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1044,
+      "meanLevel": 38.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 32.39,
+    "args": {
+     "name": "settings-use-personalization"
+    },
+    "result": {
+     "png": "settings-use-personalization.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1836,
+      "meanLevel": 40.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 35.78,
+    "args": {
+     "key": "taskmgr.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 38.93,
+    "args": {
+     "name": "taskmgr"
+    },
+    "result": {
+     "png": "taskmgr.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1144,
+      "meanLevel": 43.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 42.94,
+    "args": {
+     "key": "memory.native.taskmgr"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 45.27,
+    "args": {
+     "name": "taskmgr-use-processes"
+    },
+    "result": {
+     "png": "taskmgr-use-processes.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 956,
+      "meanLevel": 38.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 47.55,
+    "args": {
+     "name": "taskmgr-use-performance"
+    },
+    "result": {
+     "png": "taskmgr-use-performance.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 964,
+      "meanLevel": 39.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 51.15,
+    "args": {
+     "key": "alles.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 54.29,
+    "args": {
+     "name": "alles"
+    },
+    "result": {
+     "png": "alles.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 923,
+      "meanLevel": 39.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 58.29,
+    "args": {
+     "key": "memory.native.alles"
+    }
+   },
+   {
+    "step": "record",
+    "t": 58.67,
+    "args": {
+     "key": "udisks.standin"
+    }
+   },
+   {
+    "step": "record",
+    "t": 61.53,
+    "args": {
+     "key": "disks.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 64.68,
+    "args": {
+     "name": "disks"
+    },
+    "result": {
+     "png": "disks.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 847,
+      "meanLevel": 39.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 68.68,
+    "args": {
+     "key": "memory.native.disks"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 69.69,
+    "args": {
+     "name": "disks-use-overview"
+    },
+    "result": {
+     "png": "disks-use-overview.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 847,
+      "meanLevel": 39.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 70.78,
+    "args": {
+     "name": "disks-use-volume"
+    },
+    "result": {
+     "png": "disks-use-volume.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 838,
+      "meanLevel": 40.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 74.32,
+    "args": {
+     "key": "defaultapps.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 77.48,
+    "args": {
+     "name": "defaultapps"
+    },
+    "result": {
+     "png": "defaultapps.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 911,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 81.49,
+    "args": {
+     "key": "memory.native.defaultapps"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 82.93,
+    "args": {
+     "name": "defaultapps-use-dialog"
+    },
+    "result": {
+     "png": "defaultapps-use-dialog.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 925,
+      "meanLevel": 34.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 84.18,
+    "args": {
+     "name": "defaultapps-use-closed"
+    },
+    "result": {
+     "png": "defaultapps-use-closed.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 911,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 87.58,
+    "args": {
+     "key": "installer.names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 90.74,
+    "args": {
+     "name": "installer"
+    },
+    "result": {
+     "png": "installer.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 965,
+      "meanLevel": 37.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 94.74,
+    "args": {
+     "key": "memory.native.installer"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 95.5,
+    "args": {
+     "name": "installer-use-empty"
+    },
+    "result": {
+     "png": "installer-use-empty.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 965,
+      "meanLevel": 37.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 101.63,
+    "args": {
+     "name": "alles-use-query"
+    },
+    "result": {
+     "png": "alles-use-query.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 900,
+      "meanLevel": 38.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 113.89,
+    "args": {
+     "name": "taskmgr-procs"
+    },
+    "result": {
+     "png": "taskmgr-procs.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 769,
+      "meanLevel": 37.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 114.05,
+    "args": {
+     "key": "procs.apps"
+    }
+   },
+   {
+    "step": "record",
+    "t": 119.84,
+    "args": {
+     "key": "explorer (light).names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 122.98,
+    "args": {
+     "name": "explorer-light"
+    },
+    "result": {
+     "png": "explorer-light.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1959,
+      "meanLevel": 232.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 126.2,
+    "args": {
+     "key": "settings (light).names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 129.42,
+    "args": {
+     "name": "settings-light"
+    },
+    "result": {
+     "png": "settings-light.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2187,
+      "meanLevel": 218.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 132.73,
+    "args": {
+     "key": "taskmgr (light).names"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 135.9,
+    "args": {
+     "name": "taskmgr-light"
+    },
+    "result": {
+     "png": "taskmgr-light.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2239,
+      "meanLevel": 220.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 146.83,
+    "args": {
+     "key": "memory.webkit.explorer"
+    }
+   },
+   {
+    "step": "record",
+    "t": 155.46,
+    "args": {
+     "key": "memory.webkit.settings"
+    }
+   },
+   {
+    "step": "record",
+    "t": 164.38,
+    "args": {
+     "key": "memory.webkit.taskmgr"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "explorer: boot report",
+    "ok": true,
+    "t": 4.02,
+    "boot": {
+     "app": "explorer",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 1362,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "explorer: window",
+    "ok": true,
+    "t": 4.02,
+    "window": {
+     "pid": 1362,
+     "title": "robin - Verkenner",
+     "x": 107,
+     "y": 66,
+     "w": 1226,
+     "h": 720,
+     "minimized": false,
+     "focus": true
+    }
+   },
+   {
+    "check": "explorer: native process",
+    "ok": true,
+    "t": 4.02,
+    "comm": "win11-gtk-explo",
+    "pid": 1362
+   },
+   {
+    "check": "explorer: backend child",
+    "ok": true,
+    "t": 6.52,
+    "children": [
+     {
+      "pid": 1371,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 1418,
+      "comm": "glycin-svg",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "explorer: no WebKit",
+    "ok": true,
+    "t": 6.52,
+    "webkit": []
+   },
+   {
+    "check": "explorer: rendered",
+    "ok": true,
+    "t": 6.62,
+    "texts": [
+     "robin",
+     "robin",
+     "Tabblad sluiten (Ctrl+W)",
+     "Nieuw tabblad (Ctrl+T)",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Terug (Alt+pijl-links)",
+     "Vooruit (Alt+pijl-rechts)",
+     "Omhoog naar ‘run’ (Alt+pijl-omhoog)",
+     "Vernieuwen (F5)",
+     "robin",
+     "robin",
+     "Recente locaties",
+     "Zoeken in robin",
+     "Zoeken",
+     "Een nieuw item maken in de huidige locatie",
+     "Nieuw",
+     "Knippen (Ctrl+X)",
+     "Kopiëren (Ctrl+C)",
+     "Plakken (Ctrl+V)",
+     "Naam wijzigen (F2)",
+     "Delen",
+     "Verwijderen (Del)",
+     "Sorteren",
+     "Weergeven",
+     "Meer weergeven",
+     "Het detailvenster weergeven of verbergen (Alt+Shift+P)",
+     "Details",
+     "Start",
+     "Galerij",
+     "Bureaublad",
+     "Vastgemaakt",
+     "Downloads",
+     "Vastgemaakt",
+     "Documenten",
+     "Vastgemaakt",
+     "Afbeeldingen",
+     "Vastgemaakt",
+     "Muziek",
+     "Vastgemaakt",
+     "Video's",
+     "Vastgemaakt",
+     "Deze pc",
+     "Systeemschijf (/)",
+     "Prullenbak",
+     "Naam",
+     "Gewijzigd op",
+     "Type",
+     "Grootte",
+     "Desktop",
+     "13-11-2026 21:41",
+     "Bestandsmap",
+     "Documents",
+     "13-11-2026 21:41",
+     "Bestandsmap",
+     "Downloads",
+     "13-11-2026 21:41",
+     "Bestandsmap",
+     "Music"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "explorer use: Testmap is listed",
+    "ok": true,
+    "t": 13.85,
+    "labels": [
+     "robin",
+     "robin",
+     "Tabblad sluiten (Ctrl+W)",
+     "Nieuw tabblad (Ctrl+T)",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Terug (Alt+pijl-links)",
+     "Vooruit (Alt+pijl-rechts)",
+     "Omhoog naar ‘run’ (Alt+pijl-omhoog)",
+     "Vernieuwen (F5)",
+     "robin",
+     "robin",
+     "Recente locaties",
+     "Zoeken in robin",
+     "Zoeken",
+     "Een nieuw item maken in de huidige locatie",
+     "Nieuw",
+     "Knippen (Ctrl+X)",
+     "Kopiëren (Ctrl+C)",
+     "Plakken (Ctrl+V)",
+     "Naam wijzigen (F2)",
+     "Delen",
+     "Verwijderen (Del)",
+     "Sorteren",
+     "Weergeven",
+     "Meer weergeven",
+     "Het detailvenster weergeven of verbergen (Alt+Shift+P)",
+     "Details",
+     "Start",
+     "Galerij",
+     "Bureaublad",
+     "Vastgemaakt",
+     "Downloads",
+     "Vastgemaakt",
+     "Documenten",
+     "Vastgemaakt",
+     "Afbeeldingen",
+     "Vastgemaakt",
+     "Muziek"
+    ]
+   },
+   {
+    "check": "explorer use: a double-click opens Testmap",
+    "ok": true,
+    "t": 14.76,
+    "crumbs": [
+     "robin",
+     "Testmap"
+    ]
+   },
+   {
+    "check": "explorer use: Back returns to the home folder",
+    "ok": true,
+    "t": 15.97,
+    "answer": {
+     "clicked": "explorer-back"
+    }
+   },
+   {
+    "check": "explorer use: Enter opens the selected Testmap",
+    "ok": true,
+    "t": 18.0,
+    "key": {
+     "handled": true,
+     "key": "Return"
+    }
+   },
+   {
+    "check": "explorer use: Alt+Left returns to the home folder",
+    "ok": true,
+    "t": 19.1,
+    "key": {
+     "handled": true,
+     "key": "<Alt>Left"
+    }
+   },
+   {
+    "check": "explorer: closes",
+    "ok": true,
+    "t": 19.63
+   },
+   {
+    "check": "settings: boot report",
+    "ok": true,
+    "t": 19.85,
+    "boot": {
+     "app": "settings",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 1545,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "settings: window",
+    "ok": true,
+    "t": 19.86,
+    "window": {
+     "pid": 1545,
+     "title": "Startpagina – Instellingen",
+     "x": 170,
+     "y": 56,
+     "w": 1100,
+     "h": 740,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "settings: native process",
+    "ok": true,
+    "t": 19.86,
+    "comm": "win11-gtk-setti",
+    "pid": 1545
+   },
+   {
+    "check": "settings: backend child",
+    "ok": true,
+    "t": 22.36,
+    "children": [
+     {
+      "pid": 1554,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 1650,
+      "comm": "glycin-svg",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "settings: no WebKit",
+    "ok": true,
+    "t": 22.36,
+    "webkit": []
+   },
+   {
+    "check": "settings: rendered",
+    "ok": true,
+    "t": 22.47,
+    "texts": [
+     "Terug",
+     "Instellingen",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "R",
+     "robin",
+     "Lokaal account",
+     "Zoek een instelling",
+     "Zoeken",
+     "Startpagina",
+     "Systeem",
+     "Bluetooth en apparaten",
+     "Netwerk en internet",
+     "Persoonlijke instellingen",
+     "Apps",
+     "Accounts",
+     "Tijd en taal",
+     "Toegankelijkheid",
+     "Privacy en beveiliging",
+     "Update en herstel",
+     "Startpagina",
+     "robin",
+     "Gigabyte B550 GAMING X V2",
+     "Naam wijzigen",
+     "Netwerk",
+     "Niet verbonden",
+     "Updates",
+     "Aanbevolen instellingen",
+     "Recente en veelgebruikte instellingen",
+     "Beeldscherm",
+     "Systeem",
+     "Geluid",
+     "Systeem",
+     "Taakbalk",
+     "Persoonlijke instellingen",
+     "Achtergrond",
+     "Persoonlijke instellingen",
+     "Bluetooth-apparaten",
+     "Apparaten beheren, toevoegen en verbinden",
+     "Geen Bluetooth gevonden op deze computer",
+     "Alle apparaten weergeven",
+     "Persoonlijke instellingen",
+     "Kies een thema, of pas je achtergrond en kleuren aan",
+     "Lotus (licht)",
+     "Lotus (donker)",
+     "Stroming",
+     "Gloed",
+     "Zonsopgang",
+     "Noorderlicht",
+     "Kleurmodus",
+     "Donker",
+     "Meer achtergronden, kleuren en thema’s",
+     "Opslag",
+     "Ruimte op je systeemschijf",
+     "Systeemschijf (/)",
+     "97%",
+     "6,4 GB vrij van 233 GB",
+     "Details",
+     "Ruimte vrijmaken"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "settings use: nav-system opens Systeem",
+    "ok": true,
+    "t": 29.81,
+    "answer": {
+     "clicked": "nav-system"
+    },
+    "titles": [
+     "Systeem"
+    ]
+   },
+   {
+    "check": "settings use: nav-personalization opens Persoonlijke instellingen",
+    "ok": true,
+    "t": 31.22,
+    "answer": {
+     "clicked": "nav-personalization"
+    },
+    "titles": [
+     "Persoonlijke instellingen"
+    ]
+   },
+   {
+    "check": "settings: closes",
+    "ok": true,
+    "t": 32.93
+   },
+   {
+    "check": "taskmgr: boot report",
+    "ok": true,
+    "t": 33.15,
+    "boot": {
+     "app": "taskmgr",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 1896,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "taskmgr: window",
+    "ok": true,
+    "t": 33.16,
+    "window": {
+     "pid": 1896,
+     "title": "Taakbeheer – Samenvatting",
+     "x": 200,
+     "y": 66,
+     "w": 1040,
+     "h": 720,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "taskmgr: native process",
+    "ok": true,
+    "t": 33.16,
+    "comm": "win11-gtk-taskm",
+    "pid": 1896
+   },
+   {
+    "check": "taskmgr: backend child",
+    "ok": true,
+    "t": 35.66,
+    "children": [
+     {
+      "pid": 1905,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 2013,
+      "comm": "glycin-svg",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "taskmgr: no WebKit",
+    "ok": true,
+    "t": 35.66,
+    "webkit": []
+   },
+   {
+    "check": "taskmgr: rendered",
+    "ok": true,
+    "t": 35.78,
+    "texts": [
+     "Taakbeheer",
+     "Typ een naam of PID om te zoeken",
+     "Zoeken",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Navigatie sluiten",
+     "Samenvatting",
+     "Processen",
+     "Prestaties",
+     "Opslag",
+     "Opstart-apps",
+     "Services",
+     "Details",
+     "Instellingen",
+     "Samenvatting",
+     "Er vraagt 1 ding je aandacht",
+     "Hieronder staat wat er aan de hand is. Met één klik los je het op.",
+     "Gecontroleerd om 21:44",
+     "Opnieuw controleren",
+     "Veel wisselgeheugen in gebruik",
+     "10,4 GB van 11,5 GB wisselgeheugen is in gebruik. Daardoor kan de computer trager aanvoelen.",
+     "Processen bekijken",
+     "Processen bekijken",
+     "Nu in gebruik",
+     "Processor",
+     "14%",
+     "3,90 GHz · 61 °C",
+     "Geheugen",
+     "75%",
+     "11,2 GB van 15 GB",
+     "Schijf",
+     "3%",
+     "Systeemschijf · 231 KB/s",
+     "Videokaart",
+     "6%",
+     "RTX 3080 · 35 °C",
+     "Netwerk",
+     "0 bps",
+     "↑ 0 bps · Ethernet",
+     "Apps die het meest gebruiken",
+     "Alle processen",
+     "Claude",
+     "CPU 0,5% · 357,0 MB",
+     "Laag",
+     "Taakbeheer",
+     "CPU 0% · 16,7 MB",
+     "Laag",
+     "Schijven",
+     "Opslag bekijken",
+     "/",
+     "Systeemschijf",
+     "Bijna vol",
+     "6,4 GB vrij van 233 GB",
+     "97%",
+     "Goed om te weten",
+     "Opslag",
+     "Er is op al je schijven genoeg ruimte vrij.",
+     "Geheugen",
+     "Er is genoeg geheugen vrij (3,7 GB van 15,0 GB)."
+    ],
+    "windows": 1
+   },
+   {
+    "check": "taskmgr use: nav-processes shows taskmgr-processes",
+    "ok": true,
+    "t": 43.13,
+    "answer": {
+     "clicked": "nav-processes"
+    },
+    "labels": [
+     "<span font_size='11.25pt'> </span>\nNaam",
+     "<span font_size='11.25pt'> </span>\nStatus",
+     "Hoeveel rekenkracht van de processor dit gebruikt",
+     "<span font_size='11.25pt' weight='600' foreground='#ffffff'>6%</span>\nCPU",
+     "Hoeveel werkgeheugen dit gebruikt",
+     "<span font_size='11.25pt' weight='600' foreground='#ffffff'>74%</span>\nGeheugen",
+     "Hoeveel dit van en naar de schijf leest en schrijft",
+     "<span font_size='11.25pt' weight='600' foreground='#ffffff'>9%</span>\nSchijf",
+     "Apps (2)",
+     "Claude",
+     " (16)",
+     "Efficiëntiemodus staat aan",
+     "2,5%",
+     "356,4 MB",
+     "0 MB/s",
+     "Taakbeheer – Samenvatting",
+     "Taakbeheer",
+     " (2)",
+     "Efficiëntiemodus staat aan",
+     "0,1%",
+     "18,0 MB",
+     "0 MB/s",
+     "Achtergrondprocessen (1)",
+     "Win11 Shell",
+     "Efficiëntiemodus staat aan",
+     "0,2%",
+     "12,0 MB",
+     "0 MB/s"
+    ]
+   },
+   {
+    "check": "taskmgr use: nav-performance shows taskmgr-perf-list",
+    "ok": true,
+    "t": 45.4,
+    "answer": {
+     "clicked": "nav-performance"
+    },
+    "labels": [
+     "CPU",
+     "7%  3,64 GHz",
+     "54 °C",
+     "Geheugen",
+     "11,1 GB/15 GB (74%)",
+     "Schijf 0",
+     "SSD (NVMe)",
+     "0%",
+     "Schijf 1 (Systeemschijf)",
+     "SSD (NVMe)",
+     "14%",
+     "Schijf 2",
+     "USB-schijf",
+     "0%",
+     "Schijf 3",
+     "USB-schijf",
+     "0%",
+     "Schijf 4",
+     "Harde schijf",
+     "0%",
+     "Schijf 5",
+     "Harde schijf",
+     "0%",
+     "Ethernet",
+     "Verz.: 0 bps",
+     "Ontv.: 0 bps",
+     "VPN (tailscale0)",
+     "Verz.: 0 bps",
+     "Ontv.: 0 bps",
+     "GPU 0"
+    ]
+   },
+   {
+    "check": "taskmgr: closes",
+    "ok": true,
+    "t": 48.09
+   },
+   {
+    "check": "alles: boot report",
+    "ok": true,
+    "t": 48.52,
+    "boot": {
+     "app": "alles",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 2323,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "alles: window",
+    "ok": true,
+    "t": 48.52,
+    "window": {
+     "pid": 2323,
+     "title": "Alles",
+     "x": 200,
+     "y": 86,
+     "w": 1040,
+     "h": 680,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "alles: native process",
+    "ok": true,
+    "t": 48.52,
+    "comm": "win11-gtk-alles",
+    "pid": 2323
+   },
+   {
+    "check": "alles: backend child",
+    "ok": true,
+    "t": 51.02,
+    "children": [
+     {
+      "pid": 2332,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 2355,
+      "comm": "win11-index-wor",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "alles: no WebKit",
+    "ok": true,
+    "t": 51.02,
+    "webkit": []
+   },
+   {
+    "check": "alles: rendered",
+    "ok": true,
+    "t": 51.15,
+    "texts": [
+     "Alles",
+     "Zoek in al je bestanden en mappen",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Soort",
+     "Alles",
+     "Hoofdlettergevoelig zoeken (Alt+C)",
+     "Aa",
+     "Hoofdletters",
+     "Alleen hele woorden vinden (Alt+W)",
+     "ab",
+     "Heel woord",
+     "Ook in mapnamen en het volledige pad zoeken (Alt+P)",
+     "Pad",
+     "Zoeken met een patroon (reguliere expressie), voor gevorderden (Alt+R)",
+     ".*",
+     "Patroon",
+     "Sorteren",
+     "Zoektips",
+     "Voorbeeld",
+     "Opties",
+     "Alles maakt een overzicht van je bestanden",
+     "Dit gebeurt één keer en duurt een paar minuten. Daarna vind je elk bestand en elke map in een oogwenk, terwijl je typt.",
+     "85.734 items gevonden",
+     "99%",
+     "/usr/share/speech-dispatcher/locale/sr@latin",
+     "Indexeren stopt als je dit venster sluit en gaat verder wanneer je Alles weer opent.",
+     "Geen objecten",
+     "Bezig met /usr/share/speech-dispatcher/locale/sr@latin",
+     "Indexeren… 99%"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "alles: closes",
+    "ok": true,
+    "t": 58.6
+   },
+   {
+    "check": "disks: boot report",
+    "ok": true,
+    "t": 58.89,
+    "boot": {
+     "app": "disks",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 2420,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "disks: window",
+    "ok": true,
+    "t": 58.9,
+    "window": {
+     "pid": 2420,
+     "title": "Schijven",
+     "x": 190,
+     "y": 46,
+     "w": 1060,
+     "h": 760,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "disks: native process",
+    "ok": true,
+    "t": 58.9,
+    "comm": "win11-gtk-disks",
+    "pid": 2420
+   },
+   {
+    "check": "disks: backend child",
+    "ok": true,
+    "t": 61.4,
+    "children": [
+     {
+      "pid": 2429,
+      "comm": "win11-app",
+      "http": true
+     }
+    ]
+   },
+   {
+    "check": "disks: no WebKit",
+    "ok": true,
+    "t": 61.4,
+    "webkit": []
+   },
+   {
+    "check": "disks: rendered",
+    "ok": true,
+    "t": 61.53,
+    "texts": [
+     "Terug",
+     "Schijven",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Schijven en volumes",
+     "Vernieuwen",
+     "Alleen-lezen: er wordt niets aan de schijven veranderd.",
+     "Sluiten",
+     "Schijf 0",
+     "WinPoint Testschijf",
+     "USB-station · 512 MB · GPT",
+     "Veilig verwijderen",
+     "Eigenschappen",
+     "Eigenschappen",
+     "Meer opties",
+     "TESTDATA\n128 MB NTFS\nIn orde",
+     "TESTDATA",
+     "128 MB NTFS",
+     "In orde",
+     "Niet-toegewezen\n382 MB",
+     "Niet-toegewezen",
+     "382 MB",
+     "TESTDATA",
+     "NTFS · In orde · Niet gekoppeld",
+     "128 MB",
+     "Eigenschappen",
+     "Eigenschappen",
+     "Niet-toegewezen",
+     "382 MB niet-toegewezen ruimte",
+     "382 MB",
+     "Nieuw volume…",
+     "Volume",
+     "Systeempartitie",
+     "Wisselgeheugen",
+     "Versleuteld",
+     "Niet-toegewezen"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "disks use: the stand-in disk is listed",
+    "ok": true,
+    "t": 68.75,
+    "labels": [
+     "Schijf 0",
+     "WinPoint Testschijf",
+     "TESTDATA\n128 MB NTFS\nIn orde",
+     "TESTDATA",
+     "TESTDATA"
+    ]
+   },
+   {
+    "check": "disks use: Eigenschappen opens the volume page",
+    "ok": true,
+    "t": 69.83,
+    "answer": {
+     "clicked": "dk-props-sdx1"
+    },
+    "labels": [
+     "Terug",
+     "Schijven",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Schijven en volumes",
+     "Schijven en volumes",
+     "Schijf 0",
+     "Schijf 0",
+     "TESTDATA",
+     "Alleen-lezen: er wordt niets aan de schijven veranderd.",
+     "Sluiten",
+     "TESTDATA",
+     "Schijf 0 · Partitie 1 · NTFS · 128 MB",
+     "In orde",
+     "Openen in Verkenner",
+     "Volume",
+     "Label",
+     "TESTDATA",
+     "Label wijzigen",
+     "Label wijzigen",
+     "Koppelpunt",
+     "Koppel het volume om de bestanden te gebruiken",
+     "Koppelen",
+     "Koppelen",
+     "Formatteren",
+     "Alles op dit volume wissen en een nieuw bestandssysteem kiezen",
+     "Formatteren…",
+     "Formatteren…",
+     "Volume verwijderen"
+    ]
+   },
+   {
+    "check": "disks use: Back returns to the overview",
+    "ok": true,
+    "t": 70.98,
+    "answer": {
+     "clicked": "disks-back"
+    }
+   },
+   {
+    "check": "disks: closes",
+    "ok": true,
+    "t": 71.51
+   },
+   {
+    "check": "defaultapps: boot report",
+    "ok": true,
+    "t": 71.74,
+    "boot": {
+     "app": "defaultapps",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 2515,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "defaultapps: window",
+    "ok": true,
+    "t": 71.75,
+    "window": {
+     "pid": 2515,
+     "title": "Standaard-apps",
+     "x": 170,
+     "y": 56,
+     "w": 1100,
+     "h": 740,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "defaultapps: native process",
+    "ok": true,
+    "t": 71.75,
+    "comm": "win11-gtk-defau",
+    "pid": 2515
+   },
+   {
+    "check": "defaultapps: backend child",
+    "ok": true,
+    "t": 74.25,
+    "children": [
+     {
+      "pid": 2524,
+      "comm": "win11-app",
+      "http": true
+     }
+    ]
+   },
+   {
+    "check": "defaultapps: no WebKit",
+    "ok": true,
+    "t": 74.25,
+    "webkit": []
+   },
+   {
+    "check": "defaultapps: rendered",
+    "ok": true,
+    "t": 74.32,
+    "texts": [
+     "Standaard-apps",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Standaard-apps",
+     "Kies welke app een bestandstype of koppeling opent.",
+     "Zoek een extensie of bestandstype",
+     "Zoeken",
+     "Bijvoorbeeld .pdf, .jpg of text/plain",
+     ".ez",
+     "ATK-invoegsel",
+     "application/andrew-inset",
+     "Kies een standaard-app",
+     ".anx",
+     "Annodex-exchange",
+     "application/annodex",
+     "Kies een standaard-app",
+     ".appinstaller",
+     "Windows app store installer",
+     "application/appinstaller",
+     "Firefox webbrowser",
+     ".appx",
+     "Windows app store package",
+     "application/appx",
+     "Archiefbeheer",
+     ".appxbundle",
+     "Windows app store bundle",
+     "application/appxbundle",
+     "Archiefbeheer",
+     ".atom",
+     "Atom-syndicatie-feed",
+     "application/atom+xml",
+     "Firefox webbrowser",
+     "Bzip2 archive",
+     "Bzip2 archive",
+     "application/bzip2",
+     "Bestanden",
+     ".cbor",
+     "CBOR Data",
+     "application/cbor",
+     "Kies een standaard-app",
+     "application/clarisworks type",
+     "application/clarisworks type",
+     "application/clarisworks",
+     "LibreOffice Writer",
+     "application/csv type",
+     "application/csv type",
+     "application/csv",
+     "LibreOffice Calc",
+     ".dcm",
+     "DICOM-afbeelding",
+     "application/dicom",
+     "Kies een standaard-app",
+     "DocBook document",
+     "DocBook document",
+     "application/docbook+xml",
+     "LibreOffice Writer",
+     ".es",
+     "ECMAScript-programma",
+     "application/ecmascript"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "defaultapps use: file types are listed",
+    "ok": true,
+    "t": 81.57
+   },
+   {
+    "check": "defaultapps use: a row opens \"Een app kiezen\"",
+    "ok": true,
+    "t": 81.79,
+    "row": "defaultapps-type-application/appinstaller",
+    "answer": {
+     "clicked": "defaultapps-type-application/appinstaller"
+    },
+    "titles": [
+     "Een app kiezen voor .appinstaller"
+    ],
+    "choices": [
+     "defaultapps-choice-firefox.desktop",
+     "defaultapps-choice-libreoffice-writer.desktop",
+     "defaultapps-choice-org.gnome.TextEditor.desktop"
+    ]
+   },
+   {
+    "check": "defaultapps use: Escape closes the dialog",
+    "ok": true,
+    "t": 83.24,
+    "key": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "check": "defaultapps: closes",
+    "ok": true,
+    "t": 84.72
+   },
+   {
+    "check": "installer: boot report",
+    "ok": true,
+    "t": 84.98,
+    "boot": {
+     "app": "installer",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 2598,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "installer: window",
+    "ok": true,
+    "t": 84.98,
+    "window": {
+     "pid": 2598,
+     "title": "App-installatieprogramma",
+     "x": 230,
+     "y": 66,
+     "w": 980,
+     "h": 720,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "installer: native process",
+    "ok": true,
+    "t": 84.98,
+    "comm": "win11-gtk-insta",
+    "pid": 2598
+   },
+   {
+    "check": "installer: backend child",
+    "ok": true,
+    "t": 87.49,
+    "children": [
+     {
+      "pid": 2607,
+      "comm": "win11-app",
+      "http": true
+     }
+    ]
+   },
+   {
+    "check": "installer: no WebKit",
+    "ok": true,
+    "t": 87.49,
+    "webkit": []
+   },
+   {
+    "check": "installer: rendered",
+    "ok": true,
+    "t": 87.58,
+    "texts": [
+     "App-installatieprogramma",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "App-installatieprogramma",
+     "Installeer een app uit een bestand of bekijk de voortgang van je installaties.",
+     "Sleep een installatiebestand hierheen",
+     "AppImage, Debian (.deb), Flatpak en Snap",
+     "Bestand kiezen",
+     "Activiteit",
+     "Nog geen installaties",
+     "De voortgang van je installaties en verwijderingen verschijnt hier."
+    ],
+    "windows": 1
+   },
+   {
+    "check": "installer use: the empty state shows",
+    "ok": true,
+    "t": 94.84,
+    "detail": [],
+    "labels": [
+     "App-installatieprogramma",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "App-installatieprogramma",
+     "Installeer een app uit een bestand of bekijk de voortgang van je installaties.",
+     "Sleep een installatiebestand hierheen",
+     "AppImage, Debian (.deb), Flatpak en Snap",
+     "Bestand kiezen",
+     "Activiteit",
+     "Nog geen installaties",
+     "De voortgang van je installaties en verwijderingen verschijnt hier."
+    ]
+   },
+   {
+    "check": "installer: closes",
+    "ok": true,
+    "t": 96.03
+   },
+   {
+    "check": "alles use: a typed query lists the matching files",
+    "ok": true,
+    "t": 100.49,
+    "answer": {
+     "typed": "alles-search"
+    },
+    "hits": [
+     "alpha-notes.txt",
+     "alpha-plan.md"
+    ],
+    "beta": [],
+    "status": [
+     "2 objecten",
+     "0 ms",
+     "Bijgewerkt zojuist",
+     "Index bijgewerkt",
+     "·",
+     "Live bijwerken aan"
+    ]
+   },
+   {
+    "check": "alles use: closes",
+    "ok": true,
+    "t": 102.16
+   },
+   {
+    "check": "procs: each running native app is one row in Processen",
+    "ok": true,
+    "t": 112.53,
+    "counts": {
+     "Verkenner": 1,
+     "Instellingen": 1,
+     "Alles": 1,
+     "Taakbeheer": 1
+    },
+    "labels": [
+     "<span font_size='11.25pt'> </span>\nNaam",
+     "<span font_size='11.25pt'> </span>\nStatus",
+     "<span font_size='11.25pt' weight='600' foreground='#ffffff'>19%</span>\nCPU",
+     "<span font_size='11.25pt' weight='600' foreground='#ffffff'>76%</span>\nGeheugen",
+     "<span font_size='11.25pt' weight='600' foreground='#ffffff'>37%</span>\nSchijf",
+     "Apps (5)",
+     "Alles",
+     " (3)",
+     "4,7%",
+     "82,9 MB",
+     "11,4 MB/s",
+     "Claude",
+     " (16)",
+     "0,6%",
+     "353,9 MB",
+     "0 MB/s",
+     "Instellingen",
+     " (3)",
+     "0%",
+     "66,1 MB",
+     "0 MB/s",
+     "Taakbeheer",
+     " (2)",
+     "0,1%",
+     "20,7 MB",
+     "0 MB/s",
+     "Verkenner",
+     " (3)",
+     "0%",
+     "24,8 MB",
+     "0 MB/s",
+     "Achtergrondprocessen (1)",
+     "Win11 Shell",
+     "0,1%",
+     "12,5 MB",
+     "0 MB/s"
+    ]
+   },
+   {
+    "check": "procs: no backend row of its own in the visible table",
+    "ok": true,
+    "t": 112.53,
+    "rows": []
+   },
+   {
+    "check": "procs: sysmon.processes has explorer once, with its window and backend",
+    "ok": true,
+    "t": 114.04,
+    "groups": 1,
+    "shown": "Verkenner",
+    "window": 2752,
+    "backend": [
+     2761
+    ],
+    "pids": [
+     2752,
+     2761,
+     2809
+    ],
+    "host": [
+     3070
+    ]
+   },
+   {
+    "check": "procs: sysmon.processes has settings once, with its window and backend",
+    "ok": true,
+    "t": 114.04,
+    "groups": 1,
+    "shown": "Instellingen",
+    "window": 2845,
+    "backend": [
+     2854
+    ],
+    "pids": [
+     2845,
+     2854,
+     2932
+    ],
+    "host": [
+     3070
+    ]
+   },
+   {
+    "check": "procs: sysmon.processes has alles once, with its window and backend",
+    "ok": true,
+    "t": 114.04,
+    "groups": 1,
+    "shown": "Alles",
+    "window": 3234,
+    "backend": [
+     3244
+    ],
+    "pids": [
+     3234,
+     3244,
+     3269
+    ],
+    "host": [
+     3070
+    ]
+   },
+   {
+    "check": "procs: sysmon.processes has taskmgr once, with its window, its backend as the host row",
+    "ok": true,
+    "t": 114.04,
+    "groups": 1,
+    "shown": "Taakbeheer",
+    "window": 2942,
+    "backend": [
+     3070
+    ],
+    "pids": [
+     2942,
+     3160
+    ],
+    "host": [
+     3070
+    ]
+   },
+   {
+    "check": "procs: the apps close",
+    "ok": true,
+    "t": 114.6
+   },
+   {
+    "check": "explorer (light): boot report",
+    "ok": true,
+    "t": 117.15,
+    "boot": {
+     "app": "explorer",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 3732,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "explorer (light): window",
+    "ok": true,
+    "t": 117.15,
+    "window": {
+     "pid": 3732,
+     "title": "robin - Verkenner",
+     "x": 107,
+     "y": 66,
+     "w": 1226,
+     "h": 720,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "explorer (light): native process",
+    "ok": true,
+    "t": 117.15,
+    "comm": "win11-gtk-explo",
+    "pid": 3732
+   },
+   {
+    "check": "explorer (light): backend child",
+    "ok": true,
+    "t": 119.66,
+    "children": [
+     {
+      "pid": 3741,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 3789,
+      "comm": "glycin-svg",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "explorer (light): no WebKit",
+    "ok": true,
+    "t": 119.66,
+    "webkit": []
+   },
+   {
+    "check": "explorer (light): rendered",
+    "ok": true,
+    "t": 119.84,
+    "texts": [
+     "robin",
+     "robin",
+     "Tabblad sluiten (Ctrl+W)",
+     "Nieuw tabblad (Ctrl+T)",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Terug (Alt+pijl-links)",
+     "Vooruit (Alt+pijl-rechts)",
+     "Omhoog naar ‘run’ (Alt+pijl-omhoog)",
+     "Vernieuwen (F5)",
+     "robin",
+     "robin",
+     "Recente locaties",
+     "Zoeken in robin",
+     "Zoeken",
+     "Een nieuw item maken in de huidige locatie",
+     "Nieuw",
+     "Knippen (Ctrl+X)",
+     "Kopiëren (Ctrl+C)",
+     "Plakken (Ctrl+V)",
+     "Naam wijzigen (F2)",
+     "Delen",
+     "Verwijderen (Del)",
+     "Sorteren",
+     "Weergeven",
+     "Meer weergeven",
+     "Het detailvenster weergeven of verbergen (Alt+Shift+P)",
+     "Details",
+     "Start",
+     "Galerij",
+     "Bureaublad",
+     "Vastgemaakt",
+     "Downloads",
+     "Vastgemaakt",
+     "Documenten",
+     "Vastgemaakt",
+     "Afbeeldingen",
+     "Vastgemaakt",
+     "Muziek",
+     "Vastgemaakt",
+     "Video's",
+     "Vastgemaakt",
+     "Deze pc",
+     "Systeemschijf (/)",
+     "Prullenbak",
+     "Naam",
+     "Gewijzigd op",
+     "Type",
+     "Grootte",
+     "AllesIndex",
+     "13-11-2026 21:45",
+     "Bestandsmap",
+     "Desktop",
+     "13-11-2026 21:41",
+     "Bestandsmap",
+     "Documents",
+     "13-11-2026 21:41",
+     "Bestandsmap",
+     "Downloads"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "explorer (light): closes",
+    "ok": true,
+    "t": 123.29
+   },
+   {
+    "check": "settings (light): boot report",
+    "ok": true,
+    "t": 123.57,
+    "boot": {
+     "app": "settings",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 3884,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "settings (light): window",
+    "ok": true,
+    "t": 123.57,
+    "window": {
+     "pid": 3884,
+     "title": "Startpagina – Instellingen",
+     "x": 170,
+     "y": 56,
+     "w": 1100,
+     "h": 740,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "settings (light): native process",
+    "ok": true,
+    "t": 123.6,
+    "comm": "win11-gtk-setti",
+    "pid": 3884
+   },
+   {
+    "check": "settings (light): backend child",
+    "ok": true,
+    "t": 126.1,
+    "children": [
+     {
+      "pid": 3893,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 3971,
+      "comm": "glycin-svg",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "settings (light): no WebKit",
+    "ok": true,
+    "t": 126.1,
+    "webkit": []
+   },
+   {
+    "check": "settings (light): rendered",
+    "ok": true,
+    "t": 126.2,
+    "texts": [
+     "Terug",
+     "Instellingen",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "R",
+     "robin",
+     "Lokaal account",
+     "Zoek een instelling",
+     "Zoeken",
+     "Startpagina",
+     "Systeem",
+     "Bluetooth en apparaten",
+     "Netwerk en internet",
+     "Persoonlijke instellingen",
+     "Apps",
+     "Accounts",
+     "Tijd en taal",
+     "Toegankelijkheid",
+     "Privacy en beveiliging",
+     "Update en herstel",
+     "Startpagina",
+     "robin",
+     "Gigabyte B550 GAMING X V2",
+     "Naam wijzigen",
+     "Netwerk",
+     "Niet verbonden",
+     "Updates",
+     "Aanbevolen instellingen",
+     "Recente en veelgebruikte instellingen",
+     "Beeldscherm",
+     "Systeem",
+     "Geluid",
+     "Systeem",
+     "Taakbalk",
+     "Persoonlijke instellingen",
+     "Achtergrond",
+     "Persoonlijke instellingen",
+     "Bluetooth-apparaten",
+     "Apparaten beheren, toevoegen en verbinden",
+     "Geen Bluetooth gevonden op deze computer",
+     "Alle apparaten weergeven",
+     "Persoonlijke instellingen",
+     "Kies een thema, of pas je achtergrond en kleuren aan",
+     "Lotus (licht)",
+     "Lotus (donker)",
+     "Stroming",
+     "Gloed",
+     "Zonsopgang",
+     "Noorderlicht",
+     "Kleurmodus",
+     "Licht",
+     "Meer achtergronden, kleuren en thema’s",
+     "Opslag",
+     "Ruimte op je systeemschijf",
+     "Systeemschijf (/)",
+     "97%",
+     "6,4 GB vrij van 233 GB",
+     "Details",
+     "Ruimte vrijmaken"
+    ],
+    "windows": 1
+   },
+   {
+    "check": "settings (light): closes",
+    "ok": true,
+    "t": 129.72
+   },
+   {
+    "check": "taskmgr (light): boot report",
+    "ok": true,
+    "t": 130.01,
+    "boot": {
+     "app": "taskmgr",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 4141,
+     "renderer": "cairo",
+     "tag": "boot"
+    }
+   },
+   {
+    "check": "taskmgr (light): window",
+    "ok": true,
+    "t": 130.01,
+    "window": {
+     "pid": 4141,
+     "title": "Taakbeheer – Samenvatting",
+     "x": 200,
+     "y": 66,
+     "w": 1040,
+     "h": 720,
+     "minimized": false,
+     "focus": false
+    }
+   },
+   {
+    "check": "taskmgr (light): native process",
+    "ok": true,
+    "t": 130.06,
+    "comm": "win11-gtk-taskm",
+    "pid": 4141
+   },
+   {
+    "check": "taskmgr (light): backend child",
+    "ok": true,
+    "t": 132.56,
+    "children": [
+     {
+      "pid": 4150,
+      "comm": "win11-app",
+      "http": true
+     },
+     {
+      "pid": 4234,
+      "comm": "glycin-svg",
+      "http": false
+     }
+    ]
+   },
+   {
+    "check": "taskmgr (light): no WebKit",
+    "ok": true,
+    "t": 132.56,
+    "webkit": []
+   },
+   {
+    "check": "taskmgr (light): rendered",
+    "ok": true,
+    "t": 132.73,
+    "texts": [
+     "Taakbeheer",
+     "Typ een naam of PID om te zoeken",
+     "Zoeken",
+     "Minimaliseren",
+     "Maximaliseren",
+     "Sluiten",
+     "Navigatie sluiten",
+     "Samenvatting",
+     "Processen",
+     "Prestaties",
+     "Opslag",
+     "Opstart-apps",
+     "Services",
+     "Details",
+     "Instellingen",
+     "Samenvatting",
+     "Er vraagt 1 ding je aandacht",
+     "Hieronder staat wat er aan de hand is. Met één klik los je het op.",
+     "Gecontroleerd om 21:45",
+     "Opnieuw controleren",
+     "Veel wisselgeheugen in gebruik",
+     "11,3 GB van 11,5 GB wisselgeheugen is in gebruik. Daardoor kan de computer trager aanvoelen.",
+     "Processen bekijken",
+     "Processen bekijken",
+     "Nu in gebruik",
+     "Processor",
+     "17%",
+     "3,90 GHz · 64 °C",
+     "Geheugen",
+     "72%",
+     "10,8 GB van 15 GB",
+     "Schijf",
+     "1%",
+     "Systeemschijf · 248 KB/s",
+     "Videokaart",
+     "17%",
+     "RTX 3080 · 34 °C",
+     "Netwerk",
+     "0 bps",
+     "↑ 0 bps · Ethernet",
+     "Apps die het meest gebruiken",
+     "Alle processen",
+     "Claude",
+     "CPU 0,5% · 216,1 MB",
+     "Laag",
+     "Taakbeheer",
+     "CPU 0,1% · 16,7 MB",
+     "Laag",
+     "Schijven",
+     "Opslag bekijken",
+     "/",
+     "Systeemschijf",
+     "Bijna vol",
+     "6,4 GB vrij van 233 GB",
+     "97%",
+     "Goed om te weten",
+     "Opslag",
+     "Er is op al je schijven genoeg ruimte vrij.",
+     "Geheugen",
+     "Er is genoeg geheugen vrij (4,1 GB van 15,0 GB)."
+    ],
+    "windows": 1
+   },
+   {
+    "check": "taskmgr (light): closes",
+    "ok": true,
+    "t": 136.21
+   }
+  ],
+  "records": {
+   "boot": {
+    "kind": "native-shell",
+    "pid": 401,
+    "tag": "boot"
+   },
+   "explorer.names": [
+    "crumb-0",
+    "explorer-address",
+    "explorer-back",
+    "explorer-close",
+    "explorer-cmd-copy",
+    "explorer-cmd-cut",
+    "explorer-cmd-delete",
+    "explorer-cmd-details",
+    "explorer-cmd-more",
+    "explorer-cmd-new",
+    "explorer-cmd-paste",
+    "explorer-cmd-rename",
+    "explorer-cmd-share",
+    "explorer-cmd-sort",
+    "explorer-cmd-view",
+    "explorer-columns",
+    "explorer-commands",
+    "explorer-forward",
+    "explorer-items",
+    "explorer-maximize",
+    "explorer-minimize",
+    "explorer-nav",
+    "explorer-new-tab",
+    "explorer-refresh",
+    "explorer-search",
+    "explorer-search-input",
+    "explorer-status",
+    "explorer-status-details",
+    "explorer-status-large",
+    "explorer-tabs",
+    "explorer-up",
+    "explorer-view",
+    "explorer-window",
+    "nav-gallery",
+    "nav-home",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Desktop",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Documents",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Downloads",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Music",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Pictures",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Videos",
+    "nav-thispc",
+    "nav-trash",
+    "nav-vol:/",
+    "tab-1",
+    "tab-1-close"
+   ],
+   "memory.native.explorer": {
+    "pss": 48.2,
+    "anonSwap": 25.4,
+    "processes": 3
+   },
+   "settings.names": [
+    "StSettingsAutoGrid",
+    "StSettingsClamp",
+    "StSettingsDesktopPreview",
+    "StSettingsDeviceArt",
+    "StSettingsWrap",
+    "hero-network",
+    "hero-rename",
+    "hero-update",
+    "home-color-mode",
+    "home-rec-background",
+    "home-rec-display",
+    "home-rec-sound",
+    "home-rec-taskbar",
+    "nav-accessibility",
+    "nav-accounts",
+    "nav-apps",
+    "nav-bluetooth",
+    "nav-home",
+    "nav-network",
+    "nav-personalization",
+    "nav-privacy",
+    "nav-system",
+    "nav-time",
+    "nav-update",
+    "settings-back",
+    "settings-close",
+    "settings-maximize",
+    "settings-minimize",
+    "settings-nav",
+    "settings-search",
+    "settings-user",
+    "settings-window",
+    "theme-aurora",
+    "theme-flow",
+    "theme-glow",
+    "theme-lotus-dark",
+    "theme-lotus-light",
+    "theme-sunrise"
+   ],
+   "memory.native.settings": {
+    "pss": 96.6,
+    "anonSwap": 72.5,
+    "processes": 3
+   },
+   "taskmgr.names": [
+    "TaskmgrLayout",
+    "nav-details",
+    "nav-performance",
+    "nav-processes",
+    "nav-services",
+    "nav-settings",
+    "nav-startup",
+    "nav-storage",
+    "nav-summary",
+    "nav-toggle",
+    "taskmgr-close",
+    "taskmgr-health-swap",
+    "taskmgr-maximize",
+    "taskmgr-mini-cpu",
+    "taskmgr-mini-disk",
+    "taskmgr-mini-gpu",
+    "taskmgr-mini-memory",
+    "taskmgr-mini-network",
+    "taskmgr-minimize",
+    "taskmgr-nav",
+    "taskmgr-new-task",
+    "taskmgr-page-summary",
+    "taskmgr-recheck",
+    "taskmgr-search",
+    "taskmgr-summary-app-0",
+    "taskmgr-summary-app-1",
+    "taskmgr-summary-processes",
+    "taskmgr-summary-storage",
+    "taskmgr-summary-volume-fa7665e9-9308-487c-be15-02c02abde18a",
+    "taskmgr-window"
+   ],
+   "memory.native.taskmgr": {
+    "pss": 53.8,
+    "anonSwap": 30.0,
+    "processes": 3
+   },
+   "alles.names": [
+    "AllesClamp",
+    "alles-close",
+    "alles-filter",
+    "alles-maximize",
+    "alles-minimize",
+    "alles-options",
+    "alles-preview",
+    "alles-search",
+    "alles-sort",
+    "alles-status",
+    "alles-tips",
+    "alles-toggle-matchCase",
+    "alles-toggle-matchPath",
+    "alles-toggle-regex",
+    "alles-toggle-wholeWord",
+    "alles-window"
+   ],
+   "memory.native.alles": {
+    "pss": 75.1,
+    "anonSwap": 55.5,
+    "processes": 3
+   },
+   "udisks.standin": {
+    "pid": 2416,
+    "objects": [
+     "/org/freedesktop/UDisks2/Manager",
+     "/org/freedesktop/UDisks2/block_devices/sdx",
+     "/org/freedesktop/UDisks2/block_devices/sdx1",
+     "/org/freedesktop/UDisks2/drives/WinPoint_Test"
+    ]
+   },
+   "disks.names": [
+    "DisksClamp",
+    "DisksFlexBar",
+    "W11InfoBarBody",
+    "disks-back",
+    "disks-close",
+    "disks-maximize",
+    "disks-minimize",
+    "disks-page",
+    "disks-refresh",
+    "disks-scroller",
+    "disks-window",
+    "dk-disk-more-sdx",
+    "dk-disk-props-sdx",
+    "dk-disk-sdx",
+    "dk-free-action-sdx:135266304",
+    "dk-props-sdx1",
+    "dk-saferemove-sdx",
+    "dk-seg-sdx1",
+    "dk-seg-sdx:135266304",
+    "dk-vol-sdx1",
+    "dk-vol-sdx:135266304"
+   ],
+   "memory.native.disks": {
+    "pss": 36.2,
+    "anonSwap": 18.0,
+    "processes": 2
+   },
+   "defaultapps.names": [
+    "DefaultAppsClamp",
+    "defaultapps-close",
+    "defaultapps-list",
+    "defaultapps-maximize",
+    "defaultapps-minimize",
+    "defaultapps-next",
+    "defaultapps-previous",
+    "defaultapps-search",
+    "defaultapps-type-application/andrew-inset",
+    "defaultapps-type-application/annodex",
+    "defaultapps-type-application/appinstaller",
+    "defaultapps-type-application/appx",
+    "defaultapps-type-application/appxbundle",
+    "defaultapps-type-application/atom+xml",
+    "defaultapps-type-application/bzip2",
+    "defaultapps-type-application/cbor",
+    "defaultapps-type-application/clarisworks",
+    "defaultapps-type-application/csv",
+    "defaultapps-type-application/dicom",
+    "defaultapps-type-application/docbook+xml",
+    "defaultapps-type-application/ecmascript",
+    "defaultapps-type-application/epub+zip",
+    "defaultapps-type-application/excel",
+    "defaultapps-type-application/fits",
+    "defaultapps-type-application/font-tdpfr",
+    "defaultapps-type-application/geo+json",
+    "defaultapps-type-application/gml+xml",
+    "defaultapps-type-application/gnunet-directory",
+    "defaultapps-type-application/gpx+xml",
+    "defaultapps-type-application/gzip",
+    "defaultapps-type-application/illustrator",
+    "defaultapps-type-application/its+xml",
+    "defaultapps-type-application/java-archive",
+    "defaultapps-type-application/jrd+json",
+    "defaultapps-type-application/json",
+    "defaultapps-type-application/json-patch+json",
+    "defaultapps-type-application/json5",
+    "defaultapps-type-application/ld+json",
+    "defaultapps-type-application/mac-binhex40",
+    "defaultapps-type-application/macwriteii",
+    "defaultapps-type-application/mathematica",
+    "defaultapps-type-application/mathml+xml",
+    "defaultapps-type-application/mbox",
+    "defaultapps-type-application/metalink+xml",
+    "defaultapps-type-application/metalink4+xml",
+    "defaultapps-type-application/msexcel",
+    "defaultapps-type-application/msix",
+    "defaultapps-type-application/msixbundle",
+    "defaultapps-type-application/mspowerpoint",
+    "defaultapps-type-application/msword",
+    "defaultapps-type-application/msword-template",
+    "defaultapps-type-application/mxf",
+    "defaultapps-type-application/octet-stream",
+    "defaultapps-type-application/oda",
+    "defaultapps-type-application/ogg",
+    "defaultapps-type-application/ovf",
+    "defaultapps-type-application/owl+xml",
+    "defaultapps-type-application/oxps",
+    "defaultapps-type-application/pdf",
+    "defaultapps-type-application/pgp-encrypted",
+    "defaultapps-type-application/pgp-keys",
+    "defaultapps-type-application/pgp-signature",
+    "defaultapps-type-application/pkcs10",
+    "defaultapps-type-application/pkcs10+pem",
+    "defaultapps-type-application/pkcs12",
+    "defaultapps-type-application/pkcs12+pem",
+    "defaultapps-type-application/pkcs7-mime",
+    "defaultapps-type-application/pkcs7-mime+pem",
+    "defaultapps-type-application/pkcs7-signature",
+    "defaultapps-type-application/pkcs8",
+    "defaultapps-type-application/pkcs8+pem",
+    "defaultapps-type-application/pkcs8-encrypted",
+    "defaultapps-type-application/pkix-cert",
+    "defaultapps-type-application/pkix-cert+pem",
+    "defaultapps-type-application/pkix-crl",
+    "defaultapps-type-application/pkix-crl+pem",
+    "defaultapps-type-application/pkix-pkipath",
+    "defaultapps-type-application/postscript",
+    "defaultapps-type-application/prs.plucker",
+    "defaultapps-type-application/ram",
+    "defaultapps-type-application/raml+yaml",
+    "defaultapps-type-application/rdf+xml",
+    "defaultapps-type-application/relax-ng-compact-syntax",
+    "defaultapps-type-application/relaxng",
+    "defaultapps-type-application/rss+xml",
+    "defaultapps-type-application/rtf",
+    "defaultapps-type-application/schema+json",
+    "defaultapps-type-application/sdp",
+    "defaultapps-type-application/sieve",
+    "defaultapps-type-application/smil+xml",
+    "defaultapps-type-application/sparql-query",
+    "defaultapps-type-application/sparql-results+xml",
+    "defaultapps-type-application/sql",
+    "defaultapps-type-application/tab-separated-values",
+    "defaultapps-type-application/toml",
+    "defaultapps-type-application/trig",
+    "defaultapps-type-application/vnd.adobe.flash.movie",
+    "defaultapps-type-application/vnd.amazon.mobi8-ebook",
+    "defaultapps-type-application/vnd.android.package-archive",
+    "defaultapps-type-application/vnd.anthropic.mcpb",
+    "defaultapps-type-application/vnd.anthropic.skill",
+    "defaultapps-type-application/vnd.apache.parquet",
+    "defaultapps-type-application/vnd.appimage",
+    "defaultapps-type-application/vnd.apple.keynote",
+    "defaultapps-type-application/vnd.apple.mpegurl",
+    "defaultapps-type-application/vnd.apple.numbers",
+    "defaultapps-type-application/vnd.apple.pages",
+    "defaultapps-type-application/vnd.apple.pkpass",
+    "defaultapps-window"
+   ],
+   "memory.native.defaultapps": {
+    "pss": 47.4,
+    "anonSwap": 29.7,
+    "processes": 2
+   },
+   "installer.names": [
+    "InstallerClamp",
+    "installer-activity",
+    "installer-choose",
+    "installer-close",
+    "installer-drop",
+    "installer-maximize",
+    "installer-minimize",
+    "installer-window"
+   ],
+   "memory.native.installer": {
+    "pss": 35.1,
+    "anonSwap": 17.6,
+    "processes": 2
+   },
+   "procs.apps": [
+    {
+     "key": "win11shell-alles.desktop",
+     "name": "Alles",
+     "pids": [
+      3234,
+      3244,
+      3269
+     ]
+    },
+    {
+     "key": "com.anthropic.Claude.desktop",
+     "name": "Claude",
+     "pids": [
+      1,
+      2,
+      42,
+      43,
+      44,
+      45,
+      46,
+      67,
+      236,
+      238,
+      401,
+      402,
+      518,
+      602,
+      1478,
+      1488
+     ]
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "name": "Instellingen",
+     "pids": [
+      2845,
+      2854,
+      2932
+     ]
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "name": "Taakbeheer",
+     "pids": [
+      2942,
+      3160
+     ]
+    },
+    {
+     "key": "win11shell-explorer.desktop",
+     "name": "Verkenner",
+     "pids": [
+      2752,
+      2761,
+      2809
+     ]
+    }
+   ],
+   "explorer (light).names": [
+    "crumb-0",
+    "explorer-address",
+    "explorer-back",
+    "explorer-close",
+    "explorer-cmd-copy",
+    "explorer-cmd-cut",
+    "explorer-cmd-delete",
+    "explorer-cmd-details",
+    "explorer-cmd-more",
+    "explorer-cmd-new",
+    "explorer-cmd-paste",
+    "explorer-cmd-rename",
+    "explorer-cmd-share",
+    "explorer-cmd-sort",
+    "explorer-cmd-view",
+    "explorer-columns",
+    "explorer-commands",
+    "explorer-forward",
+    "explorer-items",
+    "explorer-maximize",
+    "explorer-minimize",
+    "explorer-nav",
+    "explorer-new-tab",
+    "explorer-refresh",
+    "explorer-search",
+    "explorer-search-input",
+    "explorer-status",
+    "explorer-status-details",
+    "explorer-status-large",
+    "explorer-tabs",
+    "explorer-up",
+    "explorer-view",
+    "explorer-window",
+    "nav-gallery",
+    "nav-home",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Desktop",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Documents",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Downloads",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Music",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Pictures",
+    "nav-pin:/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/home/Videos",
+    "nav-thispc",
+    "nav-trash",
+    "nav-vol:/",
+    "tab-1",
+    "tab-1-close"
+   ],
+   "settings (light).names": [
+    "StSettingsAutoGrid",
+    "StSettingsClamp",
+    "StSettingsDesktopPreview",
+    "StSettingsDeviceArt",
+    "StSettingsWrap",
+    "hero-network",
+    "hero-rename",
+    "hero-update",
+    "home-color-mode",
+    "home-rec-background",
+    "home-rec-display",
+    "home-rec-sound",
+    "home-rec-taskbar",
+    "nav-accessibility",
+    "nav-accounts",
+    "nav-apps",
+    "nav-bluetooth",
+    "nav-home",
+    "nav-network",
+    "nav-personalization",
+    "nav-privacy",
+    "nav-system",
+    "nav-time",
+    "nav-update",
+    "settings-back",
+    "settings-close",
+    "settings-maximize",
+    "settings-minimize",
+    "settings-nav",
+    "settings-search",
+    "settings-user",
+    "settings-window",
+    "theme-aurora",
+    "theme-flow",
+    "theme-glow",
+    "theme-lotus-dark",
+    "theme-lotus-light",
+    "theme-sunrise"
+   ],
+   "taskmgr (light).names": [
+    "TaskmgrLayout",
+    "nav-details",
+    "nav-performance",
+    "nav-processes",
+    "nav-services",
+    "nav-settings",
+    "nav-startup",
+    "nav-storage",
+    "nav-summary",
+    "nav-toggle",
+    "taskmgr-close",
+    "taskmgr-health-swap",
+    "taskmgr-maximize",
+    "taskmgr-mini-cpu",
+    "taskmgr-mini-disk",
+    "taskmgr-mini-gpu",
+    "taskmgr-mini-memory",
+    "taskmgr-mini-network",
+    "taskmgr-minimize",
+    "taskmgr-nav",
+    "taskmgr-new-task",
+    "taskmgr-page-summary",
+    "taskmgr-recheck",
+    "taskmgr-search",
+    "taskmgr-summary-app-0",
+    "taskmgr-summary-app-1",
+    "taskmgr-summary-processes",
+    "taskmgr-summary-storage",
+    "taskmgr-summary-volume-fa7665e9-9308-487c-be15-02c02abde18a",
+    "taskmgr-window"
+   ],
+   "memory.webkit.explorer": {
+    "pss": 170.3,
+    "anonSwap": 89.6,
+    "processes": 3,
+    "comms": [
+     "WebKitNetworkPr",
+     "WebKitWebProces",
+     "win11-explorer"
+    ]
+   },
+   "memory.webkit.settings": {
+    "pss": 192.5,
+    "anonSwap": 110.5,
+    "processes": 3,
+    "comms": [
+     "WebKitNetworkPr",
+     "WebKitWebProces",
+     "win11-app"
+    ]
+   },
+   "memory.webkit.taskmgr": {
+    "pss": 169.7,
+    "anonSwap": 86.3,
+    "processes": 3,
+    "comms": [
+     "WebKitNetworkPr",
+     "WebKitWebProces",
+     "win11-app"
+    ]
+   }
+  },
+  "shots": [
+   "explorer.png",
+   "explorer-use-open.png",
+   "explorer-use-back.png",
+   "explorer-use-enter.png",
+   "settings.png",
+   "settings-use-system.png",
+   "settings-use-personalization.png",
+   "taskmgr.png",
+   "taskmgr-use-processes.png",
+   "taskmgr-use-performance.png",
+   "alles.png",
+   "disks.png",
+   "disks-use-overview.png",
+   "disks-use-volume.png",
+   "defaultapps.png",
+   "defaultapps-use-dialog.png",
+   "defaultapps-use-closed.png",
+   "installer.png",
+   "installer-use-empty.png",
+   "alles-use-query.png",
+   "taskmgr-procs.png",
+   "explorer-light.png",
+   "settings-light.png",
+   "taskmgr-light.png"
+  ],
+  "error": null,
+  "seconds": 164.98,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 401,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 401,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 401,
+    "page": null,
+    "alive": true,
+    "native": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=6a7c8cd4abc2fe7bd36791696af7766b",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 401,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 401
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "explorer.png",
+    "group": "scenario",
+    "bytes": 324680,
+    "area": null
+   },
+   {
+    "file": "explorer-use-open.png",
+    "group": "scenario",
+    "bytes": 304442,
+    "area": null
+   },
+   {
+    "file": "explorer-use-back.png",
+    "group": "scenario",
+    "bytes": 326047,
+    "area": null
+   },
+   {
+    "file": "explorer-use-enter.png",
+    "group": "scenario",
+    "bytes": 304442,
+    "area": null
+   },
+   {
+    "file": "settings.png",
+    "group": "scenario",
+    "bytes": 493052,
+    "area": null
+   },
+   {
+    "file": "settings-use-system.png",
+    "group": "scenario",
+    "bytes": 481958,
+    "area": null
+   },
+   {
+    "file": "settings-use-personalization.png",
+    "group": "scenario",
+    "bytes": 553716,
+    "area": null
+   },
+   {
+    "file": "taskmgr.png",
+    "group": "scenario",
+    "bytes": 465378,
+    "area": null
+   },
+   {
+    "file": "taskmgr-use-processes.png",
+    "group": "scenario",
+    "bytes": 421059,
+    "area": null
+   },
+   {
+    "file": "taskmgr-use-performance.png",
+    "group": "scenario",
+    "bytes": 455709,
+    "area": null
+   },
+   {
+    "file": "alles.png",
+    "group": "scenario",
+    "bytes": 338901,
+    "area": null
+   },
+   {
+    "file": "disks.png",
+    "group": "scenario",
+    "bytes": 419590,
+    "area": null
+   },
+   {
+    "file": "disks-use-overview.png",
+    "group": "scenario",
+    "bytes": 419590,
+    "area": null
+   },
+   {
+    "file": "disks-use-volume.png",
+    "group": "scenario",
+    "bytes": 432917,
+    "area": null
+   },
+   {
+    "file": "defaultapps.png",
+    "group": "scenario",
+    "bytes": 432554,
+    "area": null
+   },
+   {
+    "file": "defaultapps-use-dialog.png",
+    "group": "scenario",
+    "bytes": 390141,
+    "area": null
+   },
+   {
+    "file": "defaultapps-use-closed.png",
+    "group": "scenario",
+    "bytes": 432554,
+    "area": null
+   },
+   {
+    "file": "installer.png",
+    "group": "scenario",
+    "bytes": 462457,
+    "area": null
+   },
+   {
+    "file": "installer-use-empty.png",
+    "group": "scenario",
+    "bytes": 462457,
+    "area": null
+   },
+   {
+    "file": "alles-use-query.png",
+    "group": "scenario",
+    "bytes": 327389,
+    "area": null
+   },
+   {
+    "file": "taskmgr-procs.png",
+    "group": "scenario",
+    "bytes": 268461,
+    "area": null
+   },
+   {
+    "file": "explorer-light.png",
+    "group": "scenario",
+    "bytes": 344467,
+    "area": null
+   },
+   {
+    "file": "settings-light.png",
+    "group": "scenario",
+    "bytes": 540480,
+    "area": null
+   },
+   {
+    "file": "taskmgr-light.png",
+    "group": "scenario",
+    "bytes": 512704,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/native-gtk-apps.out/explorer.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/explorer-use-open.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/explorer-use-back.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/explorer-use-enter.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/settings.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/settings-use-system.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/settings-use-personalization.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/taskmgr.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/taskmgr-use-processes.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/taskmgr-use-performance.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/alles.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/disks.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/disks-use-overview.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/disks-use-volume.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/defaultapps.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/defaultapps-use-dialog.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/defaultapps-use-closed.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/installer.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/installer-use-empty.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/alles-use-query.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/taskmgr-procs.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/explorer-light.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/settings-light.png",
+  "tests/gnome/scenarios/native-gtk-apps.out/taskmgr-light.png"
+ ]
+}

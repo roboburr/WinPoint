@@ -221,6 +221,21 @@ pub(super) fn own_icon(app: &str) -> String {
         })
         .clone()
 }
+/// The desktop entry scripts/install.py writes for an own app: `<GApplication id>.desktop` (launch.rs OWN_APP_IDS).
+fn own_entry(app: &str) -> Option<String> {
+    crate::launch::app_id(app).map(|id| format!("{id}.desktop"))
+}
+/// The own app a desktop entry is: the entry install.py writes for it (io.github.win11shell.<Name>.desktop), or a
+/// `win11shell-<app>.desktop` of Win11Shell's own naming (the catalogue's ids).
+fn own_of_entry(id: &str) -> Option<&'static str> {
+    OWN_IDS
+        .iter()
+        .copied()
+        .find(|app| own_entry(app).as_deref() == Some(id) || id == format!("win11shell-{app}.desktop"))
+}
+/// An own app as the catalogue lists it: id `win11shell-<app>.desktop`, our name and texts, the icon of its
+/// installed entry (`entry`: the Icon= scripts/install.py gives it, a file of the bundled Win11 icons) when that
+/// resolves, else the first of catalog-data.json's names that does.
 fn own_value(app: &str, lang: &str, installed: Option<&Record>) -> Value {
     let meta = &data()["ownApps"][app];
     let icon = installed
@@ -228,7 +243,7 @@ fn own_value(app: &str, lang: &str, installed: Option<&Record>) -> Value {
         .filter(|icon| !icon.is_empty() && crate::files::icon_exists(icon))
         .map(str::to_owned)
         .unwrap_or_else(|| own_icon(app));
-    json!({"id":format!("win11shell-{app}.desktop"),"name":meta["name"][lang],"genericName":meta["generic"][lang],"comment":meta["comment"][lang],"icon":icon,"categories":meta["categories"],"keywords":meta["keywords"],"noDisplay":false,"own":true,"added":0,"installedAt":0})
+    json!({"id":format!("win11shell-{app}.desktop"),"entry":own_entry(app),"name":meta["name"][lang],"genericName":meta["generic"][lang],"comment":meta["comment"][lang],"icon":icon,"categories":meta["categories"],"keywords":meta["keywords"],"noDisplay":false,"own":true,"added":0,"installedAt":0})
 }
 
 struct Record {
@@ -303,11 +318,17 @@ fn build(
     let mut by_id = HashMap::new();
     let mut installed = HashMap::new();
     for record in records {
-        if let Some(own) = OWN_IDS
-            .iter()
-            .find(|app| record.id == format!("win11shell-{app}.desktop"))
-        {
-            installed.insert(*own, record);
+        // Our own entries are the catalogue's own apps (below), not apps of their own: listed, the visible ones
+        // (Explorer, Default apps, the Installer) would come twice in All apps and search. Their Icon= is the own
+        // app's icon; a lookup by the entry's id (brief_id: a default handler, Open with) still finds it.
+        if let Some(own) = own_of_entry(&record.id) {
+            by_id.insert(
+                record.id.clone(),
+                json!({"id":record.id,"name":record.name,"icon":record.icon,"visible":false}),
+            );
+            if own_entry(own).as_deref() == Some(record.id.as_str()) || !installed.contains_key(own) {
+                installed.insert(own, record);
+            }
             continue;
         }
         if !record.visible {
@@ -968,6 +989,59 @@ mod tests {
             item(&english, "org.gnome.DiskUtility.desktop")["name"],
             "Disks (GNOME)"
         );
+    }
+
+    #[test]
+    fn our_installed_entries_give_the_own_apps_their_icon_and_are_not_listed_twice() {
+        // scripts/install.py: io.github.win11shell.<Name>.desktop, Explorer, Default apps and the Installer visible,
+        // Icon= a file of the bundled Win11 icons; the Calendar is no own app of the catalogue and stays an app
+        let fixture = Fixture::new();
+        let svg = fixture.desktop("system-file-manager.svg", "<svg xmlns='http://www.w3.org/2000/svg'/>\n");
+        let mut explorer = record("io.github.win11shell.Explorer.desktop", "Win11 Verkenner");
+        explorer.icon = svg.to_string_lossy().into_owned();
+        let mut installer = record("io.github.win11shell.Installer.desktop", "Win11 App-installatie");
+        installer.icon = fixture.0.join("missing.svg").to_string_lossy().into_owned();
+        let mut taskmgr = record("io.github.win11shell.TaskManager.desktop", "Win11 Taakbeheer");
+        taskmgr.visible = false;
+        let mut panel = record("io.github.win11shell.Panel.desktop", "Win11 Taakbalk");
+        panel.visible = false;
+        let (apps, index) = build(
+            &fixture.0,
+            "nl",
+            vec![
+                explorer,
+                installer,
+                taskmgr,
+                panel,
+                record("io.github.win11shell.Calendar.desktop", "Agenda"),
+                record("org.gnome.Nautilus.desktop", "Files"),
+            ],
+            None,
+            123,
+        );
+        let ids: Vec<_> = apps.iter().filter_map(|a| a["id"].as_str()).collect();
+        assert!(
+            !ids.iter().any(|id| id.starts_with("io.github.win11shell.") && *id != "io.github.win11shell.Calendar.desktop"),
+            "{ids:?}"
+        );
+        assert!(ids.contains(&"io.github.win11shell.Calendar.desktop"));
+        assert_eq!(apps.len(), OWN_IDS.len() + 2);
+        let own = item(&apps, "win11shell-explorer.desktop");
+        assert_eq!(own["icon"], json!(svg.to_string_lossy()), "the installed entry's icon");
+        assert_eq!(own["entry"], "io.github.win11shell.Explorer.desktop");
+        assert_eq!(own["name"], "Verkenner");
+        // an icon that does not resolve: the catalogue's own list
+        assert_eq!(item(&apps, "win11shell-installer.desktop")["icon"], json!(own_icon("installer")));
+        assert_eq!(item(&apps, "win11shell-alles.desktop")["entry"], "io.github.win11shell.Search.desktop");
+        for app in OWN_IDS {
+            assert_eq!(item(&apps, &format!("win11shell-{app}.desktop"))["entry"], json!(own_entry(app)), "{app}");
+        }
+        // looked up by its own id (a default handler, Open with) the entry is still there
+        assert_eq!(
+            brief_value(&index["io.github.win11shell.Explorer.desktop"]),
+            json!({"id":"io.github.win11shell.Explorer.desktop","name":"Win11 Verkenner","icon":svg.to_string_lossy()})
+        );
+        assert_eq!(index["io.github.win11shell.Panel.desktop"]["visible"], false);
     }
 
     #[test]

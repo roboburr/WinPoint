@@ -1,0 +1,265 @@
+/* ==========================================================================
+   Win11 GNOME Task Manager (GTK 4): vendor/ui/css/taskmgr.css for the shell, the grid, the dialogs, the shared
+   classes and Opstart-apps / Services / Instellingen, on the kit's tokens. Prestaties, Samenvatting and Opslag
+   have their own sheets (performance.css, summary.css, storage.css), installed after this one.
+   ========================================================================== */
+
+/* ---- Task Manager's tokens (dark first, light below; util.rs app_color has the same values for cairo) ---- */
+window.w11.taskmgr-window {
+  --tm-heat-text: #ffffff;
+  --tm-row-hover: rgba(255, 255, 255, 0.045);
+  --tm-row-sel: color-mix(in srgb, var(--accent) 20%, transparent);
+  --tm-row-sel-hover: color-mix(in srgb, var(--accent) 26%, transparent);
+  --tm-leaf: #6ccb5f;
+  --tm-leaf-vein: #1d3d17;
+  --tm-hang: #fcb36b;
+  --tm-cat-browser: #ff8a5c;
+  --tm-cat-chat: #8f93ff;
+  --tm-cat-appdata: #c49bff;
+  --tm-cat-snaps: #ff9a52;
+  --tm-cat-flatpak: #5eaaff;
+  --tm-cat-cache: #9aa3aa;
+  --tm-cat-other: #6b7379;
+  --tm-hero-ok-a: rgba(108, 203, 95, 0.12);
+  --tm-hero-ok-b: rgba(76, 194, 255, 0.06);
+  --tm-hero-warn-a: rgba(252, 162, 60, 0.15);
+  --tm-hero-warn-b: rgba(252, 225, 0, 0.05);
+  --tm-glyph-fg: #ffffff;
+  --tm-danger-bar: #ff6b6b;
+  --tm-warn-bar: #f2b33d;
+  --tm-graph-bg: rgba(0, 0, 0, 0.12);
+  --tm-card-hover: rgba(255, 255, 255, 0.08);
+  --tm-neutral-bg: transparent;
+}
+window.w11.w11-light.taskmgr-window {
+  --tm-heat-text: rgba(0, 0, 0, 0.9);
+  --tm-row-hover: rgba(0, 0, 0, 0.035);
+  --tm-row-sel: color-mix(in srgb, var(--accent) 14%, transparent);
+  --tm-row-sel-hover: color-mix(in srgb, var(--accent) 20%, transparent);
+  --tm-leaf: #3c9a2e;
+  --tm-leaf-vein: #e8f7e3;
+  --tm-hang: #b0490c;
+  --tm-cat-browser: #d9532a;
+  --tm-cat-chat: #5b5fc7;
+  --tm-cat-appdata: #8e5ccb;
+  --tm-cat-snaps: #e2681f;
+  --tm-cat-flatpak: #2f7fd1;
+  --tm-cat-cache: #8d969d;
+  --tm-cat-other: #b6bcc2;
+  --tm-hero-ok-a: rgba(15, 123, 15, 0.10);
+  --tm-hero-ok-b: rgba(0, 120, 212, 0.06);
+  --tm-hero-warn-a: rgba(247, 99, 12, 0.13);
+  --tm-hero-warn-b: rgba(255, 185, 0, 0.07);
+  --tm-glyph-fg: #ffffff;
+  --tm-danger-bar: #c42b1c;
+  --tm-warn-bar: #d1880c;
+  --tm-graph-bg: rgba(255, 255, 255, 0.55);
+  --tm-card-hover: rgba(249, 249, 249, 0.75);
+  --tm-neutral-bg: rgba(0, 0, 0, 0.0241);
+}
+
+/* ---- App shell ------------------------------------------------------------------------------------------- */
+.taskmgr-window .w11-nav { min-width: 240px; }
+.taskmgr-window .w11-nav.w11-compact { min-width: 48px; }
+.taskmgr-window .w11-nav-toggle-row { padding: 0 4px 4px 4px; }
+.taskmgr-window .w11-titlebar-center { padding: 0 24px; }
+.taskmgr-window box.w11-searchbox.taskmgr-search { min-height: 30px; }
+
+.taskmgr-page-header { min-height: 44px; padding: 10px 16px 6px 28px; }
+.taskmgr-page-title {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.taskmgr-cmdbar button.w11-button.w11-subtle { padding: 0 10px; }
+.taskmgr-cmdbar.taskmgr-narrow button.w11-button.w11-subtle { padding: 0 8px; }
+.taskmgr-cmdbar button.w11-button.taskmgr-pressed { background-color: var(--fill-subtle-2); }
+.taskmgr-cmdbar button.w11-button.taskmgr-pressed .taskmgr-cmd-icon { color: var(--tm-leaf); }
+.taskmgr-cmd-sep { min-width: 1px; min-height: 20px; margin: 0 4px; background-color: var(--stroke-divider); }
+
+.taskmgr-page-pad { padding: 0 28px 10px 28px; }
+
+/* ---- Data table (Processen / Details / Opstart-apps / Services) ------------------------------------------ */
+columnview.w11-table.taskmgr-table { font-size: var(--fs-caption); font-feature-settings: "tnum"; }
+columnview.w11-table.taskmgr-table.taskmgr-rows-40,
+columnview.w11-table.taskmgr-table.taskmgr-rows-44 { font-size: var(--fs-body); }
+columnview.w11-table.taskmgr-table > header { padding: 0 16px 0 12px; border-bottom: 1px solid var(--stroke-divider); }
+columnview.w11-table.taskmgr-table > header > button {
+  min-height: 24px;
+  padding: 4px 8px 6px 8px;
+  color: var(--text-2);
+  font-size: var(--fs-caption);
+  border-right: 1px solid transparent;
+}
+columnview.w11-table.taskmgr-table > header > button:hover { background-color: var(--fill-subtle-2); border-right-color: transparent; }
+columnview.w11-table.taskmgr-table > header > button:active { background-color: var(--fill-subtle-3); }
+columnview.w11-table.taskmgr-table > header > button > box > label { color: var(--text-2); }
+columnview.w11-table.taskmgr-table > listview { padding: 2px 16px 12px 12px; }
+columnview.w11-table.taskmgr-table > listview > row { margin: 0; }
+columnview.w11-table.taskmgr-table > listview > row:hover { background-color: var(--tm-row-hover); }
+columnview.w11-table.taskmgr-table > listview > row:selected {
+  background-color: var(--tm-row-sel);
+  background-image: image(var(--accent));
+  background-repeat: no-repeat;
+  background-size: 3px 16px;
+  background-position: left center;
+}
+columnview.w11-table.taskmgr-table > listview > row:selected:hover { background-color: var(--tm-row-sel-hover); }
+columnview.w11-table.taskmgr-table > listview > row > cell { min-height: 30px; padding: 0; }
+columnview.w11-table.taskmgr-table.taskmgr-rows-40 > listview > row > cell { min-height: 40px; }
+columnview.w11-table.taskmgr-table.taskmgr-rows-44 > listview > row > cell { min-height: 44px; }
+columnview.w11-table.taskmgr-table .w11-cell { padding: 0 8px; }
+
+/* group headings ("Apps (8)"): not a row to hover or select */
+columnview.w11-table.taskmgr-table > listview > row.taskmgr-row-group,
+columnview.w11-table.taskmgr-table > listview > row.taskmgr-row-group:hover,
+columnview.w11-table.taskmgr-table > listview > row.taskmgr-row-group:selected { background-color: transparent; background-image: none; }
+columnview.w11-table.taskmgr-table > listview > row.taskmgr-row-group > cell { min-height: 40px; }
+columnview.w11-table.taskmgr-table > listview > row.taskmgr-row-group.taskmgr-row-first-group > cell { min-height: 34px; }
+columnview.w11-table.taskmgr-table > listview > row.taskmgr-row-group .w11-cell { padding: 0 0 6px 6px; }
+.taskmgr-group-label { font-size: var(--fs-body); font-weight: 600; color: var(--text-1); }
+
+/* heat map: every numeric cell tinted pale yellow to orange (Win11) */
+.taskmgr-table .w11-cell.taskmgr-heat-0, .taskmgr-table .w11-cell.taskmgr-heat-1, .taskmgr-table .w11-cell.taskmgr-heat-2,
+.taskmgr-table .w11-cell.taskmgr-heat-3, .taskmgr-table .w11-cell.taskmgr-heat-4, .taskmgr-table .w11-cell.taskmgr-heat-5,
+.taskmgr-table .w11-cell.taskmgr-heat-6, .taskmgr-table .w11-cell.taskmgr-heat-7, .taskmgr-table .w11-cell.taskmgr-heat-8,
+.taskmgr-table .w11-cell.taskmgr-heat-9, .taskmgr-table .w11-cell.taskmgr-heat-10 { margin: 0 1px; color: var(--tm-heat-text); }
+.taskmgr-table .w11-cell.taskmgr-heat-0 { background-color: rgba(244, 197, 66, 0.08); }
+.taskmgr-table .w11-cell.taskmgr-heat-1 { background-color: rgba(249, 178, 50, 0.13); }
+.taskmgr-table .w11-cell.taskmgr-heat-2 { background-color: rgba(251, 169, 43, 0.18); }
+.taskmgr-table .w11-cell.taskmgr-heat-3 { background-color: rgba(252, 164, 40, 0.23); }
+.taskmgr-table .w11-cell.taskmgr-heat-4 { background-color: rgba(253, 161, 37, 0.28); }
+.taskmgr-table .w11-cell.taskmgr-heat-5 { background-color: rgba(254, 159, 35, 0.33); }
+.taskmgr-table .w11-cell.taskmgr-heat-6 { background-color: rgba(254, 158, 34, 0.38); }
+.taskmgr-table .w11-cell.taskmgr-heat-7 { background-color: rgba(254, 156, 33, 0.43); }
+.taskmgr-table .w11-cell.taskmgr-heat-8 { background-color: rgba(255, 155, 32, 0.48); }
+.taskmgr-table .w11-cell.taskmgr-heat-9 { background-color: rgba(255, 155, 32, 0.53); }
+.taskmgr-table .w11-cell.taskmgr-heat-10 { background-color: rgba(255, 154, 31, 0.58); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-0 { background-color: rgb(255, 244, 198); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-1 { background-color: rgb(255, 237, 185); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-2 { background-color: rgb(255, 230, 172); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-3 { background-color: rgb(255, 223, 158); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-4 { background-color: rgb(255, 216, 145); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-5 { background-color: rgb(255, 208, 132); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-6 { background-color: rgb(255, 201, 119); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-7 { background-color: rgb(255, 194, 106); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-8 { background-color: rgb(255, 187, 92); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-9 { background-color: rgb(255, 180, 79); }
+window.w11-light .taskmgr-table .w11-cell.taskmgr-heat-10 { background-color: rgb(255, 173, 66); }
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-0,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-1,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-2,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-3,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-4,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-5,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-6,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-7,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-8,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-9,
+columnview.w11-table.taskmgr-table > listview > row:selected .w11-cell.taskmgr-heat-10 {
+  background-image: image(color-mix(in srgb, var(--accent) 16%, transparent));
+}
+
+.taskmgr-table .w11-cell.taskmgr-mono label { font-family: "Cascadia Mono", "Cascadia Code", "Ubuntu Sans Mono", "Ubuntu Mono", "Noto Sans Mono", monospace; font-size: 11.5px; color: var(--text-2); }
+.taskmgr-table .w11-cell.taskmgr-muted label { color: var(--text-2); }
+.taskmgr-empty { padding: 0 16px; color: var(--text-2); font-size: var(--fs-body); }
+
+/* name cell */
+.taskmgr-name-text { color: var(--text-1); }
+.taskmgr-name-count { color: var(--text-2); }
+.taskmgr-glyph-dim { color: var(--text-2); }
+.taskmgr-hang, label.taskmgr-name-text.taskmgr-hang { color: var(--tm-hang); }
+.taskmgr-tree { margin-left: -4px; }
+button.taskmgr-chev {
+  min-width: 20px;
+  min-height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: var(--radius-control);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-2);
+}
+button.taskmgr-chev:hover { background-color: var(--fill-subtle-2); color: var(--text-1); }
+.taskmgr-status label { color: var(--text-1); }
+.taskmgr-status label.taskmgr-hang { color: var(--tm-hang); }
+.taskmgr-leaf { min-width: 16px; }
+
+/* ---- Dialog content ----------------------------------------------------------------------------------- */
+.taskmgr-dlg-hint { color: var(--text-2); font-size: var(--fs-caption); }
+.taskmgr-dlg-glyph { color: var(--text-2); }
+.taskmgr-dlg-leaf { color: var(--tm-leaf); }
+.taskmgr-props-grid { font-size: var(--fs-caption); }
+.taskmgr-props-key { color: var(--text-2); }
+.taskmgr-props-value { color: var(--text-1); }
+.taskmgr-props-cmdbox {
+  padding: 6px 8px;
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control-alt-2);
+  border: 1px solid var(--stroke-card);
+}
+.taskmgr-props-cmd { font-size: 11.5px; color: var(--text-1); }
+button.w11-link.taskmgr-props-copy { font-size: var(--fs-caption); padding: 2px 4px; }
+
+/* ---- Cards, sections, pills, bars (shared with Samenvatting and Opslag) --------------------------------- */
+.taskmgr-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+}
+.taskmgr-section-title { font-size: var(--fs-body); font-weight: 600; color: var(--text-1); }
+.taskmgr-pill {
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  background-color: var(--tm-neutral-bg);
+  color: var(--text-2);
+}
+.taskmgr-pill.taskmgr-is-warning { background-color: var(--sys-caution-bg); color: var(--sys-caution); }
+.taskmgr-pill.taskmgr-is-critical { background-color: var(--sys-critical-bg); color: var(--sys-critical); }
+.taskmgr-pill.taskmgr-is-success { background-color: var(--sys-success-bg); color: var(--sys-success); }
+.taskmgr-pill.taskmgr-is-accent { background-color: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent-fg); }
+.taskmgr-pill label { color: inherit; font-size: var(--fs-caption); font-weight: 600; }
+.taskmgr-bar { min-height: 6px; border-radius: 999px; background-color: var(--chart-track); }
+
+/* ---- Opstart-apps / Services ------------------------------------------------------------------------- */
+.taskmgr-intro {
+  padding: 12px 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.taskmgr-intro-icon {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: var(--radius-card);
+  background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-fg-3);
+}
+.taskmgr-intro-title { font-weight: 600; color: var(--text-1); }
+.taskmgr-intro-text { font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-intro-meta { font-size: var(--fs-caption); color: var(--text-2); font-feature-settings: "tnum"; }
+.taskmgr-startup-toggle { min-height: 32px; }
+.taskmgr-startup-toggle .w11-toggle-state { min-width: 0; font-size: var(--fs-body); }
+.taskmgr-actions button.w11-icon-button { min-width: 28px; min-height: 28px; }
+.taskmgr-state-dot { min-width: 6px; min-height: 6px; border-radius: 50%; background-color: currentColor; }
+.taskmgr-pill.taskmgr-state.taskmgr-is-active { background-color: var(--sys-success-bg); color: var(--sys-success); }
+.taskmgr-pill.taskmgr-state.taskmgr-is-failed { background-color: var(--sys-critical-bg); color: var(--sys-critical); }
+.taskmgr-pill.taskmgr-state.taskmgr-is-activating,
+.taskmgr-pill.taskmgr-state.taskmgr-is-deactivating { background-color: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent-fg); }
+.taskmgr-pill.taskmgr-state.taskmgr-is-inactive,
+.taskmgr-pill.taskmgr-state.taskmgr-is-unknown { background-color: var(--tm-neutral-bg); color: var(--text-2); }
+
+/* ---- Instellingen ------------------------------------------------------------------------------------ */
+.taskmgr-settings { padding: 4px 28px 32px 28px; }
+.taskmgr-settings .w11-settings-group + .w11-settings-group { margin-top: 8px; }
+
+/* ---- "Win11 Shell reageert niet" banner (hostbanner.rs) ----------------------------------------------- */
+.taskmgr-hostbar { margin: 12px 16px 2px 28px; }
+.taskmgr-hostbar-busy { min-height: 32px; }

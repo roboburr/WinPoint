@@ -1,9 +1,10 @@
 //! The taskbar's app buttons (taskbar.js computeGroups / render, shell.js app catalogue, pins and window store):
 //! pinned apps (taskbar.pinned, the shipped browser pin shows the user's default browser) and running windows,
 //! merged by desktop id (aliases: snap names, reverse-DNS tail, icon, name), unpinned running apps in first-seen
-//! order. Click: launch, focus or minimize the one window, or the window list of a group; middle click: a new
-//! instance; right click: the jump list (flyouts::menus). Hover: the window list after 450 ms. Drag: reorder
-//! the pins. Too many apps for the room: a "..." button with the rest.
+//! order. Icons: the catalogue's; for our own apps their desktop entry's (own_entry). Click: launch, focus or
+//! minimize the one window, or the window list of a group; middle click: a new instance; right click: the jump
+//! list (flyouts::menus). Hover: the window list after 450 ms. Drag: reorder the pins. Too many apps for the
+//! room: a "..." button with the rest.
 use super::util;
 use crate::core::Shell;
 use gtk::prelude::*;
@@ -119,6 +120,53 @@ pub fn own_app(id: &str) -> Option<&'static str> {
     ["settings", "taskmgr", "explorer", "alles", "disks"]
         .into_iter()
         .find(|n| base == format!("win11shell-{n}"))
+}
+
+/// The desktop entry of one of our own apps in the catalogue (host/src/apps/catalog.rs: id
+/// "win11shell-<kind>.desktop", `entry` the entry scripts/install.py writes for it, io.github.win11shell.<Name>
+/// .desktop after the app's GApplication id = its windows' app id and StartupWMClass; the one table is host
+/// launch.rs OWN_APP_IDS). Several are NoDisplay; their Icon= is what GNOME shows for those windows.
+fn own_entry(app: &Value) -> Option<String> {
+    (app["own"] == true).then(|| s(app, "entry")).filter(|entry| !entry.is_empty())
+}
+
+thread_local! {
+    static ENTRY_ICONS: RefCell<HashMap<String, Option<String>>> = RefCell::new(HashMap::new());
+}
+
+/// Icon= of the desktop entry `<id>.desktop` (the first one in the XDG data dirs, the user's own first, as GIO
+/// looks it up), NoDisplay entries included: GNOME's window tracker matches those too. None for a missing or
+/// Hidden entry or one without an icon. Cached until the catalogue changes (apps.changed).
+fn entry_icon(id: &str) -> Option<String> {
+    let id = id.trim();
+    if id.is_empty() || id.contains('/') || id.starts_with('.') {
+        return None;
+    }
+    let file = if id.ends_with(".desktop") { id.to_owned() } else { format!("{id}.desktop") };
+    if let Some(known) = ENTRY_ICONS.with(|c| c.borrow().get(&file).cloned()) {
+        return known;
+    }
+    let icon = std::iter::once(glib::user_data_dir())
+        .chain(glib::system_data_dirs())
+        .map(|dir| dir.join("applications").join(&file))
+        .find(|path| path.is_file())
+        .and_then(|path| {
+            let entry = glib::KeyFile::new();
+            entry.load_from_file(&path, glib::KeyFileFlags::NONE).ok()?;
+            if entry.boolean("Desktop Entry", "Hidden").unwrap_or(false) {
+                return None;
+            }
+            let icon = entry.string("Desktop Entry", "Icon").ok()?;
+            Some(icon.trim().to_owned()).filter(|i| !i.is_empty())
+        });
+    ENTRY_ICONS.with(|c| c.borrow_mut().insert(file, icon.clone()));
+    icon
+}
+
+/// The icon of a window's own desktop entry: the extension's (GNOME's window tracker: the entry named by the
+/// window's app id or StartupWMClass), else `<app id>.desktop` read here.
+fn window_icon(w: &Value) -> Option<String> {
+    Some(s(w, "icon")).filter(|i| !i.is_empty()).or_else(|| entry_icon(&s(w, "appId")))
 }
 
 /// "firefox_firefox" -> "firefox" (a snap's doubled name).
@@ -272,6 +320,7 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> gtk::Box {
         });
     });
     shell.on("apps.changed", |_, _| {
+        ENTRY_ICONS.with(|c| c.borrow_mut().clear());
         with(|a| {
             cancel(&a.load_timer);
             *a.load_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(400), || {
@@ -502,7 +551,13 @@ impl Apps {
                 continue;
             }
             let name = app.as_ref().map(|a| s(a, "name")).filter(|n| !n.is_empty()).unwrap_or_else(|| guess_name(&self.shell, &id));
-            let icon = app.as_ref().map(|a| s(a, "icon")).filter(|n| !n.is_empty()).unwrap_or_else(|| guess_icon(&id));
+            // our own apps: the icon of their desktop entry, as their windows have it
+            let icon = app
+                .as_ref()
+                .and_then(own_entry)
+                .and_then(|entry| entry_icon(&entry))
+                .or_else(|| app.as_ref().map(|a| s(a, "icon")).filter(|n| !n.is_empty()))
+                .unwrap_or_else(|| guess_icon(&id));
             out.push(Group { key: id.clone(), app_id: Some(id), pinned: true, windows: Vec::new(), name, icon });
         }
         for w in self.windows.borrow().iter() {
@@ -522,12 +577,16 @@ impl Apps {
                 continue;
             }
             let name = app.as_ref().map(|a| s(a, "name")).filter(|n| !n.is_empty()).unwrap_or_else(|| name_from_window(&self.shell, w));
-            let icon = app
-                .as_ref()
-                .map(|a| s(a, "icon"))
-                .filter(|n| !n.is_empty())
-                .or_else(|| Some(s(w, "icon")).filter(|n| !n.is_empty()))
-                .unwrap_or_else(|| s(w, "appId"));
+            let app_icon = app.as_ref().map(|a| s(a, "icon")).filter(|n| !n.is_empty());
+            // The window of one of our apps resolves to the catalogue's own app (the extension names it
+            // win11shell-<kind>.desktop); the window's own desktop entry (io.github.win11shell.<Name>.desktop,
+            // NoDisplay or not, a path icon included) is what GNOME shows for it, and the catalogue's icon only when
+            // that entry has none. Other apps: the catalogue's icon, then the window's entry.
+            let icon = match app.as_ref().and_then(own_entry) {
+                Some(entry) => window_icon(w).or_else(|| entry_icon(&entry)).or(app_icon),
+                None => app_icon.or_else(|| window_icon(w)),
+            }
+            .unwrap_or_else(|| s(w, "appId"));
             out.push(Group {
                 key,
                 app_id: app.as_ref().map(|a| s(a, "id")),

@@ -1,0 +1,927 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 21:39:09",
+ "seconds": 146.2,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 96,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 587499,
+   "rss_kb": 965508,
+   "processes": 24,
+   "t": 48.3
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 501589,
+   "rss_kb": 845620
+  },
+  "minMemAvailableKb": 4146228,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 252783,
+    "rss_kb": 367120
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 94311,
+    "rss_kb": 135216
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 85379,
+    "rss_kb": 115664
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 46054,
+    "rss_kb": 85832
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 25498,
+    "rss_kb": 53556
+   },
+   "win11-app": {
+    "count": 3,
+    "pss_kb": 22698,
+    "rss_kb": 50376
+   },
+   "win11-gtk-explo": {
+    "count": 1,
+    "pss_kb": 21628,
+    "rss_kb": 55952
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17219,
+    "rss_kb": 36040
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 14464,
+    "rss_kb": 24024
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4077,
+    "rss_kb": 11532
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1328,
+    "rss_kb": 10104
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 794,
+    "rss_kb": 8024
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 735,
+    "rss_kb": 7844
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 351,
+    "rss_kb": 1584
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 180,
+    "rss_kb": 2640
+   },
+   "win11-index-wor": {
+    "count": 1,
+    "pss_kb": 0,
+    "rss_kb": 0
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 73.8,
+  "mutatingSyscallPaths": 87828,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "21:40:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:46\tpw-dump\t--monitor --no-colors",
+  "21:40:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:48\tpw-dump\t--monitor --no-colors",
+  "21:40:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:52\tpw-dump\t--monitor --no-colors",
+  "21:40:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:40:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:00\tpw-dump\t--monitor --no-colors",
+  "21:41:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:16\tpw-dump\t--monitor --no-colors",
+  "21:41:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:41:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-EdqQPxBl"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 19,
+  "maxScanSeconds": 0.775,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-EdqQPxBl"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/kit-ui.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.01,
+    "args": {
+     "key": "alles.window"
+    }
+   },
+   {
+    "step": "record",
+    "t": 8.61,
+    "args": {
+     "key": "alles.band"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.6,
+    "args": {
+     "name": "alles-start"
+    },
+    "result": {
+     "png": "alles-start.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 958,
+      "meanLevel": 39.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 13.19,
+    "args": {
+     "name": "alles-results"
+    },
+    "result": {
+     "png": "alles-results.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 904,
+      "meanLevel": 38.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 15.84,
+    "args": {
+     "key": "alles.band.cleared"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 16.81,
+    "args": {
+     "name": "alles-cleared"
+    },
+    "result": {
+     "png": "alles-cleared.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 958,
+      "meanLevel": 39.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 17.67,
+    "args": {
+     "key": "explorer.dark.window"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 22.3,
+    "args": {
+     "name": "explorer-dark"
+    },
+    "result": {
+     "png": "explorer-dark.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 721,
+      "meanLevel": 31.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 25.56,
+    "args": {
+     "name": "explorer-resized"
+    },
+    "result": {
+     "png": "explorer-resized.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 721,
+      "meanLevel": 31.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 28.45,
+    "args": {
+     "name": "explorer-fit"
+    },
+    "result": {
+     "png": "explorer-fit.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 721,
+      "meanLevel": 31.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 30.12,
+    "args": {
+     "key": "explorer.menu.popups"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 31.04,
+    "args": {
+     "name": "explorer-menu"
+    },
+    "result": {
+     "png": "explorer-menu.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 763,
+      "meanLevel": 33.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 32.55,
+    "args": {
+     "key": "explorer.openwith.popups"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 33.46,
+    "args": {
+     "name": "explorer-openwith"
+    },
+    "result": {
+     "png": "explorer-openwith.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 773,
+      "meanLevel": 33.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 36.93,
+    "args": {
+     "key": "explorer.light.window"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 41.6,
+    "args": {
+     "name": "explorer-light"
+    },
+    "result": {
+     "png": "explorer-light.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1963,
+      "meanLevel": 233.2,
+      "looksBlank": false
+     }
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "alles: cairo with manual font rendering",
+    "ok": true,
+    "t": 4.01,
+    "renderer": "cairo",
+    "fontRendering": "manual"
+   },
+   {
+    "check": "alles: no dots under the command bar at start",
+    "ok": true,
+    "t": 9.62,
+    "rect": [
+     201,
+     184,
+     1038,
+     24
+    ],
+    "colour": [
+     39,
+     39,
+     39
+    ],
+    "others": [],
+    "otherPixels": 0
+   },
+   {
+    "check": "alles: no dots under the command bar after clearing",
+    "ok": true,
+    "t": 16.83,
+    "rect": [
+     201,
+     184,
+     1038,
+     24
+    ],
+    "colour": [
+     39,
+     39,
+     39
+    ],
+    "others": [],
+    "otherPixels": 0
+   },
+   {
+    "check": "explorer: cairo with manual font rendering",
+    "ok": true,
+    "t": 17.67,
+    "renderer": "cairo",
+    "fontRendering": "manual"
+   },
+   {
+    "check": "explorer: headers over their columns (start, dark)",
+    "ok": true,
+    "t": 21.38,
+    "headers": [
+     [
+      262,
+      300
+     ],
+     [
+      562,
+      150
+     ],
+     [
+      712,
+      150
+     ],
+     [
+      862,
+      100
+     ]
+    ],
+    "rows": 6,
+    "misaligned": {}
+   },
+   {
+    "check": "explorer: headers over their columns (after a drag on the Naam edge)",
+    "ok": true,
+    "t": 24.62,
+    "headers": [
+     [
+      262,
+      220
+     ],
+     [
+      482,
+      150
+     ],
+     [
+      632,
+      150
+     ],
+     [
+      782,
+      100
+     ]
+    ],
+    "rows": 6,
+    "misaligned": {}
+   },
+   {
+    "check": "explorer: the drag resized Naam",
+    "ok": true,
+    "t": 24.62,
+    "before": 300,
+    "after": 220
+   },
+   {
+    "check": "explorer: headers over their columns (after a double click on the Gewijzigd op edge)",
+    "ok": true,
+    "t": 27.54,
+    "headers": [
+     [
+      262,
+      220
+     ],
+     [
+      482,
+      122
+     ],
+     [
+      604,
+      150
+     ],
+     [
+      754,
+      100
+     ]
+    ],
+    "rows": 6,
+    "misaligned": {}
+   },
+   {
+    "check": "explorer: the double click fitted Gewijzigd op",
+    "ok": true,
+    "t": 27.54,
+    "before": 150,
+    "after": 122
+   },
+   {
+    "check": "explorer: Openen met opens a submenu",
+    "ok": true,
+    "t": 32.55,
+    "popups": [
+     {
+      "type": 9,
+      "x": 420,
+      "y": 349,
+      "w": 279,
+      "h": 293
+     },
+     {
+      "type": 9,
+      "x": 694,
+      "y": 441,
+      "w": 202,
+      "h": 82
+     }
+    ]
+   },
+   {
+    "check": "explorer: cairo with manual font rendering",
+    "ok": true,
+    "t": 36.93,
+    "renderer": "cairo",
+    "fontRendering": "manual"
+   },
+   {
+    "check": "explorer: headers over their columns (start, light)",
+    "ok": true,
+    "t": 40.67,
+    "headers": [
+     [
+      262,
+      220
+     ],
+     [
+      482,
+      122
+     ],
+     [
+      604,
+      150
+     ],
+     [
+      754,
+      100
+     ]
+    ],
+    "rows": 6,
+    "misaligned": {}
+   }
+  ],
+  "records": {
+   "alles.window": {
+    "pid": 1357,
+    "x": 200,
+    "y": 86,
+    "w": 1040,
+    "h": 680,
+    "bx": 200,
+    "by": 86,
+    "bw": 1040,
+    "bh": 680,
+    "focus": true
+   },
+   "alles.band": [
+    201,
+    184,
+    1038,
+    24
+   ],
+   "alles.band.cleared": [
+    201,
+    184,
+    1038,
+    24
+   ],
+   "explorer.dark.window": {
+    "pid": 1480,
+    "x": 107,
+    "y": 66,
+    "w": 1226,
+    "h": 720,
+    "bx": 107,
+    "by": 66,
+    "bw": 1226,
+    "bh": 720,
+    "focus": false
+   },
+   "explorer.menu.popups": [
+    {
+     "type": 9,
+     "x": 420,
+     "y": 349,
+     "w": 279,
+     "h": 293
+    }
+   ],
+   "explorer.openwith.popups": [
+    {
+     "type": 9,
+     "x": 420,
+     "y": 349,
+     "w": 279,
+     "h": 293
+    },
+    {
+     "type": 9,
+     "x": 694,
+     "y": 441,
+     "w": 202,
+     "h": 82
+    }
+   ],
+   "explorer.light.window": {
+    "pid": 1806,
+    "x": 107,
+    "y": 66,
+    "w": 1226,
+    "h": 720,
+    "bx": 107,
+    "by": 66,
+    "bw": 1226,
+    "bh": 720,
+    "focus": false
+   }
+  },
+  "shots": [
+   "alles-start.png",
+   "alles-results.png",
+   "alles-cleared.png",
+   "explorer-dark.png",
+   "explorer-resized.png",
+   "explorer-fit.png",
+   "explorer-menu.png",
+   "explorer-openwith.png",
+   "explorer-light.png"
+  ],
+  "error": null,
+  "seconds": 42.24,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 397,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 397,
+    "page": null,
+    "alive": true,
+    "native": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 397,
+    "page": null,
+    "alive": true,
+    "native": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=7a876bf703bfe2298ffda8b76af775cc",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 397,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 397
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "alles-start.png",
+    "group": "scenario",
+    "bytes": 416542,
+    "area": null
+   },
+   {
+    "file": "alles-results.png",
+    "group": "scenario",
+    "bytes": 416372,
+    "area": null
+   },
+   {
+    "file": "alles-cleared.png",
+    "group": "scenario",
+    "bytes": 416542,
+    "area": null
+   },
+   {
+    "file": "explorer-dark.png",
+    "group": "scenario",
+    "bytes": 263820,
+    "area": null
+   },
+   {
+    "file": "explorer-resized.png",
+    "group": "scenario",
+    "bytes": 263708,
+    "area": null
+   },
+   {
+    "file": "explorer-fit.png",
+    "group": "scenario",
+    "bytes": 263390,
+    "area": null
+   },
+   {
+    "file": "explorer-menu.png",
+    "group": "scenario",
+    "bytes": 278366,
+    "area": null
+   },
+   {
+    "file": "explorer-openwith.png",
+    "group": "scenario",
+    "bytes": 282269,
+    "area": null
+   },
+   {
+    "file": "explorer-light.png",
+    "group": "scenario",
+    "bytes": 335395,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/kit-ui.out/alles-start.png",
+  "tests/gnome/scenarios/kit-ui.out/alles-results.png",
+  "tests/gnome/scenarios/kit-ui.out/alles-cleared.png",
+  "tests/gnome/scenarios/kit-ui.out/explorer-dark.png",
+  "tests/gnome/scenarios/kit-ui.out/explorer-resized.png",
+  "tests/gnome/scenarios/kit-ui.out/explorer-fit.png",
+  "tests/gnome/scenarios/kit-ui.out/explorer-menu.png",
+  "tests/gnome/scenarios/kit-ui.out/explorer-openwith.png",
+  "tests/gnome/scenarios/kit-ui.out/explorer-light.png"
+ ]
+}

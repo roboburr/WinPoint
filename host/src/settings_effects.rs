@@ -75,10 +75,26 @@ impl Effects {
             }
         }
     }
-    /// At the panel host's start: the caption buttons as the setting says (D-G65).
+    /// At the panel host's start: the caption buttons as the setting says (D-G65), and with theme.syncSystem
+    /// WinPoint's GNOME look (colour scheme, GTK and icon theme, window buttons): a GNOME or Ubuntu session may have
+    /// put GNOME's own back since (gnome_look.rs, WinPoint's own login session).
     pub(crate) fn captions_at_start(&self, settings: &Value) {
         if !self.captions || self.dry_run {
             return;
+        }
+        let theme = &settings["theme"];
+        if theme["syncSystem"] == true
+            && let Some(mode @ ("light" | "dark")) = theme["mode"].as_str()
+        {
+            let family = family(theme);
+            let result = sync_system_theme(mode, family);
+            if result["ok"] != true {
+                eprintln!("GNOME-systeemthema niet volledig bijgewerkt: {result}");
+            }
+            let result = sync_gtk4_block(family, &self.config_home);
+            if result["ok"] != true {
+                eprintln!("GTK 4-thema niet bijgewerkt: {result}");
+            }
         }
         let result = apply_captions(
             settings["theme"]["captionButtons"] != false,
@@ -255,6 +271,8 @@ fn set(settings: Option<&gio::Settings>, key: &str, value: &str) -> bool {
     {
         return false;
     }
+    // WinPoint's own session: GNOME's value is kept for the other sessions (gnome_look.rs)
+    crate::gnome_look::note(s, key, &value.to_variant());
     if s.string(key) == value {
         return true;
     }

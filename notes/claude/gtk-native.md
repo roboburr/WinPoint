@@ -92,8 +92,9 @@ backend (`win11-panel --http-only`, host/src/lib.rs run_http_only), the HTML app
 readable as `git show 418ea594:<path>`.
 
 New gaps, now the default:
-- `shell.restartAll` (Windows Update) re-execs only the backend, not win11-shell; the update restart scan counts
-  win11-shell as an own process, so the "Win11 Shell needs to restart" InfoBar can stay.
+- ~~`shell.restartAll` (Windows Update) re-execs only the backend, not win11-shell~~ Resolved 13-11 (lifecycle):
+  the backend leaves a restart note and exits 75, win11-shell and every native app exec the installed build again
+  (tests/gnome/scenarios/native-restart.py).
 - The `shell.command` events (Task Manager toggle-search, Settings Clipboard "open") have no consumer.
 - No WebKit fallback: a missing or failing win11-shell ends win11-panel, and the extension shows its St bar after 6 s.
   A `--dry-run` given to win11-panel reaches win11-shell, which ignores it.

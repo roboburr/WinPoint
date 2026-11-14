@@ -269,6 +269,157 @@ pub(crate) fn submit(key: &str, value: &Value) -> Result<(), String> {
     reply(&pending, Some(value));
     Ok(())
 }
+/// The native GTK 4 picker of a portal request: `win11-gtk-explorer --picker-stdio` from this binary's directory
+/// (native/apps/explorer/src/picker.rs), on the portal's own backend (WIN11_APP_BACKEND), parented to the
+/// caller's exported window itself. One JSON line goes to its stdin (`{picker, path, parent}`); its answers come
+/// on stdout and get the same `selection` check as the WebKit picker's submit: a valid one is acknowledged
+/// (`{"ok":true}`, the picker closes) and sent to the portal, an invalid one goes back as `{"error"}` (shown in
+/// the picker, which stays open). A close or the end of its stdout is a cancel. Dropping the handle ends the
+/// process (Request.Close, the caller gone, the portal stopping). None: no native binary, WIN11_WEBKIT_APPS=1 or
+/// no start; the caller shows the WebKit picker instead.
+pub(crate) struct NativePicker {
+    child: Option<std::process::Child>,
+    accepted: std::sync::Arc<std::sync::atomic::AtomicBool>,
+}
+
+impl Drop for NativePicker {
+    fn drop(&mut self) {
+        let Some(mut child) = self.child.take() else {
+            return;
+        };
+        // a picker that got its acknowledgement closes by itself (and saves its size); others are told to go
+        let accepted = self.accepted.load(std::sync::atomic::Ordering::Acquire);
+        let _ = std::thread::Builder::new()
+            .name("win11-picker-reaper".into())
+            .spawn(move || {
+                if !accepted && let Ok(pid) = i32::try_from(child.id()) {
+                    unsafe {
+                        libc::kill(pid, libc::SIGTERM);
+                    }
+                }
+                for _ in 0..40 {
+                    if !matches!(child.try_wait(), Ok(None)) {
+                        return;
+                    }
+                    std::thread::sleep(std::time::Duration::from_millis(50));
+                }
+                let _ = child.kill();
+                let _ = child.wait();
+            });
+    }
+}
+
+pub(crate) fn show_native(
+    options: &Value,
+    parent: &str,
+    address: &str,
+) -> Option<(NativePicker, std::sync::mpsc::Receiver<Result<Value, String>>)> {
+    use std::io::{BufRead, Read, Write};
+    use std::os::unix::process::CommandExt;
+    if std::env::var("WIN11_WEBKIT_APPS").as_deref() == Ok("1") {
+        return None;
+    }
+    let binary = crate::exec_path(std::env::current_exe().ok()?).with_file_name("win11-gtk-explorer");
+    if !binary.is_file() {
+        return None;
+    }
+    let url = url::Url::parse(address).ok()?;
+    let port = url.port()?;
+    let token = url
+        .query_pairs()
+        .find(|(key, _)| key == "token")
+        .map(|(_, v)| v.into_owned())?;
+    let directory = options["directory"]
+        .as_str()
+        .map(std::path::PathBuf::from)
+        .filter(|p| p.is_absolute() && p.is_dir())
+        .unwrap_or_else(glib::home_dir);
+    let request = json!({"picker":options,"path":directory.to_string_lossy(),"parent":parent});
+    let mut command = std::process::Command::new(&binary);
+    command
+        .arg("--picker-stdio")
+        .env("WIN11_APP_BACKEND", format!("{port}:{token}"))
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::inherit());
+    // Like this process (GTK_USE_PORTAL=0, run()), the picker's GTK 4 must not ask the portal frontend that is
+    // waiting for this very request (its settings portal).
+    if std::env::var_os("GDK_DEBUG").is_none() {
+        command.env("GDK_DEBUG", "no-portals");
+    }
+    // SAFETY: pre_exec runs in the forked child before exec; prctl is async-signal-safe. The picker ends with
+    // the portal (the spawning thread is the portal's main thread).
+    unsafe {
+        command.pre_exec(|| {
+            libc::prctl(libc::PR_SET_PDEATHSIG, libc::SIGTERM);
+            Ok(())
+        });
+    }
+    let mut child = match command.spawn() {
+        Ok(child) => child,
+        Err(error) => {
+            eprintln!("Win11 file portal: {}: {error}", binary.display());
+            return None;
+        }
+    };
+    let (Some(mut stdin), Some(stdout)) = (child.stdin.take(), child.stdout.take()) else {
+        let _ = child.kill();
+        let _ = child.wait();
+        return None;
+    };
+    let accepted = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let flag = accepted.clone();
+    let options = options.clone();
+    let (ack, receiver) = std::sync::mpsc::channel();
+    let spawned = std::thread::Builder::new()
+        .name("win11-picker-native".into())
+        .spawn(move || {
+            let mut answer = None;
+            if writeln!(stdin, "{request}").and_then(|_| stdin.flush()).is_ok() {
+                let mut reader = std::io::BufReader::new(stdout);
+                loop {
+                    let mut line = String::new();
+                    if !matches!(reader.by_ref().take(16 << 20).read_line(&mut line), Ok(n) if n > 0) {
+                        break;
+                    }
+                    let Ok(message) = serde_json::from_str::<Value>(line.trim()) else {
+                        continue;
+                    };
+                    match message["cmd"].as_str() {
+                        Some("picker-submit") => {
+                            match selection(&message, &options, crate::i18n::current_language()) {
+                                Ok(value) => {
+                                    flag.store(true, std::sync::atomic::Ordering::Release);
+                                    let _ = writeln!(stdin, "{}", json!({"ok":true}));
+                                    let _ = stdin.flush();
+                                    answer = Some(value);
+                                    break;
+                                }
+                                Err(error) => {
+                                    let _ = writeln!(stdin, "{}", json!({"error":error}));
+                                    let _ = stdin.flush();
+                                }
+                            }
+                        }
+                        Some("close") => break,
+                        _ => {}
+                    }
+                }
+            }
+            let _ = ack.send(Ok(
+                answer.unwrap_or_else(|| json!({"path":null,"paths":[],"cancelled":true}))
+            ));
+        });
+    let picker = NativePicker {
+        child: Some(child),
+        accepted,
+    };
+    if spawned.is_err() {
+        return None;
+    }
+    Some((picker, receiver))
+}
+
 fn selection(value: &Value, options: &Value, lang: crate::i18n::Lang) -> Result<Value, String> {
     let folder = options["folder"] == true;
     let save = !folder && (options["save"] == true || options["action"] == "save");

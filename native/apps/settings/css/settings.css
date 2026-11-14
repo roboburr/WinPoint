@@ -1,0 +1,238 @@
+/* ==========================================================================
+   Win11 GNOME Settings (win11-gtk-settings): vendor/ui/css/settings.css in GTK CSS, on the kit's tokens.
+   Layout (gaps, grids, max-widths) is in the Rust code; this sheet has the paddings, colours, radii and type.
+   The pages' own rules are their modules' CSS constants (src/pages/*.rs), appended after this sheet.
+   ========================================================================== */
+
+/* ---- shared resets for the app's own buttons ------------------------------------------------------------ */
+button.st-user, button.st-hrow, button.st-tile, button.st-theme, button.st-arrange-mon {
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  outline: 0 solid transparent;
+  color: var(--text-1);
+  font-weight: 400;
+}
+button.st-user:focus-visible, button.st-hrow:focus-visible, button.st-tile:focus-visible, button.st-arrange-mon:focus-visible {
+  outline: 2px solid var(--focus-outer);
+  outline-offset: -2px;
+}
+
+/* ---- Navigation pane header: user card and search (.st-navhead) ---------------------------------------- */
+.st-navhead { padding: 2px 0 6px 0; }
+button.st-user {
+  margin: 0 -4px;
+  padding: 6px 4px;
+  border-radius: var(--radius-control);
+  transition: background-color 83ms linear;
+}
+button.st-user:hover { background-color: var(--fill-subtle-2); }
+button.st-user:active { background-color: var(--fill-subtle-3); }
+.st-user-avatar .w11-avatar { box-shadow: 0 0 0 1px var(--stroke-card); }
+.st-user-name { font-weight: 600; }
+.st-user-kind { font-size: var(--fs-caption); color: var(--text-2); }
+.st-avatar label { font-weight: 600; }
+
+/* ---- Content: fixed header and scrolling page (.st-view) -------------------------------------------------- */
+.st-head { padding: 8px 40px 22px 40px; }
+.st-view.st-narrow .st-head { padding: 6px 20px 16px 20px; }
+.st-title { margin: 0; }
+.st-page { padding: 0 40px 44px 40px; }
+.st-view.st-narrow .st-page { padding: 0 20px 28px 20px; }
+.st-body > .w11-settings-group + .w11-settings-group,
+.st-slot > .w11-settings-group + .w11-settings-group { margin-top: 0; }
+.st-loading { padding: 96px 0; }
+.st-lead { color: var(--text-2); }
+.st-section-title { margin: 6px 0 0 1px; font-size: var(--fs-body); font-weight: 600; }
+.st-notice { border-radius: var(--radius-card); }
+.st-value { color: var(--text-2); }
+.st-sub-note { color: var(--text-2); font-size: var(--fs-caption); }
+.st-expander-note.w11-nested-other { padding: 12px 16px; }
+.st-kbd {
+  min-width: 8px;
+  margin: 0 1px;
+  padding: 0 6px;
+  border: 1px solid var(--stroke-control-2);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control);
+  color: var(--text-1);
+  font-size: var(--fs-caption);
+}
+.st-howto { margin-top: 2px; }
+.st-unavailable .w11-sc-icon, .st-unavailable .w11-sc-title { color: var(--text-2); }
+
+/* ---- Hero (Systeem, Startpagina) ---------------------------------------------------------------------- */
+.st-hero { min-height: 120px; padding: 2px 0 4px 0; }
+.st-hero-title {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+}
+.st-hero-line { color: var(--text-2); }
+.st-hero-actions { margin: 4px 0 0 -11px; }
+.st-tile {
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: var(--radius-card);
+  transition: background-color 83ms linear;
+}
+button.st-tile { padding: 8px 12px; border-radius: var(--radius-card); }
+button.st-tile.st-clickable:hover { background-color: var(--fill-subtle-2); }
+button.st-tile.st-clickable:active { background-color: var(--fill-subtle-3); }
+.st-tile-icon { color: var(--accent-fg-3); }
+.st-tile-title { font-weight: 600; }
+.st-tile-status { font-size: var(--fs-caption); color: var(--text-2); }
+
+/* ---- Theme cards (Startpagina, Thema's) ---------------------------------------------------------------- */
+button.st-theme { border-radius: 8px; }
+button.st-theme .st-dp {
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--stroke-card);
+  transition: box-shadow 83ms linear;
+}
+button.st-theme:hover .st-dp { box-shadow: 0 0 0 1px var(--stroke-control-strong); }
+button.st-theme.w11-selected .st-dp { box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--bg-solid-base); }
+button.st-theme:focus-visible .st-dp { outline: 2px solid var(--focus-outer); outline-offset: 3px; }
+.st-theme-check {
+  margin: 6px 6px 0 0;
+  border-radius: 999px;
+  background-color: var(--accent);
+  color: var(--accent-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 167ms ease;
+}
+button.st-theme.st-compact .st-theme-check { margin: 4px 4px 0 0; }
+button.st-theme.w11-selected .st-theme-check { opacity: 1; }
+.st-theme-name { padding: 0 2px; font-size: var(--fs-body); }
+
+/* ---- Display: arrangement ----------------------------------------------------------------------------- */
+.st-arrange-card {
+  padding: 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+button.st-arrange-mon {
+  border: 1px solid var(--stroke-control-2);
+  border-radius: 6px;
+  background-color: var(--fill-control-alt-3);
+  color: var(--text-1);
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  transition: background-color 167ms linear, color 167ms linear, transform 200ms ease;
+}
+button.st-arrange-mon:hover { background-color: var(--fill-control-alt-4); }
+button.st-arrange-mon.w11-selected {
+  border-color: transparent;
+  background-color: var(--accent);
+  color: var(--accent-text);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-card);
+}
+button.st-arrange-mon.st-flash { transform: scale(1.06); }
+.st-arrange-hint { color: var(--text-2); font-size: var(--fs-caption); }
+.st-countdown { margin: 0; }
+
+/* ---- Sound --------------------------------------------------------------------------------------------- */
+.st-volume button.w11-icon-button.st-muted { color: var(--sys-critical); }
+
+/* ---- Storage ------------------------------------------------------------------------------------------- */
+.st-storage-sum {
+  padding: 16px 20px 18px 20px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.st-storage-title { font-weight: 600; }
+.st-storage-nums { color: var(--text-2); font-size: var(--fs-caption); }
+.st-catbar-card {
+  padding: 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.st-catbar-legend { color: var(--text-2); font-size: var(--fs-caption); }
+.st-cat-bar { padding-top: 6px; }
+.st-more { min-height: 22px; }
+.st-more-chev { min-width: 20px; color: var(--text-1); }
+.st-vol { padding-top: 6px; }
+.st-vol-text { color: var(--text-2); font-size: var(--fs-caption); }
+.st-vol-text.st-full { color: var(--sys-critical); }
+
+/* ---- Specs (Info) --------------------------------------------------------------------------------------- */
+.st-specs { padding: 4px 0; }
+.st-spec-key { color: var(--text-2); }
+.st-about-head { padding: 2px 0; }
+.st-about-name {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+}
+.st-about-model { color: var(--text-2); }
+
+/* ---- Power and battery ------------------------------------------------------------------------------- */
+.st-battery-hero {
+  padding: 20px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+.st-battery-icon { color: var(--accent-fg-3); }
+.st-battery-pct {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-title);
+  font-weight: 600;
+}
+.st-battery-state { color: var(--text-2); }
+
+/* ---- Startpagina ------------------------------------------------------------------------------------------ */
+.st-hcard {
+  padding: 20px 20px 14px 20px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+.st-hcard-title {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-body-large);
+  font-weight: 600;
+}
+.st-hcard-title-row .w11-switch-row, .st-hcard-title-row label { font-weight: 400; }
+.st-hcard-title-row .st-hcard-title { font-weight: 600; }
+.st-hcard-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.st-hcard-empty { color: var(--text-2); padding: 6px 0; }
+.st-hcard-foot { margin: 0 -11px -4px -11px; }
+.st-hlist { margin: 0 -10px; }
+.st-hrow {
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: var(--radius-control);
+  transition: background-color 83ms linear;
+}
+button.st-hrow { padding: 6px 10px; border-radius: var(--radius-control); }
+button.st-hrow:hover { background-color: var(--fill-subtle-2); }
+button.st-hrow:active { background-color: var(--fill-subtle-3); }
+.st-pers-row { margin: 0 -10px; }
+.st-hrow-icon { color: var(--text-1); }
+.st-hrow-desc { color: var(--text-2); font-size: var(--fs-caption); }
+.st-hrow-chev { color: var(--text-2); }
+.st-hstore-pct { color: var(--text-2); }
+.st-hstore-free { color: var(--text-2); font-size: var(--fs-caption); }
+
+/* ---- Colour picker dialog ------------------------------------------------------------------------------ */
+.st-cp-spectrum:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 2px; }
+.st-cp-label { margin: 16px 0 4px 0; color: var(--text-2); font-size: var(--fs-caption); }
+.st-cp-row { margin-top: 16px; }
+.st-cp-swatch { border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12); }
+.st-cp-chip { padding: 2px 10px; border-radius: var(--radius-control); font-size: var(--fs-caption); font-weight: 600; }
+.st-cp-warn { margin-top: 12px; color: var(--sys-caution); font-size: var(--fs-caption); }

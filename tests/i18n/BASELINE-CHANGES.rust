@@ -206,3 +206,12 @@ host/src/window.rs	169	a1444f68458bea6d	-	D-G70: WebKit Start/panel/desktop remo
 # WinPoint clean-up (418ea594): wallpaper ids renamed
 host/src/wallpaper.rs	16	69b323396d066d80	-	WinPoint clean-up (418ea594): the built-in 'bloom' wallpaper ids are now 'lotus' (ALIASES resolves the old ids); was 'bloom-' (3b898e6 line 36, technical)
 host/src/wallpaper.rs	34	2d38352cbfa886ce	-	WinPoint clean-up (418ea594): the built-in 'bloom' wallpaper ids are now 'lotus' (ALIASES resolves the old ids); was 'builtin:bloom-dark' (3b898e6 line 73, technical)
+# Native app lifecycle (13-11): the host names a missing native binary before it falls back to WebKit
+key:core.nativeAppMissing	-	-	-	new: native_app_switch names the missing win11-gtk-<kind> binary
+# Own app ids in one table (13-11, O1): run_inner's match moved to launch.rs OWN_APP_IDS, which the app catalogue uses too
+host/src/lib.rs	72	2df69aa6315197ce	-	13-11 O1: the app id table moved to launch.rs OWN_APP_IDS (same literal there); was 'io.github.win11shell.Settings' (3b898e6 line 282, technical)
+host/src/lib.rs	74	6a3cd8a8a472fb65	-	13-11 O1: the app id table moved to launch.rs OWN_APP_IDS (same literal there); was 'io.github.win11shell.TaskManager' (3b898e6 line 283, technical)
+host/src/lib.rs	76	99d99258357a3531	-	13-11 O1: the app id table moved to launch.rs OWN_APP_IDS (same literal there); was 'io.github.win11shell.Search' (3b898e6 line 284, technical)
+host/src/lib.rs	78	dd3e42f5300f704d	-	13-11 O1: the app id table moved to launch.rs OWN_APP_IDS (same literal there); was 'io.github.win11shell.Disks' (3b898e6 line 285, technical)
+host/src/lib.rs	80	5bc8e4cb59ed45a4	-	13-11 O1: the app id table moved to launch.rs OWN_APP_IDS (same literal there); was 'io.github.win11shell.DefaultApps' (3b898e6 line 286, technical)
+host/src/lib.rs	82	c958be63edfba487	-	13-11 O1: the app id table moved to launch.rs OWN_APP_IDS (same literal there); was 'io.github.win11shell.Installer' (3b898e6 line 287, technical)

@@ -1,6 +1,12 @@
 Native image routes preserve the original `/icon`, `/thumb`, `/file` MIME checks,
 encoded output, FDO reuse, cache keys and conditional ETags.
 
+`/icon?name=` has one extension: a name that neither the user's icon theme chain (the theme, its parents,
+Adwaita, hicolor), its generic forms nor the pixmaps folders have is looked up in the full-colour scalable
+icons (apps, devices, places, mimes) of the Win11 theme the install ships (the `Win11Shell` alias of
+scripts/icon_bundle.py), before the request's `fallback`. Our own apps' desktop entries name icons a stock
+theme lacks (utilities-system-monitor, system-search, system-software-install).
+
 Video posters are an explicit extension: `/thumb?path=<local path>&size=256&video=1`.
 Without `video=1`, video requests retain the original behavior (only an existing
 freedesktop thumbnail can be used). The visible Explorer Details pane opts in;

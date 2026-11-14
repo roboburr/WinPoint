@@ -108,16 +108,26 @@ Vanuit een gebouwd project of een voorbereid pakket met `bin/`:
 ~/.local/bin/win11-default-apps
 ```
 
-De installer controleert de vereiste programma's vooraf en plaatst de gemarkeerde projectbestanden standaard onder `~/.local`. Bestaande persoonlijke instellingen worden behouden. Een installatie over een eerdere versie met de WebKit-shell verwijdert de oude `win11-start` en `win11-desktop` met hun app-items. Voor de shellkoppeling moet GNOME de nieuwe extensiecode laden; na een nieuwe installatie of extensiewijziging kan één keer afmelden en aanmelden nodig zijn. Activeer daarna de koppeling expliciet:
+De installer controleert de vereiste programma's vooraf en plaatst de gemarkeerde projectbestanden standaard onder `~/.local`. Bestaande persoonlijke instellingen worden behouden. Een installatie over een eerdere versie met de WebKit-shell verwijdert de oude `win11-start` en `win11-desktop` met hun app-items.
+
+WinPoint wordt een eigen keuze bij het inloggen, naast GNOME en Ubuntu. Daarvoor start de installer `scripts/install-session.py`, dat vier kleine systeembestanden plaatst (een sessie voor GDM, een gnome-session-sessie, de systemd-aanvulling daarvan en een sessiemodus voor GNOME Shell). `pkexec` vraagt één keer om je wachtwoord. Meld je daarna af, klik op je naam, kies **WinPoint** met het tandwiel rechtsonder en meld je aan.
+
+- **WinPoint** is GNOME met de WinPoint-shell. De sessiemodus zet de extensie aan, zonder Ubuntu Dock, en de bestandskiezer van WinPoint is daar de standaard.
+- **GNOME** en **Ubuntu** blijven zoals ze waren. Bij elke aanmelding daar zet WinPoint terug wat het in GNOME veranderde (thema, iconen, kleurenschema, achtergrond, vensterknoppen en de CSS voor de vensterknoppen) en zet het zijn extensie uit.
+
+`--no-session` slaat deze stap over; dan is er geen wachtwoord nodig. WinPoint draait dan in je gewone GNOME-sessie: meld je één keer af en weer aan zodat GNOME Shell de nieuwe extensie laadt, en zet hem aan:
 
 ```bash
 gnome-extensions enable win11-gnome@win11shell.local
 ```
 
-Een reeds actief Ubuntu Dock of andere taakbalkextensie kan tegelijk zichtbaar blijven. Schakel een conflicterende taakbalkextensie desgewenst uit voordat de nieuwe shell wordt geactiveerd, bijvoorbeeld:
+Ubuntu Dock blijft dan aan en kan naast de taakbalk zichtbaar zijn; `gnome-extensions disable ubuntu-dock@ubuntu.com` zet hem uit.
+
+De inlogkeuze kan ook later, en weer weg (`--dry-run` laat zien wat er zou gebeuren):
 
 ```bash
-gnome-extensions disable ubuntu-dock@ubuntu.com
+python3 scripts/install-session.py
+python3 scripts/install-session.py --remove
 ```
 
 Er wordt geen Fluent GTK-thema geïnstalleerd. De standaard app-themafamilie is `system`. Installeren kiest geen nieuwe standaardbestandsbeheerder en past geen persoonlijke MIME-associaties aan.
@@ -129,7 +139,7 @@ WIN11_INSTALL_PREFIX="/absoluut/pad/met spaties" ./scripts/install.sh
 WIN11_INSTALL_PREFIX="/absoluut/pad/met spaties" ./scripts/uninstall.sh
 ```
 
-Verwijderen raakt de eigen gemarkeerde projectbestanden en bewaart persoonlijke instellingen. `./scripts/uninstall.sh --files-only` is bedoeld voor een geïsoleerde testinstallatie zonder bediening van een desktopsessie.
+Verwijderen zet GNOME's eigen uiterlijk terug, raakt de eigen gemarkeerde projectbestanden en bewaart persoonlijke instellingen. De inlogkeuze WinPoint blijft tot je hem weghaalt met `python3 scripts/install-session.py --remove`. `./scripts/uninstall.sh --files-only` is bedoeld voor een geïsoleerde testinstallatie zonder bediening van een desktopsessie.
 
 ## Taal
 

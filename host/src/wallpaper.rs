@@ -136,12 +136,15 @@ fn apply(background: &Background, settings: &gio::Settings) -> Result<(), String
         ("secondary-color", background.color.as_str()),
         ("color-shading-type", "solid"),
     ] {
+        // WinPoint's own session: GNOME's wallpaper is kept for the other sessions (gnome_look.rs)
+        crate::gnome_look::note(settings, key, &value.to_variant());
         if settings.string(key).as_str() != value {
             settings
                 .set_string(key, value)
                 .map_err(|error| error.to_string())?;
         }
     }
+    crate::gnome_look::note(settings, "picture-opacity", &100i32.to_variant());
     if settings.int("picture-opacity") != 100 {
         settings
             .set_int("picture-opacity", 100)

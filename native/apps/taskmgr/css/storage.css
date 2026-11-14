@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Win11 GNOME Task Manager: the Opslag (Storage) page, after vendor/ui/css/taskmgr.css "Opslag": the volume
+   cards, Verkennen (sunburst and side list), Grote bestanden, Opruimen and Categorieën (classes prefixed
+   taskmgr-, the --tm-* tokens are in taskmgr.css).
+   ========================================================================== */
+
+/* ---- Volumes -------------------------------------------------------------------------------------------- */
+.taskmgr-vols { padding: 2px 2px 10px 2px; }
+.taskmgr-vols-loading { padding: 24px 4px; }
+button.taskmgr-flat.taskmgr-vol {
+  padding: 14px 14px 12px 14px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+}
+button.taskmgr-flat.taskmgr-vol:hover { background-color: var(--tm-card-hover); }
+button.taskmgr-flat.taskmgr-vol:active { background-color: var(--bg-card-2); }
+button.taskmgr-flat.taskmgr-vol:focus-visible { outline: 2px solid var(--focus-outer); outline-offset: 1px; }
+button.taskmgr-flat.taskmgr-vol.taskmgr-selected {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent);
+  background-color: color-mix(in srgb, var(--accent) 7%, var(--bg-card));
+}
+.taskmgr-vol-name { font-weight: 600; color: var(--text-1); }
+.taskmgr-vol-mount { font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-vol-pct {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  color: var(--text-1);
+}
+button.taskmgr-vol.taskmgr-is-warning .taskmgr-vol-pct, button.taskmgr-vol.taskmgr-is-critical .taskmgr-vol-pct { color: var(--sys-critical); }
+.taskmgr-vol-foot { font-size: var(--fs-caption); color: var(--text-2); min-height: 20px; }
+
+.taskmgr-storage-tabs { margin: 8px 0 12px 0; }
+
+/* ---- Verkennen ------------------------------------------------------------------------------------------ */
+.taskmgr-explore-bar { min-height: 36px; }
+.taskmgr-explore-chart { padding: 20px 20px 12px 20px; }
+.taskmgr-explore-hint { color: var(--text-3); }
+.taskmgr-explore-listtitle { padding: 14px 16px 6px 16px; font-weight: 600; color: var(--text-1); }
+.taskmgr-explore-list { padding: 0 6px 6px 6px; }
+.taskmgr-scan { min-height: 296px; padding: 32px; }
+.taskmgr-scan-title { margin-top: 6px; color: var(--text-1); }
+.taskmgr-scan-amount { color: var(--text-1); font-feature-settings: "tnum"; min-height: 20px; }
+.taskmgr-scan-path { color: var(--text-3); font-size: var(--fs-caption); min-height: 16px; margin-bottom: 8px; }
+.taskmgr-sb-tip-name { font-weight: 600; font-size: var(--fs-body); }
+.taskmgr-sb-tip-size { font-feature-settings: "tnum"; }
+.taskmgr-sb-tip-meta { opacity: 0.72; }
+
+button.taskmgr-flat.taskmgr-xrow { min-height: 40px; padding: 6px 10px; }
+button.taskmgr-flat.taskmgr-xrow:hover, button.taskmgr-flat.taskmgr-xrow.taskmgr-hot { background-color: var(--fill-subtle-2); }
+button.taskmgr-flat.taskmgr-xrow.taskmgr-is-other:hover { background-color: transparent; }
+button.taskmgr-flat.taskmgr-xrow.taskmgr-is-other.taskmgr-hot { background-color: var(--fill-subtle-2); }
+button.taskmgr-flat.taskmgr-xrow:not(.taskmgr-is-other):active { background-color: var(--fill-subtle-3); }
+button.taskmgr-flat.taskmgr-xrow.taskmgr-picked { background-color: var(--tm-row-sel); }
+.taskmgr-xrow-name { color: var(--text-1); }
+.taskmgr-xrow.taskmgr-is-other .taskmgr-xrow-name { color: var(--text-2); }
+.taskmgr-xrow-size { font-feature-settings: "tnum"; color: var(--text-1); }
+.taskmgr-xrow-pct { font-size: var(--fs-caption); color: var(--text-2); font-feature-settings: "tnum"; }
+.taskmgr-xrow-chev { color: var(--text-2); }
+
+/* ---- Grote bestanden ------------------------------------------------------------------------------------ */
+.taskmgr-lf-where { color: var(--text-2); }
+.taskmgr-lf-head {
+  min-height: 40px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--stroke-divider);
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+}
+.taskmgr-lf-rows { padding: 4px; }
+.taskmgr-lf-row { min-height: 44px; padding: 6px 10px; border-radius: var(--radius-control); transition: background-color 83ms linear; }
+.taskmgr-lf-row:hover { background-color: var(--fill-subtle-2); }
+.taskmgr-lf-row.taskmgr-checked { background-color: var(--tm-row-sel); }
+.taskmgr-lf-row.taskmgr-checked:hover { background-color: var(--tm-row-sel-hover); }
+.taskmgr-lf-thumb.taskmgr-is-media {
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control-alt-3);
+  box-shadow: inset 0 0 0 1px var(--stroke-card);
+}
+.taskmgr-lf-play { border-radius: 999px; background-color: rgba(0, 0, 0, 0.55); color: #ffffff; }
+.taskmgr-lf-name { color: var(--text-1); }
+.taskmgr-lf-dir { font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-lf-app { color: var(--sys-caution); font-weight: 600; }
+.taskmgr-lf-sep { margin: 0 6px; color: var(--text-3); }
+button.taskmgr-lf-loc { opacity: 0; transition: opacity 83ms linear; }
+.taskmgr-lf-row:hover button.taskmgr-lf-loc, button.taskmgr-lf-loc:focus-visible { opacity: 1; }
+.taskmgr-lf-date { font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-lf-size label { font-feature-settings: "tnum"; color: var(--text-1); }
+.taskmgr-lf-review { padding: 16px; }
+.taskmgr-lf-revhead { color: var(--text-1); }
+.taskmgr-lf-revtitle { font-weight: 600; font-size: var(--fs-body); }
+.taskmgr-lf-revcount { color: var(--text-2); }
+.taskmgr-lf-revtotal {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.taskmgr-lf-revlist { border-top: 1px solid var(--stroke-divider); }
+.taskmgr-lf-revitem { padding: 6px 0; border-bottom: 1px solid var(--stroke-divider); font-size: var(--fs-caption); }
+.taskmgr-lf-note { color: var(--text-2); }
+
+/* ---- Dialog lists (Grote bestanden, Opruimen) ------------------------------------------------------------- */
+.taskmgr-dlg-listwrap {
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-card-2);
+}
+.taskmgr-dlg-list { padding: 6px; }
+.taskmgr-dlg-item { min-height: 28px; padding: 0 6px; font-size: var(--fs-caption); }
+.taskmgr-dlg-item.taskmgr-is-app .taskmgr-lf-app { color: var(--sys-caution); }
+.taskmgr-dlg-total { font-weight: 600; }
+
+/* ---- Opruimen ------------------------------------------------------------------------------------------- */
+.taskmgr-clean { padding-bottom: 72px; }
+.taskmgr-clean-group { margin-top: 8px; }
+.taskmgr-clean-row { padding: 14px 16px; transition: background-color 83ms linear; }
+.taskmgr-clean-row + .taskmgr-clean-row { border-top: 1px solid var(--stroke-divider); }
+.taskmgr-clean-row:not(.taskmgr-is-empty):hover { background-color: var(--fill-subtle-2); }
+.taskmgr-clean-row.taskmgr-is-empty { opacity: 0.6; }
+.taskmgr-clean-icon { color: var(--text-2); }
+.taskmgr-clean-name { color: var(--text-1); }
+.taskmgr-clean-tags .taskmgr-pill { padding: 0 8px; }
+.taskmgr-clean-desc { margin-top: 2px; font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-clean-detailwrap { margin-top: 6px; }
+button.w11-link.taskmgr-clean-more { font-size: var(--fs-caption); padding: 2px 4px; }
+.taskmgr-clean-details {
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
+  background-color: var(--fill-control-alt-2);
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+}
+scrolledwindow.taskmgr-clean-details { padding: 0; }
+.taskmgr-clean-li { min-height: 22px; }
+.taskmgr-clean-picks { padding: 4px 12px; }
+.taskmgr-clean-pick { min-height: 44px; }
+.taskmgr-clean-pick checkbutton label { color: var(--text-1); }
+.taskmgr-clean-pickbar { font-size: var(--fs-caption); color: var(--text-2); }
+.taskmgr-clean-size { font-feature-settings: "tnum"; padding-top: 1px; color: var(--text-1); }
+.taskmgr-clean-footer {
+  padding: 12px 16px;
+  border: 1px solid var(--stroke-card);
+  border-radius: var(--radius-card);
+  background-color: var(--bg-mica-solid);
+  background-image: linear-gradient(var(--bg-card), var(--bg-card));
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.08);
+}
+.taskmgr-clean-total { font-weight: 600; font-feature-settings: "tnum"; color: var(--text-1); }
+
+/* ---- Categorieën ------------------------------------------------------------------------------------------ */
+.taskmgr-cat-status { color: var(--text-2); }
+.taskmgr-cat-card { padding: 20px; }
+.taskmgr-cat-donutwrap { padding-top: 8px; }
+.taskmgr-cat-donut .w11-donut-label {
+  font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", "Selawik", "Inter Display", "Inter", "Noto Sans", "Ubuntu Sans", sans-serif;
+  color: var(--text-1);
+}
+.taskmgr-cat-home { color: var(--text-2); font-size: var(--fs-caption); }
+button.taskmgr-flat.taskmgr-cat-row { padding: 8px 10px; }
+button.taskmgr-flat.taskmgr-cat-sub { padding: 4px 10px; font-size: var(--fs-caption); color: var(--text-2); }
+button.taskmgr-flat.taskmgr-cat-row:hover, button.taskmgr-flat.taskmgr-cat-sub:hover { background-color: var(--fill-subtle-2); }
+button.taskmgr-flat.taskmgr-cat-row:active, button.taskmgr-flat.taskmgr-cat-sub:active { background-color: var(--fill-subtle-3); }
+.taskmgr-cat-subs { margin: 0 0 4px 40px; }
+.taskmgr-cat-name { color: var(--text-1); }
+.taskmgr-cat-size { font-feature-settings: "tnum"; }
+.taskmgr-cat-pct { font-size: var(--fs-caption); color: var(--text-2); font-feature-settings: "tnum"; }
