@@ -629,7 +629,7 @@ mod i18n_tests {
             (e.code.as_str(), e.message.as_str()),
             ("bad_args", "Invalid password.")
         );
-        // D-G2: GNOME's night light is set in Ubuntu's Settings app (the UI's display.js nightNA, both languages).
+        // D-G2: GNOME's night light is set in Ubuntu's Settings app (native Settings' display.rs, both languages).
         // The error NightLight::set returns without hyprsunset, on every machine (review m4) ...
         let (night_en, night_nl) = (
             "Night light can’t be set up here. Use Ubuntu’s Settings app instead.",
@@ -640,10 +640,8 @@ mod i18n_tests {
             json!({"code":"unsupported","message":night_en,"key":"system.nightLight.unsupported","params":{}})
         );
         assert_eq!(power::NightLight::unsupported(Lang::Nl).message, night_nl);
-        // ... is the UI's own nightNA ...
-        if let Some((nl, en)) = common::ui_display_text("nightNA") {
-            assert_eq!((night_nl, night_en), (nl.as_str(), en.as_str()));
-        }
+        // ... is native Settings' own night-light notice (display.rs na_text) ...
+        assert_eq!(common::native_display_text(night_nl), night_en);
         // ... and set() really returns it here (a GNOME session has no hyprsunset under Hyprland)
         let night = power::NightLight::new();
         if !night.supported() {

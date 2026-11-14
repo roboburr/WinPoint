@@ -1,5 +1,5 @@
-//! The texts of vendor/ui/js/apps/disks/i18n.js (Dutch first, English), by the same keys, chosen with `kit::t`.
-//! Plural entries are "<key>.one" / "<key>.other"; `{name}` style placeholders are filled by `tf` / `tp`.
+//! The texts of last-webkit:vendor/ui/js/apps/disks/i18n.js (Dutch first, English), by the same keys, chosen with
+//! `kit::t`. Plural entries are "<key>.one" / "<key>.other"; `{name}` style placeholders are filled by `tf` / `tp`.
 //! A missing key reads as the key itself, like makeT.
 
 /// (key, nl, en)

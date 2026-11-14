@@ -1,4 +1,4 @@
-//! Every user-facing text of the Explorer (vendor/ui/js/apps/explorer/i18n.js), Dutch and English, by key.
+//! Every user-facing text of the Explorer (last-webkit:vendor/ui/js/apps/explorer/i18n.js), Dutch and English, by key.
 //! `s(key)` gives the text in the UI language, `f(key, &[("name", ..)])` fills `{name}` placeholders and
 //! `n(key, count, &[..])` picks the `.one` / `.other` form and fills `{n}` too. Builders of ops.rs, dialogs.rs,
 //! details.rs, picker.rs and transfer.rs use the same table, so the wording stays the WebKit app's.

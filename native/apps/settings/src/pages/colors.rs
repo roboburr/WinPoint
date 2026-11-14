@@ -1,5 +1,5 @@
-//! Instellingen › Persoonlijke instellingen › Kleuren (vendor/ui/js/apps/settings/pages/colors.js): the mode,
-//! transparency, the accent colour (manual or automatic from the wallpaper, Windows’ 48 swatches, recent and
+//! Instellingen › Persoonlijke instellingen › Kleuren (last-webkit:vendor/ui/js/apps/settings/pages/colors.js): the
+//! mode, transparency, the accent colour (manual or automatic from the wallpaper, Windows’ 48 swatches, recent and
 //! custom colours), the accent on Start and the taskbar, the GTK theme of other apps (theme.gtkFamily) and the
 //! Windows 11 caption buttons in other apps (theme.captionButtons).
 use super::background::{color_block, remember, remembered};

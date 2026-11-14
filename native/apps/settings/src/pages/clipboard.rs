@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Klembord (vendor/ui/js/apps/settings/pages/clipboard.js): explains Win+V, opens
+//! Instellingen › Systeem › Klembord (last-webkit:vendor/ui/js/apps/settings/pages/clipboard.js): explains Win+V, opens
 //! the history, clears it. Under GNOME clipboard.list is unsupported (D-G2): the page says so.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;

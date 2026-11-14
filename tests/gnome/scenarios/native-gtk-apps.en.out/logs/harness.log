@@ -1,0 +1,114 @@
+02:56:11 GE0c run lang=en switch=False seed=defaults MemAvailable=5580088 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py
+02:57:33 private install: exit 0 in 67.6 s, 87253 mutated paths, 0 outside the run dir, ok=True
+02:57:37 GNOME Shell 50.1 up (mode user, unsafe True)
+02:57:42 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py
+02:57:45   check PASS: explorer: boot report
+02:57:45   check PASS: explorer: window
+02:57:45   check PASS: explorer: native process
+02:57:48   check PASS: explorer: backend child
+02:57:48   check PASS: explorer: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:57:48   check PASS: explorer: no WebKit
+02:57:48   check PASS: explorer: rendered
+02:57:55   check PASS: explorer use: Testmap is listed
+02:57:56   check PASS: explorer use: a double-click opens Testmap
+02:57:57   check PASS: explorer use: Back returns to the home folder
+02:57:59   check PASS: explorer use: Enter opens the selected Testmap
+02:58:00   check PASS: explorer use: Alt+Left returns to the home folder
+02:58:01   check PASS: explorer: closes
+02:58:01   check PASS: settings: boot report
+02:58:01   check PASS: settings: window
+02:58:01   check PASS: settings: native process
+02:58:03   check PASS: settings: backend child
+02:58:03   check PASS: settings: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:58:03   check PASS: settings: no WebKit
+02:58:04   check PASS: settings: rendered
+02:58:11   check PASS: settings use: nav-system opens System
+02:58:12   check PASS: settings use: nav-personalization opens Personalisation
+02:58:14   check PASS: settings: closes
+02:58:14   check PASS: taskmgr: boot report
+02:58:14   check PASS: taskmgr: window
+02:58:14   check PASS: taskmgr: native process
+02:58:17   check PASS: taskmgr: backend child
+02:58:17   check PASS: taskmgr: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:58:17   check PASS: taskmgr: no WebKit
+02:58:17   check PASS: taskmgr: rendered
+02:58:24   check PASS: taskmgr use: nav-processes shows taskmgr-processes
+02:58:26   check PASS: taskmgr use: nav-performance shows taskmgr-perf-list
+02:58:29   check PASS: taskmgr: closes
+02:58:29   check PASS: alles: boot report
+02:58:29   check PASS: alles: window
+02:58:29   check PASS: alles: native process
+02:58:32   check PASS: alles: backend child
+02:58:32   check PASS: alles: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:58:32   check PASS: alles: no WebKit
+02:58:32   check PASS: alles: rendered
+02:58:39   check PASS: alles: closes
+02:58:40   check PASS: disks: boot report
+02:58:40   check PASS: disks: window
+02:58:40   check PASS: disks: native process
+02:58:42   check PASS: disks: backend child
+02:58:42   check PASS: disks: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:58:42   check PASS: disks: no WebKit
+02:58:42   check PASS: disks: rendered
+02:58:49   check PASS: disks use: the stand-in disk is listed
+02:58:51   check PASS: disks use: Eigenschappen opens the volume page
+02:58:52   check PASS: disks use: Back returns to the overview
+02:58:52   check PASS: disks: closes
+02:58:52   check PASS: defaultapps: boot report
+02:58:52   check PASS: defaultapps: window
+02:58:52   check PASS: defaultapps: native process
+02:58:55   check PASS: defaultapps: backend child
+02:58:55   check PASS: defaultapps: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:58:55   check PASS: defaultapps: no WebKit
+02:58:55   check PASS: defaultapps: rendered
+02:59:02   check PASS: defaultapps use: file types are listed
+02:59:02   check PASS: defaultapps use: a row opens "Een app kiezen"
+02:59:04   check PASS: defaultapps use: Escape closes the dialog
+02:59:05   check PASS: defaultapps: closes
+02:59:06   check PASS: installer: boot report
+02:59:06   check PASS: installer: window
+02:59:06   check PASS: installer: native process
+02:59:08   check PASS: installer: backend child
+02:59:08   check PASS: installer: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:59:08   check PASS: installer: no WebKit
+02:59:08   check PASS: installer: rendered
+02:59:16   check PASS: installer use: the empty state shows
+02:59:17   check PASS: installer: closes
+02:59:21   check PASS: alles use: a typed query lists the matching files
+02:59:23   check PASS: alles use: closes
+02:59:33   check PASS: procs: each running native app is one row in Processen
+02:59:33   check PASS: procs: no backend row of its own in the visible table
+02:59:34   check PASS: procs: sysmon.processes has explorer once, with its window and backend
+02:59:34   check PASS: procs: sysmon.processes has settings once, with its window and backend
+02:59:34   check PASS: procs: sysmon.processes has alles once, with its window and backend
+02:59:34   check PASS: procs: sysmon.processes has taskmgr once, with its window, its backend as the host row
+02:59:35   check PASS: procs: the apps close
+02:59:37   check PASS: explorer (light): boot report
+02:59:37   check PASS: explorer (light): window
+02:59:37   check PASS: explorer (light): native process
+02:59:40   check PASS: explorer (light): backend child
+02:59:40   check PASS: explorer (light): the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:59:40   check PASS: explorer (light): no WebKit
+02:59:40   check PASS: explorer (light): rendered
+02:59:43   check PASS: explorer (light): closes
+02:59:43   check PASS: settings (light): boot report
+02:59:43   check PASS: settings (light): window
+02:59:43   check PASS: settings (light): native process
+02:59:46   check PASS: settings (light): backend child
+02:59:46   check PASS: settings (light): the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:59:46   check PASS: settings (light): no WebKit
+02:59:46   check PASS: settings (light): rendered
+02:59:50   check PASS: settings (light): closes
+02:59:50   check PASS: taskmgr (light): boot report
+02:59:50   check PASS: taskmgr (light): window
+02:59:50   check PASS: taskmgr (light): native process
+02:59:52   check PASS: taskmgr (light): backend child
+02:59:52   check PASS: taskmgr (light): the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+02:59:52   check PASS: taskmgr (light): no WebKit
+02:59:52   check PASS: taskmgr (light): rendered
+02:59:56   check PASS: taskmgr (light): closes
+02:59:56 shutdown shell clients: signalled own descendants 47:ibus-daemon, 378:win11-shell, 1459:glycin-image-rs, 3594:glycin-svg, 495:win11-panel, 577:glycin-svg, 213:ibus-memconf, 215:ibus-extension-, 383:ibus-engine-sim
+02:59:56 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+02:59:56 shutdown system bus: signalled own descendants 24:dbus-daemon
+02:59:56 inner sweep: signalled own descendants 1469:glycin-image-rs
+02:59:56 inner done: 0 surfaces, 0 failed []

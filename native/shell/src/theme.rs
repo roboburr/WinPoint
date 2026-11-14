@@ -1,5 +1,5 @@
-//! Look: GTK CSS from the UI's tokens (vendor/ui/css/tokens.css, shell.css, flyouts.css), one stylesheet per
-//! module in css/, plus a generated part for the user's choices (theme.js `apply`): the accent palette from
+//! Look: GTK CSS from the UI's tokens (last-webkit:vendor/ui/css/tokens.css, shell.css, flyouts.css), one stylesheet
+//! per module in css/, plus a generated part for the user's choices (theme.js `apply`): the accent palette from
 //! theme.accent (OKLCH steps like Windows' AccentPalette, theme.js `accentPalette`), the text scale, and
 //! "Accentkleur weergeven op Start en taakbalk" (theme.accentOnTaskbar, dark mode only, shell.js
 //! data-accent-surfaces).

@@ -239,3 +239,14 @@ sysmon.duration.minutes.other	{n} minuten	{n} min
 #@ host/src/services/sysmon/common.rs 117 0bfe935e70c321c7 plain
 #@ host/src/services/sysmon/common.rs 116 aaa9402664f1a41f en
 sysmon.duration.hourUnit	u	h
+
+# --- host/src/services/sysmon/process.rs
+# own_names(): Task Manager's name of the own app Standaard-apps (the native app's window title; was window.tsv's
+# window.title.defaultapps, which went with the WebKit windows)
+#@ new
+#@ host/src/window.rs 39 c78c7b9f8dfc3cc6 en
+sysmon.ownApp.defaultapps	Standaard-apps	Default apps
+# own_names(): Task Manager's name of the own app App-installatieprogramma (the native app's window title; was
+# window.tsv's window.title.installer)
+#@ new
+sysmon.ownApp.installer	App-installatieprogramma	App Installer

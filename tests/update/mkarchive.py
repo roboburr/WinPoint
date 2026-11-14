@@ -19,10 +19,17 @@
   ``--extended`` apt's extended_states: the libraries are automatically installed (as on a real install; apt keeps
   a manually installed package rather than replace or remove it, so a renamed library would otherwise hold
   everything back).
-* The cases (``CASES``): ok (everything newer, GNOME 50), warn (ffmpeg dropped; GTK renamed t64 → t65, which is
-  no missing part; the third-party sources are the fixture root's), hold (GNOME 51 in the archive), blocked
-  (libwebkit2gtk-4.1 and its JavaScriptCore dropped, and an upgraded ubuntu-desktop-minimal breaks libarchive13t64,
-  so the simulation removes it), ubuntuHold (the ok archive; meta-release says UpgradeBroken).
+* The cases (``CASES``): ok (everything newer, GNOME 50), warn (ffmpeg dropped; GDK Pixbuf renamed (a t64-style
+  transition), which is no missing part; the third-party sources are the fixture root's), hold (GNOME 51 in the archive), blocked
+  (libgtk-4-1 dropped, which every native program of ours needs, and an upgraded ubuntu-desktop-minimal breaks
+  libarchive13t64, so the simulation removes it), ubuntuHold (the ok archive; meta-release says UpgradeBroken).
+
+Synthetic data: made-up versions in Robin's 26.04 shape. The packages are those of the machine (WebKitGTK, libsoup
+and GTK 3 stay installed as Ubuntu's libraries for other apps; our programs do not need them, 14-11). The warn case
+renamed GTK 3 until GTK left the host; a renamed library counts only when it is one of ours. The recordings under
+fixtures/compat/recorded/ (``--record``) were made from the GW6 version of these archives, whose blocked case
+dropped libwebkit2gtk-4.1 and its JavaScriptCore instead and which had no GTK 4: compat.rs's unit tests replay them
+as algorithm data.
 
 Standard library + /usr/bin/gpg only. Never contacts a network (the caller runs it inside bwrap --unshare-net).
 """
@@ -54,6 +61,10 @@ INSTALLED = [
      "libjavascriptcoregtk-4.1-0 (= 2.52.6-0ubuntu0.26.04.1), libsoup-3.0-0, libgtk-3-0t64", {}),
     ("libjavascriptcoregtk-4.1-0", "2.52.6-0ubuntu0.26.04.1", "optional", "main/libs", "libglib2.0-0t64", {}),
     ("libgtk-3-0t64", "3.24.52-1ubuntu1", "optional", "main/libs", "libglib2.0-0t64, libcairo2, libgdk-pixbuf-2.0-0", {}),
+    ("libgtk-4-1", "4.22.4+ds-0ubuntu0.1", "optional", "main/libs",
+     "libglib2.0-0t64, libcairo2, libgdk-pixbuf-2.0-0, libgraphene-1.0-0, libpango-1.0-0", {}),
+    ("libgraphene-1.0-0", "1.10.8-5build1", "optional", "main/libs", "libglib2.0-0t64", {}),
+    ("libpango-1.0-0", "1.57.0-1", "optional", "main/libs", "libglib2.0-0t64", {}),
     ("libsoup-3.0-0", "3.6.6-1ubuntu0.2", "optional", "main/libs", "libglib2.0-0t64", {}),
     ("libglib2.0-0t64", "2.88.0-1", "optional", "main/libs", "zlib1g", {}),
     ("libgdk-pixbuf-2.0-0", "2.42.12+dfsg-4", "optional", "main/libs", "libglib2.0-0t64", {}),
@@ -79,6 +90,10 @@ OK = [
      "libjavascriptcoregtk-4.1-0 (= 2.54.1-0ubuntu1), libsoup-3.0-0, libgtk-3-0t64", {}),
     ("libjavascriptcoregtk-4.1-0", "2.54.1-0ubuntu1", "optional", "main/libs", "libglib2.0-0t64", {}),
     ("libgtk-3-0t64", "3.24.60-1ubuntu1", "optional", "main/libs", "libglib2.0-0t64, libcairo2, libgdk-pixbuf-2.0-0", {}),
+    ("libgtk-4-1", "4.24.1+ds-1ubuntu1", "optional", "main/libs",
+     "libglib2.0-0t64, libcairo2, libgdk-pixbuf-2.0-0, libgraphene-1.0-0, libpango-1.0-0", {}),
+    ("libgraphene-1.0-0", "1.10.8-6", "optional", "main/libs", "libglib2.0-0t64", {}),
+    ("libpango-1.0-0", "1.57.1-1", "optional", "main/libs", "libglib2.0-0t64", {}),
     ("libsoup-3.0-0", "3.6.7-1", "optional", "main/libs", "libglib2.0-0t64", {}),
     ("libglib2.0-0t64", "2.90.1-1", "optional", "main/libs", "zlib1g", {}),
     ("libgdk-pixbuf-2.0-0", "2.42.12+dfsg-5", "optional", "main/libs", "libglib2.0-0t64", {}),
@@ -115,15 +130,14 @@ def _drop(rows, *names):
 
 def _warn():
     rows = _drop(OK, "ffmpeg")
-    # GTK renamed (a t64-style transition): every user depends on the new name, which breaks and replaces the old
-    rows = _replace(rows, "libgtk-3-0t64", name="libgtk-3-0t65", version="3.24.60-1",
-                    extra={"Breaks": "libgtk-3-0t64 (<< 3.24.60-1)", "Replaces": "libgtk-3-0t64 (<< 3.24.60-1)",
-                           "Provides": "libgtk-3-0t64 (= 3.24.60-1)"})
-    for user in ("gnome-shell", "ptyxis"):
-        rows = [(n, v, p, s, d.replace("libgtk-3-0t64", "libgtk-3-0t65") if n == user else d, x)
-                for (n, v, p, s, d, x) in rows]
-    rows = [(n, v, p, s, d.replace("libgtk-3-0t64", "libgtk-3-0t65") if n == "libwebkit2gtk-4.1-0" else d, x)
-            for (n, v, p, s, d, x) in rows]
+    # GDK Pixbuf renamed (a t64-style transition): every user depends on the new name, which breaks and replaces the
+    # old one
+    old, new = "libgdk-pixbuf-2.0-0", "libgdk-pixbuf-2.0-0t65"
+    rows = _replace(rows, old, name=new, version="2.44.0-1",
+                    extra={"Breaks": f"{old} (<< 2.44.0-1)", "Replaces": f"{old} (<< 2.44.0-1)",
+                           "Provides": f"{old} (= 2.44.0-1)"})
+    for user in ("libgtk-3-0t64", "libgtk-4-1"):
+        rows = [(n, v, p, s, d.replace(old, new) if n == user else d, x) for (n, v, p, s, d, x) in rows]
     return rows
 
 
@@ -133,7 +147,7 @@ def _hold():
 
 
 def _blocked():
-    rows = _drop(OK, "libwebkit2gtk-4.1-0", "libjavascriptcoregtk-4.1-0")
+    rows = _drop(OK, "libgtk-4-1")
     return _replace(rows, "ubuntu-desktop-minimal", extra={"Breaks": "libarchive13t64"})
 
 

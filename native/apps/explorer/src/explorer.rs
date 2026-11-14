@@ -1,4 +1,4 @@
-//! One Explorer window (vendor/ui/js/apps/explorer/main.js createExplorer): the tabs in the title bar, the
+//! One Explorer window (last-webkit:vendor/ui/js/apps/explorer/main.js createExplorer): the tabs in the title bar, the
 //! address row and command bar, the navigation pane, the content (Start, Galerij, Deze pc, a folder, the
 //! Prullenbak or search results), the details pane and the status bar; navigation with history per tab,
 //! loading through files.*, live updates (files.dirChanged, clipboard, drives, Prullenbak), the settings

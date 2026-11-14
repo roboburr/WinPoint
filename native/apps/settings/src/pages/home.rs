@@ -1,4 +1,4 @@
-//! Instellingen › Startpagina (vendor/ui/js/apps/settings/pages/home.js): the device hero, recommended
+//! Instellingen › Startpagina (last-webkit:vendor/ui/js/apps/settings/pages/home.js): the device hero, recommended
 //! settings, Bluetooth devices, the personalisation quick switch and storage at a glance.
 use super::bluetooth::{self, device_glyph, device_status, is_not_responding};
 use super::system::device_hero;

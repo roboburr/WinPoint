@@ -496,7 +496,7 @@ fn thumb(
         decode::isolated(path, bucket, true).ok_or_else(|| error(404))?
     } else {
         let p = decode::permit();
-        let info = gtk::gdk_pixbuf::Pixbuf::file_info(path);
+        let info = gdk_pixbuf::Pixbuf::file_info(path);
         if info.is_some_and(|(_, w, h)| w > 0 && h > 0 && w.max(h) <= bucket)
             && mime::browser(mime)
             && st.len() < 4 << 20

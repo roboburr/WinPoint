@@ -1,29 +1,27 @@
-02:47:13 GE0c run lang=nl switch=False seed=defaults MemAvailable=3427320 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/build/r3-native-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-late-socket.py
-02:48:55 private install: exit 0 in 83.4 s, 87856 mutated paths, 0 outside the run dir, ok=True
-02:49:00 GStreamer registry warmed in 4.5 s (['gst-inspect-1.0 version 1.28.2'])
-02:49:04 GNOME Shell 50.1 up (mode user, unsafe True)
-02:49:09 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-late-socket.py
-02:49:09   check PASS: the late socket does not exist yet
-02:49:09   scenario: late-ready written; waiting for the outside helper to bind tests/logs/r3-late.s
-02:49:09   scenario: late socket visible inside (not connected); the socket watch must stop the session now
-02:49:11 SOCKET ABORT: socket file(s) appeared outside the run dir during the run: /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/logs/r3-late.s; stopping the private session (fix round m2)
-02:49:11 socket watch: signalled own descendants 43:strace, 47:dbus-run-sessio, 48:dbus-daemon, 49:python3, 50:dbus-daemon, 51:gnome-shell, 74:ibus-daemon, 89:glycin-svg, 110:glycin-image-rs, 445:win11-desktop, 446:win11-panel, 598:WebKitNetworkPr, 601:WebKitWebProces, 626:glycin-svg, 680:win11-start, 1084:WebKitNetworkPr, 1085:WebKitWebProces, 1099:glycin-svg, 599:WebKitNetworkPr, 600:WebKitWebProces, 627:glycin-svg, 679:glycin-image-rs, 93:ibus-memconf, 95:ibus-extension-, 254:ibus-engine-sim
-02:49:14 strace connect:     75 x AF_INET 127.0.0.1 -> EINPROGRESS
-02:49:14 strace connect:      6 x AF_INET 127.0.0.1 -> UNFINISHED
-02:49:14 strace connect:      2 x AF_INET 127.0.0.1 -> ok
-02:49:14 strace connect:      4 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/cache/ibus/db -> ok
-02:49:14 strace connect:      1 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/home/.lttng/l -> ENOENT
-02:49:14 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
-02:49:14 strace connect:      2 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
-02:49:14 strace connect:      1 x AF_UNIX /tmp/nvidia-mps/control -> ENOENT
-02:49:14 strace connect:     11 x AF_UNIX /tmp/w11-rt/bus -> ok
-02:49:14 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
-02:49:14 strace connect:      3 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
-02:49:14 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> ENOENT
-02:49:14 strace connect:     21 x AF_UNIX /tmp/w11-rt/sbus -> ok
-02:49:14 strace connect:      4 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
-02:49:14 strace connect:      8 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
-02:49:14 strace connect:      1 x AF_UNIX /var/run/lttng/lttng-ust-sock-8 -> ENOENT
-02:49:14 strace connect:     32 x AF_UNIX /var/run/nscd/socket -> ENOENT
-02:49:14 strace connect:      3 x AF_UNIX /var/run/pulse/native -> ENOENT
-02:49:14 strace connect check: 179 connect() calls, OK
+03:23:06 GE0c run lang=nl switch=False seed=defaults MemAvailable=5737560 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r3-late-socket.py
+03:24:28 private install: exit 0 in 67.9 s, 87253 mutated paths, 0 outside the run dir, ok=True
+03:24:32 GNOME Shell 50.1 up (mode user, unsafe True)
+03:24:37 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r3-late-socket.py
+03:24:37   check PASS: the late socket does not exist yet
+03:24:37   scenario: late-ready written; waiting for the outside helper to bind tests/logs/r3-late.s
+03:24:37   scenario: late socket visible inside (not connected); the socket watch must stop the session now
+03:24:40 SOCKET ABORT: socket file(s) appeared outside the run dir during the run: /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/r3-late.s; stopping the private session (fix round m2)
+03:24:40 socket watch: signalled own descendants 21:strace, 25:dbus-run-sessio, 26:dbus-daemon, 27:python3, 28:dbus-daemon, 29:gnome-shell, 51:ibus-daemon, 68:glycin-svg, 108:glycin-image-rs, 390:win11-shell, 470:win11-panel, 586:glycin-svg, 70:ibus-memconf, 71:ibus-extension-, 231:ibus-engine-sim
+03:24:43 strace connect:     20 x AF_INET 127.0.0.1 -> EINPROGRESS
+03:24:43 strace connect:     13 x AF_INET 127.0.0.1 -> UNFINISHED
+03:24:43 strace connect:      6 x AF_INET 127.0.0.1 -> ok
+03:24:43 strace connect:      1 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/ibus/dbus-* -> UNFINISHED
+03:24:43 strace connect:      3 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/ibus/dbus-* -> ok
+03:24:43 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+03:24:43 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+03:24:43 strace connect:      9 x AF_UNIX /tmp/w11-rt/bus -> ok
+03:24:43 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+03:24:43 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+03:24:43 strace connect:      5 x AF_UNIX /tmp/w11-rt/sbus -> ok
+03:24:43 strace connect:      2 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+03:24:43 strace connect:      5 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+03:24:43 strace connect:     25 x AF_UNIX /var/run/nscd/socket -> ENOENT
+03:24:43 strace connect:      1 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+03:24:43 strace connect:      3 x AF_UNIX /var/run/pulse/native -> ENOENT
+03:24:43 strace connect check: 104 connect() calls, OK
+03:24:45 strace exec check: 74 execve() calls, OK

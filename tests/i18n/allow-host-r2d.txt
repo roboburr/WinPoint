@@ -34,16 +34,8 @@ host/src/wallpaper.rs	fn:sync&text:Het GNOME-achtergrondschema ontbreekt.	wallpa
 host/src/bin/launch.rs	text:Launch-opdracht ontbreekt	CLI usage error of win11-launch, stderr only (no ack socket yet)
 host/src/bin/launch.rs	text:Te veel argumenten	CLI usage error of win11-launch, stderr only (no ack socket yet)
 #
-# --- the FileChooser portal's own texts (English at 3b898e6). The pickers it opens are picker.rs, whose texts are
-#     converted.
+# --- the FileChooser portal's own texts (English at 3b898e6). The picker it starts is the native win11-gtk-explorer
+#     child (picker.rs show_native), whose texts are native nl/en pairs.
 host/src/portal.rs	fn:register&text:Portal XML interface missing	start-up error of the portal: register → portal::run → bin/file_portal.rs main eprintln! ("Win11 file portal: …"), stderr only
 host/src/portal.rs	fn:run&text:Another process already owns the Win11 FileChooser backend	start-up error of the portal: portal::run → bin/file_portal.rs main eprintln!, stderr only
-host/src/portal.rs	fn:choose&text:Win11 FileChooser parent	title of the hidden parent ApplicationWindow that carries the xdg-foreign parent; it is never mapped, so never shown
-host/src/portal.rs	fn:run&text:Nested file chooser unavailable in portal	Err ack to a UiRequest other than Lifecycle inside the portal process, i.e. a page's shell.pickFile (FilePicker) or shell.setRegions (Regions). Unreachable: the only page the portal loads is the picker, which sends neither (shell.setRegions is answered only for kind "panel", runtime.rs:153); it would reach that page, not stderr
-host/src/portal/external.rs	fn:new&text:No display	xdg-foreign/X11 parent error of Parent::new; portal.rs choose() prints it with eprintln! ("Win11 file portal: {e}; opening without external parent") and opens without a parent
-host/src/portal/external.rs	fn:new&text:Invalid Wayland parent	Parent::new error, printed by portal.rs choose() with eprintln! only
-host/src/portal/external.rs	fn:new&text:Invalid X11 parent	Parent::new error, printed by portal.rs choose() with eprintln! only
-host/src/portal/external.rs	fn:new&text:Unknown parent-window identifier	Parent::new error, printed by portal.rs choose() with eprintln! only
-host/src/portal/external.rs	fn:apply&text:Picker surface is not realized	Parent::apply error; portal.rs choose()'s configure hook prints it with eprintln! ("Win11 file portal: {e}") only
-host/src/portal/external.rs	fn:apply&text:Wayland parent could not be imported	Parent::apply error, printed by portal.rs choose()'s configure hook with eprintln! only
 host/src/portal/model.rs	fn:bad&text:Invalid FileChooser {what}	request validation, returned to xdg-desktop-portal as org.freedesktop.DBus.Error.InvalidArgs (machine protocol)

@@ -1,21 +1,26 @@
 # The native apps: Explorer, Settings, Task Manager, Alles, Disks, Default apps, Installer in GTK 4
 
-Robin (13-11): "zet de apps ook om naar GTK 4". The shell (native/shell) and the Calendar (native/calendar) are
-GTK 4 already; the apps are still HTML in WebKitGTK (GTK 3), served by the host (host/, `win11-app`,
-`win11-explorer`, `win11-default-apps`, `win11-installer`). This round rebuilds each app as a native GTK 4 program
-with the same look, the same behaviour and the same backend, so WebKit can go.
+Robin (13-11): "zet de apps ook om naar GTK 4". The shell (native/shell) and the Calendar (native/calendar) were
+GTK 4 already; the apps were HTML in GTK 3 web views, served by the host (host/, `win11-app`, `win11-explorer`,
+`win11-default-apps`, `win11-installer`). Each app was rebuilt as a native GTK 4 program with the same look, the
+same behaviour and the same backend. Since D-G72 (14-11) these are the only apps: the HTML apps, the web engine
+and the host's GTK 3 are gone (notes/claude/plan.md D-G72). The last commit that has them is tagged `last-webkit`.
+Comments cite the HTML sources as `last-webkit:vendor/ui/<path>`; `git show last-webkit:vendor/ui/<path>` prints
+one (the shell's own HTML went earlier, with D-G70: `git show 418ea594:<path>`).
 
 ## How an app starts
 
 1. Everything that launches an app today stays as it is: desktop files, `shell.openApp`, MIME handlers and
    launch scopes run `win11-app --app <kind> [args]`, `win11-explorer [paths]`, `win11-default-apps`,
    `win11-installer`.
-2. That host process, once inside its own scope (host/src/lib.rs `native_app_switch`), execs
+2. That host process, once inside its own scope (host/src/lib.rs `exec_native_app`), execs
    `win11-gtk-<kind>` from its own directory with the same arguments, minus the `--app <kind>` of win11-app.
-   The pid, the launch scope and the slice stay. No native binary, or `WIN11_WEBKIT_APPS=1`: the WebKit app runs.
+   The pid, the launch scope and the slice stay. Without `win11-gtk-<kind>` the launcher prints
+   `core.nativeAppMissing` (the path, and "reinstall WinPoint") on stderr and exits 127; a failed exec exits 1.
+   There is no fallback.
 3. The native app starts its backend as a child: `win11-app --app <kind> --http-only` from its own directory, with
    `WIN11_NATIVE_INSTANCE=<file>`; the backend writes `{port, token}` to that file and serves the host's services
-   as the WebKit page had them: `POST /api/call/<method>` (`{"args":...}` -> `{"ok","result"|"error"}`), header
+   (the API the HTML pages used): `POST /api/call/<method>` (`{"args":...}` -> `{"ok","result"|"error"}`), header
    `X-Shell-Token`, `X-Shell-Lang`, the SSE stream `GET /api/events?token=`, and GET paths such as
    `/icon?name=..&size=..` and thumbnails. The child gets PR_SET_PDEATHSIG, so it dies with the app.
    `WIN11_APP_BACKEND=port:token` names a running backend instead (tests). Same code as native/shell/src/backend.rs.
@@ -23,7 +28,7 @@ with the same look, the same behaviour and the same backend, so WebKit can go.
    argsJSON)`, signal `Event(name, dataJSON)`): window actions, the blur (`nativeBackdrop.configure` with the app's
    own pid and kind), `explorer.tabPosition`, activation tokens.
 
-| kind | binary | GApplication id (= Wayland app id) | one process | WebKit sources (the reference) |
+| kind | binary | GApplication id (= Wayland app id) | one process | HTML sources at `last-webkit` (the reference) |
 |---|---|---|---|---|
 | explorer | win11-gtk-explorer | io.github.win11shell.Explorer | yes, a window per launch | js/apps/explorer/, css/explorer.css, css/picker.css |
 | settings | win11-gtk-settings | io.github.win11shell.Settings | yes, a relaunch navigates | js/apps/settings/, css/settings.css |
@@ -33,10 +38,11 @@ with the same look, the same behaviour and the same backend, so WebKit can go.
 | defaultapps | win11-gtk-defaultapps | io.github.win11shell.DefaultApps | yes | js/apps/defaultapps/, css/defaultapps.css |
 | installer | win11-gtk-installer | io.github.win11shell.Installer | yes | js/apps/installer/, css/installer.css, css/software.css |
 
-Paths are under `vendor/ui/`. Shared JS the apps build on: `vendor/ui/js/core/` (components, icons, i18n, api) and
-`vendor/ui/js/apps/appframe.js` (title bar, caption buttons); shared CSS: `tokens.css`, `base.css`,
-`components.css`, `appframe.css`. Arguments: what the WebKit app got as URL query (host/src/lib.rs `run_inner`
-builds it: `--params JSON` becomes query keys, `--tab-ticket T`, or paths; host/src/app_params.rs validates them).
+Paths are under `vendor/ui/` at the tag. Shared JS the apps were built on: `js/core/` (components, icons, i18n,
+api) and `js/apps/appframe.js` (title bar, caption buttons); shared CSS: `tokens.css`, `base.css`,
+`components.css`, `appframe.css` (now native/kit/css). Arguments: what the HTML app got as URL query (the host's
+`run_inner` built it, `git show last-webkit:host/src/lib.rs`: `--params JSON` became query keys, `--tab-ticket T`,
+or paths); each app parses the same arguments itself, and host/src/app_params.rs still validates them.
 A second launch of a one-process app is handed to the running one (GApplication HANDLES_COMMAND_LINE).
 
 ## Layout
@@ -63,10 +69,11 @@ toast), the harness dev channel and the Wayland app id.
   scripts/ or tests/ unless your task says so. The kit is read-only for app builders: put app-specific helpers
   in your own crate; if the kit has a real bug that blocks you, make the smallest fix without changing a public
   signature and say so in your report.
-- Same behaviour as the WebKit app: read its JS for every screen, the backend calls it makes, their arguments and
-  the answers it expects, empty and error states, keyboard shortcuts and context menus. Same backend methods
-  (host/src/api-methods.json lists them; the services are in host/src/services/, host/src/files/, host/src/apps/).
-  Never invent a backend method; if the WebKit app did something in the page itself, do it natively.
+- Same behaviour as the HTML app at `last-webkit`: read its JS for every screen, the backend calls it makes, their
+  arguments and the answers it expects, empty and error states, keyboard shortcuts and context menus. Same backend
+  methods (host/src/api-methods.json lists them; the services are in host/src/services/, host/src/files/,
+  host/src/apps/).
+  Never invent a backend method; if the HTML app did something in the page itself, do it natively.
 - Same look: port the app's CSS and the parts of components.css it uses to GTK CSS (class names prefixed with the
   kind, e.g. `.taskmgr-...`), using the kit's tokens. Dark and light. Sizes, spacing, radii and fonts as in the CSS.
 - Text in Dutch and English with `t(nl, en)` and the same wording as the app's i18n.js (or the strings in its JS).
@@ -80,14 +87,16 @@ toast), the harness dev channel and the Wayland app id.
   this when the dev channel is set).
 - The dev command file is shared by the shell and every app: an app takes (and clears) only commands whose "app"
   is its own kind; the shell takes only commands without an "app" key (tests/gnome/harness.py `native_app`).
-- GSK_RENDERER=cairo unless it is set or WIN11_APP_GL=1 (the kit's run does it), for RAM.
+- GSK_RENDERER=cairo unless it is set or WIN11_APP_GL=1, for RAM, and GDK_DEBUG=portals unless it is set, so
+  gtk::FileDialog goes through the desktop portal (the Win11 picker in the WinPoint session) instead of GTK's own
+  dialog; the kit's run does both and keeps the user's own values in WIN11SHELL_USER_GPU for what the app launches.
 - Build (from the repo root; one heavy job at a time on this machine, the lock in tools/heavy.sh queues you):
 
       tools/heavy.sh --min-mb 2000 --tag <you> -- env CARGO_HOME=/run/media/robin/22TB/win11-gnome-build/cargo-home \
         CARGO_TARGET_DIR=/run/media/robin/22TB/win11-gnome-build/target \
         cargo build --offline --manifest-path native/Cargo.toml -p win11-gtk-<kind>
 
-  The host (host/, GTK 3) has its own crate cache and target on another disk:
+  The host (host/, GLib, GIO and GDK Pixbuf; no GTK since D-G72) has its own crate cache and target on another disk:
 
       B=/run/media/robin/extra/win11-gnome-build
       tools/heavy.sh --min-mb 2500 --tag <you> -- env CARGO_HOME=$B/cargo-home CARGO_TARGET_DIR=$B/target \
@@ -101,32 +110,58 @@ toast), the harness dev channel and the Wayland app id.
 
 ## Report
 
-End with: what works (screens, actions), what is missing or different from the WebKit app, kit fixes you made,
+End with: what works (screens, actions), what is missing or different from the HTML app, kit fixes you made,
 and anything the integration step must know (arguments, files, environment).
 
 ## State
 
-Integration of 13-11. All seven apps are ported and build in release with the rest of the native workspace, with
+### Native only (D-G72, 14-11)
+
+- The HTML apps (index.html, js/ and css/ under vendor/ui), the host's web view windows and its GTK 3 are gone;
+  no binary links a web engine any more (the acceptance check of D-G72 in tools/ looks at the tree, the lockfiles
+  and the 19 binaries). vendor/ui keeps the wallpapers and the Settings icon, which the backend
+  serves under /ui/assets/.
+- A launcher without its `win11-gtk-<kind>` exits 127 with `core.nativeAppMissing`; the environment switch back to
+  the HTML apps is gone, and so is the portal's GTK 3 picker window (the portal runs `win11-gtk-explorer
+  --picker-stdio` only).
+- `shell.pickFile` is gone from the backend; Settings and Task Manager use gtk::FileDialog. The kit sets
+  GDK_DEBUG=portals (see the rules above): an unsandboxed GTK 4 app otherwise shows GTK's own dialog in-process,
+  never the Win11 picker.
+- The picker's title follows the HTML picker's rules (trimmed, at most 200 characters, else the mode's title;
+  picker.rs `titles_follow_the_mode_and_the_caller_s_own_title`). A non-modal picker gets no taskbar button of
+  its own (the extension hides a FilePicker window with a transient parent from the window list).
+- Explorer accepts only its own tab type in drops; the plain-text tab envelope only an HTML Explorer made is gone.
+  `window-state.json` stays where it was, so the tabs an earlier version saved come back.
+- Verified in the harness (nl, most also in en): native-gtk-apps (105 checks, with each app backend's environment),
+  native-shell, calendar-app, session-mode, r2d-picker, frosted-glass, native-apps, r2b-disks-race, r3-ontop,
+  ge1c-extension, native-restart, taskbar-app-icons, kit-ui, snap-accent, launch-attention and readme-shots.
+- Memory (PSS of the app with its backend, native-gtk-apps, private 1440x900 session, cairo renderer; 14-11):
+  Explorer 42.2 MiB, Settings 91.0, Task Manager 49.0, Alles 73 to 143 (its index), Disks 30.2, Default apps
+  40.6, Installer 28.6. On 13-11 one run with both versions gave Explorer 51.7 against 219.8 MiB for the HTML app,
+  Settings 101.6 against 242.1 and Task Manager 59.1 against 220.3 (the HTML app with its web and network process).
+
+### Integration of 13-11
+
+All seven apps are ported and build in release with the rest of the native workspace, with
 no warnings in native/kit or native/apps (`win11-shell` still has 19 dead-code warnings of its own). Every app was
 checked headless by its builder (Broadway, a private session bus, private XDG dirs, a mock or `--dry-run` backend,
-screenshots through the dev channel); none has run in a GNOME session or under tests/gnome/harness.py yet
-(tests/gnome/scenarios/native-gtk-apps.py is the scenario for that). Popover menus, drag and drop and pointer
-hover could not be exercised headless in any app.
+screenshots through the dev channel); none had run in a GNOME session or under tests/gnome/harness.py yet
+(tests/gnome/scenarios/native-gtk-apps.py is the scenario for that; the second round and D-G72 ran them there).
+Popover menus, drag and drop and pointer hover could not be exercised headless in any app.
 
-### Build, install, fall back
+### Build, install
 
 - `scripts/build.sh` builds the native workspace (shell, calendar, kit and the seven apps) into the host's target
   directory, so target/release holds all 19 binaries. `scripts/install.py` installs them (`BINS`, `NATIVE_BINS`,
   `WIN11_NATIVE_BUILD_DIR` first); `scripts/uninstall.py` removes them and `scripts/package.py` ships them through
   the same `BINS`. The harness's `BINS_FALLBACK` and `NATIVE_BINS` know them too.
 - Launch stays as it was: `win11-app --app <kind>`, `win11-explorer`, `win11-default-apps`, `win11-installer`. Once
-  in its unit the host execs `win11-gtk-<kind>` from its own directory (host/src/lib.rs `native_app_switch`).
-- Fall back to the WebKit apps: `WIN11_WEBKIT_APPS=1` in the launcher's environment (for the session: in
-  `~/.config/environment.d/`, then log in again), or remove the `win11-gtk-*` binaries from `~/.local/bin`. The
-  portal's file picker follows the same switch (host/src/picker.rs `show_native`).
+  in its unit the host execs `win11-gtk-<kind>` from its own directory (host/src/lib.rs `exec_native_app`).
+- Until D-G72 an environment switch in the launcher's environment, or a missing `win11-gtk-*` binary, fell back to
+  the HTML app, and the portal's file picker followed it. Since then there is no fallback (see above).
 - Smoke (13-11): every binary prints its usage with `--help` without a display and, with no display at all
   (private runtime dir, private bus), ends with exit 1 and GTK's "Failed to open display", leaving no backend
-  behind. `win11-app --app taskmgr --help` reaches the native app; with `WIN11_WEBKIT_APPS=1` the WebKit app runs.
+  behind. `win11-app --app taskmgr --help` reaches the native app.
   `cargo test` on the native workspace: kit doctest, Disks 3 and Explorer 7 unit tests pass.
 
 ### Fixed at integration
@@ -145,19 +180,19 @@ hover could not be exercised headless in any app.
 - Settings › Achtergrond "Foto's zoeken" and Task Manager › Opslag › Verkennen "Map kiezen" used `shell.pickFile`,
   which a `--http-only` backend answers with `{path: null}`, so both did nothing. They use `gtk::FileDialog` now,
   as the Installer, Alles and the Settings import do (the desktop's FileChooser portal: Win11's picker when
-  winpoint-portals.conf chooses it).
+  winpoint-portals.conf chooses it; since D-G72 the kit's GDK_DEBUG=portals makes GTK use that portal).
 - Explorer: revealing an item in Details view no longer scrolls sideways (with the details pane open the Naam
   column went out of view); the command bar and navigation pane separators have a CSS size, so they draw.
 - Settings: the unused page `placeholder` is gone.
 - Host fixes by the builders, kept: services/index.rs starts the index worker from one long-lived thread
   (PR_SET_PDEATHSIG fired when the short-lived request thread ended, so the worker died after every answer; the
-  WebKit Alles had the same bug); picker.rs `show_native` and portal.rs (the native picker).
+  HTML Alles had the same bug); picker.rs `show_native` and portal.rs (the native picker).
 
 ### Per app
 
 **Explorer** (`win11-gtk-explorer`, one process, a window per launch)
 - Has: title-bar tabs (keyboard, middle-click, drag to reorder, to another window or out to a new window, with the
-  WebKit tab-ticket protocol for tabs from other processes), session restore in window-state.json, address row
+  backend's tab tickets for tabs from other processes), session restore in window-state.json, address row
   (history menus, breadcrumb with chevrons and overflow, edit mode with suggestions), live search filter and Enter
   to Alles, the command bar enabled as in toolbar.js, the navigation pane (lazy tree, splitter), all eight view
   modes with grouping, check boxes, thumbnails, Windows selection rules, rubber band, type-to-select, inline
@@ -165,17 +200,16 @@ hover could not be exercised headless in any app.
   operations with undo, progress cards and the trash; the properties, drive, trash, share and folder-options
   dialogs; the details and preview panes; drag and drop in and out; the portal file picker (`--picker-stdio`).
 - Missing or different: no tab, content or Galerij animations, sticky month headers, hover zoom or drop shadows;
-  no menu on a group header; nearest kit glyphs in the View menu; Shift+Delete goes to the trash (as in WebKit: the host has no permanent delete); the
-  explorer.ready backlog handshake is not ported (relaunches come through GApplication); a torn-off tab opens
-  where mutter places it; native tabs cannot be dropped on a WebKit Explorer; an `x11:` picker parent is ignored;
-  a native picker that fails after it started answers "cancelled" (no WebKit fallback); Escape in a picker with a
-  menu open closes only the menu.
+  no menu on a group header; nearest kit glyphs in the View menu; Shift+Delete goes to the trash (as in the HTML
+  app: the host has no permanent delete); the explorer.ready backlog handshake is not ported (relaunches come
+  through GApplication); a torn-off tab opens where mutter places it; an `x11:` picker parent is ignored; a picker
+  that fails after it started answers "cancelled"; Escape in a picker with a menu open closes only the menu.
 - Untested: drag and drop of files and tabs, the progress card on a slow job, the picker parented to a real
   Wayland caller, and whether the extension's `explorer.tabPosition` finds native windows.
 
 **Settings** (`win11-gtk-settings`, one process, a relaunch navigates)
 - Has: the frame (title bar with Back, user card, search with suggestions and a results page, the 11 categories,
-  breadcrumb, Back history) and every page of the WebKit app: Start, Systeem, Beeldscherm (with the 15 s keep
+  breadcrumb, Back history) and every page of the HTML app: Start, Systeem, Beeldscherm (with the 15 s keep
   dialog), Geluid, Meldingen, Energie, Opslag, Klembord, Info, Bluetooth with the add-device dialog and pairing,
   Netwerk, Wi-Fi, Ethernet, Persoonlijke instellingen, Achtergrond, Kleuren with the custom colour picker,
   Thema's, Start, Taakbalk with the live mini taskbar and tray icons, Bureaubladpictogrammen, Toegankelijkheid
@@ -198,7 +232,7 @@ hover could not be exercised headless in any app.
   the sunburst, Categorieën, Grote bestanden, Opruimen); end task with force, restart, efficiency mode, properties;
   the "Win11 Shell reageert niet" banner; deep links; live language. The `open=end|restart|efficiency` test helpers
   always ask first.
-- Missing or different: no priority or affinity (no backend method, as in WebKit); a stuck shell is restarted
+- Missing or different: no priority or affinity (no backend method, as in the HTML app); a stuck shell is restarted
   through the backend only; column minimum widths and the Settings page's 1000 px maximum are not applied; group
   heading rows can show a hover highlight and may flicker once; Task Manager's own icons in menus and toasts are
   swapped in after they open (unverified); the Opruimen footer is an overlay; the sunburst tooltip is a GTK tooltip
@@ -214,7 +248,7 @@ hover could not be exercised headless in any app.
   `native-alles.json`, welcome / first-run / nothing-found / error overlays, the status bar with the index state,
   preview and search-tips panes, the context menu, copy path or name, properties, trash, the Opties dialog
   (locations, drives, exclusions, hidden files, live updates, rebuild), every keyboard shortcut, deep links.
-- Missing or different: a language switch relabels in place (WebKit reloaded); the sort arrow sits right of the
+- Missing or different: a language switch relabels in place (the HTML app reloaded); the sort arrow sits right of the
   header text; Grootte stays left-aligned; a double-click on a column edge does not reset its width; row inset and
   focus ring are drawn on the cells; the kind drop-down shows the kind's glyph; no entrance animations; the
   welcome sits 64 px from the top; "Map toevoegen / uitsluiten" uses the portal's file dialog, with a typed-path
@@ -227,10 +261,10 @@ hover could not be exercised headless in any app.
   read-only notices, the volume and disk pages (SMART health with the attribute table), the label, format (LUKS),
   delete, new volume, unlock and initialise dialogs with their checks and job progress, mount, unmount, lock, safe
   remove, eject, open in Explorer, refresh on `disks.changed`, a 30 s poll, focus and F5, deep links.
-- Missing or different: no resize (none in WebKit either); the "…" menu opens below its button; updates wait while
-  a menu or dialog is open (a re-render would close it); the 760/680 px breakpoints re-render; the slider's value is
-  a tooltip; legend and bar captions are accessible labels; dialogs have no entrance animation.
-- Untested: everything against the real `win11-app` backend (it ran on the WebKit app's disks mock).
+- Missing or different: no resize (none in the HTML app either); the "…" menu opens below its button; updates wait
+  while a menu or dialog is open (a re-render would close it); the 760/680 px breakpoints re-render; the slider's
+  value is a tooltip; legend and bar captions are accessible labels; dialogs have no entrance animation.
+- Untested: everything against the real `win11-app` backend (it ran on the HTML app's disks mock).
 
 **Default apps** (`win11-gtk-defaultapps`, one process)
 - Has: search, 100 file types per page with paging, loading / empty / error states, the "Een app kiezen" dialog
@@ -272,7 +306,7 @@ hover could not be exercised headless in any app.
 - Task Manager (host sysmon): every native app is one Apps row with its window, its backend and their children (the
   walk up from a helper stops at a process with a window of its own: an app opened from Explorer without a systemd
   unit of its own stays its own row); the portal's file picker is never Explorer. Task Manager's own backend is the host and stays the background row
-  "Win11 Shell", as the WebKit Task Manager's own process was.
+  "Win11 Shell", as the HTML Task Manager's own process was.
 - The dev channel's click, type and key take a visible widget of that name first (the frame's hidden title-bar
   Back is also called "<kind>-back", so "explorer-back" reached it instead of Explorer's Back).
 - Verified in the harness: native-gtk-apps.py (launch, memory, close and a short use of every app through the dev
@@ -295,5 +329,5 @@ hover could not be exercised headless in any app.
 - Headless testing: Broadway's socket path must stay under 108 bytes; the dev `screenshot` command sometimes says
   "nothing drawn" right after a change (retry) and does not capture popovers; CSS transitions do not advance
   without frames.
-- `shell.pickFile` on a `--http-only` backend always answers `{path: null}`; the apps use `gtk::FileDialog` instead
-  (or could start `win11-gtk-explorer --picker-stdio` themselves).
+- `shell.pickFile` is gone (D-G72; a `--http-only` backend only ever answered `{path: null}`); the apps use
+  `gtk::FileDialog` through the portal (or could start `win11-gtk-explorer --picker-stdio` themselves).

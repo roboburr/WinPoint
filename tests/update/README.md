@@ -101,6 +101,15 @@ tools/heavy.sh --min-mb 1024 --tag gw2b-bus -- tests/update/run.sh bus-tests -- 
 tests/update/run.sh exec [--expect-stubs F.json] -- "$BIN" services::update::bus_tests::NAME --exact --ignored --test-threads=1
 ```
 
+With `WIN11_CARGO_TARGET_DIR` on another disk (the build rules of the WebKit removal, 13-11) the binary lies outside
+the worktree: copy it into `tests/update/.run/` (git-ignored) first and pass that copy, e.g.
+`install -D "$BIN" tests/update/.run/bin/win11_host && BIN=tests/update/.run/bin/win11_host`; the same for the
+`win11-launch` that `test_post_upgrade.py run --launch` takes. `test_compat.sh` reads the program binaries from
+`W11_TEST_BUILD_DIR` (default `tests/build/native-release`, all of scripts/install.py `BINS`; also inside the
+worktree), as do the unit tests `elf.rs our_binaries_equal_readelf` and `post_upgrade.rs
+missing_parts_come_from_the_soname_directory`; after that directory is rebuilt, `tests/update/test_compat.sh
+--record-readelf` re-records `fixtures/compat/readelf-needed.txt`.
+
 (`run-tests.sh --lib --no-run` no longer works: since the round-2 hang guard, `run-tests.sh` passes `--no-run`
 itself, and cargo refuses it twice.) `bus-tests` runs every test of `stubs/bus-tests.json` in its own `exec` with
 `--expect-stubs` (the whole stub log in order; a matcher may carry `"count": N` for N consecutive calls),

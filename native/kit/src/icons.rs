@@ -1,5 +1,5 @@
-//! Icons: the UI's Fluent-style line glyphs (vendor/ui/js/core/icons.js, every name of `iconNames()`, plus the
-//! shell's "start-logo", "start-logo-mono", "task-view", "battery-<0..100>", "battery-charging-<0..100>" and the
+//! Icons: the UI's Fluent-style line glyphs (last-webkit:vendor/ui/js/core/icons.js, every name of `iconNames()`, plus
+//! the shell's "start-logo", "start-logo-mono", "task-view", "battery-<0..100>", "battery-charging-<0..100>" and the
 //! caption glyphs "cap-min", "cap-max", "cap-restore", "cap-close") drawn with cairo as symbolic paintables, so
 //! they take the widget's CSS `color` like a symbolic theme icon; app icons (icon theme, file, or the backend's
 //! `/icon`), file icons (theme icon or MIME type), thumbnails through the backend's `/thumb`, and textures.

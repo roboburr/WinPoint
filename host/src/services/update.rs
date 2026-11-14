@@ -251,12 +251,11 @@ impl Update {
             upgrade_watch: AtomicBool::new(false),
         });
         if mode == Mode::Mirror {
-            // this host shows the update page: update.progress and update.reply reach its WebViews; every other
-            // host only parses them (design §4.4, review F6). The backend of the native Settings
-            // (`win11-app --app settings --http-only`) is such a host: its event stream carries them to
-            // win11-gtk-settings, whose keep-alive follows them (native/apps/settings/src/keepalive.rs, design C2
-            // below at `hold_application`). retry_later's timeout runs on that backend's main loop (lib.rs
-            // run_http_only).
+            // this host serves the update page: update.progress and update.reply go out on its event stream;
+            // every other host only parses them (design §4.4, review F6). It is the backend of the native Settings
+            // (`win11-app --app settings --http-only`): its event stream carries them to win11-gtk-settings, whose
+            // keep-alive follows them (native/apps/settings/src/keepalive.rs, design C2 below at
+            // `hold_application`). retry_later's timeout runs on that backend's main loop (lib.rs run_http_only).
             ctx.events.show_update_events();
             service.observe();
             if !service.take_over() {
@@ -680,9 +679,9 @@ pub(crate) fn notify(shared: &Shared, title: &str, body: &str) {
 thread_local! {
     static HOLD: std::cell::RefCell<Option<gio::ApplicationHoldGuard>> = const { std::cell::RefCell::new(None) };
 }
-/// The keep-alive of design §4.1 (C2): `Application::hold()` on the GTK main thread while our job runs, so
-/// closing the Settings window drops the window but keeps the process until `Finished`. No application
-/// (tests, `--http-only`): nothing happens.
+/// The keep-alive of design §4.1 (C2) in a host that is a GApplication: `Application::hold()` on its main thread
+/// while our job runs, so the process stays until `Finished`. No application (tests, `--http-only`): nothing
+/// happens.
 ///
 /// The native Settings: the job's owner is its backend (`win11-app --app settings --http-only`), which has no
 /// GApplication and dies with the Settings process (PR_SET_PDEATHSIG, native/kit/src/backend.rs). So

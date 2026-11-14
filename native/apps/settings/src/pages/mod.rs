@@ -1,7 +1,7 @@
 //! # The Settings pages and their interface
 //!
-//! Each file here ports one vendor/ui/js/apps/settings/pages/<name>.js (screen by screen, same backend calls,
-//! same texts) and exports its pages in a table:
+//! Each file here ports one last-webkit:vendor/ui/js/apps/settings/pages/<name>.js (screen by screen, same backend
+//! calls, same texts) and exports its pages in a table:
 //!
 //! ```ignore
 //! use super::{Builder, Content, Page, PageFuture};

@@ -1,5 +1,5 @@
-//! Flyout `notifications` (the clock, Win+N): vendor/ui/js/shell/notifcenter.js and toasts.js ported. Two
-//! stacked cards like Windows 11: the notifications grouped per app (Niet storen, Alles wissen, the app's
+//! Flyout `notifications` (the clock, Win+N): `git show 418ea594:vendor/ui/js/shell/notifcenter.js` and toasts.js
+//! ported. Two stacked cards like Windows 11: the notifications grouped per app (Niet storen, Alles wissen, the app's
 //! buttons, a close button per notification and per group, "Geen nieuwe meldingen") and the calendar
 //! (calendar.rs) under it. The list comes from notifications.list and stays live through notifications.new and
 //! notifications.closed (the backend's stream and the extension's signal; a notification that arrives on both

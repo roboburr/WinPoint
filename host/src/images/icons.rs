@@ -364,7 +364,10 @@ impl Lookup {
                 continue;
             }
             for context in BUNDLE_CONTEXTS {
-                let path = root.join(context).join("scalable").join(format!("{name}.svg"));
+                let path = root
+                    .join(context)
+                    .join("scalable")
+                    .join(format!("{name}.svg"));
                 if path.is_file() {
                     return Some(path);
                 }

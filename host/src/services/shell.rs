@@ -118,7 +118,7 @@ impl NativeCore {
         let mut out = json!({"mode":mode,"compositor":"gnome","dryRun":self.ctx.dry_run,
             "version":env!("CARGO_PKG_VERSION"),"layerShell":mode=="layer","layerShellInstalled":false,
             "user":user(self.ctx.lang()),"apps":APPS,"services":services,
-            "dev":false,"pid":std::process::id(),"gpu":gpu_info(&self.ctx),"mainLoopLagMs":null,"runId":null,"problem":null});
+            "dev":false,"pid":std::process::id(),"gpu":gpu_info(),"mainLoopLagMs":null,"runId":null,"problem":null});
         if let (Some(out), Some(extra)) = (
             out.as_object_mut(),
             self.runtime
@@ -361,26 +361,8 @@ fn user(lang: Lang) -> Value {
     };
     json!({"name":name,"realName":if real.is_empty(){&name}else{&real}})
 }
-fn gpu_info(ctx: &ServiceContext) -> Value {
-    let requested = std::env::var("WIN11SHELL_GPU")
-        .unwrap_or_default()
-        .trim()
-        .to_lowercase();
-    let mode = if ctx.kind == "taskmgr" || ctx.config_dir.join("no-gpu").exists() {
-        "off"
-    } else if matches!(requested.as_str(), "safe" | "env") {
-        &requested
-    } else {
-        "off"
-    };
-    let enabled = |name: &str| std::env::var(name).is_ok_and(|v| v != "0");
-    let compositing = mode != "off"
-        && !enabled("WEBKIT_DISABLE_COMPOSITING_MODE")
-        && !enabled("WEBKIT_DISABLE_DMABUF_RENDERER")
-        && (mode == "safe"
-            || enabled("WEBKIT_FORCE_DMABUF_RENDERER")
-            || !["/proc/driver/nvidia/version", "/sys/module/nvidia_drm"]
-                .iter()
-                .any(|p| std::path::Path::new(p).exists()));
-    json!({"mode":mode,"compositing":compositing,"forced":mode=="safe"})
+/// `shell.info.gpu`: what the WebKit hosts reported about their GPU switches (WIN11SHELL_GPU, `no-gpu`). The
+/// native programs leave rendering to GTK 4 (GSK_RENDERER), so the field only keeps the answer's shape.
+fn gpu_info() -> Value {
+    json!({"mode":"native"})
 }

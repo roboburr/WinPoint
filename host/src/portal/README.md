@@ -5,27 +5,31 @@ The Rust FileChooser implementation
 implements OpenFile, SaveFile and SaveFiles at `/org/freedesktop/portal/desktop`.
 The existing xdg-desktop-portal frontend keeps its own name and remains responsible
 for identifying callers and granting sandboxed applications document access.
-Selection uses the same Explorer UI, native Rust file APIs and picker validation as
-Win11Shell's internal chooser. The backend creates or truncates no selected file.
+Selection uses the native GTK 4 Explorer in picker mode (`win11-gtk-explorer
+--picker-stdio`, one child process per request, on the portal's own backend) and the
+host's picker validation (picker.rs). The backend creates or truncates no selected file.
 
 The backend is activated through D-Bus. It accepts at most four requests and four
 filesystem workers. Request.Close, caller disappearance, user cancellation, invalid
-options and idle termination release the request/window. It exits after 15 idle
-seconds; it does not launch an indexing worker as part of startup. A single WebKit
-context is shared by its picker windows; ordinary apps keep separate processes.
+options and idle termination release the request and end its picker process. It exits
+after 15 idle seconds; it does not launch an indexing worker as part of startup. The
+process itself runs no GTK: a GIO service application, its runtime and HTTP server.
+Without win11-gtk-explorer (a broken install) a request fails and stderr says so.
 
 Typed options include glob/MIME filters, current filter, multiple/folder selection,
 NUL-terminated filesystem hints, current filename, custom accept label, modal state,
 combo/boolean choices and read-only selection. SaveFiles chooses a directory,
 returns collision-free candidates in the original order, and preserves non-UTF-8
-suggested basenames as file URIs. Wayland exported parents and X11 window handles
-use the matching GDK display and native transient relationships. Invalid/unavailable
-external parents fall back to an unparented chooser, as in the GTK reference backend.
+suggested basenames as file URIs. The picker child parents itself to a Wayland exported
+parent (GTK 4, xdg-foreign). X11 window handles, which GTK 4 cannot parent to, and
+invalid/unavailable external parents fall back to an unparented chooser, as in the
+GTK reference backend.
 
 Registration precedes acquisition of the implementation name, without replacement
 flags. A short registration main loop services the frontend's initialization before
-GtkApplication startup, preventing cold-activation recursion. Only this backend
-process disables GTK's portal lookup; app launch boundaries restore the original
+the application registers and starts, preventing cold-activation recursion. Only this
+backend process disables GIO's portal lookup (GTK_USE_PORTAL=0) and its picker child
+GTK's (GDK_DEBUG=no-portals); app launch boundaries restore the original
 GTK_USE_PORTAL setting. No desktop-wide theme override is performed.
 
 Backend selection is a FileChooser-specific portals.conf preference. Applications

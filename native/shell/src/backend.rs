@@ -1,7 +1,7 @@
 //! The host's Rust services, reached through their existing JSON API: `win11-panel --http-only` (host/src/lib.rs
-//! run_http_only) serves `/api/call/<method>` and the `/api/events` stream on 127.0.0.1 with a token, as it does
-//! for the WebKit pages. The shell starts that backend as its child (it dies with the shell) unless
-//! WIN11_SHELL_BACKEND="port:token" names a running one. In a systemd session the child moves a copy of itself
+//! run_http_only) serves `/api/call/<method>` and the `/api/events` stream on 127.0.0.1 with a token. The shell
+//! starts that backend as its child (it dies with the shell) unless WIN11_SHELL_BACKEND="port:token" names a
+//! running one. In a systemd session the child moves a copy of itself
 //! into the shell slice (host process_scope::ensure_native) and exits; that copy writes the instance file with its
 //! own pid, and the shell follows it through a pidfd.
 //!

@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Meldingen (vendor/ui/js/apps/settings/pages/notifications.js): toasts and their
+//! Instellingen › Systeem › Meldingen (last-webkit:vendor/ui/js/apps/settings/pages/notifications.js): toasts and their
 //! sounds, Niet storen and a test notification.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;

@@ -582,3 +582,26 @@ pub const ACCENT_PRESETS: [&str; 48] = [
     "#00CC6A", "#10893E", "#7A7574", "#5D5A58", "#68768A", "#515C6B", "#567C73", "#486860", "#498205", "#107C10",
     "#767676", "#4C4A48", "#69797E", "#4A5459", "#647C64", "#525E54", "#847545", "#7E735F",
 ];
+
+#[cfg(test)]
+mod tests {
+    //! The glass of an own app window (D-G60, "alles behalve de taakbalk mag op 90% opacity"): the harness sees only
+    //! the class (tests/gnome/scenarios/frosted-glass.py B), so the 90 % itself is checked here.
+    use super::*;
+
+    #[test]
+    fn the_glass_mica_is_90_percent_over_the_blur_and_opaque_in_high_contrast() {
+        let glass = |head: &str| parse_block(TOKENS, head).get("bg-mica-glass").cloned();
+        assert_eq!(glass("window.w11 {").as_deref(), Some("rgba(32, 32, 32, 0.9)"));
+        assert_eq!(glass("window.w11.w11-light {").as_deref(), Some("rgba(243, 243, 243, 0.9)"));
+        assert_eq!(glass("window.w11.w11-hc {").as_deref(), Some("var(--bg-mica-solid)"));
+        let rule = "window.w11-app-window.w11-glass .w11-frame { background-color: var(--bg-mica-glass); }";
+        assert!(include_str!("../css/frame.css").lines().any(|l| l.trim() == rule), "frame.css: {rule}");
+        // transparency off: the solid Mica again (dynamic_css overrides the token)
+        let look = Look { transparency: false, ..Look::default() };
+        let (_, vars) = dynamic_css(&look, &accent_palette(&look.accent));
+        assert_eq!(vars.get("bg-mica-glass").map(String::as_str), Some("#202020"));
+        let (_, vars) = dynamic_css(&Look::default(), &accent_palette("#0078d4"));
+        assert_eq!(vars.get("bg-mica-glass"), None, "with transparency the tokens' 90 % stays");
+    }
+}

@@ -69,16 +69,16 @@ pub fn scale(p: &Pixmap) -> Pixmap {
     for v in p.data.chunks_exact(4) {
         rgba.extend_from_slice(&[v[1], v[2], v[3], v[0]])
     }
-    let pb = gtk::gdk_pixbuf::Pixbuf::from_bytes(
+    let pb = gdk_pixbuf::Pixbuf::from_bytes(
         &glib::Bytes::from_owned(rgba),
-        gtk::gdk_pixbuf::Colorspace::Rgb,
+        gdk_pixbuf::Colorspace::Rgb,
         true,
         8,
         p.width,
         p.height,
         p.width * 4,
     );
-    let out = pb.scale_simple(w, h, gtk::gdk_pixbuf::InterpType::Hyper);
+    let out = pb.scale_simple(w, h, gdk_pixbuf::InterpType::Hyper);
     let rgba = if let Some(pb) = out {
         let bytes = pb.read_pixel_bytes();
         let rs = pb.rowstride() as usize;

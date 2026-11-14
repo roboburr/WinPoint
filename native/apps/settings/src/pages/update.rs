@@ -1,7 +1,7 @@
-//! Instellingen › Update en herstel (vendor/ui/js/apps/settings/pages/update.js): Windows Update for Ubuntu (the
-//! update.* service: the hero with its state and one button, the info bars, the feature-update card of
-//! update_release.rs, the update rows with their packages and "Wat is er nieuw", the metered / removals confirm,
-//! Meer opties), the settings backup (export / import), reset everything, and Over Win11 Shell.
+//! Instellingen › Update en herstel (`git show last-webkit:vendor/ui/js/apps/settings/pages/update.js`): Windows Update
+//! for Ubuntu (the update.* service: the hero with its state and one button, the info bars, the feature-update card of
+//! update_release.rs, the update rows with their packages and "Wat is er nieuw", the metered / removals confirm, Meer
+//! opties), the settings backup (export / import), reset everything, and Over Win11 Shell.
 //!
 //! Every text is rendered here from the snapshot's codes and params ({phase, rows, job, restart, ...}), so a
 //! language switch needs no host round trip; host texts (error.message, warnings[].message) come with the next
@@ -108,7 +108,8 @@ fn row_title(r: &Value) -> String {
     let template = match r["kind"].as_str().unwrap_or("") {
         "security" => t("Beveiligingsupdates voor Ubuntu {version}", "Security updates for Ubuntu {version}"),
         "gnome" => t("GNOME Shell {version}", "GNOME Shell {version}"),
-        "webkit" => t("WebKitGTK {version} (webweergave van {product})", "WebKitGTK {version} ({product}’s web view)"),
+        // Ubuntu's WebKitGTK, the web view of other apps (none of ours): a neutral title
+        "webkit" => t("WebKitGTK {version}", "WebKitGTK {version}"),
         "gtk" => t("GTK 3 {version}", "GTK 3 {version}"),
         "soup" => t("libsoup {version}", "libsoup {version}"),
         "glib" => t("GLib {version}", "GLib {version}"),
@@ -192,12 +193,10 @@ fn restart_text(r: &Value) -> String {
     }
 }
 
-/// Shell restart parts (§3.4, restart.shellParts) -> component names.
+/// Shell restart parts (§3.4, restart.shellParts; host services/update/paths.rs SHELL_MAPS) -> component names.
 fn part_name(p: &str) -> String {
     match p {
-        "webkit" | "jsc" => "WebKitGTK".into(),
-        "gtk" | "gdk" => "GTK".into(),
-        "soup" => "libsoup".into(),
+        "gtk4" => "GTK 4".into(),
         "glib" | "gio" | "gobject" => "GLib".into(),
         "pixbuf" => "GDK Pixbuf".into(),
         "cairo" => "cairo".into(),
@@ -205,6 +204,13 @@ fn part_name(p: &str) -> String {
         "self" => PRODUCT.into(),
         other => other.into(),
     }
+}
+
+/// The Win11 restart info bar (§3.4): shown while a component of ours was replaced (`restart.shell`), hidden while a
+/// reboot is pending (the reboot covers it). The WebKit pages made one exception, a replaced WebKitGTK (new web
+/// processes of an old app broke at once); the native apps have no such part.
+fn shell_bar_shown(r: &Value) -> bool {
+    r["shell"] == true && r["reboot"] != true
 }
 
 fn key_of(e: &Value) -> &str {
@@ -907,8 +913,7 @@ impl Upd {
             }
             let r = &s["restart"];
             let parts: Vec<String> = r["shellParts"].as_array().map(|a| a.iter().map(common::value_key).collect()).unwrap_or_default();
-            // the Win11 restart info bar (§3.4): hidden while a reboot is pending, except when WebKitGTK changed
-            if r["shell"] == true && (r["reboot"] != true || parts.iter().any(|p| p == "webkit" || p == "jsc")) {
+            if shell_bar_shown(r) {
                 let mut names: Vec<String> = Vec::new();
                 for p in &parts {
                     let n = part_name(p);
@@ -1837,4 +1842,24 @@ fn update(p: Page) -> PageFuture {
         ];
         out
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The Win11 restart info bar of §3.4 and its component names (the host's services/update/tests.rs checks that
+    /// part_name names every code its scan can send).
+    #[test]
+    fn the_restart_bar_waits_for_no_reboot() {
+        assert!(shell_bar_shown(&json!({"shell":true,"reboot":false,"shellParts":["gtk4"]})));
+        assert!(!shell_bar_shown(&json!({"shell":true,"reboot":true,"shellParts":["gtk4","self"]})), "the reboot covers it");
+        assert!(!shell_bar_shown(&json!({"shell":false,"reboot":false,"shellParts":[]})));
+        assert!(!shell_bar_shown(&Value::Null), "an older host without restart");
+        assert_eq!(part_name("gtk4"), "GTK 4");
+        assert_eq!(part_name("pixbuf"), "GDK Pixbuf");
+        assert_eq!(part_name("gobject"), "GLib");
+        assert_eq!(part_name("self"), PRODUCT);
+        assert_eq!(part_name("libfoo"), "libfoo", "an unknown code is shown as it is");
+    }
 }

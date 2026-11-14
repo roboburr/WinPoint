@@ -44,11 +44,11 @@
 //! ## Modules and items
 //!
 //! - [`run`]`(spec, handler) -> glib::ExitCode`: GSK_RENDERER=cairo (unless set or WIN11_APP_GL=1; with cairo,
-//!   manual font rendering), prgname and GApplication id = `spec.id`, HANDLES_COMMAND_LINE (a second launch
-//!   reaches the running process); at startup the settings, the theme, the backend (`win11-app --app <kind>
-//!   --http-only`, or WIN11_APP_BACKEND=port:token) and the dev channel. `handler(&Rc<Ctx>, args: Vec<String>
-//!   (argv[1..]), first: bool)` runs per launch; the app makes its windows (synchronously on the first launch).
-//!   `--help`/`-h` print `spec.usage`, also headless.
+//!   manual font rendering) and GDK_DEBUG=portals (unless set: the file dialog is the desktop's portal), prgname
+//!   and GApplication id = `spec.id`, HANDLES_COMMAND_LINE (a second launch reaches the running process); at startup
+//!   the settings, the theme, the backend (`win11-app --app <kind> --http-only`, or WIN11_APP_BACKEND=port:token)
+//!   and the dev channel. `handler(&Rc<Ctx>, args: Vec<String> (argv[1..]), first: bool)` runs per launch; the app
+//!   makes its windows (synchronously on the first launch). `--help`/`-h` print `spec.usage`, also headless.
 //! - [`AppSpec`]: `kind`, `id`, `title` (nl, en), `icon`, `usage`, `backend`; `AppSpec::new(kind, id, nl, en)`,
 //!   `.icon(..)`, `.usage(..)`, `.without_backend()` (all const).
 //! - Restarts: [`on_restart`]`(f(&Restart) -> RestartPlan)`: what the app does when its backend restarts

@@ -266,7 +266,9 @@ fn shell_info_keeps_original_user_apps_and_runtime_metadata_shape() {
     assert!(info["services"].is_object());
     assert_eq!(info["dryRun"], true);
     assert!(info["runId"].as_str().is_some_and(|s| !s.is_empty()));
-    core.set_runtime_info(json!({"gpu":{"mode":"off","compositing":false,"forced":false},"mainLoopLagMs":7,"runId":"new-run"}));
+    // the WebKit hosts' GPU switches are gone: GTK 4 renders the native programs
+    assert_eq!(info["gpu"], json!({"mode":"native"}));
+    core.set_runtime_info(json!({"mainLoopLagMs":7,"runId":"new-run"}));
     assert_eq!(core.info()["mainLoopLagMs"], 7);
     assert_eq!(core.info()["runId"], "new-run");
     finish(root, core);

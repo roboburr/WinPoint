@@ -1,5 +1,5 @@
-//! The calendar card of the notifications flyout (vendor/ui/js/shell/notifcenter.js buildCalendar): a
-//! "woensdag 12 november" header that folds the card, the month grid with previous and next month, the first
+//! The calendar card of the notifications flyout (`git show 418ea594:vendor/ui/js/shell/notifcenter.js` buildCalendar):
+//! a "woensdag 12 november" header that folds the card, the month grid with previous and next month, the first
 //! weekday from settings.time.firstDayOfWeek, today in an accent circle, a selected day with a ring, and
 //! keyboard moves (arrows, PageUp/PageDown, Home). `Calendar::new()` builds it; notifications.rs places it under
 //! the notification card. The folded state is kept per user (the HTML kept it in localStorage).

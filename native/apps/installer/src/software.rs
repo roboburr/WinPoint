@@ -1,5 +1,5 @@
-//! The shared software review and job tracking of vendor/ui/js/core/software.js (and css/software.css): its texts,
-//! the details list, the review dialog (software.prepare, then software.execute only from the reviewed plan's
+//! The shared software review and job tracking of last-webkit:vendor/ui/js/core/software.js (and css/software.css): its
+//! texts, the details list, the review dialog (software.prepare, then software.execute only from the reviewed plan's
 //! own button), and the job view that follows software.status. Preparing never authorises execution.
 use kit::controls::{self as c, Dialog, DialogResult, InfoBar, ProgressState, Severity, Toast, Variant};
 use kit::prelude::*;

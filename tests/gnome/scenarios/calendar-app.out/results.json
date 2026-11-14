@@ -4,8 +4,8 @@
  "switch": false,
  "seed": "defaults",
  "commit": "ref: refs/heads/claude/gnome-english-update",
- "startedAt": "2026-11-13 21:48:33",
- "seconds": 112.4,
+ "startedAt": "2026-11-14 04:21:50",
+ "seconds": 104.3,
  "innerExit": 0,
  "innerTimedOut": false,
  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
@@ -15,90 +15,148 @@
  },
  "lock": "held by an ancestor heavy.sh",
  "memory": {
-  "samples": 41,
+  "samples": 39,
   "intervalSeconds": 0.5,
   "peak": {
-   "pss_kb": 523543,
-   "rss_kb": 859624,
+   "pss_kb": 598515,
+   "rss_kb": 842592,
    "processes": 20,
-   "t": 18.3
+   "t": 14.0
   },
   "peakWithoutHarness": {
-   "pss_kb": 442088,
-   "rss_kb": 744844
+   "pss_kb": 517761,
+   "rss_kb": 729436
   },
-  "minMemAvailableKb": 3893080,
+  "minMemAvailableKb": 6113560,
   "abortedForMemory": false,
   "peakByName": {
    "gnome-shell": {
     "count": 1,
-    "pss_kb": 249014,
-    "rss_kb": 362400
+    "pss_kb": 328476,
+    "rss_kb": 380100
    },
    "python3": {
     "count": 2,
-    "pss_kb": 80921,
-    "rss_kb": 110572
+    "pss_kb": 80278,
+    "rss_kb": 108976
    },
    "win11-shell": {
     "count": 1,
-    "pss_kb": 76259,
-    "rss_kb": 115444
+    "pss_kb": 79684,
+    "rss_kb": 115972
    },
    "glycin-svg": {
     "count": 2,
-    "pss_kb": 30982,
-    "rss_kb": 56496
-   },
-   "win11-panel": {
-    "count": 1,
-    "pss_kb": 25988,
-    "rss_kb": 52640
+    "pss_kb": 36704,
+    "rss_kb": 61140
    },
    "win11-calendar": {
     "count": 2,
-    "pss_kb": 24133,
-    "rss_kb": 57360
+    "pss_kb": 22243,
+    "rss_kb": 52428
    },
    "ibus-extension-": {
     "count": 1,
-    "pss_kb": 17203,
-    "rss_kb": 35744
+    "pss_kb": 18708,
+    "rss_kb": 34524
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 13460,
+    "rss_kb": 21956
    },
    "glycin-image-rs": {
     "count": 3,
-    "pss_kb": 11502,
-    "rss_kb": 27148
+    "pss_kb": 11318,
+    "rss_kb": 25960
    },
    "ibus-daemon": {
     "count": 1,
-    "pss_kb": 4201,
-    "rss_kb": 11680
+    "pss_kb": 4248,
+    "rss_kb": 11568
    },
    "dbus-daemon": {
     "count": 2,
-    "pss_kb": 1300,
-    "rss_kb": 10140
+    "pss_kb": 1324,
+    "rss_kb": 10012
    },
    "ibus-engine-sim": {
     "count": 1,
-    "pss_kb": 772,
-    "rss_kb": 7900
+    "pss_kb": 827,
+    "rss_kb": 7944
    },
    "ibus-memconf": {
     "count": 1,
-    "pss_kb": 734,
-    "rss_kb": 7892
+    "pss_kb": 769,
+    "rss_kb": 7832
    },
    "bwrap": {
     "count": 1,
-    "pss_kb": 354,
-    "rss_kb": 1584
+    "pss_kb": 293,
+    "rss_kb": 1520
    },
    "dbus-run-sessio": {
     "count": 1,
-    "pss_kb": 180,
-    "rss_kb": 2624
+    "pss_kb": 183,
+    "rss_kb": 2660
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 328476,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 84943,
+    "first": 2.6
+   },
+   "glycin-svg": {
+    "pss_kb": 75236,
+    "first": 1.5
+   },
+   "python3": {
+    "pss_kb": 48831,
+    "first": 0.0
+   },
+   "win11-calendar": {
+    "pss_kb": 27011,
+    "first": 8.3
+   },
+   "ibus-extension-": {
+    "pss_kb": 18961,
+    "first": 1.5
+   },
+   "win11-panel": {
+    "pss_kb": 13467,
+    "first": 2.6
+   },
+   "glycin-image-rs": {
+    "pss_kb": 7823,
+    "first": 2.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4324,
+    "first": 1.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 850,
+    "first": 1.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 846,
+    "first": 2.6
+   },
+   "dbus-daemon": {
+    "pss_kb": 741,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 293,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 185,
+    "first": 0.5
    }
   }
  },
@@ -106,8 +164,8 @@
   "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
   "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
   "exit": 0,
-  "seconds": 70.6,
-  "mutatingSyscallPaths": 87828,
+  "seconds": 67.7,
+  "mutatingSyscallPaths": 87253,
   "writesOutsideRun": [],
   "failedWritesOutsideRun": [],
   "binaries": {
@@ -171,26 +229,25 @@
   }
  },
  "guardStubCalls": [
-  "21:50:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:06\tpw-dump\t--monitor --no-colors",
-  "21:50:08\tpw-dump\t--monitor --no-colors",
-  "21:50:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:12\tpw-dump\t--monitor --no-colors",
-  "21:50:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:20\tpw-dump\t--monitor --no-colors",
-  "21:50:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:50:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+  "04:23:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:15\tpw-dump\t--monitor --no-colors",
+  "04:23:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:17\tpw-dump\t--monitor --no-colors",
+  "04:23:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:21\tpw-dump\t--monitor --no-colors",
+  "04:23:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:23:29\tpw-dump\t--monitor --no-colors",
+  "04:23:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
  ],
  "updateToolCalls": [],
  "leftoverProcessesAfterInner": [],
  "socketCleanup": {
   "removed": [
-   "cache/ibus/dbus-mQlwkC49"
+   "cache/ibus/dbus-vI4q7tEh"
   ],
   "left": [],
   "ok": true
@@ -198,7 +255,7 @@
  "socketWatch": {
   "intervalSeconds": 2.0,
   "scans": 8,
-  "maxScanSeconds": 1.158,
+  "maxScanSeconds": 0.763,
   "roots": [
    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
    "/etc",
@@ -208,7 +265,7 @@
   "appeared": [],
   "ok": true,
   "runSockets": [
-   "cache/ibus/dbus-mQlwkC49"
+   "cache/ibus/dbus-vI4q7tEh"
   ],
   "runUnlisted": []
  },
@@ -263,7 +320,7 @@
    },
    {
     "step": "screenshot",
-    "t": 3.18,
+    "t": 3.17,
     "args": {
      "name": "a-calendar-2026-12-24"
     },
@@ -285,28 +342,28 @@
    },
    {
     "step": "record",
-    "t": 3.2,
+    "t": 3.19,
     "args": {
      "key": "B.launch"
     }
    },
    {
     "step": "record",
-    "t": 6.2,
+    "t": 6.19,
     "args": {
      "key": "B.windows"
     }
    },
    {
     "step": "record",
-    "t": 6.2,
+    "t": 6.19,
     "args": {
      "key": "B.titleChanged"
     }
    },
    {
     "step": "screenshot",
-    "t": 6.83,
+    "t": 6.82,
     "args": {
      "name": "b-calendar-2027-01-15"
     },
@@ -320,7 +377,7 @@
        1440,
        900
       ],
-      "distinctColours": 717,
+      "distinctColours": 715,
       "meanLevel": 38.4,
       "looksBlank": false
      }
@@ -328,14 +385,14 @@
    },
    {
     "step": "record",
-    "t": 6.83,
+    "t": 6.82,
     "args": {
      "key": "F.frosted"
     }
    },
    {
     "step": "screenshot",
-    "t": 9.53,
+    "t": 9.52,
     "args": {
      "name": "c-calendar-week-2026-12-22"
     },
@@ -357,7 +414,7 @@
    },
    {
     "step": "screenshot",
-    "t": 12.23,
+    "t": 12.26,
     "args": {
      "name": "d-calendar-day-new-2026-12-24"
     },
@@ -379,7 +436,7 @@
    },
    {
     "step": "record",
-    "t": 12.24,
+    "t": 12.27,
     "args": {
      "key": "failed"
     }
@@ -411,11 +468,11 @@
    {
     "check": "A: win11-calendar --date opens one Calendar window",
     "ok": true,
-    "t": 2.51,
+    "t": 2.52,
     "windows": [
      {
-      "id": "1231577994",
-      "pid": 1359,
+      "id": "1566655309",
+      "pid": 1335,
       "title": "Agenda",
       "focused": true,
       "minimized": false,
@@ -430,10 +487,10 @@
    {
     "check": "A: the window belongs to the launched process",
     "ok": true,
-    "t": 2.51,
+    "t": 2.52,
     "window": {
-     "id": "1231577994",
-     "pid": 1359,
+     "id": "1566655309",
+     "pid": 1335,
      "title": "Agenda",
      "focused": true,
      "minimized": false,
@@ -442,15 +499,15 @@
      "w": 1180,
      "h": 780
     },
-    "pid": 1359
+    "pid": 1335
    },
    {
     "check": "A: the launched window has the focus",
     "ok": true,
-    "t": 2.51,
+    "t": 2.52,
     "window": {
-     "id": "1231577994",
-     "pid": 1359,
+     "id": "1566655309",
+     "pid": 1335,
      "title": "Agenda",
      "focused": true,
      "minimized": false,
@@ -463,11 +520,11 @@
    {
     "check": "B: still one Calendar window (single instance)",
     "ok": true,
-    "t": 6.2,
+    "t": 6.19,
     "windows": [
      {
-      "id": "1231577994",
-      "pid": 1359,
+      "id": "1566655309",
+      "pid": 1335,
       "title": "Agenda",
       "focused": true,
       "minimized": false,
@@ -481,10 +538,10 @@
    {
     "check": "B: the same window and process as A",
     "ok": true,
-    "t": 6.2,
+    "t": 6.19,
     "before": {
-     "id": "1231577994",
-     "pid": 1359,
+     "id": "1566655309",
+     "pid": 1335,
      "title": "Agenda",
      "focused": true,
      "minimized": false,
@@ -495,8 +552,8 @@
     },
     "after": [
      {
-      "id": "1231577994",
-      "pid": 1359,
+      "id": "1566655309",
+      "pid": 1335,
       "title": "Agenda",
       "focused": true,
       "minimized": false,
@@ -510,10 +567,10 @@
    {
     "check": "F: the extension blurs the focused Calendar window (kind calendar registered)",
     "ok": true,
-    "t": 6.83,
+    "t": 6.82,
     "frosted": [
      {
-      "pid": 1359,
+      "pid": 1335,
       "kind": "window",
       "blur": true,
       "shadow": true,
@@ -524,17 +581,17 @@
    {
     "check": "C: the --view week launch is handed over and exits",
     "ok": true,
-    "t": 6.9,
+    "t": 6.89,
     "exit": 0
    },
    {
     "check": "C: still the one Calendar window",
     "ok": true,
-    "t": 8.9,
+    "t": 8.89,
     "windows": [
      {
-      "id": "1231577994",
-      "pid": 1359,
+      "id": "1566655309",
+      "pid": 1335,
       "title": "Agenda",
       "focused": true,
       "minimized": false,
@@ -548,13 +605,13 @@
    {
     "check": "D: the --view day --new launch is handed over and exits",
     "ok": true,
-    "t": 9.59,
+    "t": 9.63,
     "exit": 0
    },
    {
     "check": "every check passed",
     "ok": true,
-    "t": 12.24,
+    "t": 12.27,
     "failed": []
    }
   ],
@@ -563,14 +620,14 @@
    "P.mimeapps": "\n[Default Applications]\nx-scheme-handler/win11-calendar=io.github.win11shell.Calendar.desktop\n",
    "native.boot": {
     "kind": "native-shell",
-    "pid": 356,
+    "pid": 380,
     "tag": "boot"
    },
    "A.token": true,
    "A.windows": [
     {
-     "id": "1231577994",
-     "pid": 1359,
+     "id": "1566655309",
+     "pid": 1335,
      "title": "Agenda",
      "focused": true,
      "minimized": false,
@@ -586,8 +643,8 @@
    },
    "B.windows": [
     {
-     "id": "1231577994",
-     "pid": 1359,
+     "id": "1566655309",
+     "pid": 1335,
      "title": "Agenda",
      "focused": true,
      "minimized": false,
@@ -600,7 +657,7 @@
    "B.titleChanged": false,
    "F.frosted": [
     {
-     "pid": 1359,
+     "pid": 1335,
      "kind": "window",
      "blur": true,
      "shadow": true,
@@ -616,34 +673,34 @@
    "d-calendar-day-new-2026-12-24.png"
   ],
   "error": null,
-  "seconds": 12.24,
+  "seconds": 12.27,
   "surfaces": {
    "panel": {
     "name": "panel",
     "kind": "panel",
     "window": "native",
-    "pid": 356,
+    "pid": 380,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    },
    "desktop": {
     "name": "desktop",
     "kind": "desktop",
     "window": "native",
-    "pid": 356,
+    "pid": 380,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    },
    "start": {
     "name": "start",
     "kind": "start",
     "window": "native",
-    "pid": 356,
+    "pid": 380,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    }
   },
   "failedChecks": [],
@@ -651,7 +708,7 @@
  },
  "inner": {
   "facts": {
-   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=ac293bbec415577fe18ea8086af777fc",
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=af213d093fc3e0810e535c146af7d421",
    "shellArgv": [
     "gnome-shell",
     "--headless",
@@ -672,11 +729,11 @@
    "extensionCopyIdentical": true,
    "nativeBoot": {
     "kind": "native-shell",
-    "pid": 356,
+    "pid": 380,
     "tag": "boot"
    },
    "windowIds": {
-    "native": 356
+    "native": 380
    },
    "notificationsAtStart": [
     {
@@ -698,25 +755,25 @@
    {
     "file": "a-calendar-2026-12-24.png",
     "group": "scenario",
-    "bytes": 324065,
+    "bytes": 324191,
     "area": null
    },
    {
     "file": "b-calendar-2027-01-15.png",
     "group": "scenario",
-    "bytes": 310363,
+    "bytes": 310493,
     "area": null
    },
    {
     "file": "c-calendar-week-2026-12-22.png",
     "group": "scenario",
-    "bytes": 336749,
+    "bytes": 336875,
     "area": null
    },
    {
     "file": "d-calendar-day-new-2026-12-24.png",
     "group": "scenario",
-    "bytes": 335786,
+    "bytes": 335987,
     "area": null
    }
   ],

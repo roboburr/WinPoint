@@ -1,38 +1,42 @@
 # tools/i18n/glossary-context.tsv: the glossary's context rows (R3-UI, round-3 lock-in; tools/i18n/check.py). At the
 # places a row names, its en phrase replaces the glossary.tsv rendering of the same nl phrase (or of the shorter
 # phrase a longer nl phrase here contains): a second rendering that is right there. check.py fails on a row whose nl
-# phrase no checked text at its places has any more (stale), and on a place it does not visit (only vendor/ui/js and
-# the host's JSON tables; check_pairs.py keeps its own GLOSSARY_OK, check_rust.py its own rules).
+# phrase no checked text at its places has any more (stale), and on a place it does not visit (only native/ and the
+# host's JSON tables; check_pairs.py keeps its own GLOSSARY_OK, check_rust.py its own rules).
 # Columns (tab-separated): where, nl phrase, en phrase, flags, why.
 #   where: comma-separated places <file below the repo>:<key glob> (fnmatch; the file may be a glob). The key is a
-#     makeT key (a plural's base key), P(<page id>).title|description for a settings-registry page, "pair" for an
-#     inline {nl, en} pair, or the key of a host JSON table.
+#     native pair's key (tools/i18n/check_native.py: an arm or row key, page(<page id>).title|description for a
+#     settings-registry page, a JSON object's path, <enclosing function>/<nl text> for a call or an if), or the key
+#     of a host JSON table. Until the WebKit removal these rows named the HTML apps (git show last-webkit:tools/i18n/).
 #   flags: "-", "name" (case-sensitive, as in glossary.tsv), "known" (an accepted deviation, not a right rendering:
 #     the report names it, its owner fixes it).
 # Windows Update: "Retry" as on Windows 11's Update page (D-G41); "Try again" everywhere else (glossary.tsv)
-vendor/ui/js/apps/settings/pages/update*.js:*	Opnieuw proberen	Retry	-	D-G41: Windows 11's Update page says Retry (the hero and a failed update row)
-vendor/ui/js/apps/settings/pages/update.js:checking	Controleren op updates	Checking for updates	-	Windows' own -ing form while the check runs (was a glossary-ok comment)
-vendor/ui/js/apps/settings/pages/update-advanced.js:advNotify	Opnieuw opstarten vereist	restart is required	-	Windows' own row "Notify me when a restart is required to finish updating" (was a glossary-ok comment)
+native/apps/settings/src/pages/update*.rs:*	Opnieuw proberen	Retry	-	D-G41: Windows 11's Update page says Retry (the hero and a failed update row)
+native/apps/settings/src/pages/update.rs:hero_model/Controleren op updates*	Controleren op updates	Checking for updates	-	Windows' own -ing form while the check runs (was a glossary-ok comment)
+native/apps/settings/src/pages/update_advanced.rs:update_advanced/*	Opnieuw opstarten vereist	restart is required	-	Windows' own row "Notify me when a restart is required to finish updating" (was a glossary-ok comment)
 # Terugzetten: Restore is the Recycle Bin's; Windows says Revert for display settings and Reset for settings to defaults
-vendor/ui/js/apps/settings/pages/display.js:keepBody,vendor/ui/js/apps/settings/pages/display.js:revert	Terugzetten	Revert	-	Windows' display countdown: "Keep changes" / "Revert", "Reverting to previous display settings in …" (keepBody's glossary-ok comment had a reason in the term, so it never applied)
-vendor/ui/js/apps/settings/pages/update.js:reset*,vendor/ui/js/apps/settings/pages/update-history.js:hRecoveryDesc,vendor/ui/js/apps/settings/registry.js:P(update).description	Terugzetten	Reset	-	Win11 Shell's settings back to their defaults: Windows' Reset (as in "Reset this PC")
+native/apps/settings/src/pages/display.rs:keep_changes_dialog/*	Terugzetten	Revert	-	Windows' display countdown: "Keep changes" / "Revert", "Reverting to previous display settings in …" (keepBody's glossary-ok comment had a reason in the term, so it never applied)
+native/apps/settings/src/pages/update.rs:reset/*,native/apps/settings/src/pages/update.rs:update/*,native/apps/settings/src/pages/update_history.rs:update_history/*,native/apps/settings/src/registry.rs:page(update).description,native/shell/src/start/settings_pages.json:update.description	Terugzetten	Reset	-	Win11 Shell's settings back to their defaults: Windows' Reset (as in "Reset this PC")
 # another sense of the word
-vendor/ui/js/apps/settings/pages/about.js:mode_preview,vendor/ui/js/apps/settings/pages/update.js:m_preview	Voorbeeldvenster	preview window	-	the browser preview window Win11 Shell can run in (shell mode "preview"), not File Explorer's Preview pane
-vendor/ui/js/apps/settings/pages/power.js:healthDesc	Opslaan	hold	-	a battery that stores charge, not Save
-vendor/ui/js/apps/explorer/i18n.js:savedOnPC	Deze pc	Stored locally	-	Windows 11 File Explorer Home's own caption of a local folder tile
+native/apps/settings/src/pages/about.rs:mode_name/*,native/apps/settings/src/pages/update.rs:mode_name/*	Voorbeeldvenster	preview window	-	the browser preview window Win11 Shell can run in (shell mode "preview"), not File Explorer's Preview pane
+native/apps/settings/src/pages/power.rs:power/*	Opslaan	hold	-	a battery that stores charge, not Save
+native/apps/explorer/src/i18n.rs:savedOnPC	Deze pc	Stored locally	-	Windows 11 File Explorer Home's own caption of a local folder tile
+native/shell/src/start/search.rs:clipboard	Afbeeldingen	images	-	copied images in general, not the Pictures folder (D-G70 dropped this row with the HTML shell's search.js; the native Start search has the text)
 # Windows' own wording or an inflected form the glossary rule cannot see
-vendor/ui/js/apps/settings/pages/home.js:pers	Persoonlijke instellingen	Personalise your device	-	Windows 11's own Home card title
-vendor/ui/js/apps/settings/pages/sound.js:notifSounds	Meldingen	Notification	-	"Notification sounds": the noun before another noun
-vendor/ui/js/apps/explorer/i18n.js:job_*	Plakken	Pasting	-	the progress text of a paste job ("Pasting 1 item into …")
-vendor/ui/js/apps/explorer/i18n.js:job_*	Alles uitpakken	Extracting all	-	the progress text of an extract job
-vendor/ui/js/apps/settings/registry.js:P(clipboard).description	Klembordgeschiedenis	Cut and copy history	-	Windows 11's own description of Settings › System › Clipboard
+native/apps/settings/src/pages/home.rs:home/Persoonlijke instellingen	Persoonlijke instellingen	Personalise your device	-	Windows 11's own Home card title
+native/apps/settings/src/pages/sound.rs:sound/*	Meldingen	Notification	-	"Notification sounds": the noun before another noun
+native/apps/explorer/src/i18n.rs:job_*	Plakken	Pasting	-	the progress text of a paste job ("Pasting 1 item into …")
+native/apps/explorer/src/i18n.rs:job_*	Alles uitpakken	Extracting all	-	the progress text of an extract job
+native/shell/src/flyouts/power.rs:loggingOut	Afmelden	Signing out	-	Windows' own progress screen "Signing out" (as the HTML shell's power.js until D-G70)
+native/shell/src/panel/taskbar/system.rs:clock_menu/*	Datum en tijd	date and time	-	Windows 11's own clock menu item "Adjust date and time" (as the HTML shell's taskbar.js until D-G70)
+native/apps/settings/src/registry.rs:page(clipboard).description,native/shell/src/start/settings_pages.json:clipboard.description	Klembordgeschiedenis	Cut and copy history	-	Windows 11's own description of Settings › System › Clipboard
 # the host's JSON tables (host/src: not R3-UI's files)
 host/src/services/disks/data.json:timeout	reageert niet op tijd	answer in time	-	"didn't answer in time": a timeout, not the Not responding status
 host/src/services/disks/data.json:unavailable	Schijfbeheer	Disk management	name,known	known deviation: "Disk management doesn't work: …" is pinned by host/src/services/disks/reference-tests.json (lower-case m, straight apostrophe); for R2-B's owner and Robin (D-G1b, the disks tables)
 # Host catalogues (host/i18n/*.tsv; WU-FIX, R3-UI review m5): read only by tools/i18n/check_rust.py, where the glossary
 # is an error too. A "#host" line is a comment for check.py, which does not visit host/i18n; after "#host" come the five
 # columns above, with places host/i18n/<stem>.tsv:<key glob>.
-#host	host/i18n/update.tsv:update.err.checkFailed	Controleren op updates	Checking for updates	-	the check's own -ing form in an error ("Checking for updates didn’t work.", design §3.7), as update.js:checking; the button stays Check for updates
-#host	host/i18n/update.tsv:update.part.pixbuf	Afbeeldingen	images	-	what GDK Pixbuf does (loading images), not the Pictures folder (as the removed HTML shell's clipboard search entry, D-G70)
+#host	host/i18n/update.tsv:update.err.checkFailed	Controleren op updates	Checking for updates	-	the check's own -ing form in an error ("Checking for updates didn’t work.", design §3.7), as the Update page's hero (native/apps/settings/src/pages/update.rs); the button stays Check for updates
+#host	host/i18n/update.tsv:update.part.pixbuf	Afbeeldingen	images	-	what GDK Pixbuf does (loading images), not the Pictures folder (as the Start search's clipboard entry, native/shell/src/start/search.rs)
 #host	host/i18n/sysmon.tsv:sysmon.restart.noEnviron	Instellingen	environment	-	the process's own settings, i.e. its environment variables, not the Settings app
 #host	host/i18n/disks.tsv:disks.unavailableBody	Schijfbeheer	Disk Management	name,known	known deviation: the en ("UDisks isn’t available on this computer.") leaves out the nl's "Schijfbeheer werkt niet:" (D-G35: its nl is the frozen data.json text the disks oracle pins); for R2-B's owner and Robin (D-G1b, the disks tables), like the data.json:unavailable row above

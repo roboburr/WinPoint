@@ -1,31 +1,30 @@
-21:46:29 GE0c run lang=nl switch=False seed=defaults MemAvailable=4857116 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
-21:47:57 private install: exit 0 in 72.2 s, 87828 mutated paths, 0 outside the run dir, ok=True
-21:48:00 GStreamer registry warmed in 3.2 s (['gst-inspect-1.0 version 1.28.2'])
-21:48:04 GNOME Shell 50.1 up (mode user, unsafe True)
-21:48:09 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
-21:48:13   check PASS: A: win11-shell reported its boot
-21:48:13   check PASS: A: the panel process is win11-shell
-21:48:13   check PASS: A: its backend win11-panel --http-only is a child of win11-shell
-21:48:13   check PASS: A: no win11-start or win11-desktop process runs
-21:48:13   check PASS: A: no WebKit process below win11-shell
-21:48:13   check PASS: B: a visible taskbar window
-21:48:13   check PASS: B: the taskbar has tb-start
-21:48:13   check PASS: B: the taskbar has tb-clock
-21:48:13   check PASS: B: the taskbar has tb-sys
-21:48:13   check PASS: B: GNOME sees a Panel window of the native pid
-21:48:13   check PASS: B: the extension registered the native pid as Panel
-21:48:15   check PASS: C: the quick flyout opens
-21:48:16   check PASS: C: the quick flyout closes again
-21:48:16   check PASS: C: the notifications flyout opens
-21:48:17   check PASS: C: the notifications flyout closes again
-21:48:17   check PASS: D: tb-start opens a Start window of the same pid
-21:48:17   check PASS: D: the extension holds Panel and Start under one pid
-21:48:17   check PASS: D: the backdrop capabilities list the taskbar and Start of that pid
-21:48:19   check PASS: D: a second click closes Start
-21:48:23   check PASS: N: the native tree was measured
-21:48:23   check PASS: every check passed
-21:48:24 shutdown shell clients: signalled own descendants 71:ibus-daemon, 83:glycin-svg, 358:win11-shell, 476:glycin-image-rs, 1374:glycin-image-rs, 515:win11-panel, 597:glycin-svg, 193:ibus-memconf, 195:ibus-extension-, 470:ibus-engine-sim
-21:48:24 shutdown gnome-shell: signalled own descendants 46:gnome-shell
-21:48:24 shutdown system bus: signalled own descendants 45:dbus-daemon
-21:48:24 inner sweep: signalled own descendants 1384:glycin-image-rs
-21:48:24 inner done: 0 surfaces, 0 failed []
+04:37:00 GE0c run lang=en switch=False seed=defaults MemAvailable=6477936 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
+04:38:23 private install: exit 0 in 67.5 s, 87253 mutated paths, 0 outside the run dir, ok=True
+04:38:26 GNOME Shell 50.1 up (mode user, unsafe True)
+04:38:31 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
+04:38:35   check PASS: A: win11-shell reported its boot
+04:38:35   check PASS: A: the panel process is win11-shell
+04:38:35   check PASS: A: its backend win11-panel --http-only is a child of win11-shell
+04:38:35   check PASS: A: no win11-start or win11-desktop process runs
+04:38:35   check PASS: A: no WebKit process below win11-shell
+04:38:35   check PASS: B: a visible taskbar window
+04:38:35   check PASS: B: the taskbar has tb-start
+04:38:35   check PASS: B: the taskbar has tb-clock
+04:38:35   check PASS: B: the taskbar has tb-sys
+04:38:35   check PASS: B: GNOME sees a Panel window of the native pid
+04:38:35   check PASS: B: the extension registered the native pid as Panel
+04:38:36   check PASS: C: the quick flyout opens
+04:38:38   check PASS: C: the quick flyout closes again
+04:38:38   check PASS: C: the notifications flyout opens
+04:38:39   check PASS: C: the notifications flyout closes again
+04:38:39   check PASS: D: tb-start opens a Start window of the same pid
+04:38:39   check PASS: D: the extension holds Panel and Start under one pid
+04:38:39   check PASS: D: the backdrop capabilities list the taskbar and Start of that pid
+04:38:40   check PASS: D: a second click closes Start
+04:38:45   check PASS: N: the native tree was measured
+04:38:45   check PASS: every check passed
+04:38:45 shutdown shell clients: signalled own descendants 44:ibus-daemon, 62:glycin-svg, 104:glycin-image-rs, 383:win11-shell, 1346:glycin-image-rs, 496:win11-panel, 578:glycin-svg, 177:ibus-memconf, 196:ibus-extension-, 226:ibus-engine-sim
+04:38:46 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+04:38:46 shutdown system bus: signalled own descendants 24:dbus-daemon
+04:38:46 inner sweep: signalled own descendants 1356:glycin-image-rs
+04:38:46 inner done: 0 surfaces, 0 failed []

@@ -1,8 +1,8 @@
 # Third-party notices
 
-Win11 for GNOME's own code and assets are licensed under the MIT licence in [LICENSE](LICENSE) (the same text is in [LICENSES/MIT.txt](LICENSES/MIT.txt)). That includes `vendor/ui/`, `vendor/host/` and `vendor/config/`: they are the author's own earlier work from the Win11 Shell project and fall under the same MIT licence, except the third-party parts listed below. This file lists the material in this repository and in the release archive that comes from other people or is not under MIT: where it is, where it comes from, its licence, and what that licence asks for. The full licence texts are in [LICENSES/](LICENSES/). The MIT licence of this project gives no rights to the material listed here; each part stays under its own licence.
+Win11 for GNOME's own code and assets are licensed under the MIT licence in [LICENSE](LICENSE) (the same text is in [LICENSES/MIT.txt](LICENSES/MIT.txt)). That includes `vendor/ui/` (since the WebKit apps went, only its wallpapers and icons), `vendor/host/` and `vendor/config/`: they are the author's own earlier work from the Win11 Shell project and fall under the same MIT licence, except the third-party parts listed below. This file lists the material in this repository and in the release archive that comes from other people or is not under MIT: where it is, where it comes from, its licence, and what that licence asks for. The full licence texts are in [LICENSES/](LICENSES/). The MIT licence of this project gives no rights to the material listed here; each part stays under its own licence.
 
-This overview was made on 2026-11-13 from the files tracked in git at commit 07cb8014, without network access, and updated the same day for the author's decisions of 2026-11-13: the default wallpapers renamed to Lotus and dedicated under CC0, `vendor/` confirmed as own work, and the trademark material and the unused lock screen image removed. The evidence for each entry is a file in this repository or on an Ubuntu 26.04 system (`/usr/share/doc/<package>/copyright`, the local cargo registry, the Rust toolchain). Entries marked "per upstream" come from the licence declarations the upstream projects publish and could not be checked against their sources on this machine.
+This overview was made on 2026-11-13 from the files tracked in git at commit 07cb8014, without network access, and updated the same day for the author's decisions of 2026-11-13: the default wallpapers renamed to Lotus and dedicated under CC0, `vendor/` confirmed as own work, and the trademark material and the unused lock screen image removed. It was updated again on 2026-11-14, when WebKitGTK, JavaScriptCore, libsoup and GTK 3 left WinPoint (the last commit with them is tagged `last-webkit`): the HTML, CSS and JavaScript of the apps under `vendor/ui` are gone, the crate list was made again (section 3) and the system libraries are those of the GTK 4 programs (section 4). The evidence for each entry is a file in this repository or on an Ubuntu 26.04 system (`/usr/share/doc/<package>/copyright`, the local cargo registry, the Rust toolchain). Entries marked "per upstream" come from the licence declarations the upstream projects publish and could not be checked against their sources on this machine.
 
 ## Licence texts
 
@@ -13,8 +13,7 @@ This overview was made on 2026-11-13 from the files tracked in git at commit 07c
 | [LICENSES/CC0-1.0.txt](LICENSES/CC0-1.0.txt) | CC0 1.0 Universal (copied from Ubuntu's `/usr/share/common-licenses/CC0-1.0`) | The Lotus wallpapers (section 1) |
 | [LICENSES/PSF-2.0.txt](LICENSES/PSF-2.0.txt) | Python Software Foundation License Version 2 (copied from CPython 3.14's `LICENSE.txt`) | Two Rust files translated from CPython (section 2) |
 | [LICENSES/Unicode-3.0.txt](LICENSES/Unicode-3.0.txt) | Unicode License v3 (the copy shipped with the ICU4X crates) | ICU4X crates and the Unicode tables of the Rust standard library (section 3) |
-| [LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt) | Apache License 2.0 | The `dpi` crate, and `compiler_builtins` of the Rust standard library with the LLVM exception (section 3) |
-| [LICENSES/MPL-2.0.txt](LICENSES/MPL-2.0.txt) | Mozilla Public License 2.0 | The `option-ext` crate (section 3) |
+| [LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt) | Apache License 2.0 | `compiler_builtins` of the Rust standard library, with the LLVM exception (section 3) |
 | [LICENSES/Zlib.txt](LICENSES/Zlib.txt) | zlib licence (the copy shipped with `foldhash`) | The `foldhash` crate (section 3) |
 | [LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md) | (list) | Every Rust crate in the binaries, with its copyright notice |
 
@@ -46,7 +45,7 @@ The metadata of a few SVG files also names other icon themes: the GNOME Symbolic
 
 ### Own assets, for clarity
 
-These look like they could be third-party material but are Win11 for GNOME's own work under MIT: everything in `vendor/ui/`, `vendor/host/` and `vendor/config/` that this file does not list (the earlier Win11 Shell sources, which had no LICENSE file of their own); the procedural wallpapers `vendor/ui/assets/wallpapers/{aurora,dunes,flow-dark,flow-light,glow,sunrise}.svg`; the logo and avatar in `vendor/ui/assets/img/` (`logo.svg`, `logo-mono.svg`, `logo.png`, `avatar.svg`, `avatar.png`); the Start disc `extension/start.svg` and `logo-circle.png`; the caption glyphs `vendor/config/gtk/glyphs/w11-*-symbolic.svg`; the line icons in `vendor/ui/js/core/icons.js`, `vendor/ui/js/apps/settings/navicons.js`, `native/shell/src/icons.rs` and `native/calendar/src/glyphs.rs` ("Fluent-style" describes the look; they are original drawings, not Microsoft's Fluent UI icons or a Segoe icon font); the app icons of the development mock in `vendor/ui/js/mock/index.js` (own drawings; the former `chrome` and `store` icons were replaced by a neutral globe and a plain shopping bag). Screenshots such as `docs/screenshots/*.png`, `preview-*.png` and `tests/gnome/baseline/**/*.png` are own captures; the icons visible in them remain GPL-3.0.
+These look like they could be third-party material but are Win11 for GNOME's own work under MIT: everything in `vendor/ui/`, `vendor/host/` and `vendor/config/` that this file does not list (the earlier Win11 Shell sources, which had no LICENSE file of their own); the procedural wallpapers `vendor/ui/assets/wallpapers/{aurora,dunes,flow-dark,flow-light,glow,sunrise}.svg`; the Start disc `extension/start.svg` and `logo-circle.png`; the caption glyphs `vendor/config/gtk/glyphs/w11-*-symbolic.svg`; the line icons in `native/shell/src/icons.rs`, `native/kit/src/glyph_data.rs` and `native/calendar/src/glyphs.rs` and the category icons in `native/apps/settings/src/navicons.rs` ("Fluent-style" describes the look; they are original drawings, not Microsoft's Fluent UI icons or a Segoe icon font); the drawings in `native/apps/alles/src/art.rs` and `native/apps/disks/src/art.rs`. Until tag `last-webkit` the same drawings were also in `vendor/ui/js` (`core/icons.js`, `apps/settings/navicons.js`), with the logo and avatar in `vendor/ui/assets/img/` and the app icons of the development mock (`js/mock/index.js`, whose former `chrome` and `store` icons had become a neutral globe and a plain shopping bag); those files are gone from the tree. Screenshots such as `docs/screenshots/*.png`, `preview-*.png` (in the repository only; the release archive leaves them out) and `tests/gnome/baseline/**/*.png` are own captures; the icons visible in them remain GPL-3.0.
 
 No font files are included. The style sheets only name fonts (Segoe UI, Segoe UI Variable, Selawik, Cascadia, Inter, Noto Sans, Ubuntu Sans) that the user's system provides, with generic fallbacks.
 
@@ -98,25 +97,23 @@ No licence obligation applies to these; they are named for credit and so that no
 - `native/calendar/src/gnome.rs` talks to GNOME Shell's `org.gnome.Shell.CalendarServer` with the same rules as GNOME Shell's `calendar.js` (GPL-2.0-or-later). It is an independent Rust implementation.
 - `host/src/services/update/release.rs` and `host/data/release-upgrades-helper` read `/etc/update-manager/release-upgrades` and meta-release files the way update-manager and Python's `configparser` do, written independently.
 - `days_from_civil` and `civil_from_days` in `native/shell/src/flyouts/calendar.rs`, `native/calendar/src/dates.rs` and `host/src/apps/recent_datetime.rs` follow Howard Hinnant's published civil-date algorithms.
-- The Oklab conversion in `vendor/ui/js/core/theme.js`, `native/shell/src/theme.rs`, `native/shell/src/flyouts/quick.rs` and `native/calendar/src/theme.rs` uses Björn Ottosson's Oklab matrices.
-- Colours, radii and type sizes in `vendor/ui/css/tokens.css`, `vendor/ui/css/components.css` and the native style sheets follow the WinUI 3 theme resources (microsoft/microsoft-ui-xaml, MIT). Only values are used.
+- The Oklab conversion in `native/kit/src/theme.rs`, `native/shell/src/theme.rs`, `native/shell/src/flyouts/quick.rs`, `native/calendar/src/theme.rs` and `native/apps/settings/src/common.rs` uses Björn Ottosson's Oklab matrices.
+- Colours, radii and type sizes in `native/kit/css/tokens.css`, `native/kit/css/controls.css` and the other native style sheets follow the WinUI 3 theme resources (microsoft/microsoft-ui-xaml, MIT). Only values are used.
 
 ## 3. Rust crates linked into the binaries
 
-The Rust programs link their crates statically, so the licences of those crates apply to the binaries even though the release archive does not contain their source. The host programs (`Cargo.lock`, the 12 `win11-*` programs in `bin/` of the release archive) link 95 crates; the native programs `win11-shell` and `win11-calendar` (`native/Cargo.lock`) link 37. Together that is 116 distinct crate versions. Where a crate offers a choice, it is used under MIT.
+The Rust programs link their crates statically, so the licences of those crates apply to the binaries even though the release archive does not contain their source. The 10 host programs (`Cargo.lock`) link 61 crates; the 9 GTK 4 programs (`native/Cargo.lock`: `win11-shell`, `win11-calendar` and the seven `win11-gtk-*` apps) link 37. Together that is 84 distinct crate versions in the 19 programs in `bin/` of the release archive. Where a crate offers a choice, it is used under MIT.
 
 | Licence used | Crates | Text | What it asks for binaries |
 |---|---|---|---|
-| MIT | 98 (46 MIT only, 50 MIT OR Apache-2.0, `raw-window-handle`, `memchr`), among them gtk-rs (`gtk`, `gtk4`, `glib`, `gio`, `cairo-rs`, `pango` ...), `webkit2gtk`, `javascriptcore-rs`, `soup3`, `wry`, `serde`, `serde_json`, `url`, `ureq`, `tiny_http`, `time` | [MIT permission notice](LICENSES/RUST-CRATES.md#mit-permission-notice) | Each crate's copyright notice plus the MIT permission notice |
+| MIT | 68 (29 MIT only, 38 MIT OR Apache-2.0, `memchr`), among them gtk-rs (`gtk4`, `glib`, `gio`, `gdk-pixbuf`, `cairo-rs`, `pango` ...), `serde`, `serde_json`, `url`, `ureq`, `tiny_http` | [MIT permission notice](LICENSES/RUST-CRATES.md#mit-permission-notice) | Each crate's copyright notice plus the MIT permission notice |
 | Unicode-3.0 | 15 ICU4X crates (`icu_*`, `litemap`, `tinystr`, `writeable`, `yoke`, `zerofrom`, `zerotrie`, `zerovec`, `potential_utf`) | [Unicode-3.0.txt](LICENSES/Unicode-3.0.txt) | The Unicode notice in the documentation that comes with the binaries |
-| MPL-2.0 | `option-ext` 0.2.0, unmodified | [MPL-2.0.txt](LICENSES/MPL-2.0.txt) | The licence, and where its source is available (<https://crates.io/crates/option-ext/0.2.0>). File-level copyleft: it does not extend to Win11 for GNOME's code. |
-| Apache-2.0 AND MIT | `dpi` 0.1.2 | [Apache-2.0.txt](LICENSES/Apache-2.0.txt) and the libm MIT notice | Both texts |
 | Zlib | `foldhash` 0.2.0 | [Zlib.txt](LICENSES/Zlib.txt) | Nothing for binaries; credited anyway |
 | MIT (and Unicode-3.0; Apache-2.0 WITH LLVM-exception for `compiler_builtins`) | The Rust standard library of rustc 1.97.1, linked into every program, with the crates built into it: among them `addr2line`, `adler2`, `miniz_oxide`, `object`, `memchr` 2.7.6 and `compiler_builtins`, whose licences are given per upstream | see [RUST-CRATES.md](LICENSES/RUST-CRATES.md#rust-standard-library) | The Rust project's notice and the Unicode notice; the LLVM exception needs no notice in binaries |
 
-The full list, with version, declared licence, copyright notice and source of every crate, is in [LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md). Crates that are only used while building (proc macros, build scripts) or only on other platforms do not end up in the Linux binaries and need no notice.
+The full list, with version, declared licence, copyright notice and source of every crate, is in [LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md). Crates that are only used while building (proc macros, build scripts) or only on other platforms do not end up in the Linux binaries and need no notice. The WebKit and GTK 3 crates the host linked until tag `last-webkit` (among them `wry`, `webkit2gtk`, `soup3`, `gtk` and, through `wry`, the MPL-2.0 crate `option-ext` and the Apache-2.0 AND MIT crate `dpi`) are no longer in any binary, so their notices and `LICENSES/MPL-2.0.txt` went.
 
-This file, [LICENSES/](LICENSES/) and [LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md) have to travel with every archive that contains these binaries. `scripts/package.py` puts `LICENSE`, this file and `LICENSES/` in the release archive. The native programs are not in the release archive yet; their crates are listed so the notices are complete once they are.
+This file, [LICENSES/](LICENSES/) and [LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md) have to travel with every archive that contains these binaries. `scripts/package.py` puts `LICENSE`, this file and `LICENSES/` in the release archive, next to all 19 programs.
 
 ## 4. System libraries and programs used at runtime (not included)
 
@@ -124,19 +121,16 @@ Win11 for GNOME does not include these. The programs link to them dynamically, o
 
 | Component | Used by | Licence (from `/usr/share/doc/<package>/copyright`) |
 |---|---|---|
-| GTK 3 (3.24.52), with Pango and ATK | host programs | LGPL-2.0-or-later and LGPL-2.1-or-later |
-| WebKitGTK and JavaScriptCoreGTK 4.1 (2.52.6) | host programs | BSD-2-Clause, with LGPL-2.0-or-later and LGPL-2.1-or-later parts |
-| libsoup 3 (3.6.6) | host programs | LGPL-2.0-or-later |
-| GTK 4 (4.22.4), graphene (1.10.8) | `win11-shell`, `win11-calendar` | LGPL-2.0-or-later and LGPL-2.1-or-later; MIT |
-| GLib, GIO, GObject (2.88.0), gdk-pixbuf (2.44.5), cairo (1.18.4) | host and native programs | LGPL-2.1-or-later; LGPL-2.0-or-later and LGPL-2.1-or-later; LGPL-2.1-only OR MPL-1.1 |
-| zlib (1.3.1), glibc (2.43), libgcc_s | host and native programs | Zlib; LGPL-2.1-or-later; GPL-3.0-or-later WITH GCC-exception-3.1 |
+| GTK 4 (4.22.4), graphene (1.10.8), Pango (1.57.0), cairo (1.18.4) | the GTK 4 programs: `win11-shell`, `win11-calendar` and the seven `win11-gtk-*` apps (Pango directly only in Explorer, Settings, Task Manager and Alles) | LGPL-2.0-or-later and LGPL-2.1-or-later; MIT; LGPL-2.0-or-later and LGPL-2.1-or-later; LGPL-2.1-only OR MPL-1.1 |
+| GLib, GIO, GObject (2.88.0), gdk-pixbuf (2.44.5) | host and GTK 4 programs (the host programs link nothing else of GNOME) | LGPL-2.1-or-later; LGPL-2.0-or-later and LGPL-2.1-or-later |
+| zlib (1.3.1), glibc (2.43), libgcc_s | host and GTK 4 programs | Zlib; LGPL-2.1-or-later; GPL-3.0-or-later WITH GCC-exception-3.1 |
 | libarchive (loaded with `dlopen`), ffmpeg and ffprobe (started as programs, optional) | host programs (archives, video thumbnails) | not bundled; licences not reviewed here |
 | GNOME Shell 50 and Mutter | `extension/` runs inside GNOME Shell | GPL-2.0-or-later. The extension's MIT licence is compatible with it. |
 | python-apt (3.1.0) | `host/data/phasing.py`, run with the system `python3` | GPL-2.0-or-later |
 | PyGObject (3.56.2), pycairo (1.27.0), gtk-layer-shell | `scripts/`, `vendor/host/`, `tests/` | LGPL-2.1-or-later; LGPL-2.1-only OR MPL-1.1; MIT |
 | Pillow, PackageKit-glib, libnm, Node.js built-in modules | tests and development tools only | HPND; GPL-2.0-or-later and LGPL-2.1-or-later; not distributed |
 
-The `-sys` crates of gtk-rs and webkit2gtk-rs only declare the C interfaces in Rust (MIT); the C libraries themselves are not included. As the gtk-rs `COPYRIGHT` file points out, distributing executables that link to these libraries can bring in LGPL terms; with dynamic linking to the user's own copies, as here, nothing of the libraries is redistributed.
+The `-sys` crates of gtk-rs only declare the C interfaces in Rust (MIT); the C libraries themselves are not included. As the gtk-rs `COPYRIGHT` file points out, distributing executables that link to these libraries can bring in LGPL terms; with dynamic linking to the user's own copies, as here, nothing of the libraries is redistributed.
 
 ## 5. Trademarks
 

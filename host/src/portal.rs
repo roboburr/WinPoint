@@ -1,12 +1,12 @@
-//! On-demand xdg-desktop-portal FileChooser backend using the native Explorer picker: the GTK 4 Explorer's
-//! picker mode (picker.rs show_native) when win11-gtk-explorer is installed, else the WebKit picker window.
-mod external;
+//! On-demand xdg-desktop-portal FileChooser backend using the native Explorer picker: each request opens the GTK 4
+//! Explorer's picker mode (picker.rs show_native) on this process's own backend. The process itself runs no GTK: a
+//! GIO service application, its runtime and HTTP server, and one picker child per request.
 mod model;
 #[cfg(test)]
 mod tests;
+use gio::prelude::*;
 use glib::variant::ToVariant;
-use gtk::{gio, glib, prelude::*};
-use serde_json::{Value, json};
+use serde_json::Value;
 use std::{
     cell::{Cell, RefCell},
     collections::BTreeMap,
@@ -38,24 +38,22 @@ struct Pending {
     invocation: gio::DBusMethodInvocation,
     registration: gio::RegistrationId,
     phase: Phase,
-    key: Option<String>,
-    parent: Option<gtk::ApplicationWindow>,
-    external: Option<Rc<external::Parent>>,
     /// The native GTK 4 picker process (picker.rs show_native); dropping it ends the process.
     native: Option<crate::picker::NativePicker>,
 }
 struct Portal {
-    app: glib::WeakRef<gtk::Application>,
+    app: glib::WeakRef<gio::Application>,
     bus: gio::DBusConnection,
     runtime: Arc<crate::runtime::Runtime>,
-    address: String,
+    /// This process's backend for the picker child: `<port>:<token>` (WIN11_APP_BACKEND, native/kit lib.rs).
+    backend: String,
     pending: RefCell<BTreeMap<String, Pending>>,
     activity: Cell<Instant>,
     workers: Arc<AtomicUsize>,
     registration: RefCell<Option<gio::RegistrationId>>,
 }
 // gio 0.18 requires Send+Sync handlers, but dispatches them on the registration context.
-// GTK objects and method invocations stay on that thread; callbacks carry no GTK/Rc value.
+// The portal state and method invocations stay on that thread; callbacks carry no Rc value.
 thread_local! {static CURRENT:RefCell<std::rc::Weak<Portal>>=RefCell::new(std::rc::Weak::new());}
 fn current() -> Option<Rc<Portal>> {
     CURRENT.with(|value| value.borrow().upgrade())
@@ -194,93 +192,25 @@ impl Portal {
                 invocation: inv,
                 registration: reg,
                 phase: Phase::Preparing(rx, Instant::now()),
-                key: None,
-                parent: None,
-                external: None,
                 native: None,
             },
         );
     }
     fn choose(self: &Rc<Self>, handle: &str, options: Value) {
-        let Some(app) = self.app.upgrade() else {
-            self.finish(handle, 2, None);
-            return;
-        };
         let Some(request) = self.pending.borrow().get(handle).map(|p| p.request.clone()) else {
             return;
         };
-        // The native GTK 4 picker (win11-gtk-explorer) when it is installed: it parents itself to the caller's
-        // window; the WebKit picker below is the fallback.
-        if let Some((native, rx)) =
-            crate::picker::show_native(&options, &request.parent, &self.address)
-        {
-            trace("native picker started");
-            if let Some(pending) = self.pending.borrow_mut().get_mut(handle) {
-                pending.native = Some(native);
-                pending.phase = Phase::Choosing(rx);
-            }
+        // The native GTK 4 picker (win11-gtk-explorer) parents itself to the caller's window. Without it (a broken
+        // install; show_native says so) the request ends as failed, response 2.
+        let Some((native, rx)) =
+            crate::picker::show_native(&options, &request.parent, &self.backend)
+        else {
+            self.finish(handle, 2, None);
             return;
-        }
-        let external = match external::Parent::new(&request.parent) {
-            Ok(p) => Rc::new(p),
-            Err(e) => {
-                eprintln!("Win11 file portal: {e}; opening without external parent");
-                match external::Parent::new("") {
-                    Ok(p) => Rc::new(p),
-                    Err(_) => {
-                        self.finish(handle, 2, None);
-                        return;
-                    }
-                }
-            }
         };
-        let parent = gtk::ApplicationWindow::builder()
-            .application(&app)
-            .screen(&external.display.default_screen())
-            .title("Win11 FileChooser parent")
-            .build();
-        let (tx, rx) = mpsc::channel();
-        let transient = external.clone();
-        let configure = Rc::new(move |window: &gtk::ApplicationWindow| {
-            if window.window().is_some() {
-                if let Err(e) = transient.apply(window) {
-                    eprintln!("Win11 file portal: {e}");
-                }
-            } else {
-                let transient = transient.clone();
-                window.connect_realize(move |window| {
-                    if let Err(e) = transient.apply(window) {
-                        eprintln!("Win11 file portal: {e}");
-                    }
-                });
-            }
-        });
-        let key = match crate::picker::show_portal_with_parent(
-            &parent,
-            options,
-            &self.address,
-            tx,
-            configure,
-        ) {
-            Ok(key) => key,
-            Err(e) => {
-                eprintln!("Win11 file portal: {e}");
-                unsafe {
-                    parent.destroy();
-                }
-                self.finish(handle, 2, None);
-                return;
-            }
-        };
-        if let Some(window) = crate::picker::window(&key) {
-            // Like the GTK reference backend, present the completed chooser after
-            // showing it. show_all alone does not activate an imported parent's modal.
-            window.present();
-        }
+        trace("native picker started");
         if let Some(pending) = self.pending.borrow_mut().get_mut(handle) {
-            pending.key = Some(key);
-            pending.parent = Some(parent);
-            pending.external = Some(external);
+            pending.native = Some(native);
             pending.phase = Phase::Choosing(rx);
         }
     }
@@ -372,14 +302,8 @@ impl Portal {
         pending
             .invocation
             .return_value(Some(&(response, results.unwrap_or_default()).to_variant()));
-        if let Some(key) = pending.key {
-            crate::picker::cancel(&key);
-        }
-        if let Some(parent) = pending.parent {
-            unsafe {
-                parent.destroy();
-            }
-        }
+        // the picker ends with its request: an answer, Request.Close, the caller gone, the portal stopping
+        drop(pending.native);
         self.activity.set(Instant::now());
     }
     fn close_owner(&self, owner: &str) {
@@ -407,8 +331,9 @@ impl Portal {
 }
 pub(crate) fn run() -> Result<(), String> {
     trace("entry");
-    // This process implements a portal. GTK must read its native desktop settings
-    // directly, otherwise a frontend activating us can wait on itself in gtk_init.
+    // This process implements a portal: GIO here must not ask the frontend that is activating it (it would wait
+    // on itself), and the picker child gets GDK_DEBUG=no-portals (picker.rs). Apps launched from here get the
+    // caller's own GTK_USE_PORTAL back (launch_context.rs, WIN11_PORTAL_PARENT_GTK_USE_PORTAL).
     // run() is the executable entry point; no worker thread exists at this point.
     unsafe {
         if std::env::var_os("WIN11_PORTAL_ENV").is_none() {
@@ -426,11 +351,9 @@ pub(crate) fn run() -> Result<(), String> {
     }
     trace("native scope ready");
     glib::set_prgname(Some(NAME));
-    gtk::init().map_err(|e| e.to_string())?;
-    trace("GTK ready");
     // GApplication acquires its ID before startup. Keep that ID private to this
     // host and publish the portal implementation only after its object is ready.
-    let app = gtk::Application::new(
+    let app = gio::Application::new(
         Some("io.github.win11shell.FilePortal"),
         gio::ApplicationFlags::IS_SERVICE,
     );
@@ -440,33 +363,22 @@ pub(crate) fn run() -> Result<(), String> {
     let stopping = stop.clone();
     let instance = std::env::var_os("WIN11_NATIVE_INSTANCE").map(PathBuf::from);
     let discover = instance.clone();
-    // Publish the ready implementation before GtkApplication's default startup,
-    // which may synchronously inspect the frontend. The frontend itself can be
-    // waiting for this implementation's activation. Callbacks run once app.run
-    // starts the registration context; no picker is created before GTK startup.
+    // Publish the ready implementation before the application registers its own
+    // name. The frontend itself can be waiting for this implementation's
+    // activation. Callbacks run once app.run starts the registration context;
+    // no picker is started before the application's startup.
     let setup = (|| -> Result<Rc<Portal>, String> {
-        let (ui_tx, ui_rx) = mpsc::channel();
-        let lifecycle = ui_tx.clone();
+        // shell.quit / shell.restart (request_shutdown, from a runtime thread): the timer below quits; the next
+        // request activates the portal again (a restart is a quit here, design §5)
+        let quit = stopping.clone();
         let runtime = crate::runtime::Runtime::new(
             crate::ui_root()?,
             "picker",
-            ui_tx,
-            Arc::new(move |restart| {
-                let (ack, _) = mpsc::channel();
-                let _ = lifecycle.send(crate::UiRequest {
-                    kind: crate::UiRequestKind::Lifecycle,
-                    payload: json!({"restart":restart}),
-                    ack,
-                });
-            }),
-            true,
+            Arc::new(move |_restart| quit.store(true, Ordering::Relaxed)),
         )?;
         trace("runtime ready");
         let (port, server_stop) = runtime.server()?;
-        let address = format!(
-            "http://127.0.0.1:{port}/ui/index.html?token={}",
-            runtime.backend.token
-        );
+        let backend = format!("{port}:{}", runtime.backend.token);
         if let Some(path) = &discover {
             crate::backend::write_instance(path, port, &runtime.backend.token)?;
         }
@@ -476,7 +388,7 @@ pub(crate) fn run() -> Result<(), String> {
             app: app.downgrade(),
             bus: bus.clone(),
             runtime,
-            address,
+            backend,
             pending: RefCell::new(BTreeMap::new()),
             activity: Cell::new(Instant::now()),
             workers: Arc::new(AtomicUsize::new(0)),
@@ -540,21 +452,6 @@ pub(crate) fn run() -> Result<(), String> {
             }
             portal.runtime.beat();
             portal.poll();
-            for request in ui_rx.try_iter().take(8) {
-                match request.kind {
-                    crate::UiRequestKind::Lifecycle => {
-                        let _ = request.ack.send(Ok(json!({})));
-                        if let Some(app) = portal.app.upgrade() {
-                            app.quit();
-                        }
-                    }
-                    _ => {
-                        let _ = request
-                            .ack
-                            .send(Err("Nested file chooser unavailable in portal".into()));
-                    }
-                }
-            }
             if quitting.load(Ordering::Relaxed)
                 || (portal.pending.borrow().is_empty() && portal.activity.get().elapsed() > idle)
             {
@@ -569,9 +466,9 @@ pub(crate) fn run() -> Result<(), String> {
         Ok(portal)
     })();
     *slot.borrow_mut() = Some(setup?);
-    // GtkApplication's default startup may inspect the desktop portal. During
-    // cold activation that frontend is loading our proxy, so dispatch its
-    // property/introspection requests before entering GTK's synchronous startup.
+    // During cold activation the frontend is loading our proxy: dispatch its
+    // property/introspection requests before the application's synchronous
+    // registration and startup.
     let startup = glib::MainLoop::new(None, false);
     let completed = startup.clone();
     slot.borrow().as_ref().unwrap().bus.call(

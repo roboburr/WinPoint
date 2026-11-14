@@ -3,7 +3,6 @@
 use super::{ApiError, ApiResult, Context, abs_in, io_error};
 use gio::prelude::*;
 use glib::Unichar;
-use gtk::{gio, glib};
 use serde_json::{Value, json};
 use std::{
     cmp::Ordering,
@@ -782,9 +781,10 @@ fn current_theme() -> String {
     theme
 }
 
-/// The test binary only (the intermittent unit-suite hang: R2-D m1, GX1 n1, GW4 §3.1). Every host sets up GIO's
-/// process-wide defaults on its main thread (gtk::init) before any worker thread runs; the lib test binary did
-/// that inside up to 16 tests at the same moment (app_params and files::actions through g_vfs_get_default,
+/// The test binary only (the intermittent unit-suite hang: R2-D m1, GX1 n1, GW4 §3.1). The GTK hosts set up GIO's
+/// process-wide defaults on their main thread (gtk::init) before any worker thread ran (GTK left the host on 14-11;
+/// a `--http-only` backend never initialised it); the lib test binary did that inside up to 16 tests at the same
+/// moment (app_params and files::actions through g_vfs_get_default,
 /// apps::catalog, files::places and files::properties through the icon theme's GSettings and its default
 /// backend, apps::recent through the MIME database), and every recorded hang had exactly those tests blocked
 /// in it. So the binary does it once, on one thread, before libtest starts its test threads: the default VFS

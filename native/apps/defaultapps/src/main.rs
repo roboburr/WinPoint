@@ -1,4 +1,4 @@
-//! Win11 GNOME Default apps in GTK 4 (../../APPS.md): vendor/ui/js/apps/defaultapps/main.js and
+//! Win11 GNOME Default apps in GTK 4 (../../APPS.md): last-webkit:vendor/ui/js/apps/defaultapps/main.js and
 //! css/defaultapps.css on the kit. A searchable list of file types and link schemes, 100 per page
 //! (apps.mimeTypes), each with its default app; a click asks "Een app kiezen voor ..." with the apps that can open
 //! it (apps.forType), and "Als standaard instellen" sets one (apps.setDefaultForType). The list follows
@@ -63,9 +63,9 @@ fn main() -> glib::ExitCode {
     })
 }
 
-/// The launch arguments as the WebKit app got them in its URL query (host/src/lib.rs run_inner): `--params JSON`
-/// gives its keys (strings as they are, other values as JSON text), `--tab-ticket T` gives tabTicket, otherwise
-/// the first argument is `path` and the others `tabs`.
+/// The launch arguments as the WebKit app got them in its URL query (`git show last-webkit:host/src/lib.rs`,
+/// run_inner): `--params JSON` gives its keys (strings as they are, other values as JSON text), `--tab-ticket T`
+/// gives tabTicket, otherwise the first argument is `path` and the others `tabs`.
 fn params(args: &[String]) -> Map<String, Value> {
     let mut args: Vec<&str> =
         args.iter().map(String::as_str).filter(|a| !matches!(*a, "--dry-run" | "--http-only")).collect();

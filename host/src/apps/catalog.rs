@@ -2,7 +2,6 @@
 use crate::files::ApiResult;
 use gio::prelude::*;
 use glib::Unichar;
-use gtk::{gio, glib};
 use serde_json::{Value, json};
 use std::{
     cmp::Ordering,

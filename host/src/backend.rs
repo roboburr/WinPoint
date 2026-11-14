@@ -1,6 +1,5 @@
 //! Native runtime identity, private configuration import and explicit external oracle attachment.
 
-use gtk::glib;
 use serde_json::Value;
 use std::{
     fs::{self, File, OpenOptions},

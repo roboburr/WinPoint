@@ -1,5 +1,7 @@
 # GNOME-sneltoetsen — 0.6.2
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Getest op 1 november 2026 in een afzonderlijke D-Bus-sessie met GNOME Shell 50.1/Wayland, een virtueel scherm van 1280 × 800 en private HOME/XDG-mappen. De actieve gebruikerssessie en haar sneltoetsen zijn daarbij niet veranderd. De resultaten en bronhashes staan in `validation/shortcuts-0.6.2.json`; de ontwikkelharness en logboeken staan buiten het pakket in `work/shortcuts-test-0.6.2/`.
 
 ## Wijziging

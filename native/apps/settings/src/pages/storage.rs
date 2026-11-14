@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Opslag (vendor/ui/js/apps/settings/pages/storage.js): the drive with the home
+//! Instellingen › Systeem › Opslag (last-webkit:vendor/ui/js/apps/settings/pages/storage.js): the drive with the home
 //! folder, what fills the personal folder (a coloured stacked bar and a category list, like Windows 11) and
 //! every drive.
 use super::{Builder, Content, Page, PageFuture};

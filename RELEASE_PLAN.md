@@ -1,6 +1,6 @@
 # Doel voor openbare uitgave
 
-Het project moet na afronding als open source beschikbaar komen, met broncode en een downloadbaar installatiepakket. Er is vanuit deze werkmap nog geen openbare repository of release gepubliceerd.
+Het project moet na afronding als open source beschikbaar komen, met broncode en een downloadbaar installatiepakket. De broncode staat op GitHub (roboburr/WinPoint); er is nog geen release gepubliceerd.
 
 Voor de eerste openbare uitgave:
 

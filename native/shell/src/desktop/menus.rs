@@ -1,6 +1,6 @@
-//! The desktop's context menus (vendor/ui/js/desktop/menus.js), Win11 wording and order: the background menu
-//! (Beeld, Sorteren op, Vernieuwen, Plakken, Ongedaan maken, Nieuw, Beeldscherminstellingen, Aan persoonlijke
-//! voorkeur aanpassen, Openen in Terminal) and the item menu (the row of Knippen, Kopiëren, Naam wijzigen,
+//! The desktop's context menus (`git show 418ea594:vendor/ui/js/desktop/menus.js`), Win11 wording and order: the
+//! background menu (Beeld, Sorteren op, Vernieuwen, Plakken, Ongedaan maken, Nieuw, Beeldscherminstellingen, Aan
+//! persoonlijke voorkeur aanpassen, Openen in Terminal) and the item menu (the row of Knippen, Kopiëren, Naam wijzigen,
 //! Verwijderen on top, then Openen, Openen met, ZIP, Kopiëren als pad, Eigenschappen, Openen in Terminal).
 //! GTK popover menus over the "dt" action group (actions.rs).
 use super::grid::{Desk, Item};

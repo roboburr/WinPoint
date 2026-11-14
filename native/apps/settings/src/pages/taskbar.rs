@@ -1,5 +1,5 @@
-//! Instellingen › Persoonlijke instellingen › Taakbalk (vendor/ui/js/apps/settings/pages/taskbar.js): the items
-//! (search, task view, widgets), the notification area ("Andere systeemvakpictogrammen": which tray icons sit
+//! Instellingen › Persoonlijke instellingen › Taakbalk (last-webkit:vendor/ui/js/apps/settings/pages/taskbar.js): the
+//! items (search, task view, widgets), the notification area ("Andere systeemvakpictogrammen": which tray icons sit
 //! on the taskbar and which stay behind the ^ overflow) and the behaviour (alignment, auto-hide, seconds), with a
 //! live mini taskbar on the wallpaper.
 //!

@@ -2,7 +2,7 @@
 //! `PT_DYNAMIC` segment's `DT_NEEDED` entries resolved through `DT_STRTAB` (a virtual address, mapped to a
 //! file offset by the `PT_LOAD` segment that holds it), in the order `readelf -d` lists them. Reads only the
 //! header, the program headers, the dynamic segment and the string table (no whole-file read: our binaries
-//! are about 32 MB). Tested against `readelf -d target/debug/win11-*` (unit test + tests/update/test_compat.sh).
+//! are about 10 MB). Tested against `readelf -d` on the `BINS` of a build (unit test + tests/update/test_compat.sh).
 use std::{fs::File, io, os::unix::fs::FileExt, path::Path};
 
 const PT_LOAD: u32 = 1;
@@ -103,9 +103,11 @@ pub(super) fn needed(path: &Path) -> io::Result<Vec<String>> {
         .collect()
 }
 
-/// libc, libgcc_s and the dynamic loader are not checked (design §6.2: GLIBC_2.39 is far below any new libc).
+/// libc (with libm, the native programs' maths of the same package), libgcc_s and the dynamic loader are not
+/// checked (design §6.2: GLIBC_2.39 is far below any new libc).
 pub(super) fn skipped(soname: &str) -> bool {
     soname.starts_with("libc.so.")
+        || soname.starts_with("libm.so.")
         || soname.starts_with("libgcc_s.so.")
         || soname.starts_with("ld-linux")
 }
@@ -212,17 +214,28 @@ pub(super) mod tests {
 
     #[test]
     fn the_skip_rule() {
-        for name in ["libc.so.6", "libgcc_s.so.1", "ld-linux-x86-64.so.2"] {
+        for name in [
+            "libc.so.6",
+            "libm.so.6",
+            "libgcc_s.so.1",
+            "ld-linux-x86-64.so.2",
+        ] {
             assert!(skipped(name), "{name}");
         }
-        for name in ["libcairo.so.2", "libgio-2.0.so.0", "libz.so.1"] {
+        for name in [
+            "libcairo.so.2",
+            "libgio-2.0.so.0",
+            "libz.so.1",
+            "libgtk-4.so.1",
+        ] {
             assert!(!skipped(name), "{name}");
         }
     }
 
-    /// The 12 binaries of target/debug against `readelf -d`, recorded in
-    /// tests/update/fixtures/compat/readelf-needed.txt (tests/update/test_compat.sh runs readelf again on every
-    /// run and fails when that file is out of date). Skipped without a build.
+    /// The binaries of scripts/install.py `BINS` in a build directory (`W11_TEST_BUILD_DIR`, else
+    /// tests/build/native-release) against `readelf -d`, recorded in tests/update/fixtures/compat/readelf-needed.txt
+    /// (tests/update/test_compat.sh runs readelf again on every run and fails when that file is out of date; its
+    /// --record-readelf writes it). A missing binary fails.
     #[test]
     fn our_binaries_equal_readelf() {
         let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("..");
@@ -235,17 +248,30 @@ pub(super) mod tests {
             .filter_map(|l| l.split_once(':'))
             .map(|(name, list)| (name, list.split_whitespace().collect()))
             .collect();
-        assert_eq!(expected.len(), 12, "the recording names the 12 binaries");
-        let dir = root.join("target/debug");
-        if !expected.keys().all(|name| dir.join(name).is_file()) {
-            eprintln!(
-                "our_binaries_equal_readelf: no build in {}, skipped",
-                dir.display()
-            );
-            return;
-        }
+        let install = fs::read_to_string(root.join("scripts/install.py")).unwrap();
+        let mut bins: Vec<&str> = install
+            .split("\nBINS = (")
+            .nth(1)
+            .and_then(|t| t.split(')').next())
+            .expect("install.py BINS")
+            .split('"')
+            .skip(1)
+            .step_by(2)
+            .collect();
+        bins.sort_unstable();
+        assert_eq!(
+            expected.keys().copied().collect::<Vec<_>>(),
+            bins,
+            "the recording names every binary of BINS"
+        );
+        let dir = std::env::var_os("W11_TEST_BUILD_DIR").map_or_else(
+            || root.join("tests/build/native-release"),
+            std::path::PathBuf::from,
+        );
         for (name, list) in &expected {
-            assert_eq!(needed(&dir.join(name)).unwrap(), *list, "{name}");
+            let path = dir.join(name);
+            let found = needed(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
+            assert_eq!(found, *list, "{name}");
         }
     }
 }

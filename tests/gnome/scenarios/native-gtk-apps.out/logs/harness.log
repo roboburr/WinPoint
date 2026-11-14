@@ -1,104 +1,114 @@
-21:41:51 GE0c run lang=nl switch=False seed=defaults MemAvailable=5253008 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py
-21:43:20 private install: exit 0 in 73.2 s, 87828 mutated paths, 0 outside the run dir, ok=True
-21:43:22 GStreamer registry warmed in 2.8 s (['gst-inspect-1.0 version 1.28.2'])
-21:43:26 GNOME Shell 50.1 up (mode user, unsafe True)
-21:43:31 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py
-21:43:34   check PASS: explorer: boot report
-21:43:34   check PASS: explorer: window
-21:43:34   check PASS: explorer: native process
-21:43:37   check PASS: explorer: backend child
-21:43:37   check PASS: explorer: no WebKit
-21:43:37   check PASS: explorer: rendered
-21:43:44   check PASS: explorer use: Testmap is listed
-21:43:45   check PASS: explorer use: a double-click opens Testmap
-21:43:46   check PASS: explorer use: Back returns to the home folder
-21:43:48   check PASS: explorer use: Enter opens the selected Testmap
-21:43:49   check PASS: explorer use: Alt+Left returns to the home folder
-21:43:50   check PASS: explorer: closes
-21:43:50   check PASS: settings: boot report
-21:43:50   check PASS: settings: window
-21:43:50   check PASS: settings: native process
-21:43:52   check PASS: settings: backend child
-21:43:52   check PASS: settings: no WebKit
-21:43:52   check PASS: settings: rendered
-21:44:00   check PASS: settings use: nav-system opens Systeem
-21:44:01   check PASS: settings use: nav-personalization opens Persoonlijke instellingen
-21:44:03   check PASS: settings: closes
-21:44:03   check PASS: taskmgr: boot report
-21:44:03   check PASS: taskmgr: window
-21:44:03   check PASS: taskmgr: native process
-21:44:06   check PASS: taskmgr: backend child
-21:44:06   check PASS: taskmgr: no WebKit
-21:44:06   check PASS: taskmgr: rendered
-21:44:13   check PASS: taskmgr use: nav-processes shows taskmgr-processes
-21:44:15   check PASS: taskmgr use: nav-performance shows taskmgr-perf-list
-21:44:18   check PASS: taskmgr: closes
-21:44:19   check PASS: alles: boot report
-21:44:19   check PASS: alles: window
-21:44:19   check PASS: alles: native process
-21:44:21   check PASS: alles: backend child
-21:44:21   check PASS: alles: no WebKit
-21:44:21   check PASS: alles: rendered
-21:44:29   check PASS: alles: closes
-21:44:29   check PASS: disks: boot report
-21:44:29   check PASS: disks: window
-21:44:29   check PASS: disks: native process
-21:44:31   check PASS: disks: backend child
-21:44:31   check PASS: disks: no WebKit
-21:44:32   check PASS: disks: rendered
-21:44:39   check PASS: disks use: the stand-in disk is listed
-21:44:40   check PASS: disks use: Eigenschappen opens the volume page
-21:44:41   check PASS: disks use: Back returns to the overview
-21:44:42   check PASS: disks: closes
-21:44:42   check PASS: defaultapps: boot report
-21:44:42   check PASS: defaultapps: window
-21:44:42   check PASS: defaultapps: native process
-21:44:44   check PASS: defaultapps: backend child
-21:44:44   check PASS: defaultapps: no WebKit
-21:44:44   check PASS: defaultapps: rendered
-21:44:52   check PASS: defaultapps use: file types are listed
-21:44:52   check PASS: defaultapps use: a row opens "Een app kiezen"
-21:44:53   check PASS: defaultapps use: Escape closes the dialog
-21:44:55   check PASS: defaultapps: closes
-21:44:55   check PASS: installer: boot report
-21:44:55   check PASS: installer: window
-21:44:55   check PASS: installer: native process
-21:44:58   check PASS: installer: backend child
-21:44:58   check PASS: installer: no WebKit
-21:44:58   check PASS: installer: rendered
-21:45:05   check PASS: installer use: the empty state shows
-21:45:06   check PASS: installer: closes
-21:45:11   check PASS: alles use: a typed query lists the matching files
-21:45:12   check PASS: alles use: closes
-21:45:23   check PASS: procs: each running native app is one row in Processen
-21:45:23   check PASS: procs: no backend row of its own in the visible table
-21:45:24   check PASS: procs: sysmon.processes has explorer once, with its window and backend
-21:45:24   check PASS: procs: sysmon.processes has settings once, with its window and backend
-21:45:24   check PASS: procs: sysmon.processes has alles once, with its window and backend
-21:45:24   check PASS: procs: sysmon.processes has taskmgr once, with its window, its backend as the host row
-21:45:25   check PASS: procs: the apps close
-21:45:27   check PASS: explorer (light): boot report
-21:45:27   check PASS: explorer (light): window
-21:45:27   check PASS: explorer (light): native process
-21:45:30   check PASS: explorer (light): backend child
-21:45:30   check PASS: explorer (light): no WebKit
-21:45:30   check PASS: explorer (light): rendered
-21:45:33   check PASS: explorer (light): closes
-21:45:34   check PASS: settings (light): boot report
-21:45:34   check PASS: settings (light): window
-21:45:34   check PASS: settings (light): native process
-21:45:36   check PASS: settings (light): backend child
-21:45:36   check PASS: settings (light): no WebKit
-21:45:36   check PASS: settings (light): rendered
-21:45:40   check PASS: settings (light): closes
-21:45:40   check PASS: taskmgr (light): boot report
-21:45:40   check PASS: taskmgr (light): window
-21:45:40   check PASS: taskmgr (light): native process
-21:45:43   check PASS: taskmgr (light): backend child
-21:45:43   check PASS: taskmgr (light): no WebKit
-21:45:43   check PASS: taskmgr (light): rendered
-21:45:46   check PASS: taskmgr (light): closes
-21:46:15 shutdown shell clients: signalled own descendants 67:ibus-daemon, 401:win11-shell, 1478:glycin-image-rs, 518:win11-panel, 3630:glycin-svg, 236:ibus-memconf, 238:ibus-extension-, 402:ibus-engine-sim
-21:46:16 shutdown gnome-shell: signalled own descendants 46:gnome-shell
-21:46:17 shutdown system bus: signalled own descendants 45:dbus-daemon
-21:46:17 inner done: 0 surfaces, 0 failed []
+04:38:49 GE0c run lang=en switch=False seed=defaults MemAvailable=6589976 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py
+04:40:11 private install: exit 0 in 67.3 s, 87253 mutated paths, 0 outside the run dir, ok=True
+04:40:15 GNOME Shell 50.1 up (mode user, unsafe True)
+04:40:19 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-gtk-apps.py
+04:40:23   check PASS: explorer: boot report
+04:40:23   check PASS: explorer: window
+04:40:23   check PASS: explorer: native process
+04:40:25   check PASS: explorer: backend child
+04:40:25   check PASS: explorer: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:40:25   check PASS: explorer: no WebKit
+04:40:25   check PASS: explorer: rendered
+04:40:33   check PASS: explorer use: Testmap is listed
+04:40:33   check PASS: explorer use: a double-click opens Testmap
+04:40:35   check PASS: explorer use: Back returns to the home folder
+04:40:37   check PASS: explorer use: Enter opens the selected Testmap
+04:40:38   check PASS: explorer use: Alt+Left returns to the home folder
+04:40:38   check PASS: explorer: closes
+04:40:39   check PASS: settings: boot report
+04:40:39   check PASS: settings: window
+04:40:39   check PASS: settings: native process
+04:40:41   check PASS: settings: backend child
+04:40:41   check PASS: settings: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:40:41   check PASS: settings: no WebKit
+04:40:41   check PASS: settings: rendered
+04:40:48   check PASS: settings use: nav-system opens System
+04:40:50   check PASS: settings use: nav-personalization opens Personalisation
+04:40:51   check PASS: settings: closes
+04:40:52   check PASS: taskmgr: boot report
+04:40:52   check PASS: taskmgr: window
+04:40:52   check PASS: taskmgr: native process
+04:40:54   check PASS: taskmgr: backend child
+04:40:54   check PASS: taskmgr: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:40:54   check PASS: taskmgr: no WebKit
+04:40:54   check PASS: taskmgr: rendered
+04:41:02   check PASS: taskmgr use: nav-processes shows taskmgr-processes
+04:41:04   check PASS: taskmgr use: nav-performance shows taskmgr-perf-list
+04:41:07   check PASS: taskmgr: closes
+04:41:07   check PASS: alles: boot report
+04:41:07   check PASS: alles: window
+04:41:07   check PASS: alles: native process
+04:41:09   check PASS: alles: backend child
+04:41:09   check PASS: alles: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:41:09   check PASS: alles: no WebKit
+04:41:09   check PASS: alles: rendered
+04:41:17   check PASS: alles: closes
+04:41:17   check PASS: disks: boot report
+04:41:17   check PASS: disks: window
+04:41:17   check PASS: disks: native process
+04:41:20   check PASS: disks: backend child
+04:41:20   check PASS: disks: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:41:20   check PASS: disks: no WebKit
+04:41:20   check PASS: disks: rendered
+04:41:27   check PASS: disks use: the stand-in disk is listed
+04:41:28   check PASS: disks use: Eigenschappen opens the volume page
+04:41:29   check PASS: disks use: Back returns to the overview
+04:41:30   check PASS: disks: closes
+04:41:30   check PASS: defaultapps: boot report
+04:41:30   check PASS: defaultapps: window
+04:41:30   check PASS: defaultapps: native process
+04:41:32   check PASS: defaultapps: backend child
+04:41:32   check PASS: defaultapps: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:41:32   check PASS: defaultapps: no WebKit
+04:41:32   check PASS: defaultapps: rendered
+04:41:40   check PASS: defaultapps use: file types are listed
+04:41:40   check PASS: defaultapps use: a row opens "Een app kiezen"
+04:41:41   check PASS: defaultapps use: Escape closes the dialog
+04:41:43   check PASS: defaultapps: closes
+04:41:43   check PASS: installer: boot report
+04:41:43   check PASS: installer: window
+04:41:43   check PASS: installer: native process
+04:41:46   check PASS: installer: backend child
+04:41:46   check PASS: installer: the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:41:46   check PASS: installer: no WebKit
+04:41:46   check PASS: installer: rendered
+04:41:53   check PASS: installer use: the empty state shows
+04:41:54   check PASS: installer: closes
+04:41:59   check PASS: alles use: a typed query lists the matching files
+04:42:00   check PASS: alles use: closes
+04:42:11   check PASS: procs: each running native app is one row in Processen
+04:42:11   check PASS: procs: no backend row of its own in the visible table
+04:42:12   check PASS: procs: sysmon.processes has explorer once, with its window and backend
+04:42:12   check PASS: procs: sysmon.processes has settings once, with its window and backend
+04:42:12   check PASS: procs: sysmon.processes has alles once, with its window and backend
+04:42:12   check PASS: procs: sysmon.processes has taskmgr once, with its window, its backend as the host row
+04:42:12   check PASS: procs: the apps close
+04:42:15   check PASS: explorer (light): boot report
+04:42:15   check PASS: explorer (light): window
+04:42:15   check PASS: explorer (light): native process
+04:42:17   check PASS: explorer (light): backend child
+04:42:17   check PASS: explorer (light): the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:42:17   check PASS: explorer (light): no WebKit
+04:42:17   check PASS: explorer (light): rendered
+04:42:21   check PASS: explorer (light): closes
+04:42:21   check PASS: settings (light): boot report
+04:42:21   check PASS: settings (light): window
+04:42:21   check PASS: settings (light): native process
+04:42:23   check PASS: settings (light): backend child
+04:42:23   check PASS: settings (light): the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:42:23   check PASS: settings (light): no WebKit
+04:42:23   check PASS: settings (light): rendered
+04:42:27   check PASS: settings (light): closes
+04:42:27   check PASS: taskmgr (light): boot report
+04:42:27   check PASS: taskmgr (light): window
+04:42:27   check PASS: taskmgr (light): native process
+04:42:30   check PASS: taskmgr (light): backend child
+04:42:30   check PASS: taskmgr (light): the backend has the app's own GTK switches and the launch's in WIN11SHELL_USER_GPU
+04:42:30   check PASS: taskmgr (light): no WebKit
+04:42:30   check PASS: taskmgr (light): rendered
+04:42:33   check PASS: taskmgr (light): closes
+04:42:33 shutdown shell clients: signalled own descendants 44:ibus-daemon, 380:win11-shell, 1455:glycin-image-rs, 3579:glycin-svg, 493:win11-panel, 572:glycin-svg, 211:ibus-memconf, 213:ibus-extension-, 223:ibus-engine-sim
+04:42:34 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+04:42:34 shutdown system bus: signalled own descendants 24:dbus-daemon
+04:42:34 inner sweep: signalled own descendants 1465:glycin-image-rs
+04:42:34 inner done: 0 surfaces, 0 failed []

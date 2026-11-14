@@ -1,5 +1,5 @@
 //! The user's choices from ~/.config/win11-gnome/settings.json (XDG_CONFIG_HOME respected), the same file the
-//! shell and the HTML apps read: theme.mode (dark / light, otherwise GNOME's colour scheme), theme.accent,
+//! shell and the other apps read: theme.mode (dark / light, otherwise GNOME's colour scheme), theme.accent,
 //! language ("nl" default, "en"), time.h24 and accessibility.textScale. Also the text helper `t(nl, en)` and
 //! the data folder (~/.local/share/win11-gnome-calendar, XDG_DATA_HOME respected).
 use gtk::{gio, glib};

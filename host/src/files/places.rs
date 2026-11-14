@@ -1,6 +1,5 @@
 //! Standard Explorer locations, using the original labels, ordering and themed icons.
 use super::{ApiResult, Context, read::Factory, trash};
-use gtk::glib;
 use serde_json::{Value, json};
 use std::{ffi::CStr, fs, path::PathBuf};
 

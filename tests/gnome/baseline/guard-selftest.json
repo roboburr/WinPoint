@@ -612,6 +612,7 @@
     "live-runtime-ref",
     "live-runtime-ref",
     "live-runtime-ref",
+    "live-runtime-ref",
     "marker-missing",
     "not-sandboxed-home",
     "not-sandboxed-live-socket",
@@ -1327,13 +1328,13 @@
     "varLib": false,
     "snapdSocket": false,
     "masked": [
-     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d1239493.s",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d3618163.s",
      "/run/udev/control",
      "/run/udev/io.systemd.Udev"
     ],
     "rootMount": {
      "fsType": "ext4",
-     "source": "/dev/nvme0n1p2",
+     "source": "/dev/nvme1n1p2",
      "majMin": "259:6",
      "root": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/root",
      "readOnly": true,
@@ -1378,7 +1379,7 @@
    "codes": [],
    "rootMount": {
     "fsType": "ext4",
-    "source": "/dev/nvme0n1p2",
+    "source": "/dev/nvme1n1p2",
     "majMin": "259:6",
     "root": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/root",
     "readOnly": true,
@@ -1395,7 +1396,7 @@
     "host-socket-visible"
    ],
    "messages": [
-    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d1239493.s is still a socket inside the sandbox (listed, not masked)"
+    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d3618163.s is still a socket inside the sandbox (listed, not masked)"
    ],
    "decoyConnections": 0,
    "passed": true
@@ -1528,7 +1529,7 @@
    "layer": "sockets",
    "expect": "one call, <= 2 scans",
    "codes": [
-    0.38
+    0.37
    ],
    "scans": 4,
    "passed": true
@@ -1584,6 +1585,6 @@
    "passed": true
   }
  ],
- "when": "2026-11-06 06:39:13",
+ "when": "2026-11-14 02:15:41",
  "commit": "ref: refs/heads/claude/gnome-english-update"
 }

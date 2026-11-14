@@ -3,7 +3,6 @@ use super::{ApiError, ApiResult, Context, abs_in, directory, io_error, read};
 use crate::i18n::Lang;
 use gio::prelude::*;
 use glib::translate::ToGlibPtr;
-use gtk::{gio, glib};
 use serde_json::{Value, json};
 use std::{
     cell::Cell,
@@ -505,7 +504,7 @@ pub(crate) fn open_uri(uri: &str, ctx: &Context) -> ApiResult {
             ));
         }
         if authority.chars().filter(|ch| !ch.is_ascii()).any(|ch| {
-            gtk::glib::normalize(ch.to_string(), gtk::glib::NormalizeMode::AllCompose)
+            glib::normalize(ch.to_string(), glib::NormalizeMode::AllCompose)
                 .chars()
                 .any(|c| "/?#@:".contains(c))
         }) {
@@ -827,15 +826,6 @@ fn spawn(command: Command) -> io::Result<()> {
     crate::process_scope::spawn(command, "file-open", Some(env)).map_err(io::Error::other)
 }
 
-pub(crate) fn open_external_uri(uri: &str) -> Result<(), String> {
-    let scheme = uri.split_once(':').map(|(scheme, _)| scheme).unwrap_or("");
-    let handler = gio::AppInfo::default_for_uri_scheme(scheme);
-    launch_gio(
-        json!({"action":"default","uri":uri}),
-        handler.as_ref(),
-        crate::i18n::current_language(),
-    )
-}
 /// Starts `request` through the standalone win11-launch helper and waits for its answer; the error is the
 /// helper's own text or one of ours in `lang` (it goes into ApiError.data).
 fn launch_gio(mut request: Value, info: Option<&gio::AppInfo>, lang: Lang) -> Result<(), String> {
@@ -923,42 +913,12 @@ fn launch_gio(mut request: Value, info: Option<&gio::AppInfo>, lang: Lang) -> Re
 }
 
 type Environment = BTreeMap<OsString, OsString>;
-const GPU_KEYS: &[&str] = &[
-    "WEBKIT_FORCE_DMABUF_RENDERER",
-    "WEBKIT_DMABUF_RENDERER_FORCE_SHM",
-    "WEBKIT_SKIA_ENABLE_CPU_RENDERING",
-    "__NV_DISABLE_EXPLICIT_SYNC",
-    "WEBKIT_DISABLE_DMABUF_RENDERER",
-    "WEBKIT_DISABLE_COMPOSITING_MODE",
-    "GSK_RENDERER",
-];
-fn undo_gpu(env: &mut Environment) {
-    if let Some(raw) = env.remove(OsStr::new("WIN11SHELL_GPU_ENV")) {
-        let marker = serde_json::from_slice::<Value>(raw.as_bytes()).unwrap_or(Value::Null);
-        if let Some(keys) = marker["set"].as_array() {
-            for key in keys
-                .iter()
-                .filter_map(Value::as_str)
-                .filter(|key| GPU_KEYS[..4].contains(key))
-            {
-                env.remove(OsStr::new(key));
-            }
-        }
-        if let Some(user) = marker["user"].as_object() {
-            for (key, value) in user {
-                if GPU_KEYS[..4].contains(&key.as_str()) {
-                    if let Some(value) = value.as_str() {
-                        env.insert(key.into(), value.into());
-                    }
-                }
-            }
-        }
-    }
-    if env.remove(OsStr::new("WIN11SHELL_GPU_FORCED")).as_deref() == Some(OsStr::new("1")) {
-        env.remove(OsStr::new("WEBKIT_FORCE_DMABUF_RENDERER"));
-        env.remove(OsStr::new("__NV_DISABLE_EXPLICIT_SYNC"));
-    }
-}
+/// The GTK switches a WinPoint process may set for itself: GSK_RENDERER, which win11-shell, win11-calendar and the
+/// native apps set to cairo when the user chose none, and GDK_DEBUG, which the native apps set to `portals` (their
+/// file dialog is the desktop's FileChooser portal; native/kit app.rs). What a launched app gets instead is the
+/// WIN11SHELL_USER_GPU marker's values (the user's own: written by those programs, and by [`environment`] for our
+/// own children), else the `win11shell` supervisor's, else this process's own.
+const GPU_KEYS: &[&str] = &["GSK_RENDERER", "GDK_DEBUG"];
 fn gpu_values(env: &Environment, supervisor: Option<Environment>) -> Environment {
     if let Some(raw) = env.get(OsStr::new("WIN11SHELL_USER_GPU")) {
         if let Ok(Value::Object(values)) = serde_json::from_slice::<Value>(raw.as_bytes()) {
@@ -973,9 +933,8 @@ fn gpu_values(env: &Environment, supervisor: Option<Environment>) -> Environment
                 .collect();
         }
     }
-    let mut reference = supervisor.unwrap_or_else(|| env.clone());
-    undo_gpu(&mut reference);
-    reference
+    supervisor
+        .unwrap_or_else(|| env.clone())
         .into_iter()
         .filter(|(key, _)| GPU_KEYS.iter().any(|gpu| key == OsStr::new(gpu)))
         .collect()
@@ -987,7 +946,6 @@ fn environment(
 ) -> Environment {
     let values = gpu_values(env, supervisor);
     let mut result = env.clone();
-    undo_gpu(&mut result);
     for key in GPU_KEYS {
         result.remove(OsStr::new(key));
     }
@@ -1173,13 +1131,14 @@ mod tests {
         let base = env(&[
             (
                 "WIN11SHELL_USER_GPU",
-                r#"{"WEBKIT_DISABLE_DMABUF_RENDERER":"user","GSK_RENDERER":"cairo","unrelated":"ignored"}"#,
+                r#"{"GSK_RENDERER":"cairo","GTK_THEME":"ignored","unrelated":"ignored"}"#,
             ),
-            ("WEBKIT_FORCE_DMABUF_RENDERER", "forced"),
-            ("WEBKIT_DISABLE_DMABUF_RENDERER", "changed"),
             ("GSK_RENDERER", "vulkan"),
+            // only GSK_RENDERER is ours: the marker's other keys are ignored, an app keeps its own value
+            ("GTK_THEME", "user"),
             ("WIN11SHELL_TOKEN", "secret"),
             ("WIN11SHELL_TRASH_DIR", "private"),
+            ("WIN11SHELL_GPU_ENV", r#"{"set":["GSK_RENDERER"]}"#),
             ("WIN11_DEV_COMMAND", "private"),
             ("WIN11_REFERENCE_INSTANCE", "private"),
             ("WIN11_UI_DIR", "private"),
@@ -1189,14 +1148,13 @@ mod tests {
         ]);
         let clean = environment(&base, None, true);
         assert_eq!(
-            clean.get(OsStr::new("WEBKIT_DISABLE_DMABUF_RENDERER")),
-            Some(&OsString::from("user"))
-        );
-        assert_eq!(
             clean.get(OsStr::new("GSK_RENDERER")),
             Some(&OsString::from("cairo"))
         );
-        assert!(!clean.contains_key(OsStr::new("WEBKIT_FORCE_DMABUF_RENDERER")));
+        assert_eq!(
+            clean.get(OsStr::new("GTK_THEME")),
+            Some(&OsString::from("user"))
+        );
         assert!(
             clean
                 .keys()
@@ -1213,36 +1171,30 @@ mod tests {
         );
         let marker: Value =
             serde_json::from_slice(own[OsStr::new("WIN11SHELL_USER_GPU")].as_bytes()).unwrap();
-        assert_eq!(
-            marker,
-            json!({"GSK_RENDERER":"cairo","WEBKIT_DISABLE_DMABUF_RENDERER":"user"})
-        );
+        assert_eq!(marker, json!({"GSK_RENDERER":"cairo"}));
     }
     #[test]
-    fn legacy_gpu_markers_supervisor_and_empty_user_markers_keep_reference_semantics() {
-        let base = env(&[
-            (
-                "WIN11SHELL_GPU_ENV",
-                r#"{"set":["WEBKIT_FORCE_DMABUF_RENDERER"],"user":{"WEBKIT_DMABUF_RENDERER_FORCE_SHM":"user"}}"#,
-            ),
-            ("WEBKIT_FORCE_DMABUF_RENDERER", "forced"),
-            ("WEBKIT_DMABUF_RENDERER_FORCE_SHM", "changed"),
-        ]);
-        let clean = environment(&base, None, true);
-        assert_eq!(clean, env(&[("WEBKIT_DMABUF_RENDERER_FORCE_SHM", "user")]));
-        let supervisor = env(&[("GSK_RENDERER", "opengl")]);
+    fn the_supervisor_and_empty_or_broken_user_markers_decide_the_renderer() {
+        let base = env(&[("GSK_RENDERER", "cairo")]);
+        let supervisor = env(&[("GSK_RENDERER", "opengl"), ("PATH", "/supervisor/bin")]);
         assert_eq!(
             environment(&base, Some(supervisor), true),
-            env(&[("GSK_RENDERER", "opengl")])
+            env(&[("GSK_RENDERER", "opengl")]),
+            "the supervisor's renderer, nothing else of it"
         );
-        let base = env(&[
-            ("WIN11SHELL_GPU_FORCED", "1"),
-            ("WEBKIT_FORCE_DMABUF_RENDERER", "1"),
-            ("__NV_DISABLE_EXPLICIT_SYNC", "1"),
-        ]);
-        assert!(environment(&base, None, true).is_empty());
+        assert!(environment(&base, Some(Environment::new()), true).is_empty());
         let base = env(&[("WIN11SHELL_USER_GPU", "{}"), ("GSK_RENDERER", "vulkan")]);
         assert!(environment(&base, None, true).is_empty());
+        // a native app's backend (native/kit app.rs): its cairo and portals are its own, the user's GDK_DEBUG stays
+        let base = env(&[
+            ("WIN11SHELL_USER_GPU", r#"{"GDK_DEBUG":"misc"}"#),
+            ("GSK_RENDERER", "cairo"),
+            ("GDK_DEBUG", "portals"),
+        ]);
+        assert_eq!(
+            environment(&base, None, true),
+            env(&[("GDK_DEBUG", "misc")])
+        );
         let base = env(&[
             ("WIN11SHELL_USER_GPU", "malformed"),
             ("GSK_RENDERER", "vulkan"),

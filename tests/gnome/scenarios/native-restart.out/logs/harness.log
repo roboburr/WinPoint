@@ -1,66 +1,65 @@
-21:36:57 GE0c run lang=nl switch=False seed=defaults MemAvailable=5507864 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-restart.py
-21:38:29 private install: exit 0 in 74.5 s, 87828 mutated paths, 0 outside the run dir, ok=True
-21:38:32 GStreamer registry warmed in 3.3 s (['gst-inspect-1.0 version 1.28.2'])
-21:38:36 GNOME Shell 50.1 up (mode user, unsafe True)
-21:38:41 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-restart.py
-21:38:41   check PASS: the native shell is up
-21:38:45   check PASS: A: Explorer has two tabs
-21:38:45   check PASS: A: Explorer has two windows (1 and 2 tabs) in one process
-21:38:45   check PASS: A: explorer has one backend child that answers
-21:38:45   check PASS: A: explorer backend reports mainLoopLagMs
-21:38:45   check PASS: A: settings has one backend child that answers
-21:38:45   check PASS: A: settings backend reports mainLoopLagMs
-21:38:45   check PASS: A: taskmgr has one backend child that answers
-21:38:45   check PASS: A: taskmgr backend reports mainLoopLagMs
-21:38:45   check PASS: A: shell has one backend child that answers
-21:38:45   check PASS: A: shell backend reports mainLoopLagMs
-21:38:46   check PASS: B: the running images are the replaced ones
-21:38:46   check PASS: C: shell.restartAll is accepted
-21:38:48   check PASS: D: explorer re-exec'd (a new boot report from the same pid)
-21:38:48   check PASS: D: explorer runs the installed binary
-21:38:48   check PASS: D: explorer has a NEW backend child that answers
-21:38:48   check PASS: D: explorer backend runs the installed win11-app
-21:38:48   check PASS: D: explorer backend reports mainLoopLagMs
-21:38:48   check PASS: D: the old explorer backend is gone
-21:38:48   check PASS: D: settings re-exec'd (a new boot report from the same pid)
-21:38:48   check PASS: D: settings runs the installed binary
-21:38:48   check PASS: D: settings has a NEW backend child that answers
-21:38:48   check PASS: D: settings backend runs the installed win11-app
-21:38:48   check PASS: D: settings backend reports mainLoopLagMs
-21:38:48   check PASS: D: the old settings backend is gone
-21:38:48   check PASS: D: taskmgr re-exec'd (a new boot report from the same pid)
-21:38:48   check PASS: D: taskmgr runs the installed binary
-21:38:48   check PASS: D: taskmgr has a NEW backend child that answers
-21:38:48   check PASS: D: taskmgr backend runs the installed win11-app
-21:38:48   check PASS: D: taskmgr backend reports mainLoopLagMs
-21:38:48   check PASS: D: the old taskmgr backend is gone
-21:38:48   check PASS: D: shell re-exec'd (a new boot report from the same pid)
-21:38:48   check PASS: D: shell runs the installed binary
-21:38:48   check PASS: D: shell has a NEW backend child that answers
-21:38:48   check PASS: D: shell backend runs the installed win11-panel
-21:38:48   check PASS: D: shell backend reports mainLoopLagMs
-21:38:48   check PASS: D: the old shell backend is gone
-21:38:48   check PASS: D: the explorer window is back
-21:38:48   check PASS: D: the settings window is back
-21:38:48   check PASS: D: the taskmgr window is back
-21:38:49   check PASS: D: Explorer reopened both windows with their tabs
-21:38:49   check PASS: D: the origin Settings reopened on Update en herstel
-21:38:49   check PASS: D: the shell has its taskbar again
-21:38:49   check PASS: D: GNOME sees the Panel window of the same pid
-21:38:52   check PASS: E: no process left behind
-21:38:53   check PASS: G: taskmgr has a new backend after its backend crashed
-21:38:53   check PASS: G: taskmgr kept running (no re-exec)
-21:38:53   check PASS: G: shell has a new backend after its backend crashed
-21:38:53   check PASS: G: shell kept running (no re-exec)
-21:38:54   check PASS: G: the taskbar stayed
-21:38:54   check PASS: F: explorer and its backend end on close
-21:38:54   check PASS: F: settings and its backend end on close
-21:38:54   check PASS: F: taskmgr and its backend end on close
-21:38:54   check PASS: F: no instance or restart file of an ended app is left
-21:38:54   check PASS: F: no Explorer restart file is left
-21:38:54   check PASS: every check passed
-21:38:55 shutdown shell clients: signalled own descendants 65:ibus-daemon, 83:glycin-svg, 123:glycin-image-rs, 402:win11-shell, 1947:glycin-image-rs, 602:glycin-svg, 2357:glycin-svg, 2988:win11-panel, 237:ibus-memconf, 239:ibus-extension-, 403:ibus-engine-sim
-21:38:55 shutdown gnome-shell: signalled own descendants 46:gnome-shell
-21:38:55 shutdown system bus: signalled own descendants 45:dbus-daemon
-21:38:55 inner sweep: signalled own descendants 1957:glycin-image-rs
-21:38:55 inner done: 0 surfaces, 0 failed []
+04:25:22 GE0c run lang=nl switch=False seed=defaults MemAvailable=6381500 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-restart.py
+04:26:45 private install: exit 0 in 68.2 s, 87253 mutated paths, 0 outside the run dir, ok=True
+04:26:48 GNOME Shell 50.1 up (mode user, unsafe True)
+04:26:53 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-restart.py
+04:26:53   check PASS: the native shell is up
+04:26:57   check PASS: A: Explorer has two tabs
+04:26:57   check PASS: A: Explorer has two windows (1 and 2 tabs) in one process
+04:26:57   check PASS: A: explorer has one backend child that answers
+04:26:57   check PASS: A: explorer backend reports mainLoopLagMs
+04:26:57   check PASS: A: settings has one backend child that answers
+04:26:57   check PASS: A: settings backend reports mainLoopLagMs
+04:26:57   check PASS: A: taskmgr has one backend child that answers
+04:26:57   check PASS: A: taskmgr backend reports mainLoopLagMs
+04:26:57   check PASS: A: shell has one backend child that answers
+04:26:57   check PASS: A: shell backend reports mainLoopLagMs
+04:26:58   check PASS: B: the running images are the replaced ones
+04:26:58   check PASS: C: shell.restartAll is accepted
+04:27:01   check PASS: D: explorer re-exec'd (a new boot report from the same pid)
+04:27:01   check PASS: D: explorer runs the installed binary
+04:27:01   check PASS: D: explorer has a NEW backend child that answers
+04:27:01   check PASS: D: explorer backend runs the installed win11-app
+04:27:01   check PASS: D: explorer backend reports mainLoopLagMs
+04:27:01   check PASS: D: the old explorer backend is gone
+04:27:01   check PASS: D: settings re-exec'd (a new boot report from the same pid)
+04:27:01   check PASS: D: settings runs the installed binary
+04:27:01   check PASS: D: settings has a NEW backend child that answers
+04:27:01   check PASS: D: settings backend runs the installed win11-app
+04:27:01   check PASS: D: settings backend reports mainLoopLagMs
+04:27:01   check PASS: D: the old settings backend is gone
+04:27:01   check PASS: D: taskmgr re-exec'd (a new boot report from the same pid)
+04:27:01   check PASS: D: taskmgr runs the installed binary
+04:27:01   check PASS: D: taskmgr has a NEW backend child that answers
+04:27:01   check PASS: D: taskmgr backend runs the installed win11-app
+04:27:01   check PASS: D: taskmgr backend reports mainLoopLagMs
+04:27:01   check PASS: D: the old taskmgr backend is gone
+04:27:01   check PASS: D: shell re-exec'd (a new boot report from the same pid)
+04:27:01   check PASS: D: shell runs the installed binary
+04:27:01   check PASS: D: shell has a NEW backend child that answers
+04:27:01   check PASS: D: shell backend runs the installed win11-panel
+04:27:01   check PASS: D: shell backend reports mainLoopLagMs
+04:27:01   check PASS: D: the old shell backend is gone
+04:27:01   check PASS: D: the explorer window is back
+04:27:01   check PASS: D: the settings window is back
+04:27:01   check PASS: D: the taskmgr window is back
+04:27:01   check PASS: D: Explorer reopened both windows with their tabs
+04:27:01   check PASS: D: the origin Settings reopened on Update en herstel
+04:27:01   check PASS: D: the shell has its taskbar again
+04:27:01   check PASS: D: GNOME sees the Panel window of the same pid
+04:27:05   check PASS: E: no process left behind
+04:27:05   check PASS: G: taskmgr has a new backend after its backend crashed
+04:27:05   check PASS: G: taskmgr kept running (no re-exec)
+04:27:06   check PASS: G: shell has a new backend after its backend crashed
+04:27:06   check PASS: G: shell kept running (no re-exec)
+04:27:06   check PASS: G: the taskbar stayed
+04:27:06   check PASS: F: explorer and its backend end on close
+04:27:06   check PASS: F: settings and its backend end on close
+04:27:07   check PASS: F: taskmgr and its backend end on close
+04:27:07   check PASS: F: no instance or restart file of an ended app is left
+04:27:07   check PASS: F: no Explorer restart file is left
+04:27:07   check PASS: every check passed
+04:27:07 shutdown shell clients: signalled own descendants 44:ibus-daemon, 63:glycin-svg, 139:glycin-image-rs, 378:win11-shell, 1918:glycin-image-rs, 577:glycin-svg, 2339:glycin-svg, 2947:win11-panel, 213:ibus-memconf, 215:ibus-extension-, 383:ibus-engine-sim
+04:27:07 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+04:27:07 shutdown system bus: signalled own descendants 24:dbus-daemon
+04:27:07 inner sweep: signalled own descendants 1930:glycin-image-rs
+04:27:07 inner done: 0 surfaces, 0 failed []

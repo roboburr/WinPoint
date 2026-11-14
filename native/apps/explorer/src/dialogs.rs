@@ -1,4 +1,4 @@
-//! Dialogs (vendor/ui/js/apps/explorer/dialogs.js): Eigenschappen of a file or folder (Algemeen / Details,
+//! Dialogs (last-webkit:vendor/ui/js/apps/explorer/dialogs.js): Eigenschappen of a file or folder (Algemeen / Details,
 //! the name box, Kenmerken, OK · Annuleren · Toepassen), of several items, of a drive (donut, Ruimte
 //! vrijmaken) and of the Prullenbak; Delen; Mapopties. Also the sheet of builder B's widgets (css/ops.css:
 //! these dialogs, the details pane, the progress cards and the drag and drop hint).

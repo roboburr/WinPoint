@@ -1,4 +1,4 @@
-//! Instellingen › Privacy en beveiliging (vendor/ui/js/apps/settings/pages/privacy.js): recent files (and
+//! Instellingen › Privacy en beveiliging (last-webkit:vendor/ui/js/apps/settings/pages/privacy.js): recent files (and
 //! clearing them), and how Win11 Shell keeps you safe.
 use super::{Builder, Page, PageFuture};
 use crate::common;

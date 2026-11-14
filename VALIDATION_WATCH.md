@@ -1,5 +1,7 @@
 # Native mapbewaking — versie 0.5.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Gecontroleerd op 1 november 2026 in een eigen GNOME 50.1/Wayland-sessie. Alle acht gegroepeerde integratiegevallen slagen met twee echte Rust/WebKit-Verkenners. De oorspronkelijke HTML/CSS en gebeurtenishandlers zijn behouden.
 
 `files.watch` en `files.unwatch` worden native afgehandeld en antwoorden met `X-Win11-Service: rust-files`. Beide vensters gebruikten een testkopie van de Python-dienst waarin juist deze twee methoden bewust fouten geven. Automatisch verversen bleef werken met gewone bestandswijzigingen buiten de bestandsdienst.

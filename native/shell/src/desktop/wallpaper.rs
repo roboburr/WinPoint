@@ -1,7 +1,7 @@
-//! The wallpaper (vendor/ui/js/desktop/wallpaper.js with theme.js resolveWallpaper): a picture (fill, fit,
-//! stretch, center, tile, span) or a plain colour, cross-faded in 450 ms when it changes. Pictures are decoded off
-//! the main thread at the size they are shown, so a 4K photo costs what the monitor shows. A picture that cannot
-//! be loaded leaves a calm gradient in the wallpaper colour instead of a black screen.
+//! The wallpaper (`git show 418ea594:vendor/ui/js/desktop/wallpaper.js` with theme.js resolveWallpaper): a picture
+//! (fill, fit, stretch, center, tile, span) or a plain colour, cross-faded in 450 ms when it changes. Pictures are
+//! decoded off the main thread at the size they are shown, so a 4K photo costs what the monitor shows. A picture that
+//! cannot be loaded leaves a calm gradient in the wallpaper colour instead of a black screen.
 use crate::backend::Backend;
 use crate::core::Shell;
 use gtk::prelude::*;

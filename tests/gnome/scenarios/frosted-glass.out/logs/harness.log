@@ -1,26 +1,38 @@
-10:38:05 GE0c run lang=nl switch=False seed=defaults MemAvailable=6138828 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/fix-power-debug; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
-10:39:31 private install: exit 0 in 70.4 s, 87858 mutated paths, 0 outside the run dir, ok=True
-10:39:34 GStreamer registry warmed in 3.1 s (['gst-inspect-1.0 version 1.28.2'])
-10:39:38 GNOME Shell 50.1 up (mode user, unsafe True)
-10:39:43 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
-10:39:43   check PASS: A: one taskbar blur for the 48 px strip
-10:39:43   check PASS: A: the panel page has the taskbar capability
-10:39:43   check PASS: A: the taskbar tint is 70 % (more see-through than the 90 % before)
-10:39:46   check PASS: B: the focused Settings window has one blur
-10:39:46   check PASS: B: the unblurred rim is 3 px (corner on the 8 px arc)
-10:39:47   check PASS: B: the window background is 80 %
-10:39:49   check PASS: C: open Start has one blur
-10:39:49   check PASS: C: Settings lost its blur with the focus
-10:39:49   check PASS: C: one window blur in all (Start)
-10:39:49   check PASS: C: the Start page has the Start capability
-10:39:50   check PASS: C: Start paints the Acrylic tint (0.72)
-10:39:52   check PASS: D: closing Start releases its blur
-10:39:52   check PASS: D: Settings has its blur again
-10:39:52   check PASS: E: the window blur costs gnome-shell less than 64 MiB PSS
-10:39:52   check PASS: every check passed
-10:39:52 shutdown app: signalled own descendants 1399:win11-app, 1422:WebKitNetworkPr, 1423:WebKitWebProces
-10:39:52 shutdown shell clients: signalled own descendants 60:ibus-daemon, 76:glycin-svg, 385:win11-desktop, 386:win11-panel, 508:glycin-image-rs, 1385:glycin-image-rs, 585:WebKitNetworkPr, 586:WebKitWebProces, 600:glycin-svg, 663:win11-start, 828:WebKitNetworkPr, 829:WebKitWebProces, 838:glycin-svg, 580:WebKitNetworkPr, 582:WebKitWebProces, 599:glycin-svg, 662:glycin-image-rs, 323:ibus-memconf, 375:ibus-extension-, 503:ibus-engine-sim
-10:39:53 shutdown gnome-shell: signalled own descendants 39:gnome-shell
-10:39:53 shutdown system bus: signalled own descendants 38:dbus-daemon
-10:39:53 inner sweep: signalled own descendants 1395:glycin-image-rs
-10:39:53 inner done: 0 surfaces, 0 failed []
+04:35:11 GE0c run lang=nl switch=False seed=defaults MemAvailable=6535284 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
+04:36:33 private install: exit 0 in 67.6 s, 87253 mutated paths, 0 outside the run dir, ok=True
+04:36:37 GNOME Shell 50.1 up (mode user, unsafe True)
+04:36:41 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
+04:36:41   check PASS: A: the native shell runs
+04:36:41   check PASS: A: one taskbar blur for the 48 px strip
+04:36:41   check PASS: A: the extension holds the native pid as Panel
+04:36:41   check PASS: A: capabilities() list the native taskbar with blur
+04:36:44   check PASS: B: the focused Settings window has one blur
+04:36:44   check PASS: B: the unblurred rim is 3 px (corner on the 8 px arc)
+04:36:44   check PASS: B: the window wears the kit's glass class (w11-glass)
+04:36:47   check PASS: C: open Start has one blur
+04:36:47   check PASS: C: Settings lost its blur with the focus
+04:36:47   check PASS: C: one window blur in all (Start)
+04:36:47   check PASS: C: the extension holds Panel and Start under the native pid
+04:36:47   check PASS: C: capabilities() list the open Start with blur
+04:36:50   check PASS: D: closing Start releases its blur
+04:36:50   check PASS: D: Settings has its blur again
+04:36:51   check PASS: D: the extension keeps the hidden Start registration of the native pid
+04:36:51   check PASS: D2: reopened Start has its blur again
+04:36:51   check PASS: D2: capabilities() list the reopened Start with blur
+04:36:52   check PASS: F: the blur stays during the whole drag
+04:36:52   check PASS: F: no blur entry was rebuilt during the drag
+04:36:52   check PASS: F: the backdrop follows the drawn window
+04:36:52   check PASS: F: after the drag the blur is on the frame again
+04:36:56   check PASS: G: the title bar drag moves the window
+04:36:56   check PASS: G: the right edge resizes the window
+04:36:56   check PASS: G: the drawn window is its buffer (no stretch)
+04:36:56   check PASS: G: the app's window has the new width
+04:36:56   check PASS: G: the three caption buttons are inside the window
+04:36:57   check PASS: E: the window blur costs gnome-shell less than 64 MiB PSS
+04:36:57   check PASS: every check passed
+04:36:57 shutdown app: signalled own descendants 1352:win11-gtk-setti, 1361:win11-app, 1439:glycin-svg
+04:36:57 shutdown shell clients: signalled own descendants 45:ibus-daemon, 62:glycin-svg, 103:glycin-image-rs, 385:win11-shell, 1338:glycin-image-rs, 498:win11-panel, 581:glycin-svg, 216:ibus-memconf, 218:ibus-extension-, 228:ibus-engine-sim
+04:36:57 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+04:36:57 shutdown system bus: signalled own descendants 24:dbus-daemon
+04:36:57 inner sweep: signalled own descendants 1348:glycin-image-rs
+04:36:57 inner done: 0 surfaces, 0 failed []

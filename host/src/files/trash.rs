@@ -3,7 +3,6 @@
 use super::{ApiError, ApiResult, Context, io_error, mutate, paths, properties::du};
 use crate::i18n::Lang;
 use gio::prelude::*;
-use gtk::{gio, glib};
 use serde_json::{Value, json};
 use std::{
     collections::{HashMap, HashSet},

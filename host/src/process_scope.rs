@@ -320,7 +320,7 @@ fn start(
     let lang = crate::i18n::current_language();
     Ok(start_unit(command, role, tag, env, None, lang)?.is_some())
 }
-/// New native entry points relocate before GTK, backend or WebKit child creation.
+/// New native entry points relocate before they start a backend, a worker or a GUI.
 pub fn ensure_native(kind: &str) -> Result<bool, String> {
     let role = if shell(kind) { Role::Shell } else { Role::App };
     if fs::read_to_string("/proc/self/cgroup").is_ok_and(|group| managed(&group, role)) {

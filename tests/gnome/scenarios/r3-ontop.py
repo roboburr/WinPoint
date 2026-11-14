@@ -8,6 +8,10 @@ Run (from G; the step's build and the tree's UI and extension), once per start l
 Each run does the whole cycle in its start language, switches Win11's language and does it again, so a run
 covers nl and en; the en run covers the other order.
 
+13-11: Task Manager is the native app (win11-gtk-taskmgr): its Settings page, the card and the switch
+(taskmgr-setting-ontop, native/apps/taskmgr/src/pages/settings.rs) come from its dev state (native/kit/src/dev.rs)
+and are clicked with the virtual pointer at the widget's place.
+
 The cycle, in the language shown (the real switch on Task Manager's Settings page, clicked with the pointer):
   A. Off (the default): the switch is enabled and its description has no "not available" note. Task Manager is
      a normal window: not above, not on all workspaces, and the focused File Explorer is above it.
@@ -53,15 +57,20 @@ MAXIMIZE_JS = ("(() => {const w = global.display.list_all_windows().find(w => w.
                "m ? w.maximize(Meta.MaximizeFlags.BOTH) : w.unmaximize(Meta.MaximizeFlags.BOTH); } return true;})()")
 
 
-def card_js(title: str, what: str) -> str:
-    """A JS expression on Task Manager's page: the always-on-top card's toggle (what='track') or its state."""
-    card = ("[...document.querySelectorAll('.fl-settings-card')].find(c => "
-            f"c.querySelector('.fl-sc__title')?.textContent === {json.dumps(title)})")
-    if what == 'track':
-        return f"({card})?.querySelector('.fl-toggle__track')"
-    return (f"(() => {{const c = {card}; const t = c?.querySelector('.fl-toggle__track');"
-            "return c ? {desc: c.querySelector('.fl-sc__desc')?.textContent ?? '', checked: t?.getAttribute('aria-checked'),"
-            "disabled: Boolean(t?.disabled), cardDisabled: c.classList.contains('is-disabled')} : null;})()")
+SWITCH = 'taskmgr-setting-ontop'
+
+
+def card(h, title: str):
+    """The always-on-top card (the w11-settings-card around the switch SWITCH) when its title is ``title``: its
+    description, whether the switch is on, and whether the switch or the card is insensitive."""
+    for c in h.find('taskmgr', cls='w11-settings-card'):
+        inner = h.hm.tree_nodes([{'tree': c}])
+        sw = next((n for n in inner if n.get('name') == SWITCH), None)
+        label = lambda cls: next((n.get('label') for n in inner if cls in (n.get('classes') or [])), None)  # noqa: E731
+        if sw and label('w11-sc-title') == title:
+            return {'desc': label('w11-sc-desc') or '', 'checked': sw.get('active'),
+                    'disabled': not sw.get('sensitive', True), 'cardDisabled': not c.get('sensitive', True)}
+    return None
 
 
 def state(h):
@@ -79,21 +88,20 @@ def on_top_in_file(h):
 
 def settings_page(h, lang):
     """Task Manager on its Settings page (the nav footer item, a real click), then the card."""
-    h.click('taskmgr', selector='.fl-nav__item[data-id="settings"]')
-    return h.until(lambda: h.js('taskmgr', card_js(TITLE[lang], 'state')), f'Task Manager settings card ({lang})',
-                   timeout=15)
+    h.click('taskmgr', 'nav-settings')
+    return h.until(lambda: card(h, TITLE[lang]), f'Task Manager settings card ({lang})', timeout=15)
 
 
 def flip(h, lang, want: bool):
     """Click the real switch; wait for the file and for the extension to follow."""
-    clicked = h.click('taskmgr', find=card_js(TITLE[lang], 'track'))
+    clicked = h.click('taskmgr', SWITCH)
     file_ok = h.until(lambda: on_top_in_file(h) is want, f'settings.json taskmgr.alwaysOnTop={want}', timeout=10)
     try:
         st = h.until(lambda: (lambda s: s if s['tm'] and all(t['above'] is want and t['sticky'] is want for t in s['tm'])
                               else None)(state(h)), f'Task Manager above/sticky = {want}', timeout=10)
     except TimeoutError:
         st = state(h)
-    return {'click': {k: clicked.get(k) for k in ('input', 'x', 'y', 'element')}, 'file': file_ok, 'state': st}
+    return {'click': {k: clicked.get(k) for k in ('input', 'x', 'y', 'name')}, 'file': file_ok, 'state': st}
 
 
 def explorer_focused(h):
@@ -118,7 +126,7 @@ def cycle(h, lang):
             card=card)
     h.check(f'{label} its description is the D-G21 text, without a note', card and card['desc'] == DESC[lang],
             desc=card and card['desc'])
-    h.check(f'{label} the switch starts off', card and card['checked'] == 'false' and on_top_in_file(h) is not True,
+    h.check(f'{label} the switch starts off', card and card['checked'] is False and on_top_in_file(h) is not True,
             checked=card and card['checked'], file=on_top_in_file(h))
 
     # A. off: a normal window

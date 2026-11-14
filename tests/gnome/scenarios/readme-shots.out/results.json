@@ -4,8 +4,8 @@
  "switch": false,
  "seed": "defaults",
  "commit": "ref: refs/heads/claude/gnome-english-update",
- "startedAt": "2026-11-13 13:08:38",
- "seconds": 203.9,
+ "startedAt": "2026-11-14 03:34:33",
+ "seconds": 198.8,
  "innerExit": 0,
  "innerTimedOut": false,
  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
@@ -15,105 +15,179 @@
  },
  "lock": "held by an ancestor heavy.sh",
  "memory": {
-  "samples": 220,
+  "samples": 217,
   "intervalSeconds": 0.5,
   "peak": {
-   "pss_kb": 1000352,
-   "rss_kb": 2198196,
+   "pss_kb": 712376,
+   "rss_kb": 1104416,
    "processes": 25,
-   "t": 53.7
+   "t": 58.6
   },
   "peakWithoutHarness": {
-   "pss_kb": 919102,
-   "rss_kb": 2081112
+   "pss_kb": 626932,
+   "rss_kb": 986948
   },
-  "minMemAvailableKb": 7203140,
+  "minMemAvailableKb": 5634264,
   "abortedForMemory": false,
   "peakByName": {
-   "WebKitWebProces": {
-    "count": 3,
-    "pss_kb": 260215,
-    "rss_kb": 661756
-   },
    "gnome-shell": {
     "count": 1,
-    "pss_kb": 254520,
-    "rss_kb": 378048
-   },
-   "win11-app": {
-    "count": 2,
-    "pss_kb": 119025,
-    "rss_kb": 366884
+    "pss_kb": 320034,
+    "rss_kb": 377168
    },
    "win11-shell": {
     "count": 1,
-    "pss_kb": 93884,
-    "rss_kb": 133992
+    "pss_kb": 90183,
+    "rss_kb": 131488
    },
    "python3": {
     "count": 2,
-    "pss_kb": 80724,
-    "rss_kb": 112840
-   },
-   "win11-explorer": {
-    "count": 1,
-    "pss_kb": 59284,
-    "rss_kb": 179336
-   },
-   "WebKitNetworkPr": {
-    "count": 3,
-    "pss_kb": 43238,
-    "rss_kb": 174440
+    "pss_kb": 84972,
+    "rss_kb": 113320
    },
    "glycin-svg": {
-    "count": 1,
-    "pss_kb": 26480,
-    "rss_kb": 36180
+    "count": 4,
+    "pss_kb": 52521,
+    "rss_kb": 106916
    },
-   "win11-panel": {
+   "win11-gtk-setti": {
     "count": 1,
-    "pss_kb": 22881,
-    "rss_kb": 52764
+    "pss_kb": 30012,
+    "rss_kb": 65940
    },
-   "glycin-image-rs": {
-    "count": 2,
-    "pss_kb": 16804,
-    "rss_kb": 25364
+   "win11-gtk-taskm": {
+    "count": 1,
+    "pss_kb": 29066,
+    "rss_kb": 63852
+   },
+   "win11-app": {
+    "count": 3,
+    "pss_kb": 24930,
+    "rss_kb": 63780
+   },
+   "win11-gtk-explo": {
+    "count": 1,
+    "pss_kb": 20915,
+    "rss_kb": 54944
    },
    "ibus-extension-": {
     "count": 1,
-    "pss_kb": 15614,
-    "rss_kb": 34468
+    "pss_kb": 19506,
+    "rss_kb": 35748
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 17276,
+    "rss_kb": 25512
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 15416,
+    "rss_kb": 24144
    },
    "ibus-daemon": {
     "count": 1,
-    "pss_kb": 4109,
-    "rss_kb": 11620
+    "pss_kb": 4117,
+    "rss_kb": 11528
    },
    "dbus-daemon": {
     "count": 2,
-    "pss_kb": 1522,
-    "rss_kb": 10348
+    "pss_kb": 1440,
+    "rss_kb": 10140
    },
    "ibus-engine-sim": {
     "count": 1,
-    "pss_kb": 789,
-    "rss_kb": 7988
+    "pss_kb": 785,
+    "rss_kb": 7932
    },
    "ibus-memconf": {
     "count": 1,
-    "pss_kb": 737,
-    "rss_kb": 7924
+    "pss_kb": 731,
+    "rss_kb": 7856
    },
    "bwrap": {
     "count": 1,
-    "pss_kb": 343,
-    "rss_kb": 1568
+    "pss_kb": 289,
+    "rss_kb": 1516
    },
    "dbus-run-sessio": {
     "count": 1,
     "pss_kb": 183,
-    "rss_kb": 2676
+    "rss_kb": 2632
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 329844,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 114452,
+    "first": 2.6
+   },
+   "glycin-svg": {
+    "pss_kb": 75788,
+    "first": 1.5
+   },
+   "python3": {
+    "pss_kb": 50093,
+    "first": 0.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 32243,
+    "first": 43.3
+   },
+   "win11-gtk-taskm": {
+    "pss_kb": 31080,
+    "first": 49.1
+   },
+   "win11-gtk-explo": {
+    "pss_kb": 24328,
+    "first": 37.5
+   },
+   "win11-calendar": {
+    "pss_kb": 22407,
+    "first": 87.2
+   },
+   "ibus-extension-": {
+    "pss_kb": 20199,
+    "first": 2.0
+   },
+   "win11-panel": {
+    "pss_kb": 15998,
+    "first": 2.6
+   },
+   "win11-app": {
+    "pss_kb": 14619,
+    "first": 38.0
+   },
+   "glycin-image-rs": {
+    "pss_kb": 14208,
+    "first": 2.6
+   },
+   "ibus-daemon": {
+    "pss_kb": 4162,
+    "first": 1.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 842,
+    "first": 2.6
+   },
+   "ibus-memconf": {
+    "pss_kb": 838,
+    "first": 2.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 832,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 289,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 185,
+    "first": 0.5
    }
   }
  },
@@ -121,8 +195,8 @@
   "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
   "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
   "exit": 0,
-  "seconds": 67.1,
-  "mutatingSyscallPaths": 87785,
+  "seconds": 68.1,
+  "mutatingSyscallPaths": 87253,
   "writesOutsideRun": [],
   "failedWritesOutsideRun": [],
   "binaries": {
@@ -137,7 +211,14 @@
    "win11-installer": true,
    "win11-software-worker": true,
    "win11-shell": true,
-   "win11-calendar": true
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
   },
   "payloadMarker": true,
   "extensionIdentical": {
@@ -179,143 +260,141 @@
   }
  },
  "guardStubCalls": [
-  "13:10:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:06\tpw-dump\t--monitor --no-colors",
-  "13:10:08\tpw-dump\t--monitor --no-colors",
-  "13:10:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:12\tpw-dump\t--monitor --no-colors",
-  "13:10:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:20\tpw-dump\t--monitor --no-colors",
-  "13:10:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:36\tpw-dump\t--monitor --no-colors",
-  "13:10:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:48\tpw-dump\t--monitor --no-colors",
-  "13:10:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:50\tpw-dump\t--monitor --no-colors",
-  "13:10:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:54\tpw-dump\t--monitor --no-colors",
-  "13:10:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:54\tpw-dump\t--monitor --no-colors",
-  "13:10:55\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
-  "13:10:55\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
-  "13:10:55\tapt\tlist --upgradable",
-  "13:10:55\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "13:10:55\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "13:10:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:56\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "13:10:56\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "13:10:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:56\tpw-dump\t--monitor --no-colors",
-  "13:10:57\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "13:10:57\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "13:10:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:58\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "13:10:58\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "13:10:59\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "13:10:59\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "13:10:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:10:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:00\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "13:11:00\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "13:11:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:01\tpw-dump\t--monitor --no-colors",
-  "13:11:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:02\tpw-dump\t--monitor --no-colors",
-  "13:11:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:06\tpw-dump\t--monitor --no-colors",
-  "13:11:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:09\tpw-dump\t--monitor --no-colors",
-  "13:11:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:18\tpw-dump\t--monitor --no-colors",
-  "13:11:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:25\tpw-dump\t--monitor --no-colors",
-  "13:11:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "13:11:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+  "03:35:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:35:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:35:59\tpw-dump\t--monitor --no-colors",
+  "03:35:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:01\tpw-dump\t--monitor --no-colors",
+  "03:36:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:05\tpw-dump\t--monitor --no-colors",
+  "03:36:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:13\tpw-dump\t--monitor --no-colors",
+  "03:36:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:29\tpw-dump\t--monitor --no-colors",
+  "03:36:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:39\tpw-dump\t--monitor --no-colors",
+  "03:36:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:41\tpw-dump\t--monitor --no-colors",
+  "03:36:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:45\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "03:36:45\tpw-dump\t--monitor --no-colors",
+  "03:36:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:45\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "03:36:45\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "03:36:45\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "03:36:45\tapt\tlist --upgradable",
+  "03:36:45\tpw-dump\t--monitor --no-colors",
+  "03:36:46\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "03:36:46\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "03:36:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:47\tpw-dump\t--monitor --no-colors",
+  "03:36:47\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "03:36:47\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "03:36:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:48\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "03:36:48\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "03:36:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:49\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "03:36:49\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "03:36:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:50\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "03:36:50\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "03:36:51\tpw-dump\t--monitor --no-colors",
+  "03:36:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:53\tpw-dump\t--monitor --no-colors",
+  "03:36:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:59\tpw-dump\t--monitor --no-colors",
+  "03:36:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:36:59\tpw-dump\t--monitor --no-colors",
+  "03:36:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:09\tpw-dump\t--monitor --no-colors",
+  "03:37:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:15\tpw-dump\t--monitor --no-colors",
+  "03:37:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "03:37:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
  ],
  "updateToolCalls": [],
  "leftoverProcessesAfterInner": [],
  "socketCleanup": {
   "removed": [
-   "cache/ibus/dbus-3WaIKw0p"
+   "cache/ibus/dbus-snyPe0C9"
   ],
   "left": [],
   "ok": true
  },
  "socketWatch": {
   "intervalSeconds": 2.0,
-  "scans": 44,
-  "maxScanSeconds": 0.717,
+  "scans": 43,
+  "maxScanSeconds": 0.737,
   "roots": [
    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
    "/etc",
@@ -325,7 +404,7 @@
   "appeared": [],
   "ok": true,
   "runSockets": [
-   "cache/ibus/dbus-3WaIKw0p"
+   "cache/ibus/dbus-snyPe0C9"
   ],
   "runUnlisted": []
  },
@@ -352,14 +431,14 @@
    },
    {
     "step": "record",
-    "t": 5.73,
+    "t": 5.78,
     "args": {
      "key": "toplevels"
     }
    },
    {
     "step": "screenshot",
-    "t": 7.58,
+    "t": 7.63,
     "args": {
      "name": "desktop"
     },
@@ -373,7 +452,7 @@
        1440,
        900
       ],
-      "distinctColours": 2145,
+      "distinctColours": 2151,
       "meanLevel": 61.2,
       "looksBlank": false
      }
@@ -381,7 +460,7 @@
    },
    {
     "step": "open",
-    "t": 7.78,
+    "t": 7.84,
     "args": {
      "spec": "start"
     },
@@ -389,10 +468,10 @@
      "name": "start",
      "kind": "start",
      "window": "native",
-     "pid": 438,
+     "pid": 337,
      "page": null,
      "alive": true,
-     "native": true,
+     "shell": true,
      "rect": [
       399,
       114,
@@ -403,7 +482,7 @@
    },
    {
     "step": "screenshot",
-    "t": 9.66,
+    "t": 9.7,
     "args": {
      "name": "start"
     },
@@ -417,15 +496,15 @@
        1440,
        900
       ],
-      "distinctColours": 1587,
-      "meanLevel": 41.9,
+      "distinctColours": 1612,
+      "meanLevel": 41.8,
       "looksBlank": false
      }
     }
    },
    {
     "step": "native",
-    "t": 10.79,
+    "t": 10.88,
     "args": {
      "native": "flyout",
      "name": "quick"
@@ -436,7 +515,7 @@
    },
    {
     "step": "screenshot",
-    "t": 12.37,
+    "t": 12.45,
     "args": {
      "name": "quick-settings"
     },
@@ -450,15 +529,15 @@
        1440,
        900
       ],
-      "distinctColours": 2216,
-      "meanLevel": 61.4,
+      "distinctColours": 2222,
+      "meanLevel": 61.1,
       "looksBlank": false
      }
     }
    },
    {
     "step": "native",
-    "t": 12.58,
+    "t": 12.61,
     "args": {
      "native": "flyout",
      "name": "quick"
@@ -469,21 +548,21 @@
    },
    {
     "step": "record",
-    "t": 13.46,
+    "t": 13.49,
     "args": {
      "key": "winx.startButton"
     }
    },
    {
     "step": "record",
-    "t": 13.79,
+    "t": 13.77,
     "args": {
      "key": "winx.how"
     }
    },
    {
     "step": "screenshot",
-    "t": 15.35,
+    "t": 15.33,
     "args": {
      "name": "winx"
     },
@@ -497,15 +576,15 @@
        1440,
        900
       ],
-      "distinctColours": 2118,
-      "meanLevel": 55.5,
+      "distinctColours": 2124,
+      "meanLevel": 55.6,
       "looksBlank": false
      }
     }
    },
    {
     "step": "native",
-    "t": 15.46,
+    "t": 15.49,
     "args": {
      "native": "flyout",
      "name": "winx"
@@ -516,14 +595,14 @@
    },
    {
     "step": "record",
-    "t": 16.3,
+    "t": 16.33,
     "args": {
      "key": "notifications.posted"
     }
    },
    {
     "step": "native",
-    "t": 25.35,
+    "t": 25.33,
     "args": {
      "native": "flyout",
      "name": "notifications"
@@ -534,7 +613,7 @@
    },
    {
     "step": "screenshot",
-    "t": 27.19,
+    "t": 27.18,
     "args": {
      "name": "notifications"
     },
@@ -548,7 +627,7 @@
        1440,
        900
       ],
-      "distinctColours": 2252,
+      "distinctColours": 2259,
       "meanLevel": 62.6,
       "looksBlank": false
      }
@@ -556,7 +635,7 @@
    },
    {
     "step": "native",
-    "t": 27.36,
+    "t": 27.34,
     "args": {
      "native": "flyout",
      "name": "notifications"
@@ -567,29 +646,37 @@
    },
    {
     "step": "record",
-    "t": 28.14,
+    "t": 28.18,
     "args": {
      "key": "notifications.cleared"
     }
    },
    {
     "step": "open",
-    "t": 30.95,
+    "t": 30.2,
     "args": {
      "spec": "explorer"
     },
     "result": {
      "name": "explorer",
      "kind": "explorer",
-     "window": "69eac1341d06025eea4286fd1641d8b9",
-     "pid": 1812,
+     "window": "native-explorer",
+     "pid": 1702,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "explorer",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1702,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "screenshot",
-    "t": 36.14,
+    "t": 35.33,
     "args": {
      "name": "explorer"
     },
@@ -603,30 +690,38 @@
        1440,
        900
       ],
-      "distinctColours": 842,
-      "meanLevel": 33.1,
+      "distinctColours": 813,
+      "meanLevel": 32.1,
       "looksBlank": false
      }
     }
    },
    {
     "step": "open",
-    "t": 37.6,
+    "t": 35.91,
     "args": {
      "spec": "settings:personalization"
     },
     "result": {
      "name": "settings",
      "kind": "settings",
-     "window": "6fbf0db90c7d546968d42fa577102d60",
-     "pid": 1978,
+     "window": "native-settings",
+     "pid": 1819,
      "page": "personalization",
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1819,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "screenshot",
-    "t": 42.78,
+    "t": 41.09,
     "args": {
      "name": "settings"
     },
@@ -640,30 +735,38 @@
        1440,
        900
       ],
-      "distinctColours": 1773,
-      "meanLevel": 39.8,
+      "distinctColours": 1841,
+      "meanLevel": 39.9,
       "looksBlank": false
      }
     }
    },
    {
     "step": "open",
-    "t": 43.92,
+    "t": 41.61,
     "args": {
      "spec": "taskmgr"
     },
     "result": {
      "name": "taskmgr",
      "kind": "taskmgr",
-     "window": "8cc0e683214288fd374620a11547f545",
-     "pid": 2124,
+     "window": "native-taskmgr",
+     "pid": 2050,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "taskmgr",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 2050,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "screenshot",
-    "t": 49.09,
+    "t": 46.78,
     "args": {
      "name": "task-manager-summary"
     },
@@ -677,22 +780,22 @@
        1440,
        900
       ],
-      "distinctColours": 1025,
-      "meanLevel": 42.3,
+      "distinctColours": 1118,
+      "meanLevel": 43.1,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 49.73,
+    "t": 47.21,
     "args": {
      "key": "taskmgr.click"
     }
    },
    {
     "step": "screenshot",
-    "t": 81.0,
+    "t": 78.61,
     "args": {
      "name": "task-manager"
     },
@@ -706,29 +809,29 @@
        1440,
        900
       ],
-      "distinctColours": 979,
-      "meanLevel": 39.0,
+      "distinctColours": 967,
+      "meanLevel": 39.4,
       "looksBlank": false
      }
     }
    },
    {
     "step": "close",
-    "t": 81.82,
+    "t": 79.14,
     "args": {
      "name": "explorer"
     }
    },
    {
     "step": "record",
-    "t": 82.13,
+    "t": 79.46,
     "args": {
      "key": "calendar.windows"
     }
    },
    {
     "step": "screenshot",
-    "t": 86.71,
+    "t": 84.1,
     "args": {
      "name": "calendar"
     },
@@ -742,15 +845,15 @@
        1440,
        900
       ],
-      "distinctColours": 769,
-      "meanLevel": 39.1,
+      "distinctColours": 777,
+      "meanLevel": 38.9,
       "looksBlank": false
      }
     }
    },
    {
     "step": "native",
-    "t": 89.48,
+    "t": 86.93,
     "args": {
      "native": "flyout",
      "name": "taskview"
@@ -761,7 +864,7 @@
    },
    {
     "step": "screenshot",
-    "t": 91.17,
+    "t": 88.63,
     "args": {
      "name": "task-view"
     },
@@ -775,15 +878,15 @@
        1440,
        900
       ],
-      "distinctColours": 431,
-      "meanLevel": 32.4,
+      "distinctColours": 464,
+      "meanLevel": 32.2,
       "looksBlank": false
      }
     }
    },
    {
     "step": "native",
-    "t": 91.4,
+    "t": 88.82,
     "args": {
      "native": "flyout",
      "name": "taskview"
@@ -794,28 +897,28 @@
    },
    {
     "step": "close",
-    "t": 92.99,
+    "t": 90.11,
     "args": {
      "name": "settings"
     }
    },
    {
     "step": "close",
-    "t": 93.81,
+    "t": 90.63,
     "args": {
      "name": "taskmgr"
     }
    },
    {
     "step": "record",
-    "t": 95.32,
+    "t": 92.13,
     "args": {
      "key": "theme"
     }
    },
    {
     "step": "open",
-    "t": 99.42,
+    "t": 96.25,
     "args": {
      "spec": "start"
     },
@@ -823,10 +926,10 @@
      "name": "start",
      "kind": "start",
      "window": "native",
-     "pid": 438,
+     "pid": 337,
      "page": null,
      "alive": true,
-     "native": true,
+     "shell": true,
      "rect": [
       399,
       114,
@@ -837,7 +940,7 @@
    },
    {
     "step": "screenshot",
-    "t": 101.32,
+    "t": 98.13,
     "args": {
      "name": "light-start"
     },
@@ -851,30 +954,38 @@
        1440,
        900
       ],
-      "distinctColours": 1368,
-      "meanLevel": 213.8,
+      "distinctColours": 1401,
+      "meanLevel": 213.7,
       "looksBlank": false
      }
     }
    },
    {
     "step": "open",
-    "t": 103.57,
+    "t": 99.72,
     "args": {
      "spec": "explorer"
     },
     "result": {
      "name": "explorer",
      "kind": "explorer",
-     "window": "a0c8bfa0264831abedf3cd1efdfde7a3",
-     "pid": 3318,
+     "window": "native-explorer",
+     "pid": 3187,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "explorer",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 3187,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "screenshot",
-    "t": 108.77,
+    "t": 104.84,
     "args": {
      "name": "light-explorer"
     },
@@ -888,22 +999,22 @@
        1440,
        900
       ],
-      "distinctColours": 2037,
-      "meanLevel": 225.4,
+      "distinctColours": 1989,
+      "meanLevel": 230.0,
       "looksBlank": false
      }
     }
    },
    {
     "step": "close",
-    "t": 109.59,
+    "t": 105.38,
     "args": {
      "name": "explorer"
     }
    },
    {
     "step": "record",
-    "t": 109.59,
+    "t": 105.38,
     "args": {
      "key": "failed"
     }
@@ -913,68 +1024,68 @@
    {
     "check": "desktop",
     "ok": true,
-    "t": 7.58
+    "t": 7.63
    },
    {
     "check": "start",
     "ok": true,
-    "t": 10.74
+    "t": 10.78
    },
    {
     "check": "quick-settings",
     "ok": true,
-    "t": 13.36
+    "t": 13.39
    },
    {
     "check": "winx",
     "ok": true,
-    "t": 16.29
+    "t": 16.32
    },
    {
     "check": "notifications",
     "ok": true,
-    "t": 29.81
+    "t": 29.68
    },
    {
     "check": "explorer",
     "ok": true,
-    "t": 36.14
+    "t": 35.33
    },
    {
     "check": "settings",
     "ok": true,
-    "t": 42.78
+    "t": 41.09
    },
    {
     "check": "task-manager-summary",
     "ok": true,
-    "t": 49.09
+    "t": 46.78
    },
    {
     "check": "task-manager",
     "ok": true,
-    "t": 81.01
+    "t": 78.61
    },
    {
     "check": "calendar",
     "ok": true,
-    "t": 86.71
+    "t": 84.1
    },
    {
     "check": "task-view",
     "ok": true,
-    "t": 92.18
+    "t": 89.6
    },
    {
     "check": "light",
     "ok": true,
-    "t": 109.59
+    "t": 105.38
    }
   ],
   "records": {
    "boot": {
     "kind": "native-shell",
-    "pid": 438,
+    "pid": 337,
     "tag": "boot"
    },
    "toplevels": [
@@ -1011,53 +1122,32 @@
    "notifications.cleared": 2,
    "taskmgr.click": {
     "input": "clutter",
-    "x": 320,
-    "y": 254,
-    "client": [
-     120,
-     188
+    "x": 321,
+    "y": 240,
+    "rect": [
+     5,
+     156,
+     232,
+     36
     ],
+    "name": "nav-performance",
     "window": [
      200,
      66,
      1040,
      720
     ],
-    "element": "Performance",
     "shell": {
      "pointer": [
-      320,
-      254
+      321,
+      240
      ],
-     "focusPid": 2124
-    },
-    "pageSaw": [
-     {
-      "type": "pointerdown",
-      "x": 120,
-      "y": 188,
-      "trusted": true,
-      "target": "fl-nav__label"
-     },
-     {
-      "type": "pointerup",
-      "x": 120,
-      "y": 188,
-      "trusted": true,
-      "target": "fl-nav__label"
-     },
-     {
-      "type": "click",
-      "x": 120,
-      "y": 188,
-      "trusted": true,
-      "target": "fl-nav__label"
-     }
-    ]
+     "focusPid": 2050
+    }
    },
    "calendar.windows": [
     {
-     "pid": 2862,
+     "pid": 2770,
      "title": "Calendar",
      "x": 130,
      "y": 36,
@@ -1093,34 +1183,34 @@
    "light-explorer.png"
   ],
   "error": null,
-  "seconds": 109.59,
+  "seconds": 105.38,
   "surfaces": {
    "panel": {
     "name": "panel",
     "kind": "panel",
     "window": "native",
-    "pid": 438,
+    "pid": 337,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    },
    "desktop": {
     "name": "desktop",
     "kind": "desktop",
     "window": "native",
-    "pid": 438,
+    "pid": 337,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    },
    "start": {
     "name": "start",
     "kind": "start",
     "window": "native",
-    "pid": 438,
+    "pid": 337,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    }
   },
   "failedChecks": [],
@@ -1128,7 +1218,7 @@
  },
  "inner": {
   "facts": {
-   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=58b466613763d6ee01e58b6f6af6fe1c",
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=a722e3741897c3f37dad62376af7c90d",
    "shellArgv": [
     "gnome-shell",
     "--headless",
@@ -1149,11 +1239,11 @@
    "extensionCopyIdentical": true,
    "nativeBoot": {
     "kind": "native-shell",
-    "pid": 438,
+    "pid": 337,
     "tag": "boot"
    },
    "windowIds": {
-    "native": 438
+    "native": 337
    },
    "notificationsAtStart": [
     {
@@ -1175,79 +1265,79 @@
    {
     "file": "desktop.png",
     "group": "scenario",
-    "bytes": 1108853,
+    "bytes": 1109245,
     "area": null
    },
    {
     "file": "start.png",
     "group": "scenario",
-    "bytes": 764849,
+    "bytes": 765348,
     "area": null
    },
    {
     "file": "quick-settings.png",
     "group": "scenario",
-    "bytes": 906204,
+    "bytes": 906582,
     "area": null
    },
    {
     "file": "winx.png",
     "group": "scenario",
-    "bytes": 852263,
+    "bytes": 852719,
     "area": null
    },
    {
     "file": "notifications.png",
     "group": "scenario",
-    "bytes": 857607,
+    "bytes": 858631,
     "area": null
    },
    {
     "file": "explorer.png",
     "group": "scenario",
-    "bytes": 404751,
+    "bytes": 314427,
     "area": null
    },
    {
     "file": "settings.png",
     "group": "scenario",
-    "bytes": 542597,
+    "bytes": 550714,
     "area": null
    },
    {
     "file": "task-manager-summary.png",
     "group": "scenario",
-    "bytes": 455367,
+    "bytes": 455239,
     "area": null
    },
    {
     "file": "task-manager.png",
     "group": "scenario",
-    "bytes": 452858,
+    "bytes": 458596,
     "area": null
    },
    {
     "file": "calendar.png",
     "group": "scenario",
-    "bytes": 269251,
+    "bytes": 269410,
     "area": null
    },
    {
     "file": "task-view.png",
     "group": "scenario",
-    "bytes": 106068,
+    "bytes": 107036,
     "area": null
    },
    {
     "file": "light-start.png",
     "group": "scenario",
-    "bytes": 823063,
+    "bytes": 823934,
     "area": null
    },
    {
     "file": "light-explorer.png",
     "group": "scenario",
-    "bytes": 478740,
+    "bytes": 399002,
     "area": null
    }
   ],
@@ -1256,25 +1346,25 @@
     "app": "explorer",
     "source": "Win11 File Explorer",
     "title": "Win11 File Explorer",
-    "body": "“File Explorer” is ready"
+    "body": "“robin - File Explorer” is ready"
    },
    {
     "app": "settings",
     "source": "Win11 Settings",
     "title": "Win11 Settings",
-    "body": "“Settings” is ready"
+    "body": "“Personalisation – Settings” is ready"
    },
    {
     "app": "taskmgr",
     "source": "Win11 Task Manager",
     "title": "Win11 Task Manager",
-    "body": "“Task Manager” is ready"
+    "body": "“Task Manager – Summary” is ready"
    },
    {
     "app": "explorer",
     "source": "Win11 File Explorer",
     "title": "Win11 File Explorer",
-    "body": "“File Explorer” is ready"
+    "body": "“robin - File Explorer” is ready"
    }
   ]
  },

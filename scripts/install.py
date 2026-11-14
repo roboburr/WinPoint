@@ -25,6 +25,7 @@ from pathlib import Path
 import re
 import shlex
 import shutil
+import stat
 import struct
 import subprocess
 import sys
@@ -41,7 +42,7 @@ BINS = ("win11-explorer", "win11-panel", "win11-app", "win11-launch", "win11-ind
 # win11-calendar (Robin 2026-11-13): the native Calendar app (native/calendar), opened on a day by the taskbar calendar.
 # win11-gtk-<kind> (Robin 2026-11-13, native/APPS.md): the native GTK 4 apps (native/apps). The host binaries that
 # launch an app (win11-app --app <kind>, win11-explorer, win11-default-apps, win11-installer) exec them from their own
-# directory; without them, or with WIN11_WEBKIT_APPS=1, the WebKit app runs.
+# directory; a missing one is an error that names it (exit 127), never a fallback.
 # All are built in their own workspace (native/; scripts/build.sh puts them next to the others), so they are looked
 # up in WIN11_NATIVE_BUILD_DIR first, then in the build directory.
 NATIVE_BINS = ("win11-shell", "win11-calendar",
@@ -75,7 +76,7 @@ T = {
     "controlChars": {"nl": "{label} mag geen besturingstekens bevatten", "en": "{label} must not contain control characters"},
     "notAbsolute": {"nl": "{label} moet een absoluut pad zijn: {value}", "en": "{label} must be an absolute path: {value}"},
     "missingBinary": {"nl": "Ontbreekt: {source}. Bouw eerst met scripts/build.sh.", "en": "Missing: {source}. Build it first with scripts/build.sh."},
-    "missingSource": {"nl": "Ontbrekende interface/compatibiliteitsbron: {directory}", "en": "Missing interface/compatibility source: {directory}"},
+    "missingSource": {"nl": "Ontbrekende interfacebron: {directory}", "en": "Missing interface source: {directory}"},
     "badTable": {"nl": "Ontbrekend of ongeldig projectbestand: {file}", "en": "Missing or invalid project file: {file}"},
     "notOwned": {"nl": "Niet overschreven: {payload} bevat geen installatiemarker van dit project.", "en": "Not overwritten: {payload} has no installation marker of this project."},
     "conflicts": {"nl": "Niet overschreven: bestaande bestanden zonder installatiemarker:", "en": "Not overwritten: existing files without an installation marker:"},
@@ -105,6 +106,8 @@ T = {
     "settingsPath": {"nl": "Instellingen › Tijd en taal › Taal en regio", "en": "Settings › Time & language › Language & region"},
     "staleRemoved": {"nl": "Verwijderd uit de extensiemap (geen bestand van deze versie): {path}",
                      "en": "Removed from the extension folder (not a file of this version): {path}"},
+    "webkitRemoved": {"nl": "Verwijderd (gegevens van de WebKit-apps van een eerdere versie): {path}",
+                      "en": "Removed (data of an earlier version’s WebKit apps): {path}"},
     "done1": {"nl": "Geïnstalleerd in {prefix}/bin", "en": "Installed in {prefix}/bin"},
     "done2": {"nl": "Verkenner is los te openen via het applicatieoverzicht.", "en": "File Explorer can be opened from the app overview."},
     "done3": {"nl": "De taakbalk is geïnstalleerd, maar nog niet aangezet.", "en": "The taskbar is installed, but not turned on yet."},
@@ -385,23 +388,24 @@ def missing_binaries(build: Path) -> list[Path]:
 
 
 def choose_build(root: Path) -> Path:
-    """WIN11_BUILD_DIR, else the first complete one of target/release and bin/ (a checkout's bin/ is stale; a
-    package has only bin/). All 19 binaries are required; every missing one is named."""
+    """WIN11_BUILD_DIR, else the first of target/release and bin/ that itself holds every binary of BINS (a
+    checkout's bin/ is stale; a package has only bin/): WIN11_NATIVE_BUILD_DIR never makes an incomplete directory
+    the choice, so the old binaries of a checkout's bin/ are never installed. All 19 binaries are required; every
+    missing one is named."""
     if os.environ.get("WIN11_BUILD_DIR"):
         build = Path(os.environ["WIN11_BUILD_DIR"])
+        missing = missing_binaries(build)
     else:
         candidates = [root/"target/release", root/"bin"]
-        build = next((c for c in candidates if not missing_binaries(c)),
+        build = next((c for c in candidates if all(executable(c/name) for name in BINS)),
                      next((c for c in candidates if c.is_dir()), candidates[0]))
-    missing = missing_binaries(build)
+        missing = [build/name for name in BINS if not executable(build/name)]
     if missing:
         raise SystemExit("\n".join(t("missingBinary", source=path) for path in missing))
     return build
 
 
 PACKAGES = {   # the Ubuntu 26.04 package of each library the binaries need (dpkg -S, 2026-11-05)
-    "libwebkit2gtk-4.1.so.0": "libwebkit2gtk-4.1-0", "libjavascriptcoregtk-4.1.so.0": "libjavascriptcoregtk-4.1-0",
-    "libsoup-3.0.so.0": "libsoup-3.0-0", "libgtk-3.so.0": "libgtk-3-0t64", "libgdk-3.so.0": "libgtk-3-0t64",
     "libgdk_pixbuf-2.0.so.0": "libgdk-pixbuf-2.0-0", "libcairo.so.2": "libcairo2", "libz.so.1": "zlib1g",
     "libglib-2.0.so.0": "libglib2.0-0t64", "libgio-2.0.so.0": "libglib2.0-0t64", "libgobject-2.0.so.0": "libglib2.0-0t64",
     "libarchive.so.13": "libarchive13t64", "libgcc_s.so.1": "libgcc-s1",
@@ -615,6 +619,76 @@ def rescue_calendar(payload: Path, data: Path) -> None:
         old.rename(new)
 
 
+# The WebKit apps' own storage, up to the last-webkit tag: WebKitGTK kept each app's in $XDG_DATA_HOME/<app id> and
+# $XDG_CACHE_HOME/<app id> (the file picker's under the portal's bus name), and the first builds' caches (1 Nov) in
+# $XDG_CACHE_HOME/win11-gnome/{WebKitCache,CacheStorage} and $XDG_CACHE_HOME/win11-explorer. Nothing reads them now.
+WEBKIT_APPS = ("Explorer", "Settings", "TaskManager", "Search", "Disks", "DefaultApps", "Installer", "Panel", "Start",
+               "Desktop")
+WEBKIT_PORTAL = "org.freedesktop.impl.portal.desktop.win11shell"
+# Everything WebKitGTK puts in such a folder (its base data and cache directories); a folder holding anything else
+# is not WebKit's alone and stays.
+WEBKIT_ENTRIES = frozenset({"hsts-storage.sqlite", "hsts-storage.sqlite-wal", "hsts-storage.sqlite-shm",
+                            "hsts-storage.sqlite-journal", "localstorage", "storage", "mediakeys", "databases",
+                            "deviceidhashsalts", "serviceworkers", "itp", "WebKitCache", "CacheStorage"})
+
+
+def own_entry(path: Path, kind) -> bool:
+    """`path` is of this user and of this kind (stat.S_ISDIR, stat.S_ISREG), not a link to one."""
+    try:
+        info = path.lstat()
+    except OSError:
+        return False
+    return kind(info.st_mode) and info.st_uid == os.geteuid()
+
+
+def webkit_only(folder: Path) -> bool:
+    try:
+        return set(os.listdir(folder)) <= WEBKIT_ENTRIES
+    except OSError:
+        return False
+
+
+def remove_webkit_state(data: Path, cache: Path, runtime: Path) -> None:
+    """The WebKit apps' storage (WEBKIT_APPS, WEBKIT_PORTAL and win11-explorer, above) and the WebKit Explorer's
+    restart lock, by this exact list only: a folder only when it is a real folder of this user holding nothing but
+    WebKit's own entries, the two caches in win11-gnome only as real folders of this user, the lock only as a file of
+    this user. Each removed path is named (ge1c-review m3). Win11 Shell for Hyprland's win11shell* folders, the
+    w11gpuprobe-* probes and webkit.py are never on the list. window-state.json and .window-state.lock stay: the
+    native Explorer keeps its session there (native/apps/explorer/src/transfer.rs)."""
+    folders = [base/f"io.github.win11shell.{name}" for base in (data, cache) for name in WEBKIT_APPS]
+    folders += [data/WEBKIT_PORTAL, cache/WEBKIT_PORTAL, cache/"win11-explorer"]
+    doomed = [folder for folder in folders if own_entry(folder, stat.S_ISDIR) and webkit_only(folder)]
+    if own_entry(cache/"win11-gnome", stat.S_ISDIR):
+        doomed += [cache/"win11-gnome"/name for name in ("WebKitCache", "CacheStorage")
+                   if own_entry(cache/"win11-gnome"/name, stat.S_ISDIR)]
+    lock = runtime/"win11-gnome/explorer-restart.lock"
+    if own_entry(lock.parent, stat.S_ISDIR) and own_entry(lock, stat.S_ISREG):
+        doomed.append(lock)
+    for path in doomed:
+        try:
+            if path == lock:
+                path.unlink()
+            else:
+                shutil.rmtree(path)
+        except OSError:
+            continue
+        print(t("webkitRemoved", path=path))
+
+
+def cache_home() -> Path:
+    """The XDG cache folder: $XDG_CACHE_HOME when it is absolute, else ~/.cache (the spec ignores a relative value;
+    GLib's g_get_user_cache_dir an empty one). Only remove_webkit_state and runtime_dir read it, so a bad value never
+    stops an install or an uninstall."""
+    value = os.environ.get("XDG_CACHE_HOME", "")
+    return Path(value) if value.startswith("/") else Path.home()/".cache"
+
+
+def runtime_dir(cache: Path) -> Path:
+    """GLib's g_get_user_runtime_dir: $XDG_RUNTIME_DIR when it is absolute, else the cache folder."""
+    value = os.environ.get("XDG_RUNTIME_DIR", "")
+    return Path(value) if value.startswith("/") else cache
+
+
 def remove_legacy(prefix: Path, applications: Path) -> None:
     """D-G70: the binaries and entries of an earlier version's WebKit Start and desktop (LEGACY_BINS, LEGACY_ENTRIES).
     Only files and links are removed; anything else at those paths is left alone."""
@@ -630,6 +704,7 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     prefix = absolute_path(os.environ.get("WIN11_INSTALL_PREFIX", str(Path.home()/".local")), t("labelPrefix"))
     data = absolute_path(os.environ.get("XDG_DATA_HOME", str(Path.home()/".local/share")), "XDG_DATA_HOME")
     config = absolute_path(os.environ.get("XDG_CONFIG_HOME", str(Path.home()/".config")), "XDG_CONFIG_HOME")
+    cache = cache_home()
     payload = prefix/"share/win11-gnome"
     choice = resolve_language(explicit, config, data, payload)
     language = choice["lang"]
@@ -637,9 +712,10 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     build = choose_build(root)
     extension = data/"gnome-shell/extensions"/UUID
     applications = data/"applications"
-    for directory in (root/"vendor/ui", root/"vendor/host"):
-        if not directory.is_dir():
-            raise SystemExit(t("missingSource", directory=directory))
+    # The wallpapers and icons the native shell and apps fetch (/ui/assets/); vendor/host, the Python reference,
+    # stays in the source tree and is no longer installed.
+    if not (root/"vendor/ui/assets").is_dir():
+        raise SystemExit(t("missingSource", directory=root/"vendor/ui/assets"))
     entries = load_entries(root)
     defaults = load_defaults(root) if choice["store"] else None
     preflight_runtime(build)
@@ -671,11 +747,13 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     payload.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".win11-gnome-install-", dir=payload.parent))
     try:
-        # config/: the Windows 11 caption buttons for other GTK apps (D-G65), imported from gtk.css by the panel host
-        for directory in ("ui", "host", "config"):
-            if not (root/"vendor"/directory).is_dir():
+        # ui/: only vendor/ui/assets (wallpapers, the Settings icon), whatever else vendor/ui still holds: the HTML
+        # apps are gone (git show last-webkit:vendor/ui). config/: the Windows 11 caption buttons for other GTK apps
+        # (D-G65), imported from gtk.css by the panel host.
+        for source, target in (("ui/assets", "ui/assets"), ("config", "config")):
+            if not (root/"vendor"/source).is_dir():
                 continue
-            shutil.copytree(root/"vendor"/directory, stage/directory,
+            shutil.copytree(root/"vendor"/source, stage/target,
                             ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
         for manifest in ("ui-sha256.json", "ui-original-sha256.json", "ui-patches.json"):
             if (root/"vendor"/manifest).is_file():
@@ -709,6 +787,7 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     if updating:
         # D-G70: an earlier version's WebKit Start and desktop (the payload is ours, so these files are too)
         remove_legacy(prefix, applications)
+        remove_webkit_state(data, cache, runtime_dir(cache))
     icon_bundle.register_aliases(payload, data, previous_icons)
     file_portal.register(payload, portal_plan)
     install_extension(root, extension)

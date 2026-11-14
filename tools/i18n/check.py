@@ -2,20 +2,22 @@
 """The language checker of Win11 voor GNOME: a thin dispatcher over one module per layer (F39; GE1a,
 notes/claude/round1/ge1a.md; the rules came from H's check.py, ported in GE0a).
 
-    python3 -B tools/i18n/check.py [--root DIR] [--json] [--warnings] [--no-js] [--layers ui,rust,pairs]
+    python3 -B tools/i18n/check.py [--root DIR] [--json] [--warnings] [--layers native,rust,pairs]
 
 Exit code 0 when no rule found an *error*, 1 otherwise. Warnings never fail; ``--warnings`` lists them (by default
 only their counts per rule are shown). Nothing is written.
 
 Layers (each one file next to this one; a layer whose file does not exist yet is skipped and named in the stats):
 
-* ``ui``    — ``check_ui.py`` (GE1a): ``makeT`` dictionaries, ``{nl, en}`` pairs, ``P()`` and ``X_NL``/``X_EN``
-  tables in ``vendor/ui/js`` (needs node)
-* ``rust``  — ``check_rust.py`` (GE1b): the Rust catalogues and call sites
-* ``pairs`` — ``check_pairs.py`` (GE1c): the extension's and the installer's inline ``{nl, en}`` tables
+* ``native`` — ``check_native.py``: the nl/en pairs of the GTK 4 programs in ``native/`` (the shell, Calendar, the
+  kit and the seven apps: ``t(nl, en)`` calls, match and row tables, the settings registry, NL/EN arrays, JSON).
+  It replaced GE1a's ``ui`` layer (check_ui.py over the WebKit apps' dictionaries) when WebKit went (tag
+  ``last-webkit``)
+* ``rust``   — ``check_rust.py`` (GE1b): the Rust catalogues and call sites
+* ``pairs``  — ``check_pairs.py`` (GE1c): the extension's and the installer's inline ``{nl, en}`` tables
 
 A layer module either defines ``check_layer(root, rep, gloss, opts)`` (``rep`` a :class:`Report`, ``gloss`` the
-:class:`Glossary`, ``opts`` ``{"js": bool, "js_data": dict | None}``; it may define ``DEFERRED``, rule → the step that
+:class:`Glossary`, ``opts`` a dict for options, empty today; it may define ``DEFERRED``, rule → the step that
 makes it an error, merged into :data:`DEFERRED`, and ``REPLACES``, the shared rules below it implements itself:
 ``"tsv"``, ``"host-json"``; it imports this module for the shared pieces, ``import check``), or is a script with its
 own ``main()``: then it runs as ``python3 -B FILE --warnings`` (always on this tree, whatever ``--root`` says), and
@@ -63,7 +65,7 @@ import paths  # noqa: E402
 
 ROOT = paths.ROOT
 
-LAYERS = (("ui", "check_ui"), ("rust", "check_rust"), ("pairs", "check_pairs"))
+LAYERS = (("native", "check_native"), ("rust", "check_rust"), ("pairs", "check_pairs"))
 
 PH = re.compile(r"\{(\w+)\}", re.ASCII)
 # the first segment is the file stem (files, files_launch …); then any number of name segments, which may contain
@@ -455,8 +457,7 @@ def run_script_layer(layer: str, path: Path, rep: Report) -> None:
     rep.stats[f"{layer}"] = (lines[-1] if lines else f"exit {r.returncode}").replace(", ", "; ")
 
 
-def run(root: Path | str = ROOT, js: bool = True, js_data: dict | None = None,
-        layers: list[str] | None = None) -> Report:
+def run(root: Path | str = ROOT, layers: list[str] | None = None) -> Report:
     root = Path(root).resolve()
     rep = Report()
     mods, missing, broken = load_layers(layers)
@@ -478,16 +479,17 @@ def run(root: Path | str = ROOT, js: bool = True, js_data: dict | None = None,
     names = dict(LAYERS)
     for layer, err in broken:
         rep.add("layer-import", f"tools/i18n/{names[layer]}.py", 0, f"layer {layer} could not be loaded: {err}")
-    opts = {"js": js, "js_data": js_data}
+    opts: dict = {}
     for layer, mod, path in mods:
         if mod is None:
             run_script_layer(layer, path, rep)
         else:
             mod.check_layer(root, rep, gloss, opts)
     rep.stats["layers"] = ",".join(layer for layer, _m, _p in mods) or "-"
-    # glossary-context.tsv: judged only for the parts of the tree this run checked (the UI needs node and the ui
-    # layer; the host JSON tables the shared host-json rule)
-    gloss.check_context(rep, {paths.UI_REL + "/": "js_keys" in rep.stats, "host/src/": "host_json_rows" in rep.stats})
+    # glossary-context.tsv: judged only for the parts of the tree this run checked (native/ by the native layer, the
+    # host JSON tables by the shared host-json rule)
+    gloss.check_context(rep, {paths.NATIVE_REL + "/": "native_pairs" in rep.stats,
+                              "host/src/": "host_json_rows" in rep.stats})
     rep.stats["glossary_context_rows"] = len(gloss.context)
     if missing:
         rep.stats["layers_missing"] = ",".join(missing)
@@ -499,11 +501,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--root", default=str(ROOT))
     ap.add_argument("--json", action="store_true", help="the whole report as JSON")
     ap.add_argument("--warnings", action="store_true", help="list every warning")
-    ap.add_argument("--no-js", action="store_true", help="skip the UI dictionaries (no node)")
-    ap.add_argument("--layers", help="only these layers (comma-separated: ui, rust, pairs); skips the shared rules")
+    ap.add_argument("--layers", help="only these layers (comma-separated: native, rust, pairs); skips the shared "
+                                     "rules")
     a = ap.parse_args(argv)
     layers = [x.strip() for x in a.layers.split(",") if x.strip()] if a.layers else None
-    rep = run(a.root, js=not a.no_js, layers=layers)
+    rep = run(a.root, layers=layers)
     if a.json:
         print(json.dumps(rep.to_json(), ensure_ascii=False, indent=1))
         return 1 if rep.errors else 0

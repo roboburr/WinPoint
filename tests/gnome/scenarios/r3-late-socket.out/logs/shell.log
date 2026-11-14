@@ -1,54 +1,48 @@
-libmutter-Message: 02:49:00.966: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+libmutter-Message: 03:24:29.797: Running GNOME Shell (using mutter 50.1) as a Wayland display server
 
-(gnome-shell:51): libmutter-WARNING **: 02:49:00.967: Unknown experimental feature 'scale-monitor-framebuffer'
+(gnome-shell:29): libmutter-WARNING **: 03:24:29.797: Unknown experimental feature 'scale-monitor-framebuffer'
 
-(gnome-shell:51): libmutter-WARNING **: 02:49:00.967: Unknown experimental feature 'xwayland-native-scaling'
-libmutter-Message: 02:49:01.167: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
-libmutter-Message: 02:49:01.168: Created gbm renderer for '/dev/dri/renderD128'
-libmutter-Message: 02:49:01.168: Boot VGA GPU /dev/dri/renderD128 selected as primary
-** Message: 02:49:01.170: Obtained a high priority EGL context
-libmutter-Message: 02:49:01.216: Added virtual monitor Meta-0
-libmutter-Message: 02:49:01.223: Using Wayland display name 'w11-wl'
-GNOME Shell-Message: 02:49:01.814: Registering session with GDM
+(gnome-shell:29): libmutter-WARNING **: 03:24:29.797: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 03:24:29.935: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 03:24:29.936: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 03:24:29.936: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 03:24:29.937: Obtained a high priority EGL context
+libmutter-Message: 03:24:29.975: Added virtual monitor Meta-0
+libmutter-Message: 03:24:29.980: Using Wayland display name 'w11-wl'
+GNOME Shell-Message: 03:24:30.457: Registering session with GDM
 
-(gnome-shell:51): libmutter-WARNING **: 02:49:01.836: There is no colord server available
-GNOME Shell-Message: 02:49:01.840: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+(gnome-shell:29): libmutter-WARNING **: 03:24:30.469: There is no colord server available
+GNOME Shell-Message: 03:24:30.471: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
 
-(gnome-shell:51): GNOME Shell-CRITICAL **: 02:49:01.998: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
-
-Stack trace:
-  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
-  @resource:///org/gnome/shell/ui/init.js:20:20
-  
-
-(gnome-shell:51): GNOME Shell-CRITICAL **: 02:49:01.998: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+(gnome-shell:29): GNOME Shell-CRITICAL **: 03:24:30.576: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
 
 Stack trace:
   asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
   @resource:///org/gnome/shell/ui/init.js:20:20
   
-GNOME Shell-Message: 02:49:01.999: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+
+(gnome-shell:29): GNOME Shell-CRITICAL **: 03:24:30.577: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+GNOME Shell-Message: 03:24:30.577: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
 WARNING: Glycin running without sandbox.
 portal is not running: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.portal.IBus was not provided by any .service files
-GNOME Shell-Message: 02:49:02.040: Failed to register AuthenticationAgent
+GNOME Shell-Message: 03:24:30.600: Failed to register AuthenticationAgent
 WARNING: Glycin running without sandbox.
 
-(gnome-shell:51): GnomeDesktop-WARNING **: 02:49:02.886: Could not create transient scope for PID 445: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
-
-(gnome-shell:51): GnomeDesktop-WARNING **: 02:49:02.887: Could not create transient scope for PID 446: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
-GNOME Shell-Message: 02:49:02.887: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
-** Message: 02:49:02.901: Failed to start camera monitor
-GNOME Shell-Message: 02:49:02.930: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
-GNOME Shell-Message: 02:49:02.930: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
-Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+(gnome-shell:29): GnomeDesktop-WARNING **: 03:24:31.677: Could not create transient scope for PID 390: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+** Message: 03:24:31.688: Failed to start camera monitor
+GNOME Shell-Message: 03:24:31.710: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+GNOME Shell-Message: 03:24:31.711: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 03:24:31.711: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 03:24:31.717: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
 Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
 
-(gnome-shell:51): accountsservice-WARNING **: 02:49:02.989: ActUserManager: user (null) has no username (uid: -1)
-GNOME Shell-Message: 02:49:02.990: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
+(gnome-shell:29): accountsservice-WARNING **: 03:24:31.758: ActUserManager: user (null) has no username (uid: -1)
 WARNING: Glycin running without sandbox.
-WARNING: Glycin running without sandbox.
-WARNING: Glycin running without sandbox.
-GNOME Shell-Message: 02:49:03.449: GNOME Shell started at Fri Nov 06 2026 02:49:01 GMT+0100 (Central European Standard Time)
-GNOME Shell-Message: 02:49:03.450: Registering display with GDM
-GNOME Shell-Message: 02:49:03.453: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
-WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 03:24:32.219: GNOME Shell started at Sat Nov 14 2026 03:24:30 GMT+0100 (Central European Standard Time)
+GNOME Shell-Message: 03:24:32.219: Registering display with GDM
+GNOME Shell-Message: 03:24:32.226: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files

@@ -399,8 +399,9 @@ pub(crate) struct Engine {
     // WU-FIX (GX1 review n5): the next rescan after a deferred receiver's `shell.restartResumed`
     restart_rescan: Option<glib::Source>,
 }
-/// What the page's hero shows of our running job (update.js `heroModel`): the stage, `committing`, waiting for
-/// authentication (status 31; any other wait is the lock text) and whether unattended-upgrades holds the lock.
+/// What the page's hero shows of our running job (native/apps/settings/src/pages/update.rs `hero_model`): the stage,
+/// `committing`, waiting for authentication (status 31; any other wait is the lock text) and whether
+/// unattended-upgrades holds the lock.
 type HeroKey = (model::Stage, bool, bool, bool);
 
 fn lang_of(shared: &Shared) -> Lang {
@@ -1465,9 +1466,9 @@ impl Engine {
         }
     }
     /// The design's notifications (§3.8), only from the owner: failed / installed when no page listens,
-    /// restart required when `settings.update.notifyRestart` is on. "No page listens": no event stream (a WebKit
-    /// Settings window closed), or the native Settings said it has no window (`update.setWatching`; its stream stays
-    /// open while its keep-alive holds the process, ServiceContext::watching).
+    /// restart required when `settings.update.notifyRestart` is on. "No page listens": the native Settings said it
+    /// has no window (`update.setWatching`; its stream stays open while its keep-alive holds the process), else no
+    /// event stream (ServiceContext::watching).
     fn notify(&self, failed: bool, restart: bool) {
         if self.shared.ctx.dry_run {
             return;
@@ -1729,8 +1730,7 @@ impl Engine {
         }
         let paths = &self.shared.setup.paths;
         let own_dir = std::env::current_exe().ok().and_then(|exe| exe.parent().map(|p| p.to_path_buf())).unwrap_or_default();
-        let history = restart::history(paths);
-        self.scan = restart::scan(paths, unsafe { libc::getuid() }, &own_dir, &history);
+        self.scan = restart::scan(paths, unsafe { libc::getuid() }, &own_dir);
         self.scanned = Some(Instant::now());
     }
 
@@ -2099,17 +2099,17 @@ mod engine_tests {
                     let changed = changed.clone();
                     e.shared.ctx.events.on("update.changed", Arc::new(move |d: &Value| changed.lock().unwrap().push(d.clone())));
                 }
-                // a Win11 Explorer of this user that still runs its replaced binary and maps a replaced libsoup
-                let own = std::env::current_exe().unwrap().parent().unwrap().join("win11-explorer");
+                // a native Win11 Explorer of this user that still runs its replaced binary and maps a replaced GTK 4
+                let own = std::env::current_exe().unwrap().parent().unwrap().join("win11-gtk-explorer");
                 let explorer = f.root.join("proc/4300");
                 let uid = unsafe { libc::getuid() };
-                write(&explorer.join("status"), &format!("Name:\twin11-explorer\nPPid:\t1\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n"));
-                write(&explorer.join("comm"), "win11-explorer\n");
-                let soup = "7f10-7f11 r-xp 00000000 08:02 31 /usr/lib/x86_64-linux-gnu/libsoup-3.0.so.0.7.4 (deleted)\n";
-                write(&explorer.join("maps"), soup);
+                write(&explorer.join("status"), &format!("Name:\twin11-gtk-explor\nPPid:\t1\nUid:\t{uid}\t{uid}\t{uid}\t{uid}\n"));
+                write(&explorer.join("comm"), "win11-gtk-explor\n");
+                let gtk4 = "7f10-7f11 r-xp 00000000 08:02 31 /usr/lib/x86_64-linux-gnu/libgtk-4.so.1.2200.4 (deleted)\n";
+                write(&explorer.join("maps"), gtk4);
                 std::os::unix::fs::symlink(format!("{} (deleted)", own.display()), explorer.join("exe")).unwrap();
                 e.rescan(true);
-                assert_eq!(e.scan.shell_parts, ["self", "soup"], "the InfoBar of the restarted Settings");
+                assert_eq!(e.scan.shell_parts, ["gtk4", "self"], "the InfoBar of the restarted Settings");
                 e.persist();
                 let rev = e.rev;
                 // the event arms the first rescan; its exec has not happened yet: nothing new is published, and
@@ -2122,7 +2122,7 @@ mod engine_tests {
                 // the exec: the new image, no replaced mapping
                 std::fs::remove_file(explorer.join("exe")).unwrap();
                 std::os::unix::fs::symlink(&own, explorer.join("exe")).unwrap();
-                write(&explorer.join("maps"), "7f10-7f11 r-xp 00000000 08:02 32 /usr/lib/x86_64-linux-gnu/libsoup-3.0.so.0.7.5\n");
+                write(&explorer.join("maps"), "7f10-7f11 r-xp 00000000 08:02 32 /usr/lib/x86_64-linux-gnu/libgtk-4.so.1.2200.5\n");
                 e.restart_rescan_step(1);
                 assert!(e.scan.shell_parts.is_empty());
                 assert!(e.rev > rev, "published");

@@ -337,7 +337,7 @@ TECH_CALLS = {
     "gio::File::for_path", "gio::File::for_uri", "glib::Variant::from", "call", "gnome::call", "gnome::call_api",
     ".call", ".call_sync", "DBusProxy::new_for_bus_sync", "gio::DBusProxy::new_for_bus_sync", ".emit",
     "Settings::new", "gio::Settings::new", ".lookup", "SettingsSchemaSource::lookup", ".return_dbus_error",
-    "glib::Error::new", "gio::DBusNodeInfo::for_xml", ".evaluate_script", ".run_javascript", "send_file", "bytes",
+    "glib::Error::new", "gio::DBusNodeInfo::for_xml", "send_file", "bytes",
     "super::send_file", "super::bytes", ".header", "Header::from_bytes", "tiny_http::Header::from_bytes",
 }
 USER_KEYS = {"message", "title", "label", "name", "text", "detail", "details", "description", "hint", "body",

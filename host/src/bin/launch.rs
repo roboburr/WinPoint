@@ -1,4 +1,4 @@
-//! Lightweight GIO-only launcher: no GTK initialization, WebView or backend.
+//! Lightweight GIO-only launcher: no GTK initialization or backend.
 // The host's i18n runtime (round2-gate.md §2): this bin crate has no `crate::i18n` of the library.
 #[allow(dead_code)]
 #[path = "../i18n.rs"]

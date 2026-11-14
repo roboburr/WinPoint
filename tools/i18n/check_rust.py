@@ -3,7 +3,7 @@
 
     python3 -B tools/i18n/check_rust.py              # errors only; exit 1 when there is one
     python3 -B tools/i18n/check_rust.py --warnings   # also warnings (glossary, unused rows, extra params …)
-    python3 -B tools/i18n/check_rust.py --no-labels  # without node: skip the UI label rule (say so in your note)
+    python3 -B tools/i18n/check_rust.py --no-labels  # skip the label rule (say so in your note)
 
 Errors:
   table      host/src/i18n.rs STEMS lists exactly the files host/i18n/*.tsv, each as include_str!("../i18n/<stem>.tsv")
@@ -17,9 +17,10 @@ Errors:
   plural     key.one / key.other / key.zero: both .one and .other exist
   key        every key literal passed to i18n::tr/trf/trn or ApiError::tr/trn exists (a plural: key.one and key.other)
   params     a call's json!({…}) params give every placeholder of the row (a missing one would show "{name}")
-  label      a quoted name in an en row (“…”, ‘…’, "…") is an en text of the UI dictionaries (vendor/ui/js, read with
-             tools/i18n/jsdicts.mjs), or is allow-listed in tests/i18n/allow-host.txt with label:<text>. When the UI
-             dictionaries cannot be read (no node), that is an error too, unless --no-labels is given
+  label      a quoted name in an en row (“…”, ‘…’, "…") is an en text of the native programs (native/: the nl/en
+             pairs that tools/i18n/check_native.py reads; until the WebKit removal the UI dictionaries), or is
+             allow-listed in tests/i18n/allow-host.txt with label:<text>. When the native texts cannot be read,
+             that is an error too, unless --no-labels is given
   en-dutch   no Dutch in an English text, in the catalogues and in host/src/desktop-entries.json: no en word is in
              tests/i18n/dutch-words.txt (the list was built to hold no English word), and en is not a copy of a
              Dutch nl. A word or phrase that is Dutch on purpose (a name: D-G5 "Alles" is not in the list) is
@@ -34,8 +35,8 @@ Errors:
              host/i18n/<stem>.tsv:<key glob> places, each file glob matches a catalogue, and some row at its places
              still has its nl phrase (else it is stale)
 Host context rows are the lines of tools/i18n/glossary-context.tsv that start with "#host<TAB>" (then the five
-columns of check.py's context rows). They are comment lines for check.py, which visits only vendor/ui/js and the
-host's JSON tables and would refuse a host/i18n place; check_rust.py reads only these.
+columns of check.py's context rows). They are comment lines for check.py, which visits only native/ and the host's
+JSON tables and would refuse a host/i18n place; check_rust.py reads only these.
 Warnings: unused rows, params without a placeholder, dynamic keys, spaces at the start or end of a text, known
 glossary deviations, allow-host rules that match nothing, en words that only GE0b's wider Dutch heuristics
 (scan_rust.py: its extra words and Dutch word shapes) call Dutch, and (apostrophe, R3-NATIVE review m9) a straight '
@@ -366,15 +367,15 @@ def check_code(r: Report, root: Path, keys: dict[str, d.Row], stems: list[str]) 
 
 def check_labels(r: Report, root: Path, keys: dict[str, d.Row], allowed: set[str], skip: bool = False) -> None:
     if skip:
-        r.warn("label", "vendor/ui/js", "UI label check skipped (--no-labels)")
+        r.warn("label", "native", "label check skipped (--no-labels)")
         return
     try:
-        import corpus  # noqa: PLC0415  (GE0a's UI reader, tools/i18n/corpus.py)
-        texts = corpus.ui_texts(root)
+        import corpus  # noqa: PLC0415  (tools/i18n/corpus.py: the native pairs of check_native.py)
+        texts = corpus.native_texts(root)
     except Exception as e:  # noqa: BLE001
-        # fail closed (review m4): a round-2 agent without node must not get "0 errors" for an unchecked rule
-        r.error("label", "vendor/ui/js", f"the UI label check could not run ({e}); put node on PATH "
-                "(PATH=/home/robin/.local/node/bin:$PATH) or pass --no-labels and say so in your note")
+        # fail closed (review m4): an unreadable source must not give "0 errors" for an unchecked rule
+        r.error("label", "native", f"the label check could not read the native texts ({e}); pass --no-labels "
+                "and say so in your note")
         return
     ui_en = {t.text.strip() for t in texts if t.lang == "en"}
     ui_nl = {t.text.strip() for t in texts if t.lang == "nl"}
@@ -394,10 +395,11 @@ def check_labels(r: Report, root: Path, keys: dict[str, d.Row], allowed: set[str
                 if not known(label, pool):
                     if side == "en":
                         r.error("label", f"{row.file}:{row.line}", f"{key}: en names “{label}”, which is no en text "
-                                "of the UI (fix it, or allow-list it: label:<text> in tests/i18n/allow-host.txt)")
+                                "of the native programs (fix it, or allow-list it: label:<text> in "
+                                "tests/i18n/allow-host.txt)")
                     else:
                         r.warn("label", f"{row.file}:{row.line}", f"{key}: nl names “{label}”, which is no nl text "
-                               "of the UI")
+                               "of the native programs")
 
 
 def load_dutch_words(root: Path) -> set[str]:
@@ -534,7 +536,7 @@ def check_allow(r: Report, root: Path) -> tuple[set[str], list[tuple[str, str]]]
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--warnings", action="store_true")
-    ap.add_argument("--no-labels", action="store_true", help="skip the UI label rule (needs node); a warning")
+    ap.add_argument("--no-labels", action="store_true", help="skip the label rule; a warning")
     a = ap.parse_args(argv)
     r = Report()
     stems = check_table(r, ROOT)

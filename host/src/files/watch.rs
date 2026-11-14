@@ -4,7 +4,6 @@ use super::{ApiError, ApiResult, Context, abs_in, directory, trash};
 use crate::events::Events;
 use crate::i18n::Lang;
 use gio::prelude::*;
-use gtk::{gio, glib};
 use serde_json::{Value, json};
 use std::{
     collections::HashMap,

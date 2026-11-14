@@ -28,6 +28,11 @@ DUTCH = {w.strip() for w in (G/"tests/i18n/dutch-words.txt").read_text().splitli
          if w.strip() and not w.startswith("#")}
 # en values that may hold Dutch on purpose: the host asked for the nl test notification (args.language "nl").
 EN_DUTCH_OK = re.compile(r"^(after\.)?notificationTest\.nl$")
+# Rows of tests/i18n/BASELINE-CHANGES.ext whose texts went with their methods: windows.hostState and
+# windows.hostRestore, whose only caller was the WebKit apps' saved window state in the host (git tag last-webkit).
+# The dump no longer calls them; their GE1c rows stay in that file as history.
+REMOVED_KEYS = frozenset({"failure.sessionLocked", "failure.badHost", "failure.hostUnmapped", "failure.hostUnpainted",
+                          "failure.badGeometry", "failure.noDisplay", "failure.waitFrame"})
 
 
 def baseline_extension() -> Path:
@@ -84,7 +89,7 @@ def baseline_changes() -> dict[str, str]:
         fields = line.split("\t")
         if len(fields) >= 4 and fields[1].startswith("key:ext."):
             rows[fields[1][len("key:ext."):]] = fields[2].replace("\\t", "\t").replace("\\n", "\n")
-    return rows
+    return {key: text for key, text in rows.items() if key not in REMOVED_KEYS}
 
 
 class ExtensionText(unittest.TestCase):
@@ -104,9 +109,10 @@ class ExtensionText(unittest.TestCase):
     def test_dutch_differs_only_in_listed_keys(self):
         old, new = self.visible(self.nl_old), self.visible(self.nl)
         self.assertEqual(sorted(old), sorted(new))
+        self.assertEqual(sorted(REMOVED_KEYS & set(new)), [])
         changed = {k: message(new[k]) for k in new if new[k] != old[k]}
         self.assertEqual(changed, baseline_changes())
-        self.assertGreaterEqual(len(new), 56)
+        self.assertGreaterEqual(len(new), 56 - len(REMOVED_KEYS))
         # The failure codes never change, only their text.
         for key in new:
             if key.startswith("failure."):

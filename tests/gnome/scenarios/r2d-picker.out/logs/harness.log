@@ -1,0 +1,42 @@
+04:27:11 GE0c run lang=nl switch=False seed=defaults MemAvailable=6329796 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2d-picker.py
+04:28:33 private install: exit 0 in 67.8 s, 87253 mutated paths, 0 outside the run dir, ok=True
+04:28:36 GNOME Shell 50.1 up (mode user, unsafe True)
+04:28:41 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2d-picker.py
+04:28:41   check PASS: the Win11 FileChooser backend is on the bus
+04:28:42   check PASS: xdg-desktop-portal is on the bus
+04:28:50   check PASS: picker 1 (MODAL_DIALOG): Meta WM class is io.github.win11shell.FilePicker (o2)
+04:28:50   check PASS: picker 1: the portal's picker process (win11-gtk-explorer under win11-file-portal)
+04:28:50   check PASS: picker 1: transient for the caller's window (io.github.win11shell.Settings)
+04:28:50   check PASS: picker 1: GNOME groups it under the caller (WindowTracker, via the transient parent)
+04:28:50   check PASS: picker 1: a modal dialog of its caller
+04:28:50   check PASS: picker 1: the caller's title
+04:28:50   check PASS: picker 1: it has the focus (opened from its focused caller), no "is ready" banner
+04:28:50   check PASS: picker 1: skip-taskbar
+04:28:50   check PASS: picker 2 (NORMAL): Meta WM class is io.github.win11shell.FilePicker (o2)
+04:28:50   check PASS: picker 2: the portal's picker process (win11-gtk-explorer under win11-file-portal)
+04:28:50   check PASS: picker 2: transient for the caller's window (org.example.PickerTest)
+04:28:50   check PASS: picker 2: GNOME groups it under the caller (WindowTracker, via the transient parent)
+04:28:50   check PASS: picker 2: not modal (modal: false)
+04:28:50   check PASS: picker 2: the caller's title
+04:28:50   check PASS: picker 2: it has the focus (opened from its focused caller), no "is ready" banner
+04:28:50   check PASS: picker 2: skip-taskbar
+04:28:50   check PASS: two pickers recorded
+04:28:50   check PASS: taskbar: picker 1 open: no picker in windows.list
+04:28:50   check PASS: taskbar: picker 2 open: no picker in windows.list
+04:28:50   check PASS: taskbar: picker 1 open: no button of its own, Settings's button as before
+04:28:50   check PASS: taskbar: picker 2 open: no button of its own (the buttons are Settings's and the helper's)
+04:28:50   check PASS: taskbar: picker 2 open: Settings's button as before, the helper's holds its one window
+04:28:51   check PASS: picker of io.github.win11shell.Settings: a window-manager close request closes it
+04:28:51   check PASS: picker of io.github.win11shell.Settings: its process ends
+04:28:51   check PASS: picker of org.example.PickerTest: a window-manager close request closes it
+04:28:51   check PASS: picker of org.example.PickerTest: its process ends
+04:28:51   check PASS: the helper hears "cancelled" (path null)
+04:28:51   check PASS: Settings keeps its wallpaper (nothing was chosen)
+04:28:51   check PASS: every check passed
+04:28:51 shutdown app: signalled own descendants 1337:win11-file-port
+04:28:51 shutdown app: signalled own descendants 1354:xdg-desktop-por
+04:28:51 shutdown shell clients: signalled own descendants 49:ibus-daemon, 61:glycin-svg, 125:glycin-image-rs, 379:win11-shell, 1687:glycin-image-rs, 496:win11-panel, 578:glycin-svg, 214:ibus-memconf, 216:ibus-extension-, 384:ibus-engine-sim
+04:28:52 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+04:28:52 shutdown system bus: signalled own descendants 24:dbus-daemon
+04:28:52 inner sweep: signalled own descendants 1697:glycin-image-rs
+04:28:52 inner done: 0 surfaces, 0 failed []

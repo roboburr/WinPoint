@@ -9,9 +9,9 @@
 # 4. Watchdog: if MemAvailable drops below 1500 MB, kills only that process group (earlyoom here
 #    never kills win11-*/WebKit processes and would pick one of Robin's apps instead).
 # Exit codes: the command's own; 75 = lock timeout or not enough memory/disk; 137 = killed by the watchdog.
-# The command gets WIN11_HEAVY_LOCK=WIN11_HEAVY_HELD=<lock path>. A nested heavy.sh, tests/i18n/run.sh,
-# tests/rust-sandbox/run-tests.sh and tests/gnome/harness.py then skip their own flock (it would wait an hour on
-# the lock we hold), also when they run from a git worktree.
+# The command gets WIN11_HEAVY_LOCK=WIN11_HEAVY_HELD=<lock path>. A nested heavy.sh, tests/rust-sandbox/run-tests.sh
+# and tests/gnome/harness.py then skip their own flock (it would wait an hour on the lock we hold), also when they
+# run from a git worktree.
 set -uo pipefail
 
 LOCK="${WIN11_HEAVY_LOCK:-/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.heavy.lock}"

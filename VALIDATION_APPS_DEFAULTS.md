@@ -1,5 +1,7 @@
 # Standaardapps en Openen met — versie 0.6.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Op 1 november 2026 slagen alle twaalf integratiegroepen voor de native methoden `apps.forFile`, `apps.defaults` en `apps.setDefault`. De meting gebruikt echte Rust/WebKit-Verkenners en geauthenticeerde HTTP. Native antwoorden dragen `X-Win11-Service: rust-apps`. De oorspronkelijke interface en antwoordvelden zijn behouden; er wordt geen Python- of opdrachtregelprogramma gebruikt om deze productie-aanroepen af te handelen.
 
 ## Vergelijking en gemeten gedrag

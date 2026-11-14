@@ -213,8 +213,8 @@ impl Events {
     }
 
     /// This host shows the Windows Update page (a `settings` host with the update service): `update.progress`
-    /// and `update.reply` reach its WebViews. Panel, desktop, Start, Explorer and the rest only parse them, and
-    /// `update.request` / `update.owner` reach observers only, never a page (design §4.4).
+    /// and `update.reply` reach its event stream (native Settings' update page). Panel, Explorer and the rest only
+    /// parse them, and `update.request` / `update.owner` reach observers only, never a page (design §4.4).
     pub(crate) fn show_update_events(&self) {
         self.update_pages.store(true, Ordering::Relaxed);
     }

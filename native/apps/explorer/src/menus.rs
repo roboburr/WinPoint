@@ -36,7 +36,7 @@ pub fn new_menu(x: &Explorer) -> Vec<MenuItem> {
     ]
 }
 
-/// The glyph per view mode (the WebKit menu draws its own small grids; these are the nearest glyphs).
+/// The glyph per view mode (the WebKit menu drew its own small grids; these are the nearest glyphs).
 fn view_glyph(m: &str) -> &'static str {
     match m {
         "xl" => "image",

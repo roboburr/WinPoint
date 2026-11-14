@@ -36,10 +36,10 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-/// Every catalogue, one per stem. Round 2 fills the files; nobody edits this table (round2-gate.md).
+/// Every catalogue, one per stem. Round 2 fills the files; nobody edits this table (round2-gate.md), except to
+/// drop the stem of removed code: `window` went with the WebKit windows (the native apps title their own).
 pub(crate) const STEMS: &[(&str, &str)] = &[
     ("core", include_str!("../i18n/core.tsv")),
-    ("window", include_str!("../i18n/window.tsv")),
     ("update", include_str!("../i18n/update.tsv")),
     ("system", include_str!("../i18n/system.tsv")),
     ("display", include_str!("../i18n/display.tsv")),

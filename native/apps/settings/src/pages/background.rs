@@ -1,5 +1,5 @@
-//! Instellingen › Persoonlijke instellingen › Achtergrond (vendor/ui/js/apps/settings/pages/background.js): a
-//! picture or a solid colour, the built-in wallpaper grid with "Foto’s zoeken", the fit, and the picture that
+//! Instellingen › Persoonlijke instellingen › Achtergrond (last-webkit:vendor/ui/js/apps/settings/pages/background.js):
+//! a picture or a solid colour, the built-in wallpaper grid with "Foto’s zoeken", the fit, and the picture that
 //! follows light and dark.
 //!
 //! Also the pieces the personalisation and Bluetooth pages share: `FillGrid` (CSS `repeat(auto-fill,
@@ -538,8 +538,7 @@ fn background(p: Page) -> PageFuture {
         browse.set_widget_name("background-browse");
         {
             let pp = p.clone();
-            // GTK's file dialog (the desktop's FileChooser portal: Win11's picker when it is chosen). The WebKit
-            // page's shell.pickFile has no window to show in a --http-only backend ({path: null}).
+            // GTK's file dialog (the desktop's FileChooser portal: Win11's picker when it is chosen).
             browse.connect_clicked(move |_| {
                 let filter = gtk::FileFilter::new();
                 filter.set_name(Some(t("Afbeeldingen", "Pictures")));

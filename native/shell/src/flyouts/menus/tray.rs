@@ -1,6 +1,6 @@
-//! The tray overflow "Verborgen pictogrammen" (vendor/ui/js/shell/tray.js): the SNI icons that are not shown on
-//! the taskbar, in a grid of 40 x 40 cells, at most 5 per row. Same mouse behaviour as on the taskbar: left =
-//! Activate (ItemIsMenu or fallback:'menu' opens the menu), middle = SecondaryActivate, right = the menu
+//! The tray overflow "Verborgen pictogrammen" (`git show 418ea594:vendor/ui/js/shell/tray.js`): the SNI icons that are
+//! not shown on the taskbar, in a grid of 40 x 40 cells, at most 5 per row. Same mouse behaviour as on the taskbar:
+//! left = Activate (ItemIsMenu or fallback:'menu' opens the menu), middle = SecondaryActivate, right = the menu
 //! (the app's dbusmenu through tray.menu in our own menu, else the app's own ContextMenu).
 use super::menu::{self, Icon, Item};
 use super::util;

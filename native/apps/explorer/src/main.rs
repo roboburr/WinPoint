@@ -1,5 +1,5 @@
 //! Win11 GNOME File Explorer in GTK 4 (`win11-gtk-explorer`, GApplication io.github.win11shell.Explorer;
-//! ../../APPS.md). The native port of vendor/ui/js/apps/explorer/ on the shared kit (native/kit).
+//! ../../APPS.md). The native port of last-webkit:vendor/ui/js/apps/explorer/ on the shared kit (native/kit).
 //!
 //! One process, many windows: every launch opens a new window (a second `win11-gtk-explorer` is handed to the
 //! running process by GApplication).
@@ -9,7 +9,7 @@
 //!                                               opens its folder with the file selected; place words work too
 //!                                               (thispc, trash, gallery, documents, trash:///, computer:///)
 //!   win11-gtk-explorer --params JSON            the WebKit app's URL params: {path, place, select, tabs,
-//!                                               properties, picker, open} (host/src/lib.rs run_inner)
+//!                                               properties, picker, open} (last-webkit host lib.rs run_inner)
 //!   win11-gtk-explorer --tab-ticket T           a tab moved out of another window (transfer.rs)
 //!   win11-gtk-explorer --picker-stdio           the portal's file picker, its own process (picker.rs)
 //!   win11-gtk-explorer --restart-sessions PID   after a restart (shell.restartAll): every window again with its
@@ -40,7 +40,7 @@
 //! # For builder B: ops.rs, dialogs.rs, details.rs, dnd.rs
 //!
 //! Replace the bodies of the stubs; keep their signatures (the core calls them). Each file's header says what
-//! the WebKit app does there.
+//! the WebKit app did there.
 //!
 //! - `ops::open_file(x, &item)`, `rename_item(x, &item, new_name, done)` (inline rename: `done(Ok(()))` closes
 //!   the box, `done(Err(msg))` keeps it open with the message), `properties(x, items)` (empty: the folder or

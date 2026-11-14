@@ -611,9 +611,9 @@ fn image_data(v: &glib::Variant) -> Option<String> {
     {
         return None;
     }
-    let pb = gtk::gdk_pixbuf::Pixbuf::from_bytes(
+    let pb = gdk_pixbuf::Pixbuf::from_bytes(
         &glib::Bytes::from(&data),
-        gtk::gdk_pixbuf::Colorspace::Rgb,
+        gdk_pixbuf::Colorspace::Rgb,
         alpha,
         bps,
         w,
@@ -624,7 +624,7 @@ fn image_data(v: &glib::Variant) -> Option<String> {
         pb.scale_simple(
             (w * 128 / w.max(h)).max(1),
             (h * 128 / w.max(h)).max(1),
-            gtk::gdk_pixbuf::InterpType::Bilinear,
+            gdk_pixbuf::InterpType::Bilinear,
         )?
     } else {
         pb

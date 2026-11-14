@@ -31,6 +31,13 @@ fn main() -> glib::ExitCode {
     if std::env::var_os("GSK_RENDERER").is_none() && std::env::var("WIN11_CALENDAR_GL").as_deref() != Ok("1") {
         // SAFETY: first thing in main, before GTK or any other thread starts.
         unsafe { std::env::set_var("GSK_RENDERER", "cairo") };
+        // the user had none: the backend gives an app it launches the user's renderer, not our cairo (host
+        // files/actions.rs GPU_KEYS); a marker that a WinPoint parent passed on is the user's already
+        if std::env::var_os("WIN11SHELL_USER_GPU").is_none() {
+            let user =
+                std::env::var("GDK_DEBUG").map_or(serde_json::json!({}), |v| serde_json::json!({ "GDK_DEBUG": v }));
+            unsafe { std::env::set_var("WIN11SHELL_USER_GPU", user.to_string()) };
+        }
     }
     glib::set_prgname(Some(APP_ID));
     let app = gtk::Application::builder()

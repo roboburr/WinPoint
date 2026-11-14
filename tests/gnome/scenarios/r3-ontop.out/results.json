@@ -3,151 +3,209 @@
  "lang": "nl",
  "switch": false,
  "seed": "defaults",
- "commit": "?",
- "startedAt": "2026-11-06 02:49:18",
- "seconds": 165.8,
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-14 02:34:13",
+ "seconds": 118.5,
  "innerExit": 0,
  "innerTimedOut": false,
- "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/build/r3-native-debug",
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
  "source": {
   "rev": "worktree",
-  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native"
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
  },
  "lock": "held by an ancestor heavy.sh",
  "memory": {
-  "samples": 71,
+  "samples": 67,
   "intervalSeconds": 0.5,
   "peak": {
-   "pss_kb": 1162127,
-   "rss_kb": 2888232,
-   "processes": 37,
-   "t": 30.3
+   "pss_kb": 700423,
+   "rss_kb": 1043208,
+   "processes": 26,
+   "t": 20.4
   },
   "peakWithoutHarness": {
-   "pss_kb": 1059095,
-   "rss_kb": 2745784
+   "pss_kb": 616708,
+   "rss_kb": 927660
   },
-  "minMemAvailableKb": 2664448,
+  "minMemAvailableKb": 4638168,
   "abortedForMemory": false,
   "peakByName": {
-   "WebKitWebProces": {
-    "count": 6,
-    "pss_kb": 323888,
-    "rss_kb": 987912
-   },
    "gnome-shell": {
     "count": 1,
-    "pss_kb": 271606,
-    "rss_kb": 372268
+    "pss_kb": 330760,
+    "rss_kb": 383448
    },
    "python3": {
     "count": 2,
-    "pss_kb": 100680,
-    "rss_kb": 133980
+    "pss_kb": 83236,
+    "rss_kb": 111404
    },
-   "win11-panel": {
+   "win11-shell": {
     "count": 1,
-    "pss_kb": 70563,
-    "rss_kb": 185840
-   },
-   "win11-desktop": {
-    "count": 1,
-    "pss_kb": 67245,
-    "rss_kb": 182076
-   },
-   "win11-app": {
-    "count": 1,
-    "pss_kb": 65884,
-    "rss_kb": 178884
-   },
-   "win11-start": {
-    "count": 1,
-    "pss_kb": 65343,
-    "rss_kb": 178100
-   },
-   "WebKitNetworkPr": {
-    "count": 6,
-    "pss_kb": 64001,
-    "rss_kb": 293588
-   },
-   "win11-explorer": {
-    "count": 1,
-    "pss_kb": 62723,
-    "rss_kb": 175672
+    "pss_kb": 82739,
+    "rss_kb": 121812
    },
    "glycin-svg": {
-    "count": 4,
-    "pss_kb": 27771,
-    "rss_kb": 81368
+    "count": 5,
+    "pss_kb": 71431,
+    "rss_kb": 131392
    },
-   "glycin-image-rs": {
-    "count": 4,
-    "pss_kb": 17293,
-    "rss_kb": 38140
+   "win11-gtk-taskm": {
+    "count": 1,
+    "pss_kb": 29243,
+    "rss_kb": 62732
+   },
+   "win11-gtk-explo": {
+    "count": 1,
+    "pss_kb": 22720,
+    "rss_kb": 55848
+   },
+   "win11-app": {
+    "count": 3,
+    "pss_kb": 21138,
+    "rss_kb": 45008
    },
    "ibus-extension-": {
     "count": 1,
-    "pss_kb": 15478,
-    "rss_kb": 34308
+    "pss_kb": 19348,
+    "rss_kb": 34700
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 16855,
+    "rss_kb": 31388
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 15425,
+    "rss_kb": 24028
    },
    "ibus-daemon": {
     "count": 1,
-    "pss_kb": 4098,
-    "rss_kb": 11560
-   },
-   "strace": {
-    "count": 1,
-    "pss_kb": 2095,
-    "rss_kb": 4640
+    "pss_kb": 4130,
+    "rss_kb": 11544
    },
    "dbus-daemon": {
     "count": 2,
-    "pss_kb": 1607,
-    "rss_kb": 10200
+    "pss_kb": 1376,
+    "rss_kb": 10008
    },
    "ibus-engine-sim": {
     "count": 1,
-    "pss_kb": 828,
-    "rss_kb": 8004
+    "pss_kb": 789,
+    "rss_kb": 7900
    },
    "ibus-memconf": {
     "count": 1,
-    "pss_kb": 767,
-    "rss_kb": 7864
-   },
-   "dbus-run-sessio": {
-    "count": 1,
-    "pss_kb": 181,
-    "rss_kb": 2564
+    "pss_kb": 754,
+    "rss_kb": 7852
    },
    "bwrap": {
     "count": 1,
-    "pss_kb": 76,
-    "rss_kb": 1264
+    "pss_kb": 293,
+    "rss_kb": 1520
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 186,
+    "rss_kb": 2624
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 346306,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 94411,
+    "first": 2.6
+   },
+   "python3": {
+    "pss_kb": 50030,
+    "first": 0.0
+   },
+   "glycin-svg": {
+    "pss_kb": 47242,
+    "first": 1.5
+   },
+   "win11-gtk-taskm": {
+    "pss_kb": 33581,
+    "first": 8.8
+   },
+   "win11-gtk-explo": {
+    "pss_kb": 25112,
+    "first": 8.3
+   },
+   "ibus-extension-": {
+    "pss_kb": 19943,
+    "first": 1.5
+   },
+   "win11-panel": {
+    "pss_kb": 17319,
+    "first": 2.6
+   },
+   "win11-app": {
+    "pss_kb": 14218,
+    "first": 8.3
+   },
+   "glycin-image-rs": {
+    "pss_kb": 12524,
+    "first": 1.5
+   },
+   "ibus-daemon": {
+    "pss_kb": 4204,
+    "first": 1.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 906,
+    "first": 0.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 861,
+    "first": 1.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 831,
+    "first": 2.6
+   },
+   "bwrap": {
+    "pss_kb": 293,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 188,
+    "first": 0.5
    }
   }
  },
  "install": {
-  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native",
-  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/build/r3-native-debug",
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
   "exit": 0,
-  "seconds": 96.9,
-  "mutatingSyscallPaths": 87856,
+  "seconds": 67.4,
+  "mutatingSyscallPaths": 87253,
   "writesOutsideRun": [],
   "failedWritesOutsideRun": [],
   "binaries": {
-   "win11-start": true,
    "win11-explorer": true,
    "win11-panel": true,
    "win11-app": true,
-   "win11-desktop": true,
    "win11-launch": true,
    "win11-index-worker": true,
    "win11-image-worker": true,
    "win11-default-apps": true,
    "win11-file-portal": true,
    "win11-installer": true,
-   "win11-software-worker": true
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
   },
   "payloadMarker": true,
   "extensionIdentical": {
@@ -162,17 +220,17 @@
    "stylesheet.css": true
   },
   "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
    "io.github.win11shell.DefaultApps.desktop",
-   "io.github.win11shell.Desktop.desktop",
    "io.github.win11shell.Disks.desktop",
    "io.github.win11shell.Explorer.desktop",
    "io.github.win11shell.Installer.desktop",
    "io.github.win11shell.Panel.desktop",
    "io.github.win11shell.Search.desktop",
    "io.github.win11shell.Settings.desktop",
-   "io.github.win11shell.Start.desktop",
    "io.github.win11shell.TaskManager.desktop"
   ],
+  "legacyInstalled": [],
   "desktopExecPrivate": true,
   "schemasCompiled": true,
   "portalFiles": [
@@ -185,113 +243,93 @@
   "ok": true,
   "sourceTree": {
    "rev": "worktree",
-   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native"
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
   }
  },
  "guardStubCalls": [
-  "02:51:23\tpw-dump\t--monitor --no-colors",
-  "02:51:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:23\tpw-dump\t--monitor --no-colors",
-  "02:51:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:25\tpw-dump\t--monitor --no-colors",
-  "02:51:25\tpw-dump\t--monitor --no-colors",
-  "02:51:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:29\tpw-dump\t--monitor --no-colors",
-  "02:51:29\tpw-dump\t--monitor --no-colors",
-  "02:51:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:31\tpw-dump\t--monitor --no-colors",
-  "02:51:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:31\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
-  "02:51:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:31\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
-  "02:51:31\tapt\tlist --upgradable",
-  "02:51:31\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:31\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:33\tpw-dump\t--monitor --no-colors",
-  "02:51:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:37\tpw-dump\t--monitor --no-colors",
-  "02:51:37\tpw-dump\t--monitor --no-colors",
-  "02:51:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:38\tpw-dump\t--monitor --no-colors",
-  "02:51:38\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
-  "02:51:38\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
-  "02:51:38\tapt\tlist --upgradable",
-  "02:51:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:38\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:38\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:39\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:39\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:40\tpw-dump\t--monitor --no-colors",
-  "02:51:40\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:40\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:42\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:42\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:44\tpw-dump\t--monitor --no-colors",
-  "02:51:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:53\tpw-dump\t--monitor --no-colors",
-  "02:51:53\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
-  "02:51:53\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
-  "02:51:53\tapt\tlist --upgradable",
-  "02:51:53\tpw-dump\t--monitor --no-colors",
-  "02:51:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:53\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:53\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:53\tpw-dump\t--monitor --no-colors",
-  "02:51:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:54\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:54\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:55\tpw-dump\t--monitor --no-colors",
-  "02:51:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:55\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
-  "02:51:55\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
-  "02:51:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "02:51:59\tpw-dump\t--monitor --no-colors"
+  "02:35:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:38\tpw-dump\t--monitor --no-colors",
+  "02:35:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:40\tpw-dump\t--monitor --no-colors",
+  "02:35:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:44\tpw-dump\t--monitor --no-colors",
+  "02:35:44\tpw-dump\t--monitor --no-colors",
+  "02:35:44\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:35:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:44\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:35:44\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "02:35:44\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "02:35:44\tapt\tlist --upgradable",
+  "02:35:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:46\tpw-dump\t--monitor --no-colors",
+  "02:35:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:50\tpw-dump\t--monitor --no-colors",
+  "02:35:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:50\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "02:35:50\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "02:35:50\tapt\tlist --upgradable",
+  "02:35:50\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:35:50\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:35:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:51\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:35:52\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:35:52\tpw-dump\t--monitor --no-colors",
+  "02:35:52\tpw-dump\t--monitor --no-colors",
+  "02:35:53\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:35:53\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:35:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:54\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:35:54\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:35:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:56\tpw-dump\t--monitor --no-colors",
+  "02:35:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:35:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:03\tpw-dump\t--monitor --no-colors",
+  "02:36:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:03\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "02:36:03\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "02:36:03\tapt\tlist --upgradable",
+  "02:36:03\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:36:03\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:36:04\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:36:04\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:36:05\tpw-dump\t--monitor --no-colors",
+  "02:36:05\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:36:05\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:36:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:06\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "02:36:06\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "02:36:08\tpw-dump\t--monitor --no-colors",
+  "02:36:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:36:09\tpw-dump\t--monitor --no-colors"
  ],
  "updateToolCalls": [],
  "leftoverProcessesAfterInner": [],
  "socketCleanup": {
   "removed": [
-   "cache/ibus/db"
+   "cache/ibus/dbus-426scdRQ"
   ],
   "left": [],
   "ok": true
  },
  "socketWatch": {
   "intervalSeconds": 2.0,
-  "scans": 20,
-  "maxScanSeconds": 0.21,
+  "scans": 13,
+  "maxScanSeconds": 0.701,
   "roots": [
-   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native",
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
    "/etc",
    "/run/udev",
    "/var/cache/fontconfig"
@@ -299,139 +337,12 @@
   "appeared": [],
   "ok": true,
   "runSockets": [
-   "cache/ibus/db"
+   "cache/ibus/dbus-426scdRQ"
   ],
   "runUnlisted": []
  },
- "straceConnect": {
-  "files": [
-   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/logs/install.strace",
-   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-ontop.out/connect.strace.warm",
-   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-ontop.out/connect.strace.warm2",
-   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-ontop.out/connect.strace"
-  ],
-  "connects": 442,
-  "ok": true,
-  "violations": [],
-  "byTarget": [
-   {
-    "family": "AF_INET",
-    "target": "127.0.0.1",
-    "result": "EINPROGRESS",
-    "count": 276
-   },
-   {
-    "family": "AF_INET",
-    "target": "127.0.0.1",
-    "result": "UNFINISHED",
-    "count": 7
-   },
-   {
-    "family": "AF_INET",
-    "target": "127.0.0.1",
-    "result": "ok",
-    "count": 2
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/cache/ibus/db",
-    "result": "ok",
-    "count": 4
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/home/.lttng/l",
-    "result": "ENOENT",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/run/pipewire/pipewire-0",
-    "result": "ENOENT",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/run/systemd/journal/stdout",
-    "result": "ENOENT",
-    "count": 2
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/nvidia-mps/control",
-    "result": "ENOENT",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/bus",
-    "result": "ok",
-    "count": 19
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/pipewire-0",
-    "result": "ENOENT",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/pulse/native",
-    "result": "ENOENT",
-    "count": 10
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/sbus",
-    "result": "ENOENT",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/sbus",
-    "result": "UNFINISHED",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/sbus",
-    "result": "ok",
-    "count": 41
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/tmp/w11-rt/w11-wl",
-    "result": "ok",
-    "count": 8
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/var/lib/sss/pipes/nss",
-    "result": "ENOENT",
-    "count": 10
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/var/run/lttng/lttng-ust-sock-8",
-    "result": "ENOENT",
-    "count": 1
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/var/run/nscd/socket",
-    "result": "ENOENT",
-    "count": 42
-   },
-   {
-    "family": "AF_UNIX",
-    "target": "/var/run/pulse/native",
-    "result": "ENOENT",
-    "count": 10
-   }
-  ]
- },
  "scenario": {
-  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/scenarios/r3-ontop.py",
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r3-ontop.py",
   "startLanguage": "nl",
   "steps": [
    {
@@ -446,51 +357,67 @@
    },
    {
     "step": "open",
-    "t": 2.12,
+    "t": 1.31,
     "args": {
      "spec": "explorer"
     },
     "result": {
      "name": "explorer",
      "kind": "explorer",
-     "window": "a3e4fc8176f51805f2ffd96c4220ccc4",
-     "pid": 1380,
+     "window": "native-explorer",
+     "pid": 1338,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "explorer",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1338,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "open",
-    "t": 3.44,
+    "t": 1.83,
     "args": {
      "spec": "taskmgr"
     },
     "result": {
      "name": "taskmgr",
      "kind": "taskmgr",
-     "window": "c9f2fc18c32d581d8a23bbe7e36f8710",
-     "pid": 1528,
+     "window": "native-taskmgr",
+     "pid": 1433,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "taskmgr",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1433,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "record",
-    "t": 4.17,
+    "t": 2.3,
     "args": {
      "key": "nl.card"
     }
    },
    {
     "step": "record",
-    "t": 4.18,
+    "t": 2.31,
     "args": {
      "key": "nl.A.off"
     }
    },
    {
     "step": "screenshot",
-    "t": 4.87,
+    "t": 2.96,
     "args": {
      "name": "nl-a-off-explorer-in-front"
     },
@@ -504,29 +431,29 @@
        1440,
        900
       ],
-      "distinctColours": 822,
-      "meanLevel": 33.0,
+      "distinctColours": 697,
+      "meanLevel": 31.4,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 5.74,
+    "t": 3.83,
     "args": {
      "key": "nl.B.on"
     }
    },
    {
     "step": "record",
-    "t": 5.76,
+    "t": 3.84,
     "args": {
      "key": "nl.B.explorerFocused"
     }
    },
    {
     "step": "screenshot",
-    "t": 6.42,
+    "t": 4.48,
     "args": {
      "name": "nl-b-on-task-manager-on-top"
     },
@@ -540,22 +467,22 @@
        1440,
        900
       ],
-      "distinctColours": 856,
-      "meanLevel": 42.5,
+      "distinctColours": 716,
+      "meanLevel": 42.1,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 7.23,
+    "t": 5.29,
     "args": {
      "key": "nl.B.workspace1"
     }
    },
    {
     "step": "screenshot",
-    "t": 7.9,
+    "t": 5.96,
     "args": {
      "name": "nl-b-on-workspace-2"
     },
@@ -569,51 +496,59 @@
        1440,
        900
       ],
-      "distinctColours": 888,
-      "meanLevel": 43.2,
+      "distinctColours": 947,
+      "meanLevel": 43.3,
       "looksBlank": false
      }
     }
    },
    {
     "step": "close",
-    "t": 9.57,
+    "t": 7.29,
     "args": {
      "name": "taskmgr"
     }
    },
    {
     "step": "open",
-    "t": 10.9,
+    "t": 7.8,
     "args": {
      "spec": "taskmgr"
     },
     "result": {
      "name": "taskmgr",
      "kind": "taskmgr",
-     "window": "46c069ac0cd0de25dab57a5df4d4f60d",
-     "pid": 1782,
+     "window": "native-taskmgr",
+     "pid": 1665,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "taskmgr",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1665,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "record",
-    "t": 10.9,
+    "t": 7.8,
     "args": {
      "key": "nl.C.reopened"
     }
    },
    {
     "step": "record",
-    "t": 11.91,
+    "t": 8.81,
     "args": {
      "key": "nl.C.maximised"
     }
    },
    {
     "step": "screenshot",
-    "t": 12.49,
+    "t": 9.39,
     "args": {
      "name": "nl-c-on-maximised"
     },
@@ -627,29 +562,29 @@
        1440,
        900
       ],
-      "distinctColours": 368,
-      "meanLevel": 45.9,
+      "distinctColours": 528,
+      "meanLevel": 47.9,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 15.05,
+    "t": 11.8,
     "args": {
      "key": "nl.D.off"
     }
    },
    {
     "step": "record",
-    "t": 15.06,
+    "t": 11.8,
     "args": {
      "key": "nl.D.explorerFocused"
     }
    },
    {
     "step": "screenshot",
-    "t": 17.31,
+    "t": 14.03,
     "args": {
      "name": "nl-d-off-again"
     },
@@ -663,15 +598,15 @@
        1440,
        900
       ],
-      "distinctColours": 624,
-      "meanLevel": 33.1,
+      "distinctColours": 530,
+      "meanLevel": 31.9,
       "looksBlank": false
      }
     }
    },
    {
     "step": "set_language",
-    "t": 17.98,
+    "t": 14.36,
     "args": {
      "lang": "en",
      "via": "rename"
@@ -680,22 +615,19 @@
      "lang": "en",
      "via": "rename",
      "seconds": {
-      "desktop": 0.21,
-      "start": 0.26,
-      "explorer": 0.36,
-      "taskmgr": 0.41,
-      "panel": 0.56
+      "explorer": 0.11,
+      "taskmgr": 0.23
      },
      "fileBefore": {
       "language": "nl",
-      "inode": 3426527,
-      "mtime": 1793929902.8404756,
+      "inode": 5432114,
+      "mtime": 1794620154.9683385,
       "keys": 18
      },
      "fileAfter": {
       "language": "en",
-      "inode": 3426528,
-      "mtime": 1793929905.385936,
+      "inode": 5432115,
+      "mtime": 1794620157.4786239,
       "keys": 18
      },
      "fileLanguageOk": true,
@@ -704,28 +636,28 @@
    },
    {
     "step": "record",
-    "t": 17.98,
+    "t": 14.36,
     "args": {
      "key": "switch"
     }
    },
    {
     "step": "record",
-    "t": 18.91,
+    "t": 15.2,
     "args": {
      "key": "en.card"
     }
    },
    {
     "step": "record",
-    "t": 18.93,
+    "t": 15.21,
     "args": {
      "key": "en.A.off"
     }
    },
    {
     "step": "screenshot",
-    "t": 19.56,
+    "t": 15.8,
     "args": {
      "name": "en-a-off-explorer-in-front"
     },
@@ -739,29 +671,29 @@
        1440,
        900
       ],
-      "distinctColours": 620,
-      "meanLevel": 32.9,
+      "distinctColours": 528,
+      "meanLevel": 31.5,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 20.44,
+    "t": 16.68,
     "args": {
      "key": "en.B.on"
     }
    },
    {
     "step": "record",
-    "t": 20.45,
+    "t": 16.69,
     "args": {
      "key": "en.B.explorerFocused"
     }
    },
    {
     "step": "screenshot",
-    "t": 21.08,
+    "t": 17.29,
     "args": {
      "name": "en-b-on-task-manager-on-top"
     },
@@ -775,22 +707,22 @@
        1440,
        900
       ],
-      "distinctColours": 605,
-      "meanLevel": 40.5,
+      "distinctColours": 517,
+      "meanLevel": 40.2,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 21.89,
+    "t": 18.09,
     "args": {
      "key": "en.B.workspace1"
     }
    },
    {
     "step": "screenshot",
-    "t": 22.57,
+    "t": 18.75,
     "args": {
      "name": "en-b-on-workspace-2"
     },
@@ -804,51 +736,59 @@
        1440,
        900
       ],
-      "distinctColours": 1409,
-      "meanLevel": 47.1,
+      "distinctColours": 1357,
+      "meanLevel": 45.9,
       "looksBlank": false
      }
     }
    },
    {
     "step": "close",
-    "t": 24.25,
+    "t": 20.06,
     "args": {
      "name": "taskmgr"
     }
    },
    {
     "step": "open",
-    "t": 25.59,
+    "t": 20.59,
     "args": {
      "spec": "taskmgr"
     },
     "result": {
      "name": "taskmgr",
      "kind": "taskmgr",
-     "window": "8e39e15b578c2871a7b01568c4b2b459",
-     "pid": 2386,
+     "window": "native-taskmgr",
+     "pid": 1990,
      "page": null,
-     "alive": true
+     "alive": true,
+     "boot": {
+      "app": "taskmgr",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1990,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
     }
    },
    {
     "step": "record",
-    "t": 25.6,
+    "t": 20.59,
     "args": {
      "key": "en.C.reopened"
     }
    },
    {
     "step": "record",
-    "t": 26.62,
+    "t": 21.6,
     "args": {
      "key": "en.C.maximised"
     }
    },
    {
     "step": "screenshot",
-    "t": 27.2,
+    "t": 22.17,
     "args": {
      "name": "en-c-on-maximised"
     },
@@ -862,29 +802,29 @@
        1440,
        900
       ],
-      "distinctColours": 354,
-      "meanLevel": 45.6,
+      "distinctColours": 505,
+      "meanLevel": 47.4,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 29.74,
+    "t": 24.61,
     "args": {
      "key": "en.D.off"
     }
    },
    {
     "step": "record",
-    "t": 29.75,
+    "t": 24.62,
     "args": {
      "key": "en.D.explorerFocused"
     }
    },
    {
     "step": "screenshot",
-    "t": 31.99,
+    "t": 26.82,
     "args": {
      "name": "en-d-off-again"
     },
@@ -898,8 +838,8 @@
        1440,
        900
       ],
-      "distinctColours": 620,
-      "meanLevel": 33.0,
+      "distinctColours": 527,
+      "meanLevel": 31.7,
       "looksBlank": false
      }
     }
@@ -909,16 +849,16 @@
    {
     "check": "settings.json starts with always-on-top off",
     "ok": true,
-    "t": 0.81,
+    "t": 0.8,
     "file": false
    },
    {
     "check": "nl: the always-on-top switch is enabled",
     "ok": true,
-    "t": 4.17,
+    "t": 2.3,
     "card": {
      "desc": "Taakbeheer blijft boven andere vensters en is op elk bureaublad te zien.",
-     "checked": "false",
+     "checked": false,
      "disabled": false,
      "cardDisabled": false
     }
@@ -926,20 +866,20 @@
    {
     "check": "nl: its description is the D-G21 text, without a note",
     "ok": true,
-    "t": 4.17,
+    "t": 2.3,
     "desc": "Taakbeheer blijft boven andere vensters en is op elk bureaublad te zien."
    },
    {
     "check": "nl: the switch starts off",
     "ok": true,
-    "t": 4.17,
-    "checked": "false",
+    "t": 2.3,
+    "checked": false,
     "file": false
    },
    {
     "check": "nl: off: Task Manager is not above and not on all workspaces",
     "ok": true,
-    "t": 4.18,
+    "t": 2.31,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -956,7 +896,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1528
+       "pid": 1433
       }
      ]
     }
@@ -964,7 +904,7 @@
    {
     "check": "nl: off: the focused File Explorer is above Task Manager",
     "ok": true,
-    "t": 4.18,
+    "t": 2.31,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -981,7 +921,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1528
+       "pid": 1433
       }
      ]
     }
@@ -989,12 +929,12 @@
    {
     "check": "nl: on: settings.json taskmgr.alwaysOnTop is true",
     "ok": true,
-    "t": 5.75
+    "t": 3.83
    },
    {
     "check": "nl: on: Task Manager is above and on all workspaces",
     "ok": true,
-    "t": 5.75,
+    "t": 3.84,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1011,7 +951,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1528
+       "pid": 1433
       }
      ]
     }
@@ -1019,7 +959,7 @@
    {
     "check": "nl: on: Task Manager stays above the focused File Explorer",
     "ok": true,
-    "t": 5.76,
+    "t": 3.84,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1036,7 +976,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1528
+       "pid": 1433
       }
      ]
     }
@@ -1044,7 +984,7 @@
    {
     "check": "nl: on: Task Manager is on the next workspace too, File Explorer is not",
     "ok": true,
-    "t": 7.23,
+    "t": 5.29,
     "state": {
      "workspace": 1,
      "workspaces": 2,
@@ -1061,7 +1001,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1528
+       "pid": 1433
       }
      ]
     }
@@ -1069,7 +1009,7 @@
    {
     "check": "nl: on: a Task Manager opened now is above and on all workspaces at once",
     "ok": true,
-    "t": 10.9,
+    "t": 7.8,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1086,7 +1026,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1094,12 +1034,12 @@
    {
     "check": "nl: off again: settings.json taskmgr.alwaysOnTop is false",
     "ok": true,
-    "t": 15.05
+    "t": 11.8
    },
    {
     "check": "nl: off again: Task Manager is a normal window (not above, not on all workspaces)",
     "ok": true,
-    "t": 15.06,
+    "t": 11.8,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1116,7 +1056,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1124,7 +1064,7 @@
    {
     "check": "nl: off again: the focused File Explorer is above Task Manager",
     "ok": true,
-    "t": 15.06,
+    "t": 11.8,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1141,7 +1081,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1149,7 +1089,7 @@
    {
     "check": "nl: off again: Task Manager is not on the next workspace",
     "ok": true,
-    "t": 15.87,
+    "t": 12.61,
     "state": {
      "workspace": 1,
      "workspaces": 2,
@@ -1166,7 +1106,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1174,22 +1114,19 @@
    {
     "check": "the language switched to en",
     "ok": true,
-    "t": 17.98,
+    "t": 14.36,
     "seconds": {
-     "desktop": 0.21,
-     "start": 0.26,
-     "explorer": 0.36,
-     "taskmgr": 0.41,
-     "panel": 0.56
+     "explorer": 0.11,
+     "taskmgr": 0.23
     }
    },
    {
     "check": "en: the always-on-top switch is enabled",
     "ok": true,
-    "t": 18.91,
+    "t": 15.2,
     "card": {
      "desc": "Keeps Task Manager above other windows and on every desktop.",
-     "checked": "false",
+     "checked": false,
      "disabled": false,
      "cardDisabled": false
     }
@@ -1197,20 +1134,20 @@
    {
     "check": "en: its description is the D-G21 text, without a note",
     "ok": true,
-    "t": 18.91,
+    "t": 15.2,
     "desc": "Keeps Task Manager above other windows and on every desktop."
    },
    {
     "check": "en: the switch starts off",
     "ok": true,
-    "t": 18.91,
-    "checked": "false",
+    "t": 15.2,
+    "checked": false,
     "file": false
    },
    {
     "check": "en: off: Task Manager is not above and not on all workspaces",
     "ok": true,
-    "t": 18.93,
+    "t": 15.21,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1227,7 +1164,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1235,7 +1172,7 @@
    {
     "check": "en: off: the focused File Explorer is above Task Manager",
     "ok": true,
-    "t": 18.93,
+    "t": 15.21,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1252,7 +1189,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1260,12 +1197,12 @@
    {
     "check": "en: on: settings.json taskmgr.alwaysOnTop is true",
     "ok": true,
-    "t": 20.44
+    "t": 16.68
    },
    {
     "check": "en: on: Task Manager is above and on all workspaces",
     "ok": true,
-    "t": 20.44,
+    "t": 16.68,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1282,7 +1219,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1290,7 +1227,7 @@
    {
     "check": "en: on: Task Manager stays above the focused File Explorer",
     "ok": true,
-    "t": 20.45,
+    "t": 16.69,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1307,7 +1244,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1315,7 +1252,7 @@
    {
     "check": "en: on: Task Manager is on the next workspace too, File Explorer is not",
     "ok": true,
-    "t": 21.89,
+    "t": 18.09,
     "state": {
      "workspace": 1,
      "workspaces": 2,
@@ -1332,7 +1269,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1340,7 +1277,7 @@
    {
     "check": "en: on: a Task Manager opened now is above and on all workspaces at once",
     "ok": true,
-    "t": 25.6,
+    "t": 20.59,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1357,7 +1294,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 2386
+       "pid": 1990
       }
      ]
     }
@@ -1365,12 +1302,12 @@
    {
     "check": "en: off again: settings.json taskmgr.alwaysOnTop is false",
     "ok": true,
-    "t": 29.74
+    "t": 24.61
    },
    {
     "check": "en: off again: Task Manager is a normal window (not above, not on all workspaces)",
     "ok": true,
-    "t": 29.75,
+    "t": 24.62,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1387,7 +1324,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 2386
+       "pid": 1990
       }
      ]
     }
@@ -1395,7 +1332,7 @@
    {
     "check": "en: off again: the focused File Explorer is above Task Manager",
     "ok": true,
-    "t": 29.75,
+    "t": 24.62,
     "state": {
      "workspace": 0,
      "workspaces": 2,
@@ -1412,7 +1349,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 2386
+       "pid": 1990
       }
      ]
     }
@@ -1420,7 +1357,7 @@
    {
     "check": "en: off again: Task Manager is not on the next workspace",
     "ok": true,
-    "t": 30.56,
+    "t": 25.43,
     "state": {
      "workspace": 1,
      "workspaces": 2,
@@ -1437,7 +1374,7 @@
        "showing": true,
        "maximized": false,
        "stack": 1,
-       "pid": 2386
+       "pid": 1990
       }
      ]
     }
@@ -1445,14 +1382,14 @@
    {
     "check": "every check passed",
     "ok": true,
-    "t": 31.99,
+    "t": 26.83,
     "failed": []
    }
   ],
   "records": {
    "nl.card": {
     "desc": "Taakbeheer blijft boven andere vensters en is op elk bureaublad te zien.",
-    "checked": "false",
+    "checked": false,
     "disabled": false,
     "cardDisabled": false
    },
@@ -1472,16 +1409,16 @@
       "showing": true,
       "maximized": false,
       "stack": 1,
-      "pid": 1528
+      "pid": 1433
      }
     ]
    },
    "nl.B.on": {
     "click": {
      "input": "clutter",
-     "x": 1163,
-     "y": 397,
-     "element": ""
+     "x": 1174,
+     "y": 384,
+     "name": "taskmgr-setting-ontop"
     },
     "file": true,
     "state": {
@@ -1500,7 +1437,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1528
+       "pid": 1433
       }
      ]
     }
@@ -1521,7 +1458,7 @@
       "showing": true,
       "maximized": false,
       "stack": 3,
-      "pid": 1528
+      "pid": 1433
      }
     ]
    },
@@ -1541,7 +1478,7 @@
       "showing": true,
       "maximized": false,
       "stack": 3,
-      "pid": 1528
+      "pid": 1433
      }
     ]
    },
@@ -1561,7 +1498,7 @@
       "showing": true,
       "maximized": false,
       "stack": 3,
-      "pid": 1782
+      "pid": 1665
      }
     ]
    },
@@ -1582,7 +1519,7 @@
        "showing": true,
        "maximized": true,
        "stack": 3,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     },
@@ -1591,9 +1528,9 @@
    "nl.D.off": {
     "click": {
      "input": "clutter",
-     "x": 963,
-     "y": 331,
-     "element": ""
+     "x": 974,
+     "y": 318,
+     "name": "taskmgr-setting-ontop"
     },
     "file": true,
     "state": {
@@ -1612,7 +1549,7 @@
        "showing": true,
        "maximized": false,
        "stack": 2,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1633,7 +1570,7 @@
       "showing": true,
       "maximized": false,
       "stack": 1,
-      "pid": 1782
+      "pid": 1665
      }
     ]
    },
@@ -1641,22 +1578,19 @@
     "lang": "en",
     "via": "rename",
     "seconds": {
-     "desktop": 0.21,
-     "start": 0.26,
-     "explorer": 0.36,
-     "taskmgr": 0.41,
-     "panel": 0.56
+     "explorer": 0.11,
+     "taskmgr": 0.23
     },
     "fileBefore": {
      "language": "nl",
-     "inode": 3426527,
-     "mtime": 1793929902.8404756,
+     "inode": 5432114,
+     "mtime": 1794620154.9683385,
      "keys": 18
     },
     "fileAfter": {
      "language": "en",
-     "inode": 3426528,
-     "mtime": 1793929905.385936,
+     "inode": 5432115,
+     "mtime": 1794620157.4786239,
      "keys": 18
     },
     "fileLanguageOk": true,
@@ -1664,7 +1598,7 @@
    },
    "en.card": {
     "desc": "Keeps Task Manager above other windows and on every desktop.",
-    "checked": "false",
+    "checked": false,
     "disabled": false,
     "cardDisabled": false
    },
@@ -1684,16 +1618,16 @@
       "showing": true,
       "maximized": false,
       "stack": 1,
-      "pid": 1782
+      "pid": 1665
      }
     ]
    },
    "en.B.on": {
     "click": {
      "input": "clutter",
-     "x": 963,
-     "y": 319,
-     "element": ""
+     "x": 974,
+     "y": 304,
+     "name": "taskmgr-setting-ontop"
     },
     "file": true,
     "state": {
@@ -1712,7 +1646,7 @@
        "showing": true,
        "maximized": false,
        "stack": 3,
-       "pid": 1782
+       "pid": 1665
       }
      ]
     }
@@ -1733,7 +1667,7 @@
       "showing": true,
       "maximized": false,
       "stack": 3,
-      "pid": 1782
+      "pid": 1665
      }
     ]
    },
@@ -1753,7 +1687,7 @@
       "showing": true,
       "maximized": false,
       "stack": 3,
-      "pid": 1782
+      "pid": 1665
      }
     ]
    },
@@ -1773,7 +1707,7 @@
       "showing": true,
       "maximized": false,
       "stack": 3,
-      "pid": 2386
+      "pid": 1990
      }
     ]
    },
@@ -1794,7 +1728,7 @@
        "showing": true,
        "maximized": true,
        "stack": 3,
-       "pid": 2386
+       "pid": 1990
       }
      ]
     },
@@ -1803,9 +1737,9 @@
    "en.D.off": {
     "click": {
      "input": "clutter",
-     "x": 963,
-     "y": 319,
-     "element": ""
+     "x": 974,
+     "y": 304,
+     "name": "taskmgr-setting-ontop"
     },
     "file": true,
     "state": {
@@ -1824,7 +1758,7 @@
        "showing": true,
        "maximized": false,
        "stack": 2,
-       "pid": 2386
+       "pid": 1990
       }
      ]
     }
@@ -1845,7 +1779,7 @@
       "showing": true,
       "maximized": false,
       "stack": 1,
-      "pid": 2386
+      "pid": 1990
      }
     ]
    }
@@ -1863,45 +1797,48 @@
    "en-d-off-again.png"
   ],
   "error": null,
-  "seconds": 31.99,
+  "seconds": 26.83,
   "surfaces": {
    "panel": {
     "name": "panel",
     "kind": "panel",
-    "window": "2b3a16fb83d4031c237ead33a3a320fd",
-    "pid": null,
+    "window": "native",
+    "pid": 381,
     "page": null,
-    "alive": true
+    "alive": true,
+    "shell": true
    },
    "desktop": {
     "name": "desktop",
     "kind": "desktop",
-    "window": "be3f734f8947a6068fea71e573a7d2b0",
-    "pid": null,
+    "window": "native",
+    "pid": 381,
     "page": null,
-    "alive": true
+    "alive": true,
+    "shell": true
    },
    "start": {
     "name": "start",
     "kind": "start",
-    "window": "f47c3201865776c948cbd9878ec0c377",
-    "pid": null,
+    "window": "native",
+    "pid": 381,
     "page": null,
-    "alive": true
+    "alive": true,
+    "shell": true
    },
    "explorer": {
     "name": "explorer",
     "kind": "explorer",
-    "window": "a3e4fc8176f51805f2ffd96c4220ccc4",
-    "pid": 1380,
+    "window": "native-explorer",
+    "pid": 1338,
     "page": null,
     "alive": true
    },
    "taskmgr": {
     "name": "taskmgr",
     "kind": "taskmgr",
-    "window": "8e39e15b578c2871a7b01568c4b2b459",
-    "pid": 2386,
+    "window": "native-taskmgr",
+    "pid": 1990,
     "page": null,
     "alive": true
    }
@@ -1911,7 +1848,7 @@
  },
  "inner": {
   "facts": {
-   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=dc1341d0c074ad05304c584d6aed3298",
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=8a6889c43e3d39da1dffd6a36af7bae8",
    "shellArgv": [
     "gnome-shell",
     "--headless",
@@ -1926,14 +1863,17 @@
    "extension": {
     "state": 1,
     "active": true,
-    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/.wt/r3-native/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
     "error": ""
    },
    "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 381,
+    "tag": "boot"
+   },
    "windowIds": {
-    "panel": "2b3a16fb83d4031c237ead33a3a320fd",
-    "desktop": "be3f734f8947a6068fea71e573a7d2b0",
-    "start": "f47c3201865776c948cbd9878ec0c377"
+    "native": 381
    },
    "notificationsAtStart": [
     {
@@ -1955,61 +1895,61 @@
    {
     "file": "nl-a-off-explorer-in-front.png",
     "group": "scenario",
-    "bytes": 373406,
+    "bytes": 309621,
     "area": null
    },
    {
     "file": "nl-b-on-task-manager-on-top.png",
     "group": "scenario",
-    "bytes": 409396,
+    "bytes": 341133,
     "area": null
    },
    {
     "file": "nl-b-on-workspace-2.png",
     "group": "scenario",
-    "bytes": 444299,
+    "bytes": 553115,
     "area": null
    },
    {
     "file": "nl-c-on-maximised.png",
     "group": "scenario",
-    "bytes": 128457,
+    "bytes": 133691,
     "area": null
    },
    {
     "file": "nl-d-off-again.png",
     "group": "scenario",
-    "bytes": 264420,
+    "bytes": 189577,
     "area": null
    },
    {
     "file": "en-a-off-explorer-in-front.png",
     "group": "scenario",
-    "bytes": 260648,
+    "bytes": 187610,
     "area": null
    },
    {
     "file": "en-b-on-task-manager-on-top.png",
     "group": "scenario",
-    "bytes": 274167,
+    "bytes": 195376,
     "area": null
    },
    {
     "file": "en-b-on-workspace-2.png",
     "group": "scenario",
-    "bytes": 477379,
+    "bytes": 497081,
     "area": null
    },
    {
     "file": "en-c-on-maximised.png",
     "group": "scenario",
-    "bytes": 123898,
+    "bytes": 127089,
     "area": null
    },
    {
     "file": "en-d-off-again.png",
     "group": "scenario",
-    "bytes": 260769,
+    "bytes": 187256,
     "area": null
    }
   ],
@@ -2018,19 +1958,19 @@
     "app": "taskmgr",
     "source": "Win11 Taakbeheer",
     "title": "Win11 Taakbeheer",
-    "body": "“Taakbeheer” is ready"
+    "body": "“Taakbeheer – Samenvatting” is ready"
    },
    {
     "app": "taskmgr",
     "source": "Win11 Taakbeheer",
     "title": "Win11 Taakbeheer",
-    "body": "“Taakbeheer” is ready"
+    "body": "“Taakbeheer – Samenvatting” is ready"
    },
    {
     "app": "taskmgr",
     "source": "Win11 Task Manager",
     "title": "Win11 Task Manager",
-    "body": "“Task Manager” is ready"
+    "body": "“Task Manager – Summary” is ready"
    }
   ]
  },

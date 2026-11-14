@@ -79,8 +79,13 @@ pub fn prepare_activation(command: &mut Command, app: &str) {
     }
 }
 
+/// Start a program of the system (Software Updater, GNOME Software, hyprlock) in its own app unit with the user's
+/// environment, not this process's: `files::actions::user_environment` drops our private variables and gives back
+/// the user's own GSK_RENDERER and GDK_DEBUG, which a native app's backend inherited as cairo and portals. It is the
+/// complete environment: without one, process_scope starts from this process's own (`std::env::vars_os`).
 pub fn spawn(command: Command) -> Result<(), String> {
-    crate::process_scope::spawn(command, "app", None)
+    let env = crate::files::actions::user_environment(true).into_iter().collect();
+    crate::process_scope::spawn(command, "app", Some(env))
 }
 
 pub(crate) fn activation_token(app: &Value) -> Option<String> {

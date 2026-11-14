@@ -5,10 +5,11 @@ ported to Win11 voor GNOME in GE0a, notes/claude/round0/ge0a.md).
     python3 tools/i18n/glossary.py --json       the same as JSON
     python3 tools/i18n/glossary.py --term Schijf --examples 20
 
-Pairs read: every UI makeT key (per plural form), inline {nl, en} pair and settings-registry P() title/description
-(jsdicts.mjs over vendor/ui/js, needs node), every TSV catalog row (i18n/**/*.tsv, none at 3b898e6), and the Rust
-host's embedded JSON {nl, en} tables (corpus.host_json_tables: sysmon, disks, storage, system). H's Python-host
-reader (ast over host/*.py) is dropped. Search keywords are left out: they list synonyms on purpose.
+Pairs read: every nl/en pair of the native GTK 4 programs (check_native.py: calls, match and row tables, the
+settings registry's titles and descriptions, NL/EN arrays, JSON objects; until the WebKit removal the UI's makeT
+keys, inline pairs and P() data), every TSV catalog row (i18n/**/*.tsv, none at 3b898e6), and the Rust host's
+embedded JSON {nl, en} tables (corpus.host_json_tables: sysmon, disks, storage, system). H's Python-host reader (ast
+over host/*.py) is dropped. Search keywords are left out: they list synonyms on purpose.
 
 For every term of tools/i18n/glossary.tsv, plus the context-dependent terms and the two "(check)" rows that the
 glossary leaves out (OPEN below), the report counts the pairs whose nl text has the term (at word boundaries) and
@@ -41,7 +42,6 @@ import paths  # noqa: E402
 
 ROOT = paths.ROOT
 CONTEXT = HERE / "glossary-context.tsv"
-UI_PREFIX = paths.UI_REL + "/"
 GLOSSARY = HERE / "glossary.tsv"
 
 # Terms the glossary leaves out (context decides), with the renderings to look for. The first is the design's
@@ -76,7 +76,7 @@ class Pair:
     en: str
     where: str          # file:line key
     file: str = ""      # below the repo (a context row's place)
-    key: str = ""       # makeT key, P(<id>).title|description, pair, or a host table key
+    key: str = ""       # a native pair's key (check_native.py) or a host table key
 
 
 @dataclass
@@ -103,41 +103,11 @@ class Term:
 
 
 # ------------------------------------------------------------------------------------------------ pairs
-def _s(v) -> str | None:
-    if isinstance(v, dict) and "s" in v:
-        return v["s"]
-    if isinstance(v, dict) and "fn" in v:
-        return " … ".join(x for x in v["fn"] if isinstance(x, str)) or None
-    return None
-
-
-def ui_pairs(data: dict) -> list[Pair]:
-    out = []
-    for d in data.get("dicts", []):
-        nl, en = (d.get("langs") or {}).get("nl") or {}, (d.get("langs") or {}).get("en") or {}
-        for key, nv in nl.items():
-            ev = en.get(key)
-            if ev is None:
-                continue
-            where = f"{UI_PREFIX}{d['file']}:{nv.get('line', d['line'])} {key}"
-            file = f"{UI_PREFIX}{d['file']}"
-            if "plural" in nv and "plural" in ev:
-                for form, fv in nv["plural"].items():
-                    a, b = _s(fv), _s(ev["plural"].get(form) or ev["plural"].get("other"))
-                    if a and b:
-                        out.append(Pair(a, b, f"{where}.{form}", file, key))
-                continue
-            a, b = _s(nv), _s(ev)
-            if a and b:
-                out.append(Pair(a, b, where, file, key))
-    for p in data.get("pairs", []):
-        if p.get("what") == "keywords":
-            continue
-        if isinstance(p.get("nl"), str) and isinstance(p.get("en"), str):
-            key = f"P({p.get('id')}).{p['what']}" if p["kind"] == "P" else "pair"
-            out.append(Pair(p["nl"], p["en"], f"{UI_PREFIX}{p['file']}:{p['line']} {p.get('what') or p['kind']}",
-                            f"{UI_PREFIX}{p['file']}", key))
-    return out
+def native_pairs(root: Path) -> list[Pair]:
+    import check_native  # noqa: PLC0415
+    pairs, _ = check_native.read_pairs(root)
+    return [Pair(p.nl, p.en, f"{p.file}:{p.line} {p.key}", p.file, p.key) for p in pairs
+            if isinstance(p.nl, str) and isinstance(p.en, str) and p.nl and p.en]
 
 
 def tsv_pairs(root: Path) -> list[Pair]:
@@ -164,9 +134,8 @@ def host_pairs(root: Path) -> list[Pair]:
     return out
 
 
-def all_pairs(root: Path = ROOT, data: dict | None = None) -> list[Pair]:
-    data = data if data is not None else corpus.jsdicts(root)
-    return ui_pairs(data) + tsv_pairs(root) + host_pairs(root)
+def all_pairs(root: Path = ROOT) -> list[Pair]:
+    return native_pairs(root) + tsv_pairs(root) + host_pairs(root)
 
 
 # ------------------------------------------------------------------------------------------------ report

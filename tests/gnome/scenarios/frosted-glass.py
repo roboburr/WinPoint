@@ -3,8 +3,8 @@
 Robin (2026-11-12): "is frosted blur mogelijk? net als de python versie? maar dan in rust", "let wel op ram gebruik",
 "blur aan", and for the taskbar "de blur is al goed maar mag doorzichtiger". The reference host's in-page blur
 (WebKit on the GPU) froze the taskbar on NVIDIA; this uses extension/frostedBridge.js (Shell.BlurEffect in
-BACKGROUND mode) and vendor/ui/css/native-backdrop.css: the taskbar 70 %, the rest 90 % (D-G60, "alles behalve de
-taakbalk mag op 90% opacity").
+BACKGROUND mode) under a tint: the taskbar 70 %, the rest 90 % (D-G60, "alles behalve de taakbalk mag op 90%
+opacity").
 
 D-G60 (Robin, live after installing D-G59): "de start menu heeft nu geen blur", windows "glitchy bij het bewegen" and
 Start "hapert een beetje" when opening. Resident Start's window is unmanaged on every close, which dropped its
@@ -12,8 +12,9 @@ registration, so only the first open had glass (D2 reopens it); a drag destroyed
 step (F); Start waited for the blur call while opening (now sent without waiting).
 
 D-G70: the taskbar and Start are the native shell's (win11-shell, GTK 4): their tint is GTK CSS (shell/css), not a
-page, so A, C, D and D2 read the extension's side (frostedBridge _hosts and capabilities(), as native-shell.py does);
-the 70 % / 90 % tints of the HTML pages are no longer checked here.
+page, so A, C, D and D2 read the extension's side (frostedBridge _hosts and capabilities(), as native-shell.py does).
+13-11: Settings is the native app (win11-gtk-settings): its Mica over the blur is the kit's (native/kit/css/frame.css,
+window.w11-glass, 90 %), read from its dev state (native/kit/src/dev.rs) with its caption buttons and width.
 
 Run (from G; a build of this tree and the tree's UI and extension):
     tools/heavy.sh --min-mb 2560 --tag frosted -- python3 -B tests/gnome/harness.py launch run --lang nl \\
@@ -21,7 +22,8 @@ Run (from G; a build of this tree and the tree's UI and extension):
 
   A. The taskbar: one blur entry for the 48 px strip; the extension holds the native pid as Panel and lists its
      taskbar with blur in capabilities().
-  B. Settings focused: one window blur (the rim inset 3 px, not 8); the page's window background is 90 %.
+  B. Settings focused: one window blur (the rim inset 3 px, not 8); the window wears the kit's glass (w11-glass). That
+     its Mica is 90 % over the blur is the kit's unit test (native/kit/src/theme.rs, tokens.css and frame.css).
   C. Start open: a Start blur, Settings' blur gone (it lost the focus), so one window blur in all; the extension
      holds Panel and Start under the native pid and lists a Start with blur.
   D. Start closed: its blur is released at once (not only when the window hides); Settings has its blur again;
@@ -30,14 +32,13 @@ Run (from G; a build of this tree and the tree's UI and extension):
      once the drag ends.
   G. A real drag with a virtual pointer (Robin, 12-11, after the first D-G60 build: windows could not be dragged,
      content stretched on resize, the caption buttons were gone): the title bar moves the window, the right edge
-     resizes it, and afterwards the content is not stretched (window actor = buffer, page = frame width) and the
-     three caption buttons are inside the page.
+     resizes it, and afterwards the content is not stretched (window actor = buffer, the app's own window width =
+     frame width) and the three caption buttons are inside the window.
   E. Memory: gnome-shell PSS with Settings open and the window blurs switched off, versus Settings focused with its
      blur and Start open, each after forced paints; the extra must stay below 64 MiB (earlier 1080p: 19.5 MiB).
 """
 import json
 import os
-import re
 
 BRIDGE = "Main.extensionManager.lookup('win11-gnome@win11shell.local').stateObj._panelBridge"
 STATUS_JS = f"JSON.stringify({BRIDGE}._frostedBridge.status())"
@@ -47,7 +48,7 @@ PAINT_JS = "(()=>{global.stage.queue_redraw();return true;})()"
 # Settings moved 12 times by 15 px, 40 ms apart; after each step: does it have its blur, does the blur sit under the
 # drawn window (its actor, which can be a frame behind its frame), and how many entries were created meanwhile
 # (status().created). Then back; SETTLED_JS: once the drawn window is on its frame again, so is the blur (headless,
-# the WebKit client can take a while before Mutter draws the window at its new place).
+# the client can take a while before Mutter draws the window at its new place).
 DRAG_JS = (f"(async()=>{{const GLib=(await import('gi://GLib')).default;const f={BRIDGE}._frostedBridge;"
            "const w=global.get_window_actors().map(a=>a.meta_window).find(w=>w.get_wm_class()==='io.github.win11shell.Settings');"
            "if(!w)return {error:'no Settings window'};const start=f.status().created;const steps=[];"
@@ -80,9 +81,6 @@ REAL_DRAG_JS = (
     "const r=w.get_frame_rect(),b=w.get_buffer_rect(),a=w.get_compositor_private();"
     "return {moved:{dx:m.x-f.x,dy:m.y-f.y},resized:{dw:r.width-m.width},frame:{w:r.width,h:r.height},"
     "buffer:{w:b.width,h:b.height},actor:{w:Math.round(a.width),h:Math.round(a.height)}};})()")
-CAPTIONS_JS = ("(()=>{const v=[...document.querySelectorAll('.af-captions .af-cap')].map(b=>b.getBoundingClientRect())"
-               ".filter(r=>r.width>0&&r.left>=0&&r.right<=innerWidth+0.5&&r.top>=0);return {visible:v.length,"
-               "innerWidth,innerHeight};})()")
 SETTLED_JS = (f"(()=>{{const f={BRIDGE}._frostedBridge;"
               "const w=global.get_window_actors().map(a=>a.meta_window).find(w=>w.get_wm_class()==='io.github.win11shell.Settings');"
               "const r=w.get_frame_rect();const [ax,ay]=w.get_compositor_private().get_transformed_position();"
@@ -93,9 +91,6 @@ HOSTS_JS = (f"(()=>{{const f={BRIDGE}._frostedBridge;return Object.fromEntries([
             "[String(p),[...ids]]));})()")
 CAPS_JS = f"JSON.stringify({BRIDGE}._frostedBridge.capabilities())"
 PANEL, START = 'io.github.win11shell.Panel', 'io.github.win11shell.Start'
-NATIVE_JS = "document.documentElement.dataset.nativeBackdrop"
-BG_JS = ("(()=>{const e=document.querySelector(%s);if(!e)return null;const s=getComputedStyle(e);"
-         "return {color:s.backgroundColor,image:s.backgroundImage};})()")
 
 
 def status(h):
@@ -106,9 +101,22 @@ def entries(h, kind):
     return [e for e in status(h)['entries'] if e['kind'] == kind]
 
 
-def alphas(text):
-    """The alpha values in a computed colour string (rgba(…, a) or color(srgb … / a))."""
-    return [float(a) for a in re.findall(r'(?:,|/)\s*([01](?:\.\d+)?)\)', text or '')]
+def captions(h, surface):
+    """The app's three caption buttons (native/kit/src/frame.rs: <kind>-minimize, -maximize and -close) that lie inside
+    its window, and that window's own width and height (its dev state)."""
+    kind = h.surface(surface).kind
+    tops = [t for t in h.state(surface) if t.get('visible')]
+    top = tops[0] if tops else {}
+    names = [f'{kind}-{b}' for b in ('minimize', 'maximize', 'close')]
+    rects = [n['rect'] for n in h.find(surface, state=[top], where=lambda n: n.get('name') in names) if n.get('rect')]
+    inside = [r for r in rects if r[2] > 0 and r[0] >= 0 and r[0] + r[2] <= (top.get('width') or 0) + 0.5 and r[1] >= 0]
+    return {'visible': len(inside), 'width': top.get('width'), 'height': top.get('height'), 'rects': rects}
+
+
+def window_classes(h, surface):
+    """The CSS classes of the app window itself (the root of its first visible toplevel)."""
+    tops = [t for t in h.state(surface) if t.get('visible')]
+    return (tops[0].get('tree') or {}).get('classes') or [] if tops else []
 
 
 def shell_pss(h):
@@ -175,9 +183,13 @@ def run(h):
     h.check('B: the focused Settings window has one blur', len(blurred) == 1, entries=win)
     rim = blurred and (blurred[0]['blurRect']['x'], blurred[0]['blurRect']['y'])
     h.check('B: the unblurred rim is 3 px (corner on the 8 px arc)', rim == (3, 3), rim=rim)
-    h.until(lambda: h.js('settings', NATIVE_JS) == 'window', 'Settings page capability', 6, 0.1)
-    bg = h.js('settings', BG_JS % json.dumps('.af-window'))
-    h.check('B: the window background is 90 %', 0.9 in alphas(bg and bg['color']), bg=bg)
+    try:
+        classes = h.until(lambda: (lambda c: c if 'w11-glass' in c else None)(window_classes(h, 'settings')),
+                          'Settings window glass', 6, 0.1)
+    except TimeoutError:
+        classes = window_classes(h, 'settings')
+    # the 90 % itself is the kit's unit test (native/kit/src/theme.rs tests); the window's colour is not read here
+    h.check('B: the window wears the kit\'s glass class (w11-glass)', 'w11-glass' in classes, classes=classes)
     h.screenshot('b-settings-focused')
     with_window = settled_pss(h)
 
@@ -241,13 +253,14 @@ def run(h):
     h.check('G: the drawn window is its buffer (no stretch)', ok and abs(real['actor']['w'] - real['buffer']['w']) <= 1
             and abs(real['actor']['h'] - real['buffer']['h']) <= 1, real=real)
     try:
-        caps = h.until(lambda: (lambda c: c if ok and abs(c['innerWidth'] - real['frame']['w']) <= 2 else None)(
-            h.js('settings', CAPTIONS_JS)), 'page at the new width', 5, 0.2)
+        buttons = h.until(lambda: (lambda c: c if ok and abs((c['width'] or 0) - real['frame']['w']) <= 2 else None)(
+            captions(h, 'settings')), 'window at the new width', 5, 0.2)
     except TimeoutError:
-        caps = h.js('settings', CAPTIONS_JS)
-    h.record('G.captions', caps)
-    h.check('G: the page has the new width', ok and abs(caps['innerWidth'] - real['frame']['w']) <= 2, caps=caps, real=real)
-    h.check('G: the three caption buttons are inside the page', caps['visible'] == 3, caps=caps)
+        buttons = captions(h, 'settings')
+    h.record('G.captions', buttons)
+    h.check('G: the app\'s window has the new width', ok and abs((buttons['width'] or 0) - real['frame']['w']) <= 2,
+            caps=buttons, real=real)
+    h.check('G: the three caption buttons are inside the window', buttons['visible'] == 3, caps=buttons)
     h.screenshot('g-after-real-drag')
 
     # E. Memory.

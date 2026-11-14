@@ -5,7 +5,7 @@
 //! `update.owner` and (until it holds) `update.progress`, and reads `update.status`.
 //!
 //! Held while our backend is the owner (`mode` "owner") and a job of ours is there (`job`, not `foreign`) that does
-//! not wait for a confirm (the WebKit host holds no keep-alive during a confirm either, review F7); after the job
+//! not wait for a confirm (the WebKit host held no keep-alive during a confirm either, review F7); after the job
 //! until its re-check answered (`refreshing`), at most 60 s (pk.rs HOLD_AFTER_JOB); then 1 s more, so the job's
 //! notification has left the backend. While held a re-check runs every 5 s as well (an event may be throttled).
 //! A failed `update.status` (the backend is gone, and with it the job) lets go.

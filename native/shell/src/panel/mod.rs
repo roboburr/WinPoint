@@ -1,4 +1,4 @@
-//! The taskbar window: like the WebKit panel host it covers the primary monitor, is transparent, and takes input
+//! The taskbar window: as the WebKit panel host did, it covers the primary monitor, is transparent, takes input
 //! only where it has something (the 48 px strip, or the whole monitor while a flyout is open, so a click outside
 //! closes it). The extension recognises it by its application ID (PANEL_ID), positions it, reserves the strut
 //! and blurs the strip (`nativeBackdrop.configure` kind "panel").

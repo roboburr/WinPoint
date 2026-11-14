@@ -1,4 +1,4 @@
-//! Instellingen › Apps › Geïnstalleerde apps (vendor/ui/js/apps/settings/pages/installed.js): a searchable,
+//! Instellingen › Apps › Geïnstalleerde apps (last-webkit:vendor/ui/js/apps/settings/pages/installed.js): a searchable,
 //! sortable, filterable list (apps.list) with an "…" menu per app: Openen, Vastmaken aan Start / taakbalk, and
 //! Verwijderen with the reviewed plan of core/software.js (software.uninstallInfo, software.prepare,
 //! software.execute, software.status), ported in `software` below.
@@ -432,7 +432,7 @@ fn installed(p: Page) -> PageFuture {
     })
 }
 
-/// vendor/ui/js/core/software.js: the review of a plan (software.prepare; software.execute only from the
+/// last-webkit:vendor/ui/js/core/software.js: the review of a plan (software.prepare; software.execute only from the
 /// reviewed plan's own button) and the job view that follows software.status until the job is finished.
 mod software {
     use kit::controls::{self as c, Dialog, DialogResult, InfoBar, ProgressState, Severity, Toast, Variant};

@@ -11,13 +11,14 @@ a regeneration from G's tree would add or drop. Regenerate (--write) only as a r
 The list was generated once in E0b and is then committed: later steps do not regenerate it (a new Dutch word in a
 dictionary does not need to be in it; the dynamic en dump of §3.4 covers recall). Rule:
 
-1. every word of every nl text (UI dictionaries, inline pairs, settings-registry P() data, the nl column of the TSV
-   catalogs, the Rust host's JSON tables: tools/i18n/corpus.py), lower-case, without {placeholders};
+1. every word of every nl text (in E0b the UI dictionaries, inline pairs and settings-registry P() data; since the
+   WebKit removal the native programs' nl/en pairs and the settings registry; the nl column of the TSV catalogs, the
+   Rust host's JSON tables: tools/i18n/corpus.py), lower-case, without {placeholders};
 2. minus words of fewer than 3 letters (except SHORT), minus every word of /usr/share/dict/british-english and
    american-english (except ADD), minus words the en texts use at least a third as often (names, units, loanwords);
 3. minus DROP: the hand review of E0b (2026-11-05) — loanwords and technical terms that English UI text uses too.
 
-Needs node (the UI dictionaries are read with jsdicts.mjs) and the two word lists (Ubuntu: wbritish, wamerican).
+Needs the two word lists (Ubuntu: wbritish, wamerican).
 """
 
 from __future__ import annotations

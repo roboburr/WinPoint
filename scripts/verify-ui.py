@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Verify the shipped UI snapshot, retaining the original baseline separately.
 
+Since the WebKit removal the snapshot is the assets the native shell and apps fetch over /ui/assets/ (wallpapers,
+the Settings icon); a path that vendor/ui-patches.json names in "removed_paths" (html_apps_removed: index.html, js/,
+css/, assets/img/) may not come back, in the manifest or in the folder.
 Messages in Dutch, or English with WIN11_LANG=en (a developer script; it reads no user settings)."""
 import hashlib
 import json
@@ -29,8 +32,13 @@ actual = {str(path.relative_to(ui)): hashlib.sha256(path.read_bytes()).hexdigest
 missing = sorted(manifest.keys() - actual.keys())
 extra = sorted(actual.keys() - manifest.keys())
 changed = sorted(name for name in manifest.keys() & actual.keys() if manifest[name] != actual[name])
-if missing or extra or changed:
-    print(json.dumps({"missing": missing, "extra": extra, "changed": changed}, indent=2))
+patches = root/"vendor/ui-patches.json"
+removed_paths = [path for entry in (json.loads(patches.read_text()).values() if patches.is_file() else [])
+                 if isinstance(entry, dict) for path in entry.get("removed_paths", [])]
+back = sorted(name for name in manifest.keys() | actual.keys()
+              if any(name == path or (path.endswith("/") and name.startswith(path)) for path in removed_paths))
+if missing or extra or changed or back:
+    print(json.dumps({"missing": missing, "extra": extra, "changed": changed, "removed_paths": back}, indent=2))
     raise SystemExit(1)
 print(t("ok", count=len(manifest)))
 original = root/"vendor/ui-original-sha256.json"

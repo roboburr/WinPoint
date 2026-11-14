@@ -1,6 +1,6 @@
-//! The Win+X quick link menu (vendor/ui/js/shell/winx.js): a plain text list without icons, groups split by lines,
-//! access keys (underlined when opened from the keyboard), and the "Afsluiten of afmelden" submenu to the right.
-//! Keyboard: arrows, Home/End, Enter, the access keys, Right for the submenu (Left or Esc closes it).
+//! The Win+X quick link menu (`git show 418ea594:vendor/ui/js/shell/winx.js`): a plain text list without icons, groups
+//! split by lines, access keys (underlined when opened from the keyboard), and the "Afsluiten of afmelden" submenu to
+//! the right. Keyboard: arrows, Home/End, Enter, the access keys, Right for the submenu (Left or Esc closes it).
 use super::menu::{self, Icon, Item};
 use super::util;
 use crate::core::Shell;

@@ -1,4 +1,4 @@
-//! Icons: the UI's Fluent glyphs (vendor/ui/js/core/icons.js, ported 1:1 to SVG strings below) drawn as
+//! Icons: the UI's Fluent glyphs (last-webkit:vendor/ui/js/core/icons.js, ported 1:1 to SVG strings below) drawn as
 //! symbolic paintables, so they take the widget's CSS `color` like a symbolic theme icon (GTK hands the colour
 //! to `snapshot_symbolic`, and redraws on a colour change), plus app icons from the icon theme, a file or the
 //! backend's `/icon` service.

@@ -2,9 +2,10 @@
 
 Robin (2026-11-13), with shell.native on: "nog steeds zie ik schaduw dat blijf hangen, maar alleen bij onze eigen
 apps", "ik zie geen windows 3 knoppen rechts boven bij alle apps". The native shell is the only shell since D-G70
-(the harness waits for its boot); this opens Settings and Explorer (WebKit apps), records their caption buttons,
-drags Settings by its title bar with a virtual pointer, and lists every frosted backdrop actor in the window group
-(an orphan would be a shadow that stays behind), with screenshots before and after.
+(the harness waits for its boot); this opens Settings and Explorer (since 13-11 the native GTK 4 apps), records their
+caption buttons from their dev state (frosted-glass.py captions()), drags Settings by its title bar with a virtual
+pointer, and lists every frosted backdrop actor in the window group (an orphan would be a shadow that stays behind),
+with screenshots before and after.
 
 Run (from G):
     tools/heavy.sh --min-mb 2560 --tag native-apps -- python3 -B tests/gnome/harness.py launch run --lang nl \\
@@ -46,7 +47,7 @@ def run(h):
     h.sleep(4)
     h.open('settings')
     h.sleep(2)
-    caps = h.js('settings', fg.CAPTIONS_JS)
+    caps = fg.captions(h, 'settings')
     h.record('settings.captions', caps)
     h.check('Settings shows its three caption buttons', caps['visible'] == 3, caps=caps)
     h.record('before', h.eval(BACKDROPS_JS))
@@ -64,7 +65,7 @@ def run(h):
     h.check('the drag moved Settings', isinstance(real, dict) and real.get('moved', {}).get('dx', 0) >= 60, real=real)
     h.open('explorer')
     h.sleep(2)
-    ecaps = h.js('explorer', fg.CAPTIONS_JS)
+    ecaps = fg.captions(h, 'explorer')
     h.record('explorer.captions', ecaps)
     h.check('Explorer shows its three caption buttons', ecaps['visible'] == 3, caps=ecaps)
     h.screenshot('c-explorer')

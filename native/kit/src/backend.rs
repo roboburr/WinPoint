@@ -165,7 +165,7 @@ fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
     m.lock().unwrap_or_else(|e| e.into_inner())
 }
 
-/// Texts of the bridge (vendor/ui/js/core/bridge.js), by language.
+/// Texts of the bridge (last-webkit:vendor/ui/js/core/bridge.js), by language.
 fn text(key: &str, en: bool) -> &'static str {
     match (key, en) {
         ("offline", false) => "Geen verbinding met Win11 Shell. Probeer het zo opnieuw.",
@@ -198,7 +198,7 @@ impl Spawner {
             .env("WIN11_NATIVE_INSTANCE", &self.instance)
             .env_remove("WIN11_DEV_COMMAND")
             .env_remove("WIN11_DEV_REPORT");
-        // `win11-app --app <kind> --dry-run` execs the app with --dry-run (host lib.rs native_app_switch): the backend
+        // `win11-app --app <kind> --dry-run` execs the app with --dry-run (host lib.rs exec_native_app): the backend
         // is the one that acts, so it must get the flag too (WIN11SHELL_DRY_RUN reaches it through the environment).
         if self.dry {
             command.arg("--dry-run");

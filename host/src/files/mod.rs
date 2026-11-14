@@ -4,7 +4,6 @@ use crate::{
     events::{self, Events},
     i18n::Lang,
 };
-use gtk::glib;
 use serde_json::{Value, json};
 use std::{
     collections::HashSet,

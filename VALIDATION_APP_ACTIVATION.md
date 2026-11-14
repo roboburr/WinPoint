@@ -1,5 +1,7 @@
 # App activation — 0.7.0
 
+> **History (D-G72, 14 November 2026):** measured with the HTML interface in WebKitGTK of the time. It is gone: File Explorer, Settings, Task Manager and the other apps are native GTK 4 programs now, and WinPoint has no WebKit and no GTK 3 host any more. The Rust services this report checks still exist. The last commit with WebKit is tagged `last-webkit`; see [native/APPS.md](native/APPS.md).
+
 A user launch from the original Start/taskbar/app UI now obtains a fresh GNOME compositor startup token. The separate Rust host receives both `DESKTOP_STARTUP_ID` and `XDG_ACTIVATION_TOKEN`. Tokens are issued with `global.display.get_current_time_roundtrip()` because D-Bus handlers have no Clutter event and `global.get_current_time()` returned zero. The parent’s already-consumed startup token is removed.
 
 Installed desktop and default-file/URI launches retain the existing sanitised environment. A native GIO launch-context subclass also returns the token through the `get_startup_notify_id` virtual method: environment variables alone do not carry activation platform data to an already-running D-Bus app. gio 0.18 lacks AppLaunchContext subclass bindings, so a small private GObject subclass overrides that method, stores an immutable owned token, and leaves every other parent method intact. Its unit test verifies token identity, separate instances and the fallback without a valid token.

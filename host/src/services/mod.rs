@@ -93,8 +93,7 @@ impl ServiceContext {
     }
     /// Whether someone sees what this host shows (update/pk.rs `notify`: no "installed" or "failed" notification
     /// then). A native GUI's own word once it has said it ([`Self::set_windows_shown`]): its event stream stays open
-    /// without a window, so it is no sign of one. Else (a WebKit host: a page's EventSource closes with its
-    /// window) an open event stream.
+    /// without a window, so it is no sign of one. Until it has said so, an open event stream.
     pub fn watching(&self) -> bool {
         match self.windows.load(Ordering::SeqCst) {
             WINDOWS_SHOWN => true,

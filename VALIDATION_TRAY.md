@@ -1,5 +1,7 @@
 # GNOME-traycontrole 0.6.2
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Ubuntu AppIndicator publiceert zijn tray-items als `busName@/objectPath`. De bestaande SNI-lezer herkende alleen `busName/objectPath` en registreerde de huidige items daarom niet. Beide vormen gebruiken nu dezelfde strikte controle van de busnaam en het objectpad. Het bestaande HTML-systeemvak, de overloop, pictogrammen en menu-interface blijven ongewijzigd.
 
 Twaalf controles op een eigen echte D-Bus-sessie slagen: GNOME/KDE-registraties, ongeldige invoer, initiële lijst en pictogram, wijzigingsgebeurtenis, activeren/middenklik/contextmenu/scrollen, passief/aandacht, later registreren, dubbele registratie, afmelden, verbroken verbinding en opruimen. Deze test gebruikt nagebootste SNI-apps; hij roept geen persoonlijke tray-apps aan.

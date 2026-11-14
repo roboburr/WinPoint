@@ -26,6 +26,8 @@ const RETURN_MS = 400;
 const LAUNCH_GRANT_MS = 10000;
 // The power actions of the UI's power.js (ACTIONS) that Start hands to the panel window (panel.power).
 const POWER_ACTIONS = ['shutdown', 'reboot', 'logout', 'suspend', 'lock'];
+// The file portal's picker (the native Explorer in picker mode, host/src/picker.rs): its own Wayland app id.
+const PICKER_APP_ID = 'io.github.win11shell.FilePicker';
 const USER_WINDOW_TYPES = new Set([
     Meta.WindowType.NORMAL, Meta.WindowType.DIALOG,
     Meta.WindowType.MODAL_DIALOG, Meta.WindowType.UTILITY,
@@ -61,13 +63,6 @@ const TEXT = {
     panelMissing: {nl: 'De taakbalk is niet beschikbaar.', en: 'The taskbar isn’t available.'},
     keyboardMode: {nl: 'Er is een toetsenbordmodus nodig.', en: 'A keyboard mode is required.'},
     powerAction: {nl: 'Onbekende energieactie.', en: 'Unknown power action.'},
-    sessionLocked: {nl: 'De sessie is vergrendeld.', en: 'The session is locked.'},
-    badHost: {nl: 'Ongeldig app-proces.', en: 'Invalid app process.'},
-    hostUnmapped: {nl: 'Het venster van de app wordt nog niet weergegeven.', en: 'The app’s window isn’t shown yet.'},
-    hostUnpainted: {nl: 'De app heeft zijn venster nog niet getekend.', en: 'The app hasn’t drawn its window yet.'},
-    badGeometry: {nl: 'Ongeldige opgeslagen vensterpositie.', en: 'Invalid saved window position.'},
-    noDisplay: {nl: 'Er is geen beeldscherm beschikbaar.', en: 'No display is available.'},
-    waitFrame: {nl: 'Wachten op het niet-gemaximaliseerde venster.', en: 'Waiting for the restored window.'},
     sessionWindows: {nl: 'Vensterbeheer is alleen beschikbaar in de ontgrendelde gebruikerssessie.', en: 'Window control is only available in the unlocked user session.'},
     windowGone: {nl: 'Het gevraagde app-venster bestaat niet meer.', en: 'The requested app window no longer exists.'},
     argsObject: {nl: 'Argumenten moeten een JSON-object zijn.', en: 'Arguments must be a JSON object.'},
@@ -690,9 +685,9 @@ export class NativePanelBridge {
         const connect = (name, fn) => signals.push(window.connect(name, fn));
         const changed = () => {
             this._watchActor(window);
-            this._rememberHostFrame(window);
             this._considerPanel(window);
             this._considerStart(window);
+            this._considerPicker(window);
             if (this._panel === window)
                 this._queueGeometry();
             this._queueWindows();
@@ -700,7 +695,7 @@ export class NativePanelBridge {
         for (const name of [
             'notify::title', 'notify::wm-class', 'notify::gtk-application-id',
             'notify::minimized', 'notify::maximized-horizontally', 'notify::maximized-vertically',
-            'notify::urgent', 'notify::demands-attention', 'workspace-changed',
+            'notify::urgent', 'notify::demands-attention', 'notify::transient-for', 'workspace-changed',
             'position-changed', 'size-changed',
         ])
             connect(name, changed);
@@ -711,6 +706,7 @@ export class NativePanelBridge {
             this._watchActor(window);
             this._considerPanel(window);
             this._considerStart(window, true);
+            this._considerPicker(window);
             if (this._panel === window)
                 this._reportPanel(true);
             if (this._isStart(window))
@@ -730,71 +726,7 @@ export class NativePanelBridge {
         this._watchActor(window);
         this._considerPanel(window);
         this._considerStart(window);
-        this._rememberHostFrame(window);
-    }
-
-    _rememberHostFrame(window) {
-        const id = window.get_gtk_application_id() || window.get_wm_class() || '';
-        if (!/^io\.github\.win11shell\.(Explorer|Settings|TaskManager|Search|Disks|DefaultApps|Installer|Calendar)$/.test(id) ||
-            window.is_maximized() || window.is_fullscreen()) return;
-        const r = window.get_frame_rect();
-        if (r.width > 100 && r.height > 100) {
-            this._hostFrames ??= new WeakMap();
-            this._hostFrames.set(window, {x:r.x,y:r.y,w:r.width,h:r.height});
-        }
-    }
-
-    _hostSession(method, args) {
-        if (!this._isUserSession()) return failure('session_unavailable', this._t('sessionLocked'));
-        if (!Number.isInteger(args.pid) || args.pid <= 0 ||
-            typeof args.appId !== 'string' || !/^io\.github\.win11shell\.(Explorer|Settings|TaskManager|Search|Disks|DefaultApps|Installer)$/.test(args.appId))
-            return failure('bad_args', this._t('badHost'));
-        const window = this._userWindows(true).find(w => w.get_pid() === args.pid &&
-            (w.get_gtk_application_id() === args.appId || w.get_wm_class() === args.appId));
-        if (!window) return failure('not_found', this._t('hostUnmapped'));
-        if (method === 'windows.hostState') {
-            this._rememberHostFrame(window);
-            const r = window.get_frame_rect();
-            return {rect: {x:r.x,y:r.y,w:r.width,h:r.height}, normalRect: this._hostFrames?.get(window) ?? null,
-                maximized:window.is_maximized(),monitor:window.get_monitor()};
-        }
-        // Meta.Window exists before Mutter has placed its first client frame. Moving then
-        // reports success but the initial compositor placement subsequently recentres it.
-        if (!window.get_compositor_private()?.mapped)
-            return failure('not_ready', this._t('hostUnpainted'));
-        const r = args.rect;
-        if (!r || !['x','y','w','h'].every(k => Number.isFinite(r[k])) || r.w < 100 || r.h < 100)
-            return failure('bad_args', this._t('badGeometry'));
-        const monitors = Main.layoutManager.monitors;
-        const monitor = monitors.find(m => r.x >= m.x && r.x < m.x+m.width && r.y >= m.y && r.y < m.y+m.height) ?? Main.layoutManager.primaryMonitor;
-        if (!monitor) return failure('not_found',this._t('noDisplay'));
-        const area = global.workspace_manager.get_active_workspace().get_work_area_for_monitor(monitor.index);
-        const w = Math.min(Math.round(r.w),area.width), h = Math.min(Math.round(r.h),area.height);
-        const x = Math.max(area.x,Math.min(Math.round(r.x),area.x+area.width-w));
-        const y = Math.max(area.y,Math.min(Math.round(r.y),area.y+area.height-h));
-        const target = `${x},${y},${w},${h}`;
-        this._hostRestoreRects ??= new WeakMap();
-        if (window.is_maximized()) {
-            window.unmaximize();
-            window.move_resize_frame(false,x,y,w,h);
-            this._hostRestoreRects.set(window,target);
-            return failure('not_ready',this._t('waitFrame'));
-        }
-        const before = window.get_frame_rect();
-        const normalReady = Math.abs(before.x-x)<=2 && Math.abs(before.y-y)<=2 &&
-            Math.abs(before.width-w)<=2 && Math.abs(before.height-h)<=2;
-        window.move_resize_frame(false,x,y,w,h);
-        if (args.maximized === true && window.can_maximize()) {
-            // Wayland must commit the normal frame before Mutter saves it for unmaximize.
-            // The native worker retries; no compositor/client geometry is guessed by a timer.
-            if (this._hostRestoreRects.get(window)!==target || !normalReady) {
-                this._hostRestoreRects.set(window,target);
-                return failure('not_ready',this._t('waitFrame'));
-            }
-            window.maximize();
-        }
-        this._hostRestoreRects.delete(window);
-        return {rect:{x,y,w,h},maximized:args.maximized === true};
+        this._considerPicker(window);
     }
 
     _unwatchWindow(window) {
@@ -827,6 +759,17 @@ export class NativePanelBridge {
             if (actor?.mapped || actor?.visible)
                 this._reportPanel(true);
         }
+    }
+
+    // A picker belongs to the window it was opened for, as an owned window on Windows: no taskbar entry of its own.
+    // Mutter keeps a modal one (a modal dialog) off the task list already, but a non-modal one is a normal window
+    // with a transient parent; hide that one too (r2d-picker).
+    _considerPicker(window) {
+        if (window.skip_taskbar || !window.get_transient_for())
+            return;
+        if (window.get_wm_class() !== PICKER_APP_ID && window.get_gtk_application_id() !== PICKER_APP_ID)
+            return;
+        window.hide_from_window_list();
     }
 
     _reportPanel(present) {
@@ -1138,8 +1081,6 @@ export class NativePanelBridge {
             return {mode: 'gnome', compositor: 'gnome', layerShell: false, nativeWindows: true,
                 nativePanel: this._panelPresent, panelAppId: PANEL_APP_ID,
                 startFocused: Boolean(global.display.focus_window && this._isStart(global.display.focus_window))};
-        if (method === 'windows.hostState' || method === 'windows.hostRestore')
-            return this._hostSession(method,args);
         if (method === 'windows.list')
             return {supported: true, windows: this._userWindows().map(window => this._windowJSON(window))};
         if (method === 'windows.setIconRects')

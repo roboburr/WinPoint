@@ -4,7 +4,6 @@ use crate::{
     files::{self, ApiError, ApiResult},
 };
 use gio::prelude::*;
-use gtk::{gio, glib};
 use serde_json::{Value, json};
 use std::{
     collections::{HashMap, HashSet},

@@ -7,8 +7,9 @@ Order:
     entries (install.py, C6), a bridge failure (in-process Call) and the "app missing" GNOME notification
     (Main.notify). D-G70: the taskbar is the native shell's (no page), so the checks of the HTML panel (its failure
     toast through the host relay, the Win11 toast mirror of the notification, its <html lang>) are gone.
- 2. nl -> en through the real Settings dropdown (Settings writes settings.json itself); a probe in the extension
-    times its re-label against the file's mtime. Same checks in en.
+ 2. nl -> en through the real Settings dropdown (since 13-11 the native Settings: pointer clicks on its Taal en
+    regio drop-down and its English option, h.set_language; Settings writes settings.json itself); a probe in the
+    extension times its re-label against the file's mtime. Same checks in en.
  3. C6 at runtime, simulated: the harness rewrites Name= of the Explorer entry the way win11-panel will (GE1b;
     the 3b898e6 binaries do not), so the extension's new installed-changed handler is tested on its own.
  4. en -> nl by rename (Settings closed), nl -> en by in-place rewrite.

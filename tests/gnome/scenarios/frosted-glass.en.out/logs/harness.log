@@ -1,0 +1,38 @@
+02:48:31 GE0c run lang=en switch=False seed=defaults MemAvailable=5361640 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
+02:49:54 private install: exit 0 in 68.2 s, 87253 mutated paths, 0 outside the run dir, ok=True
+02:49:58 GNOME Shell 50.1 up (mode user, unsafe True)
+02:50:02 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/frosted-glass.py
+02:50:02   check PASS: A: the native shell runs
+02:50:02   check PASS: A: one taskbar blur for the 48 px strip
+02:50:02   check PASS: A: the extension holds the native pid as Panel
+02:50:02   check PASS: A: capabilities() list the native taskbar with blur
+02:50:05   check PASS: B: the focused Settings window has one blur
+02:50:05   check PASS: B: the unblurred rim is 3 px (corner on the 8 px arc)
+02:50:05   check PASS: B: the window wears the kit's glass (its Mica 90 % over the blur)
+02:50:08   check PASS: C: open Start has one blur
+02:50:08   check PASS: C: Settings lost its blur with the focus
+02:50:08   check PASS: C: one window blur in all (Start)
+02:50:08   check PASS: C: the extension holds Panel and Start under the native pid
+02:50:08   check PASS: C: capabilities() list the open Start with blur
+02:50:11   check PASS: D: closing Start releases its blur
+02:50:11   check PASS: D: Settings has its blur again
+02:50:12   check PASS: D: the extension keeps the hidden Start registration of the native pid
+02:50:12   check PASS: D2: reopened Start has its blur again
+02:50:12   check PASS: D2: capabilities() list the reopened Start with blur
+02:50:13   check PASS: F: the blur stays during the whole drag
+02:50:13   check PASS: F: no blur entry was rebuilt during the drag
+02:50:13   check PASS: F: the backdrop follows the drawn window
+02:50:13   check PASS: F: after the drag the blur is on the frame again
+02:50:17   check PASS: G: the title bar drag moves the window
+02:50:17   check PASS: G: the right edge resizes the window
+02:50:17   check PASS: G: the drawn window is its buffer (no stretch)
+02:50:17   check PASS: G: the app's window has the new width
+02:50:17   check PASS: G: the three caption buttons are inside the window
+02:50:18   check PASS: E: the window blur costs gnome-shell less than 64 MiB PSS
+02:50:18   check PASS: every check passed
+02:50:18 shutdown app: signalled own descendants 1354:win11-gtk-setti, 1363:win11-app, 1441:glycin-svg
+02:50:18 shutdown shell clients: signalled own descendants 49:ibus-daemon, 62:glycin-svg, 136:glycin-image-rs, 384:win11-shell, 1340:glycin-image-rs, 497:win11-panel, 533:glycin-svg, 215:ibus-memconf, 217:ibus-extension-, 227:ibus-engine-sim
+02:50:18 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+02:50:18 shutdown system bus: signalled own descendants 24:dbus-daemon
+02:50:18 inner sweep: signalled own descendants 1350:glycin-image-rs
+02:50:18 inner done: 0 surfaces, 0 failed []

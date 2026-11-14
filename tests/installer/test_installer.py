@@ -4,17 +4,22 @@
 Every install runs through sandbox.Case (bubblewrap, private HOME/XDG/prefix, PATH stubs, optional strace) in
 tests/installer/run/<case>; Robin's HOME is not even visible there. Fast cases use a small fixture tree and
 placeholder binaries; the REAL cases install a snapshot of this tree's vendor/ with the binaries of
-tests/build/3b898e6-debug plus win11-shell and win11-calendar of tests/build/native-release under strace, in a path
-with spaces, % and $.
+tests/build/3b898e6-debug plus the native ones (install.NATIVE_BINS) of tests/build/native-release under strace, in
+a path with spaces, % and $. The 3b898e6 binaries link WebKit: on a machine without the libraries they need, the REAL
+cases are skipped and say which.
 The byte-for-byte cases run scripts/*.py of 3b898e6 (git show) and the current ones in the same case dir. What
-differs from 3b898e6 by design is left out of those comparisons (SHELL_SPLIT): D-G70 removed the WebKit Start and
-desktop (win11-start, win11-desktop and their entries), the native shell and the Calendar app came with D-G63/D-G68
-(win11-shell, win11-calendar, the Calendar entry and its URI scheme default), D-G65 the payload's config/ folder; and
-the done2 line of the closing text follows install.py.
+differs from 3b898e6 by design is left out of those comparisons (SHELL_SPLIT, same_as_baseline): D-G70 removed the
+WebKit Start and desktop (win11-start, win11-desktop and their entries), the native shell, the Calendar app and the
+native apps came with D-G63/D-G68 and 13-11 (win11-shell, win11-calendar, win11-gtk-<kind>, the Calendar entry and its
+URI scheme default), D-G65 the payload's config/ folder, and since the HTML apps went (git tag last-webkit) the payload
+has no host/ (vendor/host stays in the source tree, for 3b898e6's installer) and only ui/assets of ui/; and the done2
+line of the closing text follows install.py.
 Environment: W11_INSTALLER_REAL=0 skips the two REAL cases.
 """
 from __future__ import annotations
+import contextlib
 import importlib
+import io
 import json
 import os
 from pathlib import Path
@@ -23,6 +28,7 @@ import shutil
 import subprocess
 import sys
 import unittest
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -90,10 +96,19 @@ def shell_split() -> set[str]:
 SHELL_SPLIT = shell_split()
 
 
+PAYLOAD = "prefix/share/win11-gnome/"
+
+
 def same_as_baseline(tree: dict[str, str]) -> dict[str, str]:
-    """A case tree without SHELL_SPLIT and without the payload's config/ folder (D-G65)."""
-    return {k: v for k, v in tree.items() if k not in SHELL_SPLIT
-            and not (k == "prefix/share/win11-gnome/config" or k.startswith("prefix/share/win11-gnome/config/"))}
+    """A case tree without SHELL_SPLIT, the payload's config/ folder (D-G65) and host/ (3b898e6 installed vendor/host,
+    the Python reference; the current installer does not), and without what the payload's ui/ holds besides assets/
+    (3b898e6 copied all of vendor/ui, the HTML apps included; the current installer copies vendor/ui/assets)."""
+    def by_design(key: str) -> bool:
+        if not key.startswith(PAYLOAD):
+            return False
+        top, _, rest = key[len(PAYLOAD):].partition("/")
+        return top in ("config", "host") or (top == "ui" and rest != "" and rest.split("/", 1)[0] != "assets")
+    return {k: v for k, v in tree.items() if k not in SHELL_SPLIT and not by_design(k)}
 
 
 def as_now(old_stdout: str) -> str:
@@ -449,7 +464,8 @@ class Installer(unittest.TestCase):
                          {name: Path(rel).stem for name, rel in install.BUNDLED_ICONS.items()})
 
     def test_build_directory_choice(self):
-        """WIN11_BUILD_DIR unset: target/release wins over a stale bin/; a package (bin/ only) uses bin/."""
+        """WIN11_BUILD_DIR unset: target/release wins over a stale bin/; a package (bin/ only) uses bin/; a directory
+        that does not itself hold all 19 binaries is never the choice, WIN11_NATIVE_BUILD_DIR or not."""
         base = RUN/"build-choice"
         shutil.rmtree(base, ignore_errors=True)
         root = sandbox.fixture_root(base/"root")
@@ -468,6 +484,20 @@ class Installer(unittest.TestCase):
         self.assertEqual(proc.returncode, 1)
         self.assertEqual(len(proc.stderr.splitlines()), len(install.BINS) - 6)
         self.assertTrue(all(line.startswith(f"Ontbreekt: {root}/bin/") for line in proc.stderr.splitlines()))
+        # A bin/ with the host's binaries only, the native ones in WIN11_NATIVE_BUILD_DIR: refused, each native one
+        # named as missing in bin/ (an old checkout's bin/ is never installed from).
+        for name in install.BINS:
+            if name not in install.NATIVE_BINS:
+                (root/"bin"/name).write_text("#!/bin/sh\n# host only\nexit 97\n")
+                (root/"bin"/name).chmod(0o755)
+        native = sandbox.stub_build(base/"native")
+        case = Case("build-choice-native-dir")
+        proc = self.install(case, root=root, locale=NL_LOCALE,
+                            extra={"WIN11_BUILD_DIR": None, "WIN11_NATIVE_BUILD_DIR": str(native)})
+        self.assertEqual(proc.returncode, 1)
+        self.assertEqual(proc.stderr.splitlines(), [f"Ontbreekt: {root}/bin/{name}. Bouw eerst met scripts/build.sh."
+                                                    for name in install.BINS if name in install.NATIVE_BINS])
+        self.assertEqual(sorted(p.name for p in case.prefix.iterdir()), [])
         sandbox.stub_build(root/"bin")
         case = Case("build-choice-package")
         self.assertOk(self.install(case, root=root, locale=NL_LOCALE, extra={"WIN11_BUILD_DIR": None}))
@@ -517,6 +547,107 @@ class Installer(unittest.TestCase):
         self.assertFalse((case.prefix/"share/win11-gnome").exists())
         self.assertEqual((new/"events.json").read_text(), events)
 
+    def test_payload_has_only_the_ui_assets(self):
+        """The payload's ui/ is vendor/ui/assets alone, also while vendor/ui still holds the HTML apps' files, and it
+        has no host/: vendor/host, the Python reference, stays in the source tree. Without vendor/ui/assets the
+        installer refuses before any change."""
+        root = sandbox.fixture_root(RUN/"fixture-html")
+        (root/"vendor/ui/index.html").write_text("<!doctype html><title>GE1c fixture</title>\n")
+        (root/"vendor/ui/js").mkdir()
+        (root/"vendor/ui/js/main.js").write_text("// GE1c fixture\n")
+        case = Case("payload-assets")
+        self.assertOk(self.install(case, root=root, locale=NL_LOCALE))
+        payload = case.prefix/"share/win11-gnome"
+        self.assertEqual(sorted(p.name for p in (payload/"ui").iterdir()), ["assets"])
+        self.assertEqual(sorted(p.relative_to(payload/"ui/assets") for p in (payload/"ui/assets").rglob("*")),
+                         sorted(p.relative_to(root/"vendor/ui/assets") for p in (root/"vendor/ui/assets").rglob("*")))
+        self.assertFalse((payload/"host").exists())
+        self.assertTrue((root/"vendor/host").is_dir())
+        shutil.rmtree(root/"vendor/ui/assets")
+        case = Case("payload-no-assets")
+        before = case.tree()
+        proc = self.install(case, root=root, locale=NL_LOCALE)
+        self.assertEqual((proc.returncode, proc.stdout), (1, ""))
+        self.assertEqual(proc.stderr, f"Ontbrekende interfacebron: {root}/vendor/ui/assets\n")
+        self.assertEqual(case.tree(), before)
+
+    def test_webkit_state_goes_on_update_and_uninstall(self):
+        """An update (install.py over its own payload) and uninstall.py, with and without --files-only, remove the
+        WebKit apps' storage by install.remove_webkit_state's exact list and name each removed path. Everything else
+        stays: Win11 Shell for Hyprland's win11shell* folders, the w11gpuprobe-* probes, webkit.py, a listed name that
+        holds something else or is a link, the Calendar's folder, the rest of the cache, and the window-state files
+        the native Explorer reads. A first install leaves them all."""
+        gone = ["data/io.github.win11shell.Explorer", "data/io.github.win11shell.TaskManager",
+                "cache/io.github.win11shell.Explorer", "cache/io.github.win11shell.Desktop",
+                "data/org.freedesktop.impl.portal.desktop.win11shell",
+                "cache/org.freedesktop.impl.portal.desktop.win11shell", "cache/win11-explorer",
+                "cache/win11-gnome/WebKitCache", "cache/win11-gnome/CacheStorage",
+                "tmp/win11-gnome/explorer-restart.lock"]
+        kept = ["data/win11shell-explorer", "cache/win11shell-settings", "data/w11gpuprobe-b-desk",
+                "cache/w11gpuprobe-L1-shell-shm-cpu", "data/webkit.py", "data/io.github.win11shell.Settings",
+                "cache/io.github.win11shell.Settings", "elsewhere/WebKitCache", "data/io.github.win11shell.Calendar",
+                "cache/win11-gnome/host.log", "cache/win11-gnome/index", "config/win11-gnome/window-state.json",
+                "config/win11-gnome/.window-state.lock"]
+
+        def seed(case: Case) -> None:
+            webkit_data = {"hsts-storage.sqlite": "", "localstorage/http_127.0.0.1_1.localstorage": "",
+                           "storage/salt": "", "mediakeys/v1/x": ""}
+            webkit_cache = {"WebKitCache/Version 17/salt": "", "CacheStorage/salt": ""}
+            layout = {"data/io.github.win11shell.Explorer": webkit_data, "data/io.github.win11shell.TaskManager": {},
+                      "cache/io.github.win11shell.Explorer": webkit_cache,
+                      "cache/io.github.win11shell.Desktop": {"WebKitCache/Version 17/salt": ""},
+                      "data/org.freedesktop.impl.portal.desktop.win11shell": webkit_data,
+                      "cache/org.freedesktop.impl.portal.desktop.win11shell": webkit_cache,
+                      "cache/win11-explorer": webkit_cache, "cache/win11-gnome": {**webkit_cache, "host.log": "x\n",
+                                                                                   "index/db": "x"},
+                      "data/win11shell-explorer": webkit_data, "cache/win11shell-settings": webkit_cache,
+                      "data/w11gpuprobe-b-desk": webkit_data, "cache/w11gpuprobe-L1-shell-shm-cpu": webkit_cache,
+                      "data/webkit.py": webkit_data, "data/io.github.win11shell.Settings": {**webkit_data, "notes.txt": "x"},
+                      "elsewhere": webkit_cache, "data/io.github.win11shell.Calendar": {"localstorage/x": ""},
+                      "config/win11-gnome": {"window-state.json": "{}\n", ".window-state.lock": ""},
+                      "tmp/win11-gnome": {"explorer-restart.lock": ""}}
+            for folder, files in layout.items():
+                (case.dir/folder).mkdir(parents=True, exist_ok=True)
+                for rel, text in files.items():
+                    (case.dir/folder/rel).parent.mkdir(parents=True, exist_ok=True)
+                    (case.dir/folder/rel).write_text(text)
+            if not (case.dir/"cache/io.github.win11shell.Settings").is_symlink():
+                (case.dir/"cache/io.github.win11shell.Settings").symlink_to(case.dir/"elsewhere", target_is_directory=True)
+
+        def removed_lines(case: Case) -> str:
+            return "".join(install.t("webkitRemoved", "nl", path=case.dir/rel) + "\n" for rel in gone)
+
+        def check(case: Case, what: str) -> None:
+            self.assertEqual([rel for rel in gone if os.path.lexists(case.dir/rel)], [], what)
+            self.assertEqual([rel for rel in kept if not os.path.lexists(case.dir/rel)], [], what)
+            self.assertEqual(sorted(p.name for p in (case.dir/"data/webkit.py").iterdir()),
+                             ["hsts-storage.sqlite", "localstorage", "mediakeys", "storage"], what)
+            self.assertTrue((case.dir/"cache/io.github.win11shell.Settings").is_symlink(), what)
+
+        case = Case("webkit-state")
+        write_json(case.config/"win11-gnome/settings.json", settings_doc("nl"))
+        seed(case)
+        first = self.install(case, locale=NL_LOCALE)
+        self.assertOk(first)
+        self.assertEqual(first.stdout, nl_done(case.prefix))
+        self.assertEqual([rel for rel in gone if not os.path.lexists(case.dir/rel)], [])
+        update = self.install(case, locale=NL_LOCALE, strace=True)
+        self.assertOk(update)
+        self.assertEqual(update.stdout, removed_lines(case) + nl_done(case.prefix))
+        check(case, "update")
+        self.assertNoOutsideWrites(case, update)
+        again = self.install(case, locale=NL_LOCALE)
+        self.assertEqual(again.stdout, nl_done(case.prefix))
+        for args in (["--files-only"], []):
+            with self.subTest(args=args):
+                self.assertOk(self.install(case, locale=NL_LOCALE))
+                seed(case)
+                proc = case.run(SCRIPTS/"uninstall.py", None, args, case.env(Shared.stubs, NL_LOCALE))
+                self.assertOk(proc)
+                self.assertEqual(proc.stdout, removed_lines(case)
+                                 + "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n")
+                check(case, f"uninstall {args}")
+
     def test_sandbox_negative_control(self):
         """The sandbox itself: the repo is read-only, the live config is invisible, and strace flags an outside write."""
         case = Case("sandbox-probe")
@@ -561,7 +692,8 @@ class Installer(unittest.TestCase):
     # ---- the real tree -------------------------------------------------------------------------------------------
     @unittest.skipIf(os.environ.get("W11_INSTALLER_REAL") == "0", "W11_INSTALLER_REAL=0")
     def test_real_tree_nl_update_identical_and_contained(self):
-        """The real vendor/ and the 12 baseline binaries, a path with spaces, % and $, strace on the new run."""
+        """The real vendor/ and the baseline binaries (BINS of 3b898e6), a path with spaces, % and $, strace on the
+        new run."""
         root = real_snapshot()
         build = real_build(self)
         (old_case, old, old_tree, _), (case, new, new_tree, calls) = self.compare_with_baseline(
@@ -788,8 +920,10 @@ def drop_payload(case: Case) -> None:
 
 
 def real_build(test: unittest.TestCase) -> Path:
-    """The REAL cases' binaries: hard links (else copies) of the 3b898e6 debug build plus win11-shell and
-    win11-calendar of tests/build/native-release, so 3b898e6's installer and the current one each find theirs."""
+    """The REAL cases' binaries: hard links (else copies) of the 3b898e6 debug build plus the binaries 3b898e6 did not
+    have (the native ones) of tests/build/native-release, so 3b898e6's installer and the current one each find theirs.
+    The 3b898e6 binaries link WebKit: without a library they need, the current installer's preflight refuses, so the
+    cases are skipped and name it."""
     base, native = G/"tests/build/3b898e6-debug", G/"tests/build/native-release"
     wanted = {**{n: base/n for n in sandbox.baseline_bins()}, **{n: base/n for n in install.BINS}}
     for name in set(install.BINS) - set(sandbox.baseline_bins()):
@@ -797,6 +931,10 @@ def real_build(test: unittest.TestCase) -> Path:
     missing = [str(path) for path in wanted.values() if not path.is_file()]
     if missing:
         test.skipTest(f"REAL build incomplete: {', '.join(missing)}")
+    needed = {library for path in wanted.values() for library in install.elf_needed(path) or []}
+    absent = sorted(needed - install.known_libraries())
+    if absent:
+        test.skipTest(f"REAL build needs {', '.join(absent)}, which this machine does not have")
     build = RUN/"real-build"
     build.mkdir(parents=True, exist_ok=True)
     for name, source in wanted.items():
@@ -813,7 +951,8 @@ def real_build(test: unittest.TestCase) -> Path:
 
 def snapshot_inputs() -> str:
     """A fingerprint of the install inputs real_snapshot() copies: the two host tables, extension/ and the manifests by
-    content, vendor/ui, vendor/host and vendor/config by path, size and mtime (the icon tree is stable)."""
+    content, vendor/ui, vendor/host and vendor/config by path, size and mtime (the icon tree is stable). vendor/host
+    is an input of 3b898e6's installer only, which requires and installs it."""
     import hashlib
     digest = hashlib.sha256()
     files = [G/"host/src/desktop-entries.json", G/"host/src/settings-defaults.json",
@@ -912,6 +1051,13 @@ def check_entry_icons(test: unittest.TestCase, case: Case) -> None:
             test.assertTrue(list(adwaita.glob(f"*/*/{name}.*")), name)
 
 
+# The build the preflight checks read, with all 19 binaries: WIN11_NATIVE_BUILD_DIR, else the reference release build.
+COMPLETE_BUILD = Path(os.environ.get("WIN11_NATIVE_BUILD_DIR") or G/"tests/build/native-release")
+WEBKIT_LIBS = re.compile(r"lib(webkit2gtk|javascriptcoregtk|soup)-")
+# GTK 3 left the host after that (plan group L, 14-11): no binary of this tree links it either
+GTK3_LIBS = re.compile(r"lib(gtk|gdk)-3\.")
+
+
 class Units(unittest.TestCase):
     """In-process checks of install.py's helpers (nothing is installed)."""
 
@@ -964,6 +1110,51 @@ class Units(unittest.TestCase):
             with self.subTest(env=env, timezone=timezone, localtime=localtime):
                 self.assertEqual(install.guess_language(env, timezone, localtime), want)
 
+    def test_webkit_state_needs_own_real_folders(self):
+        """install.remove_webkit_state removes nothing of another user (pretended here through the uid it compares
+        with), and never a file or a link under a listed folder name; only what it removed is named."""
+        here = RUN/"units/webkit-owner"
+        shutil.rmtree(here, ignore_errors=True)
+        data, cache, runtime = here/"data", here/"cache", here/"run"
+        for folder in (data/"io.github.win11shell.Explorer/localstorage", cache/"win11-gnome/WebKitCache",
+                       runtime/"win11-gnome"):
+            folder.mkdir(parents=True)
+        (runtime/"win11-gnome/explorer-restart.lock").write_text("")
+        (cache/"io.github.win11shell.Explorer").write_text("a file\n")
+        (data/"io.github.win11shell.Search").symlink_to(data/"io.github.win11shell.Explorer", target_is_directory=True)
+
+        def listing() -> list[str]:
+            return sorted(str(p.relative_to(here)) for p in here.rglob("*"))
+        before = listing()
+        out = io.StringIO()
+        with mock.patch("os.geteuid", return_value=os.geteuid() + 1), contextlib.redirect_stdout(out):
+            install.remove_webkit_state(data, cache, runtime)
+        self.assertEqual((out.getvalue(), listing()), ("", before))
+        try:
+            install.set_language("en")
+            with contextlib.redirect_stdout(out):
+                install.remove_webkit_state(data, cache, runtime)
+        finally:
+            install.set_language("nl")
+        self.assertEqual(out.getvalue().splitlines(),
+                         [f"Removed (data of an earlier version’s WebKit apps): {path}" for path in
+                          (data/"io.github.win11shell.Explorer", cache/"win11-gnome/WebKitCache",
+                           runtime/"win11-gnome/explorer-restart.lock")])
+        self.assertEqual(listing(), ["cache", "cache/io.github.win11shell.Explorer", "cache/win11-gnome", "data",
+                                     "data/io.github.win11shell.Search", "run", "run/win11-gnome"])
+
+    def test_cache_home_ignores_an_empty_or_relative_value(self):
+        """install.cache_home (install.py and uninstall.py): an unset, empty or relative XDG_CACHE_HOME is ~/.cache,
+        as the XDG spec has it, so such a value never stops an install or an uninstall; an absolute one is used."""
+        home = Path.home()/".cache"
+        for value, want in [(None, home), ("", home), ("cache", home), ("~/cache", home), ("./x", home),
+                            ("/var/tmp/w11-cache", Path("/var/tmp/w11-cache"))]:
+            env = {key: v for key, v in os.environ.items() if key != "XDG_CACHE_HOME"}
+            if value is not None:
+                env["XDG_CACHE_HOME"] = value
+            with self.subTest(value=value), mock.patch.dict(os.environ, env, clear=True):
+                self.assertEqual(install.cache_home(), want)
+
     def test_language_of_file(self):
         here = RUN/"units"
         here.mkdir(parents=True, exist_ok=True)
@@ -982,43 +1173,19 @@ class Units(unittest.TestCase):
         self.assertIsNone(install.elf_needed(G/"scripts/install.sh"))
 
     def test_preflight_names_missing_parts(self):
-        binary = G/"tests/build/3b898e6-debug"
-        if not binary.is_dir():
-            self.skipTest("no baseline build")
-        install.preflight_runtime(binary)                      # this machine has everything
-        real = install.known_libraries
-        try:
-            install.known_libraries = lambda: real() - {"libarchive.so.13", "libwebkit2gtk-4.1.so.0"}
-            for lang, want in [("nl", "Ontbrekende systeemonderdelen: libwebkit2gtk-4.1.so.0, libarchive.so.13.\n"
-                                      "Installeer ze op Ubuntu met: sudo apt install libwebkit2gtk-4.1-0 libarchive13t64"),
-                               ("en", "Missing system components: libwebkit2gtk-4.1.so.0, libarchive.so.13.\n"
-                                      "On Ubuntu, install them with: sudo apt install libwebkit2gtk-4.1-0 libarchive13t64")]:
-                install.set_language(lang)
-                with self.assertRaises(SystemExit) as raised:
-                    install.preflight_runtime(binary)
-                self.assertEqual(str(raised.exception.code), want)
-        finally:
-            install.known_libraries = real
-            install.set_language("nl")
-
-    def test_preflight_names_the_gtk4_packages(self):
-        """Every library the 19 binaries need (DT_NEEDED) has its Ubuntu package in PACKAGES, except libc6's own; a
-        missing libgtk-4.so.1 (the native shell, Calendar and apps) names libgtk-4-1."""
-        build = G/"tests/build/native-release"
+        """On a build with all 19 binaries: a missing libgtk-4.so.1 (the native shell, Calendar and apps) names
+        libgtk-4-1, the dlopened libarchive.so.13 (DLOPENED) libarchive13t64, in Win11's language."""
+        build = COMPLETE_BUILD
         if not all((build/name).is_file() for name in install.BINS):
-            self.skipTest("no native release build")
-        needed = {library for name in install.BINS for library in install.elf_needed(build/name) or []}
-        self.assertTrue({"libgtk-4.so.1", "libgraphene-1.0.so.0", "libpango-1.0.so.0"} <= needed, needed)
-        libc6 = re.compile(r"lib(c|m|pthread|dl|rt|resolv)\.so\.\d+|ld-linux-[\w-]+\.so\.\d+")
-        self.assertEqual(sorted(lib for lib in needed if lib not in install.PACKAGES and not libc6.fullmatch(lib)), [])
+            self.skipTest(f"no complete build in {build}")
         install.preflight_runtime(build)                       # this machine has everything
         real = install.known_libraries
         try:
-            install.known_libraries = lambda: real() - {"libgtk-4.so.1"}
-            for lang, want in [("nl", "Ontbrekende systeemonderdelen: libgtk-4.so.1.\n"
-                                      "Installeer ze op Ubuntu met: sudo apt install libgtk-4-1"),
-                               ("en", "Missing system components: libgtk-4.so.1.\n"
-                                      "On Ubuntu, install them with: sudo apt install libgtk-4-1")]:
+            install.known_libraries = lambda: real() - {"libarchive.so.13", "libgtk-4.so.1"}
+            for lang, want in [("nl", "Ontbrekende systeemonderdelen: libgtk-4.so.1, libarchive.so.13.\n"
+                                      "Installeer ze op Ubuntu met: sudo apt install libgtk-4-1 libarchive13t64"),
+                               ("en", "Missing system components: libgtk-4.so.1, libarchive.so.13.\n"
+                                      "On Ubuntu, install them with: sudo apt install libgtk-4-1 libarchive13t64")]:
                 install.set_language(lang)
                 with self.assertRaises(SystemExit) as raised:
                     install.preflight_runtime(build)
@@ -1026,6 +1193,25 @@ class Units(unittest.TestCase):
         finally:
             install.known_libraries = real
             install.set_language("nl")
+
+    def test_every_needed_library_has_its_package(self):
+        """Every library the 19 binaries need (DT_NEEDED) has its Ubuntu package in PACKAGES, except libc6's own, and
+        PACKAGES names no WebKit, JavaScriptCore, libsoup or GTK 3 library: no binary links one since the last-webkit
+        tag and the host's GTK 3 (14-11). A build that still does is older than this tree; it is skipped, by name,
+        once the other libraries are checked."""
+        old = lambda lib: WEBKIT_LIBS.match(lib) or GTK3_LIBS.match(lib)     # noqa: E731
+        self.assertEqual([lib for lib in install.PACKAGES if old(lib)], [])
+        build = COMPLETE_BUILD
+        if not all((build/name).is_file() for name in install.BINS):
+            self.skipTest(f"no complete build in {build}")
+        needed = {library for name in install.BINS for library in install.elf_needed(build/name) or []}
+        self.assertTrue({"libgtk-4.so.1", "libgraphene-1.0.so.0", "libpango-1.0.so.0"} <= needed, needed)
+        older = sorted(lib for lib in needed if old(lib))
+        libc6 = re.compile(r"lib(c|m|pthread|dl|rt|resolv)\.so\.\d+|ld-linux-[\w-]+\.so\.\d+")
+        self.assertEqual(sorted(lib for lib in needed - set(older)
+                                if lib not in install.PACKAGES and not libc6.fullmatch(lib)), [])
+        if older:
+            self.skipTest(f"{build} still links {', '.join(older)}: a build older than this tree, rebuild it from this tree")
 
     def test_desktop_entry_table_matches_baseline_dutch(self):
         """nl of host/src/desktop-entries.json == the literals of install.py at 3b898e6 (C6)."""

@@ -1,4 +1,4 @@
-//! The file list (vendor/ui/js/apps/explorer/fileview.js): details with sortable, resizable columns, list
+//! The file list (last-webkit:vendor/ui/js/apps/explorer/fileview.js): details with sortable, resizable columns, list
 //! (column flow, horizontal scrolling), small / medium / large / extra large icons, tiles and content, with
 //! group headers that collapse, check boxes, cut items dimmed, hidden items faded and thumbnails from the
 //! backend.

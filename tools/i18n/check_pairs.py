@@ -15,8 +15,8 @@ What it checks (exit 1 on any error):
 * host/src/desktop-entries.json (C6, owned by GE1b; read only): version 1, nl/en for the comment and the 10
   entries that scripts/install.py writes.
 * the glossary rule (ge1c-review m2): when an nl text has a phrase of tools/i18n/glossary.tsv, its en text must
-  have the Windows 11 en-GB phrase (check.Glossary, the same rule as check_ui.py; an error since the round-3
-  lock-in, R3-UI, like the UI's; exceptions on purpose in GLOSSARY_OK).
+  have the Windows 11 en-GB phrase (check.Glossary, the same rule as check_native.py; an error since the round-3
+  lock-in, R3-UI; exceptions on purpose in GLOSSARY_OK).
 Warnings: a table key that nothing uses; an nl text equal to its en text (allowed, listed for review); US spellings
 in an en text (D-G15: en-GB; "minimized", "color").
 """
@@ -30,7 +30,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import check  # noqa: E402  (tools/i18n/check.py: Glossary, shared with check_ui.py)
+import check  # noqa: E402  (tools/i18n/check.py: Glossary, shared with check_native.py)
 
 GLOSSARY = check.Glossary(Path(__file__).resolve().parent/"glossary.tsv")
 # (file, table.key) → nl glossary phrases whose en rendering differs on purpose.

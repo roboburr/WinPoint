@@ -477,11 +477,9 @@ impl NativeCore {
             .contains(&kind)
             .then(|| crate::launch::activation_token(&json!({"app":kind})))
             .flatten();
-        let weak = Arc::downgrade(self);
-        let nonce = pending.nonce.clone();
         // WU-FIX (D-G53): lib.rs decides Explorer's wait for its file operations; it is announced here like the
         // others (wait 'files')
-        let (files_core, files_nonce) = (weak.clone(), nonce.clone());
+        let (files_core, files_nonce) = (Arc::downgrade(self), pending.nonce.clone());
         crate::on_restart_wait(Some(Arc::new(move |waiting: bool| {
             if let Some(core) = files_core.upgrade() {
                 if waiting {
@@ -491,41 +489,11 @@ impl NativeCore {
                 }
             }
         })));
-        crate::prepare_restart_all(
-            crate::RestartAll {
-                origin: pending.origin,
-                token,
-            },
-            Some(Box::new(move || {
-                if let Some(core) = weak.upgrade() {
-                    core.restart_dropped(&nonce);
-                }
-            })),
-        );
+        crate::prepare_restart_all(crate::RestartAll {
+            origin: pending.origin,
+            token,
+        });
         (self.request_shutdown)(true);
-    }
-
-    /// The main thread did not restart this process after all: an app host without a window (Settings kept
-    /// alive by its update job's hold, design C2) has no window to reopen and ends on its own, and its next
-    /// start runs the new build. Not lost without a trace (review m2): one log line and `shell.restartDeferred
-    /// {wait:'exit'}`, and the state is cleared, so a later `shell.restartAll` is honoured again.
-    fn restart_dropped(&self, nonce: &str) {
-        {
-            let mut state = self.restart.lock().unwrap_or_else(|e| e.into_inner());
-            state.scheduled = None;
-            state.sent = None;
-            state.deferred = None;
-            state.announced = None;
-            state.exited.clear();
-        }
-        eprintln!(
-            "Win11 restart: {} has no window; it keeps running until its work ends and starts the new build next time",
-            self.ctx.kind
-        );
-        self.ctx.emit(
-            DEFERRED,
-            json!({"nonce":nonce,"pid":std::process::id(),"kind":self.ctx.kind,"wait":"exit"}),
-        );
     }
 }
 
@@ -562,21 +530,9 @@ mod tests {
             "a Settings that is not the origin"
         );
         assert_eq!(plan("panel", false), ms(1200));
-        assert_eq!(
-            plan("settings", true),
-            ms(2000),
-            "the origin goes last"
-        );
-        assert_eq!(
-            plan("taskmgr", true),
-            ms(2000),
-            "any origin goes last"
-        );
-        assert_eq!(
-            plan("picker", false),
-            Plan::Exit,
-            "win11-file-portal exits"
-        );
+        assert_eq!(plan("settings", true), ms(2000), "the origin goes last");
+        assert_eq!(plan("taskmgr", true), ms(2000), "any origin goes last");
+        assert_eq!(plan("picker", false), Plan::Exit, "win11-file-portal exits");
         // the order of design §5 holds for every pair
         let order = [
             plan("explorer", false),
@@ -964,43 +920,6 @@ mod tests {
             1,
             "one call sent it, the others answered pending"
         );
-        finish(root, core);
-    }
-
-    #[test]
-    fn a_host_that_does_not_restart_after_all_says_so_and_takes_a_later_restart() {
-        let _serial = crate::RESTART_TESTS
-            .lock()
-            .unwrap_or_else(|e| e.into_inner());
-        let (root, core, restarts) = receiver("dropped");
-        let (deferred_tx, deferred) = mpsc::channel();
-        let deferred_tx = Mutex::new(deferred_tx);
-        core.ctx.events.on(
-            DEFERRED,
-            Arc::new(move |data| {
-                let _ = deferred_tx.lock().unwrap().send(data.clone());
-            }),
-        );
-        core.ctx
-            .events
-            .emit_local(EVENT, json!({"nonce":"n1","origin":1,"at":1}));
-        assert_eq!(restarts.recv_timeout(Duration::from_secs(3)), Ok(true));
-        // the main thread finds no window (lib.rs restart_on_main, an app host kept alive by a hold)
-        assert!(crate::drop_restart_all(), "a plan to drop");
-        let note = deferred.recv_timeout(Duration::from_secs(2)).unwrap();
-        assert_eq!(
-            (note["nonce"].as_str(), note["wait"].as_str()),
-            (Some("n1"), Some("exit"))
-        );
-        assert!(core.restart.lock().unwrap().under_way().is_none());
-        assert_eq!(crate::take_restart_all(), None, "the plan is gone");
-        // a later restartAll is honoured again (it was ignored for good before, review m2)
-        core.ctx
-            .events
-            .emit_local(EVENT, json!({"nonce":"n2","origin":1,"at":2}));
-        assert_eq!(restarts.recv_timeout(Duration::from_secs(3)), Ok(true));
-        assert!(crate::take_restart_all().is_some());
-        assert!(!crate::drop_restart_all(), "nothing left to drop");
         finish(root, core);
     }
 

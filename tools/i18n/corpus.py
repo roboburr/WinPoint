@@ -4,23 +4,22 @@ to Win11 voor GNOME in GE0a, notes/claude/round0/ge0a.md).
     from corpus import load            (tools/i18n/ on sys.path)
     texts = load(ROOT)                 [Text(lang, text, file, line, key, kind)], nl and en
 
-Sources: every UI ``makeT`` dictionary value (plural forms, function strings and template text included), every
-inline ``{nl, en}`` pair and settings-registry ``P()`` title/description/keywords (all from ``jsdicts.mjs``, so node
-is needed: ``$NODE`` or the PATH), the nl/en columns of every ``i18n/**/*.tsv`` row (none yet at 3b898e6; GE1b
-adds ``i18n/host/*.tsv``), and the Rust host's embedded JSON ``{nl, en}`` tables (``paths.HOST_JSON_TABLES``: sysmon,
-disks, storage, system; H read Python ``_STR`` dicts instead). ``kind`` is ``dict``, ``obj`` (an inline pair),
-``P``, ``tsv`` or ``str``. Used by dutch_words.py (the vocabulary of the ratchet scans) and glossary.py.
+Sources: every nl/en pair of the native GTK 4 programs (shell, Calendar, kit, the seven apps: their calls, match
+tables, row tables, the settings registry's titles, descriptions and keywords, NL/EN arrays and JSON objects, read by
+check_native.py; ``kind`` is the pair's kind, ``keywords`` for a search list), the nl/en columns of every
+``i18n/**/*.tsv`` row (none: the host's catalogues are host/i18n, read by check_rust.py), and the Rust host's
+embedded JSON ``{nl, en}`` tables (``paths.HOST_JSON_TABLES``: sysmon, disks, storage, system; H read Python
+``_STR`` dicts instead; ``kind`` ``str``). Used by dutch_words.py (the vocabulary of the Dutch word test),
+glossary.py and check_rust.py (the label rule).
 
-Dropped from H: the Python host ``_STR`` reader (G's host is Rust).
+Dropped from H: the Python host ``_STR`` reader (G's host is Rust). Dropped with the WebKit apps: the UI dictionaries
+of the HTML apps (jsdicts.mjs, node; ``git show last-webkit:tools/i18n/corpus.py``).
 """
 
 from __future__ import annotations
 
 import json
-import os
 import re
-import shutil
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -28,7 +27,6 @@ import paths
 
 HERE = paths.HERE
 ROOT = paths.ROOT
-UI_PREFIX = paths.UI_REL + "/"
 PH = re.compile(r"\{[A-Za-z_]\w*\}|\$\{[^}]*\}|\$\{…\}")
 
 
@@ -42,58 +40,16 @@ class Text:
     kind: str
 
 
-def find_node() -> str | None:
-    cand = os.environ.get("NODE") or shutil.which("node")
-    if cand:
-        return cand
-    for p in (Path.home() / ".local/node/bin/node", Path("/home/robin/.local/node/bin/node"),
-              Path("/opt/node/bin/node")):                      # (a sandbox may bind node at either place)
-        if p.exists():
-            return str(p)
-    return None
-
-
-def jsdicts(root: Path, node: str | None = None) -> dict:
-    node = node or find_node()
-    if not node:
-        raise RuntimeError("node not found (set $NODE): the UI dictionaries are read with tools/i18n/jsdicts.mjs")
-    r = subprocess.run([node, str(HERE / "jsdicts.mjs"), str(paths.ui_js(root))], capture_output=True, text=True,
-                       timeout=300)
-    if r.returncode != 0:
-        raise RuntimeError(f"jsdicts.mjs failed ({r.returncode}): {r.stderr[-2000:]}")
-    return json.loads(r.stdout)
-
-
-def _strings(v) -> list[str]:
-    """All literal text of one jsdicts value."""
-    if not isinstance(v, dict):
-        return [v] if isinstance(v, str) else []
-    if "s" in v:
-        return [v["s"]]
-    if "plural" in v:
-        return [s for f in v["plural"].values() for s in _strings(f)]
-    if "fn" in v:
-        return [s for s in v["fn"] if isinstance(s, str)]
-    return [s for s in v.get("strings") or [] if isinstance(s, str)]
-
-
-def ui_texts(root: Path, data: dict | None = None) -> list[Text]:
-    data = data if data is not None else jsdicts(root)
+def native_texts(root: Path) -> list[Text]:
+    import check_native  # noqa: PLC0415  (it imports check, which imports this module)
+    pairs, _ = check_native.read_pairs(root)
     out: list[Text] = []
-    for d in data.get("dicts", []):
-        for lang, entries in (d.get("langs") or {}).items():
-            if lang not in ("nl", "en"):
-                continue
-            for key, v in entries.items():
-                for s in _strings(v):
-                    out.append(Text(lang, s, UI_PREFIX + d["file"], (v or {}).get("line", d["line"]), key, "dict"))
-    for p in data.get("pairs", []):
-        for lang in ("nl", "en"):
-            v = p.get(lang)
-            vals = v if isinstance(v, list) else [v]
-            for s in vals:
-                if isinstance(s, str):
-                    out.append(Text(lang, s, UI_PREFIX + p["file"], p["line"], p.get("what") or "", p["kind"]))
+    for p in pairs:
+        kind = "keywords" if p.keywords else p.kind
+        for lang, v in (("nl", p.nl), ("en", p.en)):
+            for s in v if isinstance(v, list) else [v]:
+                if isinstance(s, str) and s:
+                    out.append(Text(lang, s, p.file, p.line, p.key, kind))
     return out
 
 
@@ -141,9 +97,9 @@ def host_str_texts(root: Path) -> list[Text]:
     return out
 
 
-def load(root: Path | str = ROOT, data: dict | None = None) -> list[Text]:
+def load(root: Path | str = ROOT) -> list[Text]:
     root = Path(root)
-    return ui_texts(root, data) + tsv_texts(root) + host_str_texts(root)
+    return native_texts(root) + tsv_texts(root) + host_str_texts(root)
 
 
 WORD = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ]+(?:['’][a-zë]+)?")

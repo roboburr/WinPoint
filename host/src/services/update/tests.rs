@@ -1440,8 +1440,9 @@ fn the_file_watch_sees_only_the_watched_files() {
     assert!(restart::Watch::new(&[f.base.join("missing/x")]).is_none(), "no directory to watch");
 }
 
-/// Today's real noise (libpcre2, gvfs, memfd, a cache file) never counts; a deleted libsoup in a WebKit child
-/// of a Win11 process is the `soup` InfoBar; a deleted gnome-shell in gnome-shell is the hero restart.
+/// Today's real noise (libpcre2, gvfs, memfd, a cache file) never counts; a deleted GTK 4 in a native Win11 app is
+/// the `gtk4` InfoBar; a deleted gnome-shell in gnome-shell is the hero restart. Only our own programs are read,
+/// not their children, and not the Calendar, which `shell.restartAll` does not restart.
 #[test]
 fn the_maps_scan_on_a_fixture_procfs() {
     let f = Fixture::new("maps");
@@ -1468,52 +1469,48 @@ fn the_maps_scan_on_a_fixture_procfs() {
     write(&shell.join("comm"), "gnome-shell\n");
     write(&shell.join("maps"), "5600-5700 r-xp 00000000 08:02 21 /usr/bin/gnome-shell (deleted)\n");
     write(&shell.join("cgroup"), "0::/user.slice/user-1000.slice/session-2.scope\n");
-    assert_eq!(restart::scan(&setup.paths, uid, &own_dir, &[]), restart::Scan::default(), "noise only");
-    // now the real cgroup, and a WebKit child of the panel mapping a deleted libsoup
+    assert_eq!(restart::scan(&setup.paths, uid, &own_dir), restart::Scan::default(), "noise only");
+    // now the real cgroup, and a native Settings mapping a deleted GTK 4
     write(&shell.join("cgroup"), "0::/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service\n");
-    let child = proc.join("101");
+    let settings = proc.join("101");
+    write(&settings.join("status"), &status(1));
+    write(&settings.join("comm"), "win11-gtk-setti\n");
+    write(&settings.join("maps"), &format!("{noise}7f10-7f11 r-xp 00000000 08:02 31 /usr/lib/x86_64-linux-gnu/libgtk-4.so.1.2200.4 (deleted)\n"));
+    std::os::unix::fs::symlink(own_dir.join("win11-gtk-settings"), settings.join("exe")).unwrap();
+    // a child of the panel that is no program of ours (a terminal it started) is not read
+    let child = proc.join("102");
     write(&child.join("status"), &status(100));
-    write(&child.join("comm"), "WebKitWebProces\n");
-    write(&child.join("maps"), &format!("{noise}7f10-7f11 r-xp 00000000 08:02 31 /usr/lib/x86_64-linux-gnu/libsoup-3.0.so.0.7.4 (deleted)\n"));
+    write(&child.join("comm"), "ptyxis\n");
+    write(&child.join("maps"), "7f-80 r-xp 0 08:02 41 /usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2400.52 (deleted)\n");
+    std::os::unix::fs::symlink(f.base.join("usr-bin/ptyxis"), child.join("exe")).unwrap();
     // a process of another user is never scanned
     let other = proc.join("300");
-    write(&other.join("status"), "Name:\tx\nPPid:\t100\nUid:\t0\t0\t0\t0\n");
-    write(&other.join("comm"), "WebKitWebProces\n");
-    write(&other.join("maps"), "7f-80 r-xp 0 08:02 41 /usr/lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0 (deleted)\n");
-    let scan = restart::scan(&setup.paths, uid, &own_dir, &[]);
+    write(&other.join("status"), "Name:\tx\nPPid:\t1\nUid:\t0\t0\t0\t0\n");
+    write(&other.join("comm"), "win11-panel\n");
+    write(&other.join("maps"), "7f-80 r-xp 0 08:02 41 /usr/lib/x86_64-linux-gnu/libcairo.so.2.11800.0 (deleted)\n");
+    std::os::unix::fs::symlink(own_dir.join("win11-panel"), other.join("exe")).unwrap();
+    let scan = restart::scan(&setup.paths, uid, &own_dir);
     assert!(scan.gnome);
-    assert_eq!(scan.shell_parts, ["soup"]);
+    assert_eq!(scan.shell_parts, ["gtk4"]);
     assert_eq!(scan.json()["shell"], true);
     // our own binary replaced: "self"
     fs::remove_file(panel.join("exe")).unwrap();
     std::os::unix::fs::symlink(format!("{} (deleted)", own_dir.join("win11-panel").display()), panel.join("exe")).unwrap();
-    assert_eq!(restart::scan(&setup.paths, uid, &own_dir, &[]).shell_parts, ["self", "soup"]);
-    // unreadable child maps: the history fallback names packages updated after the child started
-    write(&child.join("maps"), "");
-    write(&child.join("stat"), "101 (WebKitWebProces) S 100 1 1 0 -1 0 0 0 0 0 0 0 0 0 20 0 1 0 1000 0 0\n");
-    write(&proc.join("stat"), "cpu 1 2 3\nbtime 1762300000\n");
-    let hz = unsafe { libc::sysconf(libc::_SC_CLK_TCK) } as u64;
-    let started = 1762300000 * 1000 + 1000 * 1000 / hz;
-    let history = vec![
-        restart::HistoryBlock { start_ms: started - 1, packages: vec!["libgtk-3-0t64".into()] },
-        restart::HistoryBlock { start_ms: started + 60_000, packages: vec!["libwebkit2gtk-4.1-0".into(), "zlib1g".into()] },
-    ];
-    assert_eq!(restart::scan(&setup.paths, uid, &own_dir, &history).shell_parts, ["self", "webkit"]);
-}
-
-#[test]
-fn apt_history_blocks_are_parsed() {
-    let text = "\nStart-Date: 2026-11-05  06:53:40\nCommandline: /usr/bin/unattended-upgrade\n\
-Upgrade: libsoup-3.0-0:amd64 (3.6.6-1ubuntu0.1, 3.6.6-1ubuntu0.2), libsoup-3.0-common:amd64 (3.6.6-1ubuntu0.1, 3.6.6-1ubuntu0.2)\n\
-End-Date: 2026-11-05  06:53:43\n\nStart-Date: 2026-11-05  06:54:10\nInstall: linux-image-7.0.0-44-generic:amd64 (7.0.0-44.44, automatic)\n\
-End-Date: 2026-11-05  06:55:00\n";
-    let blocks = restart::parse_history(text);
-    assert_eq!(blocks.len(), 2);
-    assert_eq!(blocks[0].packages, ["libsoup-3.0-0", "libsoup-3.0-common"]);
-    assert_eq!(blocks[1].packages, ["linux-image-7.0.0-44-generic"]);
-    assert_eq!(blocks[1].start_ms - blocks[0].start_ms, 30_000);
-    assert_eq!(restart::history_parts(&blocks, blocks[0].start_ms).into_iter().collect::<Vec<_>>(), ["soup"]);
-    assert!(restart::history_parts(&blocks, blocks[1].start_ms + 1).is_empty());
+    assert_eq!(restart::scan(&setup.paths, uid, &own_dir).shell_parts, ["gtk4", "self"]);
+    // unreadable maps add nothing (the replaced binary still counts)
+    write(&settings.join("maps"), "");
+    assert_eq!(restart::scan(&setup.paths, uid, &own_dir).shell_parts, ["self"]);
+    // the Calendar is ours but shell.restartAll cannot restart it: its deleted GTK 4 and its own replaced binary
+    // add nothing, or the InfoBar would stay while it is open
+    let calendar = proc.join("103");
+    write(&calendar.join("status"), &status(1));
+    write(&calendar.join("comm"), "win11-calendar\n");
+    write(&calendar.join("maps"), "7f10-7f11 r-xp 00000000 08:02 31 /usr/lib/x86_64-linux-gnu/libgtk-4.so.1.2200.4 (deleted)\n");
+    std::os::unix::fs::symlink(format!("{} (deleted)", own_dir.join("win11-calendar").display()), calendar.join("exe")).unwrap();
+    assert_eq!(restart::scan(&setup.paths, uid, &own_dir).shell_parts, ["self"]);
+    fs::remove_file(panel.join("exe")).unwrap();
+    std::os::unix::fs::symlink(own_dir.join("win11-panel"), panel.join("exe")).unwrap();
+    assert!(restart::scan(&setup.paths, uid, &own_dir).shell_parts.is_empty(), "only the Calendar is replaced");
 }
 
 // ------------------------------------------------------------------------------------- snapshot view
@@ -1717,18 +1714,15 @@ fn checking_counts_only_while_its_owner_lives() {
     assert_eq!(f.stub_log(), "");
 }
 
-/// GW3 D1 / D-G41: `restart.shellParts` carries the page's component codes (`update.js` PART), one per watched
-/// library, and every code the scan can produce is one the page knows.
+/// GW3 D1 / D-G41: `restart.shellParts` carries the page's component codes (native/apps/settings/src/pages/update.rs
+/// `part_name`), one per watched library, and every code the scan can produce is one the page knows.
 #[test]
 fn shell_parts_use_the_page_codes() {
     let lib = ["", "usr", "lib", "x86_64-linux-gnu"].join("/");
     let maps: String = [
-        "libwebkit2gtk-4.1.so.0.20.6",
-        "libjavascriptcoregtk-4.1.so.0.9.6",
-        "webkit2gtk-4.1/injected-bundle/libwebkit2gtkinjectedbundle.so",
+        "libgtk-4.so.1.2200.4",
         "libgtk-3.so.0.2400.52",
         "libgdk-3.so.0.2400.52",
-        "libsoup-3.0.so.0.7.4",
         "libglib-2.0.so.0.8800.0",
         "libgobject-2.0.so.0.8800.0",
         "libgio-2.0.so.0.8800.0",
@@ -1740,23 +1734,20 @@ fn shell_parts_use_the_page_codes() {
     .map(|name| format!("7f00-7f01 r-xp 00000000 08:02 11 {lib}/{name} (deleted)\n"))
     .collect();
     let parts: Vec<&str> = restart::shell_parts_in(&maps).into_iter().collect();
-    assert_eq!(parts, ["archive", "cairo", "gdk", "gio", "glib", "gobject", "gtk", "jsc", "pixbuf", "soup", "webkit"]);
-    // one library alone gives its own code (no folding into webkit/gtk/glib any more)
-    for (name, code) in [("libjavascriptcoregtk-4.1.so.0", "jsc"), ("libgdk-3.so.0", "gdk"), ("libgio-2.0.so.0", "gio"), ("libgobject-2.0.so.0", "gobject")] {
+    // a replaced GTK 3 is no part of ours (no binary links it since 14-11)
+    assert_eq!(parts, ["archive", "cairo", "gio", "glib", "gobject", "gtk4", "pixbuf"]);
+    // one library alone gives its own code (no folding into gtk/glib any more)
+    for (name, code) in [("libgtk-4.so.1", "gtk4"), ("libgdk_pixbuf-2.0.so.0", "pixbuf"), ("libgio-2.0.so.0", "gio"), ("libgobject-2.0.so.0", "gobject")] {
         let one = format!("7f00-7f01 r-xp 00000000 08:02 11 {lib}/{name} (deleted)\n");
         assert_eq!(restart::shell_parts_in(&one).into_iter().collect::<Vec<_>>(), [code]);
     }
-    // the history fallback names JavaScriptCore by its own code too
-    let blocks = vec![restart::HistoryBlock { start_ms: 10, packages: vec!["libjavascriptcoregtk-4.1-0".into(), "libgtk-3-0t64".into()] }];
-    assert_eq!(restart::history_parts(&blocks, 5).into_iter().collect::<Vec<_>>(), ["gtk", "jsc"]);
-    // the page's PART table holds every code the host sends (and "self" for a replaced own binary); skipped
-    // outside the repository (a crate-only source tarball has no vendor/ui)
-    let page = Path::new(env!("CARGO_MANIFEST_DIR")).join("../vendor/ui/js/apps/settings/pages/update.js");
-    if let Ok(page) = fs::read_to_string(page) {
-        let table = page.split("const PART = {").nth(1).and_then(|t| t.split("};").next()).expect("update.js PART table");
-        for code in parts.iter().copied().chain(["self"]) {
-            assert!(table.contains(&format!("{code}: 'c")), "update.js PART lacks {code}");
-        }
+    // the page's part_name names every code the host sends (and "self" for a replaced own binary); the page is
+    // part of the repository, so a missing file fails
+    let page = Path::new(env!("CARGO_MANIFEST_DIR")).join("../native/apps/settings/src/pages/update.rs");
+    let page = fs::read_to_string(&page).unwrap_or_else(|e| panic!("{}: {e}", page.display()));
+    let table = page.split("fn part_name(").nth(1).and_then(|t| t.split("\n}\n").next()).expect("update.rs part_name");
+    for code in parts.iter().copied().chain(["self"]) {
+        assert!(table.contains(&format!("\"{code}\"")), "update.rs part_name lacks {code}");
     }
 }
 

@@ -1,5 +1,7 @@
 # Herhaalde regressiecontroles — versie 0.5.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Op 1 november 2026 zijn de bestaande 34 bestandsregressiegevallen opnieuw uitgevoerd tegen de uiteindelijke `target/debug`-binaries, na toevoeging van native mapbewaking en het filter voor oorspronkelijke Python-mapmeldingen. Alle 34 gevallen slagen. De bestaande harness uit `work/files-regression-0.4/run.py` is gekopieerd naar `work/files-regression-0.5/run.py`; alleen de versie in de resultaatmetadata is gewijzigd naar `0.5.0`.
 
 De meting herhaalt onder andere HTTP/RPC-grenzen, volledige metadata- en foutenvergelijkingen met de oorspronkelijke Python-dienst, veilig aanmaken en hernoemen, gelijktijdige naamsconflicten, recursief kopiëren en verplaatsen, gedeeltelijk succes, een echte verplaatsing tussen bestandssystemen en voortgangsgebeurtenissen. Kopiëren en knippen tussen afzonderlijke Verkenners, plakken via de oorspronkelijke UI-handler, automatisch verversen via SSE, de 700-bestandselectie en de gerichte klembordvolgordegevallen blijven werken. Sluiten via de bestaande captionknop tijdens een kopie van 10.000 bestanden eindigt met alle bron- en doelbestanden intact en exitcode 0.

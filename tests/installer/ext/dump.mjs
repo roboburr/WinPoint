@@ -97,7 +97,6 @@ const windows = list => () => { world.actors = list.map(w => ({meta_window: w}))
 const reset = () => { Main.sessionMode.hasWindows = true; world.actors = []; };
 
 function failures(prefix) {
-    const explorer = 'io.github.win11shell.Explorer';
     const f = (id, method, args, setup, teardown = reset) => failure(prefix, id, method, args, setup, teardown);
     f('argsObject', 'windows.list', '[1]');
     f('offline', 'windows.list', {}, () => {}, reset);
@@ -108,7 +107,6 @@ function failures(prefix) {
     f('sessionStart', 'panel.toggleStart', {}, session(false));
     f('sessionApps', 'apps.activationToken', {app: 'explorer'}, session(false));
     f('panelMissing', 'panel.keyboard', {exclusive: true}, session(false));
-    f('sessionLocked', 'windows.hostState', {pid: 1, appId: explorer}, session(false));
     f('sessionWindows', 'windows.focus', {}, session(false));
     f('sessionUnavailable', 'windows.showDesktop', {}, session(false));
     f('startMissing', 'panel.toggleStart', {});
@@ -118,16 +116,8 @@ function failures(prefix) {
     // panel.power is newer than 3b898e6 (an unknown method there): its own key, outside the unchanged-code rule
     const power = call('panel.power', {action: 'zap'});
     emit(`${prefix}added.powerAction`, power?.ok === false ? `${power.error.code}\t${power.error.message}` : `ok\t${JSON.stringify(power)}`);
-    f('badHost', 'windows.hostState', {pid: 'x'});
-    f('hostUnmapped', 'windows.hostState', {pid: 999, appId: explorer});
-    f('hostUnpainted', 'windows.hostRestore', {pid: 4242, appId: explorer}, windows([fakeWindow({mapped: false})]));
-    f('badGeometry', 'windows.hostRestore', {pid: 4242, appId: explorer}, windows([fakeWindow()]));
-    const primary = Main.layoutManager.primaryMonitor;
-    f('noDisplay', 'windows.hostRestore', {pid: 4242, appId: explorer, rect: {x: 9000, y: 9000, w: 500, h: 500}},
-        () => { windows([fakeWindow()])(); Main.layoutManager.primaryMonitor = null; },
-        () => { Main.layoutManager.primaryMonitor = primary; reset(); });
-    f('waitFrame', 'windows.hostRestore', {pid: 4242, appId: explorer, rect: {x: 20, y: 20, w: 500, h: 500}},
-        windows([fakeWindow({maximized: true})]));
+    // windows.hostState and windows.hostRestore went with the WebKit apps' window state (git tag last-webkit), and
+    // their texts with them: test_extension_text.py REMOVED_KEYS
     f('windowGone', 'windows.focus', {id: 'nope'}, windows([fakeWindow()]));
     f('explorerGone', 'explorer.tabPosition', {pid: 1});
     f('cantMinimize', 'windows.minimize', {id: '77'}, windows([fakeWindow()]));

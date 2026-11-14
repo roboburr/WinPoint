@@ -1,6 +1,5 @@
 //! Paths and URIs handed to our Explorer, grouped into the original tabs/selection format.
 use gio::prelude::*;
-use gtk::gio;
 use serde_json::{Value, json};
 use std::{
     collections::HashMap,

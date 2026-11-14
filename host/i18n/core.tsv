@@ -14,18 +14,9 @@
 # new(): ApiError "offline": a call arrived after this window's services shut down
 #@ host/src/runtime.rs 6 88af237789f3c638 plain
 core.serviceStopped	De dienst is afgesloten.	The service has shut down.
-# ui(): ApiError "surface": the GTK window behind a call (regions, file picker) is gone; no full stop in nl
-#@ host/src/runtime.rs 8 edaaa13538accfc3 plain
-core.windowClosed	Venster is gesloten	The window is closed
-# ui(): ApiError "surface": the GTK window did not answer within the time-out; no full stop in nl
-#@ host/src/runtime.rs 10 4867066e82741a30 plain
-core.windowNotResponding	Venster reageert niet	The window is not responding
 # call(): ApiError "bad_args"
 #@ host/src/runtime.rs 13 e8d6a12b8b58205f plain
 core.badArgs	Ongeldige invoer.	Invalid input.
-# call(): ApiError "bad_args": nativeBackdrop.configure takes no arguments
-#@ host/src/runtime.rs 16 2a9e6890543a4b58 plain
-core.noInput	Deze actie accepteert geen invoer.	This action doesn’t accept any input.
 # serve(): ApiError "forbidden": HTTP 403: a request from another origin
 #@ host/src/runtime.rs 70 7f1d3bc763e111b4 plain
 core.forbidden	Geen toegang.	Access denied.
@@ -59,8 +50,8 @@ core.unknownMethod	Deze functie bestaat niet.	This function doesn’t exist.
 core.starting	De dienst wordt gestart.	The service is starting.
 
 # --- host/src/lib.rs
-# native_app_switch(): one line on stderr: the native GTK 4 app win11-gtk-<kind> is not next to the host binaries, so
-# the WebKit app of that kind starts instead (it stays the fallback until WebKit is removed); {path} is the full path
-# of the missing binary
+# native_app(): one line on stderr, then exit 127: the native GTK 4 app win11-gtk-<kind> is not next to the host
+# binaries, and there is no other app to start; also portal.rs (picker.rs show_native) for a missing
+# win11-gtk-explorer. {path} is the full path of the missing binary
 #@ new
-core.nativeAppMissing	Win11 voor GNOME: {path} ontbreekt; de WebKit-versie van de app start.	Win11 for GNOME: {path} is missing; the WebKit version of the app starts instead.
+core.nativeAppMissing	Win11 voor GNOME: {path} ontbreekt; installeer WinPoint opnieuw.	Win11 for GNOME: {path} is missing; reinstall WinPoint.

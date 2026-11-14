@@ -1,6 +1,6 @@
-//! Apply the original wallpaper settings to GNOME's background as well as the
-//! separate HTML desktop. No GTK theme or other desktop preferences change.
-use gtk::{gdk, gio, prelude::*};
+//! Apply the original wallpaper settings to GNOME's background; the native desktop
+//! (win11-shell) draws the same settings itself. No GTK theme or other desktop preferences change.
+use gio::prelude::*;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 
@@ -56,7 +56,7 @@ fn image(path: &str, mode: &str, follow: bool, ui: &Path) -> Result<String, Stri
         url.to_file_path()
             .map_err(|_| "De achtergrond moet een lokaal bestand zijn.")?
     } else if let Some(rest) = path.strip_prefix("~/") {
-        gtk::glib::home_dir().join(rest)
+        glib::home_dir().join(rest)
     } else {
         PathBuf::from(path)
     };
@@ -66,10 +66,65 @@ fn image(path: &str, mode: &str, follow: bool, ui: &Path) -> Result<String, Stri
     Ok(gio::File::for_path(file).uri().to_string())
 }
 
+/// The CSS colour names (CSS Color 4), lower case.
+const CSS_COLORS: &str = "aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue \
+    blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue \
+    darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid \
+    darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink \
+    deepskyblue dimgray dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold \
+    goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory khaki lavender lavenderblush \
+    lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey \
+    lightpink lightsalmon lightseagreen lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime \
+    limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen \
+    mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin \
+    navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise \
+    palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue \
+    saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray slategrey snow \
+    springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen";
+
+/// A colour GDK 3's RGBA parser took (the check until GTK left the host, 14-11), so GNOME's primary-color gets what
+/// it got before: `#` and 3, 6, 9 or 12 hex digits, `rgb(r,g,b)` or `rgba(r,g,b,a)` (numbers; the channels may be
+/// percentages), or a colour name in any case and with spaces as Pango matched them ("dark slate gray"). An older
+/// settings.json may hold a name; only the CSS names are known here, not the rest of X11's rgb.txt.
+fn valid_color(spec: &str) -> bool {
+    if let Some(hex) = spec.strip_prefix('#') {
+        return matches!(hex.len(), 3 | 6 | 9 | 12) && hex.bytes().all(|b| b.is_ascii_hexdigit());
+    }
+    let (body, count) = match (spec.strip_prefix("rgba"), spec.strip_prefix("rgb")) {
+        (Some(body), _) => (body, 4),
+        (None, Some(body)) => (body, 3),
+        (None, None) => {
+            let name: String = spec.chars().filter(|c| *c != ' ').collect();
+            let name = name.to_ascii_lowercase();
+            return CSS_COLORS
+                .split_ascii_whitespace()
+                .any(|known| known == name);
+        }
+    };
+    let Some(inner) = body
+        .trim_start()
+        .strip_prefix('(')
+        .and_then(|rest| rest.trim_end().strip_suffix(')'))
+    else {
+        return false;
+    };
+    let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+    parts.len() == count
+        && parts.iter().enumerate().all(|(i, part)| {
+            let number = match part.strip_suffix('%') {
+                Some(number) if i < 3 => number.trim_end(),
+                _ => part,
+            };
+            number.parse::<f64>().is_ok_and(f64::is_finite)
+        })
+}
+
 fn target(settings: &Value, ui: &Path) -> Result<Background, String> {
     let wallpaper = &settings["wallpaper"];
     let color = wallpaper["color"].as_str().unwrap_or("#0b2a4a");
-    gdk::RGBA::parse(color).map_err(|_| "Ongeldige achtergrondkleur.")?;
+    if !valid_color(color) {
+        return Err("Ongeldige achtergrondkleur.".into());
+    }
     let color = color.to_owned();
     if wallpaper["type"] == "color" {
         return Ok(Background {
@@ -209,12 +264,26 @@ mod tests {
         for mode in ["light", "dark"] {
             for old in ["bloom-light", "bloom-dark"] {
                 let path = format!("builtin:{old}");
-                let follow = target(&json!({"theme":{"mode":mode},"wallpaper":{"path":path}}), &root).unwrap();
-                assert!(follow.light.ends_with(&format!("/lotus-{mode}.svg")), "{old} {mode}");
+                let follow = target(
+                    &json!({"theme":{"mode":mode},"wallpaper":{"path":path}}),
+                    &root,
+                )
+                .unwrap();
+                assert!(
+                    follow.light.ends_with(&format!("/lotus-{mode}.svg")),
+                    "{old} {mode}"
+                );
                 assert_eq!(follow.light, follow.dark);
-                let fixed = target(&json!({"theme":{"mode":mode},"wallpaper":{"path":path,"followTheme":false}}), &root).unwrap();
+                let fixed = target(
+                    &json!({"theme":{"mode":mode},"wallpaper":{"path":path,"followTheme":false}}),
+                    &root,
+                )
+                .unwrap();
                 let new = old.replace("bloom", "lotus");
-                assert!(fixed.light.ends_with(&format!("/{new}.svg")), "{old} {mode}");
+                assert!(
+                    fixed.light.ends_with(&format!("/{new}.svg")),
+                    "{old} {mode}"
+                );
             }
         }
         assert_eq!(builtin_id("bloom-dark"), "lotus-dark");
@@ -275,6 +344,47 @@ mod tests {
         }
         assert!(target(&json!({"wallpaper":{"color":"not a color"}}), &root).is_err());
         fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn the_colours_gdk_3_took_and_the_css_names_are_valid() {
+        for color in [
+            "#0b2a4a",
+            "#FFF",
+            "#0b02a04a0",
+            "#0b0b2a2a4a4a",
+            "rgb(11,42,74)",
+            "rgb ( 4%, 16 % ,29%) ",
+            "rgba(11, 42, 74, 0.5)",
+            "rgb(1.5,2,300)",
+            "navy",
+            "DarkSlateGray",
+            "dark slate gray",
+            "RebeccaPurple",
+        ] {
+            assert!(valid_color(color), "{color}");
+        }
+        for color in [
+            "",
+            "#",
+            "#12",
+            "#1234",
+            "#12345g",
+            "0b2a4a",
+            "rgb(1,2)",
+            "rgba(1,2,3)",
+            "rgb(1,2,3,4)",
+            "rgba(1,2,3,50%)",
+            "rgb(1,2,x)",
+            "rgb(inf,0,0)",
+            "rgb(1,2,3",
+            "RGB(1,2,3)",
+            "hsl(0,0%,0%)",
+            "transparent",
+            "not a color",
+        ] {
+            assert!(!valid_color(color), "{color}");
+        }
+        assert_eq!(CSS_COLORS.split_ascii_whitespace().count(), 148);
     }
     #[test]
     fn only_wallpaper_and_mode_changes_request_a_desktop_update() {

@@ -20,6 +20,8 @@
 #
 # * WIN11_CARGO_HOME / WIN11_CARGO_TARGET_DIR (optional): another cargo home (an offline crate cache) and target
 #   directory, e.g. on a second disk when the main disk is nearly full; default $HOME/.cargo and $G/target
+# * W11_TEST_BUILD_DIR (optional, passed on as an absolute path): the build directory with every scripts/install.py
+#   BINS binary that the ELF tests read (post_upgrade.rs, services/update/elf.rs); default tests/build/native-release
 #
 # Usage: tests/rust-sandbox/run-tests.sh [cargo test args]   baseline: --lib (all-targets fails to compile, see
 #        notes/claude/round0/ge0b.md); to skip a test: --lib -- --skip name
@@ -35,6 +37,7 @@ if [[ -n "${WIN11_HEAVY_HELD:-}" && "$(realpath -m "$WIN11_HEAVY_HELD")" == "$(r
   LOCKCMD=()
 fi
 REAL_HOME="${HOME:?}"
+BUILD_DIR="${W11_TEST_BUILD_DIR:+$(realpath -m -- "$W11_TEST_BUILD_DIR")}"
 
 mem_kb=$(awk '/^MemAvailable:/{print $2}' /proc/meminfo)
 if (( mem_kb < 2 * 1024 * 1024 )); then
@@ -53,7 +56,8 @@ for name in pkexec systemctl systemd-run loginctl gsettings dconf gnome-extensio
             wpctl pactl udisksctl pkill killall update-desktop-database xdg-mime \
             win11-shell win11-explorer win11-panel win11-app win11-calendar win11-launch \
             win11-index-worker win11-image-worker win11-default-apps win11-file-portal \
-            win11-installer win11-software-worker; do
+            win11-installer win11-software-worker win11-gtk-explorer win11-gtk-settings win11-gtk-taskmgr \
+            win11-gtk-alles win11-gtk-disks win11-gtk-defaultapps win11-gtk-installer; do
   cat > "$SANDBOX/guard-bin/$name" <<EOF
 #!/bin/sh
 printf '%s\t%s\n' "\$(date -Is)" "$name \$*" >> "$SANDBOX/logs/guard-calls.log"
@@ -112,6 +116,7 @@ set +e
   PATH="$SANDBOX/guard-bin:$REAL_HOME/.cargo/bin:/usr/local/bin:/usr/bin:/bin" \
   CARGO_HOME="${WIN11_CARGO_HOME:-$REAL_HOME/.cargo}" RUSTUP_HOME="$REAL_HOME/.rustup" \
   ${WIN11_CARGO_TARGET_DIR:+CARGO_TARGET_DIR="$WIN11_CARGO_TARGET_DIR"} \
+  ${BUILD_DIR:+W11_TEST_BUILD_DIR="$BUILD_DIR"} \
   HOME="$SANDBOX/home" USER="${USER:-robin}" LOGNAME="${LOGNAME:-robin}" SHELL=/bin/bash \
   LANG=en_US.UTF-8 TERM=dumb \
   XDG_CONFIG_HOME="$SANDBOX/config" XDG_DATA_HOME="$SANDBOX/data" XDG_CACHE_HOME="$SANDBOX/cache" \

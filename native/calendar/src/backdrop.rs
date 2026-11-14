@@ -6,9 +6,10 @@
 //!   -> {available, generation, serial, windows: [{pid, kind: "window", blur, shadow, focused}]}
 //!
 //! Later states come as the bridge's Event("nativeBackdrop.changed", stateJSON) signal. While the state lists
-//! this pid with blur, the window has the class `cal-glass` and its Mica is 90 % over the blur (as the HTML apps
-//! do through vendor/ui/css/native-backdrop.css); otherwise the Mica stays solid. Without the extension nothing
-//! changes. The extension blurs only the focused own window, so the state flips as the focus moves.
+//! this pid with blur, the window has the class `cal-glass` and its Mica is 90 % over the blur (as the kit's apps
+//! do, and the HTML apps did through last-webkit:vendor/ui/css/native-backdrop.css); otherwise the Mica stays
+//! solid. Without the extension nothing changes. The extension blurs only the focused own window, so the state
+//! flips as the focus moves.
 use crate::config::Config;
 use gtk::prelude::*;
 use gtk::{gio, glib};

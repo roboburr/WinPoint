@@ -230,7 +230,7 @@ fn decode(value: &str) -> Option<Vec<u8>> {
     Some(glib::base64_decode(value))
 }
 fn preview(bytes: &[u8], mime: &str) -> Option<String> {
-    use gtk::gdk_pixbuf::{self, prelude::*};
+    use gdk_pixbuf::prelude::*;
     if !["image/png", "image/jpeg", "image/gif", "image/webp"].contains(&mime) {
         return None;
     }

@@ -1,7 +1,7 @@
 //! Process setup (`kit::run`): GSK_RENDERER=cairo unless set or WIN11_APP_GL=1 (RAM; with cairo, manual font
-//! rendering), the prgname and GApplication id (= the Wayland app id the extension knows the window by),
-//! HANDLES_COMMAND_LINE so a second launch reaches the running process, and at startup: the settings, the theme,
-//! the backend, the dev channel.
+//! rendering) and GDK_DEBUG=portals unless set ([`own_environment`]), the prgname and GApplication id (= the
+//! Wayland app id the extension knows the window by), HANDLES_COMMAND_LINE so a second launch reaches the running
+//! process, and at startup: the settings, the theme, the backend, the dev channel.
 //!
 //! Restarts (`shell.restartAll` of Windows Update, `shell.restart`): the backend never restarts itself; it ends with
 //! a restart note (backend.rs) and [`backend_restarted`] asks the app's [`on_restart`] hook what to do: exec itself
@@ -222,16 +222,46 @@ fn exec_self(app: &gtk::Application, args: &[String], token: Option<&str>) -> st
     command.exec()
 }
 
+/// The GTK switches an app sets for itself. GSK_RENDERER=cairo unless set or WIN11_APP_GL=1 (RAM). GDK_DEBUG=portals
+/// unless set: outside a sandbox GTK 4 shows its own file dialog in this process; with the flag, GTK's file dialog
+/// asks the desktop's FileChooser portal as a Flatpak app's does (Win11's picker when the portal configuration
+/// chooses it; tests/gnome/scenarios/r2d-picker.py). The portal's own picker gets GDK_DEBUG=no-portals (host
+/// picker.rs). The user's values go into WIN11SHELL_USER_GPU (unless a WinPoint parent passed its marker on), so the
+/// backend gives an app it launches those and not ours (host files/actions.rs GPU_KEYS).
+///
+/// # Safety
+/// Changes the process environment: no other thread may run.
+unsafe fn own_environment() {
+    let mut own = Vec::new();
+    if std::env::var_os("GSK_RENDERER").is_none() && std::env::var("WIN11_APP_GL").as_deref() != Ok("1") {
+        own.push(("GSK_RENDERER", "cairo"));
+    }
+    if std::env::var_os("GDK_DEBUG").is_none() {
+        own.push(("GDK_DEBUG", "portals"));
+    }
+    if own.is_empty() {
+        return;
+    }
+    if std::env::var_os("WIN11SHELL_USER_GPU").is_none() {
+        let user: serde_json::Map<String, serde_json::Value> = ["GSK_RENDERER", "GDK_DEBUG"]
+            .into_iter()
+            .filter_map(|key| Some((key.to_owned(), std::env::var(key).ok()?.into())))
+            .collect();
+        unsafe { std::env::set_var("WIN11SHELL_USER_GPU", serde_json::Value::Object(user).to_string()) };
+    }
+    for (key, value) in own {
+        unsafe { std::env::set_var(key, value) };
+    }
+}
+
 /// Run the app: `handler(ctx, args, first)` runs for every launch, the first one and each later one handed over
 /// by a second process (`args` are argv[1..] of that launch, `first` is true once). The app decides about
 /// windows; create the first one synchronously in the handler (or hold the application while waiting), or the
 /// process ends when the handler returns without a window. `--help` / `-h` print `spec.usage` (also without a
 /// display) and never reach the handler.
 pub fn run(spec: AppSpec, handler: impl Fn(&Rc<Ctx>, Vec<String>, bool) + 'static) -> glib::ExitCode {
-    if std::env::var_os("GSK_RENDERER").is_none() && std::env::var("WIN11_APP_GL").as_deref() != Ok("1") {
-        // SAFETY: first thing in main, before GTK or any other thread starts.
-        unsafe { std::env::set_var("GSK_RENDERER", "cairo") };
-    }
+    // SAFETY: first thing in main, before GTK or any other thread starts.
+    unsafe { own_environment() };
     let argv: Vec<String> = std::env::args().skip(1).collect();
     if argv.iter().any(|a| a == "--help" || a == "-h") {
         print!("{}", spec.help());

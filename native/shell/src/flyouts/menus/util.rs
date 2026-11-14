@@ -94,7 +94,7 @@ pub fn icon(shell: &Shell, src: &str, px: i32) -> gtk::Image {
     image
 }
 
-/// shell.openApp {app, params}: our own HTML apps (settings, taskmgr, explorer, alles, disks).
+/// shell.openApp {app, params}: our own apps (settings, taskmgr, explorer, alles, disks).
 pub fn open_app(shell: &Shell, app: &str, params: Value) {
     shell.fire("shell.openApp", json!({"app": app, "params": params}));
 }

@@ -77,8 +77,6 @@ const SYSTEM_TOOLS: &[(Tool, &str, &str)] = &[
 ];
 /// The soname directory (compat, post-upgrade check); re-rooted in test mode.
 const SONAME_DIR: &str = "/usr/lib/x86_64-linux-gnu";
-/// WebKitGTK's helper programs (a WebKit child of ours, design §4.8).
-pub(crate) const WEBKIT_EXE_DIR: &str = "/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/";
 /// Deleted mappings in the running gnome-shell that need a reboot (design §4.8 `gnome` list).
 pub(crate) const GNOME_MAPS: &[&str] = &[
     "/usr/bin/gnome-shell",
@@ -88,15 +86,11 @@ pub(crate) const GNOME_MAPS: &[&str] = &[
     "/usr/lib/x86_64-linux-gnu/mutter-",
 ];
 /// Deleted mappings in our own processes that need a Win11 restart (design §4.8 `shell` list), by the component
-/// code the page reads in `restart.shellParts` (`update.js` PART: webkit, jsc, gtk, gdk, soup, glib, gio, gobject,
-/// pixbuf, cairo, archive, and `self` for a replaced own binary; GW3 D1, D-G41).
+/// code the page reads in `restart.shellParts` (native/apps/settings/src/pages/update.rs `part_name`: gtk4, glib,
+/// gio, gobject, pixbuf, cairo, archive, and `self` for a replaced own binary; GW3 D1, D-G41). GTK 3 is not ours
+/// since 14-11 (no binary links it), so its update needs no Win11 restart.
 pub(crate) const SHELL_MAPS: &[(&str, &str)] = &[
-    ("libwebkit2gtk-4.1.so", "webkit"),
-    ("libjavascriptcoregtk-4.1.so", "jsc"),
-    ("/webkit2gtk-4.1/", "webkit"),
-    ("libgtk-3.so", "gtk"),
-    ("libgdk-3.so", "gdk"),
-    ("libsoup-3.0.so", "soup"),
+    ("libgtk-4.so", "gtk4"),
     ("libglib-2.0.so", "glib"),
     ("libgobject-2.0.so", "gobject"),
     ("libgio-2.0.so", "gio"),

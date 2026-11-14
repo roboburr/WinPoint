@@ -20,7 +20,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use std::time::Duration;
 
-/// The default timeout per method (ms); 0 = none (a native dialog that waits for the user).
+/// The default timeout per method (ms); 0 = none.
 pub fn timeout_of(method: &str) -> u64 {
     match method {
         "sysmon.processes" | "sysmon.performance" => 4000,
@@ -37,7 +37,6 @@ pub fn timeout_of(method: &str) -> u64 {
         "storage.cleanup.list" => 30000,
         "storage.cleanup.run" => 180000,
         "files.trash" => 60000,
-        "shell.pickFile" => 0,
         _ => DEFAULT_TIMEOUT,
     }
 }

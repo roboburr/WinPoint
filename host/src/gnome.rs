@@ -1,5 +1,5 @@
 //! GNOME Shell bridge: calls into the extension and the event relay of its signals.
-use gtk::{gio, prelude::*};
+use gio::prelude::*;
 use serde_json::Value;
 
 pub const SERVICE: &str = "io.github.win11shell.GnomeBridge";
@@ -60,37 +60,6 @@ fn call_raw(method: &str, args: &Value, lang: crate::i18n::Lang) -> Result<Value
     let value: Value =
         serde_json::from_str(&encoded).map_err(|error| crate::i18n::trf(lang, "gnome.invalidJson", &serde_json::json!({"error": error.to_string()})))?;
     Ok(value)
-}
-
-/// This host, rather than browser-supplied identity, selects its own compositor capability.
-pub(crate) fn configure_backdrop(kind: &str, gui: bool, settings: &Value) -> Value {
-    let pid = std::process::id();
-    let opaque = || serde_json::json!({"available":false,"pid":pid,"windows":[]});
-    if !gui
-        || !matches!(
-            kind,
-            "explorer"
-                | "settings"
-                | "taskmgr"
-                | "disks"
-                | "defaultapps"
-                | "installer"
-                | "alles"
-        )
-    {
-        return opaque();
-    }
-    let args = serde_json::json!({"pid":pid,"kind":kind,
-        "transparency":settings["theme"]["transparency"] != false,
-        "highContrast":settings["accessibility"]["highContrast"] == true,
-        "autoHide":settings["taskbar"]["autoHide"] == true});
-    match call("nativeBackdrop.configure", &args) {
-        Ok(mut state) => {
-            state["pid"] = serde_json::json!(pid);
-            state
-        }
-        Err(_) => opaque(),
-    }
 }
 
 /// GNOME events that reach the event stream. Only the panel (win11-shell's backend) asks for the window list:

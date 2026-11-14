@@ -1,6 +1,6 @@
-//! The desktop (D-G63 step 4), ported from vendor/ui/js/desktop/ (desktop.js, wallpaper.js, menus.js): the
-//! wallpaper, the icons of ~/Bureaublad with This PC and the Recycle Bin, selection, rubber band, drag to move,
-//! inline rename, the Win11 context menus, a toast with Undo and a small Properties dialog.
+//! The desktop (D-G63 step 4), ported from `git show 418ea594:vendor/ui/js/desktop/` (desktop.js, wallpaper.js,
+//! menus.js): the wallpaper, the icons of ~/Bureaublad with This PC and the Recycle Bin, selection, rubber band, drag
+//! to move, inline rename, the Win11 context menus, a toast with Undo and a small Properties dialog.
 //!
 //! The desktop is its own toplevel, a plain gtk::Window and not an ApplicationWindow: the GtkApplication's ID is
 //! the panel's, and the extension tells our surfaces apart by application ID. It carries the Wayland app ID
@@ -111,7 +111,7 @@ fn watch_bridge() {
 }
 
 /// desktop.ready {pid} once the first frame is drawn, then every 2 s while the window lives (the extension
-/// re-registers after its bridge was away, as the WebKit desktop's adapter does).
+/// re-registers after its bridge was away, as the WebKit desktop's adapter did).
 fn report_ready(desk: &Rc<grid::Desk>) {
     let weak = Rc::downgrade(desk);
     let handler: Rc<RefCell<Option<(gdk::FrameClock, glib::SignalHandlerId)>>> = Rc::new(RefCell::new(None));

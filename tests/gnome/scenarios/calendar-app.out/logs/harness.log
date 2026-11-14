@@ -1,24 +1,23 @@
-21:48:34 GE0c run lang=nl switch=False seed=defaults MemAvailable=3623452 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py
-21:50:00 private install: exit 0 in 70.6 s, 87828 mutated paths, 0 outside the run dir, ok=True
-21:50:03 GStreamer registry warmed in 3.1 s (['gst-inspect-1.0 version 1.28.2'])
-21:50:08 GNOME Shell 50.1 up (mode user, unsafe True)
-21:50:13 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py
-21:50:13   check PASS: P: win11-calendar is installed in the private prefix
-21:50:13   check PASS: P: the Calendar desktop entry handles win11-calendar: and starts the private binary
-21:50:13   check PASS: P: GNOME knows io.github.win11shell.Calendar.desktop
-21:50:13   check PASS: P: win11-calendar: opens the Calendar app (the scheme default)
-21:50:14   check PASS: A: win11-calendar --date opens one Calendar window
-21:50:14   check PASS: A: the window belongs to the launched process
-21:50:14   check PASS: A: the launched window has the focus
-21:50:18   check PASS: B: still one Calendar window (single instance)
-21:50:18   check PASS: B: the same window and process as A
-21:50:19   check PASS: F: the extension blurs the focused Calendar window (kind calendar registered)
-21:50:19   check PASS: C: the --view week launch is handed over and exits
-21:50:21   check PASS: C: still the one Calendar window
-21:50:21   check PASS: D: the --view day --new launch is handed over and exits
-21:50:24   check PASS: every check passed
-21:50:24 shutdown shell clients: signalled own descendants 67:ibus-daemon, 81:glycin-svg, 356:win11-shell, 474:glycin-image-rs, 1394:glycin-image-rs, 513:win11-panel, 597:glycin-svg, 191:ibus-memconf, 193:ibus-extension-, 468:ibus-engine-sim
-21:50:24 shutdown gnome-shell: signalled own descendants 46:gnome-shell
-21:50:24 shutdown system bus: signalled own descendants 45:dbus-daemon
-21:50:24 inner sweep: signalled own descendants 1404:glycin-image-rs
-21:50:24 inner done: 0 surfaces, 0 failed []
+04:21:50 GE0c run lang=nl switch=False seed=defaults MemAvailable=6443876 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py
+04:23:13 private install: exit 0 in 67.7 s, 87253 mutated paths, 0 outside the run dir, ok=True
+04:23:16 GNOME Shell 50.1 up (mode user, unsafe True)
+04:23:21 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/calendar-app.py
+04:23:21   check PASS: P: win11-calendar is installed in the private prefix
+04:23:21   check PASS: P: the Calendar desktop entry handles win11-calendar: and starts the private binary
+04:23:21   check PASS: P: GNOME knows io.github.win11shell.Calendar.desktop
+04:23:21   check PASS: P: win11-calendar: opens the Calendar app (the scheme default)
+04:23:22   check PASS: A: win11-calendar --date opens one Calendar window
+04:23:22   check PASS: A: the window belongs to the launched process
+04:23:22   check PASS: A: the launched window has the focus
+04:23:26   check PASS: B: still one Calendar window (single instance)
+04:23:26   check PASS: B: the same window and process as A
+04:23:27   check PASS: F: the extension blurs the focused Calendar window (kind calendar registered)
+04:23:27   check PASS: C: the --view week launch is handed over and exits
+04:23:29   check PASS: C: still the one Calendar window
+04:23:29   check PASS: D: the --view day --new launch is handed over and exits
+04:23:32   check PASS: every check passed
+04:23:32 shutdown shell clients: signalled own descendants 47:ibus-daemon, 61:glycin-svg, 109:glycin-image-rs, 380:win11-shell, 1372:glycin-image-rs, 497:win11-panel, 579:glycin-svg, 106:ibus-memconf, 108:ibus-extension-, 385:ibus-engine-sim
+04:23:32 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+04:23:32 shutdown system bus: signalled own descendants 24:dbus-daemon
+04:23:32 inner sweep: signalled own descendants 1383:glycin-image-rs
+04:23:32 inner done: 0 surfaces, 0 failed []

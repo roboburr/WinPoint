@@ -1,17 +1,20 @@
 """Native GTK 4 apps (13-11): every app starts through the host's switch as win11-gtk-<kind>, with no WebKit.
 
 Robin (2026-11-13): "zet de apps ook om naar GTK 4". The launchers stay as they were (win11-explorer, win11-app --app
-<kind>, win11-default-apps, win11-installer); the host execs the native app (host/src/lib.rs native_app_switch),
+<kind>, win11-default-apps, win11-installer); the host execs the native app (host/src/lib.rs exec_native_app),
 which starts `win11-app --app <kind> --http-only` as its backend (native/APPS.md). Per app this checks:
 
   boot      the app's dev boot report (native/kit dev.rs, windowId native-<kind>)
   window    a normal window with the app's id, on screen, a sensible size
   process   the window's pid runs win11-gtk-<kind>; its backend child runs win11-app --http-only; no
-            WebKitWebProcess or WebKitNetworkProcess anywhere under it
+            WebKitWebProcess or WebKitNetworkProcess anywhere under it; the backend's environment has the app's own
+            GTK switches (GSK_RENDERER=cairo, GDK_DEBUG=portals unless the launch set them) and the launch's own
+            values in WIN11SHELL_USER_GPU, which the host gives the apps it launches (native/kit app.rs
+            own_environment, host files/actions.rs GPU_KEYS; 14-11)
   state     the dev state lists widgets with text (the app rendered something, not an empty frame)
   shot      a screenshot of the app focused over the desktop (dark, then light for a few)
-  memory    PSS and anonymous memory of the app and everything under it, after a short settle; then the same
-            for the WebKit apps (WIN11_WEBKIT_APPS=1) of Explorer, Settings and Task Manager, for comparison
+  memory    PSS and anonymous memory of the app and everything under it, after a short settle (the WebKit
+            apps of 13-11, for comparison: git show last-webkit:tests/gnome/scenarios/native-gtk-apps.out/results.json)
   use       a short interaction per app through the kit dev channel (native/kit/src/dev.rs: state, click by widget
             name, type, key) and the real pointer, each with a check and a screenshot (after the memory sample):
               explorer     double-click on a folder opens it, Back returns; a click and Enter open it, Alt+Left returns
@@ -26,6 +29,9 @@ which starts `win11-app --app <kind> --http-only` as its backend (native/APPS.md
             group in its dev state (its backend `win11-app --http-only` is no row of its own), and the backend's
             sysmon.processes groups the window and its backend under one app key
   close     closing the window ends the app and its backend
+
+The texts a check looks for (page titles, the chooser title, the Installer's empty state, Task Manager's app names)
+are those of the run's language (TEXT below), so the scenario runs with --lang nl and --lang en.
 
 Run (from G):
     tools/heavy.sh --min-mb 2560 --tag native-gtk-apps -- python3 -B tests/gnome/harness.py launch run --lang nl \\
@@ -135,8 +141,18 @@ loop.run()
 """
 # the folder Explorer opens (made in the private home by run) and the file inside it
 FOLDER, INSIDE = 'Testmap', 'binnen.txt'
-# Task Manager's names of the apps the procs step runs (host sysmon/process.rs own_names, nl)
-PROC_APPS = (('explorer', 'Verkenner'), ('settings', 'Instellingen'), ('alles', 'Alles'), ('taskmgr', 'Taakbeheer'))
+# The texts the use and procs steps look for, per language of the run (the apps' own nl/en pairs; Task Manager's
+# names of the apps: host sysmon/process.rs own_names)
+TEXT = {
+    'nl': {'system': 'Systeem', 'personalization': 'Persoonlijke instellingen', 'chooser': 'Een app kiezen',
+           'drop': 'Sleep een installatiebestand hierheen', 'empty': 'Nog geen installaties',
+           'apps': (('explorer', 'Verkenner'), ('settings', 'Instellingen'), ('alles', 'Alles'),
+                    ('taskmgr', 'Taakbeheer'))},
+    'en': {'system': 'System', 'personalization': 'Personalisation', 'chooser': 'Choose an app',
+           'drop': 'Drag an installation file here', 'empty': 'No installations yet',
+           'apps': (('explorer', 'File Explorer'), ('settings', 'Settings'), ('alles', 'Alles'),
+                    ('taskmgr', 'Task Manager'))},
+}
 
 
 def proc_comm(pid):
@@ -166,6 +182,34 @@ def gone(pid):
     except OSError:
         return True
     return stat[stat.rindex(')') + 2:].startswith('Z')
+
+
+def proc_environ(pid):
+    """The environment a process started with (/proc/<pid>/environ: its exec's, not later setenv calls)."""
+    try:
+        raw = Path(f'/proc/{pid}/environ').read_bytes()
+    except OSError:
+        return {}
+    return dict(e.decode(errors='replace').split('=', 1) for e in raw.split(b'\0') if b'=' in e)
+
+
+GTK_SWITCHES = ('GSK_RENDERER', 'GDK_DEBUG')
+
+
+def own_switches(env):
+    """What native/kit app.rs own_environment makes of an app's launch environment: GSK_RENDERER, GDK_DEBUG and the
+    WIN11SHELL_USER_GPU marker (the launch's own values of the two), as its backend inherits them."""
+    out = {k: env.get(k) for k in (*GTK_SWITCHES, 'WIN11SHELL_USER_GPU')}
+    own = {}
+    if 'GSK_RENDERER' not in env and env.get('WIN11_APP_GL') != '1':
+        own['GSK_RENDERER'] = 'cairo'
+    if 'GDK_DEBUG' not in env:
+        own['GDK_DEBUG'] = 'portals'
+    if own:
+        out.update(own)
+        if 'WIN11SHELL_USER_GPU' not in env:
+            out['WIN11SHELL_USER_GPU'] = json.dumps({k: env[k] for k in GTK_SWITCHES if k in env})
+    return out
 
 
 def descendants(root):
@@ -233,12 +277,10 @@ def set_theme(h, mode):
     path.write_text(json.dumps(data, indent=2))
 
 
-def spawn(h, kind, argv, webkit=False, extra=None):
+def spawn(h, kind, argv, extra=None):
     bindir = h.hm.RUN / 'prefix' / 'bin'
     argv = [str(bindir / argv[0]), *[str(h.hm.RUN / 'home') if a == '__HOME__' else a for a in argv[1:]]]
     env = dict(os.environ, WAYLAND_DISPLAY=h.hm.WL, GDK_BACKEND='wayland', **(extra or {}))
-    if webkit:
-        env['WIN11_WEBKIT_APPS'] = '1'
     log = open(h.hm.RUN / 'logs' / f'app-{kind}.log', 'a')
     return subprocess.Popen(argv, env=env, stdout=log, stderr=subprocess.STDOUT)
 
@@ -249,31 +291,6 @@ def shot(h, name, settle=1.5):
     except Exception as error:   # noqa: BLE001 - one bad shot must not cost the others
         h.check(f'screenshot {name}', False, error=str(error))
         return None
-
-
-def webkit_memory(h, kind, argv, app_id):
-    """The WebKit app of this kind (WIN11_WEBKIT_APPS=1), measured the same way, then closed."""
-    proc = spawn(h, kind, argv, webkit=True)
-    try:
-        wins = h.until(lambda: h.eval(WINDOWS_JS.replace('__ID__', app_id)) or None, f'{kind} WebKit window', 40, 0.3)
-    except TimeoutError as error:
-        h.check(f'{kind} (WebKit): window', False, error=str(error))
-        proc.kill()
-        return
-    pid = wins[0]['pid']
-    h.sleep(8)
-    pids = [pid, *descendants(pid)]
-    used = memory(pids)
-    h.record(f'memory.webkit.{kind}', {**used, 'comms': sorted({proc_comm(k) for k in pids} - {None})})
-    h.eval(CLOSE_JS.replace('__PID__', str(pid)))
-    try:
-        h.until(lambda: gone(pid), f'{kind} WebKit exits', 15, 0.3)
-    except TimeoutError:
-        for k in pids:
-            try:
-                os.kill(k, 9)
-            except OSError:
-                pass
 
 
 # ---- interaction (the "use" step) ------------------------------------------------------------------------------
@@ -368,8 +385,9 @@ def use_explorer(h, pid, win):
 
 def use_settings(h, pid, win):
     """Two pages from the navigation pane: the page title follows."""
-    for nav, title, name in (('nav-system', 'Systeem', 'settings-use-system'),
-                             ('nav-personalization', 'Persoonlijke instellingen', 'settings-use-personalization')):
+    text = TEXT[h.lang]
+    for nav, title, name in (('nav-system', text['system'], 'settings-use-system'),
+                             ('nav-personalization', text['personalization'], 'settings-use-personalization')):
         answer = dev(h, 'settings', {'native': 'click', 'name': nav})
         shown, state = wait_view(h, 'settings', lambda s, t=title: labelled(s, t, 'st-title'), f'Settings page {title}')
         h.check(f'settings use: {nav} opens {title}', bool(shown), answer=answer,
@@ -455,8 +473,8 @@ def use_defaultapps(h, pid, win):
         with_app = [n for n in rows if any('Firefox' in str(k.get('label') or '') for k in walk(n, []))]
         return (with_app or rows or [None])[0]
     def chooser(s):
-        """The kit dialog layer ("w11-dialog") with the title "Een app kiezen voor <type>"."""
-        titles = [n['label'] for n in nodes(s) if str(n.get('label') or '').startswith('Een app kiezen')
+        """The kit dialog layer ("w11-dialog") with the title "Een app kiezen voor <type>" (en "Choose an app for")."""
+        titles = [n['label'] for n in nodes(s) if str(n.get('label') or '').startswith(TEXT[h.lang]['chooser'])
                   and n.get('visible', True)]
         return titles if titles and any(n.get('name') == 'w11-dialog' for n in nodes(s)) else None
     row, _ = wait_view(h, 'defaultapps', first_row, 'a file type row')
@@ -479,8 +497,9 @@ def use_installer(h, pid, win):
     state = view(h, 'installer')
     drop = [n for n in nodes(state) if n.get('name') == 'installer-drop' and n.get('visible', True)]
     detail = [n for n in nodes(state) if n.get('name') in ('installer-detail', 'installer-progress')]
-    h.check('installer use: the empty state shows', bool(drop) and bool(labelled(state, 'Sleep een installatiebestand hierheen'))
-            and bool(labelled(state, 'Nog geen installaties')) and not detail,
+    text = TEXT[h.lang]
+    h.check('installer use: the empty state shows', bool(drop) and bool(labelled(state, text['drop']))
+            and bool(labelled(state, text['empty'])) and not detail,
             detail=[n.get('name') for n in detail], labels=texts(state)[:20])
     shot(h, 'installer-use-empty', settle=0.5)
 
@@ -547,7 +566,7 @@ def procs(h):
     its dev state, and the backend's sysmon.processes groups each window with its backend under one app key."""
     running = {}
     for kind, argv, app_id in APPS:
-        if kind not in dict(PROC_APPS):
+        if kind not in dict(TEXT[h.lang]['apps']):
             continue
         rows = len(h.s.rows())
         proc = spawn(h, f'{kind}-procs', argv)
@@ -564,7 +583,7 @@ def procs(h):
         return
     h.eval(ACTIVATE_JS.replace('__PID__', str(pid)))
     dev(h, 'taskmgr', {'native': 'click', 'name': 'nav-processes'})
-    names = [name for _, name in PROC_APPS]
+    names = [name for _, name in TEXT[h.lang]['apps']]
 
     def name_labels(s):
         # the GtkLabels only: a row's tooltip (its window title, "Alles" for Alles) is no row of its own
@@ -593,7 +612,7 @@ def procs(h):
             result = json.loads(reply.read()).get('result') or {}
         apps = result.get('apps') or []
         host = [g for g in result.get('background') or [] if g.get('key') == 'win11shell']
-        for kind, name in PROC_APPS:
+        for kind, name in TEXT[h.lang]['apps']:
             key = f'win11shell-{kind}.desktop'
             groups = [g for g in apps if g.get('key') == key]
             gui = running.get(kind)
@@ -644,6 +663,14 @@ def one(h, kind, argv, app_id, light=False):
     kids = descendants(pid)
     kid_rows = [{'pid': k, 'comm': proc_comm(k), 'http': b'--http-only' in proc_cmdline(k)} for k in kids]
     h.check(f'{label}: backend child', any(k['http'] for k in kid_rows), children=kid_rows)
+    backend = next((k['pid'] for k in kid_rows if k['http']), None)
+    if backend:
+        want, env = own_switches(proc_environ(pid)), proc_environ(backend)
+        got = {k: env.get(k) for k in want}
+        marker = lambda v: json.loads(v) if v else None      # noqa: E731
+        h.check(f'{label}: the backend has the app\'s own GTK switches and the launch\'s in WIN11SHELL_USER_GPU',
+                {**got, 'WIN11SHELL_USER_GPU': marker(got['WIN11SHELL_USER_GPU'])}
+                == {**want, 'WIN11SHELL_USER_GPU': marker(want['WIN11SHELL_USER_GPU'])}, want=want, got=got)
     webkit = [k for k in kid_rows if (k['comm'] or '').startswith('WebKit')]
     h.check(f'{label}: no WebKit', not webkit, webkit=webkit)
     try:
@@ -712,10 +739,3 @@ def run(h):
             except Exception as error:   # noqa: BLE001
                 h.check(f'{kind} (light): run', False, error=f'{type(error).__name__}: {error}')
     set_theme(h, 'dark')
-    h.sleep(2)
-    for kind, argv, app_id in APPS:
-        if kind in LIGHT:
-            try:
-                webkit_memory(h, kind, argv, app_id)
-            except Exception as error:   # noqa: BLE001
-                h.check(f'{kind} (WebKit): run', False, error=f'{type(error).__name__}: {error}')

@@ -129,7 +129,7 @@ pub fn leaf(path: &str) -> String {
     path.trim_end_matches('/').rsplit('/').next().filter(|s| !s.is_empty()).unwrap_or("/").to_owned()
 }
 
-/// Our own HTML apps start through shell.openApp (shell.js OWN_APP_RE).
+/// Our own apps start through shell.openApp (shell.js OWN_APP_RE).
 pub fn own_app(id: &str) -> Option<&'static str> {
     let base = id.strip_suffix(".desktop").unwrap_or(id);
     match base.strip_prefix("win11shell-")? {

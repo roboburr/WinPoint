@@ -1,6 +1,7 @@
-# The native GTK 4 shell (D-G63), the Calendar and the apps (native/apps on the shared native/kit, APPS.md): their own workspace, because gtk4-rs 0.11 needs a newer glib than the GTK 3 /
-# WebKit host in ../host (gtk 0.18, glib 0.18), and Cargo allows one glib-sys per workspace. Crates and build
-# output live on the 22 TB disk (Robin, 12-11): CARGO_HOME and CARGO_TARGET_DIR under
+# The native GTK 4 programs: the shell (D-G63), the Calendar and the seven apps (native/apps on the shared
+# native/kit, APPS.md). Their own workspace, because gtk4-rs 0.11 needs a newer glib than the host in ../host
+# (glib, gio and gdk-pixbuf 0.18, no GTK since D-G72), and Cargo allows one glib-sys per workspace. Crates and
+# build output live on the 22 TB disk (Robin, 12-11): CARGO_HOME and CARGO_TARGET_DIR under
 # /run/media/robin/22TB/win11-gnome-build.
 [workspace]
 members = [

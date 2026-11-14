@@ -1,6 +1,6 @@
-//! The desktop window and its icons (vendor/ui/js/desktop/desktop.js): a column-major grid from the top left
-//! (small, medium, large), saved positions (settings desktop.positions, keyed by file name), labels with a text
-//! shadow (two lines, the full name when selected), translucent hover and selection fills, rubber band,
+//! The desktop window and its icons (`git show 418ea594:vendor/ui/js/desktop/desktop.js`): a column-major grid from the
+//! top left (small, medium, large), saved positions (settings desktop.positions, keyed by file name), labels with a
+//! text shadow (two lines, the full name when selected), translucent hover and selection fills, rubber band,
 //! Ctrl/Shift multi-select, drag to move (grid snapping), drop on a folder to move into it or on the Recycle Bin
 //! to delete, double click or Enter opens, F2 renames inline, Delete trashes with an Undo toast, Ctrl+C/X/V/A/Z,
 //! arrows, type-to-select, Ctrl+Shift+2/3/4 and Ctrl+wheel change the icon size.

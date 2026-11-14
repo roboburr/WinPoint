@@ -1,5 +1,5 @@
-//! Win11 controls after vendor/ui/css/components.css and js/core/components.js, as GTK widgets with the kit's
-//! CSS classes. Simple ones are functions returning the GTK widget; ones with state are small handle structs
+//! Win11 controls after last-webkit:vendor/ui/css/components.css and js/core/components.js, as GTK widgets with the
+//! kit's CSS classes. Simple ones are functions returning the GTK widget; ones with state are small handle structs
 //! (Clone, Rc inside) with `widget()` and `connect_*` methods. Texts the kit owns (On/Off, Search, Cancel,
 //! Close, ...) follow a language switch by themselves; texts an app passes are the app's to relabel.
 pub mod buttons;

@@ -1,4 +1,4 @@
-//! Drag and drop of files (vendor/ui/js/apps/explorer/dnd.js and the drag code of fileview.js, pages.js,
+//! Drag and drop of files (last-webkit:vendor/ui/js/apps/explorer/dnd.js and the drag code of fileview.js, pages.js,
 //! navpane.js, toolbar.js and tabs.js) with GTK 4's DragSource and DropTarget.
 //!
 //! - Dragging out: items of the file view (not in the Prullenbak) and of Start and Galerij. The content is a

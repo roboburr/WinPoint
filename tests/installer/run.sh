@@ -2,7 +2,8 @@
 # GE1c installer and extension-text tests. Every install runs in tests/installer/sandbox.py's bubblewrap case dirs;
 # the whole suite runs inside tests/i18n/private.sh (no live session bus, display or HOME), and, when the two REAL
 # cases are included (the default), under tools/heavy.sh (they copy the real 81 MB icon tree and 228 MB of
-# binaries under strace).
+# binaries under strace; their ~600 MB traces are read line by line, so a case stays near 110 MB). --min-mb 2048:
+# a start below the watchdog's 1500 MB margin is refused instead of killed halfway.
 #   tests/installer/run.sh                       all tests
 #   W11_INSTALLER_REAL=0 tests/installer/run.sh  without the REAL cases, not under the heavy lock
 #   tests/installer/run.sh Units                 one class (unittest names, as for python -m unittest)
@@ -16,4 +17,4 @@ wrapped=("$G/tests/i18n/private.sh" "$G/tests/installer/run/session" "${inner[@]
 if [ "$REAL" = 0 ]; then
   exec "${wrapped[@]}"
 fi
-exec "$G/tools/heavy.sh" --min-mb 1024 --tag ge1c-installer -- "${wrapped[@]}"
+exec "$G/tools/heavy.sh" --min-mb 2048 --tag ge1c-installer -- "${wrapped[@]}"

@@ -28,7 +28,7 @@ pub fn t<'a>(nl: &'a str, en_text: &'a str) -> &'a str {
     if en() { en_text } else { nl }
 }
 
-/// The Intl locale of the HTML apps for the language: "nl-NL" or "en-GB".
+/// The Intl locale the HTML apps used for the language: "nl-NL" or "en-GB".
 pub fn locale() -> &'static str {
     if en() { "en-GB" } else { "nl-NL" }
 }

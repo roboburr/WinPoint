@@ -1,0 +1,93 @@
+# tools/check-no-webkit.allow: the mentions of WebKit, JavaScriptCore, libsoup and wry that stay after the WebKit
+# removal (tag last-webkit), for tools/check-no-webkit.py. None of them is a dependency or a feature of WinPoint.
+#
+# Columns (one tab each): path<TAB>pattern<TAB>class<TAB>reason
+#   path     a repository path; * and ? stay within one folder, ** spans folders
+#   pattern  a Python regular expression searched in the line, or * for every line of the file
+#   class    history         records and comments about the WebKit apps up to last-webkit (where a behaviour came from)
+#            update-category Ubuntu's packages that Windows Update lists (decision 1: the webkit and soup rows stay)
+#            fixture         test data: recorded or synthetic package lists, seeded folders, stray files to refuse
+#            frozen-data     i18n baselines at 3b898e6 and the logs of intended text changes (append only)
+#            legacy-cleanup  removing what an earlier version left behind (its WebKit storage, its Start and desktop)
+#            third-party     other programs' names: WebKit processes of apps that are not ours, a proper name list
+# A row must cover at least one line, and the code and vendor checks accept only history, frozen-data and fixture
+# rows. Rows are tried top to bottom; the first that matches covers the line. Keep the rows narrow: a pattern for a
+# file of code, * only for records and data.
+#
+# --- frozen i18n data and the change logs (tests/i18n; tools/i18n/drift_rust.py reads them)
+tests/i18n/rust-literals.tsv	*	frozen-data	scan_rust.py's classification of every host literal at 3b898e6 (byte-identical to a scan of git 3b898e6; drift_rust.py --freeze joins it by line)
+tests/i18n/rust-frozen-all.tsv	*	frozen-data	every host literal at 3b898e6 (drift_rust.py --freeze reads git 3b898e6, never the tree)
+tests/i18n/BASELINE-CHANGES.rust*	*	frozen-data	append-only log of intended Dutch changes; its rows quote the removed literals (window.rs, window_state.rs, …)
+tests/i18n/BASELINE-CHANGES.ext	*	frozen-data	append-only log of intended text changes of the scripts and the extension
+#
+# --- scenario outputs and baselines of the harness (records of runs; the WebKit-era ones show the WebKit apps)
+tests/gnome/scenarios/*.*/**	*	history	scenario output folders (*.out, *.prep, *.g67, r3-ontop.r3 …): what a run saw, WebKit-era runs included
+tests/gnome/baseline/**	*	history	built-in pass baselines; nl/ and en/ are from the WebKit apps
+tests/gnome/README.md	*	history	the harness documentation says what changed when the WebKit apps went and which outputs are history
+#
+# --- the records (decision 7: a banner, not deletion) and the Python reference (decision 4)
+notes/**	*	history	design notes, plans, reviews and round reports: what was built when, the WebKit apps included
+validation/**	*	history	validation results of earlier versions (WebKit era)
+VALIDATION*.md	*	history	validation reports of earlier versions; each has a banner on what changed since
+PACKAGING_VALIDATION.md	*	history	the packaging report of an earlier version, with its banner
+vendor/host/**	*	history	decision 4: the Python reference host stays in the repo (WebKit2 4.1 included) but is not installed
+#
+# --- Windows Update: Ubuntu's WebKitGTK, JavaScriptCore and libsoup packages (decision 1)
+host/src/services/update/model.rs	libwebkit2gtk-4\.1-|libjavascriptcoregtk-4\.1-|gir1\.2-(webkit2|javascriptcoregtk|soup)|libsoup-3\.0-|"webkit"|"soup"	update-category	the webkit and soup rows of the update list (design §3.3), from Ubuntu package names
+host/src/services/update/compat.rs	libwebkit2gtk-4\.1-|libjavascriptcoregtk-4\.1-|libsoup-3\.0-	update-category	part_of: Ubuntu package names to the update.part labels of the compatibility check
+host/src/services/update/compat.rs	update\.part\.webkit|WebKitGTK|26\.04 of then	fixture	the recorded apt verdicts of 26.04 (tests/update/fixtures/compat/recorded) and their expected texts
+host/src/services/update/history.rs	libwebkit|libsoup-3\.0-0|\bwebkit\b	fixture	apt history fixture rows (tests/update/fixtures/history) and the parse doc example
+host/src/services/update/pk.rs	pkg\("libsoup-3\.0-0"	fixture	a security update in the PackageKit unit tests
+host/src/services/update/bus_tests.rs	*	update-category	the update service's bus tests replay Ubuntu updates of WebKitGTK and libsoup (tests/update/timelines)
+host/src/services/update/tests.rs	*	update-category	the update service's unit tests: Ubuntu packages, their rows and the apt fixtures
+host/src/services/system/info.rs	pkg\("libsoup-3\.0-0"	fixture	an update snapshot in a unit test of system.updates
+host/i18n/update.tsv	^update\.part\.(webkit|jsc|soup)\t	update-category	labels of the compatibility check's parts (compat.rs part_of)
+native/apps/settings/src/pages/update.rs	"webkit" =>|"soup" =>|Ubuntu's WebKitGTK	update-category	the neutral titles of the webkit and soup rows on the native update page
+native/apps/settings/src/pages/update.rs	The WebKit pages made one exception	history	where the restart-bar rule came from
+tests/update/timelines/**	*	update-category	recorded update timelines (Ubuntu packages, webkit and soup rows)
+tests/update/fixtures/**	*	fixture	recorded and synthetic apt, dpkg and readelf data
+tests/update/mkarchive.py	*	fixture	the synthetic apt archive of the update layer tests (Robin's 26.04 package set)
+#
+# --- the cleanup of earlier installs (their WebKit storage, the WebKit Start and desktop of D-G70)
+scripts/install.py	WEBKIT_(APPS|PORTAL|ENTRIES)|webkit_only|remove_webkit_state|webkitRemoved|WebKit[- ]apps|WebKitGTK (kept|puts)|WebKit's (alone|own entries)|WebKitCache|WebKit Start|webkit\.py	legacy-cleanup	remove_webkit_state and the D-G70 legacy binaries (an update removes what an earlier version left)
+scripts/uninstall.py	WebKit Start|WebKit apps|remove_webkit_state	legacy-cleanup	the same cleanup on uninstall
+tests/installer/test_installer.py	vendor/ui/(index\.html|js)	fixture	test_payload_has_only_the_ui_assets: stray HTML files in a fixture source tree that the payload must leave out
+tests/installer/test_installer.py	remove_webkit_state|webkit_(state|data|cache)|webkitRemoved|webkit-(state|owner)|WebKitCache|webkit\.py|WebKit apps|WebKit Start	legacy-cleanup	the tests of remove_webkit_state and of the D-G70 legacy cleanup
+tests/installer/test_installer.py	3b898e6 binaries link WebKit|WEBKIT_LIBS|no WebKit, JavaScriptCore, libsoup	fixture	the 3b898e6 REAL baseline binaries link WebKit; the library guard of the current build
+extension/extension.js	WebKit-era install	legacy-cleanup	an old Start entry of a WebKit-era install is never listed as a running app
+tests/gnome/harness.py	WebKit Start and desktop|(?i:no WebKit)( panel|\))|GStreamer warm-up the WebKit apps	history	D-G70's legacy binaries and the warm-up the WebKit apps needed
+#
+# --- other programs' names
+host/src/services/sysmon/text.json	"WebKit(Network|Web)Process"	third-party	friendly names of the WebKit processes of other apps (GNOME Web, Evolution …) in Task Manager
+tests/gnome/scenarios/native-shell.py	(?i)webkit	third-party	regression guard: no WebKit process below win11-shell, no WebKit host of before D-G70
+tests/gnome/scenarios/native-gtk-apps.py	WebKit	third-party	regression guard: no WebKitWebProcess or WebKitNetworkProcess under an app; the docstring names the last-webkit comparison
+tools/i18n/scan_rust.py	"webkit", "gtk"	third-party	PROPER: language-neutral names the 3b898e6 classifier knows
+tools/heavy.sh	WebKit processes	third-party	earlyoom on Robin's machine spares win11-* and WebKit processes (its own configuration)
+vendor/icons/**/*.svg	-webkit-print-color-adjust	third-party	a CSS property in the SVG source of other projects' logos (CurseForge, Plex)
+vendor/icon-bundle.json	"Win11/apps/scalable/epiphany-webkit\.svg"	third-party	the icon of GNOME Web (Epiphany), by its own icon name
+#
+# --- history comments and docs (where a behaviour or a file came from)
+README.md	HTML versions in WebKitGTK|earlier WebKit taskbar|WebKit app, 13 Nov|final build without WebKit|neither WebKitGTK nor GTK 3|former WebKit apps	history	the README's history: the memory comparison with the WebKit apps, what is no longer needed, the switches that went
+README.nl.md	HTML-versies in WebKit|eerdere WebKit-taakbalk|WebKit-app, 13 nov|build zonder WebKit|met de WebKit-Start|WebKitGTK en GTK 3 zijn niet nodig	history	the same history in the Dutch README
+README.nl.md	versie met de WebKit-(shell|apps)	legacy-cleanup	what an install over an earlier version removes
+THIRD_PARTY_NOTICES.md	since the WebKit apps went|when WebKitGTK, JavaScriptCore, libsoup and GTK 3 left|the same drawings were also in `vendor/ui/js`|The WebKit and GTK 3 crates the host linked	history	the notices until last-webkit: the WebKit apps' drawings and the crates and libraries linked then
+LICENSES/RUST-CRATES.md	when WebKit and GTK 3 left the host|the host also linked `wry`	history	the crates linked until last-webkit (git show last-webkit:LICENSES/RUST-CRATES.md lists them)
+vendor/ui-patches.json	"reason": "Robin 2026-11-13, the WebKit removal	history	the html_apps_removed entry of the UI patch log
+native/**/*.rs	^(?!.*vendor/ui/(js|css|index\.html))\s*//.*WebKit	history	a comment on where a native behaviour comes from (the WebKit app, host or picker up to last-webkit)
+native/kit/src/format.rs	the_intl_table_of_the_webkit_apps_holds|the JavaScriptCore table|i18n\.js in JavaScriptCore	history	the Intl table the WebKit apps' format.js produced in JavaScriptCore, ported as a Rust test
+native/apps/explorer/css/*.css	[Cc]lasses are the WebKit	history	the CSS class names follow the WebKit app's
+host/Cargo.toml	which the WebKit crates used to switch on	history	why glib and gio name the v2_70 feature
+host/i18n/sysmon.tsv	went with the WebKit windows	history	where the sysmon.ownApp rows came from
+host/src/desktop-entries.json	the WebKit Desktop and Start entries are gone	history	D-G70 note in the table's about text
+host/src/i18n.rs	went with the WebKit windows	history	why the window stem is gone
+host/src/services/shell.rs	what the WebKit hosts reported	history	why shell.info.gpu is a fixed value
+host/src/services/shell/tests/oracle_tests.rs	the WebKit hosts' GPU switches are gone	history	the same, in its test
+scripts/package.py	the WebKit( apps|$)	history	the historical reports and previews that show the WebKit apps
+scripts/verify-ui.py	Since the WebKit removal	history	what the UI snapshot holds now
+tools/**	WebKit (removal|apps|UI|picker)|when WebKit went	history	tool docs on what changed when the WebKit apps went
+tests/i18n/test_*.py	Until the WebKit removal|as the WebKit host's C4 title test	history	where a test came from
+tests/installer/ext/dump.mjs	went with the WebKit apps' window state	history	why the dump no longer calls windows.hostState
+tests/installer/test_extension_text.py	the WebKit apps' saved window state	history	why REMOVED_KEYS exist
+tests/update-ui/.gitignore	WebKit	history	the WebKit update page's screenshots stay out of git; their scripts went with the apps
+tests/update/README.md	the build rules of the WebKit removal	history	where the target-directory note came from
+tests/gnome/scenarios/*.py	WebKit (on the GPU|removal)|removed with WebKit|of the WebKit Settings	history	scenario docstrings: what a scenario replaced or was written for

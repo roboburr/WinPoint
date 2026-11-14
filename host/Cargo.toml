@@ -6,18 +6,16 @@ autobins = false
 license = "MIT"
 
 [dependencies]
-gtk = "0.18"
-gio = "0.18"
-glib = "0.18"
-wry = { version = "0.55", default-features = false, features = ["os-webview", "transparent", "devtools"] }
+gdk-pixbuf = "0.18"
+# GLib 2.70 API (TimeZone::identifier, …), which the WebKit crates used to switch on for the whole crate graph
+gio = { version = "0.18", features = ["v2_70"] }
+glib = { version = "0.18", features = ["v2_70"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 url = "2"
 ureq = { version = "2.12", default-features = false, features = ["json"] }
 tiny_http = "0.12"
 libc = "0.2"
 roxmltree = "=0.19.0"
-webkit2gtk = "2.0"
-javascriptcore = { package = "javascriptcore-rs", version = "1.1" }
 
 [[bin]]
 name = "win11-explorer"

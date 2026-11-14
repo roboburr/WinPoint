@@ -3,7 +3,6 @@ use super::catalog::{Catalog, compare_names, own_icon};
 use crate::files::{ApiError, ApiResult, actions};
 use gio::prelude::*;
 use glib::translate::ToGlibPtr;
-use gtk::{gio, glib};
 use serde_json::{Map, Value, json};
 use std::{
     collections::HashSet,

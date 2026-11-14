@@ -1,5 +1,5 @@
-//! Tabs between windows and the saved session (vendor/ui/js/apps/explorer/tabtransfer.js, tabs.js and the
-//! session part of main.js, host/src/window_state.rs).
+//! Tabs between windows and the saved session (last-webkit:vendor/ui/js/apps/explorer/tabtransfer.js, tabs.js and the
+//! session part of main.js, `git show last-webkit:host/src/window_state.rs`).
 //!
 //! # Moving a tab
 //!
@@ -19,8 +19,8 @@
 //! on Wayland the extension does (`explorer.tabPosition` {pid, phase "begin" | "end"}: its Escape bit and the
 //! pointer at the end; without the extension a cancel over one of the windows counts as Escape).
 //!
-//! Tabs of another process (a WebKit Explorer, its plain-text envelope `win11-explorer-tab:v1:{...}`, or
-//! `--tab-ticket T` from the host's explorer.tabDetach) go through the backend's one-use tickets as before:
+//! Tabs of another process (another Explorer's envelope, or `--tab-ticket T` from the host's explorer.tabDetach)
+//! go through the backend's one-use tickets as before:
 //! explorer.tabClaim, import and load, explorer.tabCommit; explorer.tabRelease when anything fails.
 //! A picker has no tab drags.
 //!
@@ -28,8 +28,8 @@
 //!
 //! A window that closes keeps its tabs (at most 20: location, history, selection, filter, scroll positions) in
 //! `apps.explorer.session` of $XDG_CONFIG_HOME/win11-gnome/window-state.json (WIN11_GNOME_CONFIG_DIR overrides
-//! the folder), the WebKit host's file, with its lock and its private-file rules, so the tabs survive a switch
-//! between the WebKit and the native Explorer. A window opened without arguments gets the last saved tabs back.
+//! the folder), the file the WebKit host kept them in up to last-webkit, with its lock and its private-file rules,
+//! so the tabs an earlier version saved come back. A window opened without arguments gets the last saved tabs back.
 //! The window size is the kit's (native-windows.json).
 use crate::explorer::{Explorer, Params, WeakExplorer};
 use crate::i18n::s;
@@ -48,8 +48,6 @@ use std::time::Duration;
 
 /// The drag type of a tab (tabtransfer.js TAB_MIME).
 pub const TAB_MIME: &str = "application/x-win11-explorer-tab+json";
-/// A WebKit Explorer's plain-text envelope (tabtransfer.js TAB_TEXT_PREFIX).
-const TAB_TEXT_PREFIX: &str = "win11-explorer-tab:v1:";
 const KINDS: [&str; 6] = ["home", "gallery", "thispc", "trash", "folder", "search"];
 const SESSION_MAX: usize = 1 << 20;
 const STATE_FILE_MAX: u64 = 8 << 20;
@@ -344,24 +342,16 @@ fn before_at(x: &Explorer, strip: &gtk::Widget, px: f64) -> Option<u64> {
     None
 }
 
-/// Whether a drag over the strip is (or may be) a tab: ours, or plain text without files (tabtransfer.js
-/// isTabDrag; the text is checked on drop).
+/// Whether a drag over the strip is a tab (tabtransfer.js isTabDrag). Only an Explorer makes the tab type; the
+/// plain-text envelope of the WebKit Explorer went with it (last-webkit).
 fn is_tab_drag(drop: &gdk::Drop) -> bool {
-    let formats = drop.formats();
-    if formats.contain_mime_type(TAB_MIME) {
-        return true;
-    }
-    let mimes: Vec<String> = formats.mime_types().iter().map(|m| m.to_string()).collect();
-    let text = mimes.iter().any(|m| m == "text/plain" || m.starts_with("text/plain;"));
-    let files = mimes.iter().any(|m| m == "text/uri-list" || m == "application/vnd.portal.filetransfer" || m == "application/vnd.portal.files");
-    text && !files
+    drop.formats().contain_mime_type(TAB_MIME)
 }
 
 /// The tab strip (drop target for tabs from this and other windows); called once per window. The window
 /// itself catches tab drops anywhere else, so a drop on an Explorer window is never a tear-off by accident.
 pub fn attach_strip(x: &Explorer, strip: &gtk::Widget) {
-    let formats = gdk::ContentFormats::new(&[TAB_MIME, "text/plain;charset=utf-8", "text/plain"]);
-    let target = gtk::DropTargetAsync::new(Some(formats), gdk::DragAction::MOVE);
+    let target = gtk::DropTargetAsync::new(Some(gdk::ContentFormats::new(&[TAB_MIME])), gdk::DragAction::MOVE);
     target.connect_accept(|_, drop| is_tab_drag(drop));
     let motion = |_: &gtk::DropTargetAsync, drop: &gdk::Drop, _: f64, _: f64| {
         if is_tab_drag(drop) { gdk::DragAction::MOVE } else { gdk::DragAction::empty() }
@@ -458,9 +448,7 @@ fn move_here(x: &Explorer, d: Rc<Drag>, before: Option<u64>) {
 
 /// The envelope of another process's tab drag (tabtransfer.js payload): (ticket, sourceWindow).
 async fn read_envelope(drop: &gdk::Drop) -> Option<(String, String)> {
-    let ours = drop.formats().contain_mime_type(TAB_MIME);
-    let mimes: &[&str] = if ours { &[TAB_MIME] } else { &["text/plain;charset=utf-8", "text/plain"] };
-    let (stream, _) = drop.read_future(mimes, glib::Priority::DEFAULT).await.ok()?;
+    let (stream, _) = drop.read_future(&[TAB_MIME], glib::Priority::DEFAULT).await.ok()?;
     let mut bytes: Vec<u8> = Vec::new();
     loop {
         let chunk = stream.read_bytes_future(16384, glib::Priority::DEFAULT).await.ok()?;
@@ -474,8 +462,7 @@ async fn read_envelope(drop: &gdk::Drop) -> Option<(String, String)> {
     }
     let _ = stream.close_future(glib::Priority::DEFAULT).await;
     let text = String::from_utf8(bytes).ok()?;
-    let encoded = if ours { text.as_str() } else { text.strip_prefix(TAB_TEXT_PREFIX)? };
-    let v: Value = serde_json::from_str(encoded).ok()?;
+    let v: Value = serde_json::from_str(&text).ok()?;
     let ticket = v["ticket"].as_str().filter(|t| (32..=36).contains(&t.len()) && t.bytes().all(|c| c.is_ascii_hexdigit() || c == b'-'))?;
     let source = v["sourceWindow"].as_str().filter(|s| !s.is_empty())?;
     Some((ticket.to_owned(), source.to_owned()))
@@ -578,7 +565,8 @@ fn private_error(what: &str) -> io::Error {
     io::Error::new(io::ErrorKind::PermissionDenied, what.to_owned())
 }
 
-/// window_state.rs private_file: ours, one link, no group or other bits, no symlink.
+/// The WebKit host's private_file (last-webkit:host/src/window_state.rs): ours, one link, no group or other bits,
+/// no symlink.
 fn private_file(path: &Path, create: bool) -> io::Result<File> {
     let f = OpenOptions::new()
         .read(true)
@@ -595,7 +583,7 @@ fn private_file(path: &Path, create: bool) -> io::Result<File> {
     Ok(f)
 }
 
-/// The window-state lock (window_state.rs locked); released when the file closes.
+/// The window-state lock (last-webkit:host/src/window_state.rs, locked); released when the file closes.
 fn locked(config: &Path) -> io::Result<File> {
     fs::DirBuilder::new().recursive(true).mode(0o700).create(config)?;
     let st = fs::symlink_metadata(config)?;
@@ -630,7 +618,8 @@ fn read_root(config: &Path) -> io::Result<Value> {
     Ok(if v["version"] == 1 && v["apps"].is_object() { v } else { json!({ "version": 1, "apps": {} }) })
 }
 
-/// window_state.rs session: {version: 1, tabs: [1..=20 valid tab states], active}, at most 1 MB.
+/// The session of last-webkit:host/src/window_state.rs: {version: 1, tabs: [1..=20 valid tab states], active}, at
+/// most 1 MB.
 fn session(v: &Value) -> Option<Value> {
     let tabs = v["tabs"].as_array().filter(|t| !t.is_empty() && t.len() <= 20)?;
     if v["version"].as_f64() != Some(1.0) || serde_json::to_vec(v).ok()?.len() > SESSION_MAX {

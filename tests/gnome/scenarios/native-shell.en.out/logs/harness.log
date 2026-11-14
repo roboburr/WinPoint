@@ -1,0 +1,30 @@
+02:36:28 GE0c run lang=en switch=False seed=defaults MemAvailable=5174224 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
+02:37:50 private install: exit 0 in 67.7 s, 87253 mutated paths, 0 outside the run dir, ok=True
+02:37:54 GNOME Shell 50.1 up (mode user, unsafe True)
+02:37:58 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py
+02:38:02   check PASS: A: win11-shell reported its boot
+02:38:02   check PASS: A: the panel process is win11-shell
+02:38:02   check PASS: A: its backend win11-panel --http-only is a child of win11-shell
+02:38:02   check PASS: A: no win11-start or win11-desktop process runs
+02:38:02   check PASS: A: no WebKit process below win11-shell
+02:38:02   check PASS: B: a visible taskbar window
+02:38:02   check PASS: B: the taskbar has tb-start
+02:38:02   check PASS: B: the taskbar has tb-clock
+02:38:02   check PASS: B: the taskbar has tb-sys
+02:38:02   check PASS: B: GNOME sees a Panel window of the native pid
+02:38:02   check PASS: B: the extension registered the native pid as Panel
+02:38:04   check PASS: C: the quick flyout opens
+02:38:05   check PASS: C: the quick flyout closes again
+02:38:05   check PASS: C: the notifications flyout opens
+02:38:06   check PASS: C: the notifications flyout closes again
+02:38:07   check PASS: D: tb-start opens a Start window of the same pid
+02:38:07   check PASS: D: the extension holds Panel and Start under one pid
+02:38:07   check PASS: D: the backdrop capabilities list the taskbar and Start of that pid
+02:38:08   check PASS: D: a second click closes Start
+02:38:13   check PASS: N: the native tree was measured
+02:38:13   check PASS: every check passed
+02:38:13 shutdown shell clients: signalled own descendants 46:ibus-daemon, 64:glycin-svg, 107:glycin-image-rs, 382:win11-shell, 1355:glycin-image-rs, 499:win11-panel, 582:glycin-svg, 217:ibus-memconf, 219:ibus-extension-, 387:ibus-engine-sim
+02:38:13 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+02:38:13 shutdown system bus: signalled own descendants 24:dbus-daemon
+02:38:13 inner sweep: signalled own descendants 1365:glycin-image-rs
+02:38:13 inner done: 0 surfaces, 0 failed []

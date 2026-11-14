@@ -1,5 +1,5 @@
-//! Instellingen › Bluetooth en apparaten (vendor/ui/js/apps/settings/pages/bluetooth.js): the power toggle, the
-//! device tiles (connect, disconnect, remove, battery), the Win11 "Een apparaat toevoegen" dialog (search, pick,
+//! Instellingen › Bluetooth en apparaten (last-webkit:vendor/ui/js/apps/settings/pages/bluetooth.js): the power toggle,
+//! the device tiles (connect, disconnect, remove, battery), the Win11 "Een apparaat toevoegen" dialog (search, pick,
 //! confirm a code / passkey / PIN, then done or failed) and the "Bluetooth reageert niet" banner with "Bluetooth
 //! opnieuw starten" (system.bluetooth.reset, one job shared by the page, the dialog and Startpagina).
 //!

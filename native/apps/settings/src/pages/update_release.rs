@@ -1,10 +1,10 @@
 //! Instellingen › Update en herstel: Ubuntu release upgrades on the Update page
-//! (vendor/ui/js/apps/settings/pages/update-release.js): the feature-update card "Ubuntu 26.10 is beschikbaar"
-//! (states checking, ok, warn, hold, ubuntuHold, blocked, unknown, and the hand-over states updatesFirst,
-//! rebootFirst, running, waiting, startFailed, ended) with its start dialog, and the "Nieuwe Ubuntu-versies" row of
-//! Meer opties (Ubuntu's Prompt=). No page of its own: update.rs builds both and calls `update(snapshot)` after
-//! every update.status it reads. Also the helpers the Update pages share: the update glyph in its disc (turning
-//! while busy), the wait for a forwarded write's update.reply, and host errors as JSON envelopes.
+//! (`git show last-webkit:vendor/ui/js/apps/settings/pages/update-release.js`): the feature-update card "Ubuntu 26.10
+//! is beschikbaar" (states checking, ok, warn, hold, ubuntuHold, blocked, unknown, and the hand-over states
+//! updatesFirst, rebootFirst, running, waiting, startFailed, ended) with its start dialog, and the "Nieuwe
+//! Ubuntu-versies" row of Meer opties (Ubuntu's Prompt=). No page of its own: update.rs builds both and calls
+//! `update(snapshot)` after every update.status it reads. Also the helpers the Update pages share: the update glyph in
+//! its disc (turning while busy), the wait for a forwarded write's update.reply, and host errors as JSON envelopes.
 use super::{Later, Page, later};
 use crate::common;
 use kit::CallError;

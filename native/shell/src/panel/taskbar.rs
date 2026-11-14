@@ -1,5 +1,5 @@
-//! The 48 px taskbar strip (vendor/ui/js/shell/taskbar.js, shell.js, tray.js): a centred (or left, per
-//! taskbar.alignment) group with Start, the search pill (taskbar.search box/icon/hidden), Task View and the
+//! The 48 px taskbar strip (`git show 418ea594:vendor/ui/js/shell/taskbar.js`, shell.js, tray.js): a centred (or left,
+//! per taskbar.alignment) group with Start, the search pill (taskbar.search box/icon/hidden), Task View and the
 //! pinned + running apps, and on the right the notification area, the system button (-> quick settings), the
 //! clock with the bell (-> notifications) and the show-desktop sliver. panel/mod.rs toggles "w11-glass" on the
 //! strip while the extension blurs it (then the 70 % tint, else the solid colour).

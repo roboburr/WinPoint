@@ -7,9 +7,10 @@
 # Runs `rustfmt --edition 2024 --check` on each crate root (host/src/lib.rs and every host/src/bin/*.rs; rustfmt
 # follows their `mod` declarations, so every module file is covered) and changes nothing. A file with a diff fails
 # the check unless it is in UNFORMATTED: the files that were not rustfmt-clean at 18c8ffbe (the round-3 start),
-# minus runtime.rs, window.rs and i18n.rs, which R3-NATIVE formatted. So a file that is clean today stays clean,
-# and a new file must be clean. A listed file that has become clean is named, so it can leave the list. Cheap:
-# no cargo, no build (rustfmt only parses); about 2 s.
+# minus runtime.rs, window.rs and i18n.rs, which R3-NATIVE formatted, and picker.rs, formatted when the WebKit picker
+# went (window.rs went with it). So a file that is clean today stays clean, and a new file must be clean. A listed
+# file that has become clean is named, so it can leave the list. Cheap: no cargo, no build (rustfmt only parses);
+# about 2 s.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 RUSTFMT="${RUSTFMT:-$(command -v rustfmt || echo "$HOME/.cargo/bin/rustfmt")}"
@@ -30,7 +31,6 @@ host/src/events.rs
 host/src/gnome.rs
 host/src/launch.rs
 host/src/launch_context/portal/tests.rs
-host/src/picker.rs
 host/src/process_scope.rs
 host/src/services/mod.rs
 host/src/services/system/info.rs

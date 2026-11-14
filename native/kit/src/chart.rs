@@ -1,5 +1,5 @@
-//! Charts after vendor/ui/js/core/charts.js, drawn with cairo and redrawn on theme changes: the streaming line /
-//! area graph with its grid (Task Manager's performance graphs), the sparkline, the donut and the stacked bar.
+//! Charts after last-webkit:vendor/ui/js/core/charts.js, drawn with cairo and redrawn on theme changes: the streaming
+//! line / area graph with its grid (Task Manager's performance graphs), the sparkline, the donut and the stacked bar.
 //! Colours are token names of tokens.css ("chart-cpu", "chart-memory", "chart-disk", "chart-network",
 //! "chart-gpu", "accent", "chart-1".."chart-8") or any CSS colour ("#0078d4").
 use gtk::prelude::*;

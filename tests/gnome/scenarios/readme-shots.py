@@ -288,13 +288,13 @@ def run(h):
     step(h, 'task-manager-summary', app('taskmgr', 'taskmgr', 'task-manager-summary'))
 
     def performance():
-        expr = ("[...document.querySelectorAll('button,a,li,[role=tab],[role=option],[role=treeitem],[role=menuitem]')]"
-                ".find(e=>(e.textContent||'').trim()==='Performance')")
+        # the navigation item Performance (native/kit nav.rs: nav-<page id>), with the pointer; the dev click as fallback
         try:
-            h.record('taskmgr.click', h.click('taskmgr', find=expr))
+            h.record('taskmgr.click', h.click('taskmgr', 'nav-performance'))
         except Exception as error:   # noqa: BLE001
             h.record('taskmgr.click', f'pointer failed: {error}')
-            h.click('taskmgr', find=expr, real=False)
+            h.click('taskmgr', 'nav-performance', real=False)
+        h.until(lambda: h.find('taskmgr', 'taskmgr-perf-list') or None, 'Task Manager on Performance', 10, 0.5)
         h.sleep(30)         # half a minute of samples for the 60 s graph
         park(h)
         shot(h, 'task-manager', settle=1.0)

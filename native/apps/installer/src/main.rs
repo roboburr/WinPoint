@@ -1,10 +1,10 @@
-//! Win11 GNOME App Installer in GTK 4 (../../APPS.md): vendor/ui/js/apps/installer/main.js with js/core/software.js,
-//! css/installer.css and css/software.css on the kit. Choose (GTK's file dialog, so the FileChooser portal's
-//! picker) or drop one installation file; it is checked (software.inspect) and shown with its details; "Installatie
-//! controleren" opens the review (software.prepare) whose own button alone runs it (software.execute); the job's
-//! progress (software.status) and the Activity list (software.jobs) follow. `--params {"uninstall": id}` reviews a
-//! removal instead (software.uninstallInfo). One process: a relaunch presents the window and takes its new file or
-//! removal (the WebKit app's app.navigate).
+//! Win11 GNOME App Installer in GTK 4 (../../APPS.md): last-webkit:vendor/ui/js/apps/installer/main.js with
+//! js/core/software.js, css/installer.css and css/software.css on the kit. Choose (GTK's file dialog, so the
+//! FileChooser portal's picker) or drop one installation file; it is checked (software.inspect) and shown with its
+//! details; "Installatie controleren" opens the review (software.prepare) whose own button alone runs it
+//! (software.execute); the job's progress (software.status) and the Activity list (software.jobs) follow. `--params
+//! {"uninstall": id}` reviews a removal instead (software.uninstallInfo). One process: a relaunch presents the window
+//! and takes its new file or removal (the WebKit app's app.navigate).
 mod clamp;
 mod software;
 
@@ -54,9 +54,9 @@ fn main() -> glib::ExitCode {
     })
 }
 
-/// The launch arguments as the WebKit app got them in its URL query (host/src/lib.rs run_inner): `--params JSON`
-/// gives its keys (strings as they are, other values as JSON text), `--tab-ticket T` gives tabTicket, otherwise
-/// the first argument is `path` and the others `tabs`.
+/// The launch arguments as the WebKit app got them in its URL query (`git show last-webkit:host/src/lib.rs`,
+/// run_inner): `--params JSON` gives its keys (strings as they are, other values as JSON text), `--tab-ticket T`
+/// gives tabTicket, otherwise the first argument is `path` and the others `tabs`.
 fn params(args: &[String]) -> Map<String, Value> {
     let mut args: Vec<&str> =
         args.iter().map(String::as_str).filter(|a| !matches!(*a, "--dry-run" | "--http-only")).collect();
@@ -381,7 +381,7 @@ impl App {
     }
 
     /// "Bestand kiezen": GTK's file dialog (the desktop's FileChooser portal, Win11's picker when it is chosen),
-    /// filtered to installation files. The WebKit app's shell.pickFile has no window to show in a backend.
+    /// filtered to installation files.
     fn browse(self: &Rc<Self>) {
         if self.state.borrow().busy {
             return;

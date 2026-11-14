@@ -503,7 +503,7 @@ impl ProcessState {
                 key
             };
         // The own apps' windows first, then the processes below them in their unit (own_window_of: a native app's
-        // backend and its workers, a WebKit window's web processes), then everything else.
+        // backend and its workers), then everything else.
         let mut own_windows = HashSet::new();
         for (pid, p) in &procs {
             if p.uid != uid || *pid == mypid {
@@ -528,8 +528,16 @@ impl ProcessState {
             .iter()
             .filter(|(pid, p)| p.uid == uid && **pid != mypid && !app_of.contains_key(pid))
             .filter_map(|(pid, _)| {
-                own_window_of(*pid, &procs, &self.statics, &app_of, &own_windows, &win_by_pid, mypid)
-                    .map(|key| (*pid, key))
+                own_window_of(
+                    *pid,
+                    &procs,
+                    &self.statics,
+                    &app_of,
+                    &own_windows,
+                    &win_by_pid,
+                    mypid,
+                )
+                .map(|key| (*pid, key))
             })
             .collect::<Vec<_>>();
         app_of.extend(helpers);
@@ -1012,8 +1020,8 @@ const OWN_KINDS: [&str; 7] = [
 /// The own app whose window a process is, from its argv and its parent's (empty when unknown). Task Manager shows
 /// it as that app and restarts it through apps.launch (actions.rs own_window).
 /// - The native app (native/apps): `win11-gtk-<kind>`, which `win11-app --app <kind>`, `win11-explorer`,
-///   `win11-default-apps` and `win11-installer` exec with the same pid (host lib.rs native_app_switch).
-/// - The WebKit app (WIN11_WEBKIT_APPS=1, or no native binary): `win11-app --app <kind>` or one of those three.
+///   `win11-default-apps` and `win11-installer` exec with the same pid (host lib.rs exec_native_app).
+/// - One of those launchers in the moment before its exec (the same pid, so the same app).
 ///
 /// Never an app of its own: a backend (`--http-only`; a native app's `win11-app --app <kind> --http-only` runs
 /// below its window and is counted under it, own_window_of), and the portal's file picker (`win11-gtk-explorer
@@ -1026,7 +1034,7 @@ pub(super) fn own_app(argv: &[String], parent: &[String]) -> Option<String> {
     let program = basename(argv.first()?);
     let kind = if let Some(kind) = program.strip_prefix("win11-gtk-") {
         kind
-    } else if argv.iter().any(|s| s == "host.appwindow") || program == "win11-app" {
+    } else if program == "win11-app" {
         let i = argv.iter().position(|s| s == "--app")?;
         argv.get(i + 1)?.as_str()
     } else {
@@ -1056,7 +1064,9 @@ fn picker(argv: &[String], parent: &[String]) -> bool {
         || parent
             .first()
             .is_some_and(|s| basename(s) == "win11-file-portal")
-        || argv.windows(2).any(|w| w[0] == "--params" && options(&w[1]))
+        || argv
+            .windows(2)
+            .any(|w| w[0] == "--params" && options(&w[1]))
 }
 /// The own app window `pid` runs below inside the same cgroup, as its app key (`app_of` of a pid in `own`). An own
 /// app's processes share its systemd unit, which resolve() does not walk out of. The walk ends at a cgroup
@@ -1102,20 +1112,23 @@ fn own_window_of(
     None
 }
 /// Task Manager's name of an own app in `lang`, and its icon (the second of apps/catalog-data.json). Default apps
-/// and the Installer are named as their windows are (host/i18n/window.tsv, the native apps' titles).
+/// and the Installer are named as their windows are (the native apps' titles).
 pub(super) fn own_names(lang: impl crate::i18n::AsLang, app: &str) -> (String, &'static str) {
     let pick = |nl: &str, en: &str| crate::i18n::pick(&lang, nl, en).to_owned();
     match app {
         "settings" => (pick("Instellingen", "Settings"), "preferences-system"),
-        "taskmgr" => (pick("Taakbeheer", "Task Manager"), "utilities-system-monitor"),
+        "taskmgr" => (
+            pick("Taakbeheer", "Task Manager"),
+            "utilities-system-monitor",
+        ),
         "explorer" => (pick("Verkenner", "File Explorer"), "system-file-manager"),
         "alles" => (pick("Alles", "Alles"), "system-search"),
         "defaultapps" => (
-            crate::i18n::tr(&lang, "window.title.defaultapps"),
+            crate::i18n::tr(&lang, "sysmon.ownApp.defaultapps"),
             "preferences-desktop-default-applications",
         ),
         "installer" => (
-            crate::i18n::tr(&lang, "window.title.installer"),
+            crate::i18n::tr(&lang, "sysmon.ownApp.installer"),
             "system-software-install",
         ),
         _ => (pick("Schijven", "Disks"), "org.gnome.DiskUtility"),
@@ -1194,16 +1207,20 @@ mod tests {
         argv.iter().map(|s| s.to_string()).collect()
     }
     #[test]
-    fn own_app_knows_the_native_apps_and_the_webkit_launchers() {
+    fn own_app_knows_the_native_apps_and_their_launchers() {
         for kind in OWN_KINDS {
             let native = format!("/home/u/.local/bin/win11-gtk-{kind}");
             assert_eq!(own_app(&args(&[&native]), &[]).as_deref(), Some(kind));
-            // as host lib.rs native_app_switch execs it: the launcher's arguments after `--app <kind>`
+            // as host lib.rs exec_native_app execs it: the launcher's arguments after `--app <kind>`
             assert_eq!(
-                own_app(&args(&[&native, "--params", "{}"]), &args(&["/usr/bin/gnome-shell"])).as_deref(),
+                own_app(
+                    &args(&[&native, "--params", "{}"]),
+                    &args(&["/usr/bin/gnome-shell"])
+                )
+                .as_deref(),
                 Some(kind)
             );
-            // the WebKit app (WIN11_WEBKIT_APPS=1)
+            // the launcher before its exec
             assert_eq!(
                 own_app(&args(&["/usr/bin/win11-app", "--app", kind]), &[]).as_deref(),
                 Some(kind)
@@ -1214,7 +1231,10 @@ mod tests {
             ("win11-default-apps", "defaultapps"),
             ("win11-installer", "installer"),
         ] {
-            assert_eq!(own_app(&args(&[&format!("/opt/w/{launcher}")]), &[]).as_deref(), Some(kind));
+            assert_eq!(
+                own_app(&args(&[&format!("/opt/w/{launcher}")]), &[]).as_deref(),
+                Some(kind)
+            );
         }
         let mut kinds = OWN_KINDS.to_vec();
         let mut launch = crate::launch::OWN_APPS.to_vec();
@@ -1244,14 +1264,29 @@ mod tests {
     fn a_backend_is_part_of_its_window_not_an_app_of_its_own() {
         for kind in OWN_KINDS {
             let window = args(&[&format!("/x/win11-gtk-{kind}")]);
-            assert_eq!(own_app(&args(&["/x/win11-app", "--app", kind, "--http-only"]), &window), None);
             assert_eq!(
-                own_app(&args(&["/x/win11-app", "--app", kind, "--http-only", "--dry-run"]), &window),
+                own_app(
+                    &args(&["/x/win11-app", "--app", kind, "--http-only"]),
+                    &window
+                ),
+                None
+            );
+            assert_eq!(
+                own_app(
+                    &args(&["/x/win11-app", "--app", kind, "--http-only", "--dry-run"]),
+                    &window
+                ),
                 None
             );
             assert_eq!(own_app(&args(&[&window[0], "--http-only"]), &[]), None);
         }
-        assert_eq!(own_app(&args(&["/x/win11-panel", "--http-only"]), &args(&["/x/win11-shell"])), None);
+        assert_eq!(
+            own_app(
+                &args(&["/x/win11-panel", "--http-only"]),
+                &args(&["/x/win11-shell"])
+            ),
+            None
+        );
     }
     #[test]
     fn the_portal_file_picker_is_not_explorer() {
@@ -1264,9 +1299,18 @@ mod tests {
         assert_eq!(explorer(&["--picker-stdio"], &portal), None);
         assert_eq!(explorer(&["--picker-stdio"], &[]), None);
         assert_eq!(explorer(&[], &portal), None);
-        assert_eq!(explorer(&["--params", r#"{"picker":{"mode":"open"}}"#], &[]), None);
-        assert_eq!(explorer(&["--params", r#"{"picker":"{\"mode\":\"save\"}"}"#], &[]), None);
-        assert_eq!(own_app(&args(&["/x/win11-explorer", "--picker-stdio"]), &[]), None);
+        assert_eq!(
+            explorer(&["--params", r#"{"picker":{"mode":"open"}}"#], &[]),
+            None
+        );
+        assert_eq!(
+            explorer(&["--params", r#"{"picker":"{\"mode\":\"save\"}"}"#], &[]),
+            None
+        );
+        assert_eq!(
+            own_app(&args(&["/x/win11-explorer", "--picker-stdio"]), &[]),
+            None
+        );
         // a regular Explorer: other params, broken params, another parent
         let regular: [(&[&str], &[&str]); 6] = [
             (&[], &["/usr/bin/gnome-shell"]),
@@ -1277,11 +1321,19 @@ mod tests {
             (&["/tmp"], &["/x/win11-file-portal-old"]),
         ];
         for (extra, parent) in regular {
-            assert_eq!(explorer(extra, parent).as_deref(), Some("explorer"), "{extra:?} {parent:?}");
+            assert_eq!(
+                explorer(extra, parent).as_deref(),
+                Some("explorer"),
+                "{extra:?} {parent:?}"
+            );
         }
         // only Explorer can be the picker
         assert_eq!(
-            own_app(&args(&["/x/win11-gtk-settings", "--picker-stdio"]), &args(&portal)).as_deref(),
+            own_app(
+                &args(&["/x/win11-gtk-settings", "--picker-stdio"]),
+                &args(&portal)
+            )
+            .as_deref(),
             Some("settings")
         );
     }
@@ -1291,15 +1343,30 @@ mod tests {
         for kind in OWN_KINDS {
             let (nl, icon) = own_names("nl", kind);
             let (en, en_icon) = own_names(crate::i18n::Lang::En, kind);
-            assert!(!nl.is_empty() && !en.is_empty() && !icon.is_empty(), "{kind}");
+            assert!(
+                !nl.is_empty() && !en.is_empty() && !icon.is_empty(),
+                "{kind}"
+            );
             assert_eq!(icon, en_icon);
-            assert!(nls.insert(nl) && ens.insert(en), "{kind}: a name of its own");
+            assert!(
+                nls.insert(nl) && ens.insert(en),
+                "{kind}: a name of its own"
+            );
         }
-        assert_eq!(own_names("nl", "taskmgr"), ("Taakbeheer".into(), "utilities-system-monitor"));
-        assert_eq!(own_names("en", "disks"), ("Disks".into(), "org.gnome.DiskUtility"));
+        assert_eq!(
+            own_names("nl", "taskmgr"),
+            ("Taakbeheer".into(), "utilities-system-monitor")
+        );
+        assert_eq!(
+            own_names("en", "disks"),
+            ("Disks".into(), "org.gnome.DiskUtility")
+        );
         assert_eq!(
             own_names("nl", "defaultapps"),
-            ("Standaard-apps".into(), "preferences-desktop-default-applications")
+            (
+                "Standaard-apps".into(),
+                "preferences-desktop-default-applications"
+            )
         );
         assert_eq!(own_names("en", "defaultapps").0, "Default apps");
         assert_eq!(
@@ -1317,14 +1384,24 @@ mod tests {
         // systemd: one cgroup for all), 106 its child; 107 a child of the host in the same cgroup
         let rows: [(u32, u32, &[&str], &str); 9] = [
             (100, 1, &["/x/win11-gtk-explorer"], unit),
-            (101, 100, &["/x/win11-app", "--app", "explorer", "--http-only"], unit),
+            (
+                101,
+                100,
+                &["/x/win11-app", "--app", "explorer", "--http-only"],
+                unit,
+            ),
             (102, 101, &["/x/win11-index-worker"], unit),
             (103, 100, &["/usr/bin/gnome-text-editor"], other),
             (104, 103, &["/usr/bin/aspell"], other),
             (105, 100, &["/usr/bin/gedit"], unit),
             (106, 105, &["/usr/bin/aspell"], unit),
             (107, 10, &["/x/win11-image-worker"], unit),
-            (10, 100, &["/x/win11-app", "--app", "taskmgr", "--http-only"], unit),
+            (
+                10,
+                100,
+                &["/x/win11-app", "--app", "taskmgr", "--http-only"],
+                unit,
+            ),
         ];
         let procs = rows
             .iter()
@@ -1362,7 +1439,10 @@ mod tests {
         let explorer = "win11shell-explorer.desktop".to_string();
         let app_of = HashMap::from([(100, explorer.clone())]);
         let own = HashSet::from([100]);
-        let windows = BTreeMap::from([(100, vec![json!({"pid":100})]), (105, vec![json!({"pid":105})])]);
+        let windows = BTreeMap::from([
+            (100, vec![json!({"pid":100})]),
+            (105, vec![json!({"pid":105})]),
+        ]);
         let of = |pid| own_window_of(pid, &procs, &statics, &app_of, &own, &windows, 10);
         assert_eq!(of(101), Some(explorer.clone()));
         assert_eq!(of(102), Some(explorer));
@@ -1370,7 +1450,7 @@ mod tests {
             assert_eq!(of(pid), None, "{pid}");
         }
     }
-    // The native app as it runs (host lib.rs native_app_switch, native/kit backend.rs): its window `win11-gtk-disks`
+    // The native app as it runs (host lib.rs exec_native_app, native/kit backend.rs): its window `win11-gtk-disks`
     // with the backend `win11-app --app disks --http-only` below it, and that backend's own child, is one app row;
     // an Explorer started by win11-file-portal (the file picker) is no Explorer row.
     #[test]
@@ -1378,7 +1458,9 @@ mod tests {
         let dir = "/nonexistent/winpoint-test";
         let app = tree::Tree::spawn(
             &format!("{dir}/win11-gtk-disks"),
-            &format!("(exec -a {dir}/win11-app bash -c 'sleep 30; :' x --app disks --http-only) & wait"),
+            &format!(
+                "(exec -a {dir}/win11-app bash -c 'sleep 30; :' x --app disks --http-only) & wait"
+            ),
         );
         let backend = app.child(app.root(), &format!("{dir}/win11-app"));
         let worker = app.child(backend, "sleep");
@@ -1387,10 +1469,15 @@ mod tests {
             &format!("(exec -a {dir}/win11-gtk-explorer sleep 30) & wait"),
         );
         let picker = portal.child(portal.root(), &format!("{dir}/win11-gtk-explorer"));
-        let root = std::env::temp_dir().join(format!("win11-sysmon-own-{}", crate::events::nonce()));
+        let root =
+            std::env::temp_dir().join(format!("win11-sysmon-own-{}", crate::events::nonce()));
         let config = root.join("config");
         fs::create_dir_all(&config).unwrap();
-        fs::write(config.join("settings.json"), json!({"language":"en"}).to_string()).unwrap();
+        fs::write(
+            config.join("settings.json"),
+            json!({"language":"en"}).to_string(),
+        )
+        .unwrap();
         let ctx = ServiceContext::new(
             crate::events::Events::new(&root.join("events")).unwrap(),
             config,
@@ -1421,18 +1508,23 @@ mod tests {
         assert_eq!(disks["name"], "Disks");
         assert_eq!(disks["icon"], "org.gnome.DiskUtility");
         for pid in [app.root(), backend, worker] {
-            assert!(disks["pids"].as_array().unwrap().contains(&json!(pid)), "{pid}");
+            assert!(
+                disks["pids"].as_array().unwrap().contains(&json!(pid)),
+                "{pid}"
+            );
         }
         // the picker (here a child of this host, through the portal) is never counted as Explorer. Which other group
         // it lands in depends on where the test runs: started from an app's scope (a terminal or an editor), every
         // process of that scope is that app's, the picker too.
         assert_ne!(row(picker)["groupKey"], "win11shell-explorer.desktop");
-        assert!(data["apps"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .filter(|g| g["key"] == "win11shell-explorer.desktop")
-            .all(|g| !g["pids"].as_array().unwrap().contains(&json!(picker))));
+        assert!(
+            data["apps"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|g| g["key"] == "win11shell-explorer.desktop")
+                .all(|g| !g["pids"].as_array().unwrap().contains(&json!(picker)))
+        );
     }
     #[test]
     fn recycled_pid_does_not_inherit_cpu_accounting() {

@@ -15,7 +15,7 @@ pub struct Transfers {
 
 impl Transfers {
     pub fn new() -> Result<Self, String> {
-        let root = gtk::glib::user_runtime_dir().join("win11-gnome/tab-transfers");
+        let root = glib::user_runtime_dir().join("win11-gnome/tab-transfers");
         fs::DirBuilder::new()
             .recursive(true)
             .mode(0o700)

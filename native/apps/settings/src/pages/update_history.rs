@@ -1,9 +1,9 @@
-//! Instellingen › Update en herstel › Updategeschiedenis (vendor/ui/js/apps/settings/pages/update-history.js):
-//! Windows 11 24H2's Update history, one expander per group with its count ("Updates (12)"), each entry a
-//! two-line row (name and version; "Geïnstalleerd op {date}" or "Kon niet worden geïnstalleerd op {date}" with
-//! who installed it), newest first; update.history gives 200 entries at most per call, "Meer laden" asks for the
-//! ones before the oldest shown (its cursor). Under the groups, Gerelateerde instellingen › Herstel opens Update
-//! en herstel at its backup and reset group.
+//! Instellingen › Update en herstel › Updategeschiedenis
+//! (`git show last-webkit:vendor/ui/js/apps/settings/pages/update-history.js`): Windows 11 24H2's Update history, one
+//! expander per group with its count ("Updates (12)"), each entry a two-line row (name and version; "Geïnstalleerd op
+//! {date}" or "Kon niet worden geïnstalleerd op {date}" with who installed it), newest first; update.history gives 200
+//! entries at most per call, "Meer laden" asks for the ones before the oldest shown (its cursor). Under the groups,
+//! Gerelateerde instellingen › Herstel opens Update en herstel at its backup and reset group.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, ct};
 use kit::controls::{self as c, Chevron, SettingsCard, SettingsExpander, SettingsGroup};

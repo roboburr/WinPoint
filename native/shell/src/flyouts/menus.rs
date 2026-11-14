@@ -1,6 +1,6 @@
 //! Taskbar menus: the app buttons' jump lists and the taskbar's context menu (both in the reusable "jumplist"
 //! flyout), Win+X ("winx"), the tray overflow ("tray") and Task View ("taskview"). Ported from
-//! vendor/ui/js/shell/{taskbar.js openJumpList / taskbarMenuItems, winx.js, tray.js, taskview.js}.
+//! git show 418ea594:vendor/ui/js/shell/{taskbar.js openJumpList / taskbarMenuItems, winx.js, tray.js, taskview.js}.
 mod menu;
 mod taskview;
 mod tray;

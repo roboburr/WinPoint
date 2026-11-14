@@ -24,8 +24,6 @@ host/src/**	macro:debug_assert!	internal assertion
 host/src/**	call:.expect	panic message of an embedded-data invariant (internal)
 # start-up failures: returned as Err(String) up to lib.rs run(), which prints "Win11 voor GNOME: {err}" and exits
 host/src/lib.rs	text:De oorspronkelijke interface ontbreekt	start-up error, stderr only (run → eprintln)
-host/src/lib.rs	text:Start registreren: {err}	start-up error, stderr only
-host/src/lib.rs	text:Herstarten: {error}	restart error, stderr only
 host/src/runtime.rs	text:UI-map ontbreekt	start-up error, stderr only (Runtime::new → run)
 host/src/runtime.rs	text:Geen TCP-adres	start-up error, stderr only (Runtime::server → run)
 # HTTP reason phrases of plain-text responses (machine protocol, not shown by the UI)

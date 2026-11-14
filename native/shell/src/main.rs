@@ -1,6 +1,6 @@
 //! Win11 GNOME native shell (GTK 4, D-G63): the taskbar with its flyouts, Start and the desktop in one process,
 //! without WebKit. Content comes from the host's Rust services (`win11-panel --http-only`, see backend.rs); the
-//! GNOME extension positions, blurs and focuses the windows as it does for the WebKit surfaces (gnome.rs).
+//! GNOME extension positions, blurs and focuses the windows (gnome.rs).
 //!
 //! Environment:
 //!   WIN11_SHELL_SURFACES   comma list of surfaces to run (default "panel,start,desktop")
@@ -35,6 +35,13 @@ fn main() -> glib::ExitCode {
     if std::env::var_os("GSK_RENDERER").is_none() && std::env::var("WIN11_SHELL_GL").as_deref() != Ok("1") {
         // SAFETY: first thing in main, before GTK or any other thread starts.
         unsafe { std::env::set_var("GSK_RENDERER", "cairo") };
+        // the user had none: the backend gives an app it launches the user's renderer, not our cairo (host
+        // files/actions.rs GPU_KEYS); a marker that a WinPoint parent passed on is the user's already
+        if std::env::var_os("WIN11SHELL_USER_GPU").is_none() {
+            let user =
+                std::env::var("GDK_DEBUG").map_or(serde_json::json!({}), |v| serde_json::json!({ "GDK_DEBUG": v }));
+            unsafe { std::env::set_var("WIN11SHELL_USER_GPU", user.to_string()) };
+        }
     }
     glib::set_prgname(Some(PANEL_ID));
     let app = gtk::Application::builder()

@@ -1,6 +1,6 @@
-//! Taakweergave (vendor/ui/js/shell/taskview.js): the whole monitor above the taskbar, tinted, with a card per open
-//! window (app icon and title, a little window mock-up with the app icon large as the "thumbnail"), the window you
-//! were using first. Click = focus, the cross = close, keyboard: arrows, Tab, Home/End, Enter, Delete, Esc.
+//! Taakweergave (`git show 418ea594:vendor/ui/js/shell/taskview.js`): the whole monitor above the taskbar, tinted, with
+//! a card per open window (app icon and title, a little window mock-up with the app icon large as the "thumbnail"), the
+//! window you were using first. Click = focus, the cross = close, keyboard: arrows, Tab, Home/End, Enter, Delete, Esc.
 use super::util;
 use crate::core::Shell;
 use crate::flyouts::{Flyout, Placement};

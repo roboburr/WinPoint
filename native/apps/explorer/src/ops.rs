@@ -1,7 +1,7 @@
-//! File operations (vendor/ui/js/apps/explorer/main.js `op`, `act`, `trashPaths`, `trashNamesFor`,
+//! File operations (last-webkit:vendor/ui/js/apps/explorer/main.js `op`, `act`, `trashPaths`, `trashNamesFor`,
 //! `restoreNames`, `dropTo`, `renameItem`, `setAttributes`, `loadOpenWith`, `showJob`): open, rename, new
 //! folder and text document, cut, copy, paste, move and copy by drag and drop, to the Prullenbak (Del and
-//! Shift+Del: the WebKit app never deletes permanently, and the host has no such method), compress, extract,
+//! Shift+Del: the WebKit app never deleted permanently, and the host has no such method), compress, extract,
 //! restore, empty the Prullenbak, Openen met, Ongedaan maken (Ctrl+Z) and the progress cards of long jobs.
 //!
 //! Long jobs (copy, move, paste, compress, extract) carry a `jobId`; when one runs longer than 700 ms a
@@ -549,7 +549,7 @@ pub fn trash(x: &Explorer) {
     trash_paths(x, paths_of(&x.selected_items()));
 }
 
-/// Shift+Delete: the WebKit app treats it as Delete (main.js onKey: every Delete goes to act.trash; "trash,
+/// Shift+Delete: the WebKit app treated it as Delete (main.js onKey: every Delete went to act.trash; "trash,
 /// never permanent delete"), and the host has no permanent delete besides emptying the Prullenbak. So the
 /// selection goes to the Prullenbak, where it can be restored.
 pub fn delete_permanently(x: &Explorer, items: Vec<Item>) {

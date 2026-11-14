@@ -1,5 +1,5 @@
-//! Instellingen › Systeem › Beeldscherm (vendor/ui/js/apps/settings/pages/display.js): monitors (arrangement,
-//! scale, resolution, refresh rate with the Windows "Deze beeldscherminstellingen behouden?" countdown),
+//! Instellingen › Systeem › Beeldscherm (last-webkit:vendor/ui/js/apps/settings/pages/display.js): monitors
+//! (arrangement, scale, resolution, refresh rate with the Windows "Deze beeldscherminstellingen behouden?" countdown),
 //! brightness and night light. Under GNOME display.set and the night light belong to GNOME's own Settings app
 //! (D-G2): the host reports the monitors read-only and the page shows the values greyed out.
 use super::{Builder, Content, Page, PageFuture};

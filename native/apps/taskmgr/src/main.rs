@@ -1,4 +1,5 @@
-//! Win11 GNOME Task Manager in GTK 4 (../../APPS.md; the WebKit app: vendor/ui/js/apps/taskmgr/main.js).
+//! Win11 GNOME Task Manager in GTK 4 (../../APPS.md; ported from the HTML app,
+//! last-webkit:vendor/ui/js/apps/taskmgr/main.js).
 //!
 //! The Win11 22H2-style Task Manager: a navigation pane with the hamburger (compact below 1000 px or by
 //! choice), the search box in the title bar, the pages with their command bar (Samenvatting, Processen,

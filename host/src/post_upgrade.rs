@@ -1,5 +1,6 @@
 //! `win11-launch --post-upgrade-check` (design §6.6, GW7): the XDG autostart check outside the extension, so it
-//! runs when WebKitGTK is broken or GNOME rejected our extension. GIO only (win11-launch's NEEDED stays as it is).
+//! runs when a library of our programs is gone or GNOME rejected our extension. GIO only (win11-launch's NEEDED
+//! stays as it is).
 //!
 //! 1. `/etc/os-release` (`VERSION_ID`, `VERSION_CODENAME`, `VERSION`), the GNOME major from the `org.gnome.Shell`
 //!    `ShellVersion` property (≤ 30 s of retries) or `dpkg-query`, and `~/.config/win11-gnome/last-os-release.json`.
@@ -103,22 +104,18 @@ const SONAME_DIR: &str = "/usr/lib/x86_64-linux-gnu";
 const SYSTEM_PATH: &str = "/usr/bin:/bin";
 // table:end
 
-/// The blocking libraries of design §6.2 (the NEEDED sonames of the win11-* binaries plus libarchive, loaded at
-/// run time; libc, libgcc_s and ld-linux are not counted): soname, its 26.04 package, the part's label row.
+/// The blocking libraries of design §6.2 (the NEEDED sonames of the win11-* binaries of scripts/install.py `BINS`
+/// plus libarchive, loaded at run time; libc, libm, libgcc_s and ld-linux are not counted): soname, its 26.04
+/// package, the part's label row. Graphene and Pango come with GTK 4 (the native shell and apps), so they carry its
+/// label.
 const PARTS: &[(&str, &str, &str)] = &[
+    ("libgtk-4.so.1", "libgtk-4-1", "update.part.gtk4"),
     (
-        "libwebkit2gtk-4.1.so.0",
-        "libwebkit2gtk-4.1-0",
-        "update.part.webkit",
+        "libgraphene-1.0.so.0",
+        "libgraphene-1.0-0",
+        "update.part.gtk4",
     ),
-    (
-        "libjavascriptcoregtk-4.1.so.0",
-        "libjavascriptcoregtk-4.1-0",
-        "update.part.jsc",
-    ),
-    ("libgtk-3.so.0", "libgtk-3-0t64", "update.part.gtk"),
-    ("libgdk-3.so.0", "libgtk-3-0t64", "update.part.gtk"),
-    ("libsoup-3.0.so.0", "libsoup-3.0-0", "update.part.soup"),
+    ("libpango-1.0.so.0", "libpango-1.0-0", "update.part.gtk4"),
     ("libglib-2.0.so.0", "libglib2.0-0t64", "update.part.glib"),
     ("libgobject-2.0.so.0", "libglib2.0-0t64", "update.part.glib"),
     ("libgio-2.0.so.0", "libglib2.0-0t64", "update.part.glib"),
@@ -1238,8 +1235,8 @@ mod tests {
     #[test]
     fn apt_cache_outputs_resolve_the_names() {
         assert_eq!(
-            policy_candidate(&fixture("apt/policy-libsoup-3.0-0.txt")).as_deref(),
-            Some("3.6.6-1ubuntu0.3")
+            policy_candidate(&fixture("apt/policy-libgtk-4-1.txt")).as_deref(),
+            Some("4.24.1+ds-1ubuntu1")
         );
         assert_eq!(
             policy_candidate(&fixture("apt/policy-libgtk-3-0t64.txt")),
@@ -1284,8 +1281,8 @@ mod tests {
         ];
         let setup = setup_from(&vars, unsafe { libc::geteuid() }).unwrap();
         assert_eq!(
-            resolve_name(&setup, "libsoup-3.0-0"),
-            "libsoup-3.0-0",
+            resolve_name(&setup, "libgtk-4-1"),
+            "libgtk-4-1",
             "a candidate: the old name"
         );
         assert_eq!(
@@ -1305,7 +1302,7 @@ mod tests {
         );
     }
 
-    /// The blocking sonames on a fixture soname directory; the table covers every NEEDED of the 12 binaries.
+    /// The blocking sonames on a fixture soname directory; the table covers every NEEDED of the `BINS`.
     #[test]
     fn missing_parts_come_from_the_soname_directory() {
         let dir = private_dir("sonames");
@@ -1313,14 +1310,21 @@ mod tests {
             fs::write(dir.0.join(soname), b"").unwrap();
         }
         assert_eq!(missing_parts(&dir.0), None);
-        fs::remove_file(dir.0.join("libgdk-3.so.0")).unwrap();
-        fs::remove_file(dir.0.join("libsoup-3.0.so.0")).unwrap();
+        fs::remove_file(dir.0.join("libgdk_pixbuf-2.0.so.0")).unwrap();
+        fs::remove_file(dir.0.join("libgtk-4.so.1")).unwrap();
         assert_eq!(
             missing_parts(&dir.0),
             Some(Finding::Missing {
-                labels: vec!["update.part.gtk", "update.part.soup"],
-                packages: vec!["libgtk-3-0t64", "libsoup-3.0-0"]
+                labels: vec!["update.part.gtk4", "update.part.pixbuf"],
+                packages: vec!["libgtk-4-1", "libgdk-pixbuf-2.0-0"]
             })
+        );
+        // GTK 3 is no part of ours (no binary links it since 14-11): its absence is no finding
+        assert!(
+            !PARTS
+                .iter()
+                .any(|(soname, _, _)| soname.starts_with("libgtk-3")
+                    || soname.starts_with("libgdk-3"))
         );
         fs::remove_file(dir.0.join("libz.so.1")).unwrap();
         std::os::unix::fs::symlink(dir.0.join("gone"), dir.0.join("libz.so.1")).unwrap();
@@ -1328,19 +1332,15 @@ mod tests {
             matches!(missing_parts(&dir.0), Some(Finding::Missing { labels, .. }) if labels.contains(&"update.part.zlib")),
             "a dangling link"
         );
-        // every NEEDED soname of the baseline binaries (minus libc, libgcc_s, ld-linux) is in the table
-        let build = Path::new(env!("CARGO_MANIFEST_DIR")).join("../tests/build/base-debug");
-        let Ok(entries) = fs::read_dir(&build) else {
-            return;
-        };
+        // every NEEDED soname of the build's binaries (minus libc, libm, libgcc_s, ld-linux) is in the table
+        let build = build_dir();
         let mut seen = 0;
-        for entry in entries
-            .flatten()
-            .filter(|e| e.file_name().to_string_lossy().starts_with("win11-"))
-        {
-            let bytes = fs::read(entry.path()).unwrap();
+        for name in bins() {
+            let path = build.join(&name);
+            let bytes = fs::read(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
             for soname in needed(&bytes) {
                 if soname.starts_with("libc.so")
+                    || soname.starts_with("libm.so")
                     || soname.starts_with("libgcc_s")
                     || soname.starts_with("ld-linux")
                 {
@@ -1348,13 +1348,49 @@ mod tests {
                 }
                 assert!(
                     PARTS.iter().any(|(s, _, _)| *s == soname),
-                    "{soname} of {} is not in PARTS",
-                    entry.path().display()
+                    "{soname} of {} is not in PARTS (or the build is older than this source)",
+                    path.display()
                 );
                 seen += 1;
             }
         }
-        assert!(seen > 20, "the baseline binaries were read");
+        assert!(seen > 20, "the build's binaries were read");
+    }
+    /// The program names of scripts/install.py `BINS` (every binary an install has).
+    fn bins() -> Vec<String> {
+        let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../scripts/install.py");
+        let text = fs::read_to_string(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
+        let list = text
+            .split("\nBINS = (")
+            .nth(1)
+            .and_then(|t| t.split(')').next())
+            .expect("install.py BINS");
+        let names: Vec<String> = list
+            .split('"')
+            .skip(1)
+            .step_by(2)
+            .map(str::to_owned)
+            .collect();
+        assert!(names.iter().all(|n| n.starts_with("win11-")), "{names:?}");
+        names
+    }
+    /// A build directory with every `BINS` binary: `W11_TEST_BUILD_DIR`, else tests/build/native-release. A missing
+    /// binary fails the test (no silent skip).
+    fn build_dir() -> PathBuf {
+        let dir = std::env::var_os("W11_TEST_BUILD_DIR").map_or_else(
+            || Path::new(env!("CARGO_MANIFEST_DIR")).join("../tests/build/native-release"),
+            PathBuf::from,
+        );
+        let missing: Vec<String> = bins()
+            .into_iter()
+            .filter(|name| !dir.join(name).is_file())
+            .collect();
+        assert!(
+            missing.is_empty(),
+            "{} lacks {missing:?} (W11_TEST_BUILD_DIR names a build directory with all BINS)",
+            dir.display()
+        );
+        dir
     }
     /// DT_NEEDED of a 64-bit little-endian ELF file (the reader of scripts/install.py `elf_needed`).
     fn needed(b: &[u8]) -> Vec<String> {
@@ -1560,9 +1596,9 @@ mod tests {
             trf(
                 Lang::En,
                 "update.post.missingBody",
-                &json!({"parts":"GTK 3, libsoup"})
+                &json!({"parts":"GTK 4, GLib"})
             ),
-            "Missing after the upgrade: GTK 3, libsoup."
+            "Missing after the upgrade: GTK 4, GLib."
         );
         assert_eq!(language_list(Lang::Nl), "nl:en");
         assert_eq!(language_list(Lang::En), "en");

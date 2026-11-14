@@ -33,13 +33,13 @@ Robin's live desktop is this GNOME version. Nothing here may reach it. Layers, o
    --virtual-monitor=1440x900 --wayland-display=w11-wl --no-x11`` with the unmodified extension copy, waits for
    the native GTK 4 shell (D-G70: win11-panel, started by the extension, execs win11-shell, which holds the
    taskbar, its flyouts, Start and the desktop in one process with ``win11-panel --http-only`` as its backend;
-   no WebKit) to report its boot on WIN11_DEV_REPORT, opens each surface (the shell's through screenshots and
-   its dev state, the HTML apps' text through WIN11_DEV_COMMAND/WIN11_DEV_REPORT), takes screenshots with
-   org.gnome.Shell.Screenshot on the private bus, optionally switches the language live by rewriting the
-   private settings.json, and shuts down only its own descendants.
+   no WebKit) to report its boot on WIN11_DEV_REPORT, opens each surface (the shell's and the native GTK 4
+   apps' through screenshots and their dev state on WIN11_DEV_COMMAND/WIN11_DEV_REPORT, native/shell/src/dev.rs
+   and native/kit/src/dev.rs), takes screenshots with org.gnome.Shell.Screenshot on the private bus, optionally
+   switches the language live by rewriting the private settings.json, and shuts down only its own descendants.
 
-GE1h added: ``--build-dir`` (which 12 binaries to install; default tests/build/native-release), ``--source``
-(install the UI, extension and scripts of the working tree or of a git revision), ``--scenario FILE`` (a Python
+GE1h added: ``--build-dir`` (which 19 binaries to install; default tests/build/native-release), ``--source``
+(install the assets, extension and scripts of the working tree or of a git revision), ``--scenario FILE`` (a Python
 file with ``def run(h)``, run inside the sandbox after the session is up; ``h`` is tests/gnome/lib/scenario.py's
 Helper), the F24 guard refusals, and the heavy lock taken by an ancestor ``tools/heavy.sh`` (contracts C8).
 
@@ -140,7 +140,7 @@ LIVE_POINTERS = ('WIN11_UI_DIR',
                  'XDG_SEAT', 'XDG_VTNR', 'XDG_SEAT_PATH', 'XDG_SESSION_PATH', 'GNOME_SETUP_DISPLAY')
 # D-G42 (GW1's layer, tests/update/run.sh root_argv): the sandbox root is an allowlist, not `--ro-bind / /`.
 ROOT_LINKS = ('bin', 'sbin', 'lib', 'lib64', 'lib32', 'libx32')     # links into /usr (or plain directories)
-FONTCONFIG_CACHE = Path('/var/cache/fontconfig')  # the system font cache, read-only (as tests/update-ui/nonet.sh)
+FONTCONFIG_CACHE = Path('/var/cache/fontconfig')  # the system font cache, read-only (as GW3's update-ui/nonet.sh)
 # udev's database, read-only: mutter finds the GPU's render node through udev's "seat" tag. Its sockets
 # (control, io.systemd.Udev) are in /proc/net/unix, so launch masks them like every other host socket.
 UDEV_DATA = Path('/run/udev')
@@ -197,8 +197,7 @@ def private_env() -> dict[str, str]:
         'WIN11_INSTALL_PREFIX': str(RUN / 'prefix'), 'WIN11_BUILD_DIR': str(BUILD),
         # install.py takes win11-shell from here (D-G63): the build dir, never the native workspace's own target
         'WIN11_NATIVE_BUILD_DIR': str(BUILD),
-        'WIN11_DEV_COMMAND': str(RUN / 'logs' / 'command.js'), 'WIN11_DEV_REPORT': str(RUN / 'logs' / 'report.jsonl'),
-        'WIN11_DEV_SCRIPT': str(RUN / 'observe.js'),
+        'WIN11_DEV_COMMAND': str(RUN / 'logs' / 'command.json'), 'WIN11_DEV_REPORT': str(RUN / 'logs' / 'report.jsonl'),
         'WIN11SHELL_INDEX_AUTOSTART': '0', 'WIN11SHELL_TRASH_DIR': str(RUN / 'data' / 'Trash'),
         'WIN11SHELL_DISKS_READONLY': '1',
         'MUTTER_DEBUG_DISABLE_HW_CURSORS': '1', 'RUST_BACKTRACE': '1', 'PYTHONDONTWRITEBYTECODE': '1',
@@ -630,9 +629,46 @@ def sha256(path: Path) -> str:
 
 
 def settings_titles() -> dict[str, dict[str, str]]:
-    text = (SRC / 'vendor/ui/js/apps/settings/registry.js').read_text()
-    pattern = r"P\('([a-z-]+)',\s*(?:null|'[a-z-]+'),\s*'[^']*',\s*'((?:[^'\\]|\\.)*)',\s*'((?:[^'\\]|\\.)*)'"
-    return {m.group(1): {'nl': m.group(2), 'en': m.group(3)} for m in re.finditer(pattern, text)}
+    """The Settings page titles in Dutch and English, by page id: the native app's registry
+    (native/apps/settings/src/registry.rs, `page!(id, parent, icon, nl, en, ...)`), with Start's copy of the page
+    list (native/shell/src/start/settings_pages.json) for an id the registry does not have."""
+    titles: dict[str, dict[str, str]] = {}
+    try:
+        pages = json.loads((SRC / 'native/shell/src/start/settings_pages.json').read_text())
+        titles.update({p['id']: {'nl': p['title']['nl'], 'en': p['title']['en']} for p in pages})
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    try:
+        text = (SRC / 'native/apps/settings/src/registry.rs').read_text()
+    except OSError:
+        return titles
+    unescape = lambda value: re.sub(r'\\u\{([0-9a-fA-F]+)\}', lambda m: chr(int(m.group(1), 16)), value)  # noqa: E731
+    pattern = r'page!\("([a-z-]+)",\s*(?:None|Some\("[a-z-]+"\)),\s*"[^"]*",\s*"((?:[^"\\]|\\.)*)",\s*"((?:[^"\\]|\\.)*)"'
+    titles.update({m.group(1): {'nl': unescape(m.group(2)), 'en': unescape(m.group(3))} for m in re.finditer(pattern, text)})
+    return titles
+
+
+def tree_nodes(tops) -> list[dict]:
+    """Every node of the widget trees in a dev state answer (a list of toplevels with a "tree"; native/kit/src/dev.rs
+    and native/shell/src/dev.rs list only visible children), depth first."""
+    out, todo = [], [top.get('tree') for top in reversed(tops or []) if isinstance(top, dict)]
+    while todo:
+        node = todo.pop()
+        if isinstance(node, dict):
+            out.append(node)
+            todo.extend(reversed(node.get('children') or []))
+    return out
+
+
+# The tooltip of a native app's close caption button (native/kit/src/frame.rs, relabelled on every switch), which the
+# kit's dev state gives as the button's label: the language the app shows (an HTML app's <html lang> before).
+CLOSE_TOOLTIP = {'Sluiten': 'nl', 'Close': 'en'}
+
+
+def app_lang(tops, app: str) -> str | None:
+    """'nl' or 'en' as a native app shows it (its `<app>-close` caption button), None without a window."""
+    return next((CLOSE_TOOLTIP[n['label']] for n in tree_nodes(tops)
+                 if n.get('name') == f'{app}-close' and n.get('label') in CLOSE_TOOLTIP), None)
 
 
 def dutch_words() -> set[str]:
@@ -827,7 +863,7 @@ INET_HOST = re.compile(r'inet_addr\("([^"]*)"\)|inet_pton\(AF_INET6, "([^"]*)"')
 
 
 def strace_connect_report(traces: list[Path]) -> dict:
-    """D-G42: every connect() inside the sandbox (strace -f over the install, the warm-up and the session). A
+    """D-G42: every connect() inside the sandbox (strace -f over the install and the session). A
     connect that succeeded, or whose outcome strace did not see (the process ended inside it, EINPROGRESS), may
     only reach a socket of the sandbox itself: one under RUN or in the sandbox's own tmpfs mounts (/tmp with
     XDG_RUNTIME_DIR, /run, /var), but not in the host directories bound into them (/run/udev, the font cache), an
@@ -1596,45 +1632,6 @@ BUS_CONF = """<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-Bus Bus Configur
 </busconfig>
 """
 
-# WIN11_DEV_SCRIPT of the HTML apps (Explorer, Settings, Task Manager, ...; D-G70: the shell itself is native and
-# reports its own boot, native/shell/src/dev.rs): a boot report once the page is ready, a stuck report if it is not.
-OBSERVE_JS = r"""(()=>{
- const q = new URLSearchParams(location.search);
- const surface = q.get('surface'), app = q.get('app');
- const kind = () => surface === 'app' ? app : surface;
- const timer = setInterval(() => {
-  if (document.documentElement.dataset.ready === 'true') {
-   clearInterval(timer);
-   window.ipc.postMessage(JSON.stringify({cmd:'test-report', data:{tag:'boot', surface, app, kind:kind(),
-     lang:document.documentElement.lang, title:document.title}}));
-  }
- }, 100);
- // A page that is not ready after 20 s reports why (12-11: the WebKit desktop sometimes never got ready):
- // its errors, the bridge calls still open and how far it rendered. Observation only; nothing is changed.
- const errors = [], open = new Map();
- let seq = 0;
- addEventListener('error', (e) => errors.push(String(e.message || e.error || 'error').slice(0, 300)));
- addEventListener('unhandledrejection', (e) => errors.push('rejection: ' + String(e.reason?.message || e.reason).slice(0, 300)));
- const fetch0 = window.fetch;
- window.fetch = function (input, init) {
-  const id = ++seq;
-  open.set(id, {url: String(input?.url || input).replace(/token=[^&]*/g, 'token=-').slice(0, 160), t: performance.now()});
-  const p = fetch0.apply(this, arguments);
-  p.finally(() => open.delete(id)).catch(() => {});
-  return p;
- };
- const stuck = () => {
-  if (document.documentElement.dataset.ready === 'true') return;
-  window.ipc.postMessage(JSON.stringify({cmd:'test-report', data:{tag:'stuck', surface, app, kind:kind(),
-    readyState:document.readyState, errors:errors.slice(-10),
-    open:[...open.values()].map((x) => ({url:x.url, ms:Math.round(performance.now() - x.t)})),
-    icons:document.querySelectorAll('[data-key]').length, text:(document.body?.innerText || '').slice(0, 200)}}));
-  setTimeout(stuck, 15000);
- };
- setTimeout(stuck, 20000);
-})();
-"""
-
 KEYFILE = """[org/gnome/shell]
 enabled-extensions=['{uuid}']
 disabled-extensions=[]
@@ -1732,8 +1729,7 @@ def prepare(lang: str, seed: str = 'defaults') -> None:
         stub.chmod(0o755)
     (RUN / 'session-bus.conf').write_text(BUS_CONF.format(path=RT / 'bus'))
     (RUN / 'system-bus.conf').write_text(BUS_CONF.format(path=RT / 'sbus'))
-    (RUN / 'observe.js').write_text(OBSERVE_JS)
-    for name in ('command.js', 'report.jsonl'):
+    for name in ('command.json', 'report.jsonl'):
         (RUN / 'logs' / name).write_text('')
         os.chmod(RUN / 'logs' / name, 0o600)
     keyfile = RUN / 'config/glib-2.0/settings/keyfile'
@@ -1923,6 +1919,7 @@ class Sampler(threading.Thread):
         self.peak = {'pss_kb': 0, 'rss_kb': 0}
         self.peak_without_harness = {'pss_kb': 0, 'rss_kb': 0}
         self.peak_processes: list = []
+        self.seen: dict[str, dict] = {}                  # per process name: the highest PSS one process had, and when
         self.min_available = mem_available_kb()
         self.samples = 0
         self.aborted = False
@@ -1961,6 +1958,9 @@ class Sampler(threading.Thread):
             rss_wo = sum(r['rss_kb'] for r in rows if not r['harness'])
             self.samples += 1
             self.min_available = min(self.min_available, available)
+            for r in rows:
+                seen = self.seen.setdefault(r['name'], {'pss_kb': 0, 'first': round(time.monotonic() - self.started, 1)})
+                seen['pss_kb'] = max(seen['pss_kb'], r['pss_kb'])
             self.out.write(f'{time.monotonic() - self.started:.1f}\t{len(rows)}\t{pss}\t{rss}\t{pss_wo}\t{available}\n')
             self.out.flush()
             if pss > self.peak['pss_kb']:
@@ -1984,7 +1984,8 @@ class Sampler(threading.Thread):
         return {'samples': self.samples, 'intervalSeconds': 0.5, 'peak': self.peak,
                 'peakWithoutHarness': self.peak_without_harness, 'minMemAvailableKb': self.min_available,
                 'abortedForMemory': self.aborted,
-                'peakByName': dict(sorted(by_name.items(), key=lambda kv: -kv[1]['pss_kb']))}
+                'peakByName': dict(sorted(by_name.items(), key=lambda kv: -kv[1]['pss_kb'])),
+                'seenByName': dict(sorted(self.seen.items(), key=lambda kv: -kv[1]['pss_kb']))}
 
 
 class SocketWatch(threading.Thread):
@@ -2137,20 +2138,12 @@ def cmd_run(args) -> int:
             return EXIT_REFUSED
         extension.write_text(extension.read_text().replace('enable() {', 'enable() {\n        global.context.unsafe_mode = true;', 1))
         log('patched the PRIVATE extension copy with unsafe_mode (fallback)')
-    # A fresh XDG_CACHE_HOME makes every first WebKit process build the GStreamer registry at once (three
-    # gst-plugin-scanner processes, about 530 MB PSS in the first smoke run). The live session has that
-    # cache, so build it once here, alone, before the session starts.
-    t0 = time.monotonic()
-    # --strace (D-G42): the warm-up and the session each under strace (connect(); WU-FIX, D-G51: and every execve, for
-    # strace_exec_report); the install has its own
+    # --strace (D-G42): the session under strace (connect(); WU-FIX, D-G51: and every execve, for strace_exec_report);
+    # the install has its own. (The GStreamer warm-up the WebKit apps needed, gst-inspect-1.0 under FILE.warm and
+    # FILE.warm2, went with them: no native program builds the registry, so no gst-plugin-scanner runs.)
     trace = Path(args.strace) if args.strace else None
     traced = lambda name: (['strace', '-f', '-qq', '--seccomp-bpf', '-e', 'trace=connect,execve,execveat', '-e',
                             'signal=none', '-o', str(trace.with_name(trace.name + name))] if trace else [])
-    warm = subprocess.run(traced('.warm') + ['gst-inspect-1.0', '--version'], env=env, capture_output=True, text=True,
-                          timeout=300)
-    subprocess.run(traced('.warm2') + ['gst-inspect-1.0'], env=env, stdout=subprocess.DEVNULL,
-                   stderr=subprocess.DEVNULL, timeout=300)
-    log(f'GStreamer registry warmed in {time.monotonic() - t0:.1f} s ({warm.stdout.splitlines()[:1]})')
     sampler = Sampler()
     sampler.start()
 
@@ -2203,16 +2196,14 @@ def cmd_run(args) -> int:
     sockets = clean_run_sockets()
     connects = execs = None
     if trace:
-        connects = strace_connect_report([RUN / 'logs' / 'install.strace', trace.with_name(trace.name + '.warm'),
-                                          trace.with_name(trace.name + '.warm2'), trace])
+        connects = strace_connect_report([RUN / 'logs' / 'install.strace', trace])
         trace.with_name(trace.name + '.json').write_text(json.dumps(connects, indent=1) + '\n')
         for row in connects['byTarget']:
             log(f'strace connect: {row["count"]:6d} x {row["family"]} {row["target"]} -> {row["result"]}')
         log(f'strace connect check: {connects["connects"]} connect() calls, '
             f'{"OK" if connects["ok"] else "FAIL " + "; ".join(connects["violations"][:5])}')
         # WU-FIX (D-G51): no real pkexec, check-new-release, apt-get, apt-cache, do-release-upgrade or loginctl ran
-        execs = strace_exec_report([RUN / 'logs' / 'install.strace', trace.with_name(trace.name + '.warm'),
-                                    trace.with_name(trace.name + '.warm2'), trace])
+        execs = strace_exec_report([RUN / 'logs' / 'install.strace', trace])
         trace.with_name(trace.name + '.exec.json').write_text(json.dumps(execs, indent=1) + '\n')
         for row in execs['byProgram']:
             log(f'strace exec: {row["count"]:6d} x {row["path"]} ({row["where"]}) -> {row["result"]}')
@@ -2231,7 +2222,8 @@ def cmd_run(args) -> int:
         **({'scenario': scenario} if scenario is not None else {}),
         'inner': {k: v for k, v in inner_results.items() if k != 'scenario'},
     }
-    switch_dir = out.parent / 'switch'
+    # the default baseline/<lang> run puts --switch's shots in baseline/switch; an --out directory keeps them inside
+    switch_dir = out / 'switch' if args.out else out.parent / 'switch'
     shots = [s for s in inner_results.get('shots', []) if (RUN / 'shots' / s['file']).is_file()]
     copied = []
     # A scenario keeps all its screenshots next to its results.json; the built-in pass splits off "switch".
@@ -2304,8 +2296,8 @@ class Session:
         self.counter = 0
         self.logs = RUN / 'logs'
         self.report = self.logs / 'report.jsonl'
-        self.command = self.logs / 'command.js'
-        self.titles = settings_titles()
+        self.command = self.logs / 'command.json'
+        self._titles: dict | None = None
         self.dutch = dutch_words()
         self.sysbus = None
         self.shell = None
@@ -2362,6 +2354,13 @@ class Session:
         stop_pids(descendants(os.getpid()), 'inner sweep')
         reap()
 
+    @property
+    def titles(self) -> dict[str, dict[str, str]]:
+        """The Settings page titles (settings_titles), read once, when a run first needs them."""
+        if self._titles is None:
+            self._titles = settings_titles()
+        return self._titles
+
     # ---- D-Bus -----------------------------------------------------------------------------------------
     def ev(self, code: str):
         GLib, Gio = self.GLib, self.Gio
@@ -2410,7 +2409,7 @@ class Session:
         return {'rect': [x0, y0, x1 - x0, y1 - y0], 'distinctColours': len(colours),
                 'meanLevel': round(total / max(count, 1) / 3, 1), 'looksBlank': len(colours) <= 4}
 
-    # ---- dev hooks: the HTML apps' WebViews and the native shell share WIN11_DEV_COMMAND/WIN11_DEV_REPORT ---------
+    # ---- dev hooks: the native shell and the native apps share WIN11_DEV_COMMAND/WIN11_DEV_REPORT ---------------
     def rows(self) -> list[dict]:
         out = []
         for line in self.report.read_text(errors='replace').splitlines():
@@ -2436,7 +2435,7 @@ class Session:
 
     def native(self, command: dict, timeout: float = 15):
         """One dev command for win11-shell ({"native": "state"|"click"|"flyout", ...}); returns its report's value.
-        The shell takes only commands with a "native" key, the WebView hosts only those with their windowId."""
+        The shell takes only commands with a "native" key and no "app" key (native_app sends an app's)."""
         self.counter += 1
         tag = f'native-{self.counter}'
         try:
@@ -2484,8 +2483,8 @@ class Session:
         return row.get('value')
 
     def native_texts(self, tops: list[dict] | None = None, visible_only: bool = True) -> dict:
-        """The labels and tooltips of the shell's (visible) toplevels, with Dutch-word hits: the native counterpart
-        of texts() for the panel, Start and the desktop."""
+        """The labels and tooltips of the (visible) toplevels of a dev state answer, the shell's unless ``tops`` is
+        given (an app's: app_texts), with Dutch-word hits."""
         tops = self.native_state() if tops is None else tops
         labels: list[str] = []
 
@@ -2507,51 +2506,14 @@ class Session:
         tokens = set(re.findall(r"[a-zà-ÿ]+(?:-[a-zà-ÿ]+)*", '\n'.join(labels).lower()))
         return {'windows': windows, 'labels': labels[:400], 'dutchWordHits': sorted(t for t in tokens if t in self.dutch)}
 
-    def boot(self, kind: str, known: set, timeout: float = 90) -> str:
-        """An HTML app's WebView is ready (OBSERVE_JS boot report, dataset.ready); returns its windowId."""
-        try:
-            row = until(lambda: next((r for r in self.rows() if r.get('event') == 'test' and r['data'].get('tag') == 'boot'
-                                      and r['data'].get('kind') == kind and r.get('windowId') not in known), None),
-                        f'{kind} WebView ready (dataset.ready)', timeout, 0.2)
-        except TimeoutError as error:
-            stuck = [r['data'] for r in self.rows() if r.get('event') == 'test' and r['data'].get('tag') == 'stuck'
-                     and r['data'].get('kind') == kind]
-            self.facts.setdefault('stuck', {})[kind] = stuck[-1] if stuck else None
-            raise TimeoutError(f'{error}; last stuck report: {json.dumps(stuck[-1])[:1500] if stuck else None}') from error
-        return row['windowId']
-
-    def known(self) -> set:
-        return {r.get('windowId') for r in self.rows()}
-
-    def capture(self, window: str, expression: str, timeout: float = 20):
-        self.counter += 1
-        tag = f'ge0c-{self.counter}'
-        try:
-            until(lambda: self.command.read_text() == '', 'previous dev command consumed', 10, 0.05)
-        except TimeoutError:
-            self.command.write_text('')
-        script = ("(async()=>{try{const value=await (" + expression + ");window.ipc.postMessage(JSON.stringify({cmd:'test-report',"
-                  "data:{tag:" + json.dumps(tag) + ",value}}));}catch(error){window.ipc.postMessage(JSON.stringify({cmd:'test-report',"
-                  "data:{tag:" + json.dumps(tag) + ",error:String(error)}}));}})()")
-        self.command.write_text(json.dumps({'windowId': window, 'script': script}))
-        try:
-            row = until(lambda: next((r['data'] for r in self.rows() if r.get('event') == 'test'
-                                      and r['data'].get('tag') == tag), None), f'dev command {tag}', timeout, 0.05)
-        except TimeoutError:
-            self.command.write_text('')
-            raise
-        if row.get('error'):
-            raise RuntimeError(row['error'])
-        return row.get('value')
-
-    TEXT = ("(()=>{const b=document.body;return {lang:document.documentElement.lang,title:document.title,"
-            "ready:document.documentElement.dataset.ready||null,text:(b?b.innerText:'').slice(0,8000)};})()")
-
-    def texts(self, window: str) -> dict:
-        value = self.capture(window, self.TEXT)
-        tokens = set(re.findall(r"[a-zà-ÿ]+(?:-[a-zà-ÿ]+)*", value.get('text', '').lower()))
-        value['dutchWordHits'] = sorted(t for t in tokens if t in self.dutch)
-        return value
+    def app_texts(self, app: str, tops: list[dict] | None = None) -> dict:
+        """A native app's labels and tooltips with Dutch-word hits (native_texts), its window title and its
+        language (app_lang): what an HTML app's page text and <html lang> were."""
+        tops = self.native_app(app, {'native': 'state'}, 20) if tops is None else tops
+        out = self.native_texts(tops)
+        out['title'] = next((t.get('title') for t in tops or [] if t.get('visible')), None)
+        out['lang'] = app_lang(tops, app)
+        return out
 
     WINDOWS = ("global.get_window_actors().map(a=>{const w=a.meta_window,r=w.get_frame_rect();return{wm:w.get_wm_class(),"
                "title:w.get_title(),pid:w.get_pid(),x:r.x,y:r.y,w:r.width,h:r.height,visible:a.visible,"
@@ -2597,26 +2559,34 @@ class Session:
         self.surfaces.append(entry)
         return entry
 
-    def finish_shot(self, name: str, window: str | None, rect=None, group: str = 'surface', settle: float = 2.0):
+    def finish_shot(self, name: str, app: str | None, rect=None, group: str = 'surface', settle: float = 2.0):
+        """A screenshot with its pixel statistics, the windows GNOME sees and, for an app, its dev state's text and
+        language (app_texts)."""
         time.sleep(settle)
         shot = self.screenshot(name, group)
         out = {'png': shot['file'], 'pixels': self.pixel_stats(shot['file'], rect),
                'windowsAtShot': self.windows()}           # native (Meta) titles, as the overview/Alt+Tab see them
-        if window:
-            out['text'] = self.texts(window)
+        if app:
+            out['text'] = self.app_texts(app)
             out['langMatches'] = out['text'].get('lang') == self.lang
         return out
 
-    def launch(self, argv: list[str], kind: str, name: str):
-        known = self.known()
-        env = dict(os.environ, WAYLAND_DISPLAY=WL, GDK_BACKEND='wayland')
-        log_file = open(self.logs / f'app-{name}.log', 'w')
+    def launch(self, argv: list[str], kind: str, name: str, env: dict | None = None):
+        """Start an app through its launcher (win11-explorer, win11-app --app <kind>, ...: the host execs
+        win11-gtk-<kind> in place, native/APPS.md), wait for the app's boot row on the kit's dev channel and for its
+        window with a size, and focus it like a launch from Start; returns the process and the boot row (whose pid
+        is the app's)."""
+        rows = len(self.rows())
+        env = dict(os.environ, WAYLAND_DISPLAY=WL, GDK_BACKEND='wayland', **(env or {}))
+        log_file = open(self.logs / f'app-{name}.log', 'a')
         proc = subprocess.Popen(argv, env=env, stdout=log_file, stderr=subprocess.STDOUT)
         self.apps.append(proc)
-        window = self.boot(kind, known)
-        until(lambda: self.window_of_pid(proc.pid), f'{name} window mapped', 30, 0.2)
-        self.focus(proc.pid, name)
-        return proc, window
+        boot = self.native_app_boot(kind, rows)
+        pid = boot.get('pid') or proc.pid
+        until(lambda: (lambda w: w if w and w['w'] > 0 else None)(self.window_of_pid(pid)), f'{name} window mapped',
+              30, 0.2)
+        self.focus(pid, name)
+        return proc, boot
 
     ATTENTION = ("Main.messageTray.getSources().flatMap(s=>(s.notifications||[]).filter(n=>/ is ready$/.test(n.body||''))"
                  ".map(n=>({source:s.title,title:n.title,body:n.body})))")
@@ -2672,18 +2642,35 @@ class Session:
             until(lambda: not visible(), 'Start hidden after a click on tb-start', 15, 0.2)
         return result
 
-    def navigate_settings(self, window: str, page: str):
-        self.capture(window, "(async()=>{const {bridge}=await import(new URL('/ui/js/core/bridge.js',location.href).href);"
-                             "bridge.emitLocal('app.navigate',{app:'settings',params:{page:" + json.dumps(page) + "}});return true;})()")
-        self.wait_settings_title(window, page)
+    def settings_page(self, page: str):
+        """Show a page in the running Settings as Start's settings search does: one more launch with --params
+        {"page": ...}, which GApplication hands to the running app (that launch then ends); then its title."""
+        argv = [str(RUN / 'prefix/bin/win11-app'), '--app', 'settings', '--params', json.dumps({'page': page})]
+        relay = subprocess.Popen(argv, env=dict(os.environ, WAYLAND_DISPLAY=WL, GDK_BACKEND='wayland'),
+                                 stdout=open(self.logs / 'app-settings-relay.log', 'a'), stderr=subprocess.STDOUT)
+        self.apps.append(relay)
+        t0 = time.monotonic()
+        try:
+            relay.wait(timeout=20)
+        except subprocess.TimeoutExpired:
+            pass
+        self.facts.setdefault('settingsRelays', []).append(
+            {'page': page, 'exit': relay.poll(), 'seconds': round(time.monotonic() - t0, 2)})
+        return self.settings_title(page)
 
-    def wait_settings_title(self, window: str, page: str, lang: str | None = None):
+    def settings_title(self, page: str, lang: str | None = None):
+        """Wait until Settings' header shows the page's title (registry.rs) in ``lang``: the `st-title` label of a
+        top-level page, or the last item of the "Parent › Page" breadcrumb that carries `st-title` for a sub-page."""
         title = self.titles.get(page, {}).get(lang or self.lang)
         if not title:
             time.sleep(2)
             return None
-        return until(lambda: title in (self.capture(window, "document.querySelector('.st-title')?.textContent||''") or ''),
-                     f'Settings page {page} title {title!r}', 20, 0.3)
+
+        def shown():
+            heads = [n for n in tree_nodes(self.native_app('settings', {'native': 'state'}, 20))
+                     if 'st-title' in (n.get('classes') or [])]
+            return title if any(title == n.get('label') for head in heads for n in tree_nodes([{'tree': head}])) else None
+        return until(shown, f'Settings page {page} title {title!r}', 20, 0.3)
 
     def run(self):
         wanted = set(self.args.surfaces.split(',')) if self.args.surfaces else None
@@ -2759,61 +2746,61 @@ class Session:
             self.surface('start', start_shot)
         if want('explorer'):
             def explorer_shot():
-                proc, window = self.launch([str(RUN / 'prefix/bin/win11-explorer'), str(RUN / 'home')], 'explorer', 'explorer')
-                w = self.window_of_pid(proc.pid)
-                out = self.finish_shot('explorer', window, (w['x'], w['y'], w['w'], w['h']), settle=2.5)
+                proc, boot = self.launch([str(RUN / 'prefix/bin/win11-explorer'), str(RUN / 'home')], 'explorer', 'explorer')
+                w = self.window_of_pid(boot['pid'])
+                out = self.finish_shot('explorer', 'explorer', (w['x'], w['y'], w['w'], w['h']), settle=2.5)
                 self.close(proc, 'explorer')
                 return out
             self.surface('explorer', explorer_shot)
         pages = [p for p in SETTINGS_PAGES if want('settings') or want(f'settings-{p}')]
         if pages:
-            proc = window = None
-            for index, page in enumerate(pages):
-                def settings_shot(page=page, index=index):
-                    nonlocal proc, window
+            proc = boot = None
+            for page in pages:
+                def settings_shot(page=page):
+                    nonlocal proc, boot
                     if proc is None:
-                        proc, window = self.launch([str(RUN / 'prefix/bin/win11-app'), '--app', 'settings', '--params',
-                                                    json.dumps({'page': page})], 'settings', 'settings')
-                        self.wait_settings_title(window, page)
+                        proc, boot = self.launch([str(RUN / 'prefix/bin/win11-app'), '--app', 'settings', '--params',
+                                                  json.dumps({'page': page})], 'settings', 'settings')
+                        self.settings_title(page)
                     else:
-                        self.navigate_settings(window, page)
-                    w = self.window_of_pid(proc.pid)
-                    return self.finish_shot(f'settings-{page}', window, (w['x'], w['y'], w['w'], w['h']), settle=2.0)
+                        self.settings_page(page)
+                    w = self.window_of_pid(boot['pid'])
+                    return self.finish_shot(f'settings-{page}', 'settings', (w['x'], w['y'], w['w'], w['h']), settle=2.0)
                 self.surface(f'settings-{page}', settings_shot)
             if proc:
                 self.close(proc, 'settings')
         for app, label in APPS:
             if want(app):
                 def app_shot(app=app):
-                    proc, window = self.launch([str(RUN / 'prefix/bin/win11-app'), '--app', app], app, app)
-                    w = self.window_of_pid(proc.pid)
-                    out = self.finish_shot(app, window, (w['x'], w['y'], w['w'], w['h']), settle=3.0)
+                    proc, boot = self.launch([str(RUN / 'prefix/bin/win11-app'), '--app', app], app, app)
+                    w = self.window_of_pid(boot['pid'])
+                    out = self.finish_shot(app, app, (w['x'], w['y'], w['w'], w['h']), settle=3.0)
                     self.close(proc, app)
                     return out
                 self.surface(app, app_shot)
 
     def live_switch(self, pid: int):
         """Settings (Taal en regio) and the native Start open, then settings.json rewritten to the other language:
-        Settings' <html lang> and the shell's labels are timed (the shell has no lang attribute: the first moment its
-        labels differ from before counts), with screenshots."""
+        Settings' language (app_lang), its page title and the shell's labels are timed (the shell has no language
+        marker: the first moment its labels differ from before counts), with screenshots."""
         target = 'en' if self.lang == 'nl' else 'nl'
         state: dict = {}
         start_rect = lambda: (lambda w: (w['x'], w['y'], w['w'], w['h']) if w else None)(  # noqa: E731
             self.window_of('io.github.win11shell.Start', pid))
 
         def before():
-            proc, window = self.launch([str(RUN / 'prefix/bin/win11-app'), '--app', 'settings', '--params',
-                                        json.dumps({'page': 'language'})], 'settings', 'settings-switch')
-            state.update(proc=proc, window=window)
-            self.wait_settings_title(window, 'language')
+            proc, boot = self.launch([str(RUN / 'prefix/bin/win11-app'), '--app', 'settings', '--params',
+                                      json.dumps({'page': 'language'})], 'settings', 'settings-switch')
+            state.update(proc=proc, pid=boot['pid'])
+            self.settings_title('language')
             time.sleep(1.5)
             self.start_flyout(True, pid)
             out = self.native_shot(f'switch-1-before-{self.lang}', None, group='switch', settle=1.5)
             state['labels'] = out['native']['labels']
-            out['settingsText'] = self.texts(window)
+            out['settingsText'] = self.app_texts('settings')
             return out
         self.surface('switch-before', before, 'switch')
-        if 'window' not in state:
+        if 'pid' not in state:
             return
 
         def after():
@@ -2821,7 +2808,7 @@ class Session:
             write_settings({'language': target})
             timings = {}
             try:
-                until(lambda: self.capture(state['window'], 'document.documentElement.lang') == target,
+                until(lambda: app_lang(self.native_app('settings', {'native': 'state'}, 5), 'settings') == target,
                       f'settings lang={target}', 20, 0.2)
                 timings['settings'] = round(time.monotonic() - t0, 2)
             except Exception as error:   # noqa: BLE001
@@ -2832,7 +2819,7 @@ class Session:
             except Exception as error:   # noqa: BLE001
                 timings['native'] = f'not switched: {error}'
             try:
-                self.wait_settings_title(state['window'], 'language', target)
+                self.settings_title('language', target)
                 timings['settingsTitle'] = round(time.monotonic() - t0, 2)
             except Exception as error:   # noqa: BLE001
                 timings['settingsTitle'] = f'not switched: {error}'
@@ -2840,14 +2827,14 @@ class Session:
             out = self.native_shot(f'switch-2-after-{target}-start-open', None, group='switch', settle=2.0)
             out['startRect'] = start_rect()
             out['switchSeconds'] = timings
-            out['settingsText'] = self.texts(state['window'])
+            out['settingsText'] = self.app_texts('settings')
             return out
         self.surface('switch-after', after, 'switch')
 
         def settings_only():
             self.start_flyout(False, pid)
-            w = self.window_of_pid(state['proc'].pid)
-            out = self.finish_shot(f'switch-3-after-{target}-settings', state['window'],
+            w = self.window_of_pid(state['pid'])
+            out = self.finish_shot(f'switch-3-after-{target}-settings', 'settings',
                                    (w['x'], w['y'], w['w'], w['h']) if w else None, group='switch', settle=1.5)
             panel_shot = self.screenshot(f'switch-4-after-{target}-panel', 'switch', area=(0, HEIGHT - TASKBAR, WIDTH, TASKBAR))
             out['panelPng'] = panel_shot['file']
@@ -2954,8 +2941,8 @@ def cmd_probe(args) -> int:
 def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
     p.add_argument('--lang', choices=('nl', 'en'), required=True)
     p.add_argument('--switch', action='store_true', help='end with a live language switch (Settings + Start open)')
-    p.add_argument('--surfaces', help='comma list: desktop,panel,start (the native shell: screenshots and its dev '
-                                      'state), explorer,settings[-page],taskmgr,alles,disks (HTML apps: text and screenshots)')
+    p.add_argument('--surfaces', help='comma list: desktop,panel,start (the native shell), explorer,settings[-page],'
+                                      'taskmgr,alles,disks (the native apps): screenshots and their dev state')
     p.add_argument('--patch-extension', action='store_true', help='fallback: unsafe_mode patch in the PRIVATE copy')
     p.add_argument('--guard-only', action='store_true', help='stop after the guard (self-test)')
     p.add_argument('--session-mode', choices=('winpoint',),
@@ -2966,16 +2953,16 @@ def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
     p.add_argument('--lock', help=argparse.SUPPRESS)        # set by launch: "parent[:kind]" or "fd:N"
     p.add_argument('--seed', choices=('defaults', 'minimal'), default='defaults',
                    help='settings.json seed: complete defaults (default) or only {"language"} (bug repro)')
-    p.add_argument('--build-dir', help=f'the {len(BINS_FALLBACK)} binaries to install, win11-shell and win11-calendar '
-                                       f'included (inside G; default {DEFAULT_BUILD.relative_to(G)})')
+    p.add_argument('--build-dir', help=f'the {len(BINS_FALLBACK)} binaries to install, win11-shell, win11-calendar and '
+                                       f'the win11-gtk-* apps included (inside G; default {DEFAULT_BUILD.relative_to(G)})')
     p.add_argument('--source', default='worktree',
-                   help='tree to install the UI, extension and scripts from: "worktree" (default) or a git revision '
-                        '(exported with git archive into run/src)')
+                   help='tree to install the assets, extension and scripts from: "worktree" (default) or a git '
+                        'revision (exported with git archive into run/src)')
     p.add_argument('--scenario', help='Python file with def run(h), run inside the sandbox after the session is up')
     p.add_argument('--strace', metavar='FILE',
-                   help='D-G42: every connect() of the install, the GStreamer warm-up and the whole session under '
-                        'strace into FILE (inside tests/gnome, outside run/); the run fails when one reached a '
-                        'socket outside the sandbox (summary in FILE.json and results.json straceConnect)')
+                   help='D-G42: every connect() of the install and the whole session under strace into FILE '
+                        '(inside tests/gnome, outside run/); the run fails when one reached a socket outside the '
+                        'sandbox (summary in FILE.json and results.json straceConnect)')
     return p
 
 
@@ -2994,7 +2981,7 @@ def main(argv: list[str]) -> int:
                    help='take .heavy.lock here when no ancestor (tools/heavy.sh, flock) holds it; default: refuse (C8)')
     p.add_argument('--lock-check-only', action='store_true', help=argparse.SUPPRESS)   # guard self-test
     sub.add_parser('guard-selftest', help='prove each guard refusal (starts no GUI process)')
-    sub.add_parser('strace-check', help='D-G42: check strace connect() logs of a run (FILE, FILE.warm, ...) again').add_argument(
+    sub.add_parser('strace-check', help='D-G42: check strace connect() logs of a run (FILE, ...) again').add_argument(
         'files', nargs='+', metavar='FILE')
     sub.add_parser('probe', help='inside the sandbox: show the guard result').add_argument(
         '--connect', metavar='PATH', help=argparse.SUPPRESS)                          # guard self-test (D-G42)

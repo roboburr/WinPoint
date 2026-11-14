@@ -1,5 +1,5 @@
-//! The glyph sources: vendor/ui/js/core/icons.js ported 1:1 to SVG strings (native/shell/src/icons.rs), plus the
-//! shell's extra names and the title bar's caption glyphs of appframe.js. svg.rs draws them with cairo.
+//! The glyph sources: last-webkit:vendor/ui/js/core/icons.js ported 1:1 to SVG strings (native/shell/src/icons.rs),
+//! plus the shell's extra names and the title bar's caption glyphs of appframe.js. svg.rs draws them with cairo.
 use std::f64::consts::PI;
 
 /// A glyph's SVG source: its grid, its body, whether the outline defaults apply (fill none, stroke

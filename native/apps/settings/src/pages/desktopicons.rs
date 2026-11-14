@@ -1,5 +1,6 @@
 //! Instellingen › Persoonlijke instellingen › Bureaubladpictogrammen
-//! (vendor/ui/js/apps/settings/pages/desktopicons.js): show the desktop icons, which ones, their size and layout.
+//! (last-webkit:vendor/ui/js/apps/settings/pages/desktopicons.js): show the desktop icons, which ones, their size and
+//! layout.
 use super::{Builder, Page, PageFuture};
 use crate::common;
 use kit::controls::{SettingsCard, SettingsGroup};

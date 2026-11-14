@@ -1,5 +1,7 @@
 # Rust-appcatalogus — versie 0.6.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Gecontroleerd op 1 november 2026 in een eigen schermloze GNOME 50.1/Wayland-sessie met echte Rust/WebKit-processen. Alle **tien gegroepeerde integratiegevallen** slagen. De oorspronkelijke Start-interface toont de native catalogus in **Alle apps**; `preview-apps-catalog.png` is een echte schermopname met herkenbare testapps.
 
 ## Volledige metadata en taal

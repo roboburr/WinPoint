@@ -1,9 +1,9 @@
 //! The window, laid out like the Windows 11 Calendar app (Mail and Calendar / Outlook): an undecorated window
-//! with its own 32 px title bar (app glyph, "Agenda", the three caption buttons of vendor/ui/js/apps/appframe.js),
-//! dragged by the title bar (gtk::WindowHandle) and resized from its edges; on the left the navigation pane with
-//! "Nieuwe gebeurtenis", the mini month and the calendars; on the right a layer with the toolbar ("Vandaag",
-//! previous / next, the month or week title, Dag / Week / Maand) above the view (month.rs, timeline.rs).
-//! Event dialogs (editor.rs) are in-window like WinUI's ContentDialog.
+//! with its own 32 px title bar (app glyph, "Agenda", the three caption buttons of
+//! last-webkit:vendor/ui/js/apps/appframe.js), dragged by the title bar (gtk::WindowHandle) and resized from its edges;
+//! on the left the navigation pane with "Nieuwe gebeurtenis", the mini month and the calendars; on the right a layer
+//! with the toolbar ("Vandaag", previous / next, the month or week title, Dag / Week / Maand) above the view (month.rs,
+//! timeline.rs). Event dialogs (editor.rs) are in-window like WinUI's ContentDialog.
 //!
 //! One App per process (`app()`); a second launch reaches it through GApplication (main.rs).
 pub mod editor;

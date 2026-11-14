@@ -1,4 +1,4 @@
-//! The colourful category icons of the navigation pane (vendor/ui/js/apps/settings/navicons.js): original
+//! The colourful category icons of the navigation pane (last-webkit:vendor/ui/js/apps/settings/navicons.js): original
 //! drawings on a 24 x 24 grid with gradients (Windows 11 Settings has small full-colour icons there), rendered
 //! in-process by GTK's own SVG renderer (gtk::Svg, a paintable), so they stay sharp at every scale.
 use gtk::glib;

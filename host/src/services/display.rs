@@ -455,8 +455,7 @@ mod tests {
     }
     #[test]
     fn display_errors_render_in_the_context_language() {
-        // R2-A: the display stem in English through display.set; the D-G2 text is the UI's displaysNA
-        let ui = crate::services::system::common::ui_display_text("displaysNA");
+        // R2-A: the display stem in English through display.set; the D-G2 text is native Settings' own notice
         for (language, unknown, not_here) in [
             (
                 "en",
@@ -490,15 +489,11 @@ mod tests {
                 unsupported(lang).json(),
                 json!({"code":"unsupported","message":not_here,"key":"display.unsupported","params":{}})
             );
-            // ... is the UI's own displaysNA in this language
-            if let Some((nl, en)) = &ui {
+            // ... is native Settings' own notice: the page's nl/en pair (display.rs render_scale)
+            if language == "nl" {
                 assert_eq!(
-                    not_here,
-                    if language == "en" {
-                        en.as_str()
-                    } else {
-                        nl.as_str()
-                    }
+                    crate::services::system::common::native_display_text(not_here),
+                    unsupported(crate::i18n::Lang::En).message
                 );
             }
             // ... and display.set really returns it here (a GNOME machine has no Hyprland socket)

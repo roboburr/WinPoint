@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Geluid (vendor/ui/js/apps/settings/pages/sound.js): the output device, volume
+//! Instellingen › Systeem › Geluid (last-webkit:vendor/ui/js/apps/settings/pages/sound.js): the output device, volume
 //! and mute.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, ct};

@@ -1,4 +1,4 @@
-//! "Eigenschappen" of a volume and of a disk (vendor/ui/js/apps/disks/properties.js): label, mount point,
+//! "Eigenschappen" of a volume and of a disk (last-webkit:vendor/ui/js/apps/disks/properties.js): label, mount point,
 //! encryption, format, delete and the details; drive health (SMART / NVMe health log with all values), safe
 //! removal, eject, new volume, initialise, the volumes on the disk and the disk's details.
 use crate::actions;

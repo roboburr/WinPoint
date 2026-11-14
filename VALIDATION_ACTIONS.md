@@ -1,5 +1,7 @@
 # Openen, snelkoppelingen en terminal — versie 0.5.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 De vier methoden `files.open`, `files.openWith`, `files.trustLauncher` en `files.openTerminal` worden nu door Rust uitgevoerd. De oorspronkelijke interface, argumenten, lege succesantwoorden en gebruikelijke foutmeldingen blijven behouden. De gecombineerde ontwikkelharness `work/files-desktop-test/run.py` rapporteert twaalf geslaagde integratiegroepen voor zoeken, locaties, watches en deze openingsfuncties. Het bijbehorende `results.json` bevat de afzonderlijke gevallen; de definitieve binary-herhaling slaagt eveneens met alle twaalf groepen.
 
 ## Normaal gedrag en referentiecontract

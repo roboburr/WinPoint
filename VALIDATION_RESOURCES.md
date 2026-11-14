@@ -1,5 +1,7 @@
 # Process isolation and shell memory — 0.7.0
 
+> **History (D-G72, 14 November 2026):** measured with the HTML interface in WebKitGTK of the time. It is gone: File Explorer, Settings, Task Manager and the other apps are native GTK 4 programs now, and WinPoint has no WebKit and no GTK 3 host any more. The Rust services this report checks still exist. The last commit with WebKit is tagged `last-webkit`; see [native/APPS.md](native/APPS.md).
+
 > **History (D-G70, 13 November 2026):** the WebKit Panel, Start and Desktop processes measured here are gone. The native GTK 4 shell `win11-shell` replaces them; its backend runs in the shell slice, `win11-shell` itself is still outside it. See [notes/claude/gtk-native.md](notes/claude/gtk-native.md).
 
 New Panel, Start and Desktop processes run in the dedicated

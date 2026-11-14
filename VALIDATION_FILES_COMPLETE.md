@@ -1,5 +1,7 @@
 # Rust-bestandsfuncties — versie 0.4.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 Gecontroleerd op 1 november 2026 in een eigen schermloze GNOME 50.1/Wayland-sessie. Alle 22 integratiegevallen slagen met twee echte Rust/WebKit-Verkenners, geauthenticeerde host-HTTP en de gedeelde SSE-eventstream. De oorspronkelijke HTML/CSS-interface is behouden. Deze meting bewijst de hieronder beschreven functies en contracten; zij bewijst geen volledige visuele één-op-één-overeenkomst van alle schermen.
 
 ## Native bereik

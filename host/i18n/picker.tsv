@@ -1,4 +1,4 @@
-# host/i18n/picker.tsv: host texts of picker.rs (and portal.rs, which shows the picker).
+# host/i18n/picker.tsv: host texts of picker.rs (the check of the portal picker's answer, portal.rs).
 # Owner: R2-D.
 # Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
 # (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
@@ -11,22 +11,7 @@
 # Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
 
 # --- host/src/picker.rs
-# create(): shell.pickFile/portal: at most four pickers per process
-#@ host/src/picker.rs 1 6f2db39be195b7af plain
-picker.tooMany	Er zijn al vier bestandskiezers geopend.	Four file pickers are already open.
-# create(): the window that asked for the picker is gone
-#@ host/src/picker.rs 2 babaa831b8cfac27 plain
-picker.parentClosed	Het bovenliggende venster is gesloten.	The parent window has closed.
-# create(): the picker's page URL could not be parsed; no full stop in nl
-#@ host/src/picker.rs 3 2a1122bc7b553085 plain
-picker.invalidAddress	Ongeldig vensteradres	Invalid window address
-# create(): GTK did not create the picker window
-#@ host/src/picker.rs 16 b93118f04cdf49e7 plain
-picker.couldNotOpen	De bestandskiezer kon niet worden geopend.	Couldn’t open the file picker.
-# submit(): a submit arrived for a picker that is gone
-#@ host/src/picker.rs 29 621b507f585a031c plain
-picker.closed	Dit selectievenster is gesloten.	This selection window has closed.
-# selection(): the page submitted none, too many or more than one path for a single choice
+# selection(): the picker submitted none, too many or more than one path for a single choice
 #@ host/src/picker.rs 37 cac2aa0c9adfe9f3 plain
 picker.chooseValidSelection	Kies een geldige bestandsselectie.	Choose a valid file selection.
 # selection(): an empty, overlong or NUL-containing path

@@ -1,7 +1,7 @@
 //! The harness's dev channel for native surfaces (tests/gnome): WIN11_DEV_COMMAND is a file the harness writes
 //! one JSON command to, WIN11_DEV_REPORT a JSON-lines file the shell appends to. Only commands with a "native"
-//! key and no "app" key are ours (the WebKit hosts and the native apps, native/kit dev.rs, share the file); each
-//! report is {"event":"test","data":{"tag",...}}.
+//! key and no "app" key are ours (the native apps, native/kit dev.rs, share the file); each report is
+//! {"event":"test","data":{"tag",...}}.
 //!   {"native":"state","tag":t}             the surfaces' widget trees (name, css classes, label, allocation; an
 //!                                           image's icon: its theme name or file, "paintable" for a fetched one)
 //!   {"native":"click","name":n,"tag":t}     activate the widget with this name (gtk::Widget::set_widget_name)

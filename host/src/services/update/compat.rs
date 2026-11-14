@@ -753,6 +753,12 @@ pub(crate) fn part_of(package: &str) -> String {
         p if p.starts_with("libwebkit2gtk-4.1-") => Some("webkit"),
         p if p.starts_with("libjavascriptcoregtk-4.1-") => Some("jsc"),
         p if p.starts_with("libgtk-3-") => Some("gtk"),
+        p if p.starts_with("libgtk-4-")
+            || p.starts_with("libgraphene-1.0-")
+            || p.starts_with("libpango-1.0-") =>
+        {
+            Some("gtk4")
+        }
         p if p.starts_with("libsoup-3.0-") => Some("soup"),
         p if p.starts_with("libglib2.0-") => Some("glib"),
         p if p.starts_with("libgdk-pixbuf-2.0-") => Some("pixbuf"),
@@ -1758,8 +1764,14 @@ mod tests {
         );
         assert_eq!(stem("libgtk-3-0t64"), "libgtk-3-0");
         assert_eq!(stem("libgtk-3-0t65"), "libgtk-3-0");
-        assert_eq!(stem("libsoup-3.0-0"), "libsoup-3.0-0");
+        assert_eq!(stem("libgtk-4-1"), "libgtk-4-1");
         assert_eq!(stem("zlib1g"), "zlib1g");
+        // the part texts: GTK 4 with the libraries that come with it, else the package name
+        for package in ["libgtk-4-1", "libgraphene-1.0-0", "libpango-1.0-0"] {
+            assert_eq!(part_of(package), "update.part.gtk4", "{package}");
+        }
+        assert_eq!(part_of("libgtk-3-0t64"), "update.part.gtk");
+        assert_eq!(part_of("libfoo1"), "libfoo1");
         assert!(
             package_name("libglib2.0-0t64")
                 && !package_name("-o")
@@ -1768,6 +1780,10 @@ mod tests {
         );
     }
 
+    /// Synthetic algorithm data: the outputs under tests/update/fixtures/compat/recorded/ are the real apt's answers
+    /// for the throwaway GW6 archives of tests/update/mkarchive.py (made-up versions; their packages are Robin's
+    /// 26.04 of then, WebKitGTK included), and this blocking set is the one of the binaries of that time. They test
+    /// the verdict rules, not our programs' dependencies (test_compat.sh's layer test reads the real binaries).
     fn facts(case: &str) -> Facts {
         let blocking = [
             "libcairo2",

@@ -414,7 +414,6 @@ pub(super) struct Plan {
     unit: Option<String>,
     via: Option<String>,
     tty: bool,
-    own_window: bool,
     argv: Vec<String>,
     exe: String,
     cwd: String,
@@ -431,7 +430,6 @@ impl Plan {
             unit: None,
             via: None,
             tty: false,
-            own_window: false,
             argv: vec![],
             exe: String::new(),
             cwd: String::new(),
@@ -475,8 +473,8 @@ fn ancestors(pid: u32, limit: usize) -> Vec<u32> {
     }
     out
 }
-/// The own app window `pid` is or runs below, and its pid: a native app's backend (`--http-only`) and a WebKit
-/// window's web processes restart their window; the portal's file picker is no Explorer (process::own_app).
+/// The own app window `pid` is or runs below, and its pid: a native app's backend (`--http-only`) restarts its
+/// window; the portal's file picker is no Explorer (process::own_app).
 fn own_window(pid: u32) -> Option<(String, u32)> {
     let chain = std::iter::once(pid)
         .chain(ancestors(pid, 9))
@@ -492,7 +490,7 @@ fn own_window(pid: u32) -> Option<(String, u32)> {
     }
     None
 }
-fn host_part(pid: u32, comm: &str, argv: &[String], host: u32) -> Option<&'static str> {
+fn host_part(pid: u32, argv: &[String], host: u32) -> Option<&'static str> {
     let mut chain = vec![];
     let mut p = pid;
     let mut parent = 0;
@@ -509,13 +507,6 @@ fn host_part(pid: u32, comm: &str, argv: &[String], host: u32) -> Option<&'stati
         return None;
     }
     let joined = argv.join(" ").to_lowercase();
-    if chain
-        .iter()
-        .all(|c| c.starts_with("WebKit") || ["bwrap", "xdg-dbus-proxy"].contains(&c.as_str()))
-        && (comm.starts_with("WebKit") || joined.contains("webkit"))
-    {
-        return Some("webkit");
-    }
     if chain.len() <= 2
         && [
             "host.indexer",
@@ -524,7 +515,6 @@ fn host_part(pid: u32, comm: &str, argv: &[String], host: u32) -> Option<&'stati
             "pw-dump",
             "glycin",
             "hyprsunset",
-            "xdg-dbus-proxy",
         ]
         .iter()
         .any(|s| joined.contains(s))
@@ -788,14 +778,12 @@ pub(super) fn restart_plan(
         let mut plan = Plan::new("app", Some(name));
         plan.desktop = Some(format!("win11shell-{app}.desktop"));
         plan.pids = vec![wpid];
-        plan.own_window = true;
         if pid != wpid && !comm.is_empty() {
             plan.via = Some(comm)
         }
         return Ok(plan);
     }
-    match host_part(pid, &comm, &argv, std::process::id()) {
-        Some("webkit") => return Ok(Plan::new("shell", Some(tr(lang.code(), "host", &[])))),
+    match host_part(pid, &argv, std::process::id()) {
         Some("helper") => {
             return Err(with_data(
                 ApiError::tr(
@@ -932,18 +920,6 @@ fn end_gracefully(pids: &[u32], term: f64, kill: f64) -> Vec<u32> {
         .map(|(p, _)| p)
         .collect()
 }
-fn webkit_snapshot(host: u32) -> Vec<(u32, u64)> {
-    let procs = process::scan_proc();
-    procs
-        .iter()
-        .filter(|(_, p)| {
-            p.comm.starts_with("WebKit") || p.comm == "bwrap" || p.comm == "xdg-dbus-proxy"
-        })
-        .filter(|(pid, _)| ancestors(**pid, 32).contains(&host))
-        .map(|(pid, p)| (*pid, p.start))
-        .collect()
-}
-
 pub(super) fn restart(
     pid: u32,
     plan: Plan,
@@ -963,11 +939,6 @@ pub(super) fn restart(
         return Ok(json!({"ok":true,"pid":pid,"how":"service","unit":unit,"name":name}));
     }
     confirm(&plan, confirmed, pid, lang)?;
-    let webkit = if plan.own_window {
-        webkit_snapshot(plan.pids[0])
-    } else {
-        vec![]
-    };
     let left = end_gracefully(&plan.pids, 5., 2.);
     if !left.is_empty() {
         return Err(with_data(
@@ -979,19 +950,6 @@ pub(super) fn restart(
             ),
             json!({"pids":left}),
         ));
-    }
-    if !webkit.is_empty() {
-        let deadline = Instant::now() + Duration::from_millis(500);
-        while Instant::now() < deadline && webkit.iter().any(|(p, s)| alive(*p, *s)) {
-            std::thread::sleep(Duration::from_millis(25));
-        }
-        for (p, s) in webkit {
-            if alive(p, s) {
-                unsafe {
-                    libc::kill(p as i32, libc::SIGKILL);
-                }
-            }
-        }
     }
     if plan.how == "app" {
         let did = plan.desktop.as_ref().unwrap();
@@ -1096,14 +1054,16 @@ mod tests {
         );
         let picker = portal.child(portal.root(), &format!("{dir}/win11-gtk-explorer"));
         for pid in [app.root(), backend, worker] {
-            assert_eq!(own_window(pid), Some(("explorer".into(), app.root())), "{pid}");
+            assert_eq!(
+                own_window(pid),
+                Some(("explorer".into(), app.root())),
+                "{pid}"
+            );
         }
         assert_eq!(own_window(picker), None);
         assert_eq!(own_window(portal.root()), None);
-        let root = std::env::temp_dir().join(format!(
-            "win11-sysmon-restart-{}",
-            crate::events::nonce()
-        ));
+        let root =
+            std::env::temp_dir().join(format!("win11-sysmon-restart-{}", crate::events::nonce()));
         let config = root.join("config");
         fs::create_dir_all(&config).unwrap();
         fs::write(
@@ -1123,11 +1083,19 @@ mod tests {
         let mut pm = ProcessState::default();
         let plan = restart_plan(backend, &mut pm, &ctx).unwrap();
         assert_eq!(
-            (plan.how.as_str(), plan.name.as_deref(), plan.desktop.as_deref()),
-            ("app", Some("File Explorer"), Some("win11shell-explorer.desktop"))
+            (
+                plan.how.as_str(),
+                plan.name.as_deref(),
+                plan.desktop.as_deref()
+            ),
+            (
+                "app",
+                Some("File Explorer"),
+                Some("win11shell-explorer.desktop")
+            )
         );
         assert_eq!(plan.via.as_deref(), Some("bash"));
-        assert_eq!((plan.pids, plan.own_window), (vec![app.root()], true));
+        assert_eq!(plan.pids, vec![app.root()]);
         ctx.events.shutdown();
         let _ = fs::remove_dir_all(root);
     }

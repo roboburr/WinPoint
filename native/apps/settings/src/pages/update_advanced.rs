@@ -1,10 +1,10 @@
-//! Instellingen › Update en herstel › Geavanceerde opties (vendor/ui/js/apps/settings/pages/update-advanced.js):
-//! Windows 11 24H2's Advanced options. The toggle rows first, without icons (downloads over metered connections
-//! and the restart notification, settings update.*), then Ubuntu's "Software-updater van Ubuntu automatisch
-//! openen voor gewone updates" (update.setAutoOpen; hidden without update-notifier's schema), and under
-//! "Aanvullende opties" the automatic security updates and Snap Store rows (read-only, update.options) and the
-//! Software Updater ("Openen"). The page is there at once: the rows that wait for update.options say "Even
-//! geduld…" until it answers.
+//! Instellingen › Update en herstel › Geavanceerde opties
+//! (`git show last-webkit:vendor/ui/js/apps/settings/pages/update-advanced.js`): Windows 11 24H2's Advanced options.
+//! The toggle rows first, without icons (downloads over metered connections and the restart notification, settings
+//! update.*), then Ubuntu's "Software-updater van Ubuntu automatisch openen voor gewone updates" (update.setAutoOpen;
+//! hidden without update-notifier's schema), and under "Aanvullende opties" the automatic security updates and Snap
+//! Store rows (read-only, update.options) and the Software Updater ("Openen"). The page is there at once: the rows that
+//! wait for update.options say "Even geduld…" until it answers.
 use super::update_release::{err_message, reply};
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, ct};

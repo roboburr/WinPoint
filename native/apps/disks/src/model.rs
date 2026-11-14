@@ -1,5 +1,5 @@
-//! The disks.list snapshot as the app reads it (vendor/ui/js/apps/disks/util.js, overview.js layout, main.js
-//! findVolume / findDisk, numparse.js): JS truthiness over serde_json values, labels, the bar's layout.
+//! The disks.list snapshot as the app reads it (last-webkit:vendor/ui/js/apps/disks/util.js, overview.js layout,
+//! main.js findVolume / findDisk, numparse.js): JS truthiness over serde_json values, labels, the bar's layout.
 use crate::strings::{s, tf};
 use kit::format;
 use serde_json::Value;

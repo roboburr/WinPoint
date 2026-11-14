@@ -1,5 +1,5 @@
-//! Instellingen › Systeem › Energie en batterij (vendor/ui/js/apps/settings/pages/power.js): GNOME's own power
-//! settings (power mode, screen off, dimming, automatic sleep), the battery and the confirmed power actions.
+//! Instellingen › Systeem › Energie en batterij (last-webkit:vendor/ui/js/apps/settings/pages/power.js): GNOME's own
+//! power settings (power mode, screen off, dimming, automatic sleep), the battery and the confirmed power actions.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, UsageBar};
 use kit::controls::{self as c, Dropdown, DropdownOption, SettingsCard, SettingsGroup, ToggleSwitch};

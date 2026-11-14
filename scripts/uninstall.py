@@ -71,6 +71,7 @@ while index < len(sys.argv):
 prefix = absolute_path(os.environ.get("WIN11_INSTALL_PREFIX", str(Path.home()/".local")), install.t("labelPrefix"))
 data = absolute_path(os.environ.get("XDG_DATA_HOME", str(Path.home()/".local/share")), "XDG_DATA_HOME")
 config = absolute_path(os.environ.get("XDG_CONFIG_HOME", str(Path.home()/".config")), "XDG_CONFIG_HOME")
+cache = install.cache_home()
 set_language(explicit or language_of_file(config/"win11-gnome/settings.json"))
 payload = prefix/"share/win11-gnome"
 if not (payload/MARKER).is_file() or (payload/MARKER).read_text() != MAGIC:
@@ -166,6 +167,8 @@ try:
     extension.rmdir()
 except OSError:
     pass
+# The WebKit apps' storage of an earlier version (install.remove_webkit_state, its exact list); also with --files-only
+install.remove_webkit_state(data, cache, install.runtime_dir(cache))
 install.rescue_calendar(payload, data)
 shutil.rmtree(payload)
 if shutil.which("update-desktop-database") and (data/"applications").is_dir():

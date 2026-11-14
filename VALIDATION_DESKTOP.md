@@ -1,5 +1,7 @@
 # Oorspronkelijk bureaublad in een eigen Rust-host — 0.7.0
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 > **Historisch (D-G70, 13 november 2026):** dit rapport gaat over de verwijderde WebKit-bureaubladhost. De native GTK 4-shell `win11-shell` vervangt die; zie [notes/claude/gtk-native.md](notes/claude/gtk-native.md).
 
 Getest op 1 november 2026 met GNOME Shell 50.1/Wayland, twee virtuele schermen van 1280 × 800 en 1024 × 768 naast elkaar, schaal 1, en een afzonderlijke D-Bus-sessie. HOME, configuratie, bestanden, prullenbak, cache, runtime en GNOME-voorkeuren stonden in private testmappen. De actieve gebruikerssessie, haar DING-proces, apps en indexeerwerk zijn daarbij niet aangepast.

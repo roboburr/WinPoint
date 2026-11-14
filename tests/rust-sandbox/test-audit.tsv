@@ -1,157 +1,207 @@
 file	line	test	ignored	risky
-host/src/app_params.rs	185	files_share_selection_and_folders_get_separate_tabs		
-host/src/app_params.rs	207	missing_inputs_special_places_and_other_hosts		
-host/src/apps/catalog.rs	773	mo_endianness_charset_and_corrupt_offsets_are_handled_natively		
-host/src/apps/catalog.rs	796	inline_locale_gettext_domain_order_and_keyword_duplicates_match_source		
-host/src/apps/catalog.rs	849	gettext_territory_fallback_and_first_directory_precedence_are_preserved		
-host/src/apps/catalog.rs	883	dutch_fallback_hidden_brief_and_gnome_disks_twin_are_exact		
-host/src/apps/catalog.rs	938	first_seen_registry_retains_original_types_and_marks_only_new_visible_apps		
-host/src/apps/catalog.rs	987	concurrent_catalog_builds_merge_seen_entries_without_lost_updates		
-host/src/apps/catalog.rs	1022	natural_order_is_stable_accent_insensitive_and_numeric_beyond_u64		
-host/src/apps/defaults.rs	605	selection_validation_and_own_explorer_aliases_preserve_reference		
-host/src/apps/defaults.rs	655	secondary_mime_types_skip_only_when_declared_unsupported		
-host/src/apps/defaults.rs	678	terminal_write_prepends_selection_preserves_comments_order_and_disabled_entries		
-host/src/apps/defaults.rs	686	secondary_explorer_cleanup_preserves_other_associations_comments_and_translations		
-host/src/apps/defaults.rs	728	cleanup_removes_empty_keys_and_leaves_untouched_files_byte_exact		
-host/src/apps/defaults.rs	754	atomic_terminal_writes_have_exact_modes_and_replace_only_the_requested_link		
-host/src/apps/defaults.rs	782	invalid_utf8_terminal_contents_abort_without_overwrite		
-host/src/apps/defaults.rs	793	configuration_lock_serializes_concurrent_read_modify_writes		
-host/src/apps/defaults.rs	833	configuration_lock_never_follows_a_symlink		
-host/src/apps/defaults.rs	842	desktop_specific_override_list_preserves_desktop_order_and_existing_files		
-host/src/apps/mod.rs	282	launch_uri_validation_and_literal_filename_encoding		net
-host/src/apps/recent.rs	524	namespaces_duplicates_stable_sort_and_last_application_follow_reference		
-host/src/apps/recent.rs	546	cdata_internal_entities_unicode_and_supported_xml_encodings		
-host/src/apps/recent.rs	557	hostile_xml_never_resolves_external_entities_and_malformed_input_is_empty		net
-host/src/apps/recent.rs	572	uri_spelling_percent_decoding_and_localhost_match_python		
-host/src/apps/recent.rs	593	recent_filters_missing_and_trash_preserves_links_and_mtime_fallback		
-host/src/apps/recent.rs	629	privacy_gate_limits_and_cache_invalidation_use_only_fixture_history		
-host/src/apps/recent.rs	671	clearing_preserves_exact_malformed_bytes_and_private_modes		
-host/src/apps/recent.rs	695	backup_failure_keeps_source_and_does_not_publish_empty_history		
-host/src/apps/recent.rs	713	clear_missing_file_and_symlink_match_atomic_reference_behavior		
-host/src/apps/recent.rs	738	fifo_history_cannot_block_reads_or_shutdown_and_clear_emits_event_after_commit		
-host/src/apps/recent_datetime.rs	255	iso_formats_and_fractional_offsets_match_python_reference		
-host/src/apps/recent_datetime.rs	274	malformed_dates_and_times_return_zero		
-host/src/apps/recent_datetime.rs	291	local_timestamp_solver_handles_fold_and_gap_without_global_tz_changes		
-host/src/backend.rs	231	instance_rejects_invalid_ports_and_header_injection		
-host/src/backend.rs	244	initial_settings_import_never_replaces_existing_settings		
-host/src/events.rs	418	delayed_clipboard_notifications_cannot_restore_an_older_selection		
-host/src/events.rs	452	settings_peers_reload_large_snapshots_and_keep_the_initiating_path		
-host/src/events.rs	494	native_events_reach_another_host_without_rebroadcasting_or_interleaving		
-host/src/files/actions.rs	1009	malformed_uri_authority_is_rejected_before_any_handler_launch		net
-host/src/files/actions.rs	1023	gpu_user_marker_restores_exact_values_and_strips_foreign_private_env		
-host/src/files/actions.rs	1073	legacy_gpu_markers_supervisor_and_empty_user_markers_keep_reference_semantics		
-host/src/files/actions.rs	1107	terminal_argv_is_literal_for_every_supported_terminal		
-host/src/files/actions.rs	1154	terminal_list_precedence_and_entry_syntax_match_reference		
-host/src/files/actions.rs	1186	file_uris_preserve_reference_percent_encoding_without_shell_expansion		
-host/src/files/actions.rs	1199	own_app_ids_and_single_file_params_preserve_existing_host_route		
-host/src/files/actions.rs	1232	malformed_entries_and_untrusted_exec_return_before_any_launch		
-host/src/files/actions.rs	1268	invalid_file_actions_and_link_urls_fail_without_external_actions		
-host/src/files/actions.rs	1335	allowing_execute_requires_no_read_access_and_pins_the_original_file		
-host/src/files/actions.rs	1359	recursive_file_links_return_an_error_instead_of_overflowing_host_stack		
-host/src/files/actions.rs	1381	native_dry_validates_but_never_spawns_at_leaf_boundaries	ignored	spawn
-host/src/files/archives.rs	1707	zip_round_trip_follows_file_links_skips_directory_links_and_keeps_conflicts		
-host/src/files/archives.rs	1760	tar_filters_safe_links_and_python_data_metadata		
-host/src/files/archives.rs	1806	rejects_unsafe_members_links_devices_and_symlink_alias_escape		
-host/src/files/archives.rs	1877	zip_unix_symlink_attributes_remain_regular_binary_data		
-host/src/files/archives.rs	1902	corrupt_payload_is_transactional_and_empty_archives_are_supported		
-host/src/files/archives.rs	1943	duplicate_members_overwrite_only_inside_new_directory		
-host/src/files/archives.rs	1966	publish_keeps_chosen_name_and_retries_like_reference		
-host/src/files/clipboard.rs	256	independent_hosts_share_copy_cut_and_broken_symlink_state		
-host/src/files/dry.rs	119	dangerous_previews_preserve_fixed_reference_shapes_without_validation		
-host/src/files/dry.rs	143	rename_preview_checks_conflicts_but_never_renames_including_same_file_links		
-host/src/files/dry.rs	197	transfer_preview_validates_paths_and_destination_without_copying		
-host/src/files/dry.rs	236	new_item_previews_use_real_unique_names_and_language_without_creation		
-host/src/files/mod.rs	653	absolute_icons_require_image_content_and_do_not_block_on_special_files		
-host/src/files/mod.rs	675	long_runtime_uses_a_stable_short_socket_directory		
-host/src/files/mod.rs	688	closing_a_host_waits_for_its_running_file_job_and_rejects_new_writes		
-host/src/files/mod.rs	730	lexical_paths_uri_special_characters_and_linux_names_keep_their_meaning		
-host/src/files/mutate.rs	829	conflict_names_preserve_compound_extensions_and_broken_links		
-host/src/files/mutate.rs	845	atomic_rename_never_replaces_files_directories_or_dangling_links		
-host/src/files/mutate.rs	865	recursive_copy_preserves_links_without_entering_link_cycles_or_external_trees		
-host/src/files/mutate.rs	886	failed_copy_keeps_existing_destination_and_source		
-host/src/files/mutate.rs	902	changed_cross_filesystem_source_is_not_deleted_after_copy		
-host/src/files/mutate.rs	914	removal_does_not_follow_replaced_child_links		
-host/src/files/mutate.rs	930	transfer_reports_partial_success_without_losing_either_source		
-host/src/files/mutate.rs	954	descendant_destination_through_a_link_is_rejected		
-host/src/files/mutate.rs	970	same_folder_copy_localizes_name_and_move_is_a_noop		
-host/src/files/mutate.rs	990	cross_device_copy_remove_helper_completes_tree_before_removing_source		
-host/src/files/mutate.rs	1008	special_files_are_rejected_without_leaving_a_partial_tree		
-host/src/files/mutate.rs	1023	simultaneous_rename_has_exactly_one_winner_and_no_replacement		
-host/src/files/mutate.rs	1060	copied_regular_file_retains_mode_modified_time_and_supported_xattrs		
-host/src/files/mutate.rs	1102	regular_file_replaced_with_fifo_is_rejected_before_a_blocking_read		
+host/src/app_params.rs	184	files_share_selection_and_folders_get_separate_tabs		
+host/src/app_params.rs	206	missing_inputs_special_places_and_other_hosts		
+host/src/apps/catalog.rs	828	mo_endianness_charset_and_corrupt_offsets_are_handled_natively		
+host/src/apps/catalog.rs	851	inline_locale_gettext_domain_order_and_keyword_duplicates_match_source		
+host/src/apps/catalog.rs	904	gettext_territory_fallback_and_first_directory_precedence_are_preserved		
+host/src/apps/catalog.rs	938	dutch_fallback_hidden_brief_and_gnome_disks_twin_are_exact		
+host/src/apps/catalog.rs	993	our_installed_entries_give_the_own_apps_their_icon_and_are_not_listed_twice		net
+host/src/apps/catalog.rs	1046	first_seen_registry_retains_original_types_and_marks_only_new_visible_apps		
+host/src/apps/catalog.rs	1095	concurrent_catalog_builds_merge_seen_entries_without_lost_updates		
+host/src/apps/catalog.rs	1130	natural_order_is_stable_accent_insensitive_and_numeric_beyond_u64		
+host/src/apps/catalog.rs	1215	english_on_a_dutch_system_takes_each_entrys_english_texts_not_gios_dutch_ones		
+host/src/apps/catalog.rs	1236	english_texts_follow_en_gb_then_en_then_the_untranslated_key_and_never_the_system_language		
+host/src/apps/catalog.rs	1298	dutch_and_same_language_catalogues_keep_todays_names		
+host/src/apps/catalog.rs	1329	gnome_names_come_from_verkenners_launcher_table		
+host/src/apps/defaults.rs	598	selection_validation_and_own_explorer_aliases_preserve_reference		
+host/src/apps/defaults.rs	648	secondary_mime_types_skip_only_when_declared_unsupported		
+host/src/apps/defaults.rs	671	terminal_write_prepends_selection_preserves_comments_order_and_disabled_entries		
+host/src/apps/defaults.rs	679	secondary_explorer_cleanup_preserves_other_associations_comments_and_translations		
+host/src/apps/defaults.rs	721	cleanup_removes_empty_keys_and_leaves_untouched_files_byte_exact		
+host/src/apps/defaults.rs	747	atomic_terminal_writes_have_exact_modes_and_replace_only_the_requested_link		
+host/src/apps/defaults.rs	775	invalid_utf8_terminal_contents_abort_without_overwrite		
+host/src/apps/defaults.rs	786	configuration_lock_serializes_concurrent_read_modify_writes		
+host/src/apps/defaults.rs	826	configuration_lock_never_follows_a_symlink		
+host/src/apps/defaults.rs	835	desktop_specific_override_list_preserves_desktop_order_and_existing_files		
+host/src/apps/mod.rs	321	launch_uri_validation_and_literal_filename_encoding		net
+host/src/apps/mod.rs	342	app_errors_render_in_the_settings_language_through_their_call_sites		
+host/src/apps/pertype.rs	320	a_link_type_without_a_description_is_named_in_the_settings_language		
+host/src/apps/recent.rs	523	namespaces_duplicates_stable_sort_and_last_application_follow_reference		
+host/src/apps/recent.rs	545	cdata_internal_entities_unicode_and_supported_xml_encodings		
+host/src/apps/recent.rs	556	hostile_xml_never_resolves_external_entities_and_malformed_input_is_empty		net
+host/src/apps/recent.rs	571	uri_spelling_percent_decoding_and_localhost_match_python		
+host/src/apps/recent.rs	592	recent_filters_missing_and_trash_preserves_links_and_mtime_fallback		
+host/src/apps/recent.rs	628	privacy_gate_limits_and_cache_invalidation_use_only_fixture_history		
+host/src/apps/recent.rs	670	clearing_preserves_exact_malformed_bytes_and_private_modes		
+host/src/apps/recent.rs	694	backup_failure_keeps_source_and_does_not_publish_empty_history		
+host/src/apps/recent.rs	716	clear_missing_file_and_symlink_match_atomic_reference_behavior		
+host/src/apps/recent.rs	741	fifo_history_cannot_block_reads_or_shutdown_and_clear_emits_event_after_commit		
+host/src/apps/recent_datetime.rs	256	iso_formats_and_fractional_offsets_match_python_reference		
+host/src/apps/recent_datetime.rs	275	malformed_dates_and_times_return_zero		
+host/src/apps/recent_datetime.rs	292	local_timestamp_solver_handles_fold_and_gap_without_global_tz_changes		
+host/src/backend.rs	230	instance_rejects_invalid_ports_and_header_injection		
+host/src/backend.rs	243	initial_settings_import_never_replaces_existing_settings		
+host/src/bin/launch.rs	80	launch_answers_follow_the_settings_language		
+host/src/desktop_entries.rs	305	the_table_has_the_nine_entries_with_install_py_dutch		
+host/src/desktop_entries.rs	318	a_switch_rewrites_only_name_and_comment_and_switching_back_restores_the_bytes		
+host/src/desktop_entries.rs	356	foreign_missing_linked_and_other_groups_are_left_alone		
+host/src/desktop_entries.rs	385	a_scheduled_rewrite_uses_the_language_at_run_time_and_only_the_newest_one_runs		
+host/src/desktop_entries.rs	419	values_are_escaped_as_the_desktop_entry_spec_says		
+host/src/events.rs	437	delayed_clipboard_notifications_cannot_restore_an_older_selection		
+host/src/events.rs	471	settings_peers_reload_large_snapshots_and_keep_the_initiating_path		
+host/src/events.rs	513	update_progress_and_forwarding_reach_only_settings_pages		
+host/src/events.rs	558	native_events_reach_another_host_without_rebroadcasting_or_interleaving		
+host/src/files/actions.rs	1114	malformed_uri_authority_is_rejected_before_any_handler_launch		net
+host/src/files/actions.rs	1129	gpu_user_marker_restores_exact_values_and_strips_foreign_private_env		
+host/src/files/actions.rs	1176	the_supervisor_and_empty_or_broken_user_markers_decide_the_renderer		
+host/src/files/actions.rs	1207	terminal_argv_is_literal_for_every_supported_terminal		
+host/src/files/actions.rs	1254	terminal_list_precedence_and_entry_syntax_match_reference		
+host/src/files/actions.rs	1286	file_uris_preserve_reference_percent_encoding_without_shell_expansion		
+host/src/files/actions.rs	1299	own_app_ids_and_single_file_params_preserve_existing_host_route		
+host/src/files/actions.rs	1332	malformed_entries_and_untrusted_exec_return_before_any_launch		
+host/src/files/actions.rs	1372	launch_errors_render_in_the_context_language_with_their_keys		
+host/src/files/actions.rs	1443	invalid_file_actions_and_link_urls_fail_without_external_actions		
+host/src/files/actions.rs	1510	allowing_execute_requires_no_read_access_and_pins_the_original_file		
+host/src/files/actions.rs	1534	recursive_file_links_return_an_error_instead_of_overflowing_host_stack		
+host/src/files/actions.rs	1556	native_dry_validates_but_never_spawns_at_leaf_boundaries	ignored	spawn
+host/src/files/archives.rs	1808	zip_round_trip_follows_file_links_skips_directory_links_and_keeps_conflicts		
+host/src/files/archives.rs	1861	tar_filters_safe_links_and_python_data_metadata		
+host/src/files/archives.rs	1907	rejects_unsafe_members_links_devices_and_symlink_alias_escape		
+host/src/files/archives.rs	1978	zip_unix_symlink_attributes_remain_regular_binary_data		
+host/src/files/archives.rs	2003	corrupt_payload_is_transactional_and_empty_archives_are_supported		
+host/src/files/archives.rs	2044	duplicate_members_overwrite_only_inside_new_directory		
+host/src/files/archives.rs	2067	publish_keeps_chosen_name_and_retries_like_reference		
+host/src/files/archives.rs	2083	libarchive_load_errors_render_in_the_call_language_with_their_key		
+host/src/files/clipboard.rs	302	independent_hosts_share_copy_cut_and_broken_symlink_state		
+host/src/files/dry.rs	131	dangerous_previews_preserve_fixed_reference_shapes_without_validation		
+host/src/files/dry.rs	155	rename_preview_checks_conflicts_but_never_renames_including_same_file_links		
+host/src/files/dry.rs	209	transfer_preview_validates_paths_and_destination_without_copying		
+host/src/files/dry.rs	248	new_item_previews_use_real_unique_names_and_language_without_creation		
+host/src/files/mod.rs	897	absolute_icons_require_image_content_and_do_not_block_on_special_files		
+host/src/files/mod.rs	919	long_runtime_uses_a_stable_short_socket_directory		
+host/src/files/mod.rs	932	busy_arms_one_local_files_idle_event_for_the_end_of_the_last_job		
+host/src/files/mod.rs	976	closing_a_host_waits_for_its_running_file_job_and_rejects_new_writes		
+host/src/files/mod.rs	1021	file_texts_follow_the_settings_language_per_call_through_files_call		
+host/src/files/mod.rs	1199	lexical_paths_uri_special_characters_and_linux_names_keep_their_meaning		
+host/src/files/mutate.rs	838	conflict_names_preserve_compound_extensions_and_broken_links		
+host/src/files/mutate.rs	854	atomic_rename_never_replaces_files_directories_or_dangling_links		
+host/src/files/mutate.rs	874	recursive_copy_preserves_links_without_entering_link_cycles_or_external_trees		
+host/src/files/mutate.rs	895	failed_copy_keeps_existing_destination_and_source		
+host/src/files/mutate.rs	911	changed_cross_filesystem_source_is_not_deleted_after_copy		
+host/src/files/mutate.rs	923	removal_does_not_follow_replaced_child_links		
+host/src/files/mutate.rs	939	transfer_reports_partial_success_without_losing_either_source		
+host/src/files/mutate.rs	965	descendant_destination_through_a_link_is_rejected		
+host/src/files/mutate.rs	986	same_folder_copy_localizes_name_and_move_is_a_noop		
+host/src/files/mutate.rs	1006	cross_device_copy_remove_helper_completes_tree_before_removing_source		
+host/src/files/mutate.rs	1024	special_files_are_rejected_without_leaving_a_partial_tree		
+host/src/files/mutate.rs	1039	simultaneous_rename_has_exactly_one_winner_and_no_replacement		
+host/src/files/mutate.rs	1076	copied_regular_file_retains_mode_modified_time_and_supported_xattrs		
+host/src/files/mutate.rs	1118	regular_file_replaced_with_fifo_is_rejected_before_a_blocking_read		
 host/src/files/places.rs	160	locations_keep_original_order_missing_desktop_and_trash_semantics		
-host/src/files/properties.rs	588	file_properties_keep_reference_metadata_and_special_mode_bits		
-host/src/files/properties.rs	607	directory_counting_counts_links_without_following_cycles_or_external_trees		
-host/src/files/properties.rs	628	link_properties_follow_display_metadata_but_directory_count_keeps_reference_link_semantics		
-host/src/files/properties.rs	644	multi_selection_uses_filename_only_mime_and_includes_selected_root_folders		
-host/src/files/properties.rs	661	hidden_and_read_only_attributes_preserve_other_names_and_restore_owner_write		
-host/src/files/properties.rs	692	read_only_never_changes_a_symlink_target_or_replaced_inode		
-host/src/files/properties.rs	719	hidden_updates_replace_link_metadata_without_writing_to_its_external_target		
-host/src/files/properties.rs	742	concurrent_hidden_updates_keep_every_native_selection		
-host/src/files/properties.rs	769	owner_write_can_be_restored_even_when_the_file_has_no_read_permission		
-host/src/files/properties.rs	778	dotfiles_missing_paths_and_budgets_keep_reference_errors_and_bounds		
-host/src/files/read.rs	964	natural_order_matches_numbers_accents_and_casefold		
-host/src/files/read.rs	978	listing_preserves_hidden_link_and_broken_link_metadata		
-host/src/files/read.rs	1017	mime_guess_distinguishes_filename_only_from_empty_content		
-host/src/files/read.rs	1043	launchers_have_native_metadata_and_trash_is_dispatched_separately		
-host/src/files/read.rs	1072	desktop_launcher_names_follow_requested_shell_language		
-host/src/files/read.rs	1098	legacy_computer_shortcut_requires_exact_own_command_and_known_filename		
-host/src/files/read.rs	1131	localized_type_names_and_icon_inheritance_are_preserved		
-host/src/files/search.rs	463	unicode_casefold_terms_and_python_whitespace_match_original		
-host/src/files/search.rs	483	python_globs_classes_invalid_ranges_and_literal_brackets		
-host/src/files/search.rs	513	breadth_first_order_and_hidden_subtree_filtering_are_preserved		
-host/src/files/search.rs	570	links_are_returned_but_never_recursed_and_invalid_utf8_is_skipped		
-host/src/files/search.rs	607	mime_filters_still_descend_into_nonmatching_directories		
-host/src/files/search.rs	620	limits_deadlines_and_directory_budget_report_truncation		
-host/src/files/search.rs	668	fifo_metadata_cannot_block_and_query_errors_match_contract		
-host/src/files/trash.rs	1274	trash_list_info_restore_conflict_and_undo_names_keep_original_contract		
-host/src/files/trash.rs	1301	trash_preserves_broken_links_and_partial_failures		
-host/src/files/trash.rs	1315	permanent_empty_does_not_follow_entry_links_or_linked_files_directory		
-host/src/files/trash.rs	1333	mounted_child_preflight_keeps_entire_tree_and_reports_partial_success		
-host/src/files/trash.rs	1361	mounted_regular_child_is_detected_before_deleting_siblings		
-host/src/files/trash.rs	1383	separately_mounted_info_is_preserved_and_blocks_permanent_empty		
-host/src/files/trash.rs	1415	readonly_folders_orphan_info_and_expunged_entries_are_removed		
-host/src/files/trash.rs	1440	topdir_original_paths_cannot_escape_drive_or_follow_parent_alias		
-host/src/files/trash.rs	1457	mounted_trash_requires_own_real_dirs_and_sticky_shared_trash		
-host/src/files/trash.rs	1475	malformed_info_and_missing_restore_have_original_errors		
-host/src/files/trash.rs	1495	orphan_info_collision_is_not_overwritten_and_empty_removes_it		
-host/src/files/trash.rs	1514	restore_creates_missing_parents_and_preserves_existing_files		
-host/src/files/trash.rs	1530	cache_detects_same_trash_name_replaced_by_another_host		
-host/src/files/watch.rs	479	external_changes_are_debounced_on_own_glib_context		
-host/src/files/watch.rs	494	continuous_external_writes_refresh_periodically_before_the_writer_stops		
-host/src/files/watch.rs	528	reference_counts_cancel_after_last_unwatch		
-host/src/files/watch.rs	551	desktop_is_automatically_pinned_and_emits_both_events		
-host/src/files/watch.rs	571	oldest_non_desktop_monitor_is_evicted_at_sixty_four		
-host/src/files/watch.rs	597	trash_watch_uses_files_path_and_emits_uri_and_trash_events		
-host/src/files/watch.rs	621	symlink_directory_and_invalid_paths_finish_without_main_gtk		
-host/src/files/watch.rs	648	shutdown_cancels_pending_sources_and_joins_worker		
-host/src/gnome.rs	401	bridge_accepts_raw_results_without_dropping_icon_status		
-host/src/gnome.rs	422	only_the_panel_receives_window_events		
-host/src/gnome.rs	440	input_region_is_clipped_in_logical_coordinates		
-host/src/gnome.rs	450	empty_region_and_offscreen_rectangles_do_not_capture_input		
-host/src/launch.rs	84	all_existing_apps_target_a_real_rust_window_binary		
-host/src/launch.rs	106	parameters_round_trip_as_one_literal_json_argument		
-host/src/launch.rs	130	unknown_apps_and_malformed_params_fail_before_any_spawn		
-host/src/launch_context/portal/tests.rs	108	owned_registration_accepts_literal_quoted_prefix_and_unrelated_selector_edits		
-host/src/launch_context/portal/tests.rs	118	absent_edited_or_symbolic_managed_files_disable_opt_in		
-host/src/launch_context/portal/tests.rs	145	backend_selection_and_native_executable_are_required		
-host/src/launch_context/portal/tests.rs	159	malformed_or_redirected_ownership_cannot_enable_opt_in		
-host/src/launch_context/portal/tests.rs	177	isolated_launch_environment	ignored	spawn
+host/src/files/properties.rs	602	file_properties_keep_reference_metadata_and_special_mode_bits		
+host/src/files/properties.rs	621	directory_counting_counts_links_without_following_cycles_or_external_trees		
+host/src/files/properties.rs	642	link_properties_follow_display_metadata_but_directory_count_keeps_reference_link_semantics		
+host/src/files/properties.rs	658	multi_selection_uses_filename_only_mime_and_includes_selected_root_folders		
+host/src/files/properties.rs	675	hidden_and_read_only_attributes_preserve_other_names_and_restore_owner_write		
+host/src/files/properties.rs	706	read_only_never_changes_a_symlink_target_or_replaced_inode		
+host/src/files/properties.rs	735	hidden_updates_replace_link_metadata_without_writing_to_its_external_target		
+host/src/files/properties.rs	758	concurrent_hidden_updates_keep_every_native_selection		
+host/src/files/properties.rs	785	owner_write_can_be_restored_even_when_the_file_has_no_read_permission		
+host/src/files/properties.rs	794	dotfiles_missing_paths_and_budgets_keep_reference_errors_and_bounds		
+host/src/files/read.rs	997	the_icon_theme_is_read_once_for_many_threads_and_the_catalogue_is_shared		
+host/src/files/read.rs	1044	natural_order_matches_numbers_accents_and_casefold		
+host/src/files/read.rs	1058	listing_preserves_hidden_link_and_broken_link_metadata		
+host/src/files/read.rs	1097	mime_guess_distinguishes_filename_only_from_empty_content		
+host/src/files/read.rs	1123	launchers_have_native_metadata_and_trash_is_dispatched_separately		
+host/src/files/read.rs	1152	desktop_launcher_names_follow_requested_shell_language		
+host/src/files/read.rs	1178	legacy_computer_shortcut_requires_exact_own_command_and_known_filename		
+host/src/files/read.rs	1211	localized_type_names_and_icon_inheritance_are_preserved		
+host/src/files/search.rs	470	unicode_casefold_terms_and_python_whitespace_match_original		
+host/src/files/search.rs	490	python_globs_classes_invalid_ranges_and_literal_brackets		
+host/src/files/search.rs	520	breadth_first_order_and_hidden_subtree_filtering_are_preserved		
+host/src/files/search.rs	577	links_are_returned_but_never_recursed_and_invalid_utf8_is_skipped		
+host/src/files/search.rs	614	mime_filters_still_descend_into_nonmatching_directories		
+host/src/files/search.rs	627	limits_deadlines_and_directory_budget_report_truncation		
+host/src/files/search.rs	689	fifo_metadata_cannot_block_and_query_errors_match_contract		
+host/src/files/trash.rs	1295	trash_list_info_restore_conflict_and_undo_names_keep_original_contract		
+host/src/files/trash.rs	1322	trash_preserves_broken_links_and_partial_failures		
+host/src/files/trash.rs	1336	permanent_empty_does_not_follow_entry_links_or_linked_files_directory		
+host/src/files/trash.rs	1354	mounted_child_preflight_keeps_entire_tree_and_reports_partial_success		
+host/src/files/trash.rs	1385	mounted_regular_child_is_detected_before_deleting_siblings		
+host/src/files/trash.rs	1407	separately_mounted_info_is_preserved_and_blocks_permanent_empty		
+host/src/files/trash.rs	1442	readonly_folders_orphan_info_and_expunged_entries_are_removed		
+host/src/files/trash.rs	1467	topdir_original_paths_cannot_escape_drive_or_follow_parent_alias		
+host/src/files/trash.rs	1484	mounted_trash_requires_own_real_dirs_and_sticky_shared_trash		
+host/src/files/trash.rs	1502	malformed_info_and_missing_restore_have_original_errors		
+host/src/files/trash.rs	1535	orphan_info_collision_is_not_overwritten_and_empty_removes_it		
+host/src/files/trash.rs	1554	restore_creates_missing_parents_and_preserves_existing_files		
+host/src/files/trash.rs	1570	cache_detects_same_trash_name_replaced_by_another_host		
+host/src/files/watch.rs	490	external_changes_are_debounced_on_own_glib_context		
+host/src/files/watch.rs	505	continuous_external_writes_refresh_periodically_before_the_writer_stops		
+host/src/files/watch.rs	539	reference_counts_cancel_after_last_unwatch		
+host/src/files/watch.rs	562	desktop_is_automatically_pinned_and_emits_both_events		
+host/src/files/watch.rs	582	oldest_non_desktop_monitor_is_evicted_at_sixty_four		
+host/src/files/watch.rs	608	trash_watch_uses_files_path_and_emits_uri_and_trash_events		
+host/src/files/watch.rs	632	symlink_directory_and_invalid_paths_finish_without_main_gtk		
+host/src/files/watch.rs	659	shutdown_cancels_pending_sources_and_joins_worker		
+host/src/gnome.rs	192	bridge_accepts_raw_results_without_dropping_icon_status		
+host/src/gnome.rs	213	only_the_panel_receives_window_events		
+host/src/gnome.rs	232	bridge_errors_follow_the_settings_language		
+host/src/i18n.rs	690	every_converted_site_renders_its_3b898e6_dutch		
+host/src/i18n.rs	786	every_catalogue_is_well_formed_complete_and_consistent		
+host/src/i18n.rs	864	lookups_fall_back_to_dutch_then_to_the_key		
+host/src/i18n.rs	886	placeholders_fill_by_name_and_keep_what_has_no_value		
+host/src/i18n.rs	905	plurals_pick_zero_one_other_with_n_equal_to_one		
+host/src/i18n.rs	940	escapes_are_decoded		
+host/src/i18n.rs	950	formatting_follows_the_language		
+host/src/i18n.rs	966	the_language_comes_only_from_the_settings_file_and_is_cached_by_its_identity		
+host/src/i18n.rs	1025	a_parse_is_trusted_only_outside_the_racy_window_of_the_last_change		
+host/src/i18n.rs	1063	lang_values_parse_as_contract_c1_says		
+host/src/launch.rs	105	every_own_app_has_its_application_id		
+host/src/launch.rs	123	all_existing_apps_target_a_real_rust_window_binary		
+host/src/launch.rs	145	parameters_round_trip_as_one_literal_json_argument		
+host/src/launch.rs	169	unknown_apps_and_malformed_params_fail_before_any_spawn		
+host/src/launch.rs	182	launch_errors_follow_the_settings_language		
+host/src/launch_context/portal/tests.rs	123	owned_registration_accepts_literal_quoted_prefix_and_unrelated_selector_edits		
+host/src/launch_context/portal/tests.rs	133	absent_edited_or_symbolic_managed_files_disable_opt_in		
+host/src/launch_context/portal/tests.rs	160	backend_selection_and_native_executable_are_required		
+host/src/launch_context/portal/tests.rs	174	malformed_or_redirected_ownership_cannot_enable_opt_in		
+host/src/launch_context/portal/tests.rs	192	isolated_launch_environment	ignored	spawn
 host/src/launch_context.rs	123	virtual_startup_method_returns_own_token_for_gio_platform_data		
-host/src/picker.rs	321	multiple_selections_are_validated_and_deduplicated		
-host/src/picker.rs	333	saved_selection_never_creates_a_file_and_validates_options		
-host/src/picker.rs	349	folders_and_invalid_paths_remain_separate		
-host/src/portal/tests.rs	22	typed_options_map_to_existing_picker_without_losing_filters_or_choices		
-host/src/portal/tests.rs	72	savefile_returns_one_encoded_uri_and_never_creates_or_truncates		
-host/src/portal/tests.rs	91	open_multiple_selection_has_exact_typed_filter_choices_and_writable		
-host/src/portal/tests.rs	125	savefiles_uses_raw_basenames_unique_targets_and_input_order_without_writing		
-host/src/portal/tests.rs	146	cancellation_invalid_types_paths_and_unoffered_choices_are_rejected		
-host/src/portal/tests.rs	192	non_utf8_suggested_folder_falls_back_to_encodable_ancestor		
-host/src/portal/tests.rs	213	portal_local_gtk_override_does_not_escape_command_or_gio_launch_context	ignored	spawn
-host/src/process_scope.rs	460	only_own_correct_slice_counts_as_managed		
-host/src/process_scope.rs	483	aggregate_cap_is_below_one_gib_and_high_below_max		
-host/src/process_scope.rs	493	explicit_clean_environment_preserves_fresh_command_overrides		home,spawn
-host/src/process_scope.rs	513	actual_manager_separates_app_from_bounded_shell_slice	ignored	home,live_path,spawn
+host/src/lib.rs	714	a_restarting_explorer_waits_for_its_file_operation_and_restarts_on_files_idle		
+host/src/lib.rs	774	a_replaced_binary_execs_its_path		
+host/src/lib.rs	807	a_native_backend_leaves_a_restart_note_for_its_gui		
+host/src/lib.rs	860	the_native_explorer_backend_waits_for_its_file_operations_before_it_restarts		
+host/src/lib.rs	902	the_restart_plan_is_taken_once		
+host/src/lib.rs	935	a_vanished_binary_restarts_the_running_image		
+host/src/lib.rs	963	the_portal_counts_a_file_chooser_call_until_its_answer		signal
+host/src/picker.rs	248	multiple_selections_are_validated_and_deduplicated		
+host/src/picker.rs	265	saved_selection_never_creates_a_file_and_validates_options		
+host/src/picker.rs	289	folders_and_invalid_paths_remain_separate		
+host/src/picker.rs	308	selection_errors_follow_the_settings_language		
+host/src/portal/tests.rs	23	typed_options_map_to_existing_picker_without_losing_filters_or_choices		
+host/src/portal/tests.rs	73	savefile_returns_one_encoded_uri_and_never_creates_or_truncates		
+host/src/portal/tests.rs	92	open_multiple_selection_has_exact_typed_filter_choices_and_writable		
+host/src/portal/tests.rs	126	savefiles_uses_raw_basenames_unique_targets_and_input_order_without_writing		
+host/src/portal/tests.rs	147	cancellation_invalid_types_paths_and_unoffered_choices_are_rejected		
+host/src/portal/tests.rs	193	non_utf8_suggested_folder_falls_back_to_encodable_ancestor		
+host/src/portal/tests.rs	214	portal_local_gtk_override_does_not_escape_command_or_gio_launch_context	ignored	spawn
+host/src/post_upgrade.rs	1161	the_extension_state_is_read_as_a_double		
+host/src/post_upgrade.rs	1195	releases_majors_and_the_record		
+host/src/post_upgrade.rs	1235	apt_cache_outputs_resolve_the_names		
+host/src/post_upgrade.rs	1306	missing_parts_come_from_the_soname_directory		
+host/src/post_upgrade.rs	1442	the_seams_fail_closed		priv
+host/src/post_upgrade.rs	1531	the_upgrader_rule_is_guards		priv
+host/src/post_upgrade.rs	1576	the_texts_follow_the_language		
+host/src/post_upgrade.rs	1609	no_absolute_exec_path_outside_the_tool_table		spawn
+host/src/process_scope.rs	471	only_own_correct_slice_counts_as_managed		
+host/src/process_scope.rs	494	aggregate_cap_is_below_one_gib_and_high_below_max		
+host/src/process_scope.rs	504	explicit_clean_environment_preserves_fresh_command_overrides		home,spawn
+host/src/process_scope.rs	524	a_non_utf8_environment_is_refused_in_the_settings_language		spawn
+host/src/process_scope.rs	538	actual_manager_separates_app_from_bounded_shell_slice	ignored	home,live_path,spawn
+host/src/runtime.rs	653	core_texts_render_the_old_dutch_and_have_english		
+host/src/runtime.rs	684	envelopes_carry_code_message_key_and_params		
+host/src/runtime.rs	729	plural_errors_report_n		
 host/src/services/disks/tests/private_bus_tests.rs	30	native_disks_use_private_udisks_protocol	ignored	home,signal
 host/src/services/disks/tests.rs	34	managed_objects_match_all_python_partition_and_protection_cases		
 host/src/services/disks/tests.rs	41	labels_match_python_unicode_limits_and_errors		
@@ -161,16 +211,42 @@ host/src/services/disks/tests.rs	94	smart_summary_and_details_match_python
 host/src/services/disks/tests.rs	106	dbus_errors_match_python_in_both_languages		
 host/src/services/disks/tests.rs	153	action_guards_match_python_without_bus_or_disk_writes		
 host/src/services/disks/tests.rs	208	drive_operation_lock_releases_and_serializes_shared_namespaces		
-host/src/services/display.rs	400	mode_normalization		
-host/src/services/display.rs	409	gnome_layout_contract		
-host/src/services/index/query.rs	944	ranges_and_bilingual		
-host/src/services/index/query.rs	953	grammar_and_highlights		
-host/src/services/index/query.rs	960	unicode_preserving_lower		
-host/src/services/media.rs	309	metadata_and_capabilities		
-host/src/services/media.rs	322	malformed_status_and_zero_length		
-host/src/services/mod.rs	289	expensive_services_start_once_on_demand_and_retry_failed_initialization		
+host/src/services/disks/tests.rs	230	the_snapshot_is_used_only_in_the_language_it_was_built_in		home
+host/src/services/disks/tests.rs	271	the_unavailable_body_does_not_repeat_its_heading_in_english_and_keeps_dutch		
+host/src/services/disks/tests.rs	311	disks_list_follows_a_language_switch_through_the_service		home
+host/src/services/display.rs	437	mode_normalization		
+host/src/services/display.rs	446	gnome_layout_contract		
+host/src/services/display.rs	456	display_errors_render_in_the_context_language		
+host/src/services/index/cache.rs	1070	a_column_of_the_wrong_length_keeps_its_key_up_to_the_root_error		
+host/src/services/index/query.rs	984	ranges_and_bilingual		
+host/src/services/index/query.rs	993	grammar_and_highlights		
+host/src/services/index/query.rs	1001	the_examples_of_the_messages_parse		live_path
+host/src/services/index/query.rs	1021	unicode_preserving_lower		
+host/src/services/index.rs	805	index_errors_render_in_english_and_dutch_through_the_service		
+host/src/services/index.rs	850	worker_errors_and_root_errors_are_rendered_in_the_hosts_language		
+host/src/services/index.rs	904	a_language_switch_sends_the_status_again_in_the_new_language		home
+host/src/services/media.rs	341	metadata_and_capabilities		
+host/src/services/media.rs	354	malformed_status_and_zero_length		
+host/src/services/media.rs	365	control_errors_render_in_the_context_language		
+host/src/services/mod.rs	327	a_native_gui_says_whether_it_shows_a_window		
+host/src/services/mod.rs	341	expensive_services_start_once_on_demand_and_retry_failed_initialization		
+host/src/services/mod.rs	386	language_is_a_cached_stat_not_a_settings_read		
+host/src/services/notifications.rs	805	stored_melding_reads_as_an_empty_app_name_and_others_stay		
+host/src/services/notifications.rs	819	errors_and_the_test_notification_render_in_the_context_language		
 host/src/services/shell/filemanager.rs	339	queue_rate_stuck_and_stop_limits_are_bounded		
 host/src/services/shell/filemanager.rs	384	late_path_checks_are_discarded_and_release_stuck_slot		
+host/src/services/shell/restart.rs	515	delays_follow_the_design_order		
+host/src/services/shell/restart.rs	549	reason_is_libraries_or_update_and_nothing_else		
+host/src/services/shell/restart.rs	565	job_rules_match_the_guard		
+host/src/services/shell/restart.rs	638	the_receiver_recheck_reads_the_update_job_and_only_its_own_software_jobs		signal,spawn
+host/src/services/shell/restart.rs	739	restart_all_is_refused_by_the_guard_in_every_job_phase_and_for_software_jobs		
+host/src/services/shell/restart.rs	839	a_second_restart_all_while_one_is_under_way_sends_no_second_event		spawn
+host/src/services/shell/restart.rs	885	calls_at_the_same_moment_send_one_event		spawn
+host/src/services/shell/restart.rs	926	dry_run_answers_without_an_event_but_still_shows_a_refusal		
+host/src/services/shell/restart.rs	953	a_receiver_with_its_own_job_defers_until_the_job_event_and_then_restarts_once		
+host/src/services/shell/restart.rs	1089	a_wait_that_lib_rs_decides_is_announced_like_the_others_and_so_is_its_end		
+host/src/services/shell/restart.rs	1152	an_update_job_of_another_process_defers_until_that_process_exits		signal,spawn
+host/src/services/shell/restart.rs	1208	a_dry_host_ignores_the_event		
 host/src/services/shell/tests/oracle_tests.rs	6	commands_match_original_validation_payload_and_delivery_count		
 host/src/services/shell/tests/oracle_tests.rs	28	app_aliases_and_parameter_size_match_python		
 host/src/services/shell/tests/oracle_tests.rs	47	gnome_clipboard_apis_match_all_python_unsupported_cases		
@@ -178,80 +254,190 @@ host/src/services/shell/tests/oracle_tests.rs	61	filemanager_name_policy_limits_
 host/src/services/shell/tests/oracle_tests.rs	90	filemanager_uri_grouping_selection_and_limits_match_original_explorer_args		
 host/src/services/shell/tests/oracle_tests.rs	138	explorer_backlog_matches_original_ack_reconnect_close_limit_and_expiry_trace		
 host/src/services/shell/tests/oracle_tests.rs	198	pinned_clipboard_history_and_storage_match_python_trace		home
-host/src/services/shell/tests/oracle_tests.rs	243	shell_info_keeps_original_user_apps_and_runtime_metadata_shape		
+host/src/services/shell/tests/oracle_tests.rs	247	shell_info_keeps_original_user_apps_and_runtime_metadata_shape		
 host/src/services/shell/tests/private_bus_tests.rs	27	native_core_uses_private_filemanager_protocol_and_events	ignored	dbus
-host/src/services/shell/tests.rs	31	native_open_validates_and_dry_run_never_invokes_launcher		
-host/src/services/shell/tests.rs	65	each_open_targets_an_independent_rust_host_and_keeps_literal_parameters		
-host/src/services/shell/tests.rs	90	gnome_clipboard_retains_pinned_file_and_reports_reference_unsupported_shape		home
-host/src/services/storage/common.rs	426	decimal_rounding_matches_reference_binary_float_cases		
-host/src/services/storage/scan.rs	743	scan_event_avoids_broadcasting_huge_trees		
-host/src/services/storage/scan.rs	754	heap_equal_sizes_retain_original_minheap_ties		
-host/src/services/storage/scan.rs	765	unicode_tree_event_limit_counts_reference_characters		
-host/src/services/storage/scan.rs	771	exhausted_node_budget_retains_false_truncated_flag_for_empty_dirs		
+host/src/services/shell/tests.rs	49	native_open_validates_and_dry_run_never_invokes_launcher		
+host/src/services/shell/tests.rs	83	each_open_targets_an_independent_rust_host_and_keeps_literal_parameters		
+host/src/services/shell/tests.rs	108	gnome_clipboard_retains_pinned_file_and_reports_reference_unsupported_shape		home
+host/src/services/shell/tests.rs	132	shell_and_clipboard_errors_render_in_the_language_of_the_settings_file		home
+host/src/services/storage/categories.rs	361	get_without_data_keeps_data_null		
+host/src/services/storage/categories.rs	385	get_keeps_a_cached_object_without_categories_as_it_is		
+host/src/services/storage/categories.rs	400	cached_category_names_follow_the_language		
+host/src/services/storage/common.rs	440	decimal_rounding_matches_reference_binary_float_cases		
+host/src/services/storage/scan.rs	823	stored_errors_and_cached_trees_follow_the_language		
+host/src/services/storage/scan.rs	845	scan_event_avoids_broadcasting_huge_trees		
+host/src/services/storage/scan.rs	856	heap_equal_sizes_retain_original_minheap_ties		
+host/src/services/storage/scan.rs	867	unicode_tree_event_limit_counts_reference_characters		
+host/src/services/storage/scan.rs	873	exhausted_node_budget_retains_false_truncated_flag_for_empty_dirs		
 host/src/services/storage/volumes.rs	253	escaped_mount_fields_and_bindroots_are_retained		
 host/src/services/storage/volumes.rs	262	drive_size_labels_match_both_languages		
-host/src/services/sysmon/actions.rs	903	pid_inputs_preserve_order_and_reject_bad_values		
-host/src/services/sysmon/actions.rs	916	protected_processes_never_reach_signal		signal
-host/src/services/sysmon/actions.rs	926	terminal_confirmation_carries_original_dialog_data		
-host/src/services/sysmon/common.rs	667	decimal_rounding_matches_reference_binary_float_cases		
+host/src/services/storage.rs	229	storage_errors_render_in_english_and_dutch_through_the_service		home
+host/src/services/storage.rs	279	the_volume_cache_is_used_only_in_its_language		
+host/src/services/storage.rs	307	storage_volumes_follow_a_switch_within_the_cache_window		home
+host/src/services/sysmon/actions.rs	1003	pid_inputs_preserve_order_and_reject_bad_values		
+host/src/services/sysmon/actions.rs	1019	protected_processes_never_reach_signal		signal
+host/src/services/sysmon/actions.rs	1026	terminal_confirmation_carries_original_dialog_data		
+host/src/services/sysmon/actions.rs	1039	a_native_backend_restarts_its_window_and_the_picker_is_no_explorer		
+host/src/services/sysmon/common.rs	672	decimal_rounding_matches_reference_binary_float_cases		
+host/src/services/sysmon/common.rs	684	every_unit_key_exists_and_every_part_name_has_english		
+host/src/services/sysmon/common.rs	780	unit_friendly_matches_3b898e6_in_dutch_and_costs_no_more		gnome_call
 host/src/services/sysmon/performance.rs	710	gpu_optional_fields_are_null_without_losing_available_metrics		
 host/src/services/sysmon/performance.rs	719	pci_friendly_names_keep_model_and_normalize_vendor		
-host/src/services/sysmon/process.rs	1026	recycled_pid_does_not_inherit_cpu_accounting		
-host/src/services/sysmon/process.rs	1033	cpu_delta_is_machine_share		
-host/src/services/sysmon/process.rs	1040	stat_reader_handles_comm_parentheses_and_existing_self		
-host/src/services/sysmon/startup.rs	229	keys_preserve_other_groups_and_remove_duplicates		
-host/src/services/sysmon/startup.rs	237	translations_follow_language_not_process_locale		
-host/src/services/sysmon/startup.rs	245	invalid_id_is_rejected_before_any_file_io		
-host/src/services/system/audio.rs	286	wpctl_tree_and_filter		
-host/src/services/system/audio.rs	302	inspect_properties		
+host/src/services/sysmon/process.rs	1209	own_app_knows_the_native_apps_and_their_launchers		
+host/src/services/sysmon/process.rs	1263	a_backend_is_part_of_its_window_not_an_app_of_its_own		
+host/src/services/sysmon/process.rs	1291	the_portal_file_picker_is_not_explorer		
+host/src/services/sysmon/process.rs	1340	own_names_cover_every_kind_in_both_languages		
+host/src/services/sysmon/process.rs	1378	processes_below_an_own_window_in_its_unit_belong_to_it		
+host/src/services/sysmon/process.rs	1456	task_manager_shows_a_native_app_with_its_backend_and_not_the_portal_picker		priv
+host/src/services/sysmon/process.rs	1529	recycled_pid_does_not_inherit_cpu_accounting		
+host/src/services/sysmon/process.rs	1536	cpu_delta_is_machine_share		
+host/src/services/sysmon/process.rs	1543	stat_reader_handles_comm_parentheses_and_existing_self		
+host/src/services/sysmon/process.rs	1552	busy_names_are_rebuilt_only_after_a_language_switch		priv
+host/src/services/sysmon/startup.rs	259	keys_preserve_other_groups_and_remove_duplicates		
+host/src/services/sysmon/startup.rs	267	translations_follow_language_not_process_locale		
+host/src/services/sysmon/startup.rs	275	invalid_id_is_rejected_before_any_file_io		
+host/src/services/sysmon.rs	222	sysmon_errors_render_in_english_and_dutch_through_the_service		priv,signal
+host/src/services/sysmon.rs	289	unit_friendly_names_have_english_rows_and_dutch_is_unchanged		gnome_call,priv
+host/src/services/sysmon.rs	364	durations_keep_their_dutch_and_english_forms		
+host/src/services/system/audio.rs	306	wpctl_tree_and_filter		
+host/src/services/system/audio.rs	322	inspect_properties		
 host/src/services/system/audio_monitor.rs	198	pipewire_stream_is_incremental_and_skips_initial_dump		
 host/src/services/system/audio_monitor.rs	214	only_expected_object_domains_refresh_audio		
-host/src/services/system/bluetooth.rs	1295	device_categories		
-host/src/services/system/bluetooth.rs	1308	bluez_errors		
+host/src/services/system/bluetooth.rs	1287	device_categories		
+host/src/services/system/bluetooth.rs	1300	bluez_errors		
 host/src/services/system/common.rs	313	variants_preserve_nested_dictionary_types		
 host/src/services/system/common.rs	322	python_rounding		
 host/src/services/system/common.rs	334	python_id_coercion		
 host/src/services/system/energy/tests.rs	7	energy_patch_validation_never_coerces_or_accepts_partial_patches		
-host/src/services/system/energy/tests.rs	37	energy_memory_backend_preserves_custom_timeouts_and_never		
-host/src/services/system/energy/tests.rs	86	energy_readonly_backend_and_missing_schemas_are_honest		
-host/src/services/system/energy/tests.rs	107	energy_schema_checks_reject_wrong_types_unknown_keys_and_enum_values		
-host/src/services/system/energy/tests.rs	132	energy_external_gsettings_changes_trigger_existing_monitor_without_polling		priv
-host/src/services/system/energy/tests.rs	159	energy_profiles_use_real_typed_dbus_and_readback	ignored	
-host/src/services/system/info.rs	354	os_strings_unquote		
-host/src/services/system/info.rs	362	dmi_rejects_placeholders		
-host/src/services/system/network.rs	807	nmcli_escapes		
-host/src/services/system/network.rs	815	security_precedence		
-host/src/services/system/network.rs	822	secrets_and_variant_types		
+host/src/services/system/energy/tests.rs	40	energy_memory_backend_preserves_custom_timeouts_and_never		
+host/src/services/system/energy/tests.rs	98	energy_readonly_backend_and_missing_schemas_are_honest		
+host/src/services/system/energy/tests.rs	121	energy_schema_checks_reject_wrong_types_unknown_keys_and_enum_values		
+host/src/services/system/energy/tests.rs	155	energy_external_gsettings_changes_trigger_existing_monitor_without_polling		priv
+host/src/services/system/energy/tests.rs	182	energy_profiles_use_real_typed_dbus_and_readback	ignored	
+host/src/services/system/info.rs	365	os_strings_unquote		
+host/src/services/system/info.rs	373	dmi_rejects_placeholders		
+host/src/services/system/info.rs	381	system_updates_come_from_the_update_snapshot_once_one_exists		
+host/src/services/system/network.rs	837	nmcli_escapes		
+host/src/services/system/network.rs	845	security_precedence		
+host/src/services/system/network.rs	852	secrets_and_variant_types		
+host/src/services/system/power.rs	296	power_actions_are_refused_while_our_update_job_commits_and_lock_passes		
 host/src/services/system/private_bus_tests.rs	11	native_system_uses_private_protocols	ignored	signal
-host/src/services/system.rs	529	argument_coercion_is_reference_exact		
-host/src/services/system.rs	539	contract_inventory_complete		
-host/src/services/system.rs	551	retained_python_oracle_contracts_match_native_helpers		
-host/src/settings.rs	794	defaults_loading_sanitizes_known_types_keeps_unknowns_and_does_not_write_valid_input		
-host/src/settings.rs	809	known_types_string_or_list_and_readonly_version_match_original_errors		
-host/src/settings.rs	856	replacing_subtree_remains_partial_until_restart_and_native_adoption_is_exact		
-host/src/settings.rs	877	unknown_descendant_of_known_scalar_keeps_exact_shape_across_native_peers		
-host/src/settings.rs	904	concurrent_independent_stores_do_not_lose_disjoint_writes		
-host/src/settings.rs	927	snapshot_does_not_suppress_external_notifications_and_noop_does_not_notify		
-host/src/settings.rs	953	restoring_a_peers_write_notifies_even_when_it_matches_our_watermark		
-host/src/settings.rs	983	persisted_theme_paths_are_preserved_alongside_other_observed_changes		
-host/src/settings.rs	1004	patch_reset_import_and_export_keep_original_shapes_and_order		
-host/src/settings.rs	1053	bad_config_is_retained_and_backups_are_private_unique_and_complete		
-host/src/settings.rs	1080	failed_save_rolls_back_memory_and_keeps_existing_file		
-host/src/settings.rs	1102	path_validation_and_python_numeric_equality_preserve_noop_behavior		
-host/src/transfers.rs	207	rejects_invalid_tab_state_without_touching_files		
-host/src/transfers.rs	219	only_committed_handoffs_may_close_source		
-host/src/wallpaper.rs	170	original_builtin_follow_theme_modes_and_manual_path		
-host/src/wallpaper.rs	191	all_six_fit_modes_and_solid_color_match_original_controls		
-host/src/wallpaper.rs	219	local_photo_uri_escapes_special_characters_and_rejects_missing_or_remote_paths		
-host/src/wallpaper.rs	245	only_wallpaper_and_mode_changes_request_a_desktop_update		
-host/src/wallpaper.rs	268	grouped_gnome_writes_are_visible_to_other_settings_clients		
-host/src/window.rs	895	desktop_detach_requires_a_confirmed_release_outside_the_source		
-host/src/window.rs	917	caption_buttons_and_tabs_are_excluded_from_dragging		
-host/src/window.rs	925	resize_edges_and_content_are_distinct		
-host/src/window_state.rs	450	persistence_excludes_surfaces_and_pickers		
-host/src/window_state.rs	466	semantic_tabs_validate_and_drop_listing_data		
-host/src/window_state.rs	476	invalid_and_oversized_sessions_are_rejected		
-host/src/window_state.rs	493	rectangles_reject_unbounded_or_incomplete_values		
-host/src/window_state.rs	505	atomic_merge_preserves_other_app_states_and_private_modes		
-host/src/window_state.rs	538	symlinked_state_and_lock_never_redirect_writes		
-host/src/window_state.rs	551	corrupt_state_recovers_but_oversized_file_is_preserved		
+host/src/services/system.rs	561	argument_coercion_is_reference_exact		
+host/src/services/system.rs	571	contract_inventory_complete		
+host/src/services/system.rs	587	argument_errors_carry_their_key_and_render_in_both_languages		
+host/src/services/system.rs	612	power_network_and_night_light_errors_follow_the_context_language		
+host/src/services/system.rs	669	bluetooth_table_errors_carry_the_key_the_ui_matches		
+host/src/services/system.rs	706	retained_python_oracle_contracts_match_native_helpers		
+host/src/services/tray.rs	1820	position_errors_render_in_both_languages		
+host/src/services/tray.rs	1860	lookup_errors_render_in_the_context_language_through_call		
+host/src/services/update/admin.rs	295	the_trust_rule_is_cleanup_rs_rule		
+host/src/services/update/admin.rs	336	the_prompt_change_runs_pkexec_with_the_helper_or_the_same_script_through_sh		priv
+host/src/services/update/admin.rs	427	pkexec_126_and_127_and_failures_become_the_design_texts		priv
+host/src/services/update/admin.rs	559	attach_needs_the_trusted_helper		priv
+host/src/services/update/bus_tests.rs	981	every_timeline_in_nl_and_en	ignored	
+host/src/services/update/bus_tests.rs	1015	progress_under_the_flood_timeline	ignored	
+host/src/services/update/bus_tests.rs	1092	two_services_one_owner_forwarding_and_takeover	ignored	
+host/src/services/update/bus_tests.rs	1169	a_mirror_takes_over_by_its_retry_after_the_owner_crashed	ignored	
+host/src/services/update/bus_tests.rs	1220	upgrade_running_refuses_every_write	ignored	
+host/src/services/update/bus_tests.rs	1307	dry_run_makes_no_call_on_the_fake	ignored	
+host/src/services/update/bus_tests.rs	1336	reader_mode_never_connects	ignored	
+host/src/services/update/bus_tests.rs	1375	shutdown_is_fast_and_the_next_owner_reattaches	ignored	
+host/src/services/update/bus_tests.rs	1418	a_vanished_daemon_is_resolved_through_old_transactions	ignored	
+host/src/services/update/compat.rs	1452	the_embedded_releases_json_is_the_designs		
+host/src/services/update/compat.rs	1467	majors_and_gnomes_prefix_rule		
+host/src/services/update/compat.rs	1483	the_cheap_verdict_matrix		
+host/src/services/update/compat.rs	1518	components_come_from_the_ubuntu_stanzas_of_ubuntu_sources		net
+host/src/services/update/compat.rs	1575	third_party_sources_are_counted_without_ubuntu_sources		net
+host/src/services/update/compat.rs	1614	the_tree_configuration		net
+host/src/services/update/compat.rs	1668	apt_config_dump_under_the_tree_shows_no_system_hook		
+host/src/services/update/compat.rs	1695	dpkg_query_policy_and_simulation_parsers		
+host/src/services/update/compat.rs	1814	the_verdict_matrix_on_recorded_apt_outputs		
+host/src/services/update/compat.rs	1879	reasons_are_rendered_per_call		
+host/src/services/update/compat.rs	2042	a_non_tested_codename_never_builds_the_tree		
+host/src/services/update/compat.rs	2094	a_tested_codename_runs_the_full_check_once_and_caches_it		
+host/src/services/update/compat.rs	2177	the_cache_rules		
+host/src/services/update/compat.rs	2223	offline_metered_and_failed_checks_are_unknown_with_a_reason		
+host/src/services/update/compat.rs	2314	the_card_fields_without_an_offer		
+host/src/services/update/compat.rs	2338	apt_tree_against_the_fixture_archive	ignored	dbus
+host/src/services/update/elf.rs	174	a_tiny_elf_lists_its_needed_in_order		
+host/src/services/update/elf.rs	182	malformed_files_are_errors_not_panics		
+host/src/services/update/elf.rs	215	the_skip_rule		
+host/src/services/update/elf.rs	239	our_binaries_equal_readelf		
+host/src/services/update/history.rs	633	a_run_is_parsed_with_its_lists_dates_uid_and_error		
+host/src/services/update/history.rs	665	cut_lines_bad_names_and_bytes_that_are_not_utf8_are_survived		
+host/src/services/update/history.rs	680	gzip_rotation_a_cut_gzip_two_members_and_the_ends_of_big_files_are_read		
+host/src/services/update/history.rs	715	groups_sources_and_outcomes_follow_the_fixture		
+host/src/services/update/history.rs	776	a_current_release_upgrade_waits_for_the_upgrader_and_a_partial_upgrade_is_listed_per_package		
+host/src/services/update/history.rs	796	pages_hold_200_entries_or_90_days_and_continue_exactly		
+host/src/services/update/history.rs	834	a_stale_job_file_ends_its_window_at_its_last_write_and_old_runs_of_ours_have_no_source		
+host/src/services/update/history.rs	888	update_history_reads_the_fixture_root_and_our_job_windows		
+host/src/services/update/options.rs	307	apt_config_and_snap_outputs_are_parsed		
+host/src/services/update/options.rs	331	options_come_from_the_stubs_of_the_tool_table		
+host/src/services/update/options.rs	368	dry_run_and_reader_hosts_start_no_program		
+host/src/services/update/options.rs	399	auto_open_round_trips_in_a_keyfile_backend		
+host/src/services/update/options.rs	438	auto_open_is_unsupported_without_the_schema_and_never_uses_dconf_in_test_mode		priv
+host/src/services/update/options.rs	465	the_two_page_toggles_persist_through_settings_set		home
+host/src/services/update/phasing.rs	270	probe_py_runs_the_script_this_module_ships		
+host/src/services/update/pk.rs	1895	a_finished_job_leaves_no_installed_package_in_the_snapshot		
+host/src/services/update/pk.rs	1933	a_failed_job_keeps_its_packages_and_marks_its_rows_failed		
+host/src/services/update/pk.rs	1952	the_keep_alive_lasts_until_the_recheck_and_not_through_a_confirm		
+host/src/services/update/pk.rs	1988	a_new_stage_of_the_running_job_is_published		
+host/src/services/update/pk.rs	2054	the_reread_after_updates_changed_waits_and_is_not_repeated		signal
+host/src/services/update/pk.rs	2090	a_deferred_receiver_that_restarts_clears_the_restart_infobar		
+host/src/services/update/pk.rs	2145	a_job_paused_for_a_confirm_ends_as_declined_in_the_next_owner		
+host/src/services/update/release.rs	866	the_prompt_follows_ubuntus_precedence_and_names_its_file		
+host/src/services/update/release.rs	904	config_prompt_reads_each_file_as_configparser_does		
+host/src/services/update/release.rs	920	meta_release_parses_like_metarelease_py		net
+host/src/services/update/release.rs	957	distro_info_gives_dates_and_the_released_release		
+host/src/services/update/release.rs	971	today_on_this_machine_is_released_but_not_offered		
+host/src/services/update/release.rs	998	the_newer_copy_wins_and_the_stamp_counts_only_when_newer		
+host/src/services/update/release.rs	1040	lts_on_an_interim_release_behaves_as_normal		
+host/src/services/update/release.rs	1054	the_snapshot_release_object		net
+host/src/services/update/release.rs	1099	check_new_release_runs_only_through_the_stub_and_only_on_the_click_path		home
+host/src/services/update/release.rs	1129	a_click_checks_at_most_daily_and_never_while_metered_offline_or_never		
+host/src/services/update/release.rs	1199	set_prompt_changes_only_the_prompt_line_and_asks_no_password_for_nothing		priv
+host/src/services/update/release.rs	1252	set_prompt_through_the_service_never_runs_in_dry_run_or_while_upgrading		priv
+host/src/services/update/release.rs	1287	ubuntu_hold_round_trips_both_keys_and_restores_only_our_values		
+host/src/services/update/release.rs	1335	ubuntu_hold_on_needs_an_offer_on_hold_and_a_schema		live_path,priv
+host/src/services/update/tests.rs	149	no_seam_variable_means_the_system_table		
+host/src/services/update/tests.rs	158	valid_seams_reroot_every_path_and_take_tools_only_from_the_stub_dir		
+host/src/services/update/tests.rs	184	tool_children_get_the_stub_path_and_the_test_buses_only		dbus,gnome_call,home,live_path,net,priv,signal,spawn
+host/src/services/update/upgrade.rs	930	a_start_runs_the_fixed_argv_with_the_language_and_the_press_enter_line		home,priv
+host/src/services/update/upgrade.rs	1022	the_preconditions_refuse_in_ubuntus_order		
+host/src/services/update/upgrade.rs	1183	linger_is_enabled_only_when_off_and_disabled_only_by_us		home,priv
+host/src/services/update/upgrade.rs	1242	the_wrapper_writes_the_status_and_holds_on_failure		spawn
+host/src/services/update/upgrade.rs	1312	the_watch_turns_status_files_into_startfailed_ended_or_the_offer		home
+host/src/services/update/upgrade.rs	1437	running_and_waiting_come_from_the_scan_and_the_log_age		
+host/src/services/update/upgrade.rs	1484	the_card_state_follows_the_precedence		
+host/src/services/update/upgrade.rs	1579	attach_needs_the_screen_session_and_the_helper		priv
+host/src/services/update/upgrade.rs	1625	the_service_routes_start_and_undoes_a_failed_terminal		home
+host/src/services/update/upgrade.rs	1676	post_upgrade_uses_the_same_wrapper		
+host/src/services/update/upgrade.rs	1684	layer_start_goes_through_the_user_manager	ignored	dbus
+host/src/settings.rs	866	defaults_loading_sanitizes_known_types_keeps_unknowns_and_does_not_write_valid_input		
+host/src/settings.rs	881	known_types_string_or_list_and_readonly_version_match_original_errors		
+host/src/settings.rs	928	replacing_a_subtree_writes_it_as_given_but_every_view_keeps_the_defaults		
+host/src/settings.rs	960	an_unknown_descendant_of_a_known_scalar_is_written_but_every_view_shows_the_default		
+host/src/settings.rs	988	a_partial_file_keeps_every_default_on_load_and_reload_and_is_not_written_back		
+host/src/settings.rs	1020	unknown_keys_survive_and_nested_objects_are_merged_on_every_reload		
+host/src/settings.rs	1044	the_object_form_of_language_reads_as_dutch_on_every_load		
+host/src/settings.rs	1064	the_language_is_set_to_exactly_nl_or_en_and_anything_else_is_refused		
+host/src/settings.rs	1146	settings_errors_render_in_the_language_of_their_settings_file		
+host/src/settings.rs	1213	concurrent_independent_stores_do_not_lose_disjoint_writes		
+host/src/settings.rs	1236	snapshot_does_not_suppress_external_notifications_and_noop_does_not_notify		
+host/src/settings.rs	1262	restoring_a_peers_write_notifies_even_when_it_matches_our_watermark		
+host/src/settings.rs	1292	persisted_theme_paths_are_preserved_alongside_other_observed_changes		
+host/src/settings.rs	1313	patch_reset_import_and_export_keep_original_shapes_and_order		
+host/src/settings.rs	1364	an_import_drops_an_invalid_language_and_keeps_the_current_one		
+host/src/settings.rs	1464	bad_config_is_retained_and_backups_are_private_unique_and_complete		
+host/src/settings.rs	1491	failed_save_rolls_back_memory_and_keeps_existing_file		
+host/src/settings.rs	1513	path_validation_and_python_numeric_equality_preserve_noop_behavior		
+host/src/transfers.rs	212	rejects_invalid_tab_state_without_touching_files		
+host/src/transfers.rs	224	only_committed_handoffs_may_close_source		
+host/src/transfers.rs	302	transfer_errors_follow_the_settings_language		
+host/src/wallpaper.rs	240	original_builtin_follow_theme_modes_and_manual_path		
+host/src/wallpaper.rs	261	renamed_bloom_ids_resolve_to_the_lotus_files		
+host/src/wallpaper.rs	294	all_six_fit_modes_and_solid_color_match_original_controls		
+host/src/wallpaper.rs	322	local_photo_uri_escapes_special_characters_and_rejects_missing_or_remote_paths		
+host/src/wallpaper.rs	348	the_colours_gdk_3_took_and_the_css_names_are_valid		
+host/src/wallpaper.rs	389	only_wallpaper_and_mode_changes_request_a_desktop_update		
+host/src/wallpaper.rs	412	grouped_gnome_writes_are_visible_to_other_settings_clients		

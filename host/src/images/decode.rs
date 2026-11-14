@@ -1,4 +1,4 @@
-use gtk::gdk_pixbuf::{InterpType, Pixbuf};
+use gdk_pixbuf::{InterpType, Pixbuf};
 use std::{
     fs::File,
     io::{Read, Write},

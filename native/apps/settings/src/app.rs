@@ -1,4 +1,4 @@
-//! The Settings window and its router (vendor/ui/js/apps/settings/main.js): a Mica window with Back and the
+//! The Settings window and its router (last-webkit:vendor/ui/js/apps/settings/main.js): a Mica window with Back and the
 //! title in a 48 px title bar, the 280 px navigation pane (user card, "Zoek een instelling", the colourful
 //! categories) and the content: the page title or breadcrumb (fixed) above a scrolling column of cards.
 //! Deep links (`--params {"page": ..}`, a relaunch), Back (history of 50), the search results page, the live

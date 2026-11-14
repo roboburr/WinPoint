@@ -23,7 +23,7 @@ RISKY = {
     "signal": r"libc::kill|kill\(|SIGTERM|SIGKILL|signal",
     "priv": r"pkexec|systemctl|systemd-run|loginctl|gsettings|dconf",
     "live_path": r"/run/user|/home/robin|\.local/share|\.config/win11|/sys/fs/cgroup",
-    "gtk": r"gtk::init|gtk::|webkit|wry::|WebView",
+    "gtk": r"gtk::init|gtk::",
     "net": r"ureq::|TcpStream|tiny_http|http://",
 }
 

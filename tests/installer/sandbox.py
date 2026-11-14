@@ -126,20 +126,22 @@ class Case:
         return proc
 
     def writes_outside(self, trace: Path) -> tuple[int, list[str], list[str]]:
-        """(mutating paths, successful writes outside the case dir, failed attempts outside it)."""
+        """(mutating paths, successful writes outside the case dir, failed attempts outside it). Read line by line: a
+        REAL install traces ~600 MB, and reading it at once took the memory watchdog's whole margin."""
         count, outside, failed = 0, [], []
         root = os.path.realpath(self.dir)
-        for line in trace.read_text(errors="replace").splitlines():
-            parsed = strace_paths(line)
-            if not parsed:
-                continue
-            call, paths = parsed
-            for path in paths:
-                absolute = path if path.startswith("/") else os.path.join(self.dir, path)
-                count += 1
-                inside = os.path.realpath(absolute) == root or os.path.realpath(absolute).startswith(root + "/")
-                if not inside and not absolute.startswith(("/dev/null", "/dev/tty", "/proc/self/")):
-                    (failed if " = -1 " in line else outside).append(f"{call} {absolute}")
+        with open(trace, encoding="utf-8", errors="replace") as stream:
+            for line in stream:
+                parsed = strace_paths(line.rstrip("\n"))
+                if not parsed:
+                    continue
+                call, paths = parsed
+                for path in paths:
+                    absolute = path if path.startswith("/") else os.path.join(self.dir, path)
+                    count += 1
+                    inside = os.path.realpath(absolute) == root or os.path.realpath(absolute).startswith(root + "/")
+                    if not inside and not absolute.startswith(("/dev/null", "/dev/tty", "/proc/self/")):
+                        (failed if " = -1 " in line else outside).append(f"{call} {absolute}")
         return count, sorted(set(outside)), sorted(set(failed))
 
     def stub_calls(self) -> list[str]:
@@ -226,8 +228,9 @@ def stub_build(directory: Path) -> Path:
 def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
                  icons: dict[str, str] | None = None) -> Path:
     """A small source tree install.py accepts: a real copy of extension/ and host/src's two JSON tables, plus a
-    tiny but valid vendor/ (ui, host, a two-theme icon bundle with its manifest and source archive). ``icons``: more
-    files of the Win11 theme (path below vendor/icons/Win11 -> text), in the bundle's manifest too."""
+    tiny but valid vendor/ (ui/assets, a two-theme icon bundle with its manifest and source archive, and a host/
+    that only 3b898e6's installer requires: the current one no longer reads or installs vendor/host). ``icons``:
+    more files of the Win11 theme (path below vendor/icons/Win11 -> text), in the bundle's manifest too."""
     if directory.exists():
         shutil.rmtree(directory)
     shutil.copytree(G/"extension", directory/"extension")
@@ -238,7 +241,6 @@ def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
         shutil.copy2(G/"host/src"/name, directory/"host/src"/name)
     vendor = directory/"vendor"
     (vendor/"ui/assets/icons").mkdir(parents=True)
-    (vendor/"ui/index.html").write_text("<!doctype html><title>GE1c fixture</title>\n")
     (vendor/"ui/assets/icons/settings.svg").write_text("<svg xmlns='http://www.w3.org/2000/svg'/>\n")
     (vendor/"host").mkdir()
     (vendor/"host/README").write_text("GE1c fixture\n")

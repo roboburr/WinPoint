@@ -631,7 +631,7 @@ fn zip_index(file: &mut File, lang: Lang) -> Result<Option<ZipIndex>, ApiError> 
             String::from_utf8(filename.to_vec())
                 .map_err(|error| bad_archive(error.to_string(), lang))?
         } else {
-            let (utf8, _) = gtk::glib::convert(filename, "UTF-8", "CP437")
+            let (utf8, _) = glib::convert(filename, "UTF-8", "CP437")
                 .map_err(|error| bad_archive(error.to_string(), lang))?;
             String::from_utf8(utf8.to_vec())
                 .map_err(|error| bad_archive(error.to_string(), lang))?

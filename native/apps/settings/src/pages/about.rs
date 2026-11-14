@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Info (vendor/ui/js/apps/settings/pages/about.js): the device and the operating
+//! Instellingen › Systeem › Info (last-webkit:vendor/ui/js/apps/settings/pages/about.js): the device and the operating
 //! system with "Kopiëren", and related links.
 use super::system::rename_hint;
 use super::{Builder, Content, Page, PageFuture};

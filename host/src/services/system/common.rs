@@ -380,21 +380,30 @@ impl Drop for LangContext {
         let _ = std::fs::remove_dir_all(&self.root);
     }
 }
-/// The UI's own text `name` in vendor/ui/js/apps/settings/pages/display.js as (nl, en): the D-G2 rows of the host
-/// must equal it (R2-A fix round, review m4). None outside the repository (source tarball); a name that is not
-/// there exactly once per language fails the test.
+/// The English half of native Settings' own `t("<nl>", "<en>")` pair for `nl` in
+/// native/apps/settings/src/pages/display.rs: the D-G2 rows of the host must equal the page's text (R2-A fix round,
+/// review m4). The page must be there (the test needs the whole repository) and say `nl`, with one English text.
 #[cfg(test)]
-pub(crate) fn ui_display_text(name: &str) -> Option<(String, String)> {
+pub(crate) fn native_display_text(nl: &str) -> String {
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../vendor/ui/js/apps/settings/pages/display.js");
-    let source = std::fs::read_to_string(path).ok()?;
-    let prefix = format!("    {name}: '");
-    let texts: Vec<&str> = source
-        .lines()
-        .filter_map(|line| line.strip_prefix(prefix.as_str())?.split_once('\''))
-        .map(|(text, _)| text)
+        .join("../native/apps/settings/src/pages/display.rs");
+    let source = std::fs::read_to_string(&path)
+        .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+    let quoted = format!("\"{nl}\"");
+    let mut english: Vec<&str> = source
+        .match_indices(quoted.as_str())
+        .filter_map(|(at, _)| {
+            // t("<nl>", "<en>"), also over two lines: a comma, then the English literal
+            let rest = source[at + quoted.len()..].trim_start().strip_prefix(',')?;
+            let rest = rest.trim_start().strip_prefix('"')?;
+            rest.split_once('"').map(|(en, _)| en)
+        })
         .collect();
-    assert_eq!(texts.len(), 2, "display.js {name}: one nl and one en text");
-    // makeT({nl, en}): the nl dictionary comes first
-    Some((texts[0].to_owned(), texts[1].to_owned()))
+    english.dedup();
+    assert_eq!(
+        english.len(),
+        1,
+        "display.rs t({quoted}, …): one English text, found {english:?}"
+    );
+    english[0].to_owned()
 }

@@ -2,7 +2,6 @@
 //! Bounded breadth-first Explorer search, preserving the original find contract.
 use super::{ApiError, ApiResult, Context, directory, read};
 use crate::i18n::Lang;
-use gtk::glib;
 use serde_json::{Value, json};
 use std::{
     collections::{HashSet, VecDeque},

@@ -1,5 +1,5 @@
-//! Alles's own texts (vendor/ui/js/apps/alles/i18n.js): the plural forms, the filter and column names and the
-//! Windows-style type names. Every other text is written in place as `t(nl, en)` with i18n.js's wording.
+//! Alles's own texts (last-webkit:vendor/ui/js/apps/alles/i18n.js): the plural forms, the filter and column names and
+//! the Windows-style type names. Every other text is written in place as `t(nl, en)` with i18n.js's wording.
 use kit::format;
 use kit::t;
 

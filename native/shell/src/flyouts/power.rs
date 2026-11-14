@@ -1,5 +1,6 @@
-//! Power confirmation (sign out, shut down, restart, sleep, lock), ported from vendor/ui/js/shell/power.js: Start
-//! hands the action to the panel (D-G58, panel-power), which shows the confirmation over the whole monitor.
+//! Power confirmation (sign out, shut down, restart, sleep, lock), ported from
+//! `git show 418ea594:vendor/ui/js/shell/power.js`: Start hands the action to the panel (D-G58, panel-power), which
+//! shows the confirmation over the whole monitor.
 //!
 //!   confirm(shell, action)   shutdown / reboot / logout: a Win11 ContentDialog on a smoke over the whole monitor
 //!                            ("Wil je de pc afsluiten?", what happens to unsaved work, accent button and

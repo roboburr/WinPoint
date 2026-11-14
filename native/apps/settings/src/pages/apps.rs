@@ -1,6 +1,6 @@
-//! Instellingen › Apps (vendor/ui/js/apps/settings/pages/apps.js): the overview with links to Geïnstalleerde
-//! apps, Standaard-apps and Opstarten. Its CSS has the app lists' toolbar and rows (settings.css "Apps lists"),
-//! shared by installed.rs and startup.rs.
+//! Instellingen › Apps (last-webkit:vendor/ui/js/apps/settings/pages/apps.js): the overview with links to
+//! Geïnstalleerde apps, Standaard-apps and Opstarten. Its CSS has the app lists' toolbar and rows (settings.css "Apps
+//! lists"), shared by installed.rs and startup.rs.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;
 use kit::controls::SettingsGroup;

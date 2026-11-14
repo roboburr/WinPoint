@@ -44,8 +44,8 @@ MARKER = '.win11-update-fixture'
 UUID = 'win11-gnome@win11shell.local'
 DOCK = 'ubuntu-dock@ubuntu.com'
 FIXTURES = HERE / 'fixtures' / 'upgrade'
-SONAMES = ('libwebkit2gtk-4.1.so.0', 'libjavascriptcoregtk-4.1.so.0', 'libgtk-3.so.0', 'libgdk-3.so.0', 'libsoup-3.0.so.0',
-           'libglib-2.0.so.0', 'libgobject-2.0.so.0', 'libgio-2.0.so.0', 'libgdk_pixbuf-2.0.so.0', 'libcairo.so.2',
+# post_upgrade.rs PARTS: the blocking sonames
+SONAMES = ('libgtk-4.so.1', 'libgraphene-1.0.so.0', 'libpango-1.0.so.0', 'libglib-2.0.so.0', 'libgobject-2.0.so.0', 'libgio-2.0.so.0', 'libgdk_pixbuf-2.0.so.0', 'libcairo.so.2',
            'libz.so.1', 'libarchive.so.13')
 RESOLUTE = 'NAME="Ubuntu"\nVERSION_ID="26.04"\nVERSION="26.04.1 LTS (Resolute Raccoon)"\nVERSION_CODENAME=resolute\n'
 STONKING = 'NAME="Ubuntu"\nVERSION_ID="26.10"\nVERSION="26.10 (Stonking Stingray)"\nVERSION_CODENAME=stonking\n'
@@ -490,7 +490,7 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
             ('no GetExtensionInfo, no EnableExtension', not ({'GetExtensionInfo', 'EnableExtension'} & set(methods(calls))))])
     if want('missing-parts'):
         sc = Scenario(base, 'missing-parts')
-        for so in ('libsoup-3.0.so.0', 'libgdk-3.so.0'):
+        for so in ('libgtk-4.so.1', 'libgdk_pixbuf-2.0.so.0'):
             (sc.root / 'usr/lib/x86_64-linux-gnu' / so).unlink()
         sc.spec = {'extensionState': 1.0, 'answers': ['close', 'action:installParts']}
         rc, took, calls = r.launch(sc)
@@ -504,15 +504,16 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         tools, home = sc.tools, sc.root / 'home'
         want_argv = [str(tools / 'xdg-terminal-exec'), '--', str(tools / 'sh'), '-c', wrapper, 'win11-gnome-parts',
                      str(home / '.run/win11-gnome/parts-status.json'), 'always', str(tools / 'pkexec'), str(tools / 'apt-get'),
-                     'install', 'libgtk-3-0t65', 'libsoup-3.0-0']
+                     'install', 'libgtk-4-1', 'libgdk-pixbuf-2.0-0t65']
         apt = [line for line in sc.tool_log() if line[0] == 'apt-cache']
         r.check(f'missing-parts [{took:.2f} s]', [
             ('rc 0', rc == 0), ('two notifications', len(n) == 2),
             ('missing title', len(n) == 2 and n[1]['args']['summary'] == 'Win11 Shell mist onderdelen'),
-            ('missing body', len(n) == 2 and n[1]['args']['body'] == 'Na de upgrade ontbreekt: GTK 3, libsoup.'),
+            ('missing body', len(n) == 2 and n[1]['args']['body'] == 'Na de upgrade ontbreekt: GTK 4, GDK Pixbuf (afbeeldingen).'),
             ('actions', len(n) == 2 and n[1]['args']['actions'] == ['installParts', 'Onderdelen installeren…', 'later', 'Later']),
-            ('names resolved on the new release', apt == [['apt-cache', 'policy', 'libgtk-3-0t64'], ['apt-cache', 'showpkg', 'libgtk-3-0t64'],
-                                                          ['apt-cache', 'policy', 'libsoup-3.0-0']]),
+            ('names resolved on the new release', apt == [['apt-cache', 'policy', 'libgtk-4-1'],
+                                                          ['apt-cache', 'policy', 'libgdk-pixbuf-2.0-0'],
+                                                          ['apt-cache', 'showpkg', 'libgdk-pixbuf-2.0-0']]),
             ('one transient unit', len(units) == 1),
             ('Role::App: app.slice', props.get('Slice') == 'app.slice'),
             ('never the shell slice', not any(u['args'].get('name') == 'app-win11shell.slice' for u in units)),

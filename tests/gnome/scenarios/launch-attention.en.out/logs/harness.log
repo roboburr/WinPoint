@@ -1,0 +1,17 @@
+23:42:43 GE0c run lang=en switch=False seed=defaults MemAvailable=6165396 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/launch-attention.py
+23:44:05 private install: exit 0 in 67.1 s, 87271 mutated paths, 0 outside the run dir, ok=True
+23:44:09 GNOME Shell 50.1 up (mode user, unsafe True)
+23:44:14 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/launch-attention.py
+23:44:19   check PASS: A: the launched helper opens with the focus
+23:44:19   check PASS: A: GNOME maps its window to the test app
+23:44:20   check PASS: B: without a launch GNOME shows "is ready" and keeps the focus
+23:44:22   check PASS: C: after a launch the window comes to the front
+23:44:22   check PASS: C: no "is ready" notification
+23:44:23   check PASS: D: a later request without a launch goes to GNOME again
+23:44:23   check PASS: every check passed
+23:44:23 shutdown app: signalled own descendants 1803:win11-gtk-setti, 1812:win11-app, 1907:glycin-svg
+23:44:23 shutdown shell clients: signalled own descendants 48:ibus-daemon, 60:glycin-svg, 335:win11-shell, 453:glycin-image-rs, 2056:glycin-image-rs, 492:win11-panel, 574:glycin-svg, 170:ibus-memconf, 172:ibus-extension-, 447:ibus-engine-sim
+23:44:23 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+23:44:23 shutdown system bus: signalled own descendants 24:dbus-daemon
+23:44:23 inner sweep: signalled own descendants 2066:glycin-image-rs
+23:44:23 inner done: 0 surfaces, 0 failed []

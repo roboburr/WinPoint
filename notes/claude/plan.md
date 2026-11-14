@@ -43,7 +43,7 @@ Branch `claude/gnome-english-update`; `codex-baseline` (3b898e6) is Codex's unto
 | D-G8 | Rust catalogues in `host/i18n/<stem>.tsv` (inside the crate, so the source tarball builds); the four `_STR` JSON tables stay in v1. |
 | D-G9 | systemd unit friendly names get English rows. |
 | D-G10 | `vendor/host` (Python reference) stays untranslated. |
-| D-G11 | Polkit, PackageKit, NetworkManager and WebKit's own strings stay in the system language; documented. |
+| D-G11 | Polkit, PackageKit, NetworkManager and WebKit's own strings stay in the system language; documented. Amended by D-G72 (2026-11-14): WinPoint has no WebKit any more; GTK's own strings (a text field's context menu, its built-in dialogs) take that place in the list. |
 | D-G12 | Windows Update per `windows-update-gnome.md` (hold with "Toch upgraden…" behind a warning on an untested GNOME major, owner lock, cheap verdict first, tests only with recorded apt outputs). Robin decides R-items (update-notifier auto-open, postponing Ubuntu's own prompt). |
 | D-G13 | Package version 0.8.0. |
 | D-G14 | Own-app window memory hardened; all-app window memory waits for Robin. |
@@ -418,6 +418,37 @@ Coordinator decisions:
   extension out of enabled-extensions. The panel host now also applies WinPoint's colour scheme and GTK/icon theme at
   its start (captions_at_start), as a GNOME session may have put GNOME's back. Harness: --session-mode winpoint
   (gnome-shell --mode=winpoint from a private RUN/sysdata, empty enabled-extensions); scenario session-mode 9/9.
+* D-G72: Robin (2026-11-13): "zet de apps ook om naar GTK 4"; then (2026-11-14) WebKit out of WinPoint and GTK 3 out
+  of the host. The seven apps are native GTK 4 programs (native/apps on native/kit, `win11-gtk-<kind>`,
+  native/APPS.md); the launchers exec them and each starts its own `win11-app --app <kind> --http-only` backend. The
+  commit before the removal (8614f207, the last with WebKit) is tagged `last-webkit`. Removed: the WebKit windows of
+  the host (window.rs, window_state.rs, portal/external.rs, the hand-off, restart_args, the GPU switches no-gpu /
+  WIN11SHELL_GPU / WIN11_WEBKIT_BROWSER_CACHE), the HTML apps (vendor/ui/index.html, js/, css/, assets/img/), `wry`,
+  webkit2gtk, javascriptcore and soup3 from host/Cargo.toml, then `gtk` (the host links GLib, GIO and GDK Pixbuf only;
+  gdk-pixbuf 0.18 directly, glib and gio with feature v2_70), WIN11_WEBKIT_APPS, `shell.pickFile`, `shell.setRegions`,
+  `nativeBackdrop.configure` and `explorer.tabPosition` in the backend (the native callers use the extension), the
+  WebKit/JavaScriptCore/libsoup/GTK 3 rows of build.sh, install.py PACKAGES and post_upgrade PARTS, the i18n UI layer
+  and the WebKit baselines (tools/i18n check_native.py reads the native nl/en pairs), notes/claude/map/merge-trial.
+  Decisions: (1) the update page keeps Ubuntu's `webkit` and `soup` package rows, with a neutral title; (2) a missing
+  `win11-gtk-<kind>` prints core.nativeAppMissing and exits 127, a failed exec exits 1, never a fallback; (3) the
+  portal is a gio::Application (IS_SERVICE) with its own runtime and HTTP server and one `win11-gtk-explorer
+  --picker-stdio` child per request (WIN11_APP_BACKEND, GDK_DEBUG=no-portals), no GTK in the portal process; (4)
+  vendor/host stays in the repository as the Python reference but is no longer installed; (5) vendor/ui keeps the
+  wallpapers and icons, its manifests describe them (patch `html_apps_removed`); (6) historical reports get a banner,
+  not deletion; (7) caption-buttons-gtk3.css stays, it themes other people's GTK 3 apps; (8) native comments cite the
+  HTML sources as `last-webkit:vendor/ui/<path>` (the shell's, removed by D-G70, as `git show 418ea594:`); (9) the
+  repo-root bin/ is Robin's and install.py's choose_build only takes a folder with all 19 BINS; (10) acceptance is "no
+  dependency and no feature": tools/check-no-webkit.py (crate patterns, both lockfiles, no vendor/ui js/css/html,
+  readelf and ldd of the 19 binaries) with tools/check-no-webkit.allow for history, update categories, fixtures,
+  frozen i18n data, legacy cleanup and third-party process names. Also: the kit sets GDK_DEBUG=portals so the apps'
+  gtk::FileDialog reaches the Win11 picker, and WIN11SHELL_USER_GPU so launched programs get the user's GSK_RENDERER
+  and GDK_DEBUG back; an update (install.py remove_webkit_state) and the uninstall remove the WebKit storage of
+  earlier versions from exact, user-owned folders. Memory (PSS of an app with its backend, native-gtk-apps): Explorer
+  42.2 MiB, Settings 91.0, Task Manager 49.0 against 219.8, 242.1 and 220.3 for the WebKit apps on 13-11 (native 51.7,
+  101.6 and 59.1 in that run). Every harness scenario passes on the rebuilt tests/build/native-release (nl; ten also
+  in en); check-no-webkit OK. README, THIRD_PARTY_NOTICES, LICENSES (RUST-CRATES.md made again, MPL-2.0.txt gone),
+  native/APPS.md, ARCH.md, gtk-native.md and the README screenshots describe the new state; the VALIDATION reports
+  carry a banner.
 ### Rounds 4-6: Windows Update per `windows-update-gnome.md` (GW steps, its own ownership table), own-app window
 memory hardening (D-G14) alongside round 4.
 

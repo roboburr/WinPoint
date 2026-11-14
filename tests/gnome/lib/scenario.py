@@ -11,23 +11,29 @@ Run one (from G; the heavy lock and the memory check come from tools/heavy.sh, c
     tools/heavy.sh --min-mb 2560 --tag <step> -- \\
         python3 -B tests/gnome/harness.py launch run --lang nl --scenario tests/gnome/scenarios/native-shell.py
 
-Surfaces (``h.open(spec)``): ``panel``, ``desktop``, ``start`` (native: windows of win11-shell, no WebView),
-``explorer``, ``settings`` or ``settings:<page>`` (a page id from ``vendor/ui/js/apps/settings/registry.js``, e.g.
-``settings:language``), ``taskmgr``, ``alles``, ``disks``, ``defaultapps``, ``installer`` (HTML apps in WebKit).
-After ``open``, a surface is addressed by its name (the spec without the page, or the ``name=`` given to ``open``).
+Surfaces (``h.open(spec)``): ``panel``, ``desktop``, ``start`` (windows of the native shell, win11-shell),
+``explorer``, ``settings`` or ``settings:<page>`` (a page id from ``native/apps/settings/src/registry.rs``, e.g.
+``settings:language``), ``taskmgr``, ``alles``, ``disks``, ``defaultapps``, ``installer`` (the native GTK 4 apps,
+win11-gtk-<kind>, started through their launchers). After ``open``, a surface is addressed by its name (the spec
+without the page, or the ``name=`` given to ``open``).
 
-Text and assertions are read from the apps' real WebViews through the product's WIN11_DEV_COMMAND/WIN11_DEV_REPORT
-hooks, and from the native shell through its own commands on the same files (``h.native``, ``h.native_state``;
-native/shell/src/dev.rs); GNOME facts (window titles, app names, the extension's own St widgets) through
-org.gnome.Shell.Eval on the private bus; real pointer input through a Clutter virtual pointer device inside the
-private shell.
+Text, widget state and input come from the dev channels on WIN11_DEV_COMMAND/WIN11_DEV_REPORT: the shell's
+(``h.native``, ``h.native_state``; native/shell/src/dev.rs) and each app's (``h.state``, ``h.find``, ``h.dev``;
+native/kit/src/dev.rs), where widgets are found by their ``set_widget_name``; GNOME facts (window titles, app
+names, the extension's own St widgets) through org.gnome.Shell.Eval on the private bus; real pointer input through
+a Clutter virtual pointer device inside the private shell, at a widget's centre: the window's frame rectangle as
+Mutter has it (the window geometry GTK sets, so without the CSD shadow of a dialog or popup; a kit window draws
+none) plus the widget's rectangle in the window from the dev state (a popover's widgets included).
 """
 from __future__ import annotations
 
 import json
 import os
+import re
+import subprocess
 import time
 import traceback
+import urllib.request
 from pathlib import Path
 
 # install.py's desktop entries (D-G70: no Start and no Desktop entry; the Calendar app's entry instead)
@@ -39,37 +45,12 @@ WM = {'panel': 'io.github.win11shell.Panel', 'desktop': 'io.github.win11shell.De
       'alles': 'io.github.win11shell.Search', 'disks': 'io.github.win11shell.Disks',
       'defaultapps': 'io.github.win11shell.DefaultApps', 'installer': 'io.github.win11shell.Installer'}
 KINDS = tuple(WM)
-# Started by the extension, not by h.open: windows of the one native shell process (win11-shell), no WebView
+# Started by the extension, not by h.open: windows of the one native shell process (win11-shell)
 RESIDENT = ('panel', 'desktop', 'start')
-LANG_OPTION = {'nl': 'Nederlands', 'en': 'English'}       # option label prefixes of the Taal en regio dropdown
+# The option label prefixes of Settings > Tijd en taal > Taal en regio's display language drop-down
+# (native/apps/settings/src/pages/time.rs language(): "Nederlands", "English (United Kingdom)")
+LANG_OPTION = {'nl': 'Nederlands', 'en': 'English'}
 VIAS = ('dropdown', 'rename', 'rewrite')
-
-# ---- JavaScript ---------------------------------------------------------------------------------------------
-# Page side (WebView, through WIN11_DEV_COMMAND). Placeholders and aria-labels are not in innerText.
-PAGE_TEXT_JS = ("(()=>{const b=document.body;const uniq=a=>[...new Set(a.filter(Boolean))];return {"
-                "lang:document.documentElement.lang,title:document.title,ready:document.documentElement.dataset.ready||null,"
-                "text:(b?b.innerText:'').slice(0,12000),"
-                "placeholders:uniq([...document.querySelectorAll('[placeholder]')].map(e=>e.getAttribute('placeholder'))),"
-                "ariaLabels:uniq([...document.querySelectorAll('[aria-label]')].map(e=>e.getAttribute('aria-label'))).slice(0,300)};})()")
-
-ELEMENT_RECT_JS = ("(()=>{{const e=({expr});if(!e)return null;e.scrollIntoView({{block:'nearest',inline:'nearest'}});"
-                   "const r=e.getBoundingClientRect();return {{x:r.left+r.width/2,y:r.top+r.height/2,w:innerWidth,h:innerHeight,"
-                   "text:(e.textContent||'').trim().slice(0,80)}};}})()")
-ELEMENT_CLICK_JS = "(()=>{{const e=({expr});if(!e)return false;e.click();return true;}})()"
-# Evidence for a real click: which pointer events the page saw (trusted = from the compositor), and where.
-POINTER_PROBE_ARM_JS = ("(()=>{const rec=window.__ge1hPointerSeen=[];const f=e=>{if(rec.length<8)rec.push({type:e.type,"
-                        "x:Math.round(e.clientX),y:Math.round(e.clientY),trusted:e.isTrusted,"
-                        "target:String((e.target&&(e.target.className||e.target.tagName))||'').slice(0,60)});};"
-                        "for(const t of ['pointerdown','pointerup','click'])addEventListener(t,f,{capture:true});"
-                        "window.__ge1hPointerOff=()=>{for(const t of ['pointerdown','pointerup','click'])"
-                        "removeEventListener(t,f,{capture:true});};return true;})()")
-POINTER_PROBE_READ_JS = ("(()=>{const seen=window.__ge1hPointerSeen||null;if(window.__ge1hPointerOff)"
-                         "window.__ge1hPointerOff();return seen;})()")
-
-# The Settings > Tijd en taal > Taal en regio control (time.js language(): a core/components.js Dropdown).
-LANG_BUTTON = ("[...document.querySelectorAll('button.fl-dropdown')]"
-               ".find(b=>/^\\s*(Nederlands|English)/.test(b.textContent||''))")
-LANG_ITEM = "[...document.querySelectorAll('.fl-dropdown__item')].find(i=>(i.textContent||'').trim().startsWith({label}))"
 
 # Shell side (org.gnome.Shell.Eval; harness.Session.ev provides Main and Meta).
 POINTER_CLICK_JS = (
@@ -94,6 +75,13 @@ POINTER_PREPARE_JS = (
 
 WINDOW_TITLES_JS = ("global.get_window_actors().map(a=>({wm:a.meta_window.get_wm_class(),title:a.meta_window.get_title(),"
                     "visible:a.visible}))")
+
+# The windows of one process (%d: its pid) as Mutter has them: the frame rectangle is the window geometry GTK sets,
+# which leaves out a CSD shadow, so a widget's rect in the dev state starts at its top left corner.
+PID_WINDOWS_JS = ("(()=>{const type=t=>Object.keys(Meta.WindowType).find(k=>Meta.WindowType[k]===t)||String(t);"
+                  "return global.get_window_actors().map(a=>a.meta_window).filter(w=>w.get_pid()===%d)"
+                  ".map(w=>{const r=w.get_frame_rect();return {title:w.get_title(),type:type(w.get_window_type()),"
+                  "x:r.x,y:r.y,w:r.width,h:r.height,focus:w.has_focus(),minimized:w.minimized};});})()")
 
 APP_NAMES_JS = ("(async()=>{{const Shell=(await import('gi://Shell')).default;const s=Shell.AppSystem.get_default();"
                 "return Object.fromEntries({ids}.map(id=>{{const a=s.lookup_app(id);return [id,a?a.get_name():null];}}));}})()")
@@ -125,39 +113,44 @@ PANEL_OPEN_JS = ("(async()=>{const Shell=(await import('gi://Shell')).default;"
 
 
 class Surface:
-    """One open Win11 surface: an HTML app's WebView id (for the dev hooks) and, for apps the helper started, the
-    process; or (``native_pid``) a window of the native shell, which has no WebView: js() and page_text() refuse it."""
+    """One open Win11 surface: a window of the native shell (``shell``: panel, desktop or Start, all of the one
+    win11-shell process) or a native app, with the process the helper started (its launcher, which the host turns
+    into win11-gtk-<kind> in place) and the app's pid from its boot row. ``window`` is the id its dev channel
+    answers with: "native" for the shell, "native-<kind>" for an app."""
 
-    def __init__(self, name: str, kind: str, window: str | None, proc=None, native_pid: int | None = None):
+    def __init__(self, name: str, kind: str, window: str, proc=None, pid: int | None = None):
         self.name, self.kind, self.window, self.proc = name, kind, window, proc
-        self.native_pid = native_pid
+        self.pid = pid if pid is not None else (proc.pid if proc else None)
         self.page: str | None = None
         self.dead = False
 
     @property
-    def native(self) -> bool:
-        return self.native_pid is not None
-
-    @property
-    def pid(self) -> int | None:
-        return self.proc.pid if self.proc else self.native_pid
+    def shell(self) -> bool:
+        return self.kind in RESIDENT
 
     def alive(self) -> bool:
-        if self.native:
-            return not self.dead and os.path.exists(f'/proc/{self.native_pid}')
-        return bool(self.window) and not self.dead and (self.proc is None or self.proc.poll() is None)
+        if self.dead or not self.pid:
+            return False
+        try:
+            stat = Path(f'/proc/{self.pid}/stat').read_text()
+        except OSError:
+            return False
+        return not stat[stat.rindex(')') + 2:].startswith('Z')
 
     def describe(self) -> dict:
         return {'name': self.name, 'kind': self.kind, 'window': self.window, 'pid': self.pid, 'page': self.page,
-                'alive': self.alive(), **({'native': True} if self.native else {})}
+                'alive': self.alive(), **({'shell': True} if self.shell else {})}
 
 
 class Helper:
     """The ``h`` object given to ``run(h)``. Methods, all recorded in results.json:
 
-    Surfaces    open(spec, path=None, tabs=1, name=None), close(name), new_tab(name='explorer'),
-                surface(name), click(surface, selector=None, find=None, real=True)
-    Evidence    screenshot(name, surface=None, area=None, settle=0.5), page_text(surface),
+    Surfaces    open(spec, path=None, tabs=1, name=None, env=None), close(name), new_tab(name='explorer'),
+                surface(name), spawn(name, argv, env=None)
+    Widgets     state(surface), find(surface, name=None, label=None, cls=None, where=None),
+                click(surface, name=None, node=None, real=True), type_text(surface, name, text),
+                key(surface, key, name=None), dev(surface, command), backend(surface, method, args=None)
+    Evidence    screenshot(name, surface=None, area=None, settle=0.5), page_text(surface), text(surface),
                 wait_text(surface, text, timeout=20, required=False), wait_lang(surface, lang, timeout=20)
     Language    set_language(lang, via='rename'|'dropdown'|'rewrite', skip=()), settings_file(), lang
     Native      native(command) (win11-shell's dev channel: {"native": "state"|"click"|"flyout", ...}),
@@ -165,8 +158,8 @@ class Helper:
     GNOME       window_titles(), app_names(ids=None), extension_labels(), notifications(), kill_panel(),
                 restart_panel()
     Recording   record(key, value), check(name, ok, known=None, **detail), require(name, ok, **detail), log(msg)
-    Low level   eval(js) (Shell Eval), js(surface, expression) (dev command), until(fn, label, timeout),
-                sleep(seconds), session (the harness Session), hm (the harness module)
+    Low level   eval(js) (Shell Eval), until(fn, label, timeout), sleep(seconds), session (the harness Session),
+                hm (the harness module)
     """
 
     def __init__(self, session, hm, scenario: Path):
@@ -184,7 +177,7 @@ class Helper:
         try:
             parked = session.ev(POINTER_PREPARE_JS.format(x=hm.WIDTH // 2, y=24))
             time.sleep(0.8)
-        except Exception as error:   # noqa: BLE001 - real clicks then fall back to DOM clicks (recorded)
+        except Exception as error:   # noqa: BLE001 - real clicks then fall back to dev clicks (recorded)
             parked = f'failed: {error}'
         self._step('pointer_prepare', None, {'pointer': parked})
 
@@ -192,13 +185,13 @@ class Helper:
         """The native shell's panel, desktop and Start as pseudo-surfaces of its one process (D-G70)."""
         if pid:
             for kind in RESIDENT:
-                self.surfaces[kind] = Surface(kind, kind, 'native', native_pid=pid)
+                self.surfaces[kind] = Surface(kind, kind, 'native', pid=pid)
 
     @property
     def native_pid(self) -> int | None:
         """The pid of the running native shell (win11-shell), or None after kill_panel()."""
         sf = self.surfaces.get('panel')
-        return sf.native_pid if sf and sf.alive() else None
+        return sf.pid if sf and sf.alive() else None
 
     # ---- recording ---------------------------------------------------------------------------------------
     def _t(self) -> float:
@@ -270,15 +263,6 @@ class Helper:
             raise RuntimeError(f'surface {name!r} is no longer running')
         return sf
 
-    def js(self, surface: str, expression: str, timeout: float = 20):
-        """Evaluate a JS expression (may be a promise) in a surface's WebView; returns its JSON value."""
-        sf = self.surface(surface)
-        if sf.native:
-            raise TypeError(f'surface {surface!r} is a window of the native shell (win11-shell, GTK 4): it has no '
-                            'WebView and no page; use h.native({"native": "state"}) / h.native_state(), a screenshot '
-                            'or the extension (h.eval)')
-        return self.s.capture(sf.window, expression, timeout)
-
     def native(self, command: dict, timeout: float = 15):
         """One command for win11-shell's dev channel (native/shell/src/dev.rs): {"native": "state"} (the
         toplevels' widget trees), {"native": "click", "name": <widget name>}, {"native": "flyout", "name": n}."""
@@ -291,15 +275,125 @@ class Helper:
         value = self.native({'native': 'state'})
         return value if isinstance(value, list) else []
 
+    def dev(self, surface: str, command: dict, timeout: float = 20):
+        """One dev command for the surface's process: the shell's (panel, desktop, start) or the app's
+        (native/kit/src/dev.rs: {"native": "state"|"click"|"type"|"key"|"screenshot", ...}; "app" is added)."""
+        sf = self.surface(surface)
+        value = self.s.native(command, timeout) if sf.shell else self.s.native_app(sf.kind, command, timeout)
+        self._step('dev', {'surface': surface, **command},
+                   value if command.get('native') != 'state' else {'toplevels': len(value or [])})
+        return value
+
+    def state(self, surface: str) -> list[dict]:
+        """The surface's toplevels from its dev channel: title, visible, width, height and the widget tree (name, type,
+        classes, label (a button's or a tooltip when it has none), rect in the window, visible, sensitive, active)."""
+        sf = self.surface(surface)
+        value = self.s.native_state() if sf.shell else self.s.native_app(sf.kind, {'native': 'state'}, 20)
+        return value if isinstance(value, list) else []
+
+    def find(self, surface: str, name: str | None = None, *, label: str | None = None, cls: str | None = None,
+             where=None, state: list[dict] | None = None) -> list[dict]:
+        """The visible widgets of the surface with that name, label and CSS class (each given one must match) and for
+        which ``where(node)`` holds, depth first; each node carries the index of its toplevel as ``top``."""
+        tops = self.state(surface) if state is None else state
+        out = []
+        for index, top in enumerate(tops):
+            if not top.get('visible', True):
+                continue
+            for node in self.hm.tree_nodes([top]):
+                if (node.get('visible', True) and (name is None or node.get('name') == name)
+                        and (label is None or node.get('label') == label)
+                        and (cls is None or cls in (node.get('classes') or []))
+                        and (where is None or where(node))):
+                    out.append({**node, 'top': index})
+        return out
+
+    def _frame(self, sf: Surface, top: dict) -> dict | None:
+        """Mutter's frame rectangle of the toplevel ``top`` (a dev state entry) of the surface's process: the window
+        with its title and size, else the one with its title, else the only one (an app's normal windows; the shell's
+        taskbar, Start and desktop are other window types, and a popover is not a toplevel of the dev state)."""
+        wins = [w for w in self.s.ev(PID_WINDOWS_JS % sf.pid) or [] if not w['minimized']
+                and (sf.shell or w['type'] == 'NORMAL') and w['type'] not in ('DROPDOWN_MENU', 'POPUP_MENU')]
+        titled = [w for w in wins if w['title'] == top.get('title')] or wins
+        sized = [w for w in titled if (w['w'], w['h']) == (top.get('width'), top.get('height'))] or titled
+        return sized[0] if sized else None
+
+    def click(self, surface: str, name: str | None = None, *, node: dict | None = None, real: bool = True) -> dict:
+        """Click a widget: by ``name`` (its set_widget_name) or a ``node`` from find(). real=True moves a Clutter
+        virtual pointer to the widget's centre (its window's frame rectangle plus its rect in the window) and presses
+        the primary button: real Wayland input. real=False, or a widget without a rect, is the dev channel's click
+        (it activates the widget by name: a button's clicked, a switch or check toggled)."""
+        sf = self.surface(surface)
+        tops = self.state(surface)
+        if node is None:
+            found = [n for n in self.find(surface, name, state=tops) if n.get('rect')] or self.find(surface, name, state=tops)
+            if not found:
+                raise LookupError(f'{surface}: no visible widget {name!r}')
+            node = found[0]
+        name = name or (node.get('name') if not str(node.get('name') or '').startswith('Gtk') else None)
+        frame = self._frame(sf, tops[node.get('top', 0)]) if real and node.get('rect') and tops else None
+        x, y, w, hh = node.get('rect') or (0, 0, 0, 0)
+        # a widget scrolled out of its window has a rect outside it: the pointer would land on another window
+        outside = bool(frame) and not (0 <= x + w // 2 < frame['w'] and 0 <= y + hh // 2 < frame['h'])
+        if not frame or outside:
+            if not name:
+                raise LookupError(f'{surface}: the widget has no name for a dev click and no place for the pointer')
+            answer = self.dev(surface, {'native': 'click', 'name': name})
+            if isinstance(answer, dict) and answer.get('error'):
+                raise LookupError(f'{surface}: {answer["error"]}')
+            return {'input': 'dev', 'name': name, 'answer': answer, **({'outside': node['rect']} if outside else {})}
+        px, py = frame['x'] + x + w // 2, frame['y'] + y + hh // 2
+        if self.s.ev('global.display.focus_window?.get_pid()') != sf.pid:
+            self.s.ev(f'(()=>{{const w=global.get_window_actors().map(a=>a.meta_window).find(w=>w.get_pid()==={sf.pid}'
+                      f'&&w.get_title()==={json.dumps(frame["title"])});if(w)Main.activateWindow(w);return Boolean(w);}})()')
+            time.sleep(0.3)
+        shell = self.s.ev(POINTER_CLICK_JS.format(x=px, y=py))
+        time.sleep(0.15)
+        return {'input': 'clutter', 'x': px, 'y': py, 'rect': node['rect'], 'name': name,
+                'window': [frame['x'], frame['y'], frame['w'], frame['h']], 'shell': shell}
+
+    def type_text(self, surface: str, name: str, text: str) -> dict:
+        """Set the text of the entry (or text view) called ``name`` through the dev channel."""
+        return self.dev(surface, {'native': 'type', 'name': name, 'text': text})
+
+    def key(self, surface: str, key: str, name: str | None = None) -> dict:
+        """A key for an app ("Return", "Escape", "<Control>f", "Down", "Tab"; native/kit/src/dev.rs)."""
+        return self.dev(surface, {'native': 'key', 'key': key, **({'name': name} if name else {})})
+
+    def backend(self, surface: str, method: str, args: dict | None = None, timeout: float = 15):
+        """A call to the app's own backend (`win11-app --app <kind> --http-only`) as the app makes it, through the
+        instance file it left in the runtime directory (native/kit/src/backend.rs: {port, token}); the answer's
+        result, or {"error": ...}."""
+        sf = self.surface(surface)
+        data = json.loads((self.hm.RT / 'win11-gnome' / f'native-{sf.kind}-{sf.pid}.json').read_text())
+        request = urllib.request.Request(f'http://127.0.0.1:{data["port"]}/api/call/{method}',
+                                         data=json.dumps({'args': args or {}}).encode(), method='POST',
+                                         headers={'X-Shell-Token': data['token'], 'Content-Type': 'application/json'})
+        with urllib.request.urlopen(request, timeout=timeout) as reply:
+            answer = json.loads(reply.read())
+        value = answer.get('result') if answer.get('ok') else {'error': answer.get('error')}
+        self._step('backend', {'surface': surface, 'method': method}, {'ok': bool(answer.get('ok'))})
+        return value
+
+    def spawn(self, name: str, argv: list[str], env: dict | None = None) -> subprocess.Popen:
+        """Start a helper process in the private session (on its Wayland display; stopped at the end of the run),
+        logging to logs/app-<name>.log."""
+        full = dict(os.environ, WAYLAND_DISPLAY=self.hm.WL, GDK_BACKEND='wayland', **(env or {}))
+        proc = subprocess.Popen(argv, env=full, stdout=open(self.hm.RUN / 'logs' / f'app-{name}.log', 'a'),
+                                stderr=subprocess.STDOUT)
+        self.s.apps.append(proc)
+        self._step('spawn', {'name': name, 'argv': argv[:4], **({'env': sorted(env)} if env else {})}, {'pid': proc.pid})
+        return proc
+
     def _meta_window(self, sf: Surface) -> dict | None:
-        if sf.native:
-            return self.s.window_of(WM[sf.kind], sf.native_pid)
-        if sf.pid:
-            return self.s.window_of_pid(sf.pid)
-        return self.s.window_of(WM[sf.kind])
+        if sf.shell:
+            return self.s.window_of(WM[sf.kind], sf.pid)
+        return self.s.window_of_pid(sf.pid) if sf.pid else self.s.window_of(WM[sf.kind])
 
     # ---- surfaces ----------------------------------------------------------------------------------------
-    def open(self, spec: str, *, path: str | None = None, tabs: int = 1, name: str | None = None) -> Surface:
+    def open(self, spec: str, *, path: str | None = None, tabs: int = 1, name: str | None = None,
+             env: dict | None = None) -> Surface:
+        """Open a surface (see the module docs); an app that is open already is focused (Settings shows the page)."""
         kind, _, page = spec.partition(':')
         if kind not in KINDS:
             raise ValueError(f'unknown surface {spec!r}; expected one of {", ".join(KINDS)} (settings:<page>)')
@@ -307,15 +401,15 @@ class Helper:
             raise ValueError(f'only settings takes a page ({spec!r})')
         name = name or kind
         args = {'spec': spec, **({'path': path} if path else {}), **({'tabs': tabs} if tabs != 1 else {}),
-                **({'name': name} if name != kind else {})}
+                **({'name': name} if name != kind else {}), **({'env': sorted(env)} if env else {})}
         if kind in ('panel', 'desktop'):
             sf = self.surface(kind)
             self._step('open', args, sf.describe())
             return sf
         if kind == 'start':
             sf = self.surface('start')
-            self.s.start_flyout(True, sf.native_pid)
-            w = self.s.window_of(WM['start'], sf.native_pid)
+            self.s.start_flyout(True, sf.pid)
+            w = self.s.window_of(WM['start'], sf.pid)
             if w:
                 self._start_rect = (w['x'], w['y'], w['w'], w['h'])
             self._step('open', args, {**sf.describe(), 'rect': self._start_rect})
@@ -323,7 +417,7 @@ class Helper:
         sf = self.surfaces.get(name)
         if sf and sf.alive():
             if kind == 'settings' and page and page != sf.page:
-                self.s.navigate_settings(sf.window, page)
+                self.s.settings_page(page)
                 sf.page = page
             self.s.focus(sf.pid, name)
             if kind == 'explorer':
@@ -342,23 +436,23 @@ class Helper:
             argv = [str(bindir / 'win11-installer')] + ([path] if path else [])
         else:
             argv = [str(bindir / 'win11-app'), '--app', kind]
-        proc, window = self.s.launch(argv, kind, name)
-        sf = Surface(name, kind, window, proc)
+        proc, boot = self.s.launch(argv, kind, name, env)
+        sf = Surface(name, kind, f'native-{kind}', proc, boot.get('pid'))
         self.surfaces[name] = sf
         if kind == 'settings':
             sf.page = page or 'home'
-            self.s.wait_settings_title(window, sf.page)
+            self.s.settings_title(sf.page)
         if kind == 'explorer':
             for _ in range(tabs - 1):
                 self.new_tab(name)
-        self._step('open', args, sf.describe())
+        self._step('open', args, {**sf.describe(), 'boot': boot})
         return sf
 
     def close(self, name: str) -> None:
         sf = self.surfaces.get(name)
         if name == 'start':
             if sf and sf.alive():
-                self.s.start_flyout(False, sf.native_pid)
+                self.s.start_flyout(False, sf.pid)
             self._step('close', {'name': name})
             return
         if name in ('panel', 'desktop'):
@@ -367,62 +461,36 @@ class Helper:
             return
         if sf.proc and sf.proc.poll() is None:
             self.s.close(sf.proc, name)
+        if sf.alive():
+            # the app is not the process the helper started (a launch handed to a running app)
+            self.s.ev(f'global.get_window_actors().map(a=>a.meta_window).filter(w=>w.get_pid()==={sf.pid})'
+                      '.forEach(w=>w.delete(global.get_current_time()))||true')
+            try:
+                self.until(lambda: not sf.alive(), f'{name} ends after its windows closed', 10, 0.2)
+            except TimeoutError:
+                self.hm.stop_pids([sf.pid] + self.hm.descendants(sf.pid), f'close {name}')
         sf.dead = True
         self.surfaces.pop(name, None)
         self._step('close', {'name': name})
 
     def _tab_count(self, name: str) -> int:
-        return self.js(name, "document.querySelectorAll('.xp-tabs [role=tab]').length") or 0
+        """Explorer's tabs: the tab-<n> buttons of its tab strip (each has a tab-<n>-close beside it)."""
+        strip = self.find(name, 'explorer-tabs')
+        return len({n['name'] for n in self.hm.tree_nodes([{'tree': strip[0]}])
+                    if re.fullmatch(r'tab-\d+', str(n.get('name')))}) if strip else 0
 
     def new_tab(self, name: str = 'explorer') -> int:
         """Open one more Explorer tab with the real "Nieuw tabblad" button; returns the new tab count."""
         before = self._tab_count(name)
-        how = self.click(name, '.xp-tabs__add')
+        how = self.click(name, 'explorer-new-tab')
         try:
             self.until(lambda: self._tab_count(name) > before, f'{name}: tab {before + 1}', 4)
         except TimeoutError:
-            self.click(name, '.xp-tabs__add', real=False)
-            how = {**how, 'fallback': 'dom'}
-            self.until(lambda: self._tab_count(name) > before, f'{name}: tab {before + 1} (DOM click)', 6)
+            how = {**self.click(name, 'explorer-new-tab', real=False), 'fallback': 'dev'}
+            self.until(lambda: self._tab_count(name) > before, f'{name}: tab {before + 1} (dev click)', 6)
         count = self._tab_count(name)
         self._step('new_tab', {'name': name}, {'tabs': count, 'input': how})
         return count
-
-    def click(self, surface: str, selector: str | None = None, *, find: str | None = None, real: bool = True) -> dict:
-        """Click an element: ``selector`` (CSS) or ``find`` (a JS expression returning the element).
-        real=True moves a Clutter virtual pointer to the element's centre and presses the primary button
-        (the WebView gets real Wayland input); real=False calls element.click() in the page."""
-        expr = find or f'document.querySelector({json.dumps(selector)})'
-        sf = self.surface(surface)
-        if not real:
-            if not self.js(surface, ELEMENT_CLICK_JS.format(expr=expr)):
-                raise LookupError(f'{surface}: no element for {selector or find}')
-            return {'input': 'dom'}
-        pos = self.js(surface, ELEMENT_RECT_JS.format(expr=expr))
-        if not pos:
-            raise LookupError(f'{surface}: no element for {selector or find}')
-        win = self._meta_window(sf)
-        if not win:
-            raise RuntimeError(f'{surface}: no visible native window to click into')
-        ratio = win['w'] / pos['w'] if pos.get('w') else 1.0
-        x, y = round(win['x'] + pos['x'] * ratio), round(win['y'] + pos['y'] * ratio)
-        if self.s.ev('global.display.focus_window?.get_pid()') != (sf.pid or win['pid']):
-            self.s.ev(f'(()=>{{const w=global.get_window_actors().map(a=>a.meta_window).find(w=>w.get_pid()==={win["pid"]});'
-                      'if(w)Main.activateWindow(w);return Boolean(w);})()')
-            time.sleep(0.3)
-        try:
-            self.js(surface, POINTER_PROBE_ARM_JS, timeout=5)
-        except Exception:   # noqa: BLE001 - the probe is evidence only
-            pass
-        shell = self.s.ev(POINTER_CLICK_JS.format(x=x, y=y))
-        time.sleep(0.15)
-        try:
-            seen = self.js(surface, POINTER_PROBE_READ_JS, timeout=5)
-        except Exception as error:   # noqa: BLE001
-            seen = f'unavailable: {error}'
-        return {'input': 'clutter', 'x': x, 'y': y, 'client': [round(pos['x']), round(pos['y'])],
-                'window': [win['x'], win['y'], win['w'], win['h']], 'element': pos.get('text'), 'shell': shell,
-                'pageSaw': seen}
 
     # ---- evidence ----------------------------------------------------------------------------------------
     def _rect(self, surface: str):
@@ -449,31 +517,37 @@ class Helper:
         return shot['file']
 
     def _hits(self, *texts: str) -> list[str]:
-        import re
         words = set()
         for text in texts:
             words |= set(re.findall(r"[a-zà-ÿ]+(?:-[a-zà-ÿ]+)*", (text or '').lower()))
         return sorted(w for w in words if w in self.s.dutch)
 
+    def text(self, surface: str) -> dict:
+        """page_text without the Dutch-word hits and without a step in results.json (for polling)."""
+        sf = self.surface(surface)
+        tops = self.state(surface)
+        shown = [t for t in tops if t.get('visible', True)]
+        labels = [str(n['label']) for n in self.hm.tree_nodes(shown) if n.get('label') and n.get('visible', True)]
+        return {'lang': None if sf.shell else self.hm.app_lang(shown, sf.kind),
+                'title': next((t.get('title') for t in shown if t.get('title')), None),
+                'titles': [t.get('title') for t in shown], 'text': '\n'.join(labels)}
+
     def page_text(self, surface: str) -> dict:
-        """lang, title, innerText, placeholders, aria-labels and Dutch-word hits (tests/i18n/dutch-words.txt)."""
-        value = self.js(surface, PAGE_TEXT_JS)
-        value['dutchWordHits'] = self._hits(value.get('text', ''), *value.get('placeholders', []),
-                                            *value.get('ariaLabels', []))
+        """The surface's language (an app's: harness app_lang), window title(s), the visible labels and tooltips of
+        its dev state as one text, and Dutch-word hits (tests/i18n/dutch-words.txt)."""
+        value = self.text(surface)
+        value['dutchWordHits'] = self._hits(value['text'])
         self._step('page_text', {'surface': surface},
-                   {k: value[k] for k in ('lang', 'title', 'dutchWordHits')} | {'chars': len(value.get('text', ''))},
-                   text=value)
+                   {k: value[k] for k in ('lang', 'title', 'dutchWordHits')} | {'chars': len(value['text'])}, text=value)
         return value
 
     def wait_text(self, surface: str, text: str, timeout: float = 20, required: bool = False) -> dict | None:
-        """Wait until ``text`` occurs in the surface's innerText, title, placeholders or aria-labels."""
+        """Wait until ``text`` occurs in the surface's labels, tooltips or window titles."""
         found = {}
 
         def probe():
-            value = self.js(surface, PAGE_TEXT_JS, timeout=min(timeout, 10))
-            hay = '\n'.join([value.get('text', ''), value.get('title', '')] + value.get('placeholders', [])
-                            + value.get('ariaLabels', []))
-            if text in hay:
+            value = self.text(surface)
+            if text in '\n'.join([value['text'], *[t or '' for t in value['titles']]]):
                 found.update(value)
                 return True
             return False
@@ -489,11 +563,10 @@ class Helper:
         return found or None
 
     def wait_lang(self, surface: str, lang: str, timeout: float = 20) -> float | None:
-        """Seconds until the surface's <html lang> is ``lang`` (None on timeout)."""
+        """Seconds until the app shows ``lang`` (harness app_lang; None on timeout)."""
         started = time.monotonic()
         try:
-            self.until(lambda: self.js(surface, 'document.documentElement.lang', timeout=5) == lang,
-                       f'{surface} lang={lang}', timeout, 0.2)
+            self.until(lambda: self.text(surface)['lang'] == lang, f'{surface} lang={lang}', timeout, 0.2)
             return round(time.monotonic() - started, 2)
         except TimeoutError:
             return None
@@ -509,11 +582,12 @@ class Helper:
             return {'language': None, 'error': str(error)}
 
     def set_language(self, lang: str, via: str = 'rename', skip=(), timeout: float = 20) -> dict:
-        """Switch Win11's language and time each open surface's <html lang>.
+        """Switch Win11's language and time each open app until it shows it (harness app_lang).
 
-        via='dropdown': the real Settings > Tijd en taal > Taal en regio control (opens Settings on that page if
-                        needed; real pointer clicks, DOM clicks as recorded fallback). The Settings process then
-                        writes settings.json itself (settings.set: invalidation datagram + rename).
+        via='dropdown': the real Settings > Tijd en taal > Taal en regio drop-down (opens Settings on that page if
+                        needed; real pointer clicks on the button and the option, a dev click on the button as
+                        recorded fallback). The Settings process then writes settings.json itself (settings.set:
+                        invalidation datagram + rename).
         via='rename':   the harness writes the private settings.json as the store does (lock, temp file, rename).
         via='rewrite':  the harness rewrites settings.json in place (same inode, O_TRUNC + one write).
         """
@@ -530,15 +604,15 @@ class Helper:
                 self.hm.write_settings({'language': lang})
             else:
                 self.hm.rewrite_settings_in_place({'language': lang})
-        # the native shell has no <html lang> (it follows settings.json itself): only the apps' WebViews are timed
-        watch = [n for n, sf in self.surfaces.items() if sf.alive() and not sf.native and n not in skip]
+        # the native shell has no language marker (it follows settings.json itself): only the apps are timed
+        watch = [n for n, sf in self.surfaces.items() if sf.alive() and not sf.shell and n not in skip]
         timings: dict = {}
         pending = list(watch)
         deadline = t0 + timeout
         while pending and time.monotonic() < deadline:
             for name in list(pending):
                 try:
-                    if self.js(name, 'document.documentElement.lang', timeout=4) == lang:
+                    if self.text(name)['lang'] == lang:
                         timings[name] = round(time.monotonic() - t0, 2)
                         pending.remove(name)
                 except Exception:   # noqa: BLE001 - keep polling the others
@@ -550,7 +624,7 @@ class Helper:
         settings = self.surfaces.get('settings')
         if settings and settings.alive() and settings.page and 'settings' not in skip:
             try:
-                self.s.wait_settings_title(settings.window, settings.page, lang)
+                self.s.settings_title(settings.page, lang)
                 timings['settingsTitle'] = round(time.monotonic() - t0, 2)
             except Exception as error:   # noqa: BLE001
                 timings['settingsTitle'] = f'not switched: {error}'
@@ -562,34 +636,36 @@ class Helper:
         return result
 
     def _dropdown(self, lang: str) -> dict:
+        """The display language drop-down (widget language-display): a pointer click opens its list (a popover of
+        w11-list-item buttons), a second one on the option chooses it. The options have no widget name, so only the
+        pointer reaches them; a dev click opens the list as the recorded fallback."""
         self.open('settings:language')
-        label = json.dumps(LANG_OPTION[lang])
-        item = LANG_ITEM.format(label=label)
-        items_open = lambda: (self.js('settings', "document.querySelectorAll('.fl-dropdown__item').length") or 0) > 0
+
+        def option():
+            return next((n for n in self.find('settings', cls='w11-list-item')
+                         if any(str(k.get('label') or '').startswith(LANG_OPTION[lang])
+                                for k in self.hm.tree_nodes([{'tree': n}]))), None)
         path, clicks = 'clutter', []
         try:
-            clicks.append(self.click('settings', find=LANG_BUTTON))
-            self.until(items_open, 'language dropdown list open (pointer)', 3)
+            clicks.append(self.click('settings', 'language-display'))
+            self.until(option, 'language drop-down open (pointer)', 3)
         except Exception as error:   # noqa: BLE001
-            path = f'dom (pointer did not open the list: {error})'
-            if not items_open():
-                clicks.append(self.click('settings', find=LANG_BUTTON, real=False))
-                self.until(items_open, 'language dropdown list open (DOM)', 5)
+            path = f'dev (pointer did not open the list: {error})'
+            if not option():
+                clicks.append(self.click('settings', 'language-display', real=False))
+                self.until(option, 'language drop-down open (dev click)', 5)
         t0 = time.monotonic()
-        if path == 'clutter':
-            clicks.append(self.click('settings', find=item))
-        else:
-            clicks.append(self.click('settings', find=item, real=False))
+        clicks.append(self.click('settings', node=option()))
         try:
             self.until(lambda: self.settings_file().get('language') == lang, 'settings.json written by Settings', 5)
         except TimeoutError:
-            # Recorded fallback: the same control, driven in the page.
-            path += ' + dom retry'
-            if not items_open():
-                clicks.append(self.click('settings', find=LANG_BUTTON, real=False))
-                self.until(items_open, 'language dropdown list open (DOM retry)', 5)
+            # Recorded retry: the list once more, the option once more (both with the pointer).
+            path += ' + retry'
+            if not option():
+                clicks.append(self.click('settings', 'language-display'))
+                self.until(option, 'language drop-down open (retry)', 5)
             t0 = time.monotonic()
-            clicks.append(self.click('settings', find=item, real=False))
+            clicks.append(self.click('settings', node=option()))
             self.until(lambda: self.settings_file().get('language') == lang, 'settings.json written by Settings', 8)
         return {'t0': t0, 'input': path, 'clicks': clicks}
 

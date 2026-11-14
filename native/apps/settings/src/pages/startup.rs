@@ -1,5 +1,5 @@
-//! Instellingen › Apps › Opstarten (vendor/ui/js/apps/settings/pages/startup.js): the apps that start when you
-//! sign in (sysmon.startup), each with a switch (sysmon.setStartup), sorted by name or status, and the link to
+//! Instellingen › Apps › Opstarten (last-webkit:vendor/ui/js/apps/settings/pages/startup.js): the apps that start when
+//! you sign in (sysmon.startup), each with a switch (sysmon.setStartup), sorted by name or status, and the link to
 //! Taakbeheer's Opstarten tab.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;

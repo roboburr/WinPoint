@@ -1,5 +1,7 @@
 # Wallpaper and theme presets — 0.7.0
 
+> **History (D-G72, 14 November 2026):** measured with the HTML interface in WebKitGTK of the time. It is gone: File Explorer, Settings, Task Manager and the other apps are native GTK 4 programs now, and WinPoint has no WebKit and no GTK 3 host any more. The Rust services this report checks still exist. The last commit with WebKit is tagged `last-webkit`; see [native/APPS.md](native/APPS.md).
+
 The original Settings controls saved wallpaper choices, but the earlier GNOME port
 had no original desktop surface and never applied those choices to GNOME's
 background. The native desktop now draws the original wallpaper UI. A Rust

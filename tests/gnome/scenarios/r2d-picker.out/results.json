@@ -1,0 +1,1600 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-14 04:27:10",
+ "seconds": 103.0,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 36,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 837670,
+   "rss_kb": 1365516,
+   "processes": 28,
+   "t": 17.3
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 756670,
+   "rss_kb": 1250000
+  },
+  "minMemAvailableKb": 5949012,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 285369,
+    "rss_kb": 378532
+   },
+   "python3": {
+    "count": 3,
+    "pss_kb": 254383,
+    "rss_kb": 362012
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 77289,
+    "rss_kb": 118796
+   },
+   "glycin-svg": {
+    "count": 5,
+    "pss_kb": 73711,
+    "rss_kb": 143484
+   },
+   "win11-gtk-explo": {
+    "count": 2,
+    "pss_kb": 37557,
+    "rss_kb": 111376
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 27805,
+    "rss_kb": 65020
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 18319,
+    "rss_kb": 34868
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 14876,
+    "rss_kb": 23512
+   },
+   "win11-file-port": {
+    "count": 1,
+    "pss_kb": 13380,
+    "rss_kb": 21856
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 11445,
+    "rss_kb": 19944
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 10322,
+    "rss_kb": 25152
+   },
+   "xdg-desktop-por": {
+    "count": 1,
+    "pss_kb": 5608,
+    "rss_kb": 19252
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4088,
+    "rss_kb": 11560
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1537,
+    "rss_kb": 10260
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 773,
+    "rss_kb": 7916
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 741,
+    "rss_kb": 7872
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 286,
+    "rss_kb": 1512
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 181,
+    "rss_kb": 2592
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 322933,
+    "first": 1.0
+   },
+   "python3": {
+    "pss_kb": 174134,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 86021,
+    "first": 2.6
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 31156,
+    "first": 8.8
+   },
+   "glycin-svg": {
+    "pss_kb": 27399,
+    "first": 1.5
+   },
+   "win11-gtk-explo": {
+    "pss_kb": 22819,
+    "first": 10.9
+   },
+   "ibus-extension-": {
+    "pss_kb": 19055,
+    "first": 2.0
+   },
+   "win11-panel": {
+    "pss_kb": 14968,
+    "first": 2.6
+   },
+   "win11-file-port": {
+    "pss_kb": 13475,
+    "first": 8.3
+   },
+   "win11-app": {
+    "pss_kb": 11474,
+    "first": 8.8
+   },
+   "glycin-image-rs": {
+    "pss_kb": 6147,
+    "first": 2.0
+   },
+   "xdg-desktop-por": {
+    "pss_kb": 6036,
+    "first": 8.8
+   },
+   "ibus-daemon": {
+    "pss_kb": 4197,
+    "first": 1.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 874,
+    "first": 0.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 862,
+    "first": 2.0
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 852,
+    "first": 2.6
+   },
+   "bwrap": {
+    "pss_kb": 287,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 183,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 67.8,
+  "mutatingSyscallPaths": 87253,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "04:28:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:35\tpw-dump\t--monitor --no-colors",
+  "04:28:37\tpw-dump\t--monitor --no-colors",
+  "04:28:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:41\tpw-dump\t--monitor --no-colors",
+  "04:28:42\tpw-dump\t--monitor --no-colors",
+  "04:28:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:44\tpw-dump\t--monitor --no-colors",
+  "04:28:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:48\tpw-dump\t--monitor --no-colors",
+  "04:28:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:28:49\tpw-dump\t--monitor --no-colors",
+  "04:28:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-n39T0qGQ"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 7,
+  "maxScanSeconds": 0.712,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-n39T0qGQ"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2d-picker.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 0.81,
+    "args": {
+     "name": "file-portal",
+     "argv": [
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/bin/win11-file-portal"
+     ],
+     "env": [
+      "WIN11_FILE_PORTAL_IDLE",
+      "WIN11_FILE_PORTAL_TRACE"
+     ]
+    },
+    "result": {
+     "pid": 1337
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 1.01,
+    "args": {
+     "name": "xdg-desktop-portal",
+     "argv": [
+      "/usr/libexec/xdg-desktop-portal",
+      "--verbose"
+     ]
+    },
+    "result": {
+     "pid": 1354
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.82,
+    "args": {
+     "spec": "settings:background"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1364,
+     "page": "background",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1364,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 3.74,
+    "args": {
+     "key": "browse.click"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.84,
+    "args": {
+     "name": "picker-1-modal"
+    },
+    "result": {
+     "png": "picker-1-modal.png",
+     "area": [
+      67,
+      46,
+      1306,
+      760
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1306,
+       760
+      ],
+      "distinctColours": 304,
+      "meanLevel": 35.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 5.84,
+    "args": {
+     "name": "picker-helper",
+     "argv": [
+      "/usr/bin/python3",
+      "-I",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/picker-helper.py",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/tmp/picker"
+     ],
+     "env": [
+      "GDK_DEBUG"
+     ]
+    },
+    "result": {
+     "pid": 1701
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 10.03,
+    "args": {
+     "name": "picker-2-nonmodal"
+    },
+    "result": {
+     "png": "picker-2-nonmodal.png",
+     "area": [
+      67,
+      110,
+      1306,
+      760
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1306,
+       760
+      ],
+      "distinctColours": 296,
+      "meanLevel": 36.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.03,
+    "args": {
+     "key": "helperWindow"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.03,
+    "args": {
+     "key": "readyBanners"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.04,
+    "args": {
+     "key": "frosted"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.04,
+    "args": {
+     "key": "pickers"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.04,
+    "args": {
+     "key": "pickerBackdrops"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.04,
+    "args": {
+     "key": "taskbar"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.46,
+    "args": {
+     "key": "helperAnswers"
+    }
+   },
+   {
+    "step": "close",
+    "t": 10.97,
+    "args": {
+     "name": "settings"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the Win11 FileChooser backend is on the bus",
+    "ok": true,
+    "t": 1.01,
+    "bus": "org.freedesktop.impl.portal.desktop.win11shell"
+   },
+   {
+    "check": "xdg-desktop-portal is on the bus",
+    "ok": true,
+    "t": 1.21,
+    "bus": "org.freedesktop.portal.Desktop"
+   },
+   {
+    "check": "picker 1 (MODAL_DIALOG): Meta WM class is io.github.win11shell.FilePicker (o2)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 1: the portal's picker process (win11-gtk-explorer under win11-file-portal)",
+    "ok": true,
+    "t": 10.04,
+    "process": {
+     "comm": "win11-gtk-explo",
+     "parent": "win11-file-port"
+    },
+    "pid": 1601
+   },
+   {
+    "check": "picker 1: transient for the caller's window (io.github.win11shell.Settings)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    },
+    "caller": {
+     "seq": 3,
+     "pid": 1364,
+     "title": "Achtergrond – Instellingen",
+     "wmClass": "io.github.win11shell.Settings",
+     "gtkApplicationId": "io.github.win11shell.Settings",
+     "type": "NORMAL",
+     "parent": null,
+     "parentSeq": null,
+     "attached": false,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": false,
+     "focus": false,
+     "x": 170,
+     "y": 56,
+     "w": 1100,
+     "h": 740
+    }
+   },
+   {
+    "check": "picker 1: GNOME groups it under the caller (WindowTracker, via the transient parent)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    },
+    "caller": {
+     "seq": 3,
+     "pid": 1364,
+     "title": "Achtergrond – Instellingen",
+     "wmClass": "io.github.win11shell.Settings",
+     "gtkApplicationId": "io.github.win11shell.Settings",
+     "type": "NORMAL",
+     "parent": null,
+     "parentSeq": null,
+     "attached": false,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": false,
+     "focus": false,
+     "x": 170,
+     "y": 56,
+     "w": 1100,
+     "h": 740
+    }
+   },
+   {
+    "check": "picker 1: a modal dialog of its caller",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 1: the caller's title",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 1: it has the focus (opened from its focused caller), no \"is ready\" banner",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    },
+    "banners": []
+   },
+   {
+    "check": "picker 1: skip-taskbar",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 4,
+     "pid": 1601,
+     "title": "Een foto kiezen voor je bureaublad",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+     "type": "MODAL_DIALOG",
+     "parent": "io.github.win11shell.Settings",
+     "parentSeq": 3,
+     "attached": true,
+     "app": "io.github.win11shell.Settings.desktop",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 86,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 2 (NORMAL): Meta WM class is io.github.win11shell.FilePicker (o2)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 2: the portal's picker process (win11-gtk-explorer under win11-file-portal)",
+    "ok": true,
+    "t": 10.04,
+    "process": {
+     "comm": "win11-gtk-explo",
+     "parent": "win11-file-port"
+    },
+    "pid": 1766
+   },
+   {
+    "check": "picker 2: transient for the caller's window (org.example.PickerTest)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    },
+    "caller": {
+     "seq": 5,
+     "pid": 1701,
+     "title": "PickerTest",
+     "wmClass": "org.example.PickerTest",
+     "gtkApplicationId": "org.example.PickerTest",
+     "type": "NORMAL",
+     "parent": null,
+     "parentSeq": null,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": false,
+     "focus": false,
+     "x": 480,
+     "y": 276,
+     "w": 480,
+     "h": 300
+    }
+   },
+   {
+    "check": "picker 2: GNOME groups it under the caller (WindowTracker, via the transient parent)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    },
+    "caller": {
+     "seq": 5,
+     "pid": 1701,
+     "title": "PickerTest",
+     "wmClass": "org.example.PickerTest",
+     "gtkApplicationId": "org.example.PickerTest",
+     "type": "NORMAL",
+     "parent": null,
+     "parentSeq": null,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": false,
+     "focus": false,
+     "x": 480,
+     "y": 276,
+     "w": 480,
+     "h": 300
+    }
+   },
+   {
+    "check": "picker 2: not modal (modal: false)",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 2: the caller's title",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "picker 2: it has the focus (opened from its focused caller), no \"is ready\" banner",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    },
+    "banners": []
+   },
+   {
+    "check": "picker 2: skip-taskbar",
+    "ok": true,
+    "t": 10.04,
+    "row": {
+     "seq": 6,
+     "pid": 1766,
+     "title": "Openen",
+     "wmClass": "io.github.win11shell.FilePicker",
+     "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+     "type": "NORMAL",
+     "parent": "org.example.PickerTest",
+     "parentSeq": 5,
+     "attached": false,
+     "app": "window:5",
+     "skipTaskbar": true,
+     "focus": true,
+     "x": 107,
+     "y": 150,
+     "w": 1226,
+     "h": 680
+    }
+   },
+   {
+    "check": "two pickers recorded",
+    "ok": true,
+    "t": 10.04,
+    "pickers": [
+     {
+      "caller": "io.github.win11shell.Settings",
+      "callerPid": 1364,
+      "modal": true,
+      "row": {
+       "seq": 4,
+       "pid": 1601,
+       "title": "Een foto kiezen voor je bureaublad",
+       "wmClass": "io.github.win11shell.FilePicker",
+       "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+       "type": "MODAL_DIALOG",
+       "parent": "io.github.win11shell.Settings",
+       "parentSeq": 3,
+       "attached": true,
+       "app": "io.github.win11shell.Settings.desktop",
+       "skipTaskbar": true,
+       "focus": true,
+       "x": 107,
+       "y": 86,
+       "w": 1226,
+       "h": 680
+      },
+      "process": {
+       "comm": "win11-gtk-explo",
+       "parent": "win11-file-port"
+      }
+     },
+     {
+      "caller": "org.example.PickerTest",
+      "callerPid": 1701,
+      "modal": false,
+      "row": {
+       "seq": 6,
+       "pid": 1766,
+       "title": "Openen",
+       "wmClass": "io.github.win11shell.FilePicker",
+       "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+       "type": "NORMAL",
+       "parent": "org.example.PickerTest",
+       "parentSeq": 5,
+       "attached": false,
+       "app": "window:5",
+       "skipTaskbar": true,
+       "focus": true,
+       "x": 107,
+       "y": 150,
+       "w": 1226,
+       "h": 680
+      },
+      "process": {
+       "comm": "win11-gtk-explo",
+       "parent": "win11-file-port"
+      }
+     }
+    ]
+   },
+   {
+    "check": "taskbar: picker 1 open: no picker in windows.list",
+    "ok": true,
+    "t": 10.04,
+    "listed": [],
+    "bar": {
+     "label": "picker 1 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1
+     }
+    }
+   },
+   {
+    "check": "taskbar: picker 2 open: no picker in windows.list",
+    "ok": true,
+    "t": 10.04,
+    "listed": [],
+    "bar": {
+     "label": "helper and picker 2 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      },
+      {
+       "seq": 5,
+       "pid": 1701,
+       "title": "PickerTest",
+       "appId": "org.example.PickerTest",
+       "desktopId": "window:5"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1,
+      "window:5": 1
+     }
+    }
+   },
+   {
+    "check": "taskbar: picker 1 open: no button of its own, Settings's button as before",
+    "ok": true,
+    "t": 10.05,
+    "bar": {
+     "label": "picker 1 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1
+     }
+    }
+   },
+   {
+    "check": "taskbar: picker 2 open: no button of its own (the buttons are Settings's and the helper's)",
+    "ok": true,
+    "t": 10.05,
+    "bar": {
+     "label": "helper and picker 2 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      },
+      {
+       "seq": 5,
+       "pid": 1701,
+       "title": "PickerTest",
+       "appId": "org.example.PickerTest",
+       "desktopId": "window:5"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1,
+      "window:5": 1
+     }
+    },
+    "helperKeys": [
+     "window:5"
+    ]
+   },
+   {
+    "check": "taskbar: picker 2 open: Settings's button as before, the helper's holds its one window",
+    "ok": true,
+    "t": 10.05,
+    "bar": {
+     "label": "helper and picker 2 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      },
+      {
+       "seq": 5,
+       "pid": 1701,
+       "title": "PickerTest",
+       "appId": "org.example.PickerTest",
+       "desktopId": "window:5"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1,
+      "window:5": 1
+     }
+    },
+    "helperKeys": [
+     "window:5"
+    ]
+   },
+   {
+    "check": "picker of io.github.win11shell.Settings: a window-manager close request closes it",
+    "ok": true,
+    "t": 10.25,
+    "seq": 4
+   },
+   {
+    "check": "picker of io.github.win11shell.Settings: its process ends",
+    "ok": true,
+    "t": 10.25,
+    "pid": 1601
+   },
+   {
+    "check": "picker of org.example.PickerTest: a window-manager close request closes it",
+    "ok": true,
+    "t": 10.45,
+    "seq": 6
+   },
+   {
+    "check": "picker of org.example.PickerTest: its process ends",
+    "ok": true,
+    "t": 10.46,
+    "pid": 1766
+   },
+   {
+    "check": "the helper hears \"cancelled\" (path null)",
+    "ok": true,
+    "t": 10.46,
+    "answers": [
+     {
+      "pid": 1701,
+      "modal": false,
+      "path": null
+     }
+    ]
+   },
+   {
+    "check": "Settings keeps its wallpaper (nothing was chosen)",
+    "ok": true,
+    "t": 10.46,
+    "before": {
+     "type": "image",
+     "path": "builtin:lotus-dark",
+     "color": "#0b2a4a",
+     "fit": "fill",
+     "followTheme": true
+    },
+    "after": {
+     "type": "image",
+     "path": "builtin:lotus-dark",
+     "color": "#0b2a4a",
+     "fit": "fill",
+     "followTheme": true
+    }
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 10.97,
+    "failed": [],
+    "frostedWindows": [
+     {
+      "pid": 379,
+      "kind": "taskbar",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     },
+     {
+      "pid": 1364,
+      "kind": "window",
+      "blur": false,
+      "shadow": true,
+      "focused": false
+     },
+     {
+      "pid": 379,
+      "kind": "start",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     }
+    ]
+   }
+  ],
+  "records": {
+   "browse.click": {
+    "input": "clutter",
+    "x": 1156,
+    "y": 756,
+    "rect": [
+     930,
+     684,
+     112,
+     32
+    ],
+    "name": "background-browse",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1156,
+      756
+     ],
+     "focusPid": 1364
+    }
+   },
+   "helperWindow": {
+    "seq": 5,
+    "pid": 1701,
+    "title": "PickerTest",
+    "wmClass": "org.example.PickerTest",
+    "gtkApplicationId": "org.example.PickerTest",
+    "type": "NORMAL",
+    "parent": null,
+    "parentSeq": null,
+    "attached": false,
+    "app": "window:5",
+    "skipTaskbar": false,
+    "focus": false,
+    "x": 480,
+    "y": 276,
+    "w": 480,
+    "h": 300
+   },
+   "readyBanners": [],
+   "frosted": {
+    "status": {
+     "experimental": true,
+     "enabled": true,
+     "options": {
+      "blur": true,
+      "windowBlur": true,
+      "shadows": true,
+      "taskbarAutoHide": false,
+      "radius": 14
+     },
+     "created": 2,
+     "entries": [
+      {
+       "kind": "taskbar",
+       "focused": false,
+       "rect": {
+        "x": 0,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "blurRect": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true,
+       "shadow": false,
+       "reactive": false,
+       "clips": true
+      },
+      {
+       "kind": "window",
+       "focused": false,
+       "rect": {
+        "x": 170,
+        "y": 56,
+        "w": 1100,
+        "h": 740
+       },
+       "blurRect": {
+        "x": 3,
+        "y": 3,
+        "w": 1094,
+        "h": 734
+       },
+       "effect": false,
+       "shadow": true,
+       "reactive": false,
+       "clips": true
+      }
+     ]
+    },
+    "windows": [
+     {
+      "pid": 379,
+      "kind": "taskbar",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     },
+     {
+      "pid": 1364,
+      "kind": "window",
+      "blur": false,
+      "shadow": true,
+      "focused": false
+     },
+     {
+      "pid": 379,
+      "kind": "start",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     }
+    ]
+   },
+   "pickers": [
+    {
+     "caller": "io.github.win11shell.Settings",
+     "callerPid": 1364,
+     "modal": true,
+     "row": {
+      "seq": 4,
+      "pid": 1601,
+      "title": "Een foto kiezen voor je bureaublad",
+      "wmClass": "io.github.win11shell.FilePicker",
+      "gtkApplicationId": "io.github.win11shell.FilePicker.p1601",
+      "type": "MODAL_DIALOG",
+      "parent": "io.github.win11shell.Settings",
+      "parentSeq": 3,
+      "attached": true,
+      "app": "io.github.win11shell.Settings.desktop",
+      "skipTaskbar": true,
+      "focus": true,
+      "x": 107,
+      "y": 86,
+      "w": 1226,
+      "h": 680
+     },
+     "process": {
+      "comm": "win11-gtk-explo",
+      "parent": "win11-file-port"
+     }
+    },
+    {
+     "caller": "org.example.PickerTest",
+     "callerPid": 1701,
+     "modal": false,
+     "row": {
+      "seq": 6,
+      "pid": 1766,
+      "title": "Openen",
+      "wmClass": "io.github.win11shell.FilePicker",
+      "gtkApplicationId": "io.github.win11shell.FilePicker.p1766",
+      "type": "NORMAL",
+      "parent": "org.example.PickerTest",
+      "parentSeq": 5,
+      "attached": false,
+      "app": "window:5",
+      "skipTaskbar": true,
+      "focus": true,
+      "x": 107,
+      "y": 150,
+      "w": 1226,
+      "h": 680
+     },
+     "process": {
+      "comm": "win11-gtk-explo",
+      "parent": "win11-file-port"
+     }
+    }
+   ],
+   "pickerBackdrops": [
+    {
+     "seq": 4,
+     "entry": null
+    },
+    {
+     "seq": 6,
+     "entry": null
+    }
+   ],
+   "taskbar": [
+    {
+     "label": "Settings only",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1
+     }
+    },
+    {
+     "label": "picker 1 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1
+     }
+    },
+    {
+     "label": "helper and picker 2 open",
+     "rows": [
+      {
+       "seq": 3,
+       "pid": 1364,
+       "title": "Achtergrond – Instellingen",
+       "appId": "io.github.win11shell.Settings",
+       "desktopId": "win11shell-settings.desktop"
+      },
+      {
+       "seq": 5,
+       "pid": 1701,
+       "title": "PickerTest",
+       "appId": "org.example.PickerTest",
+       "desktopId": "window:5"
+      }
+     ],
+     "buttons": {
+      "win11shell-settings.desktop": 1,
+      "window:5": 1
+     }
+    }
+   ],
+   "helperAnswers": [
+    {
+     "pid": 1701,
+     "modal": false,
+     "path": null
+    }
+   ]
+  },
+  "shots": [
+   "picker-1-modal.png",
+   "picker-2-nonmodal.png"
+  ],
+  "error": null,
+  "seconds": 10.97,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 379,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 379,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 379,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=4aaf01ba640fe35827c2e00e6af7d562",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 379,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 379
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "picker-1-modal.png",
+    "group": "scenario",
+    "bytes": 135158,
+    "area": [
+     67,
+     46,
+     1306,
+     760
+    ]
+   },
+   {
+    "file": "picker-2-nonmodal.png",
+    "group": "scenario",
+    "bytes": 132767,
+    "area": [
+     67,
+     110,
+     1306,
+     760
+    ]
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "picker-helper",
+    "source": "org.example.PickerTest",
+    "title": "org.example.PickerTest",
+    "body": "“PickerTest” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/r2d-picker.out/picker-1-modal.png",
+  "tests/gnome/scenarios/r2d-picker.out/picker-2-nonmodal.png"
+ ]
+}

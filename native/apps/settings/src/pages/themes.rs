@@ -1,5 +1,5 @@
-//! Instellingen › Persoonlijke instellingen › Thema’s (vendor/ui/js/apps/settings/pages/themes.js): the current
-//! theme with its background, colour and mode, and the six presets (wallpaper, mode and accent in one go).
+//! Instellingen › Persoonlijke instellingen › Thema’s (last-webkit:vendor/ui/js/apps/settings/pages/themes.js): the
+//! current theme with its background, colour and mode, and the six presets (wallpaper, mode and accent in one go).
 //! Shared with Startpagina and Persoonlijke instellingen: THEMES, `current_theme`, `apply_theme`, `theme_card`,
 //! `theme_grid`; with Achtergrond: WALLPAPERS and `wallpaper_name`.
 use super::background::FillGrid;

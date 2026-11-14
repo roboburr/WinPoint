@@ -2,7 +2,6 @@
 use super::{ApiError, ApiResult, Context, abs_in, io_error, paths};
 use crate::i18n::Lang;
 use gio::prelude::*;
-use gtk::gio;
 use serde_json::{Value, json};
 use std::{
     collections::{BTreeSet, HashSet},

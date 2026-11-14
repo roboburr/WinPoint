@@ -1,0 +1,18 @@
+02:32:32 GE0c run lang=nl switch=False seed=defaults MemAvailable=5201404 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2b-disks-race.py
+02:33:55 private install: exit 0 in 67.8 s, 87253 mutated paths, 0 outside the run dir, ok=True
+02:33:58 GNOME Shell 50.1 up (mode user, unsafe True)
+02:34:03 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/r2b-disks-race.py
+02:34:03   check PASS: Schijven shows the host text in nl
+02:34:03   check PASS: host: disks.list right after the switch is already en (the 1 s snapshot is kept per language)
+02:34:03   check PASS: host: the English body does not repeat the heading and uses ’
+02:34:04   check PASS: Schijven reaches en after the evidence step
+02:34:05   check PASS: Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch
+02:34:07   check PASS: Schijven shows the host text in en within 3.0 s although disks.list ran just before the switch
+02:34:09   check PASS: Schijven shows the host text in nl within 3.0 s although disks.list ran just before the switch
+02:34:10   check PASS: every check passed
+02:34:10 shutdown app: signalled own descendants 1340:win11-gtk-disks, 1349:win11-app
+02:34:10 shutdown shell clients: signalled own descendants 44:ibus-daemon, 64:glycin-svg, 108:glycin-image-rs, 382:win11-shell, 1482:glycin-image-rs, 498:win11-panel, 580:glycin-svg, 217:ibus-memconf, 219:ibus-extension-, 387:ibus-engine-sim
+02:34:10 shutdown gnome-shell: signalled own descendants 25:gnome-shell
+02:34:11 shutdown system bus: signalled own descendants 24:dbus-daemon
+02:34:11 inner sweep: signalled own descendants 1492:glycin-image-rs
+02:34:11 inner done: 0 surfaces, 0 failed []

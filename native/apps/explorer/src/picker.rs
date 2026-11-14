@@ -1,5 +1,5 @@
-//! The file picker (vendor/ui/js/apps/explorer/picker.js, css/picker.css): the Explorer as the Open / Save /
-//! Choose folder dialog of the desktop portal (win11-file-portal, host/src/portal.rs) and of anyone who runs it.
+//! The file picker (last-webkit:vendor/ui/js/apps/explorer/picker.js, css/picker.css): the Explorer as the Open / Save
+//! / Choose folder dialog of the desktop portal (win11-file-portal, host/src/portal.rs) and of anyone who runs it.
 //! The regular Explorer is reused; the title bar shows the dialog's title instead of the tabs, and a footer under
 //! the status bar holds the file name box, the file type filter (the portal's glob and MIME rules), the portal's
 //! choices (check boxes and drop-downs), "Alleen-lezen openen", the error line and the accept / Annuleren buttons.
@@ -82,6 +82,15 @@ fn tr(key: &str) -> &'static str {
         "readOnly" => t("Alleen-lezen openen", "Open read-only"),
         _ => "",
     }
+}
+
+/// The window title: the caller's own (the portal's `title`; trimmed, at most 200 characters), else the mode's, in
+/// the current language. The WebKit picker's rules (`git show last-webkit:host/src/window.rs`, title).
+fn picker_title(own: Option<&str>, folder: bool, save: bool) -> String {
+    if let Some(own) = own.map(str::trim).filter(|s| !s.is_empty()) {
+        return own.chars().take(200).collect();
+    }
+    tr(if folder { "folder" } else if save { "saveAs" } else { "open" }).to_owned()
 }
 
 // ============================================================================================ launch
@@ -775,10 +784,7 @@ impl State {
     }
 
     fn title(&self) -> String {
-        if let Some(own) = self.options["title"].as_str().filter(|s| !s.is_empty()) {
-            return own.to_owned();
-        }
-        tr(if self.folder { "folder" } else if self.save { "saveAs" } else { "open" }).to_owned()
+        picker_title(self.options["title"].as_str(), self.folder, self.save)
     }
 
     fn button_label(&self) -> String {
@@ -1035,6 +1041,25 @@ mod tests {
 
     fn g(p: &str, v: &str, cs: bool) -> bool {
         glob_matches(&compile_glob(p), v, cs)
+    }
+
+    #[test]
+    fn titles_follow_the_mode_and_the_caller_s_own_title() {
+        // window.rs's picker title test (last-webkit), for the portal's callers
+        for (lang, open, save_as, folder) in
+            [("nl", "Openen", "Opslaan als", "Map kiezen"), ("en", "Open", "Save as", "Choose a folder")]
+        {
+            kit::i18n::set_forced_lang(Some(lang));
+            assert_eq!(picker_title(None, false, false), open);
+            assert_eq!(picker_title(None, false, true), save_as);
+            assert_eq!(picker_title(None, true, true), folder);
+            assert_eq!(picker_title(Some("   "), false, false), open, "an empty own title");
+            // another app's own title, in its own language
+            assert_eq!(picker_title(Some("  Export Image  "), false, true), "Export Image");
+        }
+        assert_eq!(picker_title(Some(&"x".repeat(500)), false, false).chars().count(), 200);
+        assert_eq!(picker_title(Some(&"é".repeat(300)), false, false), "é".repeat(200), "characters, not bytes");
+        kit::i18n::set_forced_lang(None);
     }
 
     #[test]

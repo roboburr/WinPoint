@@ -987,8 +987,7 @@ impl Explorer {
         });
     }
 
-    /// "Map kiezen": GTK's folder dialog (the desktop's FileChooser portal: Win11's picker when it is chosen). The
-    /// WebKit page's shell.pickFile has no window to show in a --http-only backend ({path: null}).
+    /// "Map kiezen": GTK's folder dialog (the desktop's FileChooser portal: Win11's picker when it is chosen).
     fn pick(&self) {
         let w = self.me.clone();
         let dialog = gtk::FileDialog::new();

@@ -2,11 +2,18 @@
 # GW6: the compatibility check's private apt tree against a signed file: archive (plan.md D-G27, design §6.2, C17).
 #
 #   tests/update/test_compat.sh [--record] [--only CASE ...] -- BIN
-#       BIN = the lib test binary (target/debug/deps/win11_host-<hash>, built outside with
-#       tools/heavy.sh --tag gw6-build -- tests/rust-sandbox/run-tests.sh --lib -- --list). --record also copies
-#       the apt outputs to tests/update/fixtures/compat/recorded/ (the unit tests replay them).
+#       BIN = the lib test binary (<target>/debug/deps/win11_host-<hash>, built outside with
+#       tools/heavy.sh --tag gw6-build -- tests/rust-sandbox/run-tests.sh --lib -- --list), copied into this worktree
+#       when the target directory lies elsewhere (the layer sees only the worktree). --record also copies the apt
+#       outputs to tests/update/fixtures/compat/recorded/ (the unit tests replay them).
 #   tests/update/test_compat.sh --readelf
 #       Only step 1 below.
+#   tests/update/test_compat.sh --record-readelf
+#       Writes tests/update/fixtures/compat/readelf-needed.txt from the build directory (after a rebuild of it).
+#
+# The programs are scripts/install.py `BINS` (every binary an install has) in W11_TEST_BUILD_DIR, by default
+# tests/build/native-release (19 binaries and SHA256SUMS; elf.rs's unit test reads the same directory). A missing one
+# fails step 1.
 #
 # D-G27's exception and nothing more: apt-get, apt-cache and apt-config run as this user, never as root, against a
 # private tree in the test's own cache (under tests/update/.run/compat-<stamp>/), inside bwrap with --unshare-net,
@@ -17,13 +24,13 @@
 # home under the run directory (its agent's sockets live in the layer's private /run/user/<uid>).
 #
 # Steps:
-#   1. readelf -d on the 12 binaries of target/debug equals tests/update/fixtures/compat/readelf-needed.txt (the
-#      list elf.rs's unit test checks the parser against), and later the layer test parses the same 12 binaries.
+#   1. readelf -d on the BINS of the build directory equals tests/update/fixtures/compat/readelf-needed.txt (the
+#      list elf.rs's unit test checks the parser against), and later the layer test parses the same binaries.
 #   2. Stage 1 (bwrap, no network): the key, the five archives (ok, warn, hold, blocked, ubuntuHold) and the fixture
 #      dpkg status.
 #   3. Stage 2 (bwrap, no network, under strace): per case a fixture root (this machine's release files with the
 #      archive's codename offered, the extension's metadata.json, ubuntu.sources pointing at the case's archive,
-#      the throwaway keyring at the re-rooted ubuntu-archive-keyring.gpg path, the fixture status, our 12 binaries)
+#      the throwaway keyring at the re-rooted ubuntu-archive-keyring.gpg path, the fixture status, our binaries)
 #      and BIN's ignored test services::update::compat::tests::apt_tree_against_the_fixture_archive, which runs
 #      compat.rs's full check with the real apt through the tool table's wrappers. A sixth case, cheap, uses the
 #      embedded releases.json (stonking untested): the check must hold without starting any program.
@@ -42,7 +49,9 @@ HOST_NETNS="$(readlink /proc/self/ns/net)"
 RT=/tmp/w11-compat
 CASES=(ok warn hold blocked ubuntuHold cheap)
 declare -A EXPECT=([ok]=ok [warn]=warn [hold]=hold [blocked]=blocked [ubuntuHold]=ubuntuHold [cheap]=hold)
-RECORD=0 READELF_ONLY=0 ONLY=() BIN=""
+RECORD=0 READELF_ONLY=0 READELF_RECORD=0 ONLY=() BIN=""
+BUILD="${W11_TEST_BUILD_DIR:-$W/tests/build/native-release}"
+mapfile -t BINS < <(/usr/bin/python3 -I -B -c 'import sys; sys.path.insert(0, sys.argv[1]); import install; print("\n".join(install.BINS))' "$W/scripts")
 pass=0 fail=0
 ok() { pass=$((pass + 1)); echo "  ok   $*"; }
 bad() { fail=$((fail + 1)); echo "  FAIL $*"; }
@@ -51,31 +60,39 @@ while (($#)); do
   case "$1" in
     --record) RECORD=1; shift ;;
     --readelf) READELF_ONLY=1; shift ;;
+    --record-readelf) READELF_ONLY=1 READELF_RECORD=1; shift ;;
     --only) shift; while (($#)) && [[ $1 != --* ]]; do ONLY+=("$1"); shift; done ;;
     --) shift; BIN="${1:-}"; shift || true ;;
-    *) echo "usage: $0 [--record] [--only CASE ...] -- BIN | --readelf" >&2; exit 2 ;;
+    *) echo "usage: $0 [--record] [--only CASE ...] -- BIN | --readelf | --record-readelf" >&2; exit 2 ;;
   esac
 done
 ((${#ONLY[@]})) && CASES=("${ONLY[@]}")
 
 [ "$UIDN" != 0 ] || { echo "test_compat.sh: never as root" >&2; exit 2; }
+((${#BINS[@]})) || { echo "test_compat.sh: no BINS in scripts/install.py" >&2; exit 2; }
 for tool in /usr/bin/bwrap /usr/bin/strace /usr/bin/gpg /usr/bin/readelf /usr/bin/apt-get /usr/bin/python3; do
   [ -x "$tool" ] || { echo "test_compat.sh: $tool is missing" >&2; exit 3; }
 done
 sockets_in_w() { find "$W" -xdev -type s 2>/dev/null | head -5; }
 
 # ------------------------------------------------------------------------------------------- 1. readelf
-echo "== 1. readelf -d target/debug/win11-* against $FIX/readelf-needed.txt"
+echo "== 1. readelf -d on the ${#BINS[@]} BINS of $BUILD against $FIX/readelf-needed.txt"
 live="$(mktemp)"
 trap 'rm -f "$live"' EXIT
-n=0
-for f in "$W"/target/debug/win11-*; do
-  [ -f "$f" ] && [ -x "$f" ] || continue
-  n=$((n + 1))
-  printf '%s: %s\n' "$(basename "$f")" "$(readelf -d "$f" | sed -n 's/.*(NEEDED).*\[\(.*\)\]/\1/p' | tr '\n' ' ' | sed 's/ $//')"
+n=0 missing=()
+for name in $(printf '%s\n' "${BINS[@]}" | LC_ALL=C sort); do
+  f="$BUILD/$name"
+  if [ -f "$f" ] && [ -x "$f" ]; then n=$((n + 1)); else missing+=("$name"); continue; fi
+  printf '%s: %s\n' "$name" "$(readelf -d "$f" | sed -n 's/.*(NEEDED).*\[\(.*\)\]/\1/p' | tr '\n' ' ' | sed 's/ $//')"
 done > "$live"
-if [ "$n" = 12 ] && diff <(grep -v '^#' "$FIX/readelf-needed.txt") "$live" >/dev/null; then
-  ok "12 binaries, readelf's NEEDED lists equal the recording"
+if ((${#missing[@]})); then
+  bad "$BUILD lacks ${missing[*]}"
+elif ((READELF_RECORD)); then
+  { printf '# readelf -d on the BINS of scripts/install.py in a build directory (NEEDED, in order), recorded by tests/update/test_compat.sh --record-readelf from %s; test_compat.sh checks it again on every run, elf.rs'"'"'s unit test compares the parser with it\n' "${BUILD#"$W"/}"
+    cat "$live"; } > "$FIX/readelf-needed.txt"
+  ok "$n binaries recorded into $FIX/readelf-needed.txt"
+elif diff <(grep -v '^#' "$FIX/readelf-needed.txt") "$live" >/dev/null; then
+  ok "$n binaries, readelf's NEEDED lists equal the recording"
 else
   bad "readelf ($n binaries) differs from the recording:"; diff <(grep -v '^#' "$FIX/readelf-needed.txt") "$live" || true
 fi
@@ -83,6 +100,8 @@ if ((READELF_ONLY)); then echo "== $pass passed, $fail failed"; ((fail == 0)); e
 [ -n "$BIN" ] || { echo "test_compat.sh: no BIN (-- target/debug/deps/win11_host-<hash>)" >&2; exit 2; }
 case "$(realpath -e "$BIN")" in "$W"/*) ;; *) echo "test_compat.sh: BIN must lie in this worktree" >&2; exit 2 ;; esac
 BIN="$(realpath -e "$BIN")"
+case "$(realpath -e "$BUILD")" in "$W"/*) ;; *) echo "test_compat.sh: the build directory must lie in this worktree (the layer sees only it)" >&2; exit 2 ;; esac
+BUILD="$(realpath -e "$BUILD")"
 s="$(sockets_in_w)"; [ -z "$s" ] || { echo "test_compat.sh: socket files in the worktree: $s" >&2; exit 3; }
 
 # ------------------------------------------------------------------------------------------- run directory
@@ -192,7 +211,7 @@ fixture() {   # fixture CASE → $RUN/fixture-CASE
   cp "$RUN/dpkg-status" "$root/var/lib/dpkg/status"
   mkdir -p "$root/var/lib/apt" && cp "$RUN/extended_states" "$root/var/lib/apt/extended_states"
   echo 0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0 > "$root/proc/sys/kernel/random/boot_id"
-  for f in "$W"/target/debug/win11-*; do [ -f "$f" ] && [ -x "$f" ] && ln -s "$f" "$root/bin/"; done
+  for name in "${BINS[@]}"; do ln -s "$BUILD/$name" "$root/bin/"; done
   # every case but cheap: a releases.json that marks the codename tested with GNOME 50 (the extension's major)
   [ "$c" = cheap ] || printf '%s\n' '{"version":1,"extension":"win11-gnome@win11shell.local","releases":{"stonking":{"version":"26.10","gnomeShell":"50","status":"tested","allowAnyway":false}}}' > "$root/releases.json"
   mkdir -m 0700 "$RUN/out/$c"

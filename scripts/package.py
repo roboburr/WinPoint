@@ -23,6 +23,8 @@ for index, argument in enumerate(sys.argv[2:], 2):
     elif argument == "--lang" and index + 1 < len(sys.argv):
         language = sys.argv[index + 1]
 install.set_language(language.strip().lower())
+# vendor/ui against vendor/ui-sha256.json: the wallpapers and icons install.py ships (its HTML apps are history,
+# git show last-webkit:vendor/ui); tools/ui-manifest.py records a change on purpose.
 subprocess.run([sys.executable, str(root/"scripts/verify-ui.py")], check=True,
                env=dict(os.environ, WIN11_LANG=install.LANGUAGE))
 icon_bundle.validate(root/"vendor")
@@ -60,15 +62,16 @@ with tempfile.TemporaryDirectory(prefix="win11-gnome-package-") as temp:
     # The read-only inventory of an older Win11 Shell for Hyprland install, for machines without a checkout.
     (stage/"tools").mkdir()
     shutil.copy2(root/"tools/h-remnants.sh", stage/"tools/h-remnants.sh")
-    # Include only an existing report; this script never invents a passing test result.
+    # Include only an existing report; this script never invents a passing test result. Most are history (the WebKit
+    # apps up to the last-webkit tag): they ship as the record they are, not as a claim about this version.
     for report in ("VALIDATION.md", "VALIDATION_TABS.md", "VALIDATION_FILES.md", "VALIDATION_FILES_COMPLETE.md", "VALIDATION_SETTINGS.md", "VALIDATION_FILES_DESKTOP.md", "VALIDATION_SEARCH.md", "VALIDATION_WATCH.md", "VALIDATION_ACTIONS.md", "VALIDATION_REGRESSIONS_0.5.md", "VALIDATION_APPS.md", "VALIDATION_APPS_CATALOG.md", "VALIDATION_APPS_DEFAULTS.md", "VALIDATION_APPS_RECENT.md", "VALIDATION_TOPBAR.md", "VALIDATION_ALLES_PROGRESS.md", "VALIDATION_TRAY.md", "VALIDATION_APP_ACTIVATION.md", "VALIDATION_SHORTCUTS.md", "VALIDATION_DESKTOP.md", "VALIDATION_WALLPAPER.md", "VALIDATION_INDEX_LIFECYCLE.md", "VALIDATION_PROCESS_MEMORY.md", "PACKAGING_VALIDATION.md"):
         if (root/report).is_file():
             shutil.copy2(root/report, stage/report)
     if (root/"validation").is_dir():
         shutil.copytree(root/"validation", stage/"validation")
-    for preview in ("preview-gnome.png", "preview-explorer.png", "preview-settings.png", "preview-apps-catalog.png", "logo-circle.png"):
-        if (root/preview).is_file():
-            shutil.copy2(root/preview, stage/preview)
+    # The logo README.md shows; the preview-*.png captures show the WebKit apps and stay out.
+    if (root/"logo-circle.png").is_file():
+        shutil.copy2(root/"logo-circle.png", stage/"logo-circle.png")
     (stage/"bin").mkdir()
     for name in BINS:
         shutil.copy2(install.binary_source(build, name), stage/"bin"/name)

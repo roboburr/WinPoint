@@ -54,7 +54,9 @@ fn save(record: &Value) {
 
 /// Before WinPoint writes `target` to `key` of `settings`: keep what GNOME had (module docs).
 pub(crate) fn note(settings: &gio::Settings, key: &str, target: &glib::Variant) {
-    let Some(schema) = settings.schema_id() else { return };
+    let Some(schema) = settings.schema_id() else {
+        return;
+    };
     let id = format!("{schema} {key}");
     let current = settings.value(key);
     let current_text = current.print(true).to_string();
@@ -94,17 +96,31 @@ pub fn restore() -> i32 {
     if std::path::Path::new(SESSION).is_file()
         && let Some(shell) = schema("org.gnome.shell")
     {
-        let enabled: Vec<String> = shell.strv("enabled-extensions").iter().map(|s| s.to_string()).collect();
+        let enabled: Vec<String> = shell
+            .strv("enabled-extensions")
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         if enabled.iter().any(|uuid| uuid == UUID) {
-            let rest: Vec<&str> = enabled.iter().map(String::as_str).filter(|uuid| *uuid != UUID).collect();
-            ok &= shell.set_strv("enabled-extensions", rest.as_slice()).is_ok();
+            let rest: Vec<&str> = enabled
+                .iter()
+                .map(String::as_str)
+                .filter(|uuid| *uuid != UUID)
+                .collect();
+            ok &= shell
+                .set_strv("enabled-extensions", rest.as_slice())
+                .is_ok();
         }
     }
     let record = load();
     if let Some(keys) = record["keys"].as_object() {
         for (id, entry) in keys {
-            let Some((schema_id, key)) = id.split_once(' ') else { continue };
-            let Some(settings) = schema(schema_id) else { continue };
+            let Some((schema_id, key)) = id.split_once(' ') else {
+                continue;
+            };
+            let Some(settings) = schema(schema_id) else {
+                continue;
+            };
             if !settings
                 .settings_schema()
                 .is_some_and(|schema| schema.has_key(key))
@@ -124,7 +140,8 @@ pub fn restore() -> i32 {
         }
     }
     let config = config_home();
-    let captions = crate::settings_runtime::effects::apply_captions(false, &PathBuf::new(), &config);
+    let captions =
+        crate::settings_runtime::effects::apply_captions(false, &PathBuf::new(), &config);
     ok &= captions["ok"] == true;
     ok &= crate::settings_runtime::effects::gtk4_remove(&config.join("gtk-4.0/gtk.css")).is_ok();
     ok &= restore_keybindings();
@@ -139,26 +156,43 @@ fn restore_keybindings() -> bool {
         .map(PathBuf::from)
         .filter(|p| p.is_absolute())
         .unwrap_or_else(|| glib::home_dir().join(".local/share"));
-    let dir = data.join("gnome-shell/extensions").join(UUID).join("schemas");
+    let dir = data.join(format!("gnome-shell/extensions/{UUID}/schemas"));
     if !dir.join("gschemas.compiled").is_file() {
         return true;
     }
-    let Ok(source) =
-        gio::SettingsSchemaSource::from_directory(&dir, gio::SettingsSchemaSource::default().as_ref(), false)
-    else {
+    let Ok(source) = gio::SettingsSchemaSource::from_directory(
+        &dir,
+        gio::SettingsSchemaSource::default().as_ref(),
+        false,
+    ) else {
         return false;
     };
-    let Some(schema) = source.lookup(EXTENSION_SCHEMA, false) else { return true };
+    let Some(schema) = source.lookup(EXTENSION_SCHEMA, false) else {
+        return true;
+    };
     let own = gio::Settings::new_full(&schema, gio::SettingsBackend::NONE, None);
     let list = |value: &Value| -> Option<Vec<String>> {
         let items = value.as_array()?;
         (items.len() <= 100)
-            .then(|| items.iter().map(|v| v.as_str().map(str::to_owned)).collect())
+            .then(|| {
+                items
+                    .iter()
+                    .map(|v| v.as_str().map(str::to_owned))
+                    .collect()
+            })
             .flatten()
     };
     let put_back = |target: &gio::Settings, key: &str, entry: &Value| {
-        let (Some(owned), user) = (list(&entry["owned"]), &entry["user"]) else { return };
-        if target.strv(key).iter().map(|s| s.to_string()).collect::<Vec<_>>() != owned {
+        let (Some(owned), user) = (list(&entry["owned"]), &entry["user"]) else {
+            return;
+        };
+        if target
+            .strv(key)
+            .iter()
+            .map(|s| s.to_string())
+            .collect::<Vec<_>>()
+            != owned
+        {
             return;
         }
         if user.is_null() {
@@ -180,7 +214,10 @@ fn restore_keybindings() -> bool {
         && let Some(entries) = saved.as_object()
         && let Some(wm) = self::schema("org.gnome.desktop.wm.keybindings")
     {
-        let keys = wm.settings_schema().map(|s| s.list_keys()).unwrap_or_default();
+        let keys = wm
+            .settings_schema()
+            .map(|s| s.list_keys())
+            .unwrap_or_default();
         for (key, entry) in entries {
             if keys.iter().any(|k| k.as_str() == key) {
                 put_back(&wm, key, entry);

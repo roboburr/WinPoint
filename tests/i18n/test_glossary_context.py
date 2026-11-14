@@ -1,7 +1,7 @@
 """The glossary lock-in (R3-UI, notes/claude/round3/r3-ui.md): the glossary rule of tools/i18n/check.py is an error,
 and the context rows of tools/i18n/glossary-context.tsv work as documented there.
 
-    python3 -B -m unittest tests/i18n/test_glossary_context.py -v        (from the project root; node for the last test)
+    python3 -B -m unittest tests/i18n/test_glossary_context.py -v        (from the project root)
 
 The rule tests build a Glossary from small files in a temporary directory (deleted when the test ends).
 """
@@ -17,10 +17,9 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT / "tools" / "i18n"))
 
 import check  # noqa: E402
-import check_ui  # noqa: E402  (merges its DEFERRED into check.DEFERRED when the ui layer loads)
-import corpus  # noqa: E402
+import check_native  # noqa: E402  (merges its DEFERRED into check.DEFERRED when the native layer loads)
 
-UI = "vendor/ui/js/"
+APP = "native/apps/settings/src/"
 GLOSSARY = "Prullenbak\tRecycle Bin\nTerugzetten\tRestore\nReageert niet\tNot responding\nSchijfbeheer\tDisk Management\tname\n"
 
 
@@ -39,9 +38,9 @@ def rules(rep: check.Report) -> list[tuple[str, str, int, str]]:
 class LockIn(unittest.TestCase):
     def test_the_glossary_rule_is_an_error(self):
         self.assertNotIn("glossary", check.DEFERRED)
-        self.assertNotIn("glossary", check_ui.DEFERRED)
+        self.assertNotIn("glossary", check_native.DEFERRED)
         rep = check.Report()
-        rep.add("glossary", "x.js", 1, "nl “Prullenbak” → en should contain “Recycle Bin”")
+        rep.add("glossary", "x.rs", 1, "nl “Prullenbak” → en should contain “Recycle Bin”")
         self.assertEqual(rep.issues[0].level, "error")
         src = (ROOT / "tools" / "i18n" / "check_pairs.py").read_text(encoding="utf-8")
         self.assertIn('report.error(where, f"glossary:', src)
@@ -52,20 +51,21 @@ class LockIn(unittest.TestCase):
         self.assertGreaterEqual(len(g.context), 10)
         retry = [c for c in g.context if c.nl == "Opnieuw proberen"]
         self.assertEqual(len(retry), 1, "D-G41: one Retry row for the Update page")
-        self.assertTrue(retry[0].applies(UI + "apps/settings/pages/update.js", "retry"))
-        self.assertFalse(retry[0].applies(UI + "apps/settings/common.js", "retry"))
+        self.assertTrue(retry[0].applies(APP + "pages/update.rs", "row_view/Opnieuw proberen"))
+        self.assertTrue(retry[0].applies(APP + "pages/update_release.rs", "view/Opnieuw proberen"))
+        self.assertFalse(retry[0].applies(APP + "common.rs", "retry/Opnieuw proberen"))
         self.assertIn(("Opnieuw proberen", "Try again"), [(r[0], r[1]) for r in g.rows])
 
 
 class ContextRows(unittest.TestCase):
     def test_a_context_row_replaces_the_rendering_at_its_place_only(self):
-        g = build(f"{UI}a.js:revert,{UI}a.js:keep*\tTerugzetten\tRevert\t-\twhy\n")
-        self.assertEqual(g.check("Terugzetten", "Revert", set(), where=(UI + "a.js", "revert")), [])
-        self.assertEqual(g.check("Terugzetten over 3 s", "Reverting in 3 s", set(), where=(UI + "a.js", "keepBody")), [])
+        g = build(f"{APP}a.rs:revert,{APP}a.rs:keep*\tTerugzetten\tRevert\t-\twhy\n")
+        self.assertEqual(g.check("Terugzetten", "Revert", set(), where=(APP + "a.rs", "revert")), [])
+        self.assertEqual(g.check("Terugzetten over 3 s", "Reverting in 3 s", set(), where=(APP + "a.rs", "keepBody")), [])
         # the general rendering is no longer enough there
-        self.assertEqual(g.check("Terugzetten", "Restore", set(), where=(UI + "a.js", "revert")), [("Terugzetten", "Revert")])
+        self.assertEqual(g.check("Terugzetten", "Restore", set(), where=(APP + "a.rs", "revert")), [("Terugzetten", "Revert")])
         # elsewhere the glossary.tsv rendering holds
-        self.assertEqual(g.check("Terugzetten", "Revert", set(), where=(UI + "b.js", "revert")), [("Terugzetten", "Restore")])
+        self.assertEqual(g.check("Terugzetten", "Revert", set(), where=(APP + "b.rs", "revert")), [("Terugzetten", "Restore")])
         self.assertEqual(g.check("Terugzetten", "Revert", set()), [("Terugzetten", "Restore")])
         self.assertEqual(g.context[0].hits, 3)
 
@@ -85,15 +85,15 @@ class ContextRows(unittest.TestCase):
         self.assertTrue(g.context[0].known)
 
     def test_stale_rows_places_outside_and_bad_rows_are_errors(self):
-        g = build(f"{UI}a.js:k\tPrullenbak\tTrash\t-\tused\n"
-                  f"{UI}a.js:gone\tPrullenbak\tBin\t-\tstale\n"
-                  f"{UI}nofile.js:k\tPrullenbak\tBin\t-\tno such file\n"
+        g = build(f"{APP}a.rs:k\tPrullenbak\tTrash\t-\tused\n"
+                  f"{APP}a.rs:gone\tPrullenbak\tBin\t-\tstale\n"
+                  f"{APP}nofile.rs:k\tPrullenbak\tBin\t-\tno such file\n"
                   "extension/x.js:k\tPrullenbak\tBin\t-\toutside\n"
-                  f"{UI}a.js:k\tPrullenbak\n"
-                  f"{UI}a.js:k\tPrullenbak\tBin\tweird\twhy\n")
-        g.check("Prullenbak", "Trash", set(), where=(UI + "a.js", "k"))
+                  f"{APP}a.rs:k\tPrullenbak\n"
+                  f"{APP}a.rs:k\tPrullenbak\tBin\tweird\twhy\n")
+        g.check("Prullenbak", "Trash", set(), where=(APP + "a.rs", "k"))
         rep = check.Report()
-        g.check_context(rep, {UI: True, "host/src/": True})
+        g.check_context(rep, {APP: True, "host/src/": True})
         got = rules(rep)
         self.assertTrue(all(lvl == "error" and rule == "glossary-context" for lvl, rule, _l, _m in got), got)
         lines = sorted(line for _lvl, _r, line, _m in got)
@@ -101,13 +101,12 @@ class ContextRows(unittest.TestCase):
         self.assertEqual(lines, [2, 3, 3, 4, 5, 6, 6], got)
 
     def test_a_part_of_the_tree_that_was_not_checked_is_not_judged(self):
-        g = build(f"{UI}a.js:k\tPrullenbak\tTrash\t-\twhy\n")
+        g = build(f"{APP}a.rs:k\tPrullenbak\tTrash\t-\twhy\n")
         rep = check.Report()
-        g.check_context(rep, {UI: False, "host/src/": True})      # e.g. --no-js: the UI was not read
+        g.check_context(rep, {APP: False, "host/src/": True})      # e.g. --layers rust: native/ was not read
         self.assertEqual(rep.issues, [])
 
 
-@unittest.skipUnless(corpus.find_node(), "node not found")
 class Tree(unittest.TestCase):
     def test_no_glossary_findings_and_no_stale_context_row(self):
         rep = check.run(ROOT)

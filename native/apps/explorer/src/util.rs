@@ -1,4 +1,4 @@
-//! Helpers (vendor/ui/js/apps/explorer/util.js): paths, friendly names, type names, sizes, dates, groups,
+//! Helpers (last-webkit:vendor/ui/js/apps/explorer/util.js): paths, friendly names, type names, sizes, dates, groups,
 //! sorting and drives. File items are the backend's JSON objects (files.list / files.find / files.stat rows:
 //! {name, displayName, path, isDir, icon, mime, size, modified, hidden, typeName, ...}), shared as `Item`.
 use crate::i18n::{f, s};

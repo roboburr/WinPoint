@@ -1,5 +1,5 @@
-//! Flyout `quick`: Snelle instellingen (Win+A), ported from vendor/ui/js/shell/quicksettings.js and the QUICK
-//! SETTINGS part of vendor/ui/css/flyouts.css. Layout like Windows 11 23H2:
+//! Flyout `quick`: Snelle instellingen (Win+A), ported from `git show 418ea594:vendor/ui/js/shell/quicksettings.js` and
+//! the QUICK SETTINGS part of `git show 418ea594:vendor/ui/css/flyouts.css`. Layout like Windows 11 23H2:
 //!   [media card]   a separate card when a player exists (media.list / media.changed)
 //!   [tiles 3x2]    Wi-Fi >, Bluetooth >, Vliegtuigmodus, Nachtlampje, Donkere modus, Niet storen
 //!   [sliders]      helderheid (only when available), volume (mute button, > output devices)

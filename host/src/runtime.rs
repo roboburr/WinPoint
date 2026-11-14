@@ -1,6 +1,7 @@
-//! Authenticated native HTTP/API runtime shared by the independent Rust windows.
+//! Authenticated native HTTP/API runtime of a host process: the backend of win11-shell and of each native app
+//! (lib.rs run_http_only), and the file portal's own (portal.rs).
 use crate::{
-    UiRequest, UiRequestKind, apps,
+    apps,
     backend::{self, Backend},
     events, files, gnome, images, services, settings_runtime, transfers,
 };
@@ -26,20 +27,15 @@ pub(crate) struct Runtime {
     pub transfers: Arc<transfers::Transfers>,
     ui: PathBuf,
     kind: &'static str,
-    ui_sender: std::sync::mpsc::Sender<UiRequest>,
-    gui: bool,
-    /// The last beat of the owner's GLib main loop (a 500 ms timer in every owner: lib.rs `run_inner` and
-    /// `run_http_only`, portal.rs); `shell.info` reports its age as `mainLoopLagMs`. The `--http-only`
-    /// backends run a main loop too since the native programs (lib.rs), so every runtime has one.
+    /// The last beat of the owner's GLib main loop (a timer in every owner: lib.rs `run_http_only`, portal.rs);
+    /// `shell.info` reports its age as `mainLoopLagMs`.
     beat: Mutex<Option<Instant>>,
 }
 impl Runtime {
     pub fn new(
         ui: PathBuf,
         kind: &'static str,
-        ui_sender: std::sync::mpsc::Sender<UiRequest>,
         shutdown: Arc<dyn Fn(bool) + Send + Sync>,
-        gui: bool,
     ) -> Result<Arc<Self>, String> {
         let backend =
             backend::BackendGuard::connect(ui.parent().ok_or("UI-map ontbreekt")?, kind)?.backend;
@@ -85,8 +81,6 @@ impl Runtime {
             transfers: Arc::new(transfers::Transfers::new()?),
             ui,
             kind,
-            ui_sender,
-            gui,
             beat: Mutex::new(Some(Instant::now())),
         });
         let weak = Arc::downgrade(&runtime);
@@ -129,33 +123,6 @@ impl Runtime {
     pub fn beat(&self) {
         *self.beat.lock().unwrap_or_else(|e| e.into_inner()) = Some(Instant::now());
     }
-    fn ui(&self, kind: UiRequestKind, args: &Value, timeout: Duration) -> files::ApiResult {
-        let (ack, rx) = std::sync::mpsc::channel();
-        self.ui_sender
-            .send(UiRequest {
-                kind,
-                payload: args.clone(),
-                ack,
-            })
-            .map_err(|_| {
-                files::ApiError::tr(
-                    "surface",
-                    self.ctx.lang(),
-                    "core.windowClosed",
-                    crate::i18n::NO_PARAMS,
-                )
-            })?;
-        rx.recv_timeout(timeout)
-            .map_err(|_| {
-                files::ApiError::tr(
-                    "surface",
-                    self.ctx.lang(),
-                    "core.windowNotResponding",
-                    crate::i18n::NO_PARAMS,
-                )
-            })?
-            .map_err(|m| files::ApiError::new("surface", &m))
-    }
     pub fn call(&self, method: &str, args: &Value) -> Option<files::ApiResult> {
         let empty = json!({});
         let args = if args.is_null() { &empty } else { args };
@@ -166,29 +133,6 @@ impl Runtime {
                 "core.badArgs",
                 crate::i18n::NO_PARAMS,
             )));
-        }
-        if method == "nativeBackdrop.configure" {
-            return Some(if args.as_object().is_some_and(|args| !args.is_empty()) {
-                Err(files::ApiError::tr(
-                    "bad_args",
-                    self.ctx.lang(),
-                    "core.noInput",
-                    crate::i18n::NO_PARAMS,
-                ))
-            } else {
-                Ok(gnome::configure_backdrop(
-                    self.kind,
-                    self.gui,
-                    &self.ctx.settings(),
-                ))
-            });
-        }
-        match method{
-            // D-G70: no WebKit shell surface has an input region any more; regions.js and the mock still ask
-            "shell.setRegions"=>return Some(Ok(json!({}))),
-            "shell.pickFile"=>return Some(if self.gui{self.ui(UiRequestKind::FilePicker,args,Duration::from_secs(1800))}else{Ok(json!({"path":null}))}),
-            "explorer.tabPosition" if self.kind=="explorer"=>return Some(gnome::call("explorer.tabPosition",&json!({"pid":std::process::id(),"phase":if args["phase"]=="begin"{"begin"}else{"end"}})).map_err(|e|files::ApiError::new("gnome",&e))),
-            _=>{}
         }
         if method.starts_with("explorer.tab") && is_known(method) {
             return Some(
@@ -256,6 +200,9 @@ impl Runtime {
             Err(_) => return text(request, 400, "Bad URL"),
         };
         let path = parsed.path();
+        // The UI's assets, without a token: the built-in wallpapers and the Settings icon, which win11-shell and
+        // the native apps fetch (native/shell desktop/wallpaper.rs, panel/taskbar/util.rs; native/apps/settings
+        // common.rs). Nothing else of the UI folder is served.
         if let Some(relative) = path.strip_prefix("/ui/") {
             if !matches!(
                 request.method(),
@@ -263,12 +210,14 @@ impl Runtime {
             ) {
                 return text(request, 405, "Method Not Allowed");
             }
-            let target = url::Url::parse(&format!("file:///{relative}"))
-                .ok()
+            let assets = self.ui.join("assets");
+            let target = relative
+                .strip_prefix("assets/")
+                .and_then(|relative| url::Url::parse(&format!("file:///{relative}")).ok())
                 .and_then(|u| u.to_file_path().ok())
-                .map(|p| self.ui.join(p.strip_prefix("/").unwrap_or(&p)));
+                .map(|p| assets.join(p.strip_prefix("/").unwrap_or(&p)));
             if let Some(target) = target.and_then(|p| p.canonicalize().ok()).filter(|p| {
-                self.ui.canonicalize().is_ok_and(|root| p.starts_with(root)) && p.is_file()
+                assets.canonicalize().is_ok_and(|root| p.starts_with(root)) && p.is_file()
             }) {
                 return match std::fs::read(&target) {
                     Ok(data) => bytes(request, 200, data, crate::content_type(&target)),
@@ -687,10 +636,7 @@ mod i18n_tests {
     // The 3b898e6 literals of runtime.rs and services/mod.rs: the Dutch render must stay byte-identical.
     const DUTCH: &[(&str, &str)] = &[
         ("core.serviceStopped", "De dienst is afgesloten."),
-        ("core.windowClosed", "Venster is gesloten"),
-        ("core.windowNotResponding", "Venster reageert niet"),
         ("core.badArgs", "Ongeldige invoer."),
-        ("core.noInput", "Deze actie accepteert geen invoer."),
         ("core.forbidden", "Geen toegang."),
         ("core.methodNotAllowed", "Gebruik POST."),
         ("core.badRequest", "Ongeldige aanvraag."),

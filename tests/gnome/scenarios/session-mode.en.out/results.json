@@ -1,0 +1,644 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "en",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-14 02:45:00",
+ "seconds": 104.3,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 39,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 582440,
+   "rss_kb": 783972,
+   "processes": 18,
+   "t": 17.6
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 499092,
+   "rss_kb": 669184
+  },
+  "minMemAvailableKb": 5091284,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 320886,
+    "rss_kb": 367188
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 92466,
+    "rss_kb": 124116
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 82876,
+    "rss_kb": 110672
+   },
+   "glycin-svg": {
+    "count": 2,
+    "pss_kb": 37238,
+    "rss_kb": 61592
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 21195,
+    "rss_kb": 35980
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 14196,
+    "rss_kb": 22720
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 5957,
+    "rss_kb": 20524
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4274,
+    "rss_kb": 11532
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1244,
+    "rss_kb": 9836
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 838,
+    "rss_kb": 7928
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 798,
+    "rss_kb": 7768
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 289,
+    "rss_kb": 1516
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 183,
+    "rss_kb": 2600
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 323522,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 92466,
+    "first": 2.6
+   },
+   "python3": {
+    "pss_kb": 51324,
+    "first": 0.0
+   },
+   "glycin-svg": {
+    "pss_kb": 46934,
+    "first": 1.5
+   },
+   "ibus-extension-": {
+    "pss_kb": 21196,
+    "first": 1.5
+   },
+   "win11-panel": {
+    "pss_kb": 14196,
+    "first": 2.6
+   },
+   "glycin-image-rs": {
+    "pss_kb": 4501,
+    "first": 1.5
+   },
+   "ibus-daemon": {
+    "pss_kb": 4340,
+    "first": 1.5
+   },
+   "win11-app": {
+    "pss_kb": 3489,
+    "first": 17.1
+   },
+   "ibus-memconf": {
+    "pss_kb": 877,
+    "first": 1.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 842,
+    "first": 2.6
+   },
+   "dbus-daemon": {
+    "pss_kb": 669,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 289,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 184,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 67.6,
+  "mutatingSyscallPaths": 87259,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "02:46:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:26\tpw-dump\t--monitor --no-colors",
+  "02:46:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:28\tpw-dump\t--monitor --no-colors",
+  "02:46:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:32\tpw-dump\t--monitor --no-colors",
+  "02:46:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "02:46:40\tpw-dump\t--monitor --no-colors",
+  "02:46:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-YNLS6jRy"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 8,
+  "maxScanSeconds": 0.703,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-YNLS6jRy"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/session-mode.py",
+  "startLanguage": "en",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.81,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "boot"
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.81,
+    "args": {
+     "key": "mode"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 6.77,
+    "args": {
+     "name": "session-desktop"
+    },
+    "result": {
+     "png": "session-desktop.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2151,
+      "meanLevel": 61.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.78,
+    "args": {
+     "key": "interface.before"
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.78,
+    "args": {
+     "key": "interface.winpoint"
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.78,
+    "args": {
+     "key": "record"
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.78,
+    "args": {
+     "key": "gtk4.before"
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.98,
+    "args": {
+     "key": "restore.exit"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.03,
+    "args": {
+     "key": "interface.after"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "mode: winpoint with parent user",
+    "ok": true,
+    "t": 4.81,
+    "mode": {
+     "current": "winpoint",
+     "parent": "user",
+     "extensions": [
+      "win11-gnome@win11shell.local"
+     ],
+     "state": 1,
+     "dock": 6,
+     "userList": []
+    }
+   },
+   {
+    "check": "mode: the extension is in the mode list only",
+    "ok": true,
+    "t": 4.81,
+    "mode": {
+     "current": "winpoint",
+     "parent": "user",
+     "extensions": [
+      "win11-gnome@win11shell.local"
+     ],
+     "state": 1,
+     "dock": 6,
+     "userList": []
+    }
+   },
+   {
+    "check": "extension: ACTIVE through the mode",
+    "ok": true,
+    "t": 4.81,
+    "state": 1
+   },
+   {
+    "check": "extension: no Ubuntu dock",
+    "ok": true,
+    "t": 4.81,
+    "dock": 6
+   },
+   {
+    "check": "shell: windows up",
+    "ok": true,
+    "t": 4.91,
+    "toplevels": [
+     "Desktop",
+     "Start",
+     "Taskbar"
+    ]
+   },
+   {
+    "check": "start: WinPoint sets its colour scheme at the session start",
+    "ok": true,
+    "t": 6.78,
+    "before": {
+     "color-scheme": "'prefer-dark'",
+     "icon-theme": "'Adwaita'",
+     "gtk-theme": "'Adwaita-dark'"
+    }
+   },
+   {
+    "check": "record: GNOME keys WinPoint wrote are kept",
+    "ok": true,
+    "t": 9.78,
+    "keys": [
+     "org.gnome.desktop.background color-shading-type",
+     "org.gnome.desktop.background picture-opacity",
+     "org.gnome.desktop.background picture-options",
+     "org.gnome.desktop.background picture-uri",
+     "org.gnome.desktop.background picture-uri-dark",
+     "org.gnome.desktop.background primary-color",
+     "org.gnome.desktop.background secondary-color",
+     "org.gnome.desktop.interface color-scheme",
+     "org.gnome.desktop.interface gtk-theme",
+     "org.gnome.desktop.wm.preferences button-layout"
+    ]
+   },
+   {
+    "check": "restore: GNOME values back",
+    "ok": true,
+    "t": 10.03,
+    "expected": {
+     "color-scheme": "'default'",
+     "gtk-theme": "'Adwaita'"
+    },
+    "after": {
+     "color-scheme": "'default'",
+     "icon-theme": "'Adwaita'",
+     "gtk-theme": "'Adwaita'"
+    },
+    "winpoint": {
+     "color-scheme": "'prefer-light'",
+     "icon-theme": "'Adwaita'",
+     "gtk-theme": "'Adwaita'"
+    }
+   },
+   {
+    "check": "restore: no caption-button block in gtk-4.0/gtk.css",
+    "ok": true,
+    "t": 10.03,
+    "gtk4": ""
+   }
+  ],
+  "records": {
+   "boot": {
+    "kind": "native-shell",
+    "pid": 387,
+    "tag": "boot"
+   },
+   "mode": {
+    "current": "winpoint",
+    "parent": "user",
+    "extensions": [
+     "win11-gnome@win11shell.local"
+    ],
+    "state": 1,
+    "dock": 6,
+    "userList": []
+   },
+   "interface.before": {
+    "color-scheme": "'prefer-dark'",
+    "icon-theme": "'Adwaita'",
+    "gtk-theme": "'Adwaita-dark'"
+   },
+   "interface.winpoint": {
+    "color-scheme": "'prefer-light'",
+    "icon-theme": "'Adwaita'",
+    "gtk-theme": "'Adwaita'"
+   },
+   "record": {
+    "version": 1,
+    "keys": {
+     "org.gnome.desktop.background picture-uri": {
+      "gnome": "'file:///usr/share/backgrounds/gnome/adwaita-l.jxl'",
+      "winpoint": "'file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/ui/assets/wallpapers/lotus-light.svg'"
+     },
+     "org.gnome.desktop.background picture-uri-dark": {
+      "gnome": "'file:///usr/share/backgrounds/gnome/adwaita-d.jxl'",
+      "winpoint": "'file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/ui/assets/wallpapers/lotus-light.svg'"
+     },
+     "org.gnome.desktop.background picture-options": {
+      "gnome": null,
+      "winpoint": "'zoom'"
+     },
+     "org.gnome.desktop.background primary-color": {
+      "gnome": "'#023c88'",
+      "winpoint": "'#0b2a4a'"
+     },
+     "org.gnome.desktop.background secondary-color": {
+      "gnome": "'#5789ca'",
+      "winpoint": "'#0b2a4a'"
+     },
+     "org.gnome.desktop.background color-shading-type": {
+      "gnome": null,
+      "winpoint": "'solid'"
+     },
+     "org.gnome.desktop.background picture-opacity": {
+      "gnome": null,
+      "winpoint": "100"
+     },
+     "org.gnome.desktop.interface color-scheme": {
+      "gnome": "'default'",
+      "winpoint": "'prefer-light'"
+     },
+     "org.gnome.desktop.interface gtk-theme": {
+      "gnome": "'Adwaita'",
+      "winpoint": "'Adwaita'"
+     },
+     "org.gnome.desktop.wm.preferences button-layout": {
+      "gnome": "'appmenu:close'",
+      "winpoint": "':minimize,maximize,close'"
+     }
+    }
+   },
+   "gtk4.before": "/* >>> win11shell caption-buttons >>> Windows 11-vensterknoppen, beheerd door Win11 Shell (uitzetten: Instellingen > Persoonlijke instellingen > Kleuren). Niet wijzigen. */\n@import url(\"file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/share/win11-gnome/config/gtk/caption-buttons-gtk4.css\");\n/* <<< win11shell caption-buttons <<< */\n",
+   "restore.exit": {
+    "code": 0,
+    "stderr": ""
+   },
+   "interface.after": {
+    "color-scheme": "'default'",
+    "icon-theme": "'Adwaita'",
+    "gtk-theme": "'Adwaita'"
+   }
+  },
+  "shots": [
+   "session-desktop.png"
+  ],
+  "error": null,
+  "seconds": 12.03,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 387,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 387,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 387,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=9946617aa36873d3518092d86af7bd70",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11",
+    "--mode=winpoint"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "winpoint",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 387,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 387
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "session-desktop.png",
+    "group": "scenario",
+    "bytes": 1109259,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/session-mode.en.out/session-desktop.png"
+ ]
+}

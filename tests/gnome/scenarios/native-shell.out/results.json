@@ -1,11 +1,11 @@
 {
  "harness": "GE0c/GE1h tests/gnome/harness.py",
- "lang": "nl",
+ "lang": "en",
  "switch": false,
  "seed": "defaults",
  "commit": "ref: refs/heads/claude/gnome-english-update",
- "startedAt": "2026-11-13 21:46:28",
- "seconds": 117.0,
+ "startedAt": "2026-11-14 04:37:00",
+ "seconds": 107.2,
  "innerExit": 0,
  "innerTimedOut": false,
  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
@@ -15,85 +15,143 @@
  },
  "lock": "held by an ancestor heavy.sh",
  "memory": {
-  "samples": 46,
+  "samples": 45,
   "intervalSeconds": 0.5,
   "peak": {
-   "pss_kb": 509435,
-   "rss_kb": 809772,
+   "pss_kb": 588339,
+   "rss_kb": 796064,
    "processes": 18,
-   "t": 16.7
+   "t": 18.7
   },
   "peakWithoutHarness": {
-   "pss_kb": 428135,
-   "rss_kb": 694552
+   "pss_kb": 506630,
+   "rss_kb": 682128
   },
-  "minMemAvailableKb": 4177236,
+  "minMemAvailableKb": 6246908,
   "abortedForMemory": false,
   "peakByName": {
    "gnome-shell": {
     "count": 1,
-    "pss_kb": 249569,
-    "rss_kb": 361192
+    "pss_kb": 315103,
+    "rss_kb": 364340
    },
    "win11-shell": {
     "count": 1,
-    "pss_kb": 81231,
-    "rss_kb": 119560
+    "pss_kb": 97904,
+    "rss_kb": 131320
    },
    "python3": {
     "count": 2,
-    "pss_kb": 80760,
-    "rss_kb": 110940
+    "pss_kb": 81234,
+    "rss_kb": 109824
    },
    "glycin-svg": {
     "count": 2,
-    "pss_kb": 31074,
-    "rss_kb": 56868
-   },
-   "win11-panel": {
-    "count": 1,
-    "pss_kb": 25296,
-    "rss_kb": 51708
-   },
-   "ibus-extension-": {
-    "count": 1,
-    "pss_kb": 17214,
-    "rss_kb": 35668
+    "pss_kb": 34564,
+    "rss_kb": 58856
    },
    "glycin-image-rs": {
     "count": 3,
-    "pss_kb": 16864,
-    "rss_kb": 32148
+    "pss_kb": 19213,
+    "rss_kb": 33600
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 18994,
+    "rss_kb": 34608
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 13681,
+    "rss_kb": 22112
    },
    "ibus-daemon": {
     "count": 1,
-    "pss_kb": 4062,
-    "rss_kb": 11512
+    "pss_kb": 4299,
+    "rss_kb": 11696
    },
    "dbus-daemon": {
     "count": 2,
-    "pss_kb": 1288,
-    "rss_kb": 10012
+    "pss_kb": 1268,
+    "rss_kb": 9864
    },
    "ibus-engine-sim": {
     "count": 1,
-    "pss_kb": 790,
-    "rss_kb": 8040
+    "pss_kb": 834,
+    "rss_kb": 7912
    },
    "ibus-memconf": {
     "count": 1,
-    "pss_kb": 747,
-    "rss_kb": 7844
+    "pss_kb": 770,
+    "rss_kb": 7820
    },
    "bwrap": {
     "count": 1,
-    "pss_kb": 353,
-    "rss_kb": 1596
+    "pss_kb": 289,
+    "rss_kb": 1516
    },
    "dbus-run-sessio": {
     "count": 1,
+    "pss_kb": 186,
+    "rss_kb": 2596
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 315103,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 97904,
+    "first": 2.6
+   },
+   "python3": {
+    "pss_kb": 48820,
+    "first": 0.0
+   },
+   "glycin-svg": {
+    "pss_kb": 29670,
+    "first": 2.0
+   },
+   "nvidia-smi": {
+    "pss_kb": 19430,
+    "first": 2.6
+   },
+   "ibus-extension-": {
+    "pss_kb": 19000,
+    "first": 2.0
+   },
+   "win11-panel": {
+    "pss_kb": 13693,
+    "first": 2.6
+   },
+   "glycin-image-rs": {
+    "pss_kb": 11908,
+    "first": 2.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4335,
+    "first": 1.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 866,
+    "first": 2.0
+   },
+   "ibus-memconf": {
+    "pss_kb": 804,
+    "first": 2.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 690,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 289,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
     "pss_kb": 187,
-    "rss_kb": 2684
+    "first": 0.5
    }
   }
  },
@@ -101,8 +159,8 @@
   "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
   "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
   "exit": 0,
-  "seconds": 72.2,
-  "mutatingSyscallPaths": 87828,
+  "seconds": 67.5,
+  "mutatingSyscallPaths": 87253,
   "writesOutsideRun": [],
   "failedWritesOutsideRun": [],
   "binaries": {
@@ -166,28 +224,28 @@
   }
  },
  "guardStubCalls": [
-  "21:48:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:03\tpw-dump\t--monitor --no-colors",
-  "21:48:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:05\tpw-dump\t--monitor --no-colors",
-  "21:48:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:09\tpw-dump\t--monitor --no-colors",
-  "21:48:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:17\tpw-dump\t--monitor --no-colors",
-  "21:48:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
-  "21:48:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+  "04:38:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:25\tpw-dump\t--monitor --no-colors",
+  "04:38:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:27\tpw-dump\t--monitor --no-colors",
+  "04:38:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:31\tpw-dump\t--monitor --no-colors",
+  "04:38:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:39\tpw-dump\t--monitor --no-colors",
+  "04:38:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:38:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
  ],
  "updateToolCalls": [],
  "leftoverProcessesAfterInner": [],
  "socketCleanup": {
   "removed": [
-   "cache/ibus/dbus-awFQcKE2"
+   "cache/ibus/dbus-rPiGMHVw"
   ],
   "left": [],
   "ok": true
@@ -195,7 +253,7 @@
  "socketWatch": {
   "intervalSeconds": 2.0,
   "scans": 9,
-  "maxScanSeconds": 0.734,
+  "maxScanSeconds": 0.702,
   "roots": [
    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
    "/etc",
@@ -205,13 +263,13 @@
   "appeared": [],
   "ok": true,
   "runSockets": [
-   "cache/ibus/dbus-awFQcKE2"
+   "cache/ibus/dbus-rPiGMHVw"
   ],
   "runUnlisted": []
  },
  "scenario": {
   "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/native-shell.py",
-  "startLanguage": "nl",
+  "startLanguage": "en",
   "steps": [
    {
     "step": "pointer_prepare",
@@ -232,7 +290,7 @@
    },
    {
     "step": "record",
-    "t": 4.81,
+    "t": 4.8,
     "args": {
      "key": "A.backend"
     }
@@ -265,15 +323,15 @@
        1440,
        120
       ],
-      "distinctColours": 337,
-      "meanLevel": 36.7,
+      "distinctColours": 344,
+      "meanLevel": 36.8,
       "looksBlank": false
      }
     }
    },
    {
     "step": "screenshot",
-    "t": 6.26,
+    "t": 6.25,
     "args": {
      "name": "b-native-desktop"
     },
@@ -287,7 +345,7 @@
        1440,
        900
       ],
-      "distinctColours": 2149,
+      "distinctColours": 2152,
       "meanLevel": 61.2,
       "looksBlank": false
      }
@@ -295,14 +353,14 @@
    },
    {
     "step": "record",
-    "t": 6.36,
+    "t": 6.35,
     "args": {
      "key": "C.quick.open"
     }
    },
    {
     "step": "screenshot",
-    "t": 7.47,
+    "t": 7.46,
     "args": {
      "name": "c-quick-open"
     },
@@ -316,7 +374,7 @@
        1440,
        900
       ],
-      "distinctColours": 2185,
+      "distinctColours": 2193,
       "meanLevel": 61.4,
       "looksBlank": false
      }
@@ -324,21 +382,21 @@
    },
    {
     "step": "record",
-    "t": 7.57,
+    "t": 7.56,
     "args": {
      "key": "C.quick.close"
     }
    },
    {
     "step": "record",
-    "t": 7.67,
+    "t": 7.66,
     "args": {
      "key": "C.notifications.open"
     }
    },
    {
     "step": "screenshot",
-    "t": 8.77,
+    "t": 8.75,
     "args": {
      "name": "c-notifications-open"
     },
@@ -352,7 +410,7 @@
        1440,
        900
       ],
-      "distinctColours": 2215,
+      "distinctColours": 2222,
       "meanLevel": 61.0,
       "looksBlank": false
      }
@@ -360,28 +418,28 @@
    },
    {
     "step": "record",
-    "t": 8.87,
+    "t": 8.85,
     "args": {
      "key": "C.notifications.close"
     }
    },
    {
     "step": "record",
-    "t": 8.97,
+    "t": 8.95,
     "args": {
      "key": "D.click"
     }
    },
    {
     "step": "record",
-    "t": 8.97,
+    "t": 8.96,
     "args": {
      "key": "D.capabilities"
     }
    },
    {
     "step": "screenshot",
-    "t": 10.01,
+    "t": 10.0,
     "args": {
      "name": "d-native-start-open"
     },
@@ -395,22 +453,22 @@
        1440,
        900
       ],
-      "distinctColours": 1616,
-      "meanLevel": 41.9,
+      "distinctColours": 1612,
+      "meanLevel": 41.8,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 10.06,
+    "t": 10.05,
     "args": {
      "key": "D.visibleToplevels"
     }
    },
    {
     "step": "screenshot",
-    "t": 11.14,
+    "t": 11.28,
     "args": {
      "name": "d-native-start-closed"
     },
@@ -424,15 +482,15 @@
        1440,
        900
       ],
-      "distinctColours": 2182,
-      "meanLevel": 61.0,
+      "distinctColours": 2152,
+      "meanLevel": 61.2,
       "looksBlank": false
      }
     }
    },
    {
     "step": "record",
-    "t": 15.14,
+    "t": 15.29,
     "args": {
      "key": "N.native"
     }
@@ -447,16 +505,16 @@
    {
     "check": "A: the panel process is win11-shell",
     "ok": true,
-    "t": 4.81,
-    "pid": 358,
+    "t": 4.8,
+    "pid": 383,
     "comm": "win11-shell"
    },
    {
     "check": "A: its backend win11-panel --http-only is a child of win11-shell",
     "ok": true,
-    "t": 4.81,
+    "t": 4.8,
     "backend": [
-     515
+     496
     ]
    },
    {
@@ -476,9 +534,9 @@
     "ok": true,
     "t": 4.86,
     "titles": [
-     "Bureaublad",
+     "Desktop",
      "Start",
-     "Taakbalk"
+     "Taskbar"
     ]
    },
    {
@@ -502,8 +560,8 @@
     "t": 4.86,
     "window": {
      "wm": "io.github.win11shell.Panel",
-     "title": "Taakbalk",
-     "pid": 358,
+     "title": "Taskbar",
+     "pid": 383,
      "x": 0,
      "y": 0,
      "w": 1440,
@@ -518,7 +576,7 @@
     "ok": true,
     "t": 4.86,
     "hosts": {
-     "358": [
+     "383": [
       "io.github.win11shell.Panel",
       "io.github.win11shell.Start"
      ]
@@ -527,7 +585,7 @@
    {
     "check": "C: the quick flyout opens",
     "ok": true,
-    "t": 6.36,
+    "t": 6.35,
     "result": {
      "open": "quick"
     }
@@ -535,7 +593,7 @@
    {
     "check": "C: the quick flyout closes again",
     "ok": true,
-    "t": 7.57,
+    "t": 7.56,
     "result": {
      "open": null
     }
@@ -543,7 +601,7 @@
    {
     "check": "C: the notifications flyout opens",
     "ok": true,
-    "t": 7.67,
+    "t": 7.66,
     "result": {
      "open": "notifications"
     }
@@ -551,7 +609,7 @@
    {
     "check": "C: the notifications flyout closes again",
     "ok": true,
-    "t": 8.87,
+    "t": 8.85,
     "result": {
      "open": null
     }
@@ -559,7 +617,7 @@
    {
     "check": "D: tb-start opens a Start window of the same pid",
     "ok": true,
-    "t": 8.97,
+    "t": 8.96,
     "click": {
      "clicked": "tb-start"
     }
@@ -567,9 +625,9 @@
    {
     "check": "D: the extension holds Panel and Start under one pid",
     "ok": true,
-    "t": 8.97,
+    "t": 8.96,
     "hosts": {
-     "358": [
+     "383": [
       "io.github.win11shell.Panel",
       "io.github.win11shell.Start"
      ]
@@ -578,7 +636,7 @@
    {
     "check": "D: the backdrop capabilities list the taskbar and Start of that pid",
     "ok": true,
-    "t": 8.97,
+    "t": 8.96,
     "kinds": [
      "start",
      "taskbar"
@@ -587,34 +645,34 @@
    {
     "check": "D: a second click closes Start",
     "ok": true,
-    "t": 10.37
+    "t": 10.45
    },
    {
     "check": "N: the native tree was measured",
     "ok": true,
-    "t": 15.14,
-    "pssMiB": 128.2,
-    "anonMiB": 96.1
+    "t": 15.29,
+    "pssMiB": 125.7,
+    "anonMiB": 92.6
    },
    {
     "check": "every check passed",
     "ok": true,
-    "t": 15.15,
+    "t": 15.29,
     "failed": []
    }
   ],
   "records": {
    "A.boot": {
     "kind": "native-shell",
-    "pid": 358,
+    "pid": 383,
     "tag": "boot"
    },
    "A.backend": [
-    515
+    496
    ],
    "B.toplevels": [
     {
-     "title": "Bureaublad",
+     "title": "Desktop",
      "visible": true,
      "width": 1440,
      "height": 852
@@ -626,7 +684,7 @@
      "height": 0
     },
     {
-     "title": "Taakbalk",
+     "title": "Taskbar",
      "visible": true,
      "width": 1440,
      "height": 900
@@ -649,18 +707,18 @@
    },
    "D.capabilities": {
     "available": true,
-    "generation": "106221467154",
+    "generation": "130843763871",
     "serial": 7,
     "windows": [
      {
-      "pid": 358,
+      "pid": 383,
       "kind": "taskbar",
       "blur": true,
       "shadow": false,
       "focused": false
      },
      {
-      "pid": 358,
+      "pid": 383,
       "kind": "start",
       "blur": true,
       "shadow": false,
@@ -670,7 +728,7 @@
    },
    "D.visibleToplevels": [
     {
-     "title": "Bureaublad",
+     "title": "Desktop",
      "width": 1440,
      "height": 852
     },
@@ -680,33 +738,33 @@
      "height": 726
     },
     {
-     "title": "Taakbalk",
+     "title": "Taskbar",
      "width": 1440,
      "height": 900
     }
    ],
    "N.native": {
-    "root": 358,
-    "pssMiB": 128.2,
-    "anonMiB": 96.1,
+    "root": 383,
+    "pssMiB": 125.7,
+    "anonMiB": 92.6,
     "processes": [
      {
-      "pid": 358,
+      "pid": 383,
       "comm": "win11-shell",
-      "pssKb": 91124,
-      "anonKb": 74632
+      "pssKb": 97624,
+      "anonKb": 75136
      },
      {
-      "pid": 515,
+      "pid": 496,
       "comm": "win11-panel",
-      "pssKb": 25265,
-      "anonKb": 11948
+      "pssKb": 13681,
+      "anonKb": 5924
      },
      {
-      "pid": 597,
+      "pid": 578,
       "comm": "glycin-svg",
-      "pssKb": 14851,
-      "anonKb": 11840
+      "pssKb": 17437,
+      "anonKb": 13772
      }
     ]
    }
@@ -720,34 +778,34 @@
    "d-native-start-closed.png"
   ],
   "error": null,
-  "seconds": 15.15,
+  "seconds": 15.29,
   "surfaces": {
    "panel": {
     "name": "panel",
     "kind": "panel",
     "window": "native",
-    "pid": 358,
+    "pid": 383,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    },
    "desktop": {
     "name": "desktop",
     "kind": "desktop",
     "window": "native",
-    "pid": 358,
+    "pid": 383,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    },
    "start": {
     "name": "start",
     "kind": "start",
     "window": "native",
-    "pid": 358,
+    "pid": 383,
     "page": null,
     "alive": true,
-    "native": true
+    "shell": true
    }
   },
   "failedChecks": [],
@@ -755,7 +813,7 @@
  },
  "inner": {
   "facts": {
-   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=52f2470dd2eec1410e8516e56af77781",
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=d207b71c2fff62ccc5bc46166af7d7af",
    "shellArgv": [
     "gnome-shell",
     "--headless",
@@ -776,11 +834,11 @@
    "extensionCopyIdentical": true,
    "nativeBoot": {
     "kind": "native-shell",
-    "pid": 358,
+    "pid": 383,
     "tag": "boot"
    },
    "windowIds": {
-    "native": 358
+    "native": 383
    },
    "notificationsAtStart": [
     {
@@ -802,7 +860,7 @@
    {
     "file": "b-native-taskbar.png",
     "group": "scenario",
-    "bytes": 83241,
+    "bytes": 83287,
     "area": [
      0,
      780,
@@ -813,31 +871,31 @@
    {
     "file": "b-native-desktop.png",
     "group": "scenario",
-    "bytes": 1109091,
+    "bytes": 1109281,
     "area": null
    },
    {
     "file": "c-quick-open.png",
     "group": "scenario",
-    "bytes": 1054915,
+    "bytes": 1054868,
     "area": null
    },
    {
     "file": "c-notifications-open.png",
     "group": "scenario",
-    "bytes": 1005261,
+    "bytes": 1006296,
     "area": null
    },
    {
     "file": "d-native-start-open.png",
     "group": "scenario",
-    "bytes": 766747,
+    "bytes": 765381,
     "area": null
    },
    {
     "file": "d-native-start-closed.png",
     "group": "scenario",
-    "bytes": 950410,
+    "bytes": 1109281,
     "area": null
    }
   ],

@@ -1,5 +1,5 @@
-//! Instellingen › Tijd en taal (vendor/ui/js/apps/settings/pages/time.js): the overview with a live clock, Datum
-//! en tijd (read-only system time, the taskbar clock's display) and Taal en regio (the display language and
+//! Instellingen › Tijd en taal (last-webkit:vendor/ui/js/apps/settings/pages/time.js): the overview with a live clock,
+//! Datum en tijd (read-only system time, the taskbar clock's display) and Taal en regio (the display language and
 //! how dates, times and numbers look).
 use super::network::specs;
 use super::{Builder, Content, Page, PageFuture};

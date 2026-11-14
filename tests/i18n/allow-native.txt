@@ -1,0 +1,5 @@
+# tests/i18n/allow-native.txt: Dutch that an English text of native/ shows on purpose (tools/i18n/check_native.py,
+# rule native-dutch: no en word of a pair is in tests/i18n/dutch-words.txt, and en is no copy of a Dutch nl).
+# One row per name or phrase, tab-separated: <file glob below the repo><TAB>en:<phrase><TAB>why
+#   the phrase is removed from the en texts of the matching files (whole words) before the word test; a row that
+#   removes nothing is stale (an error). The names the word list leaves out need no row (Alles, D-G5).

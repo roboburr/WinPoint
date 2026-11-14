@@ -1,4 +1,4 @@
-//! Instellingen › Toegankelijkheid (vendor/ui/js/apps/settings/pages/accessibility.js) with its sub-pages
+//! Instellingen › Toegankelijkheid (last-webkit:vendor/ui/js/apps/settings/pages/accessibility.js) with its sub-pages
 //! Tekstgrootte (a sample, the slider and Toepassen), Visuele effecten and Contrastthema’s.
 use super::{Builder, Page, PageFuture};
 use crate::common;

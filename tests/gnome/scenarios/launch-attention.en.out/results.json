@@ -1,0 +1,696 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "en",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-13 23:42:43",
+ "seconds": 101.7,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 35,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 695286,
+   "rss_kb": 1062636,
+   "processes": 24,
+   "t": 17.2
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 615121,
+   "rss_kb": 947768
+  },
+  "minMemAvailableKb": 5716536,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 302440,
+    "rss_kb": 362464
+   },
+   "python3": {
+    "count": 4,
+    "pss_kb": 108472,
+    "rss_kb": 172164
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 83481,
+    "rss_kb": 122852
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 78076,
+    "rss_kb": 133752
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 30555,
+    "rss_kb": 64316
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 28207,
+    "rss_kb": 52428
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 26307,
+    "rss_kb": 50172
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17614,
+    "rss_kb": 35964
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 12623,
+    "rss_kb": 26964
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4053,
+    "rss_kb": 11536
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1372,
+    "rss_kb": 9956
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 789,
+    "rss_kb": 8004
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 743,
+    "rss_kb": 7844
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 372,
+    "rss_kb": 1588
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 182,
+    "rss_kb": 2632
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 302440,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 87174,
+    "first": 2.6
+   },
+   "glycin-svg": {
+    "pss_kb": 53161,
+    "first": 1.5
+   },
+   "python3": {
+    "pss_kb": 49731,
+    "first": 0.0
+   },
+   "win11-panel": {
+    "pss_kb": 34643,
+    "first": 2.6
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 30591,
+    "first": 14.6
+   },
+   "win11-app": {
+    "pss_kb": 26307,
+    "first": 14.6
+   },
+   "ibus-extension-": {
+    "pss_kb": 18814,
+    "first": 2.0
+   },
+   "glycin-image-rs": {
+    "pss_kb": 7906,
+    "first": 2.6
+   },
+   "ibus-daemon": {
+    "pss_kb": 4085,
+    "first": 1.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 836,
+    "first": 2.0
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 820,
+    "first": 2.6
+   },
+   "dbus-daemon": {
+    "pss_kb": 734,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 373,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 184,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 67.1,
+  "mutatingSyscallPaths": 87271,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service",
+   "config/xdg-desktop-portal/gnome-portals.conf"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "23:44:08\tpw-dump\t--monitor --no-colors",
+  "23:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:10\tpw-dump\t--monitor --no-colors",
+  "23:44:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:14\tpw-dump\t--monitor --no-colors",
+  "23:44:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:19\tpw-dump\t--monitor --no-colors",
+  "23:44:19\tapt\tlist --upgradable",
+  "23:44:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:21\tpw-dump\t--monitor --no-colors",
+  "23:44:22\tpw-dump\t--monitor --no-colors",
+  "23:44:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:44:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-r8p24T8y"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 7,
+  "maxScanSeconds": 0.71,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-r8p24T8y"
+  ],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/launch-attention.py",
+  "startLanguage": "en",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.04,
+    "args": {
+     "key": "A.launch"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.24,
+    "args": {
+     "key": "A.state"
+    }
+   },
+   {
+    "step": "open",
+    "t": 6.86,
+    "args": {
+     "spec": "settings"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1803,
+     "page": "home",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1803,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.96,
+    "args": {
+     "key": "B.state"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 7.66,
+    "args": {
+     "name": "b-gnome-notification"
+    },
+    "result": {
+     "png": "b-gnome-notification.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1067,
+      "meanLevel": 38.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 7.97,
+    "args": {
+     "spec": "settings"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1803,
+     "page": "home",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 7.97,
+    "args": {
+     "key": "C.launch"
+    }
+   },
+   {
+    "step": "record",
+    "t": 8.68,
+    "args": {
+     "key": "C.state"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.32,
+    "args": {
+     "name": "c-launched-front"
+    },
+    "result": {
+     "png": "c-launched-front.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 933,
+      "meanLevel": 38.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 9.63,
+    "args": {
+     "spec": "settings"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1803,
+     "page": "home",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 9.73,
+    "args": {
+     "key": "D.state"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "A: the launched helper opens with the focus",
+    "ok": true,
+    "t": 6.24,
+    "state": {
+     "exists": true,
+     "focused": true,
+     "demands": false,
+     "focus": "org.example.AttentionTest",
+     "app": "org.example.AttentionTest.desktop",
+     "notified": 0
+    }
+   },
+   {
+    "check": "A: GNOME maps its window to the test app",
+    "ok": true,
+    "t": 6.24,
+    "state": {
+     "exists": true,
+     "focused": true,
+     "demands": false,
+     "focus": "org.example.AttentionTest",
+     "app": "org.example.AttentionTest.desktop",
+     "notified": 0
+    }
+   },
+   {
+    "check": "B: without a launch GNOME shows \"is ready\" and keeps the focus",
+    "ok": true,
+    "t": 6.96,
+    "state": {
+     "exists": true,
+     "focused": false,
+     "demands": true,
+     "focus": "io.github.win11shell.Settings",
+     "app": "org.example.AttentionTest.desktop",
+     "notified": 1
+    }
+   },
+   {
+    "check": "C: after a launch the window comes to the front",
+    "ok": true,
+    "t": 8.68,
+    "state": {
+     "exists": true,
+     "focused": true,
+     "demands": false,
+     "focus": "org.example.AttentionTest",
+     "app": "org.example.AttentionTest.desktop",
+     "notified": 0
+    }
+   },
+   {
+    "check": "C: no \"is ready\" notification",
+    "ok": true,
+    "t": 8.68,
+    "state": {
+     "exists": true,
+     "focused": true,
+     "demands": false,
+     "focus": "org.example.AttentionTest",
+     "app": "org.example.AttentionTest.desktop",
+     "notified": 0
+    }
+   },
+   {
+    "check": "D: a later request without a launch goes to GNOME again",
+    "ok": true,
+    "t": 9.73,
+    "state": {
+     "exists": true,
+     "focused": false,
+     "demands": true,
+     "focus": "io.github.win11shell.Settings",
+     "app": "org.example.AttentionTest.desktop",
+     "notified": 1
+    }
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 9.73,
+    "failed": []
+   }
+  ],
+  "records": {
+   "A.launch": {
+    "token": true
+   },
+   "A.state": {
+    "exists": true,
+    "focused": true,
+    "demands": false,
+    "focus": "org.example.AttentionTest",
+    "app": "org.example.AttentionTest.desktop",
+    "notified": 0
+   },
+   "B.state": {
+    "exists": true,
+    "focused": false,
+    "demands": true,
+    "focus": "io.github.win11shell.Settings",
+    "app": "org.example.AttentionTest.desktop",
+    "notified": 1
+   },
+   "C.launch": {
+    "token": true
+   },
+   "C.state": {
+    "exists": true,
+    "focused": true,
+    "demands": false,
+    "focus": "org.example.AttentionTest",
+    "app": "org.example.AttentionTest.desktop",
+    "notified": 0
+   },
+   "D.state": {
+    "exists": true,
+    "focused": false,
+    "demands": true,
+    "focus": "io.github.win11shell.Settings",
+    "app": "org.example.AttentionTest.desktop",
+    "notified": 1
+   }
+  },
+  "shots": [
+   "b-gnome-notification.png",
+   "c-launched-front.png"
+  ],
+  "error": null,
+  "seconds": 9.73,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 335,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 335,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 335,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "native-settings",
+    "pid": 1803,
+    "page": "home",
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=a9ee7f80bc8bd57e18a9ee1f6af792b6",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 335,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 335
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [
+    {
+     "source": "AttentionTest",
+     "notifications": [
+      {
+       "title": "AttentionTest",
+       "body": "“AttentionTest” is ready"
+      }
+     ]
+    }
+   ],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "b-gnome-notification.png",
+    "group": "scenario",
+    "bytes": 528467,
+    "area": null
+   },
+   {
+    "file": "c-launched-front.png",
+    "group": "scenario",
+    "bytes": 403418,
+    "area": null
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "settings",
+    "source": "Win11 Settings",
+    "title": "Win11 Settings",
+    "body": "“Home – Settings” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/launch-attention.en.out/b-gnome-notification.png",
+  "tests/gnome/scenarios/launch-attention.en.out/c-launched-front.png"
+ ]
+}

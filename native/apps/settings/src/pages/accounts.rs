@@ -1,4 +1,4 @@
-//! Instellingen › Accounts (vendor/ui/js/apps/settings/pages/accounts.js): who you are on this PC (name,
+//! Instellingen › Accounts (last-webkit:vendor/ui/js/apps/settings/pages/accounts.js): who you are on this PC (name,
 //! picture) and where to change it, and "Nu vergrendelen".
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;

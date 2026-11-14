@@ -8,7 +8,6 @@ use crate::{
     settings::{Change, SettingsStore},
     wallpaper,
 };
-use gtk::glib;
 use serde_json::{Value, json};
 use std::{
     path::{Path, PathBuf},

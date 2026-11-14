@@ -1,5 +1,5 @@
-//! The details and preview pane (vendor/ui/js/apps/explorer/detailspane.js): Detailvenster (a big icon or the
-//! thumbnail, a video's poster, the name, type, size, dates and location; several items as a stack of icons
+//! The details and preview pane (last-webkit:vendor/ui/js/apps/explorer/detailspane.js): Detailvenster (a big icon or
+//! the thumbnail, a video's poster, the name, type, size, dates and location; several items as a stack of icons
 //! with the total size; without a selection the location itself with its item count) and Voorbeeldvenster
 //! (Alt+P: a large picture of the selected image, else Windows' messages).
 //!

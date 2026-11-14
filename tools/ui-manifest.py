@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Regenerate the vendored UI's manifests (GE1a, notes/claude/round1/ge1a.md; plan-critique F5, D-G17).
 
+Since the WebKit removal ``vendor/ui`` holds only the assets the native GTK 4 shell and apps fetch over /ui/assets/
+(the wallpapers and the Settings icon); the HTML apps went (``html_apps_removed`` in vendor/ui-patches.json).
+
     python3 -B tools/ui-manifest.py            write vendor/ui-sha256.json and the file lists of vendor/ui-patches.json
     python3 -B tools/ui-manifest.py --check    write nothing; exit 1 when either file is out of date (lists the drift)
 
@@ -9,8 +12,11 @@
   ``scripts/verify-ui.py`` and ``scripts/package.py`` read.
 * ``vendor/ui-patches.json``: only its ``changed``, ``added`` and ``removed`` lists are recomputed, against the
   original baseline ``vendor/ui-original-sha256.json`` (Codex's 161 files of the 2026-10-27 interim UI). Every other
-  entry (the reasons, ``english_option`` …) is kept as written, in its order. Entries of the form
-  ``{"files": [...], "reason": ...}`` are checked: each named file must exist under ``vendor/ui``.
+  entry (the reasons, ``lotus_wallpapers`` …) is kept as written, in its order. Entries of the form
+  ``{"files": [...], "reason": ...}`` are checked: each named file must exist under ``vendor/ui``. Entries with
+  ``"removed_paths"`` (``html_apps_removed``: ``index.html``, ``js/``, ``css/``, ``assets/img/``) are checked the
+  other way: no file may be under a removed path (one ending in ``/`` is a folder), so the HTML cannot come back
+  unnoticed; scripts/verify-ui.py refuses it too.
 
 The tool never edits ``vendor/ui`` itself and never touches ``scripts/`` (GE1c owns ``scripts/verify-ui.py``).
 """
@@ -52,6 +58,11 @@ def patches_text(doc: dict) -> str:
     return json.dumps(doc, indent=2, ensure_ascii=False) + "\n"
 
 
+def under(name: str, paths: list[str]) -> bool:
+    """name is one of paths, or below one that ends in "/"."""
+    return any(name == p or (p.endswith("/") and name.startswith(p)) for p in paths)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--check", action="store_true", help="write nothing; exit 1 when a file is out of date")
@@ -71,6 +82,9 @@ def main(argv: list[str] | None = None) -> int:
             for f in entry["files"]:
                 if f not in h:
                     problems.append(f"ui-patches.json {key}: file {f!r} is not under vendor/ui")
+        if isinstance(entry, dict) and isinstance(entry.get("removed_paths"), list):
+            for f in sorted(n for n in h if under(n, entry["removed_paths"])):
+                problems.append(f"ui-patches.json {key}: {f!r} is under a removed path {entry['removed_paths']}")
 
     old_h = json.loads(old_manifest) if old_manifest else {}
     drift = {

@@ -1,5 +1,7 @@
 # Alles — stabiele indexeringsvoortgang
 
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+
 De voortgangsmeldingen vervingen voorheen bij iedere indexupdate het hele eerste-indexeringspaneel. Daardoor begon de oorspronkelijke `alles-in`-animatie steeds opnieuw. Een tijdelijk ontbrekend pad verwijderde daarnaast een tekstregel; de statusring begon zijn animatie opnieuw doordat ook die werd vervangen.
 
 `vendor/ui/js/apps/alles/main.js` houdt nu het bestaande eerste-indexerings- en welkomstpaneel vast. Alleen tekst, percentage, voortgangsbalk en tooltip veranderen. De statusindicator blijft behouden zolang zijn betekenis en voortgangsmodus gelijk blijven. Een tijdelijk leeg pad behoudt een onzichtbare regel, zodat de hoogte gelijk blijft. De bestaande CSS, pictogrammen, zoekacties en indexer zijn niet aangepast.

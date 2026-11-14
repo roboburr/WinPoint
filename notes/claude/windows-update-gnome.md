@@ -27,6 +27,16 @@ backend.rs, bin/launch.rs, process_scope.rs, services/system/info.rs}`, `/usr/bi
 `strings` on `libapt-private.so` and `/usr/bin/bwrap`, and the PackageKitGlib typelib plus `apt_pkg` attribute
 names through `python3 -I` (no D-Bus, no cache opened). Still no PackageKit call, apt run, build or launch.
 
+**Updated 2026-11-13: WinPoint without WebKit.** The WebKit hosts and the page code under `vendor/ui/js` are gone
+(the last commit with them is tagged `last-webkit`: `git show last-webkit:vendor/ui/js/apps/settings/pages/update.js`).
+The page is the native Settings (`native/apps/settings/src/pages/update*.rs`), and the owner of the update service is
+its backend `win11-app --app settings --http-only`. Rewritten to that: §3.4 (the restart InfoBar and its component
+names), §4.1 (the keep-alive), §4.8 (the scan, without WebKit children and without the history fallback) and the
+blocking parts of §6.2 and §6.6 (GTK 4 instead of WebKitGTK, JavaScriptCore and libsoup). The `webkit` and `soup`
+rows of §3.3 stay: they group Ubuntu's packages, which other apps use; the native page titles them neutrally
+(`WebKitGTK {version}`, `libsoup {version}`). Everything else, including the "today" observations, is the design as
+it was built in GW1–GW9.
+
 ---
 
 ## 0. Summary
@@ -267,7 +277,7 @@ Component rows take precedence over `security`; a component row whose packages a
 |---|---|---|
 | `security` | `info` 8 security (or 7 important, 26 critical), or `data` containing `-security`; not in a component row | `rowSecurity` Beveiligingsupdates voor Ubuntu {version} / Security updates for Ubuntu {version} (`{version}` = os-release `VERSION` with a trailing ` (…)` codename removed by the host *[review]*: "26.04.1 LTS (Resolute Raccoon)" → "26.04.1 LTS") |
 | `gnome` | `gnome-shell*`, `mutter*`, `libmutter-*`, `gir1.2-mutter-*` | `rowGnome` GNOME Shell {version} / GNOME Shell {version} |
-| `webkit` | `libwebkit2gtk-4.1-*`, `libjavascriptcoregtk-4.1-*`, `gir1.2-webkit2-4.1`, `gir1.2-javascriptcoregtk-4.1` | `rowWebkit` WebKitGTK {version} (webweergave van {product}) / WebKitGTK {version} ({product}’s web view) |
+| `webkit` | `libwebkit2gtk-4.1-*`, `libjavascriptcoregtk-4.1-*`, `gir1.2-webkit2-4.1`, `gir1.2-javascriptcoregtk-4.1` | `rowWebkit` WebKitGTK {version} (webweergave van {product}) / WebKitGTK {version} ({product}’s web view); since 2026-11-13 (no WebKit of ours) the native page's neutral WebKitGTK {version} in both languages |
 | `gtk` | `libgtk-3-*`, `gir1.2-gtk-3.0` | `rowGtk` GTK 3 {version} / GTK 3 {version} |
 | `soup` | `libsoup-3.0-*`, `gir1.2-soup-3.0` | `rowSoup` libsoup {version} / libsoup {version} |
 | `glib` | `libglib2.0-*` | `rowGlib` GLib {version} / GLib {version} |
@@ -312,11 +322,13 @@ Row status (combined from `Package` info and `ItemProgress`; a row's percentage 
 | Cause (§4.8) | Shown as | nl | en | Action |
 |---|---|---|---|---|
 | `/run/reboot-required`, `RequireRestart` system/security-system/session/security-session, or a replaced gnome-shell/mutter in the running gnome-shell | hero `restartRequired` (§3.2) | – | – | `restartNow` |
-| A Win11 process or its WebKit children map a replaced WebKitGTK, JavaScriptCore, GTK/GDK, libsoup, GLib/GIO/GObject, GDK Pixbuf, cairo, libarchive, or a replaced `win11-*` binary | InfoBar (warning) above the rows; the hero is unchanged; **hidden while a reboot is pending** (a reboot covers it), *[review]* **except when WebKitGTK/JavaScriptCore changed**: new web processes started by old UI processes break now, and the reboot may be days away (today it has been pending since 06:54), so that InfoBar shows next to the restart hero | `shellRestartTitle` {product} moet opnieuw starten · `shellRestartBody` Onderdelen van het bureaublad zijn bijgewerkt ({list}). Opnieuw starten duurt een paar seconden; vensters van {product} gaan even dicht. | {product} needs to restart · Parts of the desktop were updated ({list}). Restarting takes a few seconds; {product} windows close briefly. | `shellRestartNow` {product} opnieuw starten / Restart {product} → `shell.restartAll {reason:'libraries'}` (GX1, §5) |
+| A Win11 process maps a replaced GTK 4, GTK/GDK 3, GLib/GIO/GObject, GDK Pixbuf, cairo, libarchive, or is a replaced `win11-*` binary (2026-11-13: WebKitGTK, JavaScriptCore and libsoup left the list with our WebKit hosts) | InfoBar (warning) above the rows; the hero is unchanged; **hidden while a reboot is pending** (a reboot covers it). *[review]* The WebKit pages made one exception, a replaced WebKitGTK/JavaScriptCore (new web processes started by old UI processes broke at once, and the reboot may be days away); the native apps have no such part, so the native page (`shell_bar_shown`) keeps only the rule | `shellRestartTitle` {product} moet opnieuw starten · `shellRestartBody` Onderdelen van het bureaublad zijn bijgewerkt ({list}). Opnieuw starten duurt een paar seconden; vensters van {product} gaan even dicht. | {product} needs to restart · Parts of the desktop were updated ({list}). Restarting takes a few seconds; {product} windows close briefly. | `shellRestartNow` {product} opnieuw starten / Restart {product} → `shell.restartAll {reason:'libraries'}` (GX1, §5) |
 
 `{list}` uses component names from the UI dictionary: `cWebkit` WebKitGTK, `cGtk` GTK, `cSoup` libsoup, `cGlib`
 GLib, `cPixbuf` GDK Pixbuf, `cCairo` cairo, `cArchive` libarchive, `cSelf` {product}. The same in both languages,
-but kept as keys so the checker sees them.
+but kept as keys so the checker sees them. 2026-11-13: the native page's `part_name` (GTK 4, GTK, GLib, GDK Pixbuf,
+cairo, libarchive, {product}); the host's unit test `shell_parts_use_the_page_codes` checks that it names every code
+of `paths.rs` `SHELL_MAPS` and `self`.
 
 ### 3.5 Feature-update card "Ubuntu 26.10 is beschikbaar" (`update-release.js` makeT)
 
@@ -546,11 +558,18 @@ Everything else on the page (backup, reset, about) stays byte-identical.
   to packagekitd. The next owner reattaches (§4.7).
 * *[review]* **Keep-alive while an own job runs (C2).** Whether packagekitd cancels a cancellable transaction when its
   caller leaves the bus is unverified (it links `g_bus_watch_name` and `pk_transaction_cancel_bg`), so the owner never
-  leaves during a job by choice: when its window closes while `job.json` has no `finishedAt`, the service takes a
-  `gio::Application::hold()` guard, the window and its WebKit view go away, and the host process stays (about
-  30–50 MB) until `Finished`, then sends the notification and releases the guard. GW2 checks in `lib.rs` that closing
-  the window only drops the use count; if it calls `quit()`, the one-line change goes to GX1, which owns `lib.rs` in
-  round 5. R3 measures the vanish behaviour anyway; reattach stays for crashes and re-execs.
+  leaves during a job by choice. *2026-11-13, native:* the owner is the Settings backend (`win11-app --app settings
+  --http-only`), which has no GApplication and dies with win11-gtk-settings (`PR_SET_PDEATHSIG`,
+  `native/kit/src/backend.rs`). So win11-gtk-settings holds its own GApplication
+  (`native/apps/settings/src/keepalive.rs`): it follows `update.changed`, `update.owner` and (until it holds)
+  `update.progress`, and reads `update.status`. While its backend is the owner (`mode` owner) and a job of ours runs
+  that does not wait for a confirm (review F7), and after the job until its re-check answered (`refreshing`, at most
+  60 s as `pk.rs` `HOLD_AFTER_JOB`), closing the window keeps the process and its backend; then 1 s more, so the
+  job's notification has left, and it exits. It tells the backend whether a window is shown (`update.setWatching`),
+  because its event stream stays open without one: the outcome notification ("installed", "failed") goes out only
+  when nobody watches. `services/update.rs` `hold_application` (a `gio::Application::hold()` in a host that is a
+  GApplication: the WebKit Settings of GW2, whose window and WebKit view went away while the process stayed) does
+  nothing in a backend. Reattach stays for crashes and re-execs.
 * **One transaction per user:** `flock` on `~/.cache/win11-gnome/update/lock`, held by the job thread for the job's
   lifetime. A new owner (after a crash) sees the lock or the unfinished `job.json` and reattaches instead of starting
   a new job.
@@ -798,22 +817,25 @@ touches a reviewed install/remove path.
    clears them. Application 2 is ignored, because the scan covers our own processes.
 2. **Scan** (on the pk thread, one file per step, at most 30 processes and 4 MiB per file):
    * our processes: `/proc/<pid>` with our uid whose `exe` link (minus " (deleted)") is in
-     `current_exe().parent()`; plus their direct children (via `PPid` in `/proc/<pid>/status`; *[review]* WebKit
-     children here are direct children of the UI process, no bwrap in between, so one level) whose `comm` starts with
-     `WebKit` (*[review]* the real names are `WebKitWebProces` and `WebKitNetworkPr`, 15 characters) or whose exe is
-     under `/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/`;
+     `current_exe().parent()` and named `win11-*`: the host binaries, the native shell and apps (`win11-shell`,
+     `win11-gtk-*`) and their `--http-only` backends. *2026-11-14:* not `win11-calendar` (`restart.rs`
+     `NOT_RESTARTED`): `shell.restartAll` cannot restart it (no backend, no event stream), so its replaced mappings
+     kept the InfoBar up while it was open; it picks up replaced libraries when it is next started. *2026-11-13:*
+     their children are no longer read. Until then the scan also read the direct WebKit children of a UI process
+     (`comm` `WebKitWebProces` / `WebKitNetworkPr`, or an exe under WebKitGTK's helper directory), with a fallback to
+     `history.log` entries newer than such a child's start when its maps were unreadable; our programs start no such
+     helpers any more;
    * gnome-shell: our uid, `comm == "gnome-shell"`, cgroup containing `org.gnome.Shell@`;
    * only lines ending in ` (deleted)` count, matched against **watch lists**. Anything else is noise: `memfd:`,
      `/dev/shm/`, `/SYSV`, dconf, `gschemas.compiled`, `*.cache`, `gio/modules/`, gvfs, and libpcre2 (deleted in
      every process today).
-   * `shell` list: `libwebkit2gtk-4.1.so`, `libjavascriptcoregtk-4.1.so`, `/webkit2gtk-4.1/`, `libgtk-3.so`,
-     `libgdk-3.so`, `libsoup-3.0.so`, `libglib-2.0.so`, `libgobject-2.0.so`, `libgio-2.0.so`,
-     `libgdk_pixbuf-2.0.so`, `libcairo.so`, `libarchive.so`, and a deleted own `win11-*` exe. These map to the
-     components of §3.4.
+   * `shell` list (`paths.rs` `SHELL_MAPS`, by component code): `libgtk-4.so` (gtk4), `libglib-2.0.so`,
+     `libgobject-2.0.so`, `libgio-2.0.so`, `libgdk_pixbuf-2.0.so`, `libcairo.so`, `libarchive.so`, and a deleted own
+     `win11-*` exe (self). These map to the components of §3.4. *2026-11-13:* `libwebkit2gtk-4.1.so`,
+     `libjavascriptcoregtk-4.1.so`, `/webkit2gtk-4.1/` and `libsoup-3.0.so` left it with our WebKit hosts;
+     *2026-11-14:* `libgtk-3.so` (gtk) and `libgdk-3.so` (gdk) with the host's GTK 3 (a GTK 3 update needs no Win11
+     restart; GTK 4 does).
    * `gnome` list: `/usr/bin/gnome-shell`, `/usr/lib/gnome-shell/`, `libmutter-`, `/usr/lib/x86_64-linux-gnu/mutter-`.
-   * If a WebKit child's maps are unreadable, fall back to `history.log` entries newer than that process's start
-     time that name a package of the watch list (`libwebkit2gtk-4.1-0`, `libjavascriptcoregtk-4.1-0`,
-     `libgtk-3-0t64`, `libsoup-3.0-0`, `libglib2.0-0t64`, `libgdk-pixbuf-2.0-0`, `libcairo2`, `libarchive13t64`).
    * Triggers: page open (if the last scan is older than 60 s), after our `Finished`, on `UpdatesChanged`, and on a
      FileMonitor event on `/var/log/apt/history.log` (0644).
 3. This is what needrestart does. It also catches unattended-upgrades, which is how today's libsoup came in.
@@ -1007,11 +1029,15 @@ sysmon in any process stay cheap. `system.openUpdater` stays (Geavanceerde optie
   a prefix match of the running major (`extensionSystem.js:409-411`, verified). A mismatch → `hold`.
 * **Blocking packages:** the packages that own our binaries' NEEDED sonames, plus `libarchive13t64` (loaded at runtime,
   `README:76`). NEEDED comes from parsing `DT_NEEDED` of every `win11-*` next to `current_exe()` with `elf.rs`
-  (64-bit LE ELF, `PT_DYNAMIC`, ~80 lines, tested against `readelf -d` on `target/debug`). The libc, libgcc_s and
-  ld-linux entries are skipped (the highest symbol GLIBC_2.39 is far below any new libc). Soname → package uses
+  (64-bit LE ELF, `PT_DYNAMIC`, ~80 lines, tested against `readelf -d` on the `BINS` of a build directory,
+  `tests/update/fixtures/compat/readelf-needed.txt`). The libc, libm (2026-11-13: the native programs), libgcc_s
+  and ld-linux entries are skipped (the highest symbol GLIBC_2.39 is far below any new libc). Soname → package uses
   `dpkg-query -S /usr/lib/x86_64-linux-gnu/<soname>` (local, read-only). Today that gives libwebkit2gtk-4.1-0,
   libjavascriptcoregtk-4.1-0, libgtk-3-0t64, libsoup-3.0-0, libglib2.0-0t64, libgdk-pixbuf-2.0-0, libcairo2 and
-  zlib1g.
+  zlib1g. *2026-11-13:* without our WebKit hosts, and with the native shell and apps: libgtk-4-1,
+  libgraphene-1.0-0, libpango-1.0-0, libglib2.0-0t64, libgdk-pixbuf-2.0-0, libcairo2 and zlib1g (libgtk-3-0t64
+  until 2026-11-14, when the host left GTK 3) (`tests/update/fixtures/compat/dpkg-query-S.txt`); `compat.rs`
+  `part_of` labels the GTK 4 three `update.part.gtk4`.
 * **Degraded packages** (warn): ffmpeg, bubblewrap, squashfs-tools, flatpak, packagekit, a terminal (ptyxis or
   gnome-terminal or gnome-console), screen, xdg-terminal-exec, gnome-shell-ubuntu-extensions (the dock safety net).
 * **`releases.json`** (embedded with `include_str!`, so there is no missing-file path):
@@ -1194,7 +1220,8 @@ the upgrader again by the `/proc` scan and shows `running`.
   it (§1.2); the ≤ 30 s `ShellVersion` retry below does the waiting. It exists always, not only after our upgrade,
   so it also catches upgrades done through Ubuntu's Software Updater.
 * `win11-launch --post-upgrade-check` (new module `host/src/post_upgrade.rs`, `#[path]`-included by
-  `bin/launch.rs`, GIO only, so it runs even when WebKitGTK is broken or the extension is rejected):
+  `bin/launch.rs`, GIO only, so it runs even when a library of our other programs is broken or the extension is
+  rejected):
   1. Read `/etc/os-release` (`VERSION_ID`, `VERSION_CODENAME`, `VERSION`), the GNOME major from the `org.gnome.Shell`
      `ShellVersion` property (session bus, read, ≤ 30 s retries) or `dpkg-query -W gnome-shell`, and
      `~/.config/win11-gnome/last-os-release.json`. If there is no record: write it and exit. If nothing changed and
@@ -1373,7 +1400,7 @@ and `--remove` stay separate commands.
     Prompt precedence with `.d`, the stamp text, distro-info;
   * the compat verdict matrix with a faked apt runner (`apt-cache policy` and `apt-get -s` output fixtures);
   * the tree's `APT_CONFIG` (`apt-config dump` under it, read-only: no system `Post-Invoke`, no system `Dir::Etc::Parts`);
-  * the ELF parser against `readelf -d target/debug/win11-*`;
+  * the ELF parser against `readelf -d` on the `BINS` of a build directory (2026-11-13; was `target/debug/win11-*`);
   * the rebootFirst and updatesFirst rules;
   * linger bookkeeping with a PATH-stub `loginctl` (enable only when off, disable only by us, the stamp survives a
     restart);
