@@ -18,6 +18,9 @@ the way (no leftover flyouts, no test windows, the pointer parked on the right e
   light-start, light-explorer
                   theme.mode light (settings.json), Start and Explorer
 
+The apps get the Win11 icon theme the installed session sets (host/src/settings_effects.rs: Win11-dark with the dark
+colour scheme, Win11 with the light one); without a portal GTK would show Adwaita's icons here (14-11).
+
 Run (from G):
     tools/heavy.sh --min-mb 2560 --tag readme-shots -- python3 -B tests/gnome/harness.py launch run --lang en \\
         --build-dir tests/build/native-release --source worktree --scenario tests/gnome/scenarios/readme-shots.py \\
@@ -163,6 +166,19 @@ def test_notification(h):
                   ".notification?.summary||true;}catch(e){return String(e);}})()")
 
 
+def win11_icons(h, dark=True):
+    """The Win11 icon theme for the apps started after this (GTK reads settings.ini when an app starts)."""
+    icons = h.hm.RUN / 'data' / 'icons'
+    icons.mkdir(parents=True, exist_ok=True)
+    for name in ('Win11', 'Win11-dark'):
+        link = icons / name
+        if not link.exists():
+            os.symlink(str(h.hm.G / 'vendor' / 'icons' / name), str(link))
+    gtk4 = h.hm.RUN / 'config' / 'gtk-4.0'
+    gtk4.mkdir(parents=True, exist_ok=True)
+    (gtk4 / 'settings.ini').write_text('[Settings]\ngtk-icon-theme-name=' + ('Win11-dark' if dark else 'Win11') + '\n')
+
+
 def set_theme(h, mode):
     path = h.hm.RUN / 'config' / 'win11-gnome' / 'settings.json'
     data = json.loads(path.read_text() or '{}')
@@ -208,6 +224,7 @@ def spawn_calendar(h, args):
 def run(h):
     W, H = h.hm.WIDTH, h.hm.HEIGHT
     h.record('boot', h.s.facts.get('nativeBoot'))
+    win11_icons(h)
     h.sleep(4)
     clean(h)
     h.record('toplevels', [{k: t.get(k) for k in ('title', 'visible', 'width', 'height')} for t in h.s.native_state()])
@@ -360,6 +377,7 @@ def run(h):
     # 7. Light theme: Start, then Explorer.
     def light():
         h.record('theme', set_theme(h, 'light'))
+        win11_icons(h, dark=False)
         h.sleep(3)
         clean(h)
         h.open('start')
@@ -374,6 +392,7 @@ def run(h):
         h.close('explorer')
     step(h, 'light', light)
     set_theme(h, 'dark')
+    win11_icons(h)
 
     failed = [c['check'] for c in h.results['checks'] if not c['ok']]
     h.record('failed', failed)
