@@ -7,8 +7,8 @@ WinPoint has no WebKitGTK, wry, JavaScriptCore or libsoup: not as a build or run
 a feature; and the host links no GTK 3 (GLib, GIO and GDK Pixbuf only). Checked over every file git tracks or would
 add (git ls-files --cached --others --exclude-standard), the whole repository: the code (host, native, scripts, tools,
 extension, tests, the Cargo files), the user-facing docs (README.md, README.nl.md, THIRD_PARTY_NOTICES.md,
-RELEASE_PLAN.md, LICENSES, docs), vendor (vendor/host, the Python reference that stays but is not installed,
-decision 4) and the records (notes, validation, VALIDATION*.md), which the allow list covers as history:
+RELEASE_PLAN.md, LICENSES, docs), vendor (ui, config and the icons; vendor/host, the Python reference of decision 4,
+left the tree with D-G73) and the records (notes, validation, VALIDATION*.md), which the allow list covers as history:
 
 1. code      the crate-level patterns (CODE below: wry::, webkit2gtk::, WebViewBuilder, WIN11_WEBKIT_APPS,
              window_state …) appear nowhere.

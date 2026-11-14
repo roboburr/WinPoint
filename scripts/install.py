@@ -712,8 +712,8 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     build = choose_build(root)
     extension = data/"gnome-shell/extensions"/UUID
     applications = data/"applications"
-    # The wallpapers and icons the native shell and apps fetch (/ui/assets/); vendor/host, the Python reference,
-    # stays in the source tree and is no longer installed.
+    # The wallpapers and icons the native shell and apps fetch (/ui/assets/). vendor/host, the Python reference, is
+    # not installed since D-G72 and left the tree with D-G73 (git show last-webkit:vendor/host).
     if not (root/"vendor/ui/assets").is_dir():
         raise SystemExit(t("missingSource", directory=root/"vendor/ui/assets"))
     entries = load_entries(root)

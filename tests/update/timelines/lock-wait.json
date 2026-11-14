@@ -7,10 +7,32 @@
   "H07"
  ],
  "stubs": {
-  "python3": {
-   "rc": 0,
-   "stdout": "libsoup-3.0-0\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-common\t3.6.6-1ubuntu0.3\t0\t-\t0\nlibsoup-3.0-0\tamd64\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\nlibsoup-3.0-common\tall\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\n@@end\n"
-  }
+  "apt-cache": [
+   {
+    "argv": [
+     "policy",
+     "?phasing"
+    ],
+    "rc": 0,
+    "stdout": ""
+   },
+   {
+    "argvPrefix": [
+     "policy"
+    ],
+    "rc": 0,
+    "stdout": "libsoup-3.0-0:\n  Installed: 3.6.6-1ubuntu0.2\n  Candidate: 3.6.6-1ubuntu0.3\n  Version table:\n     3.6.6-1ubuntu0.3 500\n        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages\n *** 3.6.6-1ubuntu0.2 100\n        100 /var/lib/dpkg/status\nlibsoup-3.0-common:\n  Installed: 3.6.6-1ubuntu0.2\n  Candidate: 3.6.6-1ubuntu0.3\n  Version table:\n     3.6.6-1ubuntu0.3 500\n        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages\n *** 3.6.6-1ubuntu0.2 100\n        100 /var/lib/dpkg/status\n"
+   }
+  ],
+  "apt-mark": [
+   {
+    "argv": [
+     "showhold"
+    ],
+    "rc": 0,
+    "stdout": ""
+   }
+  ]
  },
  "packages": {
   "libsoup-3.0-0;3.6.6-1ubuntu0.3;amd64;ubuntu-resolute-security": {

@@ -42,7 +42,7 @@ Branch `claude/gnome-english-update`; `codex-baseline` (3b898e6) is Codex's unto
 | D-G7 | Host ignores `X-Shell-Lang` in v1 (C1). |
 | D-G8 | Rust catalogues in `host/i18n/<stem>.tsv` (inside the crate, so the source tarball builds); the four `_STR` JSON tables stay in v1. |
 | D-G9 | systemd unit friendly names get English rows. |
-| D-G10 | `vendor/host` (Python reference) stays untranslated. |
+| D-G10 | `vendor/host` (Python reference) stays untranslated. Amended by D-G73 (2026-11-14): vendor/host is deleted, so nothing of it is left to translate. |
 | D-G11 | Polkit, PackageKit, NetworkManager and WebKit's own strings stay in the system language; documented. Amended by D-G72 (2026-11-14): WinPoint has no WebKit any more; GTK's own strings (a text field's context menu, its built-in dialogs) take that place in the list. |
 | D-G12 | Windows Update per `windows-update-gnome.md` (hold with "Toch upgraden…" behind a warning on an untested GNOME major, owner lock, cheap verdict first, tests only with recorded apt outputs). Robin decides R-items (update-notifier auto-open, postponing Ubuntu's own prompt). |
 | D-G13 | Package version 0.8.0. |
@@ -433,22 +433,62 @@ Coordinator decisions:
   `win11-gtk-<kind>` prints core.nativeAppMissing and exits 127, a failed exec exits 1, never a fallback; (3) the
   portal is a gio::Application (IS_SERVICE) with its own runtime and HTTP server and one `win11-gtk-explorer
   --picker-stdio` child per request (WIN11_APP_BACKEND, GDK_DEBUG=no-portals), no GTK in the portal process; (4)
-  vendor/host stays in the repository as the Python reference but is no longer installed; (5) vendor/ui keeps the
-  wallpapers and icons, its manifests describe them (patch `html_apps_removed`); (6) historical reports get a banner,
-  not deletion; (7) caption-buttons-gtk3.css stays, it themes other people's GTK 3 apps; (8) native comments cite the
-  HTML sources as `last-webkit:vendor/ui/<path>` (the shell's, removed by D-G70, as `git show 418ea594:`); (9) the
-  repo-root bin/ is Robin's and install.py's choose_build only takes a folder with all 19 BINS; (10) acceptance is "no
-  dependency and no feature": tools/check-no-webkit.py (crate patterns, both lockfiles, no vendor/ui js/css/html,
-  readelf and ldd of the 19 binaries) with tools/check-no-webkit.allow for history, update categories, fixtures,
-  frozen i18n data, legacy cleanup and third-party process names. Also: the kit sets GDK_DEBUG=portals so the apps'
-  gtk::FileDialog reaches the Win11 picker, and WIN11SHELL_USER_GPU so launched programs get the user's GSK_RENDERER
-  and GDK_DEBUG back; an update (install.py remove_webkit_state) and the uninstall remove the WebKit storage of
-  earlier versions from exact, user-owned folders. Memory (PSS of an app with its backend, native-gtk-apps): Explorer
-  42.2 MiB, Settings 91.0, Task Manager 49.0 against 219.8, 242.1 and 220.3 for the WebKit apps on 13-11 (native 51.7,
-  101.6 and 59.1 in that run). Every harness scenario passes on the rebuilt tests/build/native-release (nl; ten also
-  in en); check-no-webkit OK. README, THIRD_PARTY_NOTICES, LICENSES (RUST-CRATES.md made again, MPL-2.0.txt gone),
-  native/APPS.md, ARCH.md, gtk-native.md and the README screenshots describe the new state; the VALIDATION reports
-  carry a banner.
+  vendor/host stays in the repository as the Python reference but is no longer installed (Amended by D-G73
+  (2026-11-14): vendor/host is deleted, readable as `git show last-webkit:vendor/host/<path>`); (5) vendor/ui keeps
+  the wallpapers and icons, its manifests describe them (patch `html_apps_removed`); (6) historical reports get a
+  banner, not deletion; (7) caption-buttons-gtk3.css stays, it themes other people's GTK 3 apps; (8) native comments
+  cite the HTML sources as `last-webkit:vendor/ui/<path>` (the shell's, removed by D-G70, as `git show 418ea594:`);
+  (9) the repo-root bin/ is Robin's and install.py's choose_build only takes a folder with all 19 BINS; (10)
+  acceptance is "no dependency and no feature": tools/check-no-webkit.py (crate patterns, both lockfiles, no vendor/ui
+  js/css/html, readelf and ldd of the 19 binaries) with tools/check-no-webkit.allow for history, update categories,
+  fixtures, frozen i18n data, legacy cleanup and third-party process names. Also: the kit sets GDK_DEBUG=portals so
+  the apps' gtk::FileDialog reaches the Win11 picker, and WIN11SHELL_USER_GPU so launched programs get the user's
+  GSK_RENDERER and GDK_DEBUG back; an update (install.py remove_webkit_state) and the uninstall remove the WebKit
+  storage of earlier versions from exact, user-owned folders. Memory (PSS of an app with its backend,
+  native-gtk-apps): Explorer 42.2 MiB, Settings 91.0, Task Manager 49.0 against 219.8, 242.1 and 220.3 for the WebKit
+  apps on 13-11 (native 51.7, 101.6 and 59.1 in that run). Every harness scenario passes on the rebuilt
+  tests/build/native-release (nl; ten also in en); check-no-webkit OK. README, THIRD_PARTY_NOTICES, LICENSES
+  (RUST-CRATES.md made again, MPL-2.0.txt gone), native/APPS.md, ARCH.md, gtk-native.md and the README screenshots
+  describe the new state; the VALIDATION reports carry a banner.
+* D-G73: Robin (2026-11-14): "ja, haal de laatste Python ook weg", after the offer to delete vendor/host and to port
+  the Windows Update phasing script to Rust. WinPoint now starts no Python of its own at run time. Removed:
+  vendor/host (the Python reference host of D-G72 (4), 37 files, not installed since D-G72), host/data/phasing.py with
+  `Tool::Python3` (the tool table has `Tool::AptMark` instead) and `tools/update/probe.py --phasing`. phasing.rs asks
+  apt itself, through the tool table (each program niced, idle I/O, 30 s timeout, environment cleared plus
+  LANG=C.UTF-8), in this order: `apt-cache policy ?phasing` (apt's own per-machine decision,
+  `pkgDepCache::PhasingApplied`: machine id, `APT::Get::Always/Never-Include-Phased-Updates`, the security exemption;
+  exit 0 with no output when nothing is phased, exit 100 on an apt older than 2.7.11), `apt-cache policy -o
+  APT::Cmd::Pattern-Only=true <name:arch>…` in GetUpdates order (installed version, candidate, the candidate's
+  `(phased N%)`; the option stops apt from searching an unknown name as a regular expression) and `apt-mark
+  showhold`. The three answers join on apt's package name (the bare name for the native architecture and `all`,
+  `name:arch` for a foreign one). `?phasing` runs first, so a change of the lists between the calls always shows as a
+  candidate mismatch, which gets the safe rule. Any exit code, timeout or spawn failure of one of them runs the
+  unchanged fallback `apt-cache show --no-all-versions name=version …` (any Phased-Update-Percentage counts as
+  phased); a missing stub is a seam error at once, with no further program. The snapshot's `phasing` is still `apt`,
+  `fallback` or `unknown`. `pup` is now apt's stored percentage from the candidate's `(phased N%)` (apt prints it only
+  below 100); before, it was the raw field of the candidate's first record (do-release-upgrade's own reading, so
+  `updates_pending` can now differ from it): the two differ for a literal 100, a field apt reads as a number prefix
+  (`50.5`, `+50`, `5x`), a value over 100 that wraps to 32 bits, and one version whose records disagree (apt keeps the
+  last record that carries the field). Launchpad publishes the field only below 100. Evidence:
+  `phasing_matches_the_python3_apt_script` gets the old script's answers from the recorded real outputs of this PC
+  (tests/update/fixtures/phasing: 19 packages, eight of them phased); `apt-cache policy '?phasing'` takes 0.23 s here;
+  on a synthetic apt root (62 configurations × 1,106 packages) the `?phasing` pattern agreed with python3-apt's
+  `DepCache.phasing_applied` on all 68,572 rows; the Rust parse and join against the old script on three synthetic
+  roots (186 configurations, 213,280 package rows, native, `:i386` and `all`): candidate, phased, held and installed
+  equal on every row, `pup` different on 29,449 rows, all of them the cases above. The host tests (459 lib, 28
+  others), the update bus tests (9/9), the update layer's self-test, the installer suite (49), check-no-webkit and the
+  i18n checks pass. The update test layer follows: stub.py answers per argv (a list of `argv`/`argvPrefix` entries),
+  check_stub_log has a `group` × `count` matcher, the 30 timelines answer the three programs, and names.json's guard
+  now also names win11-shell, win11-calendar and the seven win11-gtk-* programs (the self-test requires the
+  run-tests.sh list; they were missing since D-G72). tests/installer/sandbox.py hides an installed WinPoint login
+  session of the machine (`/usr/share/wayland-sessions/winpoint.desktop` and the other three files of D-G71), which
+  had changed install.py's answers inside the sandbox. What stays Python: the installer, packaging, the i18n tools and
+  the test tools; the GNOME Shell extension stays JavaScript (GNOME requires it). Ubuntu's own Python programs that
+  Windows Update starts (check-new-release, do-release-upgrade) are not WinPoint's. vendor/host and phasing.py stay
+  readable as `git show last-webkit:<path>` (the recorded oracle JSON of the Rust tests came from vendor/host and can
+  be made again from there). README, README.nl.md, THIRD_PARTY_NOTICES (no python-apt, pycairo or gtk-layer-shell
+  row), windows-update-gnome.md and VALIDATION.md (banners), tools/check-no-webkit.allow (its vendor/host row went)
+  and tests/installer (3b898e6's installer gets a placeholder vendor/host in its test trees) describe the new state.
 ### Rounds 4-6: Windows Update per `windows-update-gnome.md` (GW steps, its own ownership table), own-app window
 memory hardening (D-G14) alongside round 4.
 

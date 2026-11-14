@@ -3,7 +3,8 @@
 Every run happens in a case directory under tests/installer/run/ and, inside it:
 * bubblewrap: the whole filesystem read-only, Robin's home hidden behind a tmpfs (only this repository is bound
   back, read-only, and the case directory read-write), private /tmp, /var/tmp, /run/user and /run/dbus, no network,
-  its own PID namespace; so nothing outside the case directory can be written or even read from the live session;
+  its own PID namespace, and /dev/null over the WinPoint login session files when this machine has them
+  (hide_system_session); so nothing outside the case directory can be written or even read from the live session;
 * a complete replacement environment (HOME, XDG_*, WIN11_INSTALL_PREFIX, PATH with stubs for gnome-extensions,
   gsettings, dconf, systemctl, … that only log and fail), keyfile GSettings, no session or system bus;
 * optionally strace -f: every mutating file syscall must name a path inside the case directory.
@@ -11,6 +12,7 @@ The suite itself is started through tests/installer/run.sh (tools/heavy.sh + tes
 """
 from __future__ import annotations
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -53,6 +55,21 @@ def strace_paths(line: str):
     if not paths:
         paths = re.findall(r"\d+<([^>]*)>", rest)
     return call, [bytes(p, "utf-8").decode("unicode_escape").encode("latin-1").decode("utf-8", "replace") for p in paths]
+
+
+def hide_system_session() -> list[str]:
+    """bwrap arguments that put /dev/null over the WinPoint login session files this machine has installed
+    (scripts/install-session.py FILES, D-G71). install.py reads them from the real /usr, and with them its closing
+    text, the portal choice and the GnomeLook autostart entry change; the cases expect a system without the session."""
+    spec = importlib.util.spec_from_file_location("install_session", G/"scripts/install-session.py")
+    session = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(session)
+    args = []
+    for name, directory in session.FILES:
+        path = Path(directory)/name
+        if path.is_file():
+            args += ["--ro-bind", "/dev/null", str(path)]
+    return args
 
 
 class Case:
@@ -115,7 +132,7 @@ class Case:
         trace = self.dir/"logs"/f"{tag}.strace"
         if strace:
             argv = ["strace", "-f", "-qq", "-y", "-e", "trace=%file", "-e", "signal=none", "-o", str(trace)] + argv
-        bw = ["/usr/bin/bwrap", "--ro-bind", "/", "/", "--dev", "/dev", "--proc", "/proc",
+        bw = ["/usr/bin/bwrap", "--ro-bind", "/", "/", *hide_system_session(), "--dev", "/dev", "--proc", "/proc",
               "--tmpfs", "/tmp", "--tmpfs", "/var/tmp", "--tmpfs", "/run/user", "--tmpfs", "/run/dbus",
               "--tmpfs", str(REAL_HOME), "--ro-bind", str(G), str(G), "--bind", str(self.dir), str(self.dir),
               "--unshare-all", "--die-with-parent", "--new-session", "--chdir", str(self.dir), "--"]
@@ -228,9 +245,9 @@ def stub_build(directory: Path) -> Path:
 def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
                  icons: dict[str, str] | None = None) -> Path:
     """A small source tree install.py accepts: a real copy of extension/ and host/src's two JSON tables, plus a
-    tiny but valid vendor/ (ui/assets, a two-theme icon bundle with its manifest and source archive, and a host/
-    that only 3b898e6's installer requires: the current one no longer reads or installs vendor/host). ``icons``:
-    more files of the Win11 theme (path below vendor/icons/Win11 -> text), in the bundle's manifest too."""
+    tiny but valid vendor/ (ui/assets, a two-theme icon bundle with its manifest and source archive, and the
+    placeholder host/ of old_installer_host). ``icons``: more files of the Win11 theme (path below
+    vendor/icons/Win11 -> text), in the bundle's manifest too."""
     if directory.exists():
         shutil.rmtree(directory)
     shutil.copytree(G/"extension", directory/"extension")
@@ -242,8 +259,7 @@ def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
     vendor = directory/"vendor"
     (vendor/"ui/assets/icons").mkdir(parents=True)
     (vendor/"ui/assets/icons/settings.svg").write_text("<svg xmlns='http://www.w3.org/2000/svg'/>\n")
-    (vendor/"host").mkdir()
-    (vendor/"host/README").write_text("GE1c fixture\n")
+    old_installer_host(vendor)
     entries = {}
     for theme in ("Win11", "Win11-dark"):
         base = vendor/"icons"/theme
@@ -275,6 +291,15 @@ def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
                              "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest()}}
     (vendor/"icon-bundle.json").write_text(json.dumps(manifest, indent=1) + "\n")
     return directory
+
+
+def old_installer_host(vendor: Path) -> None:
+    """The vendor/host that only 3b898e6's installer requires: it refuses without the directory and copies it to the
+    payload's host/, which same_as_baseline leaves out. The repository has none since D-G73 (the Python reference
+    is history: git show last-webkit:vendor/host), and the current installer never reads it, so a test tree gets
+    this placeholder."""
+    (vendor/"host").mkdir(parents=True, exist_ok=True)
+    (vendor/"host/README").write_text("GE1c fixture\n")
 
 
 def old_scripts(directory: Path, commit: str = "3b898e6") -> Path:

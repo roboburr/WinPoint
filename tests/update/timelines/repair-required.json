@@ -7,10 +7,32 @@
   "H15"
  ],
  "stubs": {
-  "python3": {
-   "rc": 0,
-   "stdout": "libwebkit2gtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\nlibjavascriptcoregtk-4.1-0\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nlibwebkit2gtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\nlibjavascriptcoregtk-4.1-0\tamd64\t2.52.7-0ubuntu0.26.04.1\t0\t-\t0\t2.52.7-0ubuntu0.26.04.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
-  }
+  "apt-cache": [
+   {
+    "argv": [
+     "policy",
+     "?phasing"
+    ],
+    "rc": 0,
+    "stdout": ""
+   },
+   {
+    "argvPrefix": [
+     "policy"
+    ],
+    "rc": 0,
+    "stdout": "libwebkit2gtk-4.1-0:\n  Installed: 2.52.7-0ubuntu0.26.04.0\n  Candidate: 2.52.7-0ubuntu0.26.04.1\n  Version table:\n     2.52.7-0ubuntu0.26.04.1 500\n        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages\n *** 2.52.7-0ubuntu0.26.04.0 100\n        100 /var/lib/dpkg/status\nlibjavascriptcoregtk-4.1-0:\n  Installed: 2.52.7-0ubuntu0.26.04.0\n  Candidate: 2.52.7-0ubuntu0.26.04.1\n  Version table:\n     2.52.7-0ubuntu0.26.04.1 500\n        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages\n *** 2.52.7-0ubuntu0.26.04.0 100\n        100 /var/lib/dpkg/status\ntzdata:\n  Installed: 2026b-0ubuntu0.26.03\n  Candidate: 2026b-0ubuntu0.26.04\n  Version table:\n     2026b-0ubuntu0.26.04 500\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n *** 2026b-0ubuntu0.26.03 100\n        100 /var/lib/dpkg/status\n"
+   }
+  ],
+  "apt-mark": [
+   {
+    "argv": [
+     "showhold"
+    ],
+    "rc": 0,
+    "stdout": ""
+   }
+  ]
  },
  "packages": {
   "libwebkit2gtk-4.1-0;2.52.7-0ubuntu0.26.04.1;amd64;ubuntu-resolute-security": {

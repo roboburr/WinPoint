@@ -1,7 +1,7 @@
 {
- "comment": "GW1 (design 4.11). tools = WIN11_UPDATE_TOOL_DIR, the only programs the update service may start in test mode (paths.rs::Tools); guard = <run>/guard-bin, first on PATH for every process in the layer: GE0b's guard-bin list + GE0c's STUBS + the GW1 additions + other ways to reach root, the session or the system. The self-test checks that guard covers every name in tests/rust-sandbox/run-tests.sh and tests/gnome/harness.py STUBS. python3, sh, nice and ionice are deliberately not in guard: the layer itself needs the real ones, and they reach nothing inside the layer.",
+ "comment": "GW1 (design 4.11). tools = WIN11_UPDATE_TOOL_DIR, the only programs the update service may start in test mode (paths.rs::Tools); guard = <run>/guard-bin, first on PATH for every process in the layer: GE0b's guard-bin list + GE0c's STUBS + the GW1 additions + other ways to reach root, the session or the system. The self-test checks that guard covers every name in tests/rust-sandbox/run-tests.sh and tests/gnome/harness.py STUBS. python3, sh, nice and ionice are deliberately not in guard: the layer itself needs the real ones, and they reach nothing inside the layer. D-G73: python3 left tools (the service starts no Python of its own; check-new-release and do-release-upgrade are Ubuntu's), apt-mark joined it (the phasing classifier runs apt-mark showhold).",
  "tools": ["loginctl", "xdg-terminal-exec", "pkexec", "check-new-release", "apt-get", "apt-cache", "apt-config",
-           "dpkg-query", "snap", "python3", "screen", "nice", "ionice", "sh"],
+           "apt-mark", "dpkg-query", "snap", "screen", "nice", "ionice", "sh"],
  "guard": [
   "pkexec", "sudo", "sudoedit", "su", "run0", "doas", "pkttyagent",
   "systemctl", "systemd-run", "systemd-inhibit", "loginctl", "machinectl", "busctl", "gdbus", "dbus-send", "qdbus",
@@ -16,6 +16,7 @@
   "shutdown", "reboot", "poweroff", "halt", "timedatectl", "hostnamectl", "localectl",
   "win11-start", "win11-explorer", "win11-panel", "win11-app", "win11-desktop", "win11-launch",
   "win11-index-worker", "win11-image-worker", "win11-default-apps", "win11-file-portal", "win11-installer",
-  "win11-software-worker"
+  "win11-software-worker", "win11-shell", "win11-calendar", "win11-gtk-explorer", "win11-gtk-settings",
+  "win11-gtk-taskmgr", "win11-gtk-alles", "win11-gtk-disks", "win11-gtk-defaultapps", "win11-gtk-installer"
  ]
 }

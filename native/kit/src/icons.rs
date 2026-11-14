@@ -285,7 +285,7 @@ pub fn app_icon(icon: &str, px: i32) -> gtk::Image {
     image.add_css_class("w11-app-icon");
     let name = icon.trim();
     match resolve_local(name) {
-        Some(Local::Name(n)) => image.set_icon_name(Some(&n)),
+        Some(Local::Name(n)) => set_theme_icon(&image, &n),
         Some(Local::File(path)) => image.set_from_file(Some(&path)),
         None => {
             image.set_icon_name(Some("application-x-executable"));
@@ -297,8 +297,104 @@ pub fn app_icon(icon: &str, px: i32) -> gtk::Image {
     image
 }
 
-/// A file icon: a theme icon name ("folder", "user-home", "drive-harddisk") or a MIME type ("image/png"), from
-/// the icon theme, else the backend's `/icon`; the "file" glyph when nothing is found.
+// ------------------------------------------------------------------------------------------------ theme icons
+
+/// One image [`set_theme_icon`] filled: shown again when the icon theme changes, as long as it still shows that.
+struct Themed {
+    image: glib::WeakRef<gtk::Image>,
+    name: String,
+    file: Option<gio::File>,
+}
+
+thread_local! {
+    /// [`set_theme_icon`]'s images by address (pruned of dead ones when the map doubles).
+    static THEMED: RefCell<(HashMap<usize, Themed>, usize)> = RefCell::new((HashMap::new(), 64));
+    /// name → the theme's scalable SVG (None: GTK's own choice), until the icon theme changes.
+    static SCALABLE: RefCell<HashMap<String, Option<gio::File>>> = RefCell::new(HashMap::new());
+    static WATCHING: Cell<bool> = const { Cell::new(false) };
+}
+
+/// Show the theme icon `name` the way the host's `/icon` picks one (host/src/images/icons.rs `score`): the theme's
+/// scalable SVG before its fixed sizes. Win11 draws its fixed 16-24 px places and devices icons as monochrome line
+/// icons and its coloured ones from 32 px on (places/scalable and devices/scalable have MinSize=32), so at 16 px
+/// GTK's own pick for a folder or a drive is the line icon; the WebKit apps showed the coloured one through
+/// `/icon`, and so does this (GTK renders the SVG at the image's size and scale). A name without a scalable SVG keeps
+/// GTK's pick. The image follows a change of the icon theme (Win11 / Win11-dark with the colour scheme).
+pub fn set_theme_icon(image: &gtk::Image, name: &str) {
+    let file = show_theme_icon(image, name);
+    THEMED.with(|t| {
+        let (map, prune_at) = &mut *t.borrow_mut();
+        if map.len() >= *prune_at {
+            map.retain(|_, e| e.image.upgrade().is_some());
+            *prune_at = (map.len() * 2).max(64);
+        }
+        map.insert(image.as_ptr() as usize, Themed { image: image.downgrade(), name: name.to_owned(), file });
+    });
+}
+
+fn show_theme_icon(image: &gtk::Image, name: &str) -> Option<gio::File> {
+    let file = scalable(name);
+    match &file {
+        Some(file) => image.set_from_gicon(&gio::FileIcon::new(file)),
+        None => image.set_icon_name(Some(name)),
+    }
+    file
+}
+
+/// The theme's scalable SVG for `name`: what GTK picks for a large size, when that is an SVG in a "scalable" folder.
+fn scalable(name: &str) -> Option<gio::File> {
+    if let Some(hit) = SCALABLE.with(|s| s.borrow().get(name).cloned()) {
+        return hit;
+    }
+    let theme = gtk::IconTheme::for_display(&gdk::Display::default()?);
+    watch_theme(&theme);
+    let file = theme
+        .lookup_icon(name, &[], 512, 1, gtk::TextDirection::None, gtk::IconLookupFlags::empty())
+        .file()
+        .filter(|f| {
+            f.path().is_some_and(|p| {
+                p.extension().is_some_and(|e| e == "svg") && p.parent().and_then(|d| d.file_name()).is_some_and(|d| d == "scalable")
+            })
+        });
+    SCALABLE.with(|s| s.borrow_mut().insert(name.to_owned(), file.clone()));
+    file
+}
+
+/// Whether `image` still shows what [`set_theme_icon`] gave it (no thumbnail, fetched or other icon since).
+fn still_shows(image: &gtk::Image, e: &Themed) -> bool {
+    match &e.file {
+        Some(file) => image
+            .gicon()
+            .and_then(|g| g.downcast::<gio::FileIcon>().ok())
+            .is_some_and(|g| g.file().equal(file)),
+        None => image.storage_type() == gtk::ImageType::IconName && image.icon_name().as_deref() == Some(e.name.as_str()),
+    }
+}
+
+fn watch_theme(theme: &gtk::IconTheme) {
+    if WATCHING.replace(true) {
+        return;
+    }
+    theme.connect_changed(|_| {
+        SCALABLE.with(|s| s.borrow_mut().clear());
+        let live: Vec<(usize, gtk::Image, String)> = THEMED.with(|t| {
+            let (map, _) = &mut *t.borrow_mut();
+            map.retain(|_, e| e.image.upgrade().is_some_and(|image| still_shows(&image, e)));
+            map.iter().filter_map(|(k, e)| Some((*k, e.image.upgrade()?, e.name.clone()))).collect()
+        });
+        for (key, image, name) in live {
+            let file = show_theme_icon(&image, &name);
+            THEMED.with(|t| {
+                if let Some(e) = t.borrow_mut().0.get_mut(&key) {
+                    e.file = file;
+                }
+            });
+        }
+    });
+}
+
+/// A file icon: a theme icon name ("folder", "user-home", "drive-harddisk", through [`set_theme_icon`]) or a MIME type
+/// ("image/png"), from the icon theme, else the backend's `/icon`; the "file" glyph when nothing is found.
 pub fn file_icon(icon_or_mime: &str, px: i32) -> gtk::Image {
     let image = gtk::Image::new();
     image.set_pixel_size(px);
@@ -320,7 +416,7 @@ pub fn file_icon(icon_or_mime: &str, px: i32) -> gtk::Image {
         return image;
     }
     match resolve_local(spec) {
-        Some(Local::Name(n)) => image.set_icon_name(Some(&n)),
+        Some(Local::Name(n)) => set_theme_icon(&image, &n),
         Some(Local::File(p)) => image.set_from_file(Some(&p)),
         None => {
             image.set_icon_name(Some("text-x-generic"));

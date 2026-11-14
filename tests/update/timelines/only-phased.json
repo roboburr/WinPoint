@@ -7,10 +7,32 @@
   "H16"
  ],
  "stubs": {
-  "python3": {
-   "rc": 0,
-   "stdout": "ubuntu-drivers-common\t1:0.10.4\t1\t30\t0\nfwupd\t2.0.17-1ubuntu1\t1\t10\t0\nubuntu-drivers-common\tamd64\t1:0.10.4\t1\t30\t0\t1:0.10.3\nfwupd\tamd64\t2.0.17-1ubuntu1\t1\t10\t0\t2.0.17-1ubuntu0\n@@end\n"
-  }
+  "apt-cache": [
+   {
+    "argv": [
+     "policy",
+     "?phasing"
+    ],
+    "rc": 0,
+    "stdout": "ubuntu-drivers-common:\n  Installed: 1:0.10.3\n  Candidate: 1:0.10.4\n  Version table:\n     1:0.10.4 500 (phased 30%)\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n *** 1:0.10.3 100\n        100 /var/lib/dpkg/status\nfwupd:\n  Installed: 2.0.17-1ubuntu0\n  Candidate: 2.0.17-1ubuntu1\n  Version table:\n     2.0.17-1ubuntu1 500 (phased 10%)\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n *** 2.0.17-1ubuntu0 100\n        100 /var/lib/dpkg/status\n"
+   },
+   {
+    "argvPrefix": [
+     "policy"
+    ],
+    "rc": 0,
+    "stdout": "ubuntu-drivers-common:\n  Installed: 1:0.10.3\n  Candidate: 1:0.10.4\n  Version table:\n     1:0.10.4 500 (phased 30%)\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n *** 1:0.10.3 100\n        100 /var/lib/dpkg/status\nfwupd:\n  Installed: 2.0.17-1ubuntu0\n  Candidate: 2.0.17-1ubuntu1\n  Version table:\n     2.0.17-1ubuntu1 500 (phased 10%)\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n *** 2.0.17-1ubuntu0 100\n        100 /var/lib/dpkg/status\n"
+   }
+  ],
+  "apt-mark": [
+   {
+    "argv": [
+     "showhold"
+    ],
+    "rc": 0,
+    "stdout": ""
+   }
+  ]
  },
  "packages": {
   "ubuntu-drivers-common;1:0.10.4;amd64;ubuntu-resolute-updates": {
@@ -69,7 +91,9 @@
  "expect": {
   "callCount": 6,
   "stubs": [
-   "python3"
+   "apt-cache",
+   "apt-cache",
+   "apt-mark"
   ]
  }
 }

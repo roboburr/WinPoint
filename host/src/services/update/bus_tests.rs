@@ -409,7 +409,8 @@ struct Expect {
     nm: usize,
     /// `Notify` calls on the fake notification server (session bus)
     notify: usize,
-    /// phasing classifier runs: the `python3` tool stub, `-I -c <script>`
+    /// phasing classifier rounds (D-G73): three tool stub calls each, `apt-cache policy <name:arch>…`,
+    /// `apt-cache policy ?phasing` and `apt-mark showhold`
     stubs: usize,
 }
 fn tx(method: &str) -> Vec<String> {
@@ -483,11 +484,22 @@ fn verify(fake: &Fake, stub_mark: usize, exp: &Expect, what: &str) -> Vec<Value>
         }
     }
     let stubs: Vec<Value> = fake.stub_log().into_iter().skip(stub_mark).collect();
-    assert_eq!(stubs.len(), exp.stubs, "{what}: stub calls {}", short(&json!(stubs)));
-    for s in &stubs {
-        assert_eq!((s["tool"].as_str(), s["dir"].as_str(), s["rc"].as_i64()), (Some("python3"), Some("tools"), Some(0)), "{what}: {s}");
-        let argv = s["argv"].as_array().cloned().unwrap_or_default();
-        assert_eq!(argv.get(..2), Some(&[json!("-I"), json!("-c")][..]), "{what}: the classifier script");
+    assert_eq!(stubs.len(), 3 * exp.stubs, "{what}: stub calls {}", short(&json!(stubs)));
+    for round in stubs.chunks(3) {
+        for (s, tool) in round.iter().zip(["apt-cache", "apt-cache", "apt-mark"]) {
+            assert_eq!((s["tool"].as_str(), s["dir"].as_str(), s["rc"].as_i64()), (Some(tool), Some("tools"), Some(0)), "{what}: {s}");
+        }
+        let argv = |i: usize| round[i]["argv"].as_array().cloned().unwrap_or_default();
+        // the packages of the GetUpdates, each once, as name:arch, names only (no regular expression search)
+        let query = argv(1);
+        let exact = [json!("policy"), json!("-o"), json!("APT::Cmd::Pattern-Only=true")];
+        let mut specs: Vec<&str> = query.iter().skip(exact.len()).filter_map(Value::as_str).filter(|s| s.split_once(':').is_some_and(|(n, a)| !n.is_empty() && !a.is_empty())).collect();
+        let n = specs.len();
+        specs.sort_unstable();
+        specs.dedup();
+        assert!(query.starts_with(&exact) && n > 0 && n == query.len() - exact.len() && specs.len() == n, "{what}: the package query {query:?}");
+        assert_eq!(argv(0), [json!("policy"), json!("?phasing")], "{what}: apt's phasing rule, first");
+        assert_eq!(argv(2), [json!("showhold")], "{what}: the holds");
     }
     assert_eq!(fake.state()["violations"], json!([]), "{what}: fake violations");
     calls
@@ -592,9 +604,9 @@ fn timeline(fake: &Fake, name: &str, lang: Lang) {
             let details = ids_of(&calls, "GetDetails");
             assert_eq!(details.len(), 22, "{what}: sizes only for offered packages");
             assert!(!details.iter().any(|id| id.starts_with("fwupd;") || id.starts_with("ubuntu-drivers-common;")));
-            let stdin = fake.stub_log()[mark]["stdin"].as_str().unwrap_or("").to_owned();
-            assert_eq!(stdin.lines().count(), 24, "{what}: every name once on stdin");
-            assert!(stdin.contains("libsoup-3.0-0\tamd64\n") && stdin.contains("tzdata\tall\n"));
+            let query = fake.stub_log()[mark + 1]["argv"].as_array().cloned().unwrap_or_default();
+            assert_eq!(query.len(), 27, "{what}: policy, the names-only option and every package once, as name:arch");
+            assert!(query.contains(&json!("libsoup-3.0-0:amd64")) && query.contains(&json!("tzdata:all")), "{what}: {query:?}");
         }
         "only-phased" => {
             let h = Host::owner(&scn, "a", lang);

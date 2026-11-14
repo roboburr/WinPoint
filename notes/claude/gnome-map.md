@@ -6,6 +6,12 @@ W = `/home/robin/Documents/Codex/2026-11-01/chat/work`. Sources: `notes/claude/m
 (all 8 present), plus my own spot-checks (section 7.1). Nothing in G or H was changed apart from this file. Nothing was built, run or launched.
 Paths without a prefix are relative to G.
 
+**Note 2026-11-14 (D-G73).** This map is the record of G at `3b898e6` and stays as written. Since then the WebKit
+apps left (D-G70, D-G72; tag `last-webkit`), and `vendor/host`, the Python reference of 1.8, 6 and 7.3, was deleted:
+no installer requires or ships it, and `git show last-webkit:vendor/host/<path>` still shows it. Windows Update runs
+no Python of WinPoint's own either (it still starts Ubuntu's check-new-release and do-release-upgrade, which are
+Python). `plan.md` has the current decisions.
+
 ## 1. What the GNOME version is
 
 1. **Processes.** One Rust crate `host/` (0.7.0, wry 0.55, webkit2gtk 4.1, gtk 0.18; 55,655 lines in `host/src`, not the ~33k the task brief says) builds 12 binaries (`scripts/install.py:17`): `win11-panel`, `win11-desktop`, `win11-start`, `win11-explorer`, `win11-app --app settings|taskmgr|alles|disks`, `win11-default-apps`, `win11-installer`, `win11-file-portal`, `win11-launch` and the index, image and software workers.

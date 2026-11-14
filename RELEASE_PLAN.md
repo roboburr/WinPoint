@@ -7,7 +7,7 @@ Voor de eerste openbare uitgave:
 - Werkende native shell (`win11-shell`: taakbalk, flyouts, Start, bureaublad en tray), losse apps en vensterknoppen in de ondersteunde GNOME-sessie aantonen.
 - `win11-shell` en zijn backend samen onder 1 GiB houden; gestarte apps in eigen groepen; de Alles-indexer uitsluitend tijdens gebruik van Alles laten draaien.
 - Installeren, bijwerken, verwijderen en terugvallen op de bestaande desktop met behoud van persoonlijke gegevens controleren.
-- Ondersteunde Ubuntu-, GNOME-, Wayland-, schaal- en schermconfiguraties concreet vastleggen; ontbrekende ondersteuning en tijdelijke Python-diensten zichtbaar documenteren.
+- Ondersteunde Ubuntu-, GNOME-, Wayland-, schaal- en schermconfiguraties concreet vastleggen; ontbrekende ondersteuning zichtbaar documenteren.
 - Broncode, exacte bouwafhankelijkheden, reproduceerbare bouwinstructies, versienummers, checksums en testbewijs opnemen.
 - De herkomst en licentiebestanden van alle meegeleverde code, afbeeldingen, pictogrammen en lettertypen vastleggen; projectnaam en eigen ronde logo consequent gebruiken.
 - Een gebruikershandleiding, wijzigingslog en eenvoudige procedure voor foutmeldingen toevoegen.

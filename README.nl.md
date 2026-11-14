@@ -54,7 +54,7 @@ Alle schermafbeeldingen komen uit een afgeschermde GNOME 50-sessie zonder beelds
 
 ## Mogelijkheden
 
-- **Taakbalk**: vastgemaakte en geopende apps met groepering en jump lists, pictogrammen in het systeemvak, klok en datum, gecentreerd of links uitgelijnd, desgewenst automatisch verbergen.
+- **Taakbalk**: vastgemaakte en geopende apps met groepering en jump lists, pictogrammen in het systeemvak, klok en datum, gecentreerd of links uitgelijnd, desgewenst automatisch verbergen. Een geminimaliseerd venster krimpt in zijn knop op de taakbalk en komt er bij herstellen weer uit.
 - **Start**: vastgemaakte apps, Alle apps, aanbevolen bestanden, het gebruikers- en het energiemenu, en zoeken in apps, instellingen, bestanden en op internet.
 - **Snelle instellingen**: wifi, Bluetooth, vliegtuigmodus, donkere modus, niet storen, schuifregelaars voor helderheid en volume, en mediabediening.
 - **Meldingen en agenda**: een meldingencentrum met pop-upmeldingen, en een maandagenda die de gekozen dag in de Agenda-app opent.
@@ -75,7 +75,7 @@ De Windows-toets opent Start, Alt+Tab opent de taakweergave en Ctrl+Alt+Delete o
 
 Als de extensie aan staat, start ze `win11-panel`, dat zichzelf vervangt door `win11-shell`. Taakbalk, flyouts, Start en bureaublad zijn vensters van dat ene GTK 4-proces, dus Start openen start geen nieuw proces. De shell start `win11-panel --http-only` als backend: de Rust-diensten van de host voor apps en vastgemaakte items, instellingen, het systeemvak, meldingen, geluid, netwerk, energie en bestanden, zonder venster en bereikbaar via een lokale JSON-API met eventstream. De extensie draait in GNOME Shell en praat met de shell via D-Bus (`io.github.win11shell.GnomeBridge`): ze zet de taakbalk, Start en het bureaublad op hun plaats, verbergt de bovenbalk van GNOME en de bureaubladpictogrammen van Ubuntu, voegt het matglas toe en geeft vensters de focus. Ontbreekt `win11-shell` of valt die uit, dan komen de bovenbalk van GNOME en de eenvoudige noodtaakbalk van de extensie terug (bij het aanmelden na 6 seconden, anders meteen), en de Windows-toets of Alt+Tab start de taakbalk opnieuw. De extensie uitzetten herstelt het gewone GNOME-bureaublad. Andere dockextensies zet de installatie niet uit.
 
-De code staat in twee Cargo-workspaces: de host in de hoofdmap (de diensten, backends, starters, hulpprogramma's en de bestandskiezer voor de portal; die linkt GLib, GIO en GDK Pixbuf en geen GTK) en `native/` (de GTK 4-programma's: `win11-shell`, `win11-calendar` en de zeven apps op hun gedeelde kit). gtk4-rs 0.11 heeft een nieuwere glib nodig dan de host, en Cargo staat één `glib-sys` per workspace toe. De eerdere HTML-versies in WebKitGTK zijn verwijderd: die van taakbalk, Start en bureaublad op 13 november 2026, die van de apps op 14 november. De laatste commit met de HTML-apps heeft de tag `last-webkit`; wat oudere rapporten over WebKit zeggen, geldt alleen voor die versies.
+De code staat in twee Cargo-workspaces: de host in de hoofdmap (de diensten, backends, starters, hulpprogramma's en de bestandskiezer voor de portal; die linkt GLib, GIO en GDK Pixbuf en geen GTK) en `native/` (de GTK 4-programma's: `win11-shell`, `win11-calendar` en de zeven apps op hun gedeelde kit). gtk4-rs 0.11 heeft een nieuwere glib nodig dan de host, en Cargo staat één `glib-sys` per workspace toe. De eigen programma's van WinPoint zijn Rust, met GTK 4 voor elk venster. Uitzonderingen zijn de GNOME Shell-extensie, die JavaScript is omdat GNOME dat vereist, en een beetje POSIX-shell: de twee Windows Update-hulpprogramma's in `host/data` (die via pkexec als root draaien) en een paar vaste `sh -c`-programma's die de host aan pkexec of een terminal geeft (de opruimstappen, de wrapper voor de release-upgrade). Er draait geen eigen Python van WinPoint in de sessie; de installer en de tests zijn Python. De eerdere HTML-versies in WebKitGTK zijn verwijderd: die van taakbalk, Start en bureaublad op 13 november 2026, die van de apps op 14 november. De laatste commit met de HTML-apps heeft de tag `last-webkit`; wat oudere rapporten over WebKit zeggen, geldt alleen voor die versies.
 
 ### Zelfstandige programma's
 
@@ -152,7 +152,7 @@ Matglas komt van GNOME Shell zelf, niet van GTK: onder de taakbalk, onder het ge
 - Om te draaien: GTK 4 (met Pango, graphene en cairo), GLib en GDK Pixbuf, `libarchive.so.13` (archieven in Verkenner), en Python 3 met PyGObject (`python3-gi`) en `glib-compile-schemas` (`libglib2.0-bin`) voor installeren en verwijderen. De installer controleert dat vooraf en noemt de ontbrekende Ubuntu-pakketten. WebKitGTK en GTK 3 zijn niet nodig.
 - Optioneel: FFmpeg en FFprobe voor videominiaturen; PackageKit, Flatpak of snapd voor App-installatie, met `dpkg-deb` en `unsquashfs` (squashfs-tools) voor de gegevens van DEB- en Snap-pakketten; bubblewrap om de decoders voor metadata en afbeeldingen af te schermen.
 
-Netwerk, geluid, opslag, energie en meldingen gebruiken de gewone Linux- en GNOME-diensten. Python gebruikt WinPoint verder voor de pakkettools en sommige ontwikkeltests; de shell en de apps starten geen Python-backend. Het pakket bundelt geen Python-omgeving en geen kopieën van systeembibliotheken. De oorspronkelijke Python-diensten in `vendor/host` blijven als referentie voor vergelijkende tests en worden niet geïnstalleerd.
+Netwerk, geluid, opslag, energie en meldingen gebruiken de gewone Linux- en GNOME-diensten. Python gebruikt WinPoint verder voor de pakkettools en sommige ontwikkeltests; de shell en de apps starten geen Python-backend. Het pakket bundelt geen Python-omgeving en geen kopieën van systeembibliotheken.
 
 ## Bouwen
 
@@ -299,7 +299,6 @@ native/kit/       wat de apps delen: backendclient, instellingen, thema, venster
 host/             de Rust-host: diensten en JSON-API, starters, bestandskiezer voor de portal, hulpprogramma's, i18n-tabellen
 extension/        de GNOME Shell-extensie (paneel, matglas, sneltoetsen, meldingen, bureaublad)
 vendor/ui/        de achtergronden en het pictogram van Instellingen (de HTML-apps zijn weg: git-tag last-webkit)
-vendor/host/      de oorspronkelijke Python-diensten, als referentie voor vergelijkende tests (niet geïnstalleerd)
 vendor/config/    de stijlen van de GTK-vensterknoppen
 vendor/icons/     het Win11-pictogramthema (GPL-3.0-only)
 scripts/          bouwen, installeren, verwijderen, pakket maken en controles van de UI-manifesten
@@ -351,13 +350,12 @@ Bekende tekortkomingen:
 - **Agenda**: in het Engels begint de Agenda-app de week op zondag, terwijl de agenda van de taakbalk `time.firstDayOfWeek` volgt (standaard maandag). De agenda's van GNOME en het openen van een dag vanuit de taakbalk zijn niet getest in de afgeschermde sessie.
 - **Twee agenda's in Alle apps**: met GNOME Agenda geïnstalleerd tonen Alle apps in Start (en het appoverzicht van GNOME) die en de Agenda van WinPoint onder dezelfde naam ("Agenda", in het Engels "Calendar").
 - **Nachtlampje en beeldschermen**: het nachtlampje staat niet in de snelle instellingen en Instellingen toont de beeldschermen alleen grijs; beide stel je in via de eigen Instellingen van GNOME.
-- **Uitgavearchief**: het archief van `scripts/package.sh` bevat nog `vendor/host`, de Python-referentie, die de installer niet installeert.
 - **Logmeldingen**: de apps zetten zelf `GDK_DEBUG=portals`; in een sessie zonder `xdg-desktop-portal` (zoals de afgeschermde testsessie) schrijven ze een onschuldige Gdk-waarschuwing "Failed to read portal settings" in het log.
 - **Automatische dekking**: jump lists, de overloop van het systeemvak, de contextmenu's van het bureaublad, hernoemen en slepen hebben nog geen scenario.
 
 ## Licenties
 
-- De eigen code en assets van WinPoint vallen onder de [MIT-licentie](LICENSE). Dat geldt ook voor `vendor/ui`, `vendor/host` en `vendor/config`, eigen eerder werk van de auteur uit het Win11 Shell-project, behalve de onderdelen van derden die in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) staan.
+- De eigen code en assets van WinPoint vallen onder de [MIT-licentie](LICENSE). Dat geldt ook voor `vendor/ui` en `vendor/config`, eigen eerder werk van de auteur uit het Win11 Shell-project, behalve de onderdelen van derden die in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) staan.
 - Het meegeleverde **Win11-pictogramthema** van [yeyushengfan258](https://github.com/yeyushengfan258/Win11-icon-theme) (`vendor/icons/`, `vendor/icon-source/` en `vendor/ui/assets/icons/settings.svg`) valt onder **GPL-3.0-only**, niet onder MIT. Het is gebaseerd op de Yaru-pictogrammen van Ubuntu. De wijzigingen staan in [vendor/ICON_PROVENANCE.md](vendor/ICON_PROVENANCE.md); zie ook [vendor/ui/assets/icons/NOTICE.txt](vendor/ui/assets/icons/NOTICE.txt) en `vendor/icon-bundle.json`, waarmee de pakketmanifesten de herkomst en symlinks controleren.
 - De standaardachtergronden **Lotus** (`vendor/ui/assets/wallpapers/lotus-dark.svg` en `lotus-light.svg`) zijn met AI gemaakt (beeldgeneratie van OpenAI ChatGPT) en vallen in het publieke domein onder [CC0-1.0](LICENSES/CC0-1.0.txt).
 - Twee Rust-bestanden bevatten code die uit CPython is vertaald (PSF-2.0), en de Rust-crates in de programma's houden hun eigen licentie ([LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md)).

@@ -185,7 +185,7 @@ cat > "$RUN/tools/dpkg-query" <<EOF
 printf 'dpkg-query %s\n' "\$*" >> '$LOG'
 while IFS= read -r l; do printf '%s\n' "\$l"; done < '$FIX/dpkg-query-S.txt'
 EOF
-for t in loginctl xdg-terminal-exec pkexec check-new-release snap python3 screen nice ionice sh do-release-upgrade release-upgrades-helper release-upgrade-attach; do
+for t in loginctl xdg-terminal-exec pkexec check-new-release apt-mark snap screen nice ionice sh do-release-upgrade release-upgrades-helper release-upgrade-attach; do
   printf '#!/bin/sh\nprintf "%%s %%s\\n" %s "$*" >> %s\nexit 97\n' "$t" "'$LOG'" > "$RUN/tools/$t"
 done
 chmod 0755 "$RUN"/tools/*

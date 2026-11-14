@@ -70,6 +70,9 @@ pub struct Apps {
     max_apps: Cell<usize>,
     layout_queued: Cell<bool>,
     render_timer: RefCell<Option<glib::SourceId>>,
+    // where each window's button rests, for GNOME's minimize animation (windows.setIconRects)
+    icon_timer: RefCell<Option<glib::SourceId>>,
+    icon_key: RefCell<String>,
     drag: RefCell<Option<Drag>>,
     shift: Cell<bool>,
     // window list (hover preview)
@@ -296,6 +299,8 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> gtk::Box {
         max_apps: Cell::new(usize::MAX),
         layout_queued: Cell::new(false),
         render_timer: RefCell::new(None),
+        icon_timer: RefCell::new(None),
+        icon_key: RefCell::new(String::new()),
         drag: RefCell::new(None),
         shift: Cell::new(false),
         preview: RefCell::new(None),
@@ -697,6 +702,53 @@ impl Apps {
             }
         }
         self.queue_layout();
+        self.icon_rects_soon();
+    }
+
+    /// Tell GNOME where each window's button rests once the buttons have settled (300 ms covers the 260 ms
+    /// entrance): the extension's windows.setIconRects sets every window's icon geometry, so minimizing goes into
+    /// its button and restoring comes out of it, instead of GNOME's default top-left corner (taskbar.js
+    /// iconRectsMessage, `git show 418ea594:vendor/ui/js/shell/taskbar.js`).
+    fn icon_rects_soon(self: &Rc<Self>) {
+        cancel(&self.icon_timer);
+        *self.icon_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(300), || {
+            with(|a| {
+                *a.icon_timer.borrow_mut() = None;
+                a.send_icon_rects();
+            });
+        }));
+    }
+
+    /// The rects in the panel window's coordinates, which are the primary monitor's logical pixels (the window
+    /// covers it, panel/mod.rs); a group in the overflow uses the "…" button. Sent only when they changed.
+    fn send_icon_rects(&self) {
+        let Some(root) = self.strip.root().map(|r| r.upcast::<gtk::Widget>()) else { return };
+        let ids = |key: &str| -> Vec<String> {
+            self.groups.borrow().iter().find(|g| g.key == key).map(|g| g.windows.iter().map(id_of).filter(|id| !id.is_empty()).collect()).unwrap_or_default()
+        };
+        let rect = |widget: &gtk::Widget, ids: Vec<String>| -> Option<Value> {
+            if ids.is_empty() || !widget.is_mapped() {
+                return None;
+            }
+            let b = widget.compute_bounds(&root)?;
+            (b.width() >= 1.0 && b.height() >= 1.0).then(|| {
+                json!({"ids": ids, "x": b.x().round(), "y": b.y().round(), "w": b.width().round(), "h": b.height().round()})
+            })
+        };
+        let mut rects: Vec<Value> = Vec::new();
+        for (key, btn) in self.buttons.borrow().iter() {
+            rects.extend(rect(btn.button.upcast_ref(), ids(key)));
+        }
+        let overflow: Vec<String> = self.overflow_keys.borrow().iter().flat_map(|k| ids(k)).collect();
+        rects.extend(rect(self.overflow_btn.upcast_ref(), overflow));
+        rects.sort_by(|a, b| a["x"].as_f64().unwrap_or(0.0).total_cmp(&b["x"].as_f64().unwrap_or(0.0)));
+        let msg = json!({"layer": "shell", "hidden": false, "rects": rects});
+        let key = msg.to_string();
+        if *self.icon_key.borrow() == key {
+            return;
+        }
+        *self.icon_key.borrow_mut() = key;
+        self.shell.gnome.send("windows.setIconRects", msg);
     }
 
     fn queue_layout(self: &Rc<Self>) {
@@ -728,6 +780,8 @@ impl Apps {
         self.max_apps.set(cap);
         if cap != old && (n > cap || old < n) {
             self.render();
+        } else {
+            self.icon_rects_soon();
         }
     }
 

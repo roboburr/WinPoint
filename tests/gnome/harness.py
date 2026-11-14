@@ -163,8 +163,8 @@ UPDATE_TOOLS = RUN / 'update-tools'
 UPDATE_FIXTURE = RUN / 'update-fixture'
 UPDATE_SEAMS = {'WIN11_UPDATE_TOOL_DIR': UPDATE_TOOLS, 'WIN11_UPDATE_FIXTURE_ROOT': UPDATE_FIXTURE}
 # paths.rs Tool table (the names a stub must have); each stub only logs to logs/update-tool-calls.log and fails
-UPDATE_TOOL_NAMES = ('loginctl xdg-terminal-exec pkexec check-new-release apt-get apt-cache apt-config dpkg-query '
-                     'snap python3 screen nice ionice sh do-release-upgrade release-upgrades-helper '
+UPDATE_TOOL_NAMES = ('loginctl xdg-terminal-exec pkexec check-new-release apt-get apt-cache apt-config apt-mark '
+                     'dpkg-query snap screen nice ionice sh do-release-upgrade release-upgrades-helper '
                      'release-upgrade-attach').split()
 UPDATE_SCHEMAS = G / 'tests' / 'update' / 'fixtures' / 'options' / 'schemas'   # update-notifier's (GW4 N2/N3)
 

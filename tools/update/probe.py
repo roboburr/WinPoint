@@ -7,21 +7,20 @@ mode 0700 and holds the ``.win11-update-fixture`` marker (tests/update/run.sh's 
 /run/dbus/system_bus_socket must not be visible at all. It never falls back to the system bus or to
 DBUS_SYSTEM_BUS_ADDRESS.
 
-    python3 -I tools/update/probe.py --bus <private address> --get-updates [--simulate-all] [--phasing] [--out F]
+    python3 -I tools/update/probe.py --bus <private address> --get-updates [--simulate-all] [--out F]
 
 With --live it is Robin's R1 tool on the real system bus (agents never run it; it also refuses inside a test
 environment and without a terminal, and asks for the word "probe" before it connects):
 
-    python3 -I tools/update/probe.py --live --get-updates [--simulate-all] [--phasing] --out r1-probe.json
+    python3 -I tools/update/probe.py --live --get-updates [--simulate-all] --out r1-probe.json
 
 What it does (and nothing else): NameHasOwner + ListActivatableNames (packagekitd is usually idle and D-Bus
 activated: then the first call below starts it; if it is neither running nor activatable the probe stops with
 errorCode "packagekitd-not-available"), the manager properties, CreateTransaction +
 SetHints(interactive=false) + GetUpdates(filter none);
-with --simulate-all UpdatePackages(SIMULATE|ONLY_TRUSTED = 6) on every listed id and GetDetails on them (sizes);
-with --phasing the apt_pkg script the service ships (host/data/phasing.py, which phasing.rs embeds: the same bytes,
-`name<TAB>arch` per package on stdin, under nice 10 and idle I/O as phasing.rs runs it) and its output, wall time and
-peak RSS. Never RefreshCache, never a real install, never RepairSystem: the only
+with --simulate-all UpdatePackages(SIMULATE|ONLY_TRUSTED = 6) on every listed id and GetDetails on them (sizes).
+It starts no program: since D-G73 the phasing classifier (phasing.rs) asks apt's own read-only programs, so R1 has
+no script of ours to measure. Never RefreshCache, never a real install, never RepairSystem: the only
 UpdatePackages call has the fixed flags 6 and asserts it. Exit 0 = done, 1 = a call failed, 2 = refused.
 """
 from __future__ import annotations
@@ -29,8 +28,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import resource
-import subprocess
 import sys
 import time
 import urllib.parse
@@ -43,30 +40,6 @@ MARKER = '.win11-update-fixture'
 REAL_SYSTEM_BUS = '/run/dbus/system_bus_socket'
 FILTER_NONE = 1 << 1                       # pk_filter_bitfield_from_string("none")
 SIMULATE_ONLY_TRUSTED = (1 << 2) | (1 << 1)  # pk_transaction_flag_bitfield_from_string("only-trusted;simulate")
-
-# The phasing classifier of design 4.6 (WU-FIX, GW2b review n3): the file host/src/services/update/phasing.rs embeds
-# with include_str!, read here byte for byte (phasing.rs's test probe_py_runs_the_script_this_module_ships compares
-# the two), so R1 measures the script that ships. Read only for --phasing, so every refusal works without it.
-PHASING_FILE = Path(__file__).resolve().parents[2] / 'host' / 'data' / 'phasing.py'
-PHASING_END = '@@end'
-
-
-def phasing_script() -> str:
-    return PHASING_FILE.read_bytes().decode('utf-8')
-
-
-def parse_phasing(stdout: str) -> tuple[list[list[str]], bool]:
-    """phasing.rs's parse_script: lines of 7 fields (name, arch, candidate, phasing_applied, percentage, held,
-    installed) up to the end marker; (rows, whether the marker came)."""
-    rows = []
-    for line in stdout.splitlines():
-        if line == PHASING_END:
-            return rows, True
-        fields = line.split('\t')
-        if len(fields) == 7:
-            rows.append(fields)
-    return rows, False
-
 
 class _Stop(Exception):
     """A clear, expected end of the probe (the report says why)."""
@@ -209,39 +182,12 @@ class Probe:
         return out
 
 
-def run_phasing(packages: list[tuple[str, str]], live: bool) -> dict:
-    """The shipped script on (name, arch) pairs, as phasing.rs runs it (nice 10, idle I/O, 30 s)."""
-    try:
-        script = phasing_script()
-    except (OSError, UnicodeDecodeError) as e:
-        return {'refused': f'{PHASING_FILE}: {e}'}
-    if live:
-        argv = ['/usr/bin/nice', '-n', '10', '/usr/bin/ionice', '-c', '3', '/usr/bin/python3', '-I', '-c', script]
-    else:
-        tool_dir = os.environ.get('WIN11_UPDATE_TOOL_DIR', '')
-        if not tool_dir or not os.path.isfile(os.path.join(tool_dir, MARKER)):
-            return {'refused': 'WIN11_UPDATE_TOOL_DIR is not a marked test tool directory'}
-        argv = [os.path.join(tool_dir, 'python3'), '-I', '-c', script]
-    before = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
-    t0 = time.monotonic()
-    p = subprocess.run(argv, input=''.join(f'{name}\t{arch}\n' for name, arch in packages),
-                       capture_output=True, text=True, timeout=30)
-    rows, ended = parse_phasing(p.stdout)
-    return {'rc': p.returncode, 'seconds': round(time.monotonic() - t0, 3),
-            'peakRssKiB': resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss, 'peakRssBeforeKiB': before,
-            'stdout': p.stdout, 'stderr': p.stderr[-2000:], 'packages': len(packages), 'ended': ended,
-            'noAptPkg': '@@no-apt-pkg' in p.stdout.splitlines(), 'script': str(PHASING_FILE.relative_to(PHASING_FILE.parents[2])),
-            'phased': sorted(r[0] for r in rows if r[3] == '1'), 'held': sorted(r[0] for r in rows if r[5] == '1'),
-            'pup': {r[0]: r[4] for r in rows if r[4] != '-'}, 'tool': 'stub' if not live else '/usr/bin/python3'}
-
-
 def main() -> int:
     ap = argparse.ArgumentParser(description='PackageKit probe for R1 (GW1).')
     ap.add_argument('--bus', help='a private test bus address (without --live)')
     ap.add_argument('--live', action='store_true', help='Robin only: the real system bus')
     ap.add_argument('--get-updates', action='store_true')
     ap.add_argument('--simulate-all', action='store_true')
-    ap.add_argument('--phasing', action='store_true')
     ap.add_argument('--out')
     ap.add_argument('--timeout', type=float, default=300)
     a = ap.parse_args()
@@ -270,8 +216,8 @@ def main() -> int:
             return refuse(*problem)
         if not a.get_updates:
             return refuse('nothing-to-do', 'give --get-updates')
-    if (a.simulate_all or a.phasing) and not a.get_updates:
-        return refuse('nothing-to-do', '--simulate-all and --phasing need --get-updates')
+    if a.simulate_all and not a.get_updates:
+        return refuse('nothing-to-do', '--simulate-all needs --get-updates')
 
     import gi
     gi.require_version('Gio', '2.0')
@@ -299,9 +245,6 @@ def main() -> int:
             report['simulate'] = probe.transaction('UpdatePackages', '(tas)', (SIMULATE_ONLY_TRUSTED, ids))
             report['details'] = det = probe.transaction('GetDetails', '(as)', (ids,))
             det['downloadSizePresent'] = sum(1 for d in det['details'] if 'download-size' in d)
-        if a.phasing:
-            report['phasing'] = run_phasing(sorted({(i.split(';')[0], i.split(';')[2]) for i in ids if i.count(';') == 3}),
-                                            a.live)
         if any(t.get('timedOut') or t.get('exit') != 1 for t in
                (report.get('getUpdates', {}), report.get('simulate', {'exit': 1}), report.get('details', {'exit': 1}))):
             rc = 1

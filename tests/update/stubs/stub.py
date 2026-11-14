@@ -5,19 +5,23 @@ tests/update/run.sh copies this file into ``<run>/guard-bin/`` (first on PATH) a
 (WIN11_UPDATE_TOOL_DIR) and makes one symlink per tool name to it, so ``basename(argv[0])`` is the tool. The
 log is ``<run>/stub-calls.jsonl``, found from the stub's own location (no environment variable, so a caller
 that clears the environment is still logged). One JSON object per call:
-``{"t", "tool", "dir", "argv", "cwd", "stdin", "env", "rc"}``.
+``{"t", "tool", "dir", "argv", "cwd", "env", "rc"}``.
 
 Behaviour:
 * guard-bin: always exit 97 with a message on stderr.
 * tools: if ``<tools>/.responses/<tool>.json`` exists (written by the fake's Load() from the timeline's
-  ``stubs`` map), print its ``stdout``/``stderr`` and exit with its ``rc``; otherwise exit 97.
+  ``stubs`` map), print its ``stdout``/``stderr`` and exit with its ``rc``; otherwise exit 97. The file is one
+  response ``{"rc", "stdout", "stderr"}`` for every argv, or a list of them, each with ``"argv": [...]`` (equal)
+  or ``"argvPrefix": [...]`` (the first arguments): the first entry that matches answers, and an argv no entry
+  matches exits 97 with a message (D-G73: apt-cache answers ``policy <name:arch>...``, ``policy ?phasing`` and
+  ``show`` differently).
 * tools ``nice`` and ``ionice`` are pass-throughs: they skip their own options and exec the named program,
   but only one that exists in the same tools directory (never PATH, never an absolute path).
-* ``stdin`` is recorded (at most 64 KiB, 2 s) only for ``python3`` (the phasing call sends package names).
+* stdin is never read or recorded: every program the update service starts gets its input as argv (D-G73), and
+  a stub that read stdin could wait on, or take, input that belongs to its caller.
 """
 import json
 import os
-import select
 import sys
 import time
 
@@ -32,9 +36,6 @@ def main() -> int:
     kind = os.path.basename(here)
     run = os.path.dirname(here)
     argv = sys.argv[1:]
-    stdin = None
-    if tool == 'python3':
-        stdin = read_stdin()
     rc, out, err, exec_target = BLOCKED, '', f'win11 update stub: {tool} is blocked in the test layer ({kind})\n', None
     if kind == 'tools' and tool in ('nice', 'ionice'):
         target, rest = passthrough(tool, argv)
@@ -48,14 +49,17 @@ def main() -> int:
         response = os.path.join(here, '.responses', tool + '.json')
         try:
             with open(response, encoding='utf-8') as f:
-                spec = json.load(f)
-            rc, out, err = int(spec.get('rc', 0)), spec.get('stdout', ''), spec.get('stderr', '')
+                spec = answer(json.load(f), argv)
+            if spec is None:
+                err = f'win11 update stub: {tool} has no response for this argv in {response}\n'
+            else:
+                rc, out, err = int(spec.get('rc', 0)), spec.get('stdout', ''), spec.get('stderr', '')
         except FileNotFoundError:
             pass
-        except (OSError, ValueError) as e:
+        except (OSError, ValueError, TypeError, AttributeError) as e:
             err = f'win11 update stub: bad response file {response}: {e}\n'
     record = {'t': round(time.time(), 3), 'tool': tool, 'dir': kind, 'argv': argv, 'cwd': os.getcwd(),
-              'stdin': stdin, 'env': {k: os.environ[k] for k in ENV_KEYS if k in os.environ}, 'rc': rc}
+              'env': {k: os.environ[k] for k in ENV_KEYS if k in os.environ}, 'rc': rc}
     if exec_target:
         record['exec'] = os.path.basename(exec_target[0])
     line = json.dumps(record, ensure_ascii=False) + '\n'
@@ -78,6 +82,18 @@ def main() -> int:
     return rc
 
 
+def answer(spec, argv: list):
+    """The response for argv: the one object, or the first list entry whose argv or argvPrefix matches; None
+    when no entry matches."""
+    if isinstance(spec, dict):
+        return spec
+    for entry in spec:
+        prefix = entry.get('argvPrefix', [])
+        if entry.get('argv', argv) == argv and argv[:len(prefix)] == prefix:
+            return entry
+    return None
+
+
 def passthrough(tool: str, argv: list) -> tuple:
     """(program, its args) after nice's / ionice's own options."""
     args = list(argv)
@@ -90,25 +106,6 @@ def passthrough(tool: str, argv: list) -> tuple:
         if opt in with_value and args:
             args.pop(0)
     return (args[0], args[1:]) if args else (None, [])
-
-
-def read_stdin():
-    try:
-        if os.isatty(0):
-            return None
-        chunks, total, deadline = [], 0, time.time() + 2.0
-        while total < 65536:
-            left = deadline - time.time()
-            if left <= 0 or not select.select([0], [], [], left)[0]:
-                break
-            data = os.read(0, 65536 - total)
-            if not data:
-                break
-            chunks.append(data)
-            total += len(data)
-        return b''.join(chunks).decode('utf-8', 'replace')
-    except (OSError, ValueError):
-        return None
 
 
 if __name__ == '__main__':

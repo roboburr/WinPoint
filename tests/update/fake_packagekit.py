@@ -589,9 +589,10 @@ def validate_timeline(tl: dict) -> None:
         if pid not in tl.get('packages', {}):
             raise TimelineError(f'updates: {pid!r} is not in packages')
     names = json.loads((STUBS_SRC / 'names.json').read_text())['tools']
-    for tool in tl.get('stubs', {}):
+    for tool, spec in tl.get('stubs', {}).items():
         if tool not in names:
             raise TimelineError(f'stubs: {tool!r} is not a tool stub (stubs/names.json)')
+        _check_stub_response(f'stubs.{tool}', spec)
     for rel in tl.get('fixtures', {}):
         _fixture_rel(rel)
     if tl.get('onVanish', 'continue') not in ('continue', 'cancel'):
@@ -603,6 +604,33 @@ def validate_timeline(tl: dict) -> None:
                 raise TimelineError(f'nm: unknown property {k}')
             if k in ('Connectivity', 'Metered', 'State'):
                 ev(f'NM.{k}', x)
+
+
+def _check_stub_response(where: str, spec) -> None:
+    """One response {rc?, stdout?, stderr?} for every argv, or (D-G73) a non-empty list of them, each with exactly
+    one of "argv" (the whole argv) and "argvPrefix" (its first arguments); stubs/stub.py answers with the first
+    entry that matches and exits 97 when none does."""
+    listed = isinstance(spec, list)
+    if listed and not spec:
+        raise TimelineError(f'{where}: an empty list')
+    for i, entry in enumerate(spec if listed else [spec]):
+        here = f'{where}[{i}]' if listed else where
+        if not isinstance(entry, dict):
+            raise TimelineError(f'{here}: a response must be an object')
+        match = [k for k in ('argv', 'argvPrefix') if k in entry]
+        if len(match) != (1 if listed else 0):
+            want = 'exactly one of argv and argvPrefix' if listed else 'no argv or argvPrefix outside a list'
+            raise TimelineError(f'{here}: needs {want}, has {match}')
+        extra = set(entry) - {'rc', 'stdout', 'stderr'} - set(match)
+        if extra:
+            raise TimelineError(f'{here}: unknown keys {sorted(extra)}')
+        if match and not (isinstance(entry[match[0]], list) and all(isinstance(a, str) for a in entry[match[0]])):
+            raise TimelineError(f'{here}: {match[0]} must be a list of strings')
+        rc = entry.get('rc', 0)
+        if not isinstance(rc, int) or isinstance(rc, bool) or not 0 <= rc <= 255:
+            raise TimelineError(f'{here}: rc must be an exit code 0-255')
+        if not all(isinstance(entry.get(k, ''), str) for k in ('stdout', 'stderr')):
+            raise TimelineError(f'{here}: stdout and stderr must be strings')
 
 
 def _fixture_rel(rel: str) -> str:
@@ -951,6 +979,7 @@ class Fake:
                  f'activatable={self.activatable}, nm={self.nm_owned}')
 
     def _write_stub_responses(self, stubs: dict) -> None:
+        """<tools>/.responses/<tool>.json per stub of a validated timeline: one object or the list form."""
         if not self.tool_dir:
             return
         rdir = self.tool_dir / '.responses'
@@ -1728,6 +1757,22 @@ def cmd_activate(a) -> int:
 # Stub log
 # ----------------------------------------------------------------------------------------------------------
 
+def apt_policy(text: str) -> dict[str, dict]:
+    """`apt-cache policy` output (C locale) as {apt name: {"installed", "candidate"}}: a block starts at a line
+    `<name>:` or `<name>:<arch>:` and its `  Installed:` / `  Candidate:` lines follow; `(none)` is None."""
+    out, block = {}, None
+    for line in text.splitlines():
+        if not line.startswith(' '):
+            name = line[:-1] if line.endswith(':') else ''
+            block = out.setdefault(name, {}) if re.fullmatch(r'[a-z0-9][a-z0-9+.-]*(:[a-z0-9-]+)?', name) else None
+        elif block is not None:
+            for key in ('Installed', 'Candidate'):
+                if line.startswith(f'  {key}:'):
+                    value = line.split(':', 1)[1].strip()
+                    block[key.lower()] = None if value in ('', '(none)') else value
+    return out
+
+
 def read_stub_log(path: Path, start: int = 0) -> list[dict]:
     try:
         lines = path.read_text(encoding='utf-8').splitlines()
@@ -1736,14 +1781,25 @@ def read_stub_log(path: Path, start: int = 0) -> list[dict]:
     return [json.loads(x) for x in lines[start:] if x.strip()]
 
 
+def _expand_matcher(x) -> list[dict]:
+    """One expected entry as the plain matchers it stands for, in order (count and group expanded)."""
+    m = {'tool': x} if isinstance(x, str) else dict(x)
+    count = int(m.pop('count', 1))
+    if 'group' in m:
+        group = m.pop('group')
+        if m or not isinstance(group, list) or not group:
+            raise ValueError(f'a group is {{"group": [matchers], "count"?}}, not {x!r}')
+        return [e for g in group for e in _expand_matcher(g)] * count
+    return [m] * count
+
+
 def check_stub_log(path: Path, expected: list, start: int = 0) -> dict:
     """expected: ordered list of matchers: a tool name, or {"tool", "argv"?, "argvPrefix"?, "dir"?, "count"?}.
-    "count" (GW2b) stands for that many consecutive calls of the same matcher (0 allowed); default 1."""
+    "count" (GW2b) stands for that many consecutive calls of the same matcher (0 allowed); default 1.
+    {"group": [matchers], "count"?} (D-G73) stands for count rounds of the group's calls in order, for example
+    one round of the phasing classifier's three programs per GetUpdates."""
     actual = read_stub_log(path, start)
-    want = []
-    for x in expected:
-        m = {'tool': x} if isinstance(x, str) else dict(x)
-        want.extend([m] * int(m.pop('count', 1)))
+    want = [m for x in expected for m in _expand_matcher(x)]
     unexpected, missing, i = [], [], 0
 
     def match(m, rec):
@@ -2381,27 +2437,39 @@ class SelfTest:
                 fail(f'control {step["control"]} -> {r!r} lacks {exp["contains"]!r}')
             return
         if 'phasing' in step:
+            # D-G73: the three programs of host/src/services/update/phasing.rs, in its order, through the tool stubs
             ids = self.resolve(step['phasing'], ctx)
-            names = [p.split(';')[0] for p in ids]
+            specs = list(dict.fromkeys(f'{i.split(";")[0]}:{i.split(";")[2]}' for i in ids))   # in order, once each
+            calls = [('apt-cache', ['policy', '?phasing']), ('apt-cache', ['policy', '-o', 'APT::Cmd::Pattern-Only=true'] + specs),
+                     ('apt-mark', ['showhold'])]
             mark = len(read_stub_log(self.stub_log))
-            p = subprocess.run([str(self.tools / 'python3'), '-I', '-c', '# GW1 self-test client: phasing call'],
-                               input=''.join(n + '\n' for n in names), capture_output=True, text=True, timeout=15)
-            if p.returncode != 0:
-                fail(f'phasing stub rc {p.returncode}: {p.stderr.strip()}')
-            out = {}
-            for line in p.stdout.splitlines():
-                cols = line.split('\t')
-                if len(cols) == 5:
-                    out[cols[0]] = cols
-            excluded = {n for n, c in out.items() if c[2] == '1' or c[4] == '1'}
-            ctx[step.get('save', 'install')] = [pid for pid in ids if pid.split(';')[0] not in excluded]
-            if 'phased' in exp and sorted(n for n, c in out.items() if c[2] == '1') != sorted(exp['phased']):
-                fail(f'phased {sorted(n for n, c in out.items() if c[2] == "1")} != {exp["phased"]}')
+            outs = []
+            for tool, argv in calls:
+                p = subprocess.run([str(self.tools / tool)] + argv, stdin=subprocess.DEVNULL, capture_output=True,
+                                   text=True, timeout=15)
+                if p.returncode != 0:
+                    fail(f'{tool} {argv[:2]} stub rc {p.returncode}: {p.stderr.strip()}')
+                outs.append(p.stdout)
+            phasing, policy = apt_policy(outs[0]), apt_policy(outs[1])
+            holds = {line.strip() for line in outs[2].splitlines() if line.strip()}
+            phased, held = set(), set()
+            for pid in ids:
+                name, version, arch = pid.split(';')[:3]
+                apt = f'{name}:{arch}' if f'{name}:{arch}' in policy else name     # apt's FullName(true)
+                if policy.get(apt, {}).get('candidate') != version:
+                    fail(f'{pid}: apt-cache policy names the candidate {policy.get(apt, {}).get("candidate")!r}')
+                if apt in phasing:
+                    phased.add(pid)
+                if apt in holds:
+                    held.add(pid)
+            ctx[step.get('save', 'install')] = [pid for pid in ids if pid not in phased | held]
+            if 'phased' in exp and sorted(pid.split(';')[0] for pid in phased) != sorted(exp['phased']):
+                fail(f'phased {sorted(pid.split(";")[0] for pid in phased)} != {exp["phased"]}')
             if 'install' in exp and len(ctx[step.get('save', 'install')]) != exp['install']:
                 fail(f'{len(ctx[step.get("save", "install")])} ids to install != {exp["install"]}')
             recs = read_stub_log(self.stub_log, mark)
-            if [r['tool'] for r in recs] != ['python3'] or recs[0]['stdin'] != ''.join(n + '\n' for n in names):
-                fail(f'stub log after the phasing call: {[(r["tool"], (r["stdin"] or "")[:40]) for r in recs]}')
+            if [(r['tool'], r['argv']) for r in recs] != [(tool, argv) for tool, argv in calls]:
+                fail(f'stub log after the phasing calls: {[(r["tool"], r["argv"][:3]) for r in recs]}')
             return
         if 'disconnect' in step:
             ctx['clients'][step['disconnect']].close()
@@ -2652,7 +2720,7 @@ class SelfTest:
         return {'violations': v}
 
     def meta_stub_log(self, fails):
-        self.control('Load', ['phased-as-normal'])        # writes the python3 response file
+        self.control('Load', ['phased-as-normal'])        # writes the apt-cache and apt-mark response lists
         mark = len(read_stub_log(self.stub_log))
         env = dict(os.environ)
         rcs = {}
@@ -2676,13 +2744,21 @@ class SelfTest:
         if not ok['ok']:
             fails.append(f'the check refused the expected calls: {ok}')
         mark2 = len(read_stub_log(self.stub_log))
-        p = subprocess.run([str(self.tools / 'nice'), '-n', '10', 'python3', '-I', '-c', 'x'],
-                           input='ubuntu-drivers-common\n', capture_output=True, text=True, timeout=10)
+        p = subprocess.run([str(self.tools / 'nice'), '-n', '10', 'apt-cache', 'policy', 'ubuntu-drivers-common:amd64'],
+                           stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=10)
         q = subprocess.run([str(self.tools / 'nice'), '-n', '10', '/usr/bin/id'], capture_output=True, timeout=10)
         recs = read_stub_log(self.stub_log, mark2)
-        if p.returncode != 0 or 'ubuntu-drivers-common\t' not in p.stdout or q.returncode != 97 \
-                or [r['tool'] for r in recs] != ['nice', 'python3', 'nice']:
+        if p.returncode != 0 or 'ubuntu-drivers-common:\n' not in p.stdout or q.returncode != 97 \
+                or [r['tool'] for r in recs] != ['nice', 'apt-cache', 'nice']:
             fails.append(f'nice pass-through: rc {p.returncode}/{q.returncode}, {[r["tool"] for r in recs]}')
+        # D-G73 list form: an argv that no entry matches is refused like a tool without a response
+        mark3 = len(read_stub_log(self.stub_log))
+        m = subprocess.run([str(self.tools / 'apt-mark'), 'hold', 'ubuntu-drivers-common'], stdin=subprocess.DEVNULL,
+                           capture_output=True, text=True, timeout=10)
+        recs = read_stub_log(self.stub_log, mark3)
+        if m.returncode != 97 or 'no response for this argv' not in m.stderr \
+                or [(r['tool'], r['rc']) for r in recs] != [('apt-mark', 97)]:
+            fails.append(f'apt-mark hold: rc {m.returncode}, {m.stderr.strip()[-120:]}, {recs}')
         return {'exitCodes': rcs, 'caught': len(got['unexpected'])}
 
     def meta_guard_bin(self, fails):
@@ -2700,7 +2776,7 @@ class SelfTest:
                'gnome-terminal', 'kgx', 'unattended-upgrade'}
         if gw1 - ge0c:
             fails.append(f'tests/gnome/harness.py STUBS lacks the GW1 additions {sorted(gw1 - ge0c)}')
-        loose = set(names['tools']) - guard - {'python3', 'sh', 'nice', 'ionice'}
+        loose = set(names['tools']) - guard - {'sh', 'nice', 'ionice'}
         if loose:
             fails.append(f'tool stubs not in guard-bin: {sorted(loose)}')
         path0 = os.environ['PATH'].split(':')[0]
@@ -2732,17 +2808,18 @@ class SelfTest:
                 fails.append(f'probe {label}: rc {p.returncode}, stderr {p.stderr.strip()[-200:]}')
         self.control('Load', ['available-mixed'])
         self.control('Run')
-        p = subprocess.run(probe + ['--bus', self.addr, '--get-updates', '--simulate-all', '--phasing', '--out', str(out)],
+        p = subprocess.run(probe + ['--bus', self.addr, '--get-updates', '--simulate-all', '--out', str(out)],
                            capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
         result['private bus'] = p.returncode
         if p.returncode != 0:
             fails.append(f'probe on the private bus: rc {p.returncode}: {p.stderr.strip()[-300:]}')
         else:
             data = json.loads(out.read_text())
+            # D-G73: the probe runs no program (the phasing classifier is apt's own programs, phasing.rs)
             if len(data['getUpdates']['packages']) != 24 or not data['simulate']['packages'] \
-                    or len(data['phasing']['phased']) != 2 or data['bus'] != 'private':
+                    or 'phasing' in data or data['bus'] != 'private':
                 fails.append(f'probe output: {len(data["getUpdates"]["packages"])} packages, '
-                             f'{len(data["simulate"]["packages"])} simulated, phasing {data["phasing"]["phased"]}')
+                             f'{len(data["simulate"]["packages"])} simulated, keys {sorted(data)}')
         calls = [c['method'] for c in json.loads(self.control('CallsJson'))]
         forbidden = [c for c in calls if c in ('RefreshCache', 'RepairSystem')]
         ups = [c for c in json.loads(self.control('CallsJson')) if c['method'] == 'UpdatePackages']

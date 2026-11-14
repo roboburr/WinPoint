@@ -151,7 +151,7 @@ fn no_seam_variable_means_the_system_table() {
     let setup = paths::resolve(&Env::fixture(&[], 1000)).unwrap();
     assert!(!setup.test);
     assert_eq!(setup.bus, BusTarget::System);
-    assert!(setup.tools.path(Tool::Python3).unwrap().is_absolute());
+    assert!(setup.tools.path(Tool::AptMark).unwrap().is_absolute());
     assert!(!setup.paths.fixture);
 }
 
@@ -169,9 +169,9 @@ fn valid_seams_reroot_every_path_and_take_tools_only_from_the_stub_dir() {
         assert_eq!(setup.tools.path(tool).unwrap(), f.tools.join(tool.name()));
     }
     // a stub that is not there is a seam error, never a PATH or absolute fallback
-    fs::remove_file(f.tools.join("python3")).unwrap();
-    assert!(setup.tools.path(Tool::Python3).is_err());
-    assert!(setup.tools.command(Tool::Python3).is_err());
+    fs::remove_file(f.tools.join("apt-mark")).unwrap();
+    assert!(setup.tools.path(Tool::AptMark).is_err());
+    assert!(setup.tools.command(Tool::AptMark).is_err());
     // test mode without a tool directory: no tool at all
     let no_tools = paths::resolve(&Env::fixture(&[(VAR_FIXTURE_ROOT, &Fixture::s(&f.root))], uid())).unwrap();
     assert!(Tool::ALL.iter().all(|t| no_tools.tools.path(*t).is_err()));
@@ -186,7 +186,7 @@ fn tool_children_get_the_stub_path_and_the_test_buses_only() {
     let f = Fixture::new("childenv");
     let report = f.base.join("env.txt");
     script(
-        &f.tools.join("python3"),
+        &f.tools.join("apt-mark"),
         &format!(
             "{{ echo \"PATH=$PATH\"; echo \"SYSTEM=$DBUS_SYSTEM_BUS_ADDRESS\"; echo \"SESSION=$DBUS_SESSION_BUS_ADDRESS\"; \
              echo \"HOME=${{HOME:-}}\"; echo \"PKEXEC=$(command -v pkexec)\"; }} > '{}'\n",
@@ -195,7 +195,7 @@ fn tool_children_get_the_stub_path_and_the_test_buses_only() {
     );
     let read = |env: &Env| {
         let setup = paths::resolve(env).unwrap();
-        let status = setup.tools.command(Tool::Python3).unwrap().status().unwrap();
+        let status = setup.tools.command(Tool::AptMark).unwrap().status().unwrap();
         assert!(status.success());
         let text = fs::read_to_string(&report).unwrap();
         text.lines().map(|l| l.split_once('=').map(|(k, v)| (k.to_owned(), v.to_owned())).unwrap()).collect::<std::collections::BTreeMap<_, _>>()
@@ -215,7 +215,7 @@ fn tool_children_get_the_stub_path_and_the_test_buses_only() {
     assert!(f.never_connected());
     // production: PATH=/usr/bin:/bin, no bus variable (the command is only built, never run)
     let system = paths::resolve(&Env::fixture(&[], 1000)).unwrap();
-    let command = system.tools.command(Tool::Python3).unwrap();
+    let command = system.tools.command(Tool::AptMark).unwrap();
     let envs: Vec<(String, String)> = command
         .get_envs()
         .filter_map(|(k, v)| Some((k.to_string_lossy().into_owned(), v?.to_string_lossy().into_owned())))
@@ -557,20 +557,94 @@ fn no_absolute_exec_path_outside_the_tool_table() {
 
 // ------------------------------------------------------------------------------------- phasing
 
-pub(super) const SCRIPT_OUTPUT: &str = "libsoup-3.0-0\tamd64\t3.6.6-1ubuntu0.3\t0\t-\t0\t3.6.6-1ubuntu0.2\n\
-gnome-shell\tamd64\t50.1-0ubuntu1.6\t1\t10\t0\t50.1-0ubuntu1.5\n\
-linux-image-7.0.0-44-generic\tamd64\t7.0.0-44.44\t0\t-\t1\t-\n\
-libgtk-3-0t64\tamd64\t3.24.53-1\t1\t40\t0\t3.24.52-1\n\
-zlib1g\tamd64\t1:1.3.dfsg-3.1ubuntu3\t0\t-\t0\t1:1.3.dfsg-3.1ubuntu2\n\
-libfoo1\tamd64\t2.0-1\t0\t-\t0\t1.9-1\n\
-garbage line\n\
-libold\tamd64\t1\t0\t-\t0\n\
-Bad Name\tamd64\t1\t0\t-\t0\t-\n\
-@@end\n";
+/// apt's three answers for [`sample_pkgs`] (the shapes of `tests/update/fixtures/phasing/recorded/`): gnome-shell
+/// and libgtk-3-0t64 held back by phasing, a hold on the new kernel, libfoo1 blocked (info 9) by PackageKit.
+pub(super) const POLICY_OUTPUT: &str = "\
+libsoup-3.0-0:
+  Installed: 3.6.6-1ubuntu0.2
+  Candidate: 3.6.6-1ubuntu0.3
+  Version table:
+     3.6.6-1ubuntu0.3 500
+        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages
+ *** 3.6.6-1ubuntu0.2 100
+        100 /var/lib/dpkg/status
+gnome-shell:
+  Installed: 50.1-0ubuntu1.5
+  Candidate: 50.1-0ubuntu1.6
+  Version table:
+     50.1-0ubuntu1.6 500 (phased 10%)
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+ *** 50.1-0ubuntu1.5 100
+        100 /var/lib/dpkg/status
+linux-image-7.0.0-44-generic:
+  Installed: (none)
+  Candidate: 7.0.0-44.44
+  Version table:
+     7.0.0-44.44 500
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+libgtk-3-0t64:
+  Installed: 3.24.52-1
+  Candidate: 3.24.53-1
+  Version table:
+     3.24.53-1 500 (phased 40%)
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+ *** 3.24.52-1 100
+        100 /var/lib/dpkg/status
+zlib1g:
+  Installed: 1:1.3.dfsg-3.1ubuntu2
+  Candidate: 1:1.3.dfsg-3.1ubuntu3
+  Version table:
+     1:1.3.dfsg-3.1ubuntu3 500
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+ *** 1:1.3.dfsg-3.1ubuntu2 100
+        100 /var/lib/dpkg/status
+libfoo1:
+  Installed: 1.9-1
+  Candidate: 2.0-1
+  Version table:
+     2.0-1 500
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+ *** 1.9-1 100
+        100 /var/lib/dpkg/status
+garbage line
+Bad Name:
+  Installed: 1
+  Candidate: 2
+";
+pub(super) const PHASING_OUTPUT: &str = "\
+gnome-shell:
+  Installed: 50.1-0ubuntu1.5
+  Candidate: 50.1-0ubuntu1.6
+  Version table:
+     50.1-0ubuntu1.6 500 (phased 10%)
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+ *** 50.1-0ubuntu1.5 100
+        100 /var/lib/dpkg/status
+libgtk-3-0t64:
+  Installed: 3.24.52-1
+  Candidate: 3.24.53-1
+  Version table:
+     3.24.53-1 500 (phased 40%)
+        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages
+ *** 3.24.52-1 100
+        100 /var/lib/dpkg/status
+";
+pub(super) const HOLDS_OUTPUT: &str = "linux-image-7.0.0-44-generic\n";
+
+/// [`sample_pkgs`] classified by the canned answers above.
+pub(super) fn sample_apt() -> std::collections::HashMap<(String, String), phasing::Phasing> {
+    let wanted: Vec<(String, String)> = sample_pkgs().iter().map(|p| (p.name.clone(), p.arch.clone())).collect();
+    phasing::join(
+        &wanted,
+        &phasing::parse_policy(POLICY_OUTPUT),
+        &phasing::parse_policy(PHASING_OUTPUT),
+        &phasing::parse_holds(HOLDS_OUTPUT),
+    )
+}
 
 #[test]
-fn phasing_script_output_is_parsed_and_needs_its_end_marker() {
-    let parsed = phasing::parse_script(SCRIPT_OUTPUT).unwrap();
+fn apt_answers_are_joined_per_package() {
+    let parsed = sample_apt();
     assert_eq!(parsed.len(), 6);
     let shell = &parsed[&("gnome-shell".into(), "amd64".into())];
     assert!(shell.phased && !shell.held);
@@ -580,9 +654,8 @@ fn phasing_script_output_is_parsed_and_needs_its_end_marker() {
     assert!(!parsed[&("libsoup-3.0-0".into(), "amd64".into())].phased);
     assert_eq!(parsed[&("libsoup-3.0-0".into(), "amd64".into())].installed.as_deref(), Some("3.6.6-1ubuntu0.2"));
     assert_eq!(parsed[&("linux-image-7.0.0-44-generic".into(), "amd64".into())].installed, None, "a new kernel");
-    assert!(!parsed.contains_key(&("libold".into(), "amd64".into())), "six columns: an old script's line");
-    // a cut pipe or a crash: no end marker, no classification
-    assert!(phasing::parse_script(&SCRIPT_OUTPUT.replace("@@end\n", "")).is_none());
+    let blocks = phasing::parse_policy(POLICY_OUTPUT);
+    assert!(blocks.iter().all(|(name, _)| name != "Bad Name"), "a header that is no apt name starts no block");
 }
 
 #[test]
@@ -612,8 +685,7 @@ pub(super) fn sample_pkgs() -> Vec<Pkg> {
 #[test]
 fn phased_and_held_packages_never_reach_a_row_or_update_packages() {
     let mut pkgs = sample_pkgs();
-    let parsed = phasing::parse_script(SCRIPT_OUTPUT).unwrap();
-    phasing::apply(&mut pkgs, Some(&parsed), None);
+    phasing::apply(&mut pkgs, Some(&sample_apt()), None);
     let by = |n: &str| pkgs.iter().find(|p| p.name == n).unwrap().clone();
     assert!(by("gnome-shell").phased);
     assert!(by("libgtk-3-0t64").phased);
@@ -647,8 +719,7 @@ fn a_package_without_an_answer_for_its_version_gets_the_safe_rule() {
         pkg("libsoup-3.0-0", "3.6.6-1ubuntu0.4", 8, "ubuntu-resolute-security"),
         pkg("unknown-pkg", "1.0-1", 5, "ubuntu-resolute-updates"),
     ];
-    let parsed = phasing::parse_script(SCRIPT_OUTPUT).unwrap();
-    assert_eq!(phasing::apply(&mut pkgs, Some(&parsed), None), 3);
+    assert_eq!(phasing::apply(&mut pkgs, Some(&sample_apt()), None), 3);
     assert!(pkgs[0].phased, "apt's candidate 1.6 says nothing about 1.7: held back as phased");
     assert!(!pkgs[1].phased, "the -security pocket is never phased: still offered");
     assert!(pkgs[2].phased, "not in the output");
@@ -657,65 +728,86 @@ fn a_package_without_an_answer_for_its_version_gets_the_safe_rule() {
     assert_eq!(model::install_ids(&rows, None).unwrap(), [pkgs[1].id.clone()]);
 }
 
+/// The classifier runs exactly apt-cache policy ?phasing, apt-cache policy (the packages, names only) and apt-mark
+/// showhold, the names as `name:arch` arguments; any failure of them runs the `apt-cache show` fallback (review F5).
 #[test]
-fn the_classifier_runs_only_the_stub_with_names_on_stdin() {
+fn the_classifier_runs_apt_cache_twice_and_apt_mark_once() {
     let f = Fixture::new("phasing");
-    let input = f.base.join("stdin");
-    let output = f.base.join("canned");
-    write(&output, SCRIPT_OUTPUT);
+    let (policy, phasing_out, holds, show) =
+        (f.base.join("policy"), f.base.join("phasing"), f.base.join("holds"), f.base.join("show"));
+    write(&policy, POLICY_OUTPUT);
+    write(&phasing_out, PHASING_OUTPUT);
+    write(&holds, HOLDS_OUTPUT);
+    write(&show, "Package: zlib1g\nVersion: 1:1.3.dfsg-3.1ubuntu3\nPhased-Update-Percentage: 20\n");
     let cat = format!("{}bin{}cat", '/', '/');
-    script(
-        &f.tools.join("python3"),
-        &format!("echo \"python3 $1 $2\" >> '{log}'\n{cat} > '{input}'\n{cat} '{output}'\n", log = f.log.display(), input = input.display(), output = output.display()),
-    );
+    let log = f.log.display();
+    // `rc` is each answer's exit code: policy (the packages), ?phasing, showhold
+    let stubs = |rc: [u8; 3]| {
+        script(
+            &f.tools.join("apt-cache"),
+            &format!(
+                "echo \"apt-cache $*\" >> '{log}'\ncase \"$1 $2\" in\n'policy ?phasing') {cat} '{}'; exit {} ;;\n\
+                 policy*) {cat} '{}'; exit {} ;;\nshow*) {cat} '{}' ;;\nesac\n",
+                phasing_out.display(),
+                rc[1],
+                policy.display(),
+                rc[0],
+                show.display()
+            ),
+        );
+        script(&f.tools.join("apt-mark"), &format!("echo \"apt-mark $*\" >> '{log}'\n{cat} '{}'\nexit {}\n", holds.display(), rc[2]));
+    };
+    stubs([0, 0, 0]);
     let setup = paths::resolve(&f.env()).unwrap();
     let mut pkgs = sample_pkgs();
-    phasing::classify(&setup.tools, &mut pkgs).unwrap();
-    assert_eq!(f.stub_log(), "python3 -I -c\n");
-    let sent = fs::read_to_string(&input).unwrap();
-    assert!(sent.lines().all(|l| l.split('\t').count() == 2), "{sent}");
-    assert!(sent.contains("gnome-shell\tamd64\n"));
-    assert!(pkgs.iter().find(|p| p.name == "gnome-shell").unwrap().phased);
-    assert_eq!(setup.tools.runs(), 1);
-    // without python3-apt (exit 3): one apt-cache show call
-    script(&f.tools.join("python3"), "echo @@no-apt-pkg\nexit 3\n");
-    script(
-        &f.tools.join("apt-cache"),
-        &format!("echo \"apt-cache $*\" >> '{log}'\nprintf 'Package: zlib1g\\nVersion: 1:1.3.dfsg-3.1ubuntu3\\nPhased-Update-Percentage: 20\\n'\n", log = f.log.display()),
+    assert_eq!(phasing::classify(&setup.tools, &mut pkgs).unwrap(), phasing::Classified::Apt);
+    assert_eq!(
+        f.stub_log(),
+        "apt-cache policy ?phasing\napt-cache policy -o APT::Cmd::Pattern-Only=true libsoup-3.0-0:amd64 gnome-shell:amd64 linux-image-7.0.0-44-generic:amd64 libgtk-3-0t64:amd64 \
+         zlib1g:amd64 libfoo1:amd64\napt-mark showhold\n"
     );
-    let mut pkgs = sample_pkgs();
-    phasing::classify(&setup.tools, &mut pkgs).unwrap();
-    assert!(pkgs.iter().find(|p| p.name == "zlib1g").unwrap().phased);
-    let log = f.stub_log();
-    let call = log.lines().last().unwrap();
-    assert!(call.starts_with("apt-cache show --no-all-versions "), "{call}");
-    assert!(call.contains("zlib1g=1:1.3.dfsg-3.1ubuntu3"));
-    // any other classifier failure runs the fallback too (review F5): a traceback, a missing end marker
-    for broken in ["echo Traceback >&2\nexit 1\n", "echo 'zlib1g\tamd64\t1\t0\t-\t0\t-'\nexit 0\n"] {
-        script(&f.tools.join("python3"), broken);
+    assert_eq!(setup.tools.runs(), 3);
+    let by = |pkgs: &[Pkg], n: &str| pkgs.iter().find(|p| p.name == n).unwrap().clone();
+    assert!(by(&pkgs, "gnome-shell").phased && by(&pkgs, "libgtk-3-0t64").phased);
+    assert!(by(&pkgs, "linux-image-7.0.0-44-generic").held);
+    assert!(!by(&pkgs, "zlib1g").phased, "apt's rule, not the fallback's");
+    let offered: Vec<&str> = pkgs.iter().filter(|p| p.offered()).map(|p| p.name.as_str()).collect();
+    assert_eq!(offered, ["libsoup-3.0-0", "zlib1g"], "every candidate matched: nothing got the safe rule");
+    assert_eq!(by(&pkgs, "zlib1g").from.as_deref(), Some("1:1.3.dfsg-3.1ubuntu2"));
+    // any failure of apt's answers runs the fallback (review F5): an apt without ?phasing (exit 100), a failing
+    // first call, a failing apt-mark
+    for rc in [[0, 100, 0], [100, 0, 0], [0, 0, 1]] {
+        stubs(rc);
         let before = f.stub_log().lines().count();
         let mut pkgs = sample_pkgs();
-        assert_eq!(phasing::classify(&setup.tools, &mut pkgs).unwrap(), phasing::Classified::Fallback, "{broken}");
-        assert!(f.stub_log().lines().skip(before).any(|l| l.starts_with("apt-cache show")), "{broken}: no fallback");
-        assert!(pkgs.iter().find(|p| p.name == "zlib1g").unwrap().phased);
-        // what apt-cache did not answer: the safe rule (libsoup is -security, so it stays offered)
+        assert_eq!(phasing::classify(&setup.tools, &mut pkgs).unwrap(), phasing::Classified::Fallback, "{rc:?}");
+        let call = f.stub_log().lines().skip(before).last().unwrap().to_owned();
+        assert!(call.starts_with("apt-cache show --no-all-versions "), "{rc:?}: {call}");
+        assert!(call.contains("zlib1g=1:1.3.dfsg-3.1ubuntu3"));
+        assert!(by(&pkgs, "zlib1g").phased, "Phased-Update-Percentage: the fallback's rule");
+        // what apt-cache show did not answer: the safe rule (libsoup is -security, so it stays offered)
         let offered: Vec<&str> = pkgs.iter().filter(|p| p.offered()).map(|p| p.name.as_str()).collect();
-        assert_eq!(offered, ["libsoup-3.0-0"], "{broken}");
+        assert_eq!(offered, ["libsoup-3.0-0"], "{rc:?}");
     }
-    // both fail: nothing classified, the safe rule for every package, no panic
+    // everything fails: nothing classified, the safe rule for every package, no panic
     script(&f.tools.join("apt-cache"), "exit 100\n");
     let mut pkgs = sample_pkgs();
     assert_eq!(phasing::classify(&setup.tools, &mut pkgs).unwrap(), phasing::Classified::Unknown);
     let offered: Vec<&str> = pkgs.iter().filter(|p| p.offered()).map(|p| p.name.as_str()).collect();
     assert_eq!(offered, ["libsoup-3.0-0"]);
     assert_eq!(model::totals(&pkgs, None)["count"], 1);
-    // a missing python3 stub is a seam error at once: no further program, the safe rule
-    fs::remove_file(f.tools.join("python3")).unwrap();
+    // a missing stub is a seam error at once: no further program (no fallback), the safe rule
+    stubs([0, 0, 0]);
+    fs::remove_file(f.tools.join("apt-mark")).unwrap();
     let runs = setup.tools.runs();
     let mut pkgs = sample_pkgs();
     assert!(phasing::classify(&setup.tools, &mut pkgs).is_err());
-    assert_eq!(setup.tools.runs(), runs, "nothing ran after the missing stub");
+    assert_eq!(setup.tools.runs(), runs + 2, "the two apt-cache calls, then nothing after the missing stub");
     assert_eq!(pkgs.iter().filter(|p| p.offered()).count(), 1);
+    fs::remove_file(f.tools.join("apt-cache")).unwrap();
+    let runs = setup.tools.runs();
+    assert!(phasing::classify(&setup.tools, &mut sample_pkgs()).is_err());
+    assert_eq!(setup.tools.runs(), runs, "nothing ran");
 }
 
 // ------------------------------------------------------------------------------------- owner election
@@ -1523,7 +1615,7 @@ fn the_snapshot_view_counts_only_offered_packages_and_shows_restarts() {
     let setup = paths::resolve(&f.env()).unwrap();
     let store = store::Store::open(ctx.cache_dir.join("update")).unwrap();
     let mut pkgs = sample_pkgs();
-    phasing::apply(&mut pkgs, Some(&phasing::parse_script(SCRIPT_OUTPUT).unwrap()), None);
+    phasing::apply(&mut pkgs, Some(&sample_apt()), None);
     let boot = store::boot_id(&setup.paths).unwrap();
     store
         .write(
@@ -1619,7 +1711,7 @@ fn system_updates_counts_the_snapshot_once_one_exists() {
     assert!(super::system_updates(&ctx).is_none());
     let store = store::Store::open(ctx.cache_dir.join("update")).unwrap();
     let mut pkgs = sample_pkgs();
-    phasing::apply(&mut pkgs, Some(&phasing::parse_script(SCRIPT_OUTPUT).unwrap()), None);
+    phasing::apply(&mut pkgs, Some(&sample_apt()), None);
     let packages = pkgs.iter().map(Pkg::json).collect::<Vec<_>>();
     // review F4: the snapshot an owner writes when Settings › Update first opens (no check yet) and one without
     // PackageKit keep the apt count

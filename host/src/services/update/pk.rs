@@ -1295,7 +1295,7 @@ impl Engine {
         }
         // a new list: details of the old one are not kept (review F15)
         self.details.clear();
-        // phasing runs off the pk thread (1–2 s of apt cache), the result comes back through the context
+        // phasing runs off the pk thread (three apt programs), the result comes back through the context
         let tools = self.shared.setup.tools.clone();
         let context = glib::MainContext::ref_thread_default();
         let spawned = std::thread::Builder::new().name("update-phasing".into()).spawn(move || {

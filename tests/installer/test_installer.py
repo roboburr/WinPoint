@@ -12,8 +12,8 @@ differs from 3b898e6 by design is left out of those comparisons (SHELL_SPLIT, sa
 WebKit Start and desktop (win11-start, win11-desktop and their entries), the native shell, the Calendar app and the
 native apps came with D-G63/D-G68 and 13-11 (win11-shell, win11-calendar, win11-gtk-<kind>, the Calendar entry and its
 URI scheme default), D-G65 the payload's config/ folder, and since the HTML apps went (git tag last-webkit) the payload
-has no host/ (vendor/host stays in the source tree, for 3b898e6's installer) and only ui/assets of ui/; and the done2
-line of the closing text follows install.py.
+has no host/ (vendor/host left the tree with D-G73; the test trees give 3b898e6's installer a placeholder,
+sandbox.old_installer_host) and only ui/assets of ui/; and the done2 line of the closing text follows install.py.
 Environment: W11_INSTALLER_REAL=0 skips the two REAL cases.
 """
 from __future__ import annotations
@@ -549,8 +549,8 @@ class Installer(unittest.TestCase):
 
     def test_payload_has_only_the_ui_assets(self):
         """The payload's ui/ is vendor/ui/assets alone, also while vendor/ui still holds the HTML apps' files, and it
-        has no host/: vendor/host, the Python reference, stays in the source tree. Without vendor/ui/assets the
-        installer refuses before any change."""
+        has no host/, also while the source tree has a vendor/host (the fixture's placeholder for 3b898e6's
+        installer). Without vendor/ui/assets the installer refuses before any change."""
         root = sandbox.fixture_root(RUN/"fixture-html")
         (root/"vendor/ui/index.html").write_text("<!doctype html><title>GE1c fixture</title>\n")
         (root/"vendor/ui/js").mkdir()
@@ -951,8 +951,7 @@ def real_build(test: unittest.TestCase) -> Path:
 
 def snapshot_inputs() -> str:
     """A fingerprint of the install inputs real_snapshot() copies: the two host tables, extension/ and the manifests by
-    content, vendor/ui, vendor/host and vendor/config by path, size and mtime (the icon tree is stable). vendor/host
-    is an input of 3b898e6's installer only, which requires and installs it."""
+    content, vendor/ui and vendor/config by path, size and mtime (the icon tree is stable)."""
     import hashlib
     digest = hashlib.sha256()
     files = [G/"host/src/desktop-entries.json", G/"host/src/settings-defaults.json",
@@ -961,7 +960,7 @@ def snapshot_inputs() -> str:
     for path in files:
         if path.is_file():
             digest.update(str(path.relative_to(G)).encode() + b"\0" + path.read_bytes())
-    for name in ("ui", "host", "config"):
+    for name in ("ui", "config"):
         for path in sorted((G/"vendor"/name).rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts:
                 st = path.stat()
@@ -971,7 +970,8 @@ def snapshot_inputs() -> str:
 
 def real_snapshot() -> Path:
     """A frozen copy of this tree's install inputs (other steps edit vendor/ meanwhile); made again when those
-    inputs changed since the copy (snapshot_inputs)."""
+    inputs changed since the copy (snapshot_inputs). Its vendor/host is the placeholder 3b898e6's installer
+    requires (sandbox.old_installer_host): the tree has none since D-G73."""
     root = RUN/"real-root"
     stamp = f"GE1c snapshot {snapshot_inputs()}\n"
     if (root/".complete").is_file() and (root/".complete").read_text() == stamp:
@@ -981,7 +981,7 @@ def real_snapshot() -> Path:
     (root/"host/src").mkdir(parents=True)
     for name in ("desktop-entries.json", "settings-defaults.json"):
         shutil.copy2(G/"host/src"/name, root/"host/src"/name)
-    for name in ("ui", "host", "config", "icons", "icon-source"):
+    for name in ("ui", "config", "icons", "icon-source"):
         if not (G/"vendor"/name).is_dir():
             continue
         shutil.copytree(G/"vendor"/name, root/"vendor"/name, symlinks=True,
@@ -989,6 +989,7 @@ def real_snapshot() -> Path:
     for name in ("icon-bundle.json", "ICON_PROVENANCE.md", "ui-sha256.json", "ui-original-sha256.json", "ui-patches.json"):
         if (G/"vendor"/name).is_file():
             shutil.copy2(G/"vendor"/name, root/"vendor"/name)
+    sandbox.old_installer_host(root/"vendor")
     (root/".complete").write_text(stamp)
     return root
 

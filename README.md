@@ -64,7 +64,7 @@ All screenshots come from a private, headless GNOME 50 session at 1440×900 in E
 
 ## Features
 
-- **Taskbar**: pinned and running apps with grouping and jump lists, tray icons, clock and date, centred or left aligned, optional auto-hide.
+- **Taskbar**: pinned and running apps with grouping and jump lists, tray icons, clock and date, centred or left aligned, optional auto-hide. A minimised window shrinks into its taskbar button and grows back out of it when restored.
 - **Start**: pinned apps, All apps, recommended files, the user and power menus, and search over apps, settings, files and the web.
 - **Quick settings**: Wi-Fi, Bluetooth, flight mode, dark mode, do not disturb, brightness and volume sliders, and media controls.
 - **Notifications and calendar**: a notification centre with pop-up toasts, and a month calendar that opens the chosen day in the Calendar app.
@@ -110,7 +110,7 @@ When the extension is enabled it starts `win11-panel`, which replaces itself wit
 
 The apps are separate processes that start on demand. An app's launcher (`win11-explorer`, `win11-app --app settings` and the others, which the app entries and the shell run) starts itself again in its own transient systemd user service (`app-win11-<kind>-….service` in `app.slice`, when the systemd user manager is available), where it replaces itself with the GTK 4 app (`win11-gtk-explorer`, `win11-gtk-settings` …). The app starts its own backend, `win11-app --app <kind> --http-only`, and talks to it the way the shell talks to its backend; window actions and the blur go straight to the extension over D-Bus. The file picker works the same way: `win11-file-portal`, the FileChooser backend of `xdg-desktop-portal`, shows File Explorer in picker mode for each request.
 
-The code lives in two Cargo workspaces: the host in the top folder (the services, backends, launchers, workers and the file portal; it links GLib, GIO and GDK Pixbuf and no GTK) and `native/` (the GTK 4 programs: `win11-shell`, `win11-calendar` and the seven apps on their shared kit). gtk4-rs 0.11 needs a newer glib than the host, and Cargo allows one `glib-sys` per workspace. The earlier HTML versions in WebKitGTK are gone: the taskbar, Start and desktop since 13 November 2026, the apps since 14 November. The last commit with the HTML apps is tagged `last-webkit`.
+The code lives in two Cargo workspaces: the host in the top folder (the services, backends, launchers, workers and the file portal; it links GLib, GIO and GDK Pixbuf and no GTK) and `native/` (the GTK 4 programs: `win11-shell`, `win11-calendar` and the seven apps on their shared kit). gtk4-rs 0.11 needs a newer glib than the host, and Cargo allows one `glib-sys` per workspace. WinPoint's own programs are Rust, with GTK 4 for every window. The exceptions are the GNOME Shell extension, which is JavaScript because GNOME requires it, and a little POSIX shell: the two Windows Update helpers in `host/data` (run as root through pkexec) and a few fixed `sh -c` programs the host hands to pkexec or a terminal (the cleanup steps, the release-upgrade wrapper). No Python of WinPoint's own runs in the session; the installer and the tests are Python. The earlier HTML versions in WebKitGTK are gone: the taskbar, Start and desktop since 13 November 2026, the apps since 14 November. The last commit with the HTML apps is tagged `last-webkit`.
 
 **Memory.** In a private, headless GNOME session at 1440×900 with software rendering, `win11-shell`, its backend and GTK's SVG loader process together used **126 MiB PSS and 93 MiB anonymous memory plus swap** with the final build (14 November; a second run that day measured 144 and 110 MiB). On 12 November, in one session with both versions, the first native build used 119 and 76 MiB, against 443 and 269 MiB for the earlier WebKit taskbar, Start and desktop with all their WebKit processes (`tests/gnome/scenarios/native-shell.py`). The shell uses GTK's cairo renderer by default (`GSK_RENDERER=cairo`); with the GL renderer on llvmpipe that first build used 244 and 113 MiB. The apps, measured the same way, each with its own backend (`tests/gnome/scenarios/native-gtk-apps.py`):
 
@@ -283,7 +283,6 @@ native/kit/       what the apps share: backend client, settings, theme, window f
 host/             the Rust host: services and JSON API, launchers, file portal, workers, i18n tables
 extension/        the GNOME Shell extension (panel, frosted glass, shortcuts, notifications, desktop)
 vendor/ui/        the wallpapers and the Settings icon (the HTML apps are gone: git tag last-webkit)
-vendor/host/      the original Python services, kept as a reference for comparison tests (not installed)
 vendor/config/    the GTK caption button styles
 vendor/icons/     the Win11 icon theme (GPL-3.0-only)
 scripts/          build, install, uninstall, package and UI manifest checks
@@ -331,13 +330,12 @@ Known gaps:
 - **Calendar**: in English the Calendar app starts the week on Sunday while the taskbar calendar uses `time.firstDayOfWeek` (Monday by default). GNOME's calendars and opening a day from the taskbar have not been tested in the private session.
 - **Two calendars in All apps**: on a system with GNOME Calendar, Start's All apps (and GNOME's app grid) list both it and WinPoint's Calendar under the same name ("Calendar", in Dutch "Agenda").
 - **Night light and displays**: night light is not in quick settings, and Settings shows the displays greyed out; both are set in GNOME's own Settings.
-- **Release archive**: the archive that `scripts/package.sh` makes still contains `vendor/host`, the Python reference, which the installer does not install.
 - **Log noise**: the apps set `GDK_DEBUG=portals`, so in a session without `xdg-desktop-portal` (such as the test sandbox) they log a harmless Gdk warning "Failed to read portal settings".
 - **Automated coverage**: jump lists, the tray overflow, desktop context menus, rename and drag have no scenario yet.
 
 ## Licences
 
-- WinPoint's own code and assets are under the [MIT licence](LICENSE). That includes `vendor/ui`, `vendor/host` and `vendor/config`, the author's own earlier work from the Win11 Shell project, except the third-party parts listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- WinPoint's own code and assets are under the [MIT licence](LICENSE). That includes `vendor/ui` and `vendor/config`, the author's own earlier work from the Win11 Shell project, except the third-party parts listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - The bundled **Win11 icon theme** by [yeyushengfan258](https://github.com/yeyushengfan258/Win11-icon-theme) (`vendor/icons/`, `vendor/icon-source/` and `vendor/ui/assets/icons/settings.svg`) is under **GPL-3.0-only**, not MIT. It is based on Ubuntu's Yaru icons. The changes made to it are in [vendor/ICON_PROVENANCE.md](vendor/ICON_PROVENANCE.md).
 - The default **Lotus wallpapers** (`vendor/ui/assets/wallpapers/lotus-dark.svg` and `lotus-light.svg`) are AI-generated (OpenAI ChatGPT image generation) and dedicated to the public domain under [CC0-1.0](LICENSES/CC0-1.0.txt).
 - Two Rust files contain code translated from CPython (PSF-2.0), and the Rust crates linked into the programs keep their own licences ([LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md)).

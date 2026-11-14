@@ -7,10 +7,32 @@
   "H19"
  ],
  "stubs": {
-  "python3": {
-   "rc": 0,
-   "stdout": "openssl\t3.5.3-1ubuntu2.1\t0\t-\t0\nlibssl3t64\t3.5.3-1ubuntu2.1\t0\t-\t0\ntzdata\t2026b-0ubuntu0.26.04\t0\t-\t0\nopenssl\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\nlibssl3t64\tamd64\t3.5.3-1ubuntu2.1\t0\t-\t0\t3.5.3-1ubuntu2.0\ntzdata\tall\t2026b-0ubuntu0.26.04\t0\t-\t0\t2026b-0ubuntu0.26.03\n@@end\n"
-  }
+  "apt-cache": [
+   {
+    "argv": [
+     "policy",
+     "?phasing"
+    ],
+    "rc": 0,
+    "stdout": ""
+   },
+   {
+    "argvPrefix": [
+     "policy"
+    ],
+    "rc": 0,
+    "stdout": "openssl:\n  Installed: 3.5.3-1ubuntu2.0\n  Candidate: 3.5.3-1ubuntu2.1\n  Version table:\n     3.5.3-1ubuntu2.1 500\n        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages\n *** 3.5.3-1ubuntu2.0 100\n        100 /var/lib/dpkg/status\nlibssl3t64:\n  Installed: 3.5.3-1ubuntu2.0\n  Candidate: 3.5.3-1ubuntu2.1\n  Version table:\n     3.5.3-1ubuntu2.1 500\n        500 http://security.ubuntu.com/ubuntu resolute-security/main amd64 Packages\n *** 3.5.3-1ubuntu2.0 100\n        100 /var/lib/dpkg/status\ntzdata:\n  Installed: 2026b-0ubuntu0.26.03\n  Candidate: 2026b-0ubuntu0.26.04\n  Version table:\n     2026b-0ubuntu0.26.04 500\n        500 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages\n *** 2026b-0ubuntu0.26.03 100\n        100 /var/lib/dpkg/status\n"
+   }
+  ],
+  "apt-mark": [
+   {
+    "argv": [
+     "showhold"
+    ],
+    "rc": 0,
+    "stdout": ""
+   }
+  ]
  },
  "packages": {
   "openssl;3.5.3-1ubuntu2.1;amd64;ubuntu-resolute-security": {

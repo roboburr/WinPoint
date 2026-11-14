@@ -175,7 +175,9 @@ pub(crate) fn screen_running(shared: &Shared) -> bool {
 
 /// do-release-upgrade's own rule (`do-release-upgrade:175-191`): an upgradable package whose candidate has no
 /// Phased-Update-Percentage blocks the upgrade, held ones too. → (blocking count, held names when only held ones
-/// block: "Alles" will not install those, so the card names them).
+/// block: "Alles" will not install those, so the card names them). `pup` is apt's stored percentage (phasing.rs);
+/// do-release-upgrade reads the raw field, which differs only for a literal 100, a malformed field or records that
+/// disagree.
 pub(crate) fn updates_pending(snapshot: &Value) -> (usize, Vec<String>) {
     let pkgs: Vec<model::Pkg> = snapshot["packages"]
         .as_array()

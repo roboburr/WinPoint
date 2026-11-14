@@ -25,12 +25,11 @@ tests/gnome/scenarios/*.*/**	*	history	scenario output folders (*.out, *.prep, *
 tests/gnome/baseline/**	*	history	built-in pass baselines; nl/ and en/ are from the WebKit apps
 tests/gnome/README.md	*	history	the harness documentation says what changed when the WebKit apps went and which outputs are history
 #
-# --- the records (decision 7: a banner, not deletion) and the Python reference (decision 4)
+# --- the records (decision 7: a banner, not deletion)
 notes/**	*	history	design notes, plans, reviews and round reports: what was built when, the WebKit apps included
 validation/**	*	history	validation results of earlier versions (WebKit era)
 VALIDATION*.md	*	history	validation reports of earlier versions; each has a banner on what changed since
 PACKAGING_VALIDATION.md	*	history	the packaging report of an earlier version, with its banner
-vendor/host/**	*	history	decision 4: the Python reference host stays in the repo (WebKit2 4.1 included) but is not installed
 #
 # --- Windows Update: Ubuntu's WebKitGTK, JavaScriptCore and libsoup packages (decision 1)
 host/src/services/update/model.rs	libwebkit2gtk-4\.1-|libjavascriptcoregtk-4\.1-|gir1\.2-(webkit2|javascriptcoregtk|soup)|libsoup-3\.0-|"webkit"|"soup"	update-category	the webkit and soup rows of the update list (design §3.3), from Ubuntu package names

@@ -18,7 +18,7 @@ in `/usr/share/dbus-1/interfaces/` (the fake registers exactly those interfaces,
 | `fake_packagekit.py` | the fake (`serve`), its D-Bus activation helper (`activate`), the in-layer driver (`layer`), the reference client (`selftest`), `guard`, `check-stubs`, `decoy` |
 | `timelines/*.json` | 32 timelines: the 31 of design 9.1 plus `daemon-idle-activatable` |
 | `enums.json`, `test_enums.py` | pinned PackageKit/NM enum values; equal to the PackageKitGlib-1.0 and NM-1.0 typelibs (no D-Bus) |
-| `stubs/stub.py`, `stubs/names.json` | the one stub program and the stub names (guard-bin on PATH, the update tool dir) |
+| `stubs/stub.py`, `stubs/names.json` | the one stub program (its answers per argv come from the timeline) and the stub names (guard-bin on PATH, the update tool dir) |
 | `stubs/bus-tests.json` | GW2b: the expectations of each Rust bus test for `run.sh bus-tests` (stub log, calls, timeout, datagrams) |
 | `../../tools/update/probe.py` | R1 probe; without `--live` it accepts only a marked private bus inside a sandbox |
 
@@ -53,7 +53,7 @@ from nothing (`env -i`); the caller's own environment is never looked at:
 
 | Variable | Value inside |
 |---|---|
-| `PATH` | `<run>/guard-bin:/usr/bin:/bin` (guard-bin: 88 stubs, a superset of GE0b's guard-bin and GE0c's `STUBS`) |
+| `PATH` | `<run>/guard-bin:/usr/bin:/bin` (guard-bin: 97 stubs, a superset of GE0b's guard-bin and GE0c's `STUBS`) |
 | `HOME`, `XDG_{CONFIG,DATA,CACHE,STATE}_HOME` | `<run>/home`, `<run>/config`, … |
 | `XDG_RUNTIME_DIR` | `/tmp/w11-update` (the sandbox's own tmpfs, 0700; it holds the bus sockets and the marker) |
 | `TMPDIR` | `/tmp/w11-update/tmp` |
@@ -112,7 +112,8 @@ missing_parts_come_from_the_soname_directory`; after that directory is rebuilt, 
 
 (`run-tests.sh --lib --no-run` no longer works: since the round-2 hang guard, `run-tests.sh` passes `--no-run`
 itself, and cargo refuses it twice.) `bus-tests` runs every test of `stubs/bus-tests.json` in its own `exec` with
-`--expect-stubs` (the whole stub log in order; a matcher may carry `"count": N` for N consecutive calls),
+`--expect-stubs` (the whole stub log in order; a matcher may carry `"count": N` for N consecutive calls, and a
+`"group"` of matchers stands for one round of calls, `"count"` rounds of them),
 `--expect-calls` (the fake's calls since the test's last `Load()`), `--timeout` and, for the two tests whose hosts
 share an events directory, `--allow-layer-dgrams`. Each test also checks every one of its scenarios itself.
 Before the first test, `BIN services::update::bus_tests:: --list --ignored` runs inside the layer: its bus tests
@@ -126,8 +127,10 @@ must be exactly the JSON's (with `--only`: must include each name), and each tes
   (HOME, XDG dirs, fixture root) and `/tmp/w11-update`.
 * `--expect-stubs FILE`: a JSON list of expected stub calls in order: `"tool"` or
   `{"tool", "dir": "tools"|"guard-bin", "argv": [...], "argvPrefix": [...], "count": N}` (`count`, GW2b: N
-  consecutive calls of that matcher, default 1). Without it, any stub call fails the run. `python3 -I fake_packagekit.py check-stubs --log <run>/stub-calls.jsonl --expect F --start N` does the
-  same check from a driver.
+  consecutive calls of that matcher, default 1), or `{"group": [matchers], "count": N}` (D-G73: N rounds of the
+  group's calls in order, such as the phasing classifier's three programs per GetUpdates). Without it, any stub
+  call fails the run. `python3 -I fake_packagekit.py check-stubs --log <run>/stub-calls.jsonl --expect F --start
+  N` does the same check from a driver.
 * `--expect-calls N|FILE`: the fake's calls since the last `Load()` at the end of the run: exactly `N`, or a JSON
   list in order of `"Method"` / `{"method", "path"?, "to"?: "pk"|"nm"|"notify", "noAutoStart"?, "args"?,
   "argsPrefix"?}`. Per-test counts belong in the test itself (`CallCount()` after its own `Load()`).
@@ -189,10 +192,11 @@ activatable) never reach the fake and are not counted.
 
 Top-level keys: `name`, `group`, `title`, `description`, `states` (GW8 screen ids it serves), `daemon`
 (`present`, `activatable`, `locked`, `networkState`, `distroId`, `timeSinceAction`), `nm` (initial properties or
-null), `onVanish`, `forbiddenIds`, `stubs` (`{tool: {rc, stdout, stderr}}`, written to `<tools>/.responses/` on
-Load), `fixtures` (`{relative path: text|null}` written into the fixture root on Load), `batch` (GetUpdates as one
-`packages` event), `destroyMs`, `packages` (`{package id: {info, summary, size, downloadSize?, row}}`), `updates`
-(what GetUpdates lists now), `updateDetails`, `history`, `methods` (`{method key: script}` or
+null), `onVanish`, `forbiddenIds`, `stubs` (`{tool: {rc, stdout, stderr}}`, or per tool a list of such responses
+each with `argv` or `argvPrefix`, see below; written to `<tools>/.responses/` on Load), `fixtures` (`{relative
+path: text|null}` written into the fixture root on Load), `batch` (GetUpdates as one `packages` event), `destroyMs`,
+`packages` (`{package id: {info, summary, size, downloadSize?, row}}`), `updates` (what GetUpdates lists now),
+`updateDetails`, `history`, `methods` (`{method key: script}` or
 `{"each": [script, …]}` per call; keys `RefreshCache`, `GetUpdates`, `GetDetails`, `GetUpdateDetail`,
 `UpdatePackages:simulate`, `UpdatePackages`, `RepairSystem`, `GetOldTransactions`, `Cancel`, `StateHasChanged`;
 missing keys use built-in defaults), `script` (global events queued at Load), `client` (the reference client's
@@ -214,13 +218,27 @@ Reference-client steps: `tx` (with `args`, `plural`, `hints`, `cancelWhen`, `det
 `phasing`, `connect`/`disconnect`, `attach`, `waitSignal`, `waitObserver`, `observerExpect`, `fixtureExists`,
 `sleep`.
 
-The python3 phasing stub answers in two formats at once (GW2b), so both of its readers find their lines and skip
-the others:
-* 5 columns per package, `name<TAB>candidate<TAB>phasing_applied 0|1<TAB>Phased-Update-Percentage or -<TAB>held
-  0|1`: the output of `tools/update/probe.py` `PHASING_SCRIPT`, read by `probe.py` and the reference client;
-* 7 columns per package, `name<TAB>arch<TAB>candidate<TAB>phased<TAB>pup<TAB>held<TAB>installed`, then a line
-  `@@end`: the output of the script in `host/src/services/update/phasing.rs` (it needs the end marker and skips
-  lines without 7 fields).
+A tool stub's response is one object `{rc, stdout, stderr}` (every key optional; `rc` 0, empty texts) that answers
+every argv, or a list of them in which each entry has exactly one of `argv` (the whole argv) and `argvPrefix` (its
+first arguments): `stubs/stub.py` answers with the first entry that matches, and an argv that no entry matches
+exits 97 with a message, like a tool without a response. Load refuses any other shape. The stubs never read
+stdin, and the stub log has no `stdin` field (D-G73: every program the service starts takes its input as argv).
 
-Every timeline with packages has such an answer (GW2b added it to the 27 that had none, with nothing phased); the
-phased flags of `available-mixed`, `only-phased` and `phased-as-normal` are the same in both formats.
+The phasing classifier (`host/src/services/update/phasing.rs`, D-G73) runs three programs per GetUpdates that
+listed packages, and the reference client's `phasing` step runs the same three through the tool stubs (and checks
+that apt's candidate is the offered version), in this order: `apt-cache policy ?phasing`, `apt-cache policy -o
+APT::Cmd::Pattern-Only=true <name:arch>…` and `apt-mark showhold`. Every timeline with packages answers them in apt's C-locale format
+(`tests/update/fixtures/phasing/recorded/policy.txt` shows the real one):
+* `apt-cache`: first `{"argv": ["policy", "?phasing"]}`, the blocks of the packages phasing holds back on this
+  machine (empty when none is); then `{"argvPrefix": ["policy"]}`, a block for every package of the timeline (the
+  classifier reads only the ones it asked for). A block is `<name>:` (`<name>:<arch>:` for a foreign
+  architecture), `  Installed: <version>|(none)`, `  Candidate: <version>|(none)`, `  Version table:`, then per
+  version ` *** <version> <priority>` (the installed one) or five spaces and `<version> <priority>`, with
+  ` (phased N%)` on a version whose Phased-Update-Percentage is below 100, each followed by its source lines
+  (indented further). No timeline has an `apt-cache show` entry: none needs the fallback.
+* `apt-mark`: `{"argv": ["showhold"]}`, one apt name per held package (empty in every timeline).
+
+These responses replaced the one answer of the script classifier before D-G73 (`git show
+last-webkit:tests/update/timelines/<name>.json`) and keep every package's candidate, phased flag, percentage, hold
+and installed version. `available-mixed` (2 phased), `only-phased` (2) and `phased-as-normal` (1) are the
+timelines with phased packages; their `expect.stubs` are the three calls of their client's `phasing` step.

@@ -237,7 +237,7 @@ fn set_icon(cell: &AllesCell, image: &gtk::Image, e: Option<&Entry>) {
     *cell.imp().icon_key.borrow_mut() = key;
     match src {
         IconSrc::Gicon(g) => image.set_from_gicon(&g),
-        IconSrc::Name(n) => image.set_icon_name(Some(n)),
+        IconSrc::Name(n) => kit::icons::set_theme_icon(image, n),
         IconSrc::Texture(t) => image.set_paintable(Some(&t)),
         IconSrc::Glyph(n) => kit::icons::set_glyph(image, n),
     }

@@ -37,6 +37,15 @@ rows of §3.3 stay: they group Ubuntu's packages, which other apps use; the nati
 (`WebKitGTK {version}`, `libsoup {version}`). Everything else, including the "today" observations, is the design as
 it was built in GW1–GW9.
 
+**Updated 2026-11-14 (D-G73): the phasing classifier without Python.** `phasing.rs` no longer runs a python3-apt
+script (`git show last-webkit:host/data/phasing.py`). It asks apt itself, with three read-only programs from the tool
+table, in this order: `apt-cache policy ?phasing` (apt's own per-machine decision), `apt-cache policy -o
+APT::Cmd::Pattern-Only=true <name:arch>…` and `apt-mark showhold`. `Tool::Python3` and `probe.py --phasing` are gone, and so is vendor/host, the Python reference host
+(`git show last-webkit:vendor/host/<path>`). Rewritten to that, each place marked *[D-G73]*: §0 (the phasing line),
+§1.1 (the cleanup-helper template), §4.2 (the `phasing.rs` row), §4.6 (phasing and held packages), §4.11 (the stub
+list), §6.4 (the `updatesPending` rule), §9.1 (the phased-as-normal timeline, probe.py), §9.2, §9.4, §11 R1 and §14. §1.2's observations and §15's
+review table stay as they were written.
+
 ---
 
 ## 0. Summary
@@ -53,7 +62,7 @@ it was built in GW1–GW9.
   `UpdatePackages(ONLY_TRUSTED)`. The client is event-driven (signals and `PropertiesChanged` on its own
   `MainContext`/`MainLoop`), with no 20 ms poll and no 2-hour cap. Robin needs no password for updates
   (`org.freedesktop.packagekit.rules`, verified). *[review]* PackageKit's apt backend has no phasing logic, so the
-  service classifies phased updates itself with apt's own rule (`apt_pkg.DepCache.phasing_applied`, §4.6) and
+  service classifies phased updates itself with apt's own rule (*[D-G73]* `apt-cache policy ?phasing`, §4.6) and
   never passes them to `UpdatePackages`.
 * **Shared state is files** in `~/.cache/win11-gnome/update/` (snapshot, job with boot id, lock, release, compat),
   so a crashed or restarted Settings reattaches through `GetTransactionList` (NO_AUTO_START) or
@@ -120,7 +129,7 @@ it was built in GW1–GW9.
 | Services | `LazyService` per process, routing by prefix, `ctx.language()` read fresh per call, `ctx.dry_run` | `services/mod.rs:62-69, 94-134, 203-253` |
 | Events | Unix datagrams to every `*.sock` in the runtime dir, 60 KiB limit, prefix allowlist **without** `update.` | `events.rs:20, 160-200, 334-362`; `Events::on` observers `:248` |
 | API registry | 172 methods with `dangerous`; dangerous + dry host → envelope `dryRun:true` (the method itself must avoid effects) | `api-methods.json`, `runtime.rs:524-546` |
-| pkexec precedent | root-owned helper check (file and parent uid 0, no g/o write), else `pkexec /bin/sh -c <constant> win11shell-cleanup <args>`; rc 126/127 → "geen wachtwoord"/"wachtwoord klopte niet"; markers `@@ok`/`@@fail`; helper path `/usr/libexec/win11shell/cleanup-helper` is **not installed** by `install.py` | `services/storage/cleanup.rs:661-735`; template `vendor/host/data/{nl.win11shell.cleanup.policy, win11shell-cleanup-helper}` |
+| pkexec precedent | root-owned helper check (file and parent uid 0, no g/o write), else `pkexec /bin/sh -c <constant> win11shell-cleanup <args>`; rc 126/127 → "geen wachtwoord"/"wachtwoord klopte niet"; markers `@@ok`/`@@fail`; helper path `/usr/libexec/win11shell/cleanup-helper` is **not installed** by `install.py` | `services/storage/cleanup.rs:661-735`; template *[D-G73]* `git show last-webkit:vendor/host/data/{nl.win11shell.cleanup.policy, win11shell-cleanup-helper}` (vendor/host is deleted) |
 | Terminal precedent | `default_terminal()` (xdg-terminals.list, then Ptyxis, GNOME Terminal, Console, …), `terminal_command`, sanitised `user_environment(true)`, activation token, spawn through `process_scope::spawn(…, "file-open", Some(env))`. *[review]* `user_environment` is private (`fn`, no `pub`), so `update/upgrade.rs` needs a one-line visibility change (GW7) | `host/src/files/actions.rs:531-685, 910-916` |
 | Single instance? *[review]* | every kind except start/panel/desktop/alles gets `ApplicationFlags::NON_UNIQUE`, so each Settings launch is a new process; `shell.openApp` always spawns (Taakbeheer's health item opens `settings` `page:update`) | `lib.rs:295-301`, `services/shell.rs:177`, `sysmon/health.rs:333` |
 | Preloaded Start *[review]* | the panel prewarms Start as its child, SIGTERMs it on its own shutdown and prewarms a new one after it starts again | `lib.rs:515, 559-585` |
@@ -584,7 +593,7 @@ Everything else on the page (backup, reset, about) stays byte-identical.
 | `update/paths.rs` | every system path and tool path in one `Paths`/`Tools` struct; the test re-rooting and the fail-closed seam check of §4.11 *[review]*; the only file under `update/` allowed to contain an absolute exec path | GW2 |
 | `update/pk.rs` | event-driven PackageKit client: `Client::connect(bus)`, `transaction(role)`, signal and property handling, NO_AUTO_START reads, enum table | GW2 |
 | `update/model.rs` | enums, row grouping, phase derivation, progress throttling (pure functions, unit-tested) | GW2 |
-| `update/phasing.rs` *[review]* | the phasing/held classifier of §4.6 (one batched read-only `python3 -I -c <constant>` with `apt_pkg`; fallback `apt-cache show`), parser unit-tested | GW2 |
+| `update/phasing.rs` *[review]* | the phasing/held classifier of §4.6 (*[D-G73]* three batched read-only apt programs: `apt-cache policy <name:arch>…`, `apt-cache policy ?phasing`, `apt-mark showhold`, joined on apt's package name; fallback `apt-cache show`), parsers unit-tested | GW2 |
 | `update/store.rs` | snapshot, job and `jobs.jsonl` files (atomic write via temp file + rename, 0600), lock, boot id, *[review]* `owner.lock`/`owner.json`, persisted `rev`, `update.request` forwarding | GW2 |
 | `update/restart.rs` | reboot-required FileMonitor and parse; deleted-mapping scan; history fallback | GW2 |
 | `update/net.rs` | NetworkManager `Connectivity`/`Metered` (NO_AUTO_START reads, `PropertiesChanged`) | GW2 |
@@ -727,16 +736,24 @@ In `~/.config/win11-gnome/`: `update-linger-by-us` (stamp, survives the cache) a
   case of §3.3.
 * *[review]* **Phasing and held packages (ours, not PackageKit's).** The apt backend has no phasing code (§1.2), so
   GetUpdates very likely lists phased packages as normal (info 5) or security updates, and `UpdatePackages(ids)` would
-  mark them explicitly and install them early, which Ubuntu's Software Updater never does. After every GetUpdates,
-  `phasing.rs` makes **one** batched, read-only call (`Tools.python3 -I -c '<constant script>'`, package names on
-  stdin, nice 10, 30 s timeout): it opens `apt_pkg.Cache(None)` and `DepCache` without a lock and prints per name
-  `name, candidate version, phasing_applied (0/1), Phased-Update-Percentage or -, held (selection hold) (0/1)`. That
-  is apt's own per-machine rule (machine-id, `APT::Get::Always/Never-Include-Phased-Updates`), the one `apt upgrade`
-  and unattended-upgrades follow. `phasing_applied` → `phased:true`; a hold or info 9 → `held:true`; the
-  percentage is kept as `pup` for do-release-upgrade's coarser rule (§6.4). Without python3-apt the fallback is one
-  `apt-cache show <name>=<ver> …` call: any `Phased-Update-Percentage` counts as phased (do-release-upgrade's rule,
-  conservative). Phased and held packages never enter a row, the default `update.install` set or a simulate. Cost:
-  an `apt_pkg` cache open for about 1–2 s (estimate; R1 measures it), only in the owner, only after a check.
+  mark them explicitly and install them early, which Ubuntu's Software Updater never does. *[D-G73]* After every
+  GetUpdates, `phasing.rs` asks apt itself with three batched, read-only programs from the tool table (each niced,
+  idle I/O, 30 s timeout, environment cleared plus `LANG=C.UTF-8`): `apt-cache policy -o APT::Cmd::Pattern-Only=true
+  <name:arch>…` (in GetUpdates order, deduplicated, names only: per package the installed version, the candidate and
+  the candidate's `(phased N%)`), `apt-cache policy ?phasing` (the packages apt's own rule holds back on this machine: `pkgDepCache::PhasingApplied`
+  with the machine id, `APT::Get::Always/Never-Include-Phased-Updates` and the `-security` exemption, the rule `apt
+  upgrade` and unattended-upgrades follow; exit 0 with no output when nothing is phased, exit 100 on an apt older
+  than 2.7.11) and `apt-mark showhold` (the selection holds). The three answers join on apt's package name (the bare
+  name for the native architecture and `all`, `name:arch` for a foreign one). `?phasing` runs first, so a change of
+  the lists between the calls always shows as a candidate that differs from the later answer or from PackageKit's
+  version, and gets the safe rule. Listed by `?phasing` → `phased:true`; a
+  hold or info 9 → `held:true`; apt's stored percentage is kept as `pup` for do-release-upgrade's coarser rule
+  (§6.4; do-release-upgrade itself reads the raw field of the candidate's first record, which differs only for a
+  literal 100, a malformed field or one version whose records disagree). Any exit code, timeout or spawn failure of one of the three runs the fallback, one `apt-cache show
+  --no-all-versions <name>=<ver> …` call: any `Phased-Update-Percentage` counts as phased (do-release-upgrade's rule,
+  conservative); a missing stub (test mode) is a seam error at once, with no further program. Phased and held
+  packages never enter a row, the default `update.install` set or a simulate. Cost: `apt-cache policy '?phasing'`
+  took 0.23 s on this PC; the classifier runs only in the owner, only after a check.
 * **Install.** `UpdatePackages(SIMULATE|ONLY_TRUSTED = (1<<2)|(1<<1) = 6, ids)` → `Package` info 12/11/13/15
   (installing/updating/removing/obsoleting) and `DownloadSizeRemaining`. *[review]* Confirm-worthy in a simulate are
   removing 13, obsoleting 15, downgrading 20, remove 28, obsolete 29 and downgrade 30 (the typelib has all of them;
@@ -898,9 +915,9 @@ sysmon in any process stay cheap. `system.openUpdater` stays (Geavanceerde optie
     files (§6.4), the soname directory `/usr/lib/x86_64-linux-gnu/` for the post-upgrade check (P03), and a fixture
     procfs `proc/<pid>/{comm,exe,status,cgroup,maps,cmdline}`.
   * `WIN11_UPDATE_TOOL_DIR=<dir>`: stubs for `loginctl`, `xdg-terminal-exec`, `pkexec`, `check-new-release`,
-    `apt-get`, `apt-cache`, `apt-config`, `dpkg-query`, `snap`, *[review]* `python3` (the phasing call), `screen`,
-    `nice`, `ionice` and `sh` (the wrapper). GSettings writes go through `gio::Settings`, which the tests point at the
-    keyfile backend in the private HOME.
+    `apt-get`, `apt-cache`, `apt-config`, `dpkg-query`, `snap`, *[D-G73]* `apt-mark` (`apt-cache` and `apt-mark`
+    answer the phasing calls), `screen`, `nice`, `ionice` and `sh` (the wrapper). GSettings writes go through
+    `gio::Settings`, which the tests point at the keyfile backend in the private HOME.
   * *[review]* **Fail closed.** "Test mode" = any `WIN11_UPDATE_*` variable is set. If any of them fails its check
     (marker missing, euid 0, a bus address that is not `unix:path=` under the test run dir, a missing directory), the
     service enters `unsupported` with `error.code = "test_seam"` (`update.err.testSeam`), opens **no** bus, starts
@@ -1124,7 +1141,9 @@ marker was printed).
    * release offered (`notOffered`);
    * a non-phased upgradable package exists (`updatesPending`): *[review]* do-release-upgrade's own, coarser rule
      (`do-release-upgrade:175-191`): any upgradable package whose candidate has **no** `Phased-Update-Percentage`
-     record, taken from the snapshot's `pup` field (§4.6), so no extra call. Held packages count too, as in Ubuntu's
+     record, taken from the snapshot's `pup` field (§4.6), so no extra call. *[D-G73]* `pup` is apt's stored
+     percentage, so this matches do-release-upgrade's raw-record reading except for a literal
+     `Phased-Update-Percentage: 100` (we block, it does not), a malformed value, or one version whose records disagree. Held packages count too, as in Ubuntu's
      check; if only held packages block, the card's `relUpdatesFirst` lists their names, because "Alles" will not
      install them;
    * `reboot-required.pkgs` has `libc6`, `linux-base` or `linux-image-*` (`rebootFirst`);
@@ -1359,8 +1378,8 @@ and `--remove` stay separate commands.
     lists the rest), repair-required (exit 11 / error 66, then RepairSystem ok), no-space (46), untrusted (exit 8),
     conflict (13), removals-in-simulate (info 13 *[review]* and 28, plus a downgrade 30), metered (NM Metered 1,
     NetworkState 5; *[review]* a second step with GUESS_YES 3);
-  * *[review]* phasing and odd outcomes: phased-as-normal (GetUpdates lists a phased package with info 5; the
-    `python3` stub reports `phasing_applied 1`; the row and the install ids must not contain it),
+  * *[review]* phasing and odd outcomes: phased-as-normal (GetUpdates lists a phased package with info 5; *[D-G73]*
+    the `apt-cache` stub lists it under `?phasing`; the row and the install ids must not contain it),
     success-rows-remain (exit 1 while GetUpdates still lists one job package), cancelled-priority (exit 9 /
     error 65), install-blocked (error 39);
   * reattach and other callers: caller-vanishes-reattach, *[review]* vanish-cancels-download (the fake cancels a
@@ -1382,9 +1401,9 @@ and `--remove` stay separate commands.
   '1.0')`, no D-Bus), skipped when the typelib is absent.
 * `tools/update/probe.py` (for R1): without flags it refuses to touch anything but a private bus. With
   `--live --get-updates [--simulate-all]` it runs `CreateTransaction` → `GetUpdates`, optionally `UpdatePackages
-  (SIMULATE|ONLY_TRUSTED)` and `GetDetails`, and writes JSON. No RefreshCache, no real install. *[review]* `--live
-  --phasing` runs the same constant `apt_pkg` script as `phasing.rs` on the GetUpdates names and records its output,
-  wall time and peak RSS.
+  (SIMULATE|ONLY_TRUSTED)` and `GetDetails`, and writes JSON. No RefreshCache, no real install. *[D-G73]* It has no
+  `--phasing` any more: the classifier is apt's own read-only CLI, which anyone can run (`apt-cache policy
+  '?phasing'`).
 
 ### 9.2 Rust tests
 
@@ -1412,8 +1431,10 @@ and `--remove` stay separate commands.
   * *[review]* fail-closed seams: each `WIN11_UPDATE_*` variable set but invalid → `test_seam`, no bus opened, no tool
     started (the tool stub log stays empty);
   * *[review]* the no-absolute-exec-path grep over `services/update/` and `post_upgrade.rs`;
-  * *[review]* the phasing classifier: parser of the `python3` output and of the `apt-cache show` fallback, and the
-    rule that phased/held ids never reach a row or `UpdatePackages`;
+  * *[review]* the phasing classifier: *[D-G73]* the parsers of `apt-cache policy`, of `?phasing` and of `apt-mark
+    showhold`, the join on apt's package name, the fallback on every failure and the parser of `apt-cache show`; the
+    same answers as the old python3-apt script on the recorded real outputs of tests/update/fixtures/phasing; and
+    the rule that phased/held ids never reach a row or `UpdatePackages`;
   * *[review]* the wrapper outcomes (status-file fixtures × seen/not seen × reboot flag → `startFailed`/`ended`/offer)
     and the `/proc/locks` busy rule on a fixture `locks` file;
   * *[review]* the owner election as pure logic (lock won/lost, takeover, `rev` continuation).
@@ -1474,9 +1495,9 @@ dumps (`tests/i18n/surfaces.json`).
 Real PackageKit (even reads), a real polkit prompt, a real install, `RefreshCache`, `check-new-release`, the real
 archive download, a real Prompt change, real linger, a real `RepairSystem`, a real release upgrade, the GTK
 frontend, the post-upgrade notification on a real GNOME 51, and gsettings writes outside a keyfile backend. These
-are R1–R10. *[review]* Also never: the real `apt_pkg` phasing call (agents only use the stub; R1 runs the real one),
-and the private-tree apt run against anything but a `file:` fixture inside bwrap, and that only with the plan
-exception of C17.
+are R1–R10. *[review]* Also never: the real phasing calls in a test (*[D-G73]* the tests use stubs and the recorded
+outputs of tests/update/fixtures/phasing), and the private-tree apt run against anything but a `file:` fixture
+inside bwrap, and that only with the plan exception of C17.
 
 ---
 
@@ -1533,7 +1554,7 @@ wrapper and its states (GW7 +2), the restart guard and Start handling (GX1 +2), 
 
 | # | Machine | When | Exact command / action | Why only Robin |
 |---|---|---|---|---|
-| R1 | this PC | after GW1 | `cd /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome && python3 -I tools/update/probe.py --live --get-updates --simulate-all --out tests/update/probe-results/$(date +%F).json` | activates root packagekitd on the real bus (no refresh, no install). Answers: what GetUpdates reports for a phased package *[review]* (the design no longer depends on it), removals in an update simulation, `data` field for the security row, whether `Details` has `download-size` *[review]*, count against `apt list --upgradable`, and *[review]* the time and RSS of the real `apt_pkg` phasing call (`probe.py --phasing`, read-only) |
+| R1 | this PC | after GW1 | `cd /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome && python3 -I tools/update/probe.py --live --get-updates --simulate-all --out tests/update/probe-results/$(date +%F).json` | activates root packagekitd on the real bus (no refresh, no install). Answers: what GetUpdates reports for a phased package *[review]* (the design no longer depends on it), removals in an update simulation, `data` field for the security row, whether `Details` has `download-size` *[review]*, count against `apt list --upgradable`, and *[review]* the time and RSS of the real phasing call (*[D-G73]* no longer through probe.py: the classifier is apt's own `apt-cache policy`, and `apt-cache policy '?phasing'` took 0.23 s on this PC) |
 | R2 | this PC | after GW5 is reviewed | *[review]* `cd /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome && python3 scripts/install-system.py --dry-run && python3 scripts/install-system.py` (one password; installs only the four system files, no user-local install), then `ls -l /usr/libexec/win11-gnome/ /usr/share/polkit-1/actions/io.github.win11shell.gnome.*`. Undo: `python3 scripts/install-system.py --remove` | writes system files |
 | R3 | this PC | after Phase A is deployed | deploy: `WIN11_BUILD_DIR=/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/target/release ./scripts/install.sh`, then *[review]* **log out and in** (round 1 changed the extension, so "Win11 Shell opnieuw starten" is not enough). Settings › Update en herstel › Controleren op updates → Alles downloaden en installeren; during the commit `systemd-inhibit --list > tests/update/probe-results/r3-inhibit.txt`; close the Settings window during the download *[review]* and check with `pgrep -a win11-app > tests/update/probe-results/r3-keepalive.txt` that the Settings process stays until the job ends. *[review]* On a later update, to settle C2: while the page still says "Downloaden", end that Settings process (`pkill -TERM -f -- '--app settings'`), reopen Settings and note whether the job went on (reattach) or ended `cancelled` (nothing is half-installed in the download phase). Afterwards `journalctl -u packagekit --since -30min > tests/update/probe-results/r3-journal.txt` | the first real system change; also confirms no prompt for him, conffile behaviour and packagekitd's own inhibitor, *[review]* and whether packagekitd cancels a transaction whose caller vanished (settles C2) |
 | R4 | this PC | after R2 | Settings › Update en herstel › Nieuwe Ubuntu-versies → "Alleen LTS-versies" (password) → `grep -n '^Prompt' /etc/update-manager/release-upgrades` shows `Prompt=lts` → back to "Elke nieuwe versie" (or keep lts, see decision 4) | password; changes /etc |
@@ -1616,8 +1637,9 @@ wrapper and its states (GW7 +2), the restart guard and Start handling (GX1 +2), 
   polkit setup.
 * *[review]* Whether packagekitd cancels a transaction whose caller leaves the bus (C2, R3), and the text frontend's
   exit codes after it has started (R5).
-* *[review]* The real GetUpdates output for a phased package and the real cost of the `apt_pkg` phasing call (R1).
-  The design classifies phasing itself, so neither changes the flow.
+* *[review]* The real GetUpdates output for a phased package and the real cost of the phasing call (R1). The design
+  classifies phasing itself, so neither changes the flow. *[D-G73]* The phasing calls are now three apt programs;
+  `apt-cache policy '?phasing'` took 0.23 s on this PC.
 * *[review]* The Windows 11 24H2 texts in §3 (including the review's changes "Pending restart", "There were problems
   installing some updates" and the advNotify sentence) are from memory; GW8 checks them against a reference set.
 * *[review]* That GE0c's bwrap layer, as it stands after round 0, keeps its current binds when GE0c is finished; the
