@@ -108,7 +108,7 @@ impl SettingsRuntime {
                 let wallpaper_changed = relevant_wallpaper_change(&change);
                 self.sync_effects(&change);
                 // Another host may have committed in between our write and its notification.
-                let change = self.store.reload().ok().flatten().unwrap_or(change);
+                let change = merge_reload(change, self.store.reload().ok().flatten());
                 if wallpaper_changed || relevant_wallpaper_change(&change) {
                     self.sync_wallpaper();
                 }
@@ -150,6 +150,19 @@ impl SettingsRuntime {
         self.stopped.store(true, Ordering::Relaxed);
     }
 }
+/// Our write's change after a reload: the newer settings when another host committed in between, with the paths of
+/// both writes (the shell renders per changed path, native/shell/src/core.rs `touches`, so a path left out is never
+/// shown) and our write's label.
+fn merge_reload(own: Change, newer: Option<Change>) -> Change {
+    let Some(mut newer) = newer else { return own };
+    for path in own.changed {
+        if !newer.changed.contains(&path) {
+            newer.changed.push(path);
+        }
+    }
+    newer.path = own.path.or(newer.path);
+    newer
+}
 fn payload(change: Change) -> Value {
     json!({"settings":change.settings,"path":change.path,"changed":change.changed})
 }
@@ -158,4 +171,33 @@ fn relevant_wallpaper_change(change: &Change) -> bool {
         .changed
         .iter()
         .any(|path| wallpaper::is_relevant(path))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn change(path: Option<&str>, changed: &[&str], mode: &str) -> Change {
+        Change {
+            settings: json!({"theme": {"mode": mode}}),
+            path: path.map(str::to_owned),
+            changed: changed.iter().map(|p| p.to_string()).collect(),
+        }
+    }
+
+    #[test]
+    fn a_peer_write_in_between_keeps_our_paths() {
+        let own = change(Some("theme.mode"), &["theme.mode"], "dark");
+        assert_eq!(merge_reload(own.clone(), None).changed, ["theme.mode"]);
+        let peer = change(None, &["explorer.view"], "dark");
+        let merged = merge_reload(own, Some(peer));
+        assert_eq!(merged.changed, ["explorer.view", "theme.mode"]);
+        assert_eq!(merged.path.as_deref(), Some("theme.mode"));
+        assert_eq!(merged.settings["theme"]["mode"], "dark");
+        let both = merge_reload(
+            change(None, &["theme.mode"], "light"),
+            Some(change(Some("x"), &["theme.mode"], "light")),
+        );
+        assert_eq!((both.changed.len(), both.path.as_deref()), (1, Some("x")));
+    }
 }

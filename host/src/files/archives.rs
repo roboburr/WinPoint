@@ -1,4 +1,5 @@
-//! ZIP creation and ZIP/TAR extraction with the reference Explorer API and transactional publish.
+//! ZIP creation and ZIP/TAR extraction with the reference Explorer API and transactional publish, and the unpacking
+//! of WinPoint's own release tarball ([`extract_release`], D-G74: services/winpoint/job.rs).
 use super::{ApiError, ApiResult, Context, abs_in, directory, io_error, mutate, paths};
 use crate::i18n::Lang;
 use serde_json::{Value, json};
@@ -16,7 +17,7 @@ use std::{
     },
     path::{Component, Path, PathBuf},
     ptr,
-    sync::atomic::{AtomicU64, Ordering},
+    sync::atomic::{AtomicBool, AtomicU64, Ordering},
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 #[path = "archive_ffi.rs"]
@@ -131,7 +132,8 @@ fn c_path(path: &Path) -> io::Result<CString> {
 }
 
 struct Progress<'a> {
-    ctx: &'a Context,
+    /// None: nobody listens (a release bundle, [`extract_release`])
+    ctx: Option<&'a Context>,
     job: Value,
     op: &'static str,
     total: Option<u64>,
@@ -151,7 +153,7 @@ impl<'a> Progress<'a> {
         count: usize,
     ) -> Self {
         Self {
-            ctx,
+            ctx: Some(ctx),
             job: if truthy(job) {
                 job.clone()
             } else {
@@ -177,7 +179,8 @@ impl<'a> Progress<'a> {
             return;
         }
         self.last = Some(Instant::now());
-        self.ctx.emit("files.progress",json!({"jobId":self.job,"op":self.op,"done":self.done,"total":self.total,"items":self.items,"count":self.count,"current":self.current,"finished":finished}));
+        let Some(ctx) = self.ctx else { return };
+        ctx.emit("files.progress",json!({"jobId":self.job,"op":self.op,"done":self.done,"total":self.total,"items":self.items,"count":self.count,"current":self.current,"finished":finished}));
     }
     fn add(&mut self, bytes: u64) {
         self.done = self.done.saturating_add(bytes);
@@ -1167,7 +1170,14 @@ fn extract(args: &Value, ctx: &Context) -> ApiResult {
         ));
     }
     let mut reader = Reader::new(file, index, lang)?;
-    extract_tree(&mut reader, &stage.payload, kind, &mut progress, &path)?;
+    extract_tree(
+        &mut reader,
+        &stage.payload,
+        kind,
+        &mut progress,
+        &path,
+        Rules::Explorer,
+    )?;
     let published = stage
         .publish(&target, true)
         .map_err(|error| io_error(error, &path, lang))?;
@@ -1398,7 +1408,9 @@ impl Tree {
         }
         Ok(file)
     }
-    fn symlink(&mut self, path: &Path, target: &[u8]) -> io::Result<()> {
+    /// A symbolic link at `path`. Its target is checked in its normal form; `exact` writes the archive's own bytes
+    /// (a release bundle: `./go-up.svg` stays `./go-up.svg`), else that normal form. Returns where the link is.
+    fn symlink(&mut self, path: &Path, target: &[u8], exact: bool) -> io::Result<PathBuf> {
         let path = self.resolved(path, true, false)?;
         let target_path = normalized_link(&PathBuf::from(OsString::from_vec(target.to_vec())));
         let joined = path.parent().unwrap_or(Path::new("")).join(&target_path);
@@ -1409,7 +1421,11 @@ impl Tree {
             Err(error) => return Err(error),
         }
         let (parent, name) = self.parent(&path)?;
-        let target = c_path(&target_path)?;
+        let target = if exact {
+            CString::new(target).map_err(|_| io::Error::from_raw_os_error(libc::EINVAL))?
+        } else {
+            c_path(&target_path)?
+        };
         if unsafe { libc::unlinkat(parent.as_raw_fd(), name.as_ptr(), 0) } != 0
             && io::Error::last_os_error().kind() != io::ErrorKind::NotFound
         {
@@ -1418,7 +1434,7 @@ impl Tree {
         if unsafe { libc::symlinkat(target.as_ptr(), parent.as_raw_fd(), name.as_ptr()) } != 0 {
             return Err(io::Error::last_os_error());
         }
-        Ok(())
+        Ok(path)
     }
     fn hardlink(&mut self, path: &Path, target: &[u8]) -> io::Result<()> {
         let path = self.resolved(path, true, false)?;
@@ -1547,19 +1563,48 @@ fn hardlink_metadata(tree: &mut Tree, path: &Path, entry: &Entry) -> io::Result<
     let file = unsafe { File::from_raw_fd(fd) };
     tar_metadata(&file, entry)
 }
+/// What [`extract_tree`] follows: the Explorer's rules, or a release bundle's ([`extract_release`]: everything below
+/// `top`, link targets byte for byte, no hard links, the job's Cancel between members, at most `max_entries`).
+#[derive(Clone, Copy)]
+enum Rules<'a> {
+    Explorer,
+    Release {
+        top: &'a str,
+        stop: &'a AtomicBool,
+        max_entries: u64,
+    },
+}
 fn extract_tree(
     reader: &mut Reader,
     root: &Path,
     kind: Kind,
     progress: &mut Progress<'_>,
     archive: &Path,
+    rules: Rules<'_>,
 ) -> Result<(), ApiError> {
     let lang = reader.lang;
     let mut tree = Tree::new(root).map_err(|error| io_error(error, archive, lang))?;
     let mut pending = Vec::new();
+    let mut links = Vec::new();
+    let mut entries = 0_u64;
     let mut buffer = vec![0_u8; CHUNK];
     while let Some(entry) = reader.next()? {
         validate(&entry, kind, lang)?;
+        if let Rules::Release {
+            top,
+            stop,
+            max_entries,
+        } = rules
+        {
+            entries += 1;
+            if stop.load(Ordering::SeqCst) {
+                return Err(release_cancelled(lang));
+            }
+            if entries > max_entries {
+                return Err(release_too_large(lang));
+            }
+            validate_release(&entry, top, lang)?;
+        }
         progress.current = if kind == Kind::Zip {
             entry.name.clone()
         } else {
@@ -1583,8 +1628,13 @@ fn extract_tree(
             .map_err(|error| extraction_io(error, archive, lang))?;
             reader.skip()?;
         } else if kind == Kind::Tar && entry.symlink.is_some() {
-            tree.symlink(&path, entry.symlink.as_ref().unwrap())
+            let exact = matches!(rules, Rules::Release { .. });
+            let link = tree
+                .symlink(&path, entry.symlink.as_ref().unwrap(), exact)
                 .map_err(|error| extraction_io(error, archive, lang))?;
+            if exact {
+                links.push(link);
+            }
             reader.skip()?;
         } else if kind == Kind::Tar && entry.hardlink.is_some() {
             match tree.hardlink(&path, entry.hardlink.as_ref().unwrap()) {
@@ -1648,10 +1698,225 @@ fn extract_tree(
     }
     tree.finish()
         .map_err(|error| io_error(error, archive, lang))?;
+    if let Rules::Release { top, .. } = rules {
+        release_links_inside(&mut tree, &links, top, lang)?;
+    }
     if kind == Kind::Tar {
         progress.add(progress.total.unwrap_or(0));
     }
     Ok(())
+}
+
+// ------------------------------------------------------------------------------------------------ release bundles
+
+/// The limits of a release bundle ([`extract_release`]): its unpacked bytes and its number of members, and the room
+/// to keep free beyond the unpacked bytes on the file system of `out` (0: not measured).
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct ReleaseLimits {
+    pub max_bytes: u64,
+    pub max_entries: u64,
+    pub spare: u64,
+}
+/// Too little room for a release bundle: `no_space`, with the bytes it needs in `data.size`.
+fn release_no_space(needed: u64, lang: Lang) -> ApiError {
+    let mut error = ApiError::tr(
+        "no_space",
+        lang,
+        "files.noSpaceExtract",
+        crate::i18n::NO_PARAMS,
+    );
+    error.data = Some(json!({"size": needed}));
+    error
+}
+
+fn release_cancelled(lang: Lang) -> ApiError {
+    ApiError::tr(
+        "cancelled",
+        lang,
+        "update.winpoint.err.cancelled",
+        crate::i18n::NO_PARAMS,
+    )
+}
+fn release_too_large(lang: Lang) -> ApiError {
+    bad_archive(&crate::i18n::tr(lang, "files.archiveTooLarge"), lang)
+}
+/// A member of a release bundle: `top` itself (a folder) or below it; a folder, a regular file or a symbolic link
+/// whose target is relative and, read from the link's own folder, stays below `top`. No hard link, no device.
+fn validate_release(entry: &Entry, top: &str, lang: Lang) -> Result<(), ApiError> {
+    let path = normalized(Path::new(&entry.name)).ok_or_else(|| unsafe_path(lang))?;
+    if !path.starts_with(top) {
+        return Err(unsafe_path(lang));
+    }
+    if entry.hardlink.is_some() {
+        return Err(unsafe_link(lang));
+    }
+    let link = entry.symlink.as_ref();
+    if !matches!(
+        (entry.kind, link.is_some()),
+        (libc::S_IFDIR, false) | (libc::S_IFLNK, true) | (libc::S_IFREG | 0, false)
+    ) {
+        return Err(unsafe_device(lang));
+    }
+    if path == Path::new(top) && (entry.kind != libc::S_IFDIR || link.is_some()) {
+        return Err(unsafe_path(lang));
+    }
+    if let Some(target) = link {
+        let target = PathBuf::from(OsString::from_vec(target.clone()));
+        let joined = path.parent().unwrap_or(Path::new("")).join(&target);
+        if target.as_os_str().is_empty()
+            || target.is_absolute()
+            || !normalized(&joined).is_some_and(|resolved| resolved.starts_with(top))
+        {
+            return Err(unsafe_link(lang));
+        }
+    }
+    Ok(())
+}
+/// After the last member: every link of the bundle, followed through the links it passes on disk, ends below
+/// `top` (or nowhere: a missing target). A link checked on its own when it was written can still be led out
+/// through a link written after it (`x/../../q` once `x` points at `..`).
+fn release_links_inside(
+    tree: &mut Tree,
+    links: &[PathBuf],
+    top: &str,
+    lang: Lang,
+) -> Result<(), ApiError> {
+    for link in links {
+        match tree.resolved(link, false, true) {
+            Ok(resolved) if resolved.starts_with(top) => {}
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+            _ => return Err(unsafe_link(lang)),
+        }
+    }
+    Ok(())
+}
+/// Unpack WinPoint's release tarball `archive` (gzip-compressed tar, D-G74) into the new folder `out` (0700, must
+/// not exist) and return `out/<top>`, the bundle. Every member is `top` (`winpoint-V`) or below it; folders, regular
+/// files and relative symbolic links that stay below `top` only (no hard link, device or fifo); link targets are
+/// kept byte for byte (Python's `tarfile` data filter rewrote `./go-up.svg`, which broke the installer's icon
+/// checks); setuid, setgid and sticky bits and group/other write are dropped (the Explorer's rule). The declared sizes
+/// and the member count are checked against `limits` before anything is written, and so is the room for them (the
+/// declared sizes and `limits.spare` on the file system of `out`'s folder: `no_space` with `data.size`; a disk that
+/// fills anyway is `no_space` with the same size), the job's `stop` between members. On any error nothing stays
+/// behind: `out` is removed.
+pub(crate) fn extract_release(
+    archive: &Path,
+    out: &Path,
+    top: &str,
+    limits: ReleaseLimits,
+    stop: &AtomicBool,
+    lang: Lang,
+) -> Result<PathBuf, ApiError> {
+    let single = Path::new(top).components().count() == 1
+        && matches!(
+            Path::new(top).components().next(),
+            Some(Component::Normal(_))
+        );
+    if !single {
+        return Err(unsafe_path(lang));
+    }
+    let file = OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK | libc::O_CLOEXEC)
+        .open(archive)
+        .map_err(|error| io_error(error, archive, lang))?;
+    let metadata = file
+        .metadata()
+        .map_err(|error| io_error(error, archive, lang))?;
+    if !metadata.is_file() {
+        return Err(bad_archive("not a regular file", lang));
+    }
+    let mut reader = Reader::new(
+        file.try_clone()
+            .map_err(|error| io_error(error, archive, lang))?,
+        None,
+        lang,
+    )?;
+    let (mut total, mut entries) = (0_u64, 0_u64);
+    while let Some(entry) = reader.next()? {
+        if stop.load(Ordering::SeqCst) {
+            return Err(release_cancelled(lang));
+        }
+        if reader.kind()? != Kind::Tar {
+            return Err(unsupported(lang));
+        }
+        validate(&entry, Kind::Tar, lang)?;
+        validate_release(&entry, top, lang)?;
+        entries += 1;
+        total = total
+            .checked_add(entry.size)
+            .ok_or_else(|| release_too_large(lang))?;
+        if entries > limits.max_entries || total > limits.max_bytes {
+            return Err(release_too_large(lang));
+        }
+        reader.skip()?;
+    }
+    if entries == 0 {
+        return Err(bad_archive("empty", lang));
+    }
+    drop(reader);
+    let needed = total.saturating_add(limits.spare);
+    if limits.spare > 0
+        && let Some(free) = free_space(out.parent().unwrap_or(out))
+        && free < needed
+    {
+        return Err(release_no_space(needed, lang));
+    }
+    fs::DirBuilder::new()
+        .mode(0o700)
+        .create(out)
+        .map_err(|error| io_error(error, out, lang))?;
+    let result = (|| {
+        let now = file
+            .metadata()
+            .map_err(|error| io_error(error, archive, lang))?;
+        if !same_input(&metadata, &now) {
+            return Err(bad_archive(
+                &crate::i18n::tr(lang, "files.archiveChanged"),
+                lang,
+            ));
+        }
+        let mut reader = Reader::new(file, None, lang)?;
+        let mut progress = Progress {
+            ctx: None,
+            job: Value::Null,
+            op: "extract",
+            total: Some(total),
+            done: 0,
+            items: 0,
+            count: 1,
+            current: String::new(),
+            last: None,
+            finished: true,
+        };
+        let rules = Rules::Release {
+            top,
+            stop,
+            max_entries: limits.max_entries,
+        };
+        extract_tree(&mut reader, out, Kind::Tar, &mut progress, archive, rules)?;
+        let names: Vec<OsString> = fs::read_dir(out)
+            .map_err(|error| io_error(error, out, lang))?
+            .map(|entry| entry.map(|e| e.file_name()))
+            .collect::<io::Result<_>>()
+            .map_err(|error| io_error(error, out, lang))?;
+        let bundle = out.join(top);
+        let is_dir = fs::symlink_metadata(&bundle).is_ok_and(|m| m.is_dir());
+        if names != [OsString::from(top)] || !is_dir {
+            return Err(unsafe_path(lang));
+        }
+        Ok(bundle)
+    })();
+    if result.is_err() {
+        let _ = fs::remove_dir_all(out);
+    }
+    result.map_err(|error| {
+        if error.code == "no_space" {
+            release_no_space(needed, lang)
+        } else {
+            error
+        }
+    })
 }
 
 #[cfg(test)]
@@ -2106,5 +2371,218 @@ mod tests {
             load_error(&ffi::LoadError::Symbol("archive_read_new"), Lang::Nl).message,
             "De archiefbibliotheek mist archive_read_new"
         );
+    }
+
+    // ------------------------------------------------------------------------------------------------ release
+
+    const TOP: &str = "winpoint-9.9.9";
+    const LIMITS: ReleaseLimits = ReleaseLimits {
+        max_bytes: 1 << 20,
+        max_entries: 100,
+        spare: 0,
+    };
+    fn release(tmp: &Temp, entries: &[Fixture<'_>]) -> (PathBuf, PathBuf) {
+        let archive = tmp.0.join("winpoint-9.9.9-linux-x86_64.tar.gz");
+        let _ = fs::remove_file(&archive);
+        fixture(&archive, false, "gz", entries);
+        (archive, tmp.0.join("work/bundle.partial"))
+    }
+    fn unpack(archive: &Path, out: &Path, limits: ReleaseLimits) -> Result<PathBuf, ApiError> {
+        fs::create_dir_all(out.parent().unwrap()).unwrap();
+        extract_release(archive, out, TOP, limits, &AtomicBool::new(false), Lang::En)
+    }
+
+    #[test]
+    fn a_release_bundle_keeps_its_link_targets_byte_for_byte_and_drops_setuid() {
+        let tmp = Temp::new();
+        let mut setuid = Fixture::file("winpoint-9.9.9/bin/win11-panel", b"WinPoint 9.9.9\n");
+        setuid.mode = 0o4775;
+        let (archive, out) = release(
+            &tmp,
+            &[
+                Fixture::directory("winpoint-9.9.9"),
+                Fixture::directory("winpoint-9.9.9/bin"),
+                setuid,
+                Fixture::file("winpoint-9.9.9/icons/go-up.svg", b"<svg/>"),
+                Fixture::link("winpoint-9.9.9/icons/go-top.svg", "./go-up.svg", false),
+                Fixture::link("winpoint-9.9.9/icons/up", "../icons//go-up.svg", false),
+                Fixture::link("winpoint-9.9.9/later", "scripts/install.py", false),
+                Fixture::file("winpoint-9.9.9/scripts/install.py", b"print()\n"),
+            ],
+        );
+        let bundle = unpack(&archive, &out, LIMITS).unwrap();
+        assert_eq!(bundle, out.join(TOP));
+        // the targets exactly as packed (Python's tarfile data filter made `./go-up.svg` into `go-up.svg`)
+        assert_eq!(
+            fs::read_link(bundle.join("icons/go-top.svg")).unwrap(),
+            Path::new("./go-up.svg")
+        );
+        assert_eq!(
+            fs::read_link(bundle.join("icons/up")).unwrap().as_os_str(),
+            "../icons//go-up.svg"
+        );
+        assert_eq!(
+            fs::read(bundle.join("icons/go-top.svg")).unwrap(),
+            b"<svg/>"
+        );
+        assert_eq!(fs::read(bundle.join("later")).unwrap(), b"print()\n");
+        let mode = fs::metadata(bundle.join("bin/win11-panel"))
+            .unwrap()
+            .permissions()
+            .mode();
+        assert_eq!(mode & 0o7000, 0, "no setuid {mode:o}");
+        assert_eq!(mode & 0o100, 0o100, "still executable {mode:o}");
+        let out_mode = fs::metadata(&out).unwrap().permissions().mode();
+        assert_eq!(fs::read_dir(&out).unwrap().count(), 1, "only the bundle");
+        assert!(out_mode & 0o022 == 0, "{out_mode:o}");
+        // a second unpack never reuses a folder that is there
+        assert!(unpack(&archive, &out, LIMITS).is_err());
+        assert!(bundle.join("scripts/install.py").is_file(), "left alone");
+    }
+
+    #[test]
+    fn a_release_bundle_refuses_every_member_outside_its_top_folder() {
+        let tmp = Temp::new();
+        let cases: Vec<(&str, Vec<Fixture<'_>>)> = vec![
+            ("another top", vec![Fixture::file("other/x", b"x")]),
+            ("a file at the root", vec![Fixture::file("README", b"x")]),
+            ("dot-dot", vec![Fixture::file("winpoint-9.9.9/../x", b"x")]),
+            ("absolute", vec![Fixture::file("/winpoint-9.9.9/x", b"x")]),
+            (
+                "a link out of the top",
+                vec![Fixture::link("winpoint-9.9.9/a", "../x", false)],
+            ),
+            (
+                "a link far out",
+                vec![Fixture::link("winpoint-9.9.9/a", "../../../etc", false)],
+            ),
+            (
+                "an absolute link",
+                vec![Fixture::link("winpoint-9.9.9/a", "/etc/passwd", false)],
+            ),
+            (
+                "a hard link",
+                vec![
+                    Fixture::file("winpoint-9.9.9/a", b"x"),
+                    Fixture::link("winpoint-9.9.9/b", "winpoint-9.9.9/a", true),
+                ],
+            ),
+            (
+                "the top as a link",
+                vec![Fixture::link("winpoint-9.9.9", ".", false)],
+            ),
+            (
+                "the top as a file",
+                vec![Fixture::file("winpoint-9.9.9", b"x")],
+            ),
+            (
+                // each link is inside on its own; followed on disk, `a` goes x → top, .. → out, .. → work
+                "a link led out by a later link",
+                vec![
+                    Fixture::directory("winpoint-9.9.9/y"),
+                    Fixture::link("winpoint-9.9.9/y/a", "x/../../q", false),
+                    Fixture::link("winpoint-9.9.9/y/x", "..", false),
+                ],
+            ),
+        ];
+        for (what, entries) in cases {
+            let (archive, out) = release(&tmp, &entries);
+            let error = unpack(&archive, &out, LIMITS).unwrap_err();
+            assert_eq!(error.code, "unsafe_archive", "{what}: {}", error.message);
+            assert!(!out.exists(), "{what}: nothing stays behind");
+            assert!(!tmp.0.join("work/q").exists(), "{what}");
+            no_partial(&tmp.0.join("work"));
+        }
+        let mut fifo = Fixture::file("winpoint-9.9.9/pipe", b"");
+        fifo.kind = libc::S_IFIFO;
+        let (archive, out) = release(&tmp, &[Fixture::directory(TOP), fifo]);
+        assert_eq!(
+            unpack(&archive, &out, LIMITS).unwrap_err().key.as_deref(),
+            Some("files.deviceFiles")
+        );
+        assert!(!out.exists());
+        let (archive, _) = release(&tmp, &[Fixture::directory(TOP)]);
+        let error = extract_release(
+            &archive,
+            &tmp.0.join("x"),
+            "../up",
+            LIMITS,
+            &AtomicBool::new(false),
+            Lang::En,
+        )
+        .unwrap_err();
+        assert_eq!(error.code, "unsafe_archive", "a top folder of one name");
+    }
+
+    #[test]
+    fn a_release_bundle_has_size_and_entry_limits_and_stops_between_members() {
+        let tmp = Temp::new();
+        let entries = [
+            Fixture::directory(TOP),
+            Fixture::file("winpoint-9.9.9/a", b"0123456789"),
+            Fixture::file("winpoint-9.9.9/b", b"0123456789"),
+        ];
+        let (archive, out) = release(&tmp, &entries);
+        for limits in [
+            ReleaseLimits {
+                max_bytes: 19,
+                max_entries: 100,
+                spare: 0,
+            },
+            ReleaseLimits {
+                max_bytes: 1 << 20,
+                max_entries: 2,
+                spare: 0,
+            },
+        ] {
+            let error = unpack(&archive, &out, limits).unwrap_err();
+            assert_eq!(error.code, "bad_archive", "{limits:?}");
+            assert!(!out.exists(), "checked before anything is written");
+        }
+        let exact = ReleaseLimits {
+            max_bytes: 20,
+            max_entries: 3,
+            spare: 0,
+        };
+        assert!(unpack(&archive, &out, exact).is_ok());
+        fs::remove_dir_all(&out).unwrap();
+        // the room for the unpacked bytes and the spare is measured before anything is written: more than this file
+        // system has is `no_space`, with what it needs
+        let free = free_space(&tmp.0).unwrap();
+        let roomy = ReleaseLimits {
+            spare: free + (64 << 20),
+            ..exact
+        };
+        let error = unpack(&archive, &out, roomy).unwrap_err();
+        assert_eq!(error.code, "no_space");
+        assert_eq!(
+            error.data.as_ref().unwrap()["size"].as_u64(),
+            Some(20 + free + (64 << 20))
+        );
+        assert!(!out.exists(), "measured before anything is written");
+        let small = ReleaseLimits {
+            spare: 1 << 20,
+            ..exact
+        };
+        assert!(unpack(&archive, &out, small).is_ok());
+        fs::remove_dir_all(&out).unwrap();
+        let error = extract_release(
+            &archive,
+            &out,
+            TOP,
+            LIMITS,
+            &AtomicBool::new(true),
+            Lang::Nl,
+        )
+        .unwrap_err();
+        assert_eq!(
+            (error.code.as_str(), error.message.as_str()),
+            ("cancelled", "Geannuleerd")
+        );
+        assert!(!out.exists());
+        // not a tarball, or empty
+        fs::write(&archive, b"not an archive").unwrap();
+        assert!(unpack(&archive, &out, LIMITS).is_err());
+        assert!(!out.exists());
     }
 }

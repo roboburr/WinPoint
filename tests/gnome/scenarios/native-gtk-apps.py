@@ -14,7 +14,7 @@ which starts `win11-app --app <kind> --http-only` as its backend (native/APPS.md
   state     the dev state lists widgets with text (the app rendered something, not an empty frame)
   shot      a screenshot of the app focused over the desktop (dark, then light for a few)
   memory    PSS and anonymous memory of the app and everything under it, after a short settle (the WebKit
-            apps of 13-11, for comparison: git show last-webkit:tests/gnome/scenarios/native-gtk-apps.out/results.json)
+            apps of 13-11, for comparison: git show 6ebf169f:tests/gnome/scenarios/native-gtk-apps.out/results.json)
   use       a short interaction per app through the kit dev channel (native/kit/src/dev.rs: state, click by widget
             name, type, key) and the real pointer, each with a check and a screenshot (after the memory sample):
               explorer     double-click on a folder opens it, Back returns; a click and Enter open it, Alt+Left returns

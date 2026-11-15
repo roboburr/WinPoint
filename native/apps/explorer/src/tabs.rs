@@ -1,4 +1,4 @@
-//! The tab strip in the title bar (last-webkit:vendor/ui/js/apps/explorer/tabs.js): a click activates, the middle
+//! The tab strip in the title bar (6ebf169f:vendor/ui/js/apps/explorer/tabs.js): a click activates, the middle
 //! button or the cross closes, "+" opens Start, Left / Right / Enter / Delete on a focused tab; the tabs share the room
 //! (240 px each at most, 52 at least). Dragging files over a tab (dnd.rs) and tabs between windows
 //! (transfer.rs) attach to each tab widget.

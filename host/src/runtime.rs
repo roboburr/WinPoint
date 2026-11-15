@@ -120,6 +120,12 @@ impl Runtime {
             core.set_runtime_info(data);
         }
     }
+    /// D-G74a: make this host the owner of WinPoint's update check (lib.rs run_http_only, on its main thread).
+    pub fn winpoint_start(&self) {
+        if let Some(services) = &self.services {
+            services.winpoint_start();
+        }
+    }
     pub fn beat(&self) {
         *self.beat.lock().unwrap_or_else(|e| e.into_inner()) = Some(Instant::now());
     }
@@ -499,7 +505,7 @@ impl Runtime {
                 closed.store(true, Ordering::Relaxed);
             });
         } else {
-            let hello = json!({"mode":if self.kind=="panel"{"layer"}else{"app"},"version":env!("CARGO_PKG_VERSION"),"dryRun":self.ctx.dry_run,"compositor":"gnome"});
+            let hello = json!({"mode":if self.kind=="panel"{"layer"}else{"app"},"version":crate::VERSION,"dryRun":self.ctx.dry_run,"compositor":"gnome"});
             hello_frame = Some(format!("retry: 1500\n\nevent: hello\ndata: {hello}\n\n"));
         }
         let mut writer = request.into_writer();

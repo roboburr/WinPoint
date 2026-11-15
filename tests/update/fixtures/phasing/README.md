@@ -9,7 +9,7 @@ python3-apt 3.1.0), read by `phasing_matches_the_python3_apt_script` in `host/sr
 | `policy.txt` | `apt-cache policy <name:arch>…` for those pairs (the service adds `-o APT::Cmd::Pattern-Only=true`, which prints the same for names apt knows) |
 | `phasing.txt` | `apt-cache policy ?phasing` |
 | `showhold.txt` | `apt-mark showhold`, trimmed to the requested packages (none of them is held) |
-| `phasing-py.txt` | the python3-apt script the classifier replaced (`git show last-webkit:host/data/phasing.py`) on `input.tsv` |
+| `phasing-py.txt` | the python3-apt script the classifier replaced (`git show 6ebf169f:host/data/phasing.py`) on `input.tsv` |
 
 The mirror `nl.archive.ubuntu.com` is written as `archive.ubuntu.com`, and `showhold.txt` keeps only the requested
 packages; nothing else is changed.

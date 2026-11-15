@@ -154,10 +154,19 @@ impl Store {
     }
     /// Is `name` locked by anyone (us included)? Used by readers: a held job lock means a job runs.
     pub(crate) fn locked(&self, name: &str) -> bool {
+        self.held(name).unwrap_or(false)
+    }
+    /// [`locked`](Self::locked), with the error of a lock file that is not ours alone (try_lock's checks) instead of
+    /// "free"; a missing file is free and is not created.
+    pub(crate) fn held(&self, name: &str) -> io::Result<bool> {
         if !self.path(name).exists() {
-            return false;
+            return Ok(false);
         }
-        matches!(self.try_lock(name), Ok(None))
+        Ok(self.try_lock(name)?.is_none())
+    }
+    /// The folder (`Store::open`'s).
+    pub(crate) fn dir(&self) -> &Path {
+        &self.dir
     }
 }
 

@@ -179,11 +179,18 @@ fn load() {
     });
 }
 
-/// Settings (taskbar.tray) or the language changed.
-pub fn settings_changed() {
+/// Settings (`data`, core::touches) or the language changed: the texts by the language, the icons by where they go
+/// (hiddenMenu, shown, order). taskbar.tray.known, which the backend writes for every new icon, is none of these.
+pub fn settings_changed(data: &Value, lang_changed: bool) {
     with(|t| {
-        t.update_texts();
-        t.render();
+        if lang_changed {
+            t.update_texts();
+        }
+        if lang_changed
+            || crate::core::touches(data, &["taskbar.tray.hiddenMenu", "taskbar.tray.shown", "taskbar.tray.order"])
+        {
+            t.render();
+        }
     });
 }
 

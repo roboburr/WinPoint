@@ -1346,7 +1346,7 @@ mod tests {
             copy(&f, "var/lib/update-manager/meta-release", meta, 1);
             let error = ubuntu_hold(&shared, &json!({"on":true}), Lang::En).unwrap_err();
             assert_eq!((error.code.as_str(), error.key.as_deref()), ("not_held", Some("update.release.err.notHeld")));
-            assert_eq!(error.message, "This is only possible while Win11 Shell isn’t ready for the new Ubuntu version yet.");
+            assert_eq!(error.message, "This is only possible while WinPoint isn’t ready for the new Ubuntu version yet.");
         }
         assert_eq!(keyfile(&f), "");
         // GW6: the embedded releases.json (stonking untested, GNOME 51) is the cheap hold: the postponement is allowed,

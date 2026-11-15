@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Info (last-webkit:vendor/ui/js/apps/settings/pages/about.js): the device and the operating
+//! Instellingen › Systeem › Info (6ebf169f:vendor/ui/js/apps/settings/pages/about.js): the device and the operating
 //! system with "Kopiëren", and related links.
 use super::system::rename_hint;
 use super::{Builder, Content, Page, PageFuture};
@@ -157,7 +157,7 @@ fn about(p: Page) -> PageFuture {
             (t("Editie", "Edition").into(), (!edition.is_empty()).then_some(edition)),
             (t("Kernel", "Kernel").into(), some(&info["kernel"])),
             (t("Bureaublad", "Desktop").into(), desktop.filter(|s| !s.is_empty())),
-            (t("Win11 Shell", "Win11 Shell").into(), shell),
+            ("WinPoint".into(), shell),
             (t("Actief sinds opstarten", "Up time").into(), info["uptime"].as_f64().map(kit::format::duration_long)),
             (t("Gebruiker", "User").into(), user_text),
         ];

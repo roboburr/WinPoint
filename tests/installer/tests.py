@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Runs test_installer.py and test_extension_text.py together (tests/installer/run.sh)."""
+"""Runs test_installer.py, test_extension_text.py and test_release.py together (tests/installer/run.sh)."""
 import sys
 import unittest
 from pathlib import Path
@@ -8,11 +8,12 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import test_installer  # noqa: E402
 import test_extension_text  # noqa: E402
+import test_release  # noqa: E402
 
 if __name__ == "__main__":
     loader = unittest.TestLoader()
     names = sys.argv[1:]
-    modules = (test_installer, test_extension_text)
+    modules = (test_installer, test_extension_text, test_release)
     if names:
         suite = unittest.TestSuite()
         for name in names:

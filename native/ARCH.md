@@ -27,13 +27,17 @@ apps are GTK 4 too, native/APPS.md). Read `notes/claude/gtk-native.md`.
   tray.activate {id, x, y}, tray.contextMenu, tray.menu/menuEvent, system.network.get/setWifi/wifiList,
   system.audio.get/set {volume|muted}, system.battery.get, system.brightness.get/set, system.bluetooth.*,
   system.power.action {action}, notifications.list/dismiss/clear/invokeAction, media.list/control,
-  shell.openApp {app, params}, apps.recent, files.* ...). The HTML modules that showed how each is used and what
+  shell.openApp {app, params}, apps.recent, winpoint.status/check/install/cancel (WinPoint's own updater, D-G74a
+  and D-G74: the check, and after a click the download and install; events winpoint.changed {rev} and
+  winpoint.progress {jobId, state, done, total}), files.* ...). The HTML modules that showed how each is used and what
   the answers look like are gone since D-G70; for the reference behaviour read them from git:
   `git show 418ea594:vendor/ui/js/shell/<file>` (or `js/desktop/<file>`). Comments cite the HTML sources as
-  `last-webkit:vendor/ui/<path>` (the tag of D-G72; `git show last-webkit:<path>` prints one); the shell's own
+  `6ebf169f:vendor/ui/<path>` (the tag of D-G72; `git show 6ebf169f:<path>` prints one); the shell's own
   modules were removed before that tag, so their citations need 418ea594 instead.
 - Extension methods (gnome.call): windows.list, windows.focus/minimize/close/restore {id}, windows.showDesktop,
-  panel.geometry, panel.keyboard {exclusive}, panel.toggleStart, panel.openTaskView, apps.activationToken,
+  windows.setIconRects {layer, hidden, rects} (where a minimised window shrinks to), panel.geometry,
+  panel.keyboard {exclusive}, panel.inputChanged (repick after a new input region), panel.toggleStart,
+  panel.openTaskView, apps.activationToken,
   nativeBackdrop.configure {pid, kind, transparency, highContrast, autoHide}, nativeBackdrop.start {pid, phase},
   desktop.ready {pid}, desktop.geometry (extension/panelBridge.js `_call`).
 
@@ -44,7 +48,7 @@ GTK CSS, one sheet per module in `shell/css/` (loaded by theme.rs). Windows get 
 `--layer` (flyout/Start background), `--stroke`, `--hover`, `--press`, `--radius-control` (4px),
 `--radius-overlay` (8px), and the taskbar's `--tb-*`. The WinUI values are the ones of `native/kit/css/tokens.css`
 (the apps' tokens; the shell does not load the kit, so it keeps its own copy in css/base.css). The HTML originals:
-`git show last-webkit:vendor/ui/css/tokens.css`, and for shell.css and flyouts.css (gone since D-G70)
+`git show 6ebf169f:vendor/ui/css/tokens.css`, and for shell.css and flyouts.css (gone since D-G70)
 `git show 418ea594:vendor/ui/css/shell.css` (dark and light). Sizes as in the old HTML (taskbar 48 px, buttons 40 px,
 flyouts 12 px off the edges). Text in Dutch and English through
 `shell.t(nl, en)`, same wording as the old HTML modules. No em-dashes in UI text.

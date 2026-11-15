@@ -3,6 +3,8 @@
 This module never changes existing Win11 theme folders. It restores the prior
 icon choice on uninstall only if the current choice is one of our own aliases.
 The main installer owns the payload marker and calls these functions explicitly.
+Errors are ValueErrors with the text in Win11's language, as before; their key and params are for install.py
+--check (D-G74). register_aliases saves each alias it adds in install.py's Transaction (tx) first.
 """
 from pathlib import Path
 import hashlib,json,os,shutil,subprocess
@@ -30,33 +32,36 @@ T={
 def _t(key,**params):
     pair=T[key];return (pair.get(LANGUAGE) or pair['nl']).format_map(params)
 
+def _error(key,**params):
+    error=ValueError(_t(key,**params));error.key=key;error.params={k:str(v) for k,v in params.items()};return error
+
 def _owned(payload):
     try:return (Path(payload)/MARKER).is_file() and (Path(payload)/MARKER).read_text()==MAGIC
     except OSError:return False
 
 def validate(vendor):
     vendor=Path(vendor);base=vendor/'icons';manifest=json.loads((vendor/'icon-bundle.json').read_text())
-    if manifest.get('schema')!=1 or manifest.get('aliases')!=ALIASES:raise ValueError(_t('unknownBundle'))
+    if manifest.get('schema')!=1 or manifest.get('aliases')!=ALIASES:raise _error('unknownBundle')
     actual={};stats={'files':0,'symlinks':0,'bytes':0}
     for directory,dirs,files in os.walk(base,followlinks=False):
         for name in dirs+files:
             path=Path(directory)/name;rel=path.relative_to(base).as_posix()
             if path.is_symlink():
                 target=os.readlink(path)
-                if os.path.isabs(target):raise ValueError(_t('absoluteLink',rel=rel))
+                if os.path.isabs(target):raise _error('absoluteLink',rel=rel)
                 try:resolved=path.resolve(strict=True)
-                except (OSError,RuntimeError) as error:raise ValueError(_t('missingTarget',rel=rel)) from error
-                if not resolved.is_relative_to(base.resolve()):raise ValueError(_t('linkOutside',rel=rel))
+                except (OSError,RuntimeError) as error:raise _error('missingTarget',rel=rel) from error
+                if not resolved.is_relative_to(base.resolve()):raise _error('linkOutside',rel=rel)
                 actual[rel]={'type':'symlink','target':target};stats['symlinks']+=1
             elif path.is_file():
                 data=path.read_bytes();actual[rel]={'type':'file','size':len(data),'sha256':hashlib.sha256(data).hexdigest()}
                 stats['files']+=1;stats['bytes']+=len(data)
-    if actual!=manifest['entries']:raise ValueError(_t('filesDiffer'))
+    if actual!=manifest['entries']:raise _error('filesDiffer')
     source=vendor/manifest['upstream']['source_archive']
-    if not source.resolve().is_relative_to((vendor/'icon-source').resolve()):raise ValueError(_t('archiveOutside'))
-    if hashlib.sha256(source.read_bytes()).hexdigest()!=manifest['upstream']['archive_sha256']:raise ValueError(_t('archiveChanged'))
+    if not source.resolve().is_relative_to((vendor/'icon-source').resolve()):raise _error('archiveOutside')
+    if hashlib.sha256(source.read_bytes()).hexdigest()!=manifest['upstream']['archive_sha256']:raise _error('archiveChanged')
     for theme in ALIASES.values():
-        if not (base/theme/'COPYING').is_file() or not (base/theme/'AUTHORS').is_file():raise ValueError(_t('licenceMissing'))
+        if not (base/theme/'COPYING').is_file() or not (base/theme/'AUTHORS').is_file():raise _error('licenceMissing')
     return stats
 
 def _same_target(alias,target):
@@ -89,7 +94,7 @@ def preflight_aliases(payload,data):
         path=data/'icons'/alias;target=payload/'icons'/theme
         if path.exists() or path.is_symlink():
             if not (_owned(payload) and _same_target(path,target)):
-                raise ValueError(_t('aliasForeign',alias=alias))
+                raise _error('aliasForeign',alias=alias)
     return _previous_state(payload)
 
 def copy_into_payload(root,stage):
@@ -106,15 +111,19 @@ def copy_into_payload(root,stage):
             subprocess.run([tool,'-q','-f','-t',str(stage/'icons'/theme)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)
     return stats
 
-def register_aliases(payload,data,previous_state=None):
+def register_aliases(payload,data,previous_state=None,tx=None):
     payload=Path(payload);data=Path(data)
-    if not _owned(payload):raise ValueError(_t('markerMissing'))
+    if not _owned(payload):raise _error('markerMissing')
     fallback_state=preflight_aliases(payload,data)
     previous_state=previous_state or fallback_state
-    icons=data/'icons';icons.mkdir(parents=True,exist_ok=True)
-    for alias,theme in ALIASES.items():
-        destination=icons/alias;target=payload/'icons'/theme
-        if not _same_target(destination,target):os.symlink(os.path.relpath(target,icons),destination,target_is_directory=True)
+    icons=data/'icons'
+    added=[alias for alias,theme in ALIASES.items() if not _same_target(icons/alias,payload/'icons'/theme)]
+    for alias in added:
+        if tx:tx.save(icons/alias)
+    icons.mkdir(parents=True,exist_ok=True)
+    for alias in added:
+        destination=icons/alias;target=payload/'icons'/ALIASES[alias]
+        os.symlink(os.path.relpath(target,icons),destination,target_is_directory=True)
     (payload/TRACKER).write_text(json.dumps({'schema':1,'aliases':ALIASES},indent=2)+'\n')
     if previous_state is not None:(payload/STATE).write_text(json.dumps(previous_state,indent=2)+'\n')
 

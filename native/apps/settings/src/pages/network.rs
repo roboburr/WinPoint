@@ -1,4 +1,4 @@
-//! Instellingen › Netwerk en internet (last-webkit:vendor/ui/js/apps/settings/pages/network.js) with Wi-Fi (the
+//! Instellingen › Netwerk en internet (6ebf169f:vendor/ui/js/apps/settings/pages/network.js) with Wi-Fi (the
 //! networks, connecting with a password or to an open network, disconnecting) and Ethernet (the adapters' addresses).
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, ct};

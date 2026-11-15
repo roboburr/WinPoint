@@ -11,9 +11,13 @@ The byte-for-byte cases run scripts/*.py of 3b898e6 (git show) and the current o
 differs from 3b898e6 by design is left out of those comparisons (SHELL_SPLIT, same_as_baseline): D-G70 removed the
 WebKit Start and desktop (win11-start, win11-desktop and their entries), the native shell, the Calendar app and the
 native apps came with D-G63/D-G68 and 13-11 (win11-shell, win11-calendar, win11-gtk-<kind>, the Calendar entry and its
-URI scheme default), D-G65 the payload's config/ folder, and since the HTML apps went (git tag last-webkit) the payload
+URI scheme default), D-G65 the payload's config/ folder, and since the HTML apps went (commit 6ebf169f) the payload
 has no host/ (vendor/host left the tree with D-G73; the test trees give 3b898e6's installer a placeholder,
 sandbox.old_installer_host) and only ui/assets of ui/; and the done2 line of the closing text follows install.py.
+The Updater cases (D-G74) run the bundle's own installer as WinPoint's updater does (UPDATER, frozen_env): --check,
+the exit codes and the status and log files, a failure after each step and a SIGTERM (everything back, byte for
+byte, the binaries' inodes too), a SIGKILL and a rerun (roll forward), a second installer (busy), and the GNOME and
+ldd checks.
 Environment: W11_INSTALLER_REAL=0 skips the two REAL cases.
 """
 from __future__ import annotations
@@ -23,10 +27,13 @@ import io
 import json
 import os
 from pathlib import Path
+import pwd
 import re
 import shutil
+import signal
 import subprocess
 import sys
+import time
 import unittest
 from unittest import mock
 
@@ -273,14 +280,24 @@ class Installer(unittest.TestCase):
     def test_interrupted_first_install_keeps_the_language(self):
         """ge1c-review m1: a first install that fails after its payload is in place (here glib-compile-schemas
         fails) has already stored the guessed language, so the rerun stays English instead of taking the
-        update-without-choice path (nl, H D13)."""
+        update-without-choice path (nl, H D13). Since D-G74 the failure puts everything else back (exit 3): the
+        stored language is the one change that stays."""
         case = Case("interrupted-first")
         failing = case.dir/"stubs/glib-compile-schemas"
         failing.write_text("#!/bin/sh\necho 'GE1c test: glib-compile-schemas fails on purpose' >&2\nexit 1\n")
         failing.chmod(0o755)
+        before = case.tree()
         first = self.install(case, locale=EN_LOCALE)
-        self.assertEqual(first.returncode, 1, first.stdout + first.stderr)
-        self.assertTrue((case.prefix/"share/win11-gnome"/install.MARKER).is_file())       # the payload is in place
+        self.assertEqual(first.returncode, 3, first.stdout + first.stderr)
+        self.assertFalse((case.prefix/"share/win11-gnome").exists())                      # rolled back
+        self.assertEqual(first.stderr.splitlines()[-1], "The installation failed; everything was put back as it was.")
+        after = case.tree()
+        # besides the stored language, only the sandbox's keyfile GSettings folder, which GLib makes (empty) when the
+        # checks read the icon theme of a first install (icon_bundle.preflight_aliases)
+        self.assertEqual(sorted(k for k in after if k not in before),
+                         ["config/glib-2.0", "config/glib-2.0/settings", "config/win11-gnome",
+                          "config/win11-gnome/.settings.lock", "config/win11-gnome/settings.json"])
+        self.assertEqual({k: v for k, v in after.items() if k in before}, before)
         self.assertEqual(first.stdout.splitlines()[0],
                          "Language: English. In het Nederlands: kies Nederlands in Settings › Time & language › Language & region.")
         settings = case.config/"win11-gnome/settings.json"
@@ -689,6 +706,47 @@ class Installer(unittest.TestCase):
         self.assertEqual((new_nothing.returncode, new_nothing.stderr), (old_nothing.returncode, old_nothing.stderr))
         self.assertEqual(calls, [])
 
+    def test_payload_version_and_the_update_state_on_uninstall(self):
+        """D-G74a: a tree with a root Cargo.toml gets share/win11-gnome/VERSION, its [workspace.package] version and a
+        newline (what WinPoint's update check compares with); a tree without one, as every other test's, or with a
+        version that is no X.Y.Z[-pre], gets none, so those trees stay 3b898e6's. uninstall.py removes
+        $XDG_CACHE_HOME/win11-gnome/winpoint, a real folder of this user only, and nothing else of the cache."""
+        import tomllib
+        workspace = tomllib.loads((G/"Cargo.toml").read_text())["workspace"]["package"]["version"]
+        self.assertEqual(install.bundle_version(G), workspace)
+        root = sandbox.fixture_root(RUN/"fixture-version")
+        (root/"Cargo.toml").write_text('[workspace]\nmembers = ["host"]\n\n[workspace.package]\nversion = "0.9.0"\n')
+        case = Case("payload-version")
+        self.assertOk(self.install(case, root=root, locale=NL_LOCALE))
+        self.assertEqual((case.prefix/"share/win11-gnome/VERSION").read_text(), "0.9.0\n")
+        for text in ('[workspace.package]\nversion = "0.9"\n', '[package]\nversion = "0.9.0"\n', "not toml ["):
+            (root/"Cargo.toml").write_text(text)
+            other = Case("payload-version-none")
+            self.assertOk(self.install(other, root=root, locale=NL_LOCALE))
+            self.assertFalse((other.prefix/"share/win11-gnome/VERSION").exists(), text)
+        self.assertFalse((Shared.root/"Cargo.toml").exists())
+        cache = case.dir/"cache/win11-gnome"
+        (cache/"winpoint").mkdir(parents=True, mode=0o700)
+        (cache/"winpoint/state.json").write_text("{}\n")
+        (cache/"update").mkdir(mode=0o700)
+        (cache/"update/snapshot.json").write_text("{}\n")
+        proc = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE))
+        self.assertOk(proc)
+        self.assertEqual(proc.stdout, "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n")
+        self.assertFalse((cache/"winpoint").exists())
+        self.assertTrue((cache/"update/snapshot.json").is_file(), "only the update check's folder")
+        # a link in its place is left alone, and so is what it points at
+        linked = Case("payload-version-link")
+        self.assertOk(self.install(linked, root=root, locale=NL_LOCALE))
+        elsewhere = linked.dir/"home/elsewhere"
+        elsewhere.mkdir()
+        (elsewhere/"keep").write_text("x\n")
+        (linked.dir/"cache/win11-gnome").mkdir(parents=True)
+        (linked.dir/"cache/win11-gnome/winpoint").symlink_to(elsewhere)
+        self.assertOk(linked.run(SCRIPTS/"uninstall.py", None, ["--files-only"], linked.env(Shared.stubs, NL_LOCALE)))
+        self.assertTrue((linked.dir/"cache/win11-gnome/winpoint").is_symlink())
+        self.assertEqual((elsewhere/"keep").read_text(), "x\n")
+
     # ---- the real tree -------------------------------------------------------------------------------------------
     @unittest.skipIf(os.environ.get("W11_INSTALLER_REAL") == "0", "W11_INSTALLER_REAL=0")
     def test_real_tree_nl_update_identical_and_contained(self):
@@ -725,6 +783,468 @@ class Installer(unittest.TestCase):
         self.assertEqual({n: e["Name"] for n, e in entries_in(case).items()}, entry_names("en"))
         check_exec_lines(self, case)
         check_entry_icons(self, case)
+
+
+# ---- D-G74: WinPoint's updater runs the bundle's own installer ----------------------------------------------------------
+
+STEPS = ("payload", "binaries", "aliases", "portal", "extension", "entries", "autostart")
+UPDATER = ["/usr/bin/python3", "-E", "-s", "-B"]                 # never -I: it drops scripts/ from sys.path
+
+
+def make_bundle(name: str, version: str, extension_extra: dict[str, str] | None = None,
+                shell: list[str] | None = None) -> Path:
+    """A small release bundle as scripts/package.py lays one out: the fixture tree with a root Cargo.toml of `version`
+    (and that version-name in metadata.json, `shell` as its shell-version), a settings icon of its own, the current
+    scripts/ (the updater runs the bundle's own installer) and bin/ with placeholder binaries of this version."""
+    root = sandbox.fixture_root(RUN/name, extension_extra)
+    (root/"Cargo.toml").write_text(f'[workspace]\nmembers = ["host"]\n\n[workspace.package]\nversion = "{version}"\n')
+    metadata = json.loads((root/"extension/metadata.json").read_text())
+    metadata["version-name"] = version
+    if shell is not None:
+        metadata["shell-version"] = shell
+    (root/"extension/metadata.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
+    (root/"vendor/ui/assets/icons/settings.svg").write_text(f"<svg xmlns='http://www.w3.org/2000/svg'><!-- {version} --></svg>\n")
+    (root/"scripts").mkdir()
+    for script in SCRIPTS.glob("*.py"):
+        shutil.copy2(script, root/"scripts"/script.name)
+    (root/"bin").mkdir()
+    for binary in install.BINS:
+        (root/"bin"/binary).write_text(f"#!/bin/sh\n# GE1c placeholder for {binary} {version}; installer tests never run it\nexit 97\n")
+        (root/"bin"/binary).chmod(0o755)
+    return root
+
+
+def frozen_env(case: Case, bundle: Path) -> dict[str, str]:
+    """Exactly the updater's environment (scripts/install.py docstring, D-G74), with the case's prefix."""
+    user = pwd.getpwuid(os.getuid()).pw_name
+    return {"HOME": str(case.dir/"home"), "USER": user, "LOGNAME": user, "PATH": "/usr/bin:/bin", "LANG": "C.UTF-8",
+            "XDG_DATA_HOME": str(case.data), "XDG_CONFIG_HOME": str(case.config),
+            "XDG_CACHE_HOME": str(case.dir/"cache"), "XDG_RUNTIME_DIR": str(case.dir/"tmp"),
+            "WIN11_BUILD_DIR": str(bundle/"bin"), "WIN11_NO_SESSION": "1", "WIN11_INSTALL_PREFIX": str(case.prefix)}
+
+
+def mutations(trace: Path) -> list[str]:
+    """Every path a traced run wrote, created, renamed or removed, /dev/ aside."""
+    found = []
+    with open(trace, encoding="utf-8", errors="replace") as stream:
+        for line in stream:
+            parsed = sandbox.strace_paths(line.rstrip("\n"))
+            if parsed:
+                found += [f"{parsed[0]} {path}" for path in parsed[1] if not path.startswith("/dev/")]
+    return found
+
+
+def stop(proc: subprocess.Popen) -> None:
+    if proc.poll() is None:
+        proc.kill()
+        proc.wait(timeout=30)
+
+
+class Updater(unittest.TestCase):
+    """D-G74: scripts/install.py as WinPoint's updater starts it (module docstring of install.py): prepare and apply,
+    --check, the status and log files, the Transaction, the repair of a killed install, the lock and the two new
+    checks. 0.9.0 is installed from a terminal first; 0.9.1 (another settings icon and VERSION, binaries of its own and
+    one more extension file) comes through the updater."""
+    maxDiff = None
+
+    @classmethod
+    def setUpClass(cls):
+        Shared.build()
+        cls.old = make_bundle("bundle-0.9.0", "0.9.0")
+        cls.new = make_bundle("bundle-0.9.1", "0.9.1", {"ge1cNew.js": "export const GE1C_NEW = 1;\n"})
+
+    # ---- helpers -------------------------------------------------------------------------------------------
+    def base(self, name: str, first: bool = False) -> Case:
+        """A case with Win11's language stored (nl) and, unless first, 0.9.0 installed from a terminal."""
+        case = Case(name)
+        write_json(case.config/"win11-gnome/settings.json", settings_doc("nl"))
+        os.chmod(case.config/"win11-gnome", 0o700)
+        if not first:
+            self.assertOk(self.terminal(case, self.old))
+        return case
+
+    def terminal(self, case: Case, bundle: Path, args=(), extra=None):
+        return case.run(bundle/"scripts/install.py", bundle, list(args), case.env(bundle/"bin", NL_LOCALE, extra))
+
+    def files(self, case: Case, name: str = "install") -> list[str]:
+        return ["--status", str(case.dir/f"logs/{name}.status"), "--log", str(case.dir/f"logs/{name}.log")]
+
+    def updater(self, case: Case, bundle: Path, mode: list[str], lang: str = "nl", extra=None, strace=False):
+        args = ["--lang", lang, "--no-session", *mode]
+        return case.run(bundle/"scripts/install.py", bundle, args, {**frozen_env(case, bundle), **(extra or {})},
+                        strace=strace, interpreter=UPDATER)
+
+    def start(self, case: Case, bundle: Path, fail: str) -> subprocess.Popen:
+        proc = case.start(bundle/"scripts/install.py", bundle, ["--lang", "nl", "--no-session", *self.files(case)],
+                          {**frozen_env(case, bundle), "WIN11_INSTALL_TEST_FAIL": fail}, interpreter=UPDATER)
+        self.addCleanup(stop, proc)
+        deadline = time.monotonic() + 60
+        while fail not in self.log(case):
+            self.assertIsNone(proc.poll(), self.log(case))
+            self.assertLess(time.monotonic(), deadline, "the installer never reached its pause")
+            time.sleep(0.05)
+        return proc
+
+    def status(self, case: Case, name: str = "install") -> str | None:
+        path = case.dir/f"logs/{name}.status"
+        return path.read_text() if path.exists() else None
+
+    def log(self, case: Case, name: str = "install") -> str:
+        path = case.dir/f"logs/{name}.log"
+        return path.read_text() if path.exists() else ""
+
+    def inodes(self, case: Case) -> dict[str, int]:
+        return {name: (case.prefix/"bin"/name).stat().st_ino for name in install.BINS}
+
+    def answer(self, proc) -> dict:
+        self.assertEqual(proc.stdout.count("\n"), 1, proc.stdout + proc.stderr)
+        self.assertTrue(proc.stdout.isascii())
+        return json.loads(proc.stdout)
+
+    def assertOk(self, proc):
+        self.assertEqual(proc.returncode, 0, f"exit {proc.returncode}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}")
+
+    def leftovers(self, case: Case) -> list[str]:
+        share = case.prefix/"share"
+        found = [p.name for p in share.iterdir() if p.name.startswith(".")] if share.is_dir() else []
+        found += [p.name for p in (case.prefix/"bin").glob(".*.new")] if (case.prefix/"bin").is_dir() else []
+        return sorted(found)
+
+    # ---- --check -------------------------------------------------------------------------------------------
+    def test_check_reports_and_writes_nothing(self):
+        case = self.base("check")
+        before = case.tree()
+        proc = self.updater(case, self.new, ["--check"], strace=True)
+        self.assertEqual((proc.returncode, proc.stderr), (0, ""))
+        self.assertEqual(self.answer(proc), {"ok": True, "version": "0.9.1", "extensionChanged": True, "systemFiles": []})
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(mutations(proc.trace), [], "--check wrote")
+        # the installed version itself: the same extension; a tree without a version (the fixture's) says null
+        same = self.updater(case, self.old, ["--check"])
+        self.assertEqual(self.answer(same), {"ok": True, "version": "0.9.0", "extensionChanged": False, "systemFiles": []})
+        plain = case.run(SCRIPTS/"install.py", Shared.root, ["--lang", "nl", "--no-session", "--check"],
+                         {**frozen_env(case, Shared.root), "WIN11_BUILD_DIR": str(Shared.stubs)}, interpreter=UPDATER)
+        self.assertEqual(self.answer(plain)["version"], None)
+        # a first install: nothing installed, so the extension is new
+        fresh = self.base("check-first", first=True)
+        before = fresh.tree()
+        self.assertEqual(self.answer(self.updater(fresh, self.new, ["--check"])),
+                         {"ok": True, "version": "0.9.1", "extensionChanged": True, "systemFiles": []})
+        self.assertEqual(fresh.tree(), before)
+        # a refusal: its key, params and text in --lang; exit 1, still nothing written
+        (fresh.prefix/"bin").mkdir()
+        (fresh.prefix/"bin/win11-panel").write_text("someone else's\n")
+        before = fresh.tree()
+        refused = self.updater(fresh, self.new, ["--check"], lang="en")
+        self.assertEqual(refused.returncode, 1)
+        panel = str(fresh.prefix/"bin/win11-panel")
+        self.assertEqual(self.answer(refused), {"ok": False, "code": "conflicts", "params": {"paths": [panel]},
+                                                "message": install.t("conflicts", "en") + "\n" + panel})
+        self.assertEqual(fresh.tree(), before)
+
+    # ---- the frozen contract -------------------------------------------------------------------------------
+    def test_frozen_argv_environment_and_exit_codes(self):
+        """Exactly the updater's argv and environment; each exit code with its status file and log."""
+        reference = self.base("contract")
+        self.assertOk(self.terminal(reference, self.new))
+        want = reference.tree()
+        case = self.base("contract")
+        before = case.tree()
+        # 1: refused before any change (here a previous payload that is not ours)
+        foreign = case.prefix/"share"/install.PREVIOUS
+        foreign.mkdir()
+        (foreign/"note").write_text("not ours\n")
+        refused_tree = case.tree()
+        proc = self.updater(case, self.new, self.files(case))
+        self.assertEqual((proc.returncode, proc.stdout, proc.stderr, self.status(case)), (1, "", "", "1\n"))
+        self.assertEqual(self.log(case), install.t("previousCopy", "nl", backup=foreign) + "\n")
+        self.assertEqual(case.tree(), refused_tree)
+        self.assertEqual(self.answer(self.updater(case, self.new, ["--check"])),
+                         {"ok": False, "code": "previousCopy", "params": {"backup": str(foreign)},
+                          "message": install.t("previousCopy", "nl", backup=foreign)})
+        shutil.rmtree(foreign)
+        # 3: failed, everything put back
+        proc = self.updater(case, self.new, self.files(case), extra={"WIN11_INSTALL_TEST_FAIL": "entries"})
+        self.assertEqual((proc.returncode, self.status(case)), (3, "3\n"))
+        self.assertTrue(self.log(case).endswith(install.t("rolledBack", "nl") + "\n"), self.log(case))
+        self.assertEqual(case.tree(), before)
+        # 4: failed, and putting it back was incomplete (the last change stays); the rerun rolls forward
+        proc = self.updater(case, self.new, self.files(case), extra={"WIN11_INSTALL_TEST_FAIL": "entries:rollback"})
+        self.assertEqual((proc.returncode, self.status(case)), (4, "4\n"))
+        calendar = case.data/"applications/io.github.win11shell.Calendar.desktop"
+        self.assertIn(install.t("notRestored", "nl", path=calendar,
+                                error=install.t("testFail", "nl", step="rollback")), self.log(case))
+        self.assertTrue(self.log(case).endswith(install.t("rollbackIncomplete", "nl") + "\n"), self.log(case))
+        self.assertNotEqual(case.tree(), before)
+        # 0: installed; every line in the log (Win11's language), nothing on stdout or stderr; byte for byte the tree a
+        # terminal install of 0.9.1 leaves
+        proc = self.updater(case, self.new, self.files(case))
+        self.assertEqual((proc.returncode, proc.stdout, proc.stderr, self.status(case)), (0, "", "", "0\n"))
+        self.assertEqual(self.log(case), nl_done(case.prefix))
+        self.assertEqual(case.tree(), want)
+        self.assertEqual((case.prefix/"share/win11-gnome/VERSION").read_text(), "0.9.1\n")
+        self.assertEqual(self.leftovers(case), [])
+        self.assertFalse(list(self.new.rglob("__pycache__")), "-B: no bytecode in the bundle")
+
+    # ---- the Transaction -----------------------------------------------------------------------------------
+    def test_a_failure_after_each_step_puts_every_byte_back(self):
+        """An update and a first install: WIN11_INSTALL_TEST_FAIL after each step gives exit 3, status 3 and the tree
+        of before, byte for byte (the folders a first install made are gone again, the binaries keep their inodes)."""
+        for first in (False, True):
+            case = self.base("each-step-first" if first else "each-step", first=first)
+            before = case.tree()
+            inodes = None if first else self.inodes(case)
+            for step in STEPS:
+                with self.subTest(first=first, step=step):
+                    proc = self.updater(case, self.new, self.files(case), extra={"WIN11_INSTALL_TEST_FAIL": step})
+                    self.assertEqual((proc.returncode, self.status(case)), (3, "3\n"), self.log(case))
+                    self.assertIn(install.t("testFail", "nl", step=step), self.log(case))
+                    self.assertTrue(self.log(case).endswith(install.t("rolledBack", "nl") + "\n"), self.log(case))
+                    self.assertEqual(case.tree(), before)
+                    if inodes:
+                        self.assertEqual(self.inodes(case), inodes)
+            self.assertOk(self.updater(case, self.new, self.files(case)))
+            self.assertEqual(self.leftovers(case), [])
+
+    def test_sigterm_during_the_binaries_puts_everything_back(self):
+        case = self.base("sigterm")
+        before, inodes = case.tree(), self.inodes(case)
+        proc = self.start(case, self.new, "binary:wait")
+        # halfway: the first binary is 0.9.1's, the others still 0.9.0's, the old payload waits next to the new one
+        bins = case.prefix/"bin"
+        self.assertIn("0.9.1", (bins/install.BINS[0]).read_text())
+        self.assertIn("0.9.0", (bins/install.BINS[-1]).read_text())
+        self.assertTrue((case.prefix/"share"/install.PREVIOUS).is_dir())
+        # meanwhile a second installer, its --check and uninstall.py are refused: busy, and nothing changes
+        busy = install.t("busy", "nl", path=case.prefix/"share")
+        second = self.updater(case, self.new, self.files(case, "second"))
+        self.assertEqual((second.returncode, self.status(case, "second"), self.log(case, "second")), (1, "1\n", busy + "\n"))
+        self.assertEqual(self.answer(self.updater(case, self.new, ["--check"])),
+                         {"ok": False, "code": "busy", "params": {"path": str(case.prefix/"share")}, "message": busy})
+        removed = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE))
+        self.assertEqual((removed.returncode, removed.stderr), (1, busy + "\n"))
+        # SIGTERM twice: the second one cannot interrupt the rollback
+        pid = sandbox.descendant(proc.pid)
+        self.assertIsNotNone(pid)
+        os.kill(pid, signal.SIGTERM)
+        os.kill(pid, signal.SIGTERM)
+        self.assertEqual(proc.wait(timeout=60), 3, self.log(case))
+        self.assertEqual(self.status(case), "3\n")
+        self.assertIn(install.t("interrupted", "nl") + "\n", self.log(case))
+        self.assertTrue(self.log(case).endswith(install.t("rolledBack", "nl") + "\n"), self.log(case))
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(self.inodes(case), inodes, "the original inodes are back")
+
+    def test_a_signal_started_ignored_stays_ignored(self):
+        """nohup (SIGHUP) and a background job (SIGINT) start an install with that signal ignored: it stays ignored,
+        so closing the terminal does not roll the install back (SIGTERM, not ignored, still does: the case above)."""
+        reference = self.base("nohup")
+        self.assertOk(self.updater(reference, self.new, self.files(reference)))
+        want = reference.tree()
+        case = self.base("nohup")
+        old = signal.signal(signal.SIGHUP, signal.SIG_IGN)
+        try:
+            proc = self.start(case, self.new, "binary:pause")
+        finally:
+            signal.signal(signal.SIGHUP, old)
+        pid = sandbox.descendant(proc.pid)
+        self.assertIsNotNone(pid)
+        os.kill(pid, signal.SIGHUP)
+        self.assertEqual(proc.wait(timeout=60), 0, self.log(case))
+        self.assertEqual(self.status(case), "0\n")
+        self.assertEqual(case.tree(), want)
+
+    def test_a_rollback_never_leaves_a_half_removed_payload_in_place(self):
+        """The rollback puts the new payload aside with one rename before the old one comes back, and repair() renames
+        an old copy aside before it removes it (uninstall.py: the interrupted uninstall case): a kill at any moment
+        leaves a Transaction folder (which the next run removes) and never a payload without its marker."""
+        case = self.base("aside")
+        payload = case.prefix/"share/win11-gnome"
+        before = case.tree()
+        tx = install.Transaction(payload.parent)
+        tx.begin()
+        stage = payload.with_name(install.STAGE + "ge1c")
+        shutil.copytree(payload, stage)
+        (stage/"VERSION").write_text("0.9.1\n")
+        tx.swap(stage, payload)
+        self.assertEqual((payload/"VERSION").read_text(), "0.9.1\n")
+        real_rmtree = shutil.rmtree
+        kept = (payload, payload.with_name(install.PREVIOUS))
+
+        def rmtree(path, *args, **kwargs):
+            if Path(path) in kept:
+                self.fail(f"rmtree of {path} where it lies")
+            return real_rmtree(path, *args, **kwargs)
+        with mock.patch("shutil.rmtree", side_effect=rmtree):
+            self.assertTrue(tx.rollback())
+        self.assertEqual((payload/"VERSION").read_text(), "0.9.0\n")
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(self.leftovers(case), [])
+        # repair: an own old copy next to an own payload goes aside first, then away
+        shutil.copytree(payload, payload.with_name(install.PREVIOUS))
+        with mock.patch("shutil.rmtree", side_effect=rmtree):
+            self.assertTrue(install.repair(payload, case.prefix))
+        self.assertTrue(payload.is_dir())
+        self.assertEqual(self.leftovers(case), [])
+        # a repair killed after that rename leaves only a Transaction folder, which the next run removes unasked
+        aside = payload.with_name(install.TX + "discard-1-2")
+        shutil.copytree(payload, aside)
+        (aside/install.MARKER).unlink()
+        self.assertTrue(install.repair(payload, case.prefix))
+        self.assertEqual(self.leftovers(case), [])
+        self.assertEqual(case.tree(), before)
+
+    def test_sigkill_then_the_same_bundle_rolls_forward(self):
+        reference = self.base("sigkill")
+        self.assertOk(self.updater(reference, self.new, self.files(reference)))
+        want = reference.tree()
+        case = self.base("sigkill")
+        proc = self.start(case, self.new, "binary:wait")
+        os.kill(sandbox.descendant(proc.pid), signal.SIGKILL)
+        proc.wait(timeout=60)
+        self.assertIsNone(self.status(case), "no status: the updater calls that interrupted")
+        self.assertIn(install.PREVIOUS, self.leftovers(case))
+        self.assertTrue(any(name.startswith(install.TX) for name in self.leftovers(case)))
+        # --check repairs first (the old payload goes, the new one stays) and cannot tell which extension runs
+        self.assertEqual(self.answer(self.updater(case, self.new, ["--check"])),
+                         {"ok": True, "version": "0.9.1", "extensionChanged": True, "systemFiles": []})
+        self.assertEqual(self.leftovers(case), [])
+        self.assertOk(self.updater(case, self.new, self.files(case)))
+        self.assertEqual(case.tree(), want)
+
+    def test_repair_puts_a_lone_previous_payload_back_and_uninstall_takes_the_leftovers(self):
+        """Killed between the payload's two renames: only .win11-gnome-previous is there, and the repair renames it
+        back. uninstall.py removes what a killed install left (an own previous payload, stage and Transaction folders)
+        and nothing else."""
+        case = self.base("repair")
+        before = case.tree()
+        payload = case.prefix/"share/win11-gnome"
+        payload.rename(payload.with_name(install.PREVIOUS))
+        (case.prefix/"share/.win11-gnome-tx-ge1c/bin").mkdir(parents=True)
+        (case.prefix/"bin/.win11-panel.new").write_text("half a copy\n")
+        self.assertEqual(self.answer(self.updater(case, self.old, ["--check"]))["ok"], True)
+        self.assertEqual(case.tree(), before)
+        (case.prefix/"share/.win11-gnome-tx-ge1c").mkdir()
+        (case.prefix/"share/.win11-gnome-install-ge1c").mkdir()
+        shutil.copytree(payload, payload.with_name(install.PREVIOUS))
+        (case.prefix/"share/someone-elses").mkdir()
+        proc = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE))
+        self.assertOk(proc)
+        self.assertEqual(sorted(p.name for p in (case.prefix/"share").iterdir()), ["someone-elses"])
+
+    # The stand-in for an uninstall interrupted inside the removal of the payload or of the old copy next to it, loaded
+    # by uninstall.py's python3 (PYTHONPATH): shutil.rmtree of the Nth marked folder does what Python's own does
+    # first (every top-level file goes before the subfolders, the marker among them), then Ctrl+C.
+    INTERRUPT = """import os, shutil
+real, seen = shutil.rmtree, [0]
+def rmtree(path, *args, **kwargs):
+    if os.path.isfile(os.path.join(path, ".win11-gnome-owned")):
+        seen[0] += 1
+        if seen[0] == int(os.environ["GE1C_RMTREE_STOP"]):
+            for entry in os.scandir(path):
+                if not entry.is_dir(follow_symlinks=False):
+                    os.unlink(entry.path)
+            raise KeyboardInterrupt
+    return real(path, *args, **kwargs)
+shutil.rmtree = rmtree
+"""
+
+    def test_an_interrupted_uninstall_never_leaves_a_payload_without_its_marker(self):
+        """uninstall.py renames the payload and an own old copy aside before it removes them (install.discard): a
+        Ctrl+C or a closed terminal halfway leaves each one whole with its marker or gone, never in its place without
+        the marker (which every installer and uninstall.py itself refuse to touch). The next install takes the
+        Transaction folders it left, and so does uninstall.sh run again (its repair puts a lone own old copy back
+        first, which it then removes like any payload)."""
+        removed = "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n"
+        for stop in (1, 2):
+            for then in ("install", "uninstall"):
+                case = self.base(f"uninstall-cut-{stop}-{then}")
+                payload = case.prefix/"share/win11-gnome"
+                previous = payload.with_name(install.PREVIOUS)
+                shutil.copytree(payload, previous)
+                shim = case.dir/"shim"
+                shim.mkdir()
+                (shim/"sitecustomize.py").write_text(self.INTERRUPT)
+                env = case.env(Shared.stubs, NL_LOCALE, {"PYTHONPATH": str(shim), "GE1C_RMTREE_STOP": str(stop)})
+                proc = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], env)
+                self.assertNotEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+                self.assertIn("KeyboardInterrupt", proc.stderr)
+                for folder in (payload, previous):
+                    self.assertTrue(not os.path.lexists(folder) or install.owned(folder), f"stop {stop}: {folder}")
+                self.assertFalse(os.path.lexists(payload), f"stop {stop}: the payload went first")
+                self.assertEqual(previous.is_dir(), stop == 1, f"stop {stop}")
+                self.assertTrue(any(name.startswith(install.TX + "discard-") for name in self.leftovers(case)),
+                                self.leftovers(case))
+                if then == "install":
+                    # an install afterwards is no notOwned: its repair takes the Transaction folders (and puts a lone
+                    # own old copy back first)
+                    self.assertOk(self.terminal(case, self.old))
+                    self.assertTrue(install.owned(payload))
+                else:
+                    # no "Nothing removed" with the folders left in place: the old copy (stop 1) is removed as the
+                    # payload; with nothing put back (stop 2) the rerun only takes the Transaction folder
+                    again = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE))
+                    if stop == 1:
+                        self.assertOk(again)
+                        self.assertEqual(again.stdout, removed)
+                    else:
+                        self.assertEqual((again.returncode, again.stderr),
+                                         (1, f"Niets verwijderd: {payload} bevat geen installatiemarker van dit project.\n"))
+                    self.assertFalse(os.path.lexists(payload), f"stop {stop}")
+                    self.assertFalse(os.path.lexists(previous), f"stop {stop}")
+                    self.assertEqual(sorted(p.name for p in (case.prefix/"share").iterdir()), [], f"stop {stop}")
+                self.assertEqual(self.leftovers(case), [], f"stop {stop}, then {then}")
+
+    # ---- the new checks ------------------------------------------------------------------------------------
+    def running_major(self, case: Case) -> str:
+        probe = case.dir/"major.py"
+        probe.write_text(f"import sys\nsys.path.insert(0, {str(SCRIPTS)!r})\nimport install\nprint(install.gnome_major() or '')\n")
+        major = case.run(probe, None, [], case.env(Shared.stubs)).stdout.strip()
+        if not major:
+            self.skipTest("no /usr/bin/gnome-shell that says its version")
+        return major
+
+    def test_a_gnome_shell_other_than_the_extensions_is_refused(self):
+        case = self.base("gnome")
+        running = self.running_major(case)
+        other = str(int(running) - 1)
+        bundle = make_bundle("bundle-gnome", "0.9.1", shell=[other])
+        before = case.tree()
+        refused = self.updater(case, bundle, ["--check"])
+        self.assertEqual(refused.returncode, 1)
+        self.assertEqual(self.answer(refused), {"ok": False, "code": "gnomeMismatch",
+                                                "params": {"needs": other, "running": running},
+                                                "message": install.t("gnomeMismatch", "nl", needs=other, running=running)})
+        proc = self.terminal(case, bundle, ["--lang", "en"])
+        self.assertEqual((proc.returncode, proc.stdout), (1, ""))
+        self.assertEqual(proc.stderr, install.t("gnomeMismatch", "en", needs=other, running=running) + "\n")
+        self.assertEqual(case.tree(), before)
+        # GNOME's own rule: "50.2" matches a running 50
+        minor = make_bundle("bundle-gnome-minor", "0.9.1", shell=["40", f"{running}.2"])
+        self.assertTrue(self.answer(self.updater(case, minor, ["--check"]))["ok"])
+
+    def test_a_binary_ldd_cannot_load_is_refused(self):
+        """A real ldd -r failure: /usr/bin/true with one symbol version renamed (libc has no GLIBC_9.x), as a build
+        made on a newer Ubuntu would need one this system lacks."""
+        program = Path("/usr/bin/true").read_bytes()
+        match = re.search(rb"GLIBC_2\.[0-9.]+\0", program)
+        if program[:4] != b"\x7fELF" or not match:
+            self.skipTest("no dynamic /usr/bin/true with a GLIBC_2 version")
+        bundle = make_bundle("bundle-abi", "0.9.1")
+        broken = bundle/"bin/win11-launch"
+        broken.write_bytes(program[:match.start()] + b"GLIBC_9" + program[match.start() + 7:])
+        broken.chmod(0o755)
+        case = self.base("abi")
+        before = case.tree()
+        refused = self.updater(case, bundle, ["--check"])
+        answer = self.answer(refused)
+        self.assertEqual((refused.returncode, answer["ok"], answer["code"], answer["params"]["binary"]),
+                         (1, False, "abi", "win11-launch"))
+        self.assertRegex(answer["params"]["detail"], r"version `GLIBC_9[0-9.]*' not found")
+        self.assertEqual(answer["message"], install.t("abi", "nl", **answer["params"]))
+        proc = self.terminal(case, bundle)
+        self.assertEqual((proc.returncode, proc.stderr), (1, answer["message"] + "\n"))
+        self.assertEqual(case.tree(), before)
 
 
 class Autostart(unittest.TestCase):
@@ -1197,8 +1717,8 @@ class Units(unittest.TestCase):
 
     def test_every_needed_library_has_its_package(self):
         """Every library the 19 binaries need (DT_NEEDED) has its Ubuntu package in PACKAGES, except libc6's own, and
-        PACKAGES names no WebKit, JavaScriptCore, libsoup or GTK 3 library: no binary links one since the last-webkit
-        tag and the host's GTK 3 (14-11). A build that still does is older than this tree; it is skipped, by name,
+        PACKAGES names no WebKit, JavaScriptCore, libsoup or GTK 3 library: no binary links one since commit
+        6ebf169f and the host's GTK 3 (14-11). A build that still does is older than this tree; it is skipped, by name,
         once the other libraries are checked."""
         old = lambda lib: WEBKIT_LIBS.match(lib) or GTK3_LIBS.match(lib)     # noqa: E731
         self.assertEqual([lib for lib in install.PACKAGES if old(lib)], [])
@@ -1213,6 +1733,124 @@ class Units(unittest.TestCase):
                                 if lib not in install.PACKAGES and not libc6.fullmatch(lib)), [])
         if older:
             self.skipTest(f"{build} still links {', '.join(older)}: a build older than this tree, rebuild it from this tree")
+
+    def test_system_files_report_stale_root_files(self):
+        """D-G74, --check's systemFiles: "session" when install-session.py's four files are there and one differs from
+        what this tree's would write, "system" when one of install-system.py's is there and differs from host/data;
+        files that are not installed are no report."""
+        here = RUN/"units/system-files"
+        shutil.rmtree(here, ignore_errors=True)
+        root, system = here/"tree", here/"system"
+        (root/"host/data").mkdir(parents=True)
+        for rel in install.SYSTEM_FILES:
+            (root/"host/data"/Path(rel).name).write_text(f"GE1c {rel}\n")
+        system.mkdir()
+        self.assertEqual(install.system_files(root, system), [])
+        session = install.session_script()
+        wanted = session.contents(system)
+        for name, directory in session.FILES:
+            (system/directory.lstrip("/")).mkdir(parents=True, exist_ok=True)
+            (system/directory.lstrip("/")/name).write_bytes(wanted[name])
+        self.assertEqual(install.system_files(root, system), [])
+        stale = system/session.FILES[1][1].lstrip("/")/session.FILES[1][0]
+        stale.write_bytes(wanted[session.FILES[1][0]] + b"# older\n")
+        self.assertEqual(install.system_files(root, system), ["session"])
+        stale.write_bytes(wanted[session.FILES[1][0]])
+        helper = system/install.SYSTEM_FILES[0]
+        helper.parent.mkdir(parents=True)
+        helper.write_text(f"GE1c {install.SYSTEM_FILES[0]}\n")
+        self.assertEqual(install.system_files(root, system), [])
+        helper.write_text("GE1c an older helper\n")
+        self.assertEqual(install.system_files(root, system), ["system"])
+        stale.write_bytes(b"older\n")
+        self.assertEqual(install.system_files(root, system), ["session", "system"])
+
+    def test_extension_changed_compares_files_and_schemas(self):
+        here = RUN/"units/extension-changed"
+        shutil.rmtree(here, ignore_errors=True)
+        root, installed = here/"tree", here/"installed"
+        (root/"extension/schemas").mkdir(parents=True)
+        (root/"extension/extension.js").write_text("// 1\n")
+        (root/"extension/schemas/x.gschema.xml").write_text("<schemalist/>\n")
+        self.assertTrue(install.extension_changed(root, installed))             # nothing installed
+        shutil.copytree(root/"extension", installed)
+        (installed/"schemas/gschemas.compiled").write_bytes(b"GVariant")       # made by the install itself
+        self.assertFalse(install.extension_changed(root, installed))
+        for change in (lambda: (installed/"extension.js").write_text("// 0\n"),
+                       lambda: (installed/"old.js").write_text("// gone in this version\n"),
+                       lambda: (installed/"schemas/x.gschema.xml").write_text("<schemalist><!-- 0 --></schemalist>\n")):
+            shutil.rmtree(installed)
+            shutil.copytree(root/"extension", installed)
+            change()
+            self.assertTrue(install.extension_changed(root, installed))
+
+    def test_portal_selector_switch_writes_nothing_until_register(self):
+        """D-G74: a portal record that names the other selector (the login session came or went since) is undone by
+        file_portal.register now, not by preflight, which only reads (install.py --check); the result is byte for
+        byte the one of the earlier file_portal.py (d30430b0^), whose preflight undid it at once."""
+        spec = importlib.util.spec_from_loader("file_portal_before", loader=None)
+        before = importlib.util.module_from_spec(spec)
+        exec(subprocess.run(["git", "-C", str(G), "show", "d30430b0^:scripts/file_portal.py"], capture_output=True,
+                            text=True, check=True).stdout, before.__dict__)
+        portal = importlib.import_module("file_portal")
+        here = RUN/"units/portal-switch"
+        payload, prefix, data, config = here/"prefix/share/win11-gnome", here/"prefix", here/"data", here/"config"
+
+        def listing() -> dict[str, bytes]:
+            return {str(p.relative_to(here)): p.read_bytes() for p in sorted(here.rglob("*")) if p.is_file()}
+
+        def installed(session: bool) -> None:
+            shutil.rmtree(here, ignore_errors=True)
+            payload.mkdir(parents=True)
+            (config/"xdg-desktop-portal").mkdir(parents=True)
+            (config/"xdg-desktop-portal/gnome-portals.conf").write_text("[preferred]\ndefault=gnome;gtk;\n# mine\n")
+            portal.register(payload, portal.preflight(payload, prefix, data, config, session))
+
+        with mock.patch.dict(os.environ, {"XDG_CURRENT_DESKTOP": "ubuntu:GNOME"}):
+            for session in (True, False):
+                with self.subTest(session=session):
+                    installed(not session)
+                    seen = listing()
+                    plan = before.preflight(payload, prefix, data, config, session)
+                    before.register(payload, plan)
+                    want = listing()
+                    self.assertNotEqual(want, seen)
+                    installed(not session)
+                    plan = portal.preflight(payload, prefix, data, config, session)
+                    self.assertIn("undo", plan)
+                    self.assertEqual(listing(), seen, "preflight wrote")
+                    portal.register(payload, plan)
+                    self.assertEqual(listing(), want)
+                    self.assertNotIn("undo", json.loads((payload/portal.MANIFEST).read_text()))
+
+    def test_uninstall_keeps_the_update_folder_while_its_installer_runs(self):
+        """D-G74 (design 5.5): $XDG_CACHE_HOME/win11-gnome/winpoint stays only while job.json says installing and
+        its installer {pid, start} (the host's process_start) still runs."""
+        here = RUN/"units/winpoint-cache"
+        live = {"pid": os.getpid(), "start": install.process_start(os.getpid())}
+        self.assertTrue(live["start"] and live["start"].isdigit())
+        for job, kept in [({"state": "installing", "installer": live}, True),
+                          ({"state": "installing", "installer": {**live, "start": "1"}}, False),
+                          ({"state": "installing", "installer": {**live, "pid": True}}, False),
+                          ({"state": "downloading", "installer": live}, False),
+                          ({"state": "installing", "installer": None}, False), (None, False), ("{broken", False)]:
+            with self.subTest(job=job):
+                shutil.rmtree(here, ignore_errors=True)
+                folder = here/"cache/win11-gnome/winpoint"
+                folder.mkdir(parents=True)
+                if job is not None:
+                    (folder/"job.json").write_text(job if isinstance(job, str) else json.dumps(job))
+                install.remove_winpoint_cache(here/"cache")
+                self.assertEqual(folder.is_dir(), kept)
+
+    def test_the_release_build_loads_cleanly(self):
+        """D-G74's gate: ldd -r finds nothing missing in the 19 binaries of the reference release build, so its own
+        install passes check_abi."""
+        build = COMPLETE_BUILD
+        if not all((build/name).is_file() for name in install.BINS):
+            self.skipTest(f"no complete build in {build}")
+        self.assertTrue(all(install.elf_needed(build/name) is not None for name in install.BINS))
+        install.check_abi(build)
 
     def test_desktop_entry_table_matches_baseline_dutch(self):
         """nl of host/src/desktop-entries.json == the literals of install.py at 3b898e6 (C6)."""

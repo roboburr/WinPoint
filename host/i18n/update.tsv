@@ -11,9 +11,9 @@
 # Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
 
 # --- errors of the update.* service (GW2, design §3.7)
-# {product} in every update text (design §3.1, C7: the product name until Robin decides branding)
+# {product} in every update text (design §3.1, C7); the product name WinPoint since D-G74a, the same in both languages
 #@ new
-update.product	Win11 Shell	Win11 Shell
+update.product	WinPoint	WinPoint
 # PackageKit no-network 2, no-more-mirrors 43, repo-not-available 37 (an Ubuntu URI, or GetUpdates failed too)
 #@ new
 update.err.network	Er is geen verbinding met de updateserver. Controleer je internetverbinding en probeer het opnieuw.	Can’t reach the update server. Check your internet connection and try again.
@@ -335,3 +335,154 @@ update.post.missingBody	Na de upgrade ontbreekt: {parts}.	Missing after the upgr
 # post-upgrade notification action
 #@ new
 update.post.installParts	Onderdelen installeren…	Install components…
+
+# --- WinPoint's own update check (services/winpoint.rs, D-G74a)
+# notification title after an automatic check found a newer release; {version} is e.g. 0.9.1
+#@ new
+update.winpoint.notifyTitle	WinPoint {version} is beschikbaar	WinPoint {version} is available
+# notification body; the page links to the release on GitHub (phase 1 installs nothing itself)
+#@ new
+update.winpoint.notifyBody	Open Instellingen › Update en herstel om hem te installeren.	Open Settings › Update & recovery to install it.
+# notification button: opens Settings › Update & recovery
+#@ new
+update.winpoint.notifyAction	Bekijken	View
+# the card's error: NetworkManager reports no connectivity when Check for updates is clicked
+#@ new
+update.winpoint.err.offline	Geen internetverbinding	No internet connection
+# GIO has no TLS backend; glib-networking is the Ubuntu package name
+#@ new
+update.winpoint.err.noTls	Voor beveiligde verbindingen is het pakket glib-networking nodig	Secure connections need the package glib-networking
+# DNS failure for api.github.com
+#@ new
+update.winpoint.err.dns	De naam van GitHub kan niet worden opgezocht	GitHub’s name couldn’t be looked up
+# connection refused, network or host unreachable, or another socket error
+#@ new
+update.winpoint.err.connect	Er is geen verbinding met GitHub	Can’t connect to GitHub
+# TLS failure (an untrusted certificate, a failed handshake) or a redirect to plain http
+#@ new
+update.winpoint.err.tls	De beveiligde verbinding met GitHub is mislukt	The secure connection to GitHub failed
+# no byte for 20 s, or the request took longer than 60 s
+#@ new
+update.winpoint.err.timeout	GitHub antwoordt niet	GitHub isn’t answering
+# GNOME's proxy failed or needs authentication
+#@ new
+update.winpoint.err.proxy	De proxyserver weigert de verbinding	The proxy server refused the connection
+# {code} is the HTTP status code, e.g. 500
+#@ new
+update.winpoint.err.status	GitHub gaf een fout ({code})	GitHub returned an error ({code})
+# the release list is not the JSON WinPoint expects, or the HTTP answer is malformed or too large
+#@ new
+update.winpoint.err.feed	Het antwoord van GitHub is onleesbaar	GitHub’s answer couldn’t be read
+# 404 after an earlier successful check: the repository is private or gone
+#@ new
+update.winpoint.err.unreachable	De uitgaven van WinPoint zijn niet te vinden op GitHub	WinPoint’s releases can’t be found on GitHub
+# Check for updates in Settings while WinPoint's taskbar backend (the owner of the check) does not run
+#@ new
+update.winpoint.err.noOwner	WinPoint kan alleen op updates controleren terwijl de taakbalk draait	WinPoint can only check for updates while its taskbar is running
+# a check stopped because WinPoint shut down
+#@ new
+update.winpoint.err.cancelled	Geannuleerd	Cancelled
+# the newer release has no package for this processor type; {arch} is e.g. aarch64
+#@ new
+update.winpoint.reason.noAsset	Er is nog geen download voor deze pc ({arch})	There’s no download for this PC ({arch}) yet
+# GitHub's rate limit; {time} is the local time of day it allows the next request, e.g. 14:05 (no promise of an automatic retry: checks run on hourly ticks, and not at all with automatic checks off)
+#@ new
+update.winpoint.err.rateLimited	GitHub vraagt WinPoint te wachten tot {time}	GitHub asks WinPoint to wait until {time}
+# the update check's state folder (or a lock file in it) has group or other permissions, another owner or a symbolic link; {path} is the folder, e.g. /home/robin/.cache/win11-gnome/winpoint
+#@ new
+update.winpoint.err.cache	WinPoint kan zijn map {path} niet gebruiken. De map en de bestanden erin moeten van jou zijn en mogen alleen voor jou toegankelijk zijn.	WinPoint can’t use its folder {path}. The folder and the files in it must be yours and accessible only to you.
+
+# --- WinPoint's own update job (services/winpoint/job.rs, D-G74)
+# notification title after WinPoint's update job installed a release; {version} is e.g. 0.9.1
+#@ new
+update.winpoint.installedTitle	WinPoint {version} is geïnstalleerd	WinPoint {version} is installed
+# notification body: the release changed the GNOME Shell extension, so a sign-out finishes the update
+#@ new
+update.winpoint.installedRelogin	Meld je af en weer aan om de update af te ronden.	Sign out and back in to finish the update.
+# notification body: a restart of WinPoint's programs finishes the update
+#@ new
+update.winpoint.installedRestart	Start WinPoint opnieuw om de update af te ronden.	Restart WinPoint to finish the update.
+# Download and install, Try again or Cancel in Settings while WinPoint's taskbar backend (the owner of the update) does not run
+#@ new
+update.winpoint.err.noOwnerUpdate	WinPoint kan alleen worden bijgewerkt terwijl de taakbalk draait	WinPoint can only be updated while its taskbar is running
+# the release's package has no SHA-256 digest in GitHub's answer, so WinPoint does not download it itself; the card links to the release page
+#@ new
+update.winpoint.reason.noDigest	Deze uitgave heeft geen controlegetal van GitHub; download hem via de link	This release has no checksum from GitHub; download it from the link
+# WinPoint runs from a build folder, not from an installation; {path} is that folder
+#@ new
+update.winpoint.reason.dev	Deze WinPoint draait vanuit {path}. Werk hem bij met git en scripts/install.sh.	This WinPoint runs from {path}. Update it with git and scripts/install.sh.
+# the release's installer is a Python program and /usr/bin/python3 is missing
+#@ new
+update.winpoint.reason.noPython	Voor het installeren is python3 nodig	Installing needs python3
+# the release's installer refused it: its extension is for another GNOME version; {needs} e.g. 50, {running} e.g. 49
+#@ new
+update.winpoint.reason.gnome	WinPoint {version} is gemaakt voor GNOME {needs}; deze pc heeft GNOME {running}	WinPoint {version} is made for GNOME {needs}; this PC has GNOME {running}
+# the release's installer refused it: its programs need newer system libraries than this PC has (details in the expander)
+#@ new
+update.winpoint.reason.abi	WinPoint {version} werkt niet met de systeembibliotheken van deze pc	WinPoint {version} doesn’t work with the system libraries on this PC
+# the release changes files that only an install with a password can change, so WinPoint does not install it itself
+#@ new
+update.winpoint.reason.manual	Deze versie wijzigt ook systeembestanden. Download hem op GitHub en installeer hem met scripts/install.sh.	This version also changes system files. Download it from GitHub and install it with scripts/install.sh.
+# the release's installer needs system packages first; {packages} e.g. libgtk-4-1 libadwaita-1-0
+#@ new
+update.winpoint.reason.missingParts	Installeer eerst: sudo apt install {packages}	Install these first: sudo apt install {packages}
+# {size} e.g. 135,2 MB, {path} the folder it is needed in
+#@ new
+update.winpoint.err.space	Te weinig ruimte: {size} nodig in {path}	Not enough space: {size} needed in {path}
+# the downloaded package does not have the SHA-256 that GitHub gave for it
+#@ new
+update.winpoint.err.checksum	De download is beschadigd en is verwijderd	The download is damaged and was deleted
+# the release's .sha256 file names another file or another hash than GitHub's digest; the package was not downloaded
+#@ new
+update.winpoint.err.mismatch	Het controlebestand van de uitgave klopt niet met GitHub; er is niets gedownload	The release’s checksum file doesn’t match GitHub; nothing was downloaded
+# the downloaded package cannot be unpacked safely
+#@ new
+update.winpoint.err.archive	Het pakket is ongeldig	The package is invalid
+# the unpacked package is another version than the one offered; {version} e.g. 0.9.1
+#@ new
+update.winpoint.err.bundle	Het pakket hoort niet bij WinPoint {version}	The package doesn’t belong to WinPoint {version}
+# {code} is the installer's exit code, e.g. 3
+#@ new
+update.winpoint.err.installer	Het installatieprogramma is gestopt (code {code})	The installer stopped (code {code})
+# the release's installer said no for another reason (its own message is in the details)
+#@ new
+update.winpoint.err.refused	Het installatieprogramma weigert deze versie	The installer refused this version
+# the line below a failed update: the installed WinPoint is untouched
+#@ new
+update.winpoint.err.nothingChanged	Er is niets gewijzigd.	Nothing was changed.
+# the line below a failed update: the installer undid its changes
+#@ new
+update.winpoint.err.rolledBack	Je vorige versie is teruggezet.	Your previous version was restored.
+# the line below a failed or interrupted update whose result is not known: running it again completes it
+#@ new
+update.winpoint.err.unknown	Probeer het opnieuw om de installatie af te ronden.	Try again to finish the installation.
+# {found} and {version} are versions, e.g. 0.9.0 and 0.9.1
+#@ new
+update.winpoint.err.versionMismatch	Na de installatie meldt WinPoint versie {found} in plaats van {version}	After installing, WinPoint reports version {found} instead of {version}
+# WinPoint's update cannot start: another update, an Ubuntu upgrade, a software installation or a restart of WinPoint runs
+#@ new
+update.winpoint.err.busy	Er loopt al een update	An update is already running
+# a restart, shutdown or sign-out was refused while WinPoint updates itself
+#@ new
+update.winpoint.err.installing	WinPoint wordt bijgewerkt; wacht tot dat klaar is	WinPoint is being updated; wait until it’s done
+# restarting WinPoint was refused: the installed update needs a sign-out instead
+#@ new
+update.winpoint.err.signOutFirst	Meld je eerst af om de update van WinPoint af te ronden	Sign out first to finish the WinPoint update
+# the connection is metered; the page asks before it downloads
+#@ new
+update.winpoint.err.metered	Bevestig het downloaden via een verbinding met een datalimiet	Confirm the download over a metered connection
+# the clicked version is no longer the one GitHub offers
+#@ new
+update.winpoint.err.stale	Deze versie wordt niet meer aangeboden; controleer opnieuw	This version is no longer offered; check again
+# WinPoint's taskbar backend ended while it downloaded or unpacked the update (nothing was installed)
+#@ new
+update.winpoint.err.ownerStopped	WinPoint is gestopt tijdens de update	WinPoint stopped during the update
+# a file in WinPoint's update folder could not be created or renamed
+#@ new
+update.winpoint.err.io	Een bestand van de update kon niet worden geschreven	A file of the update couldn’t be written
+# Cancel after the installer started
+#@ new
+update.winpoint.err.cannotCancel	De update kan niet meer worden geannuleerd	The update can’t be cancelled any more
+# Cancel for an update that is no longer running
+#@ new
+update.winpoint.err.noJob	Er loopt geen update	No update is running

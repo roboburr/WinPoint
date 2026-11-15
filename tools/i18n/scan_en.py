@@ -4,7 +4,7 @@ in GE0a, notes/claude/round0/ge0a.md; warning-only).
     python3 tools/i18n/scan_en.py FILE
     python3 tools/i18n/scan_en.py FILE --strict        exit 1 on any hit (round 3 makes it blocking)
 
-FILE is a text dump in the format of the WebKit apps' en dump (``git show last-webkit:tests/i18n/baseline-en.txt``,
+FILE is a text dump in the format of the WebKit apps' en dump (``git show 6ebf169f:tests/i18n/baseline-en.txt``,
 recorded by tests/i18n/run.sh until the WebKit removal): "== id url ==" blocks of text lines.
 
 Every text line of the dump (not the "== id url ==" headers, not "# …" lines) is matched against

@@ -1,5 +1,5 @@
 //! Instellingen › Update en herstel › Updategeschiedenis
-//! (`git show last-webkit:vendor/ui/js/apps/settings/pages/update-history.js`): Windows 11 24H2's Update history, one
+//! (`git show 6ebf169f:vendor/ui/js/apps/settings/pages/update-history.js`): Windows 11 24H2's Update history, one
 //! expander per group with its count ("Updates (12)"), each entry a two-line row (name and version; "Geïnstalleerd op
 //! {date}" or "Kon niet worden geïnstalleerd op {date}" with who installed it), newest first; update.history gives 200
 //! entries at most per call, "Meer laden" asks for the ones before the oldest shown (its cursor). Under the groups,
@@ -24,7 +24,8 @@ pub const CSS: &str = r#"
 .st-updhist-more { margin-top: 12px; }
 "#;
 
-const PRODUCT: &str = "Win11 Shell";
+/// The product name (update_release.rs, D-G74a).
+const PRODUCT: &str = super::update_release::PRODUCT;
 
 /// The groups in Windows' order (updates first) and whether they start open.
 const GROUPS: &[(&str, bool)] = &[("updates", true), ("releases", true), ("software", false)];

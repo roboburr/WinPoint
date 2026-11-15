@@ -28,6 +28,9 @@ mod search;
 mod trash;
 mod watch;
 
+// D-G74: WinPoint's updater unpacks its release bundle with the Explorer's extractor (services/winpoint/job.rs)
+pub(crate) use archives::{ReleaseLimits, extract_release};
+
 /// The error of an API call (contracts C2): `code` for programs, `message` rendered in the caller's language,
 /// and for catalogue texts also `key` + `params`, so the UI can match on them (never on `message`).
 #[derive(Debug, Clone)]

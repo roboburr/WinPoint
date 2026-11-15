@@ -1,6 +1,6 @@
 # Controle van installatie en verpakking
 
-> **Historisch (D-G72, 14 november 2026):** deze controles gingen over pakketten met de HTML-apps in WebKitGTK en minder programma's. Een pakket bevat nu 19 programma's (de host zonder WebKit of GTK 3, en de GTK 4-shell, -agenda en -apps); `scripts/package.py` en `tests/installer/run.sh` controleren dat. De laatste commit met WebKit heeft de tag `last-webkit`.
+> **Historisch (D-G72, 14 november 2026):** deze controles gingen over pakketten met de HTML-apps in WebKitGTK en minder programma's. Een pakket bevat nu 19 programma's (de host zonder WebKit of GTK 3, en de GTK 4-shell, -agenda en -apps); `scripts/package.py` en `tests/installer/run.sh` controleren dat. De laatste commit met WebKit is `6ebf169f`. Sinds 0.9.0 (D-G74a) heet het archief `winpoint-<versie>-linux-<arch>.tar.gz`, met de map `winpoint-<versie>/`; `tools/release.py build` maakt het en drukt de publicatiecommando's af.
 
 Uitgevoerd op 1 november 2026 in tijdelijke mappen; geen installatie in de actieve desktop of activering uitgevoerd. De scriptcontrole gebruikt vier onschadelijke testprogramma's. De aanvullende archiefcontrole gebruikt de echte meegeleverde Rust-programma's.
 

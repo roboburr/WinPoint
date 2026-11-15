@@ -13,7 +13,7 @@
 //! the timeout, a spawn error; an apt without `?phasing` exits 100) the fallback is one
 //! `apt-cache show name=version …`: any `Phased-Update-Percentage` counts as phased (do-release-upgrade's rule,
 //! conservative). The programs come only from the tool table (stubs in tests). Until D-G73 the first answer came from
-//! a python3-apt script (`git show last-webkit:host/data/phasing.py`); `phasing_matches_the_python3_apt_script`
+//! a python3-apt script (`git show 6ebf169f:host/data/phasing.py`); `phasing_matches_the_python3_apt_script`
 //! keeps its answers on a recorded real system.
 //!
 //! Review F5: the fallback runs on **every** failure of the apt answers. A package that neither answered for the
@@ -405,7 +405,7 @@ mod tests {
     }
 
     /// The answers of the D-G73 classifier on a recorded real system equal those of the python3-apt script it
-    /// replaced (`git show last-webkit:host/data/phasing.py`), recorded at the same moment on the same machine
+    /// replaced (`git show 6ebf169f:host/data/phasing.py`), recorded at the same moment on the same machine
     /// (Ubuntu 26.04.1, apt 3.2.1, python3-apt 3.1.0; tests/update/fixtures/phasing/README.md): candidate,
     /// phasing_applied, percentage, hold and installed version of each of the 19 packages, among them eight that
     /// phasing holds back, three with a percentage this machine already passed, a foreign `:i386` and a native

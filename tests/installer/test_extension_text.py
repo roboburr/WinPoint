@@ -29,7 +29,7 @@ DUTCH = {w.strip() for w in (G/"tests/i18n/dutch-words.txt").read_text().splitli
 # en values that may hold Dutch on purpose: the host asked for the nl test notification (args.language "nl").
 EN_DUTCH_OK = re.compile(r"^(after\.)?notificationTest\.nl$")
 # Rows of tests/i18n/BASELINE-CHANGES.ext whose texts went with their methods: windows.hostState and
-# windows.hostRestore, whose only caller was the WebKit apps' saved window state in the host (git tag last-webkit).
+# windows.hostRestore, whose only caller was the WebKit apps' saved window state in the host (commit 6ebf169f).
 # The dump no longer calls them; their GE1c rows stay in that file as history.
 REMOVED_KEYS = frozenset({"failure.sessionLocked", "failure.badHost", "failure.hostUnmapped", "failure.hostUnpainted",
                           "failure.badGeometry", "failure.noDisplay", "failure.waitFrame"})

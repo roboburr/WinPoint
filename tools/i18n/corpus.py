@@ -13,7 +13,7 @@ embedded JSON ``{nl, en}`` tables (``paths.HOST_JSON_TABLES``: sysmon, disks, st
 glossary.py and check_rust.py (the label rule).
 
 Dropped from H: the Python host ``_STR`` reader (G's host is Rust). Dropped with the WebKit apps: the UI dictionaries
-of the HTML apps (jsdicts.mjs, node; ``git show last-webkit:tools/i18n/corpus.py``).
+of the HTML apps (jsdicts.mjs, node; ``git show 6ebf169f:tools/i18n/corpus.py``).
 """
 
 from __future__ import annotations

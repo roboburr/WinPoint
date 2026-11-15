@@ -1,4 +1,4 @@
-//! The Windows 11 app window (last-webkit:vendor/ui/js/apps/appframe.js, css/appframe.css; the calendar's title bar is
+//! The Windows 11 app window (6ebf169f:vendor/ui/js/apps/appframe.js, css/appframe.css; the calendar's title bar is
 //! the model): an undecorated gtk::ApplicationWindow with its own title bar (32 px by default) holding an
 //! optional Back button, the app icon and title (or the app's own title widget), a slot for the app's title bar
 //! content (Explorer's tabs, a search box) and the three caption buttons with the Win11 glyphs (close turns

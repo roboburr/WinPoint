@@ -1,4 +1,4 @@
-//! Instellingen › Privacy en beveiliging (last-webkit:vendor/ui/js/apps/settings/pages/privacy.js): recent files (and
+//! Instellingen › Privacy en beveiliging (6ebf169f:vendor/ui/js/apps/settings/pages/privacy.js): recent files (and
 //! clearing them), and how Win11 Shell keeps you safe.
 use super::{Builder, Page, PageFuture};
 use crate::common;
@@ -77,7 +77,7 @@ fn page(p: Page) -> PageFuture {
         clear.set_control(&clear_btn);
         activity.add(clear.widget());
 
-        let security = SettingsGroup::new(t("Zo houdt Win11 Shell je veilig", "How Win11 Shell keeps you safe"), "");
+        let security = SettingsGroup::new(t("Zo houdt WinPoint je veilig", "How WinPoint keeps you safe"), "");
         for (icon, title, desc) in [
             (
                 "trash",
@@ -91,22 +91,25 @@ fn page(p: Page) -> PageFuture {
                 "shield",
                 t("Eerst vragen", "Asking first"),
                 t(
-                    "Voordat er iets belangrijks gebeurt, zoals afsluiten of opruimen, vraagt Win11 Shell of je het zeker weet.",
-                    "Before something important happens, like shutting down or cleaning up, Win11 Shell asks if you’re sure.",
+                    "Voordat er iets belangrijks gebeurt, zoals afsluiten of opruimen, vraagt WinPoint of je het zeker weet.",
+                    "Before something important happens, like shutting down or cleaning up, WinPoint asks if you’re sure.",
                 ),
             ),
             (
                 "key",
                 t("Beheerdersrechten", "Administrator rights"),
                 t(
-                    "Sommige taken hebben je wachtwoord nodig. Win11 Shell legt altijd eerst uit waarom, daarna vraagt Ubuntu om je wachtwoord.",
-                    "Some tasks need your password. Win11 Shell always explains why first, then Ubuntu asks for your password.",
+                    "Sommige taken hebben je wachtwoord nodig. WinPoint legt altijd eerst uit waarom, daarna vraagt Ubuntu om je wachtwoord.",
+                    "Some tasks need your password. WinPoint always explains why first, then Ubuntu asks for your password.",
                 ),
             ),
             (
                 "lock",
-                t("Alles blijft op deze computer", "Everything stays on this computer"),
-                t("Win11 Shell stuurt geen gegevens over jou of je bestanden naar internet.", "Win11 Shell doesn’t send any data about you or your files to the internet."),
+                t("Je gegevens blijven op deze computer", "Your data stays on this computer"),
+                t(
+                    "WinPoint stuurt geen gegevens over jou of je bestanden naar internet. Alleen de updatecontrole vraagt GitHub één keer per dag naar de nieuwste versie van WinPoint (GitHub ziet dan je IP-adres en de versie van WinPoint). Je zet die uit in Update en herstel › Geavanceerde opties.",
+                    "WinPoint doesn’t send any data about you or your files to the internet. Only the update check asks GitHub once a day for WinPoint’s latest version (GitHub then sees your IP address and WinPoint’s version). You can turn it off in Update & recovery › Advanced options.",
+                ),
             ),
         ] {
             security.add(SettingsCard::new(icon, title, desc).widget());

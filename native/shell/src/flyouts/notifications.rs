@@ -84,17 +84,6 @@ pub fn register(shell: &Rc<Shell>) {
             c.settings_changed();
         }
     });
-    // The toasts keep their pointer area after a flyout gave the strip its own input region back.
-    let weak = Rc::downgrade(&center);
-    shell.flyouts().on_change(move |open| {
-        if let Some(c) = weak.upgrade() {
-            let toasts = c.toasts.clone();
-            if !open {
-                glib::idle_add_local_once(move || toasts.update_input());
-            }
-        }
-    });
-
     // Banner lease: while it holds, GNOME leaves the banners to us (extension/notificationsBridge.js).
     let weak = Rc::downgrade(&center);
     let beat = move || {
@@ -1281,7 +1270,6 @@ struct Toasts {
     stack: gtk::Box,
     window: RefCell<Option<gtk::Window>>,
     live: RefCell<Vec<Rc<Toast>>>,
-    extended: Cell<bool>,
     me: RefCell<Weak<Toasts>>,
 }
 
@@ -1297,7 +1285,6 @@ impl Toasts {
             stack,
             window: RefCell::new(None),
             live: RefCell::new(Vec::new()),
-            extended: Cell::new(false),
             me: RefCell::new(Weak::new()),
         });
         *toasts.me.borrow_mut() = Rc::downgrade(&toasts);
@@ -1324,33 +1311,20 @@ impl Toasts {
         false
     }
 
-    /// The pointer reaches the toasts: the strip plus their area while no flyout holds the whole monitor.
+    /// The pointer reaches the toasts: their area joins the panel window's input region (panel/mod.rs), whatever
+    /// flyout is open.
     fn update_input(&self) {
-        let shell = crate::core::shell();
-        if shell.flyouts.borrow().as_ref().is_some_and(|f| f.current().is_some()) {
-            return;
-        }
+        let Some(host) = crate::core::shell().flyouts.borrow().clone() else { return };
         let Some(win) = self.window.borrow().clone() else { return };
-        let Some(surface) = win.surface() else { return };
-        let (w, h) = (win.width().max(1), win.height().max(1));
-        let bar = crate::panel::BAR;
-        let region = gtk::cairo::Region::create_rectangle(&gtk::cairo::RectangleInt::new(0, h - bar, w, bar));
-        let any = self.stack.first_child().is_some();
-        if any && let Some(b) = self.stack.compute_bounds(&win) {
-            let rect = gtk::cairo::RectangleInt::new(
+        let area = self.stack.first_child().and_then(|_| self.stack.compute_bounds(&win)).map(|b| {
+            gtk::cairo::RectangleInt::new(
                 b.x().floor() as i32,
                 b.y().floor() as i32,
                 b.width().ceil() as i32 + 1,
                 b.height().ceil() as i32 + 1,
-            );
-            let _ = region.union_rectangle(&rect);
-            self.extended.set(true);
-        } else if self.extended.get() {
-            self.extended.set(false);
-        } else {
-            return;
-        }
-        surface.set_input_region(Some(&region));
+            )
+        });
+        host.set_extra_input(area);
     }
 
     fn update_input_soon(&self) {

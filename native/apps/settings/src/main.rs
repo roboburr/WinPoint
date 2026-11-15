@@ -1,5 +1,5 @@
 //! Win11 GNOME Settings in GTK 4 (`win11-gtk-settings`, see ../../APPS.md): the WebKit app
-//! last-webkit:vendor/ui/js/apps/settings/ rebuilt natively on win11-kit, with the same pages, backend and look.
+//! 6ebf169f:vendor/ui/js/apps/settings/ rebuilt natively on win11-kit, with the same pages, backend and look.
 //!
 //! One process (GApplication "io.github.win11shell.Settings"); a second launch hands its arguments to the
 //! running one, which opens that page and comes to the front.
@@ -104,7 +104,7 @@ fn open_router() -> Option<Rc<app::Router>> {
 }
 
 /// The backend restarts (kit `on_restart`): `shell.restartAll` reopens the window on the update page when this
-/// Settings asked for it (the WebKit app's rule, last-webkit host lib.rs restart_args), else on the page it shows;
+/// Settings asked for it (the WebKit app's rule, 6ebf169f host lib.rs restart_args), else on the page it shows;
 /// a Settings that only the keep-alive kept has nothing to reopen. A plain shell.restart stays on a new backend.
 fn restart_plan(restart: &kit::Restart) -> kit::RestartPlan {
     if !restart.all {

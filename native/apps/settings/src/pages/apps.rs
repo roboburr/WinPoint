@@ -1,4 +1,4 @@
-//! Instellingen › Apps (last-webkit:vendor/ui/js/apps/settings/pages/apps.js): the overview with links to
+//! Instellingen › Apps (6ebf169f:vendor/ui/js/apps/settings/pages/apps.js): the overview with links to
 //! Geïnstalleerde apps, Standaard-apps and Opstarten. Its CSS has the app lists' toolbar and rows (settings.css "Apps
 //! lists"), shared by installed.rs and startup.rs.
 use super::{Builder, Content, Page, PageFuture};

@@ -1,7 +1,7 @@
 //! Instellingen › Update en herstel › Geavanceerde opties
-//! (`git show last-webkit:vendor/ui/js/apps/settings/pages/update-advanced.js`): Windows 11 24H2's Advanced options.
-//! The toggle rows first, without icons (downloads over metered connections and the restart notification, settings
-//! update.*), then Ubuntu's "Software-updater van Ubuntu automatisch openen voor gewone updates" (update.setAutoOpen;
+//! (`git show 6ebf169f:vendor/ui/js/apps/settings/pages/update-advanced.js`): Windows 11 24H2's Advanced options.
+//! The toggle rows first, without icons (WinPoint's own daily check for new versions, D-G74a; downloads over metered
+//! connections and the restart notification, settings update.*), then Ubuntu's "Software-updater van Ubuntu automatisch openen voor gewone updates" (update.setAutoOpen;
 //! hidden without update-notifier's schema), and under "Aanvullende opties" the automatic security updates and Snap
 //! Store rows (read-only, update.options) and the Software Updater ("Openen"). The page is there at once: the rows that
 //! wait for update.options say "Even geduld…" until it answers.
@@ -176,6 +176,20 @@ async fn set_auto(st: Rc<State>, on: bool) {
 
 fn update_advanced(p: Page) -> PageFuture {
     Box::pin(async move {
+        // WinPoint's own check against GitHub (services/winpoint.rs): off stops the daily check and its notification,
+        // the Update page's "Controleren op updates" still works
+        let (winpoint, winpoint_sw) = common::toggle_card(
+            &p,
+            "",
+            t("Automatisch controleren op nieuwe versies van WinPoint", "Check for new versions of WinPoint automatically"),
+            t(
+                "Eén keer per dag vraagt WinPoint GitHub naar de nieuwste uitgave. GitHub ziet je IP-adres en de versie van WinPoint; verder wordt er niets verstuurd.",
+                "Once a day WinPoint asks GitHub for the latest release. GitHub sees your IP address and WinPoint’s version; nothing else is sent.",
+            ),
+            "update.winpointAutoCheck",
+            false,
+        );
+        winpoint_sw.switch().set_widget_name("advanced-winpoint");
         let (metered, _) = common::toggle_card(
             &p,
             "",
@@ -233,6 +247,7 @@ fn update_advanced(p: Page) -> PageFuture {
         });
 
         let g1 = SettingsGroup::new("", "");
+        g1.add(winpoint.widget());
         g1.add(metered.widget());
         g1.add(notify.widget());
         g1.add(st.auto.widget());

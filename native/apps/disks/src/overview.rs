@@ -1,4 +1,4 @@
-//! "Schijven en volumes" (last-webkit:vendor/ui/js/apps/disks/overview.js): a card per disk with the Schijfbeheer bar
+//! "Schijven en volumes" (6ebf169f:vendor/ui/js/apps/disks/overview.js): a card per disk with the Schijfbeheer bar
 //! (partitions and unallocated space side by side, proportional; click selects, double-click or Enter opens,
 //! right-click, the Menu key or Shift+F10 for the actions; an MBR extended partition is a frame around its
 //! logical drives and the free space in it; one tab stop per bar, arrows move) and the volume list below it.

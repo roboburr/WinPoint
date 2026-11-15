@@ -1,4 +1,4 @@
-//! Instellingen › Toegankelijkheid (last-webkit:vendor/ui/js/apps/settings/pages/accessibility.js) with its sub-pages
+//! Instellingen › Toegankelijkheid (6ebf169f:vendor/ui/js/apps/settings/pages/accessibility.js) with its sub-pages
 //! Tekstgrootte (a sample, the slider and Toepassen), Visuele effecten and Contrastthema’s.
 use super::{Builder, Page, PageFuture};
 use crate::common;
@@ -145,7 +145,7 @@ fn textsize(p: Page) -> PageFuture {
         row.append(slider.widget());
         row.append(&value_l);
         row.append(&apply);
-        let card = SettingsCard::new("zoom-in", t("Tekstgrootte", "Text size"), t("Hoe groot tekst is in Win11 Shell", "How big text is in Win11 Shell"));
+        let card = SettingsCard::new("zoom-in", t("Tekstgrootte", "Text size"), t("Hoe groot tekst is in WinPoint", "How big text is in WinPoint"));
         card.set_control(&row);
         let group = SettingsGroup::new("", "");
         group.add(card.widget());
@@ -174,8 +174,8 @@ fn visualeffects(p: Page) -> PageFuture {
 fn contrast(p: Page) -> PageFuture {
     Box::pin(async move {
         let info = common::notice(t(
-            "Speciale contrastthema’s zijn nog niet beschikbaar in Win11 Shell.",
-            "Special contrast themes aren’t available in Win11 Shell yet.",
+            "Speciale contrastthema’s zijn nog niet beschikbaar in WinPoint.",
+            "Special contrast themes aren’t available in WinPoint yet.",
         ));
         let tips = SettingsGroup::new(t("Tips voor beter leesbare tekst", "Tips for easier reading"), "");
         let mode = common::setting_dropdown(

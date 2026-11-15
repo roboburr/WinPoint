@@ -1,4 +1,4 @@
-//! Instellingen › Persoonlijke instellingen › Start (last-webkit:vendor/ui/js/apps/settings/pages/start.js): the layout
+//! Instellingen › Persoonlijke instellingen › Start (6ebf169f:vendor/ui/js/apps/settings/pages/start.js): the layout
 //! (start.layout: morePins, default, moreRecommendations), recently added apps, recommended files, and the
 //! folders next to the power button (start.folders).
 use super::{Builder, Page, PageFuture};

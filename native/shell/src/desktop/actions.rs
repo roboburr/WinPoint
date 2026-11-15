@@ -662,19 +662,19 @@ impl Desk {
             });
         }
         let p = path.as_deref().unwrap_or("");
-        if path.is_none() || p.starts_with("wallpaper") || p.starts_with("theme") {
+        // only for what the desktop shows (core::touches): Explorer's own explorer.* writes (columns, navWidth, view)
+        // and the host's taskbar.tray.known rebuilt every icon before
+        let touches = |keys: &[&str]| crate::core::touches(data, keys);
+        if touches(&["wallpaper", "theme"]) {
             self.apply_wallpaper(false);
         }
-        if p == "language" || path.is_none() {
+        if touches(&["language"]) {
             self.window.set_title(Some(&self.t("Bureaublad", "Desktop")));
         }
         if !self.s.borrow().loaded {
             return;
         }
-        if path.is_none()
-            || ["desktop", "explorer", "taskbar", "accessibility"].iter().any(|k| p.starts_with(k))
-            || p == "language"
-        {
+        if touches(&["desktop", "explorer.showExtensions", "taskbar.autoHide", "accessibility", "language"]) {
             self.refresh_view();
         }
         if p == "language" {
@@ -684,7 +684,10 @@ impl Desk {
     }
 
     pub fn on_geometry(self: &Rc<Self>, data: &Value) {
-        if let Some((w, h)) = super::size_of(data) {
+        // only a real change: set_default_size queues a resize and a desktop frame even for the same size
+        let Some((w, h)) = super::size_of(data) else { return };
+        let shown = (self.window.width(), self.window.height());
+        if self.window.default_size() != (w, h) || (self.window.is_mapped() && shown != (w, h)) {
             self.window.set_default_size(w, h);
         }
     }

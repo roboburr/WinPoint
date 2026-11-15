@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
-"""Bundle source + prebuilt standalone apps, excluding build caches and private configuration."""
+"""Bundle source + prebuilt standalone apps, excluding build caches and private configuration.
+
+The release asset (D-G74a, frozen from 0.9.0 on: WinPoint's update check looks for these names):
+dist/winpoint-<version>-linux-<arch>.tar.gz with one top folder winpoint-<version>/, and next to it the .sha256
+"<64 hex>  <archive name>\n". The version is the root Cargo.toml's [workspace.package] version, the one source;
+extension/metadata.json's version-name must equal it, and the build's win11-panel must carry its marker
+"WinPoint <version>\n" (host/src/lib.rs VERSION_LINE), so a stale build is never packed under a new name."""
 from pathlib import Path
 import hashlib
+import json
 import os
 import platform
 import shutil
@@ -9,7 +16,6 @@ import subprocess
 import sys
 import tarfile
 import tempfile
-import tomllib
 import install
 from install import BINS
 import icon_bundle
@@ -24,7 +30,7 @@ for index, argument in enumerate(sys.argv[2:], 2):
         language = sys.argv[index + 1]
 install.set_language(language.strip().lower())
 # vendor/ui against vendor/ui-sha256.json: the wallpapers and icons install.py ships (its HTML apps are history,
-# git show last-webkit:vendor/ui); tools/ui-manifest.py records a change on purpose.
+# git show 6ebf169f:vendor/ui); tools/ui-manifest.py records a change on purpose.
 subprocess.run([sys.executable, str(root/"scripts/verify-ui.py")], check=True,
                env=dict(os.environ, WIN11_LANG=install.LANGUAGE))
 icon_bundle.validate(root/"vendor")
@@ -33,12 +39,24 @@ build = Path(os.environ.get("WIN11_BUILD_DIR", str(root/"target/release")))
 missing = install.missing_binaries(build)
 if missing:
     raise SystemExit("\n".join(install.t("missingBinary", source=path) for path in missing))
-version = tomllib.loads((root/"host/Cargo.toml").read_text())["package"]["version"]
+# D-G74a: one version, the root [workspace.package]; metadata.json and the build must agree with it
+version = install.bundle_version(root)
+if not version:
+    raise SystemExit(install.t("badTable", file=root/"Cargo.toml"))
+try:
+    version_name = json.loads((root/"extension/metadata.json").read_text(encoding="utf-8")).get("version-name")
+except (OSError, UnicodeDecodeError, ValueError, AttributeError):
+    raise SystemExit(install.t("badTable", file=root/"extension/metadata.json"))
+if version_name != version:
+    raise SystemExit(install.t("packageVersion", file=root/"extension/metadata.json", found=version_name, version=version))
+panel = install.binary_source(build, "win11-panel")
+if f"WinPoint {version}\n".encode() not in panel.read_bytes():
+    raise SystemExit(install.t("packageMarker", binary=panel, version=version))
 destination = Path(os.environ.get("WIN11_PACKAGE_DIR", str(root/"dist"))).resolve()
 destination.mkdir(parents=True, exist_ok=True)
-archive = destination/f"win11-gnome-{version}-linux-{platform.machine()}.tar.gz"
-with tempfile.TemporaryDirectory(prefix="win11-gnome-package-") as temp:
-    stage = Path(temp)/"win11-gnome"
+archive = destination/f"winpoint-{version}-linux-{platform.machine()}.tar.gz"
+with tempfile.TemporaryDirectory(prefix="winpoint-package-") as temp:
+    stage = Path(temp)/f"winpoint-{version}"
     stage.mkdir()
     # native/: the GTK 4 shell, Calendar, kit and app sources (their own workspace), next to host/
     for name in ("scripts", "extension", "host", "native", "vendor"):
@@ -55,6 +73,9 @@ with tempfile.TemporaryDirectory(prefix="win11-gnome-package-") as temp:
     # README.md is the English README, README.nl.md the Dutch one (2026-11-13; README.en.md is gone).
     for name in ("Cargo.toml", "Cargo.lock", "LICENSE", "THIRD_PARTY_NOTICES.md", "README.md", "README.nl.md", "RELEASE_PLAN.md"):
         shutil.copy2(root/name, stage/name)
+    # What changed per release (tools/release.py takes the release notes from it).
+    if (root/"CHANGELOG.md").is_file():
+        shutil.copy2(root/"CHANGELOG.md", stage/"CHANGELOG.md")
     # The screenshots README.md shows (docs/screenshots/*.png, own captures; the icons in them stay GPL-3.0).
     if (root/"docs/screenshots").is_dir():
         shutil.copytree(root/"docs/screenshots", stage/"docs/screenshots")
@@ -63,7 +84,7 @@ with tempfile.TemporaryDirectory(prefix="win11-gnome-package-") as temp:
     (stage/"tools").mkdir()
     shutil.copy2(root/"tools/h-remnants.sh", stage/"tools/h-remnants.sh")
     # Include only an existing report; this script never invents a passing test result. Most are history (the WebKit
-    # apps up to the last-webkit tag): they ship as the record they are, not as a claim about this version.
+    # apps up to commit 6ebf169f): they ship as the record they are, not as a claim about this version.
     for report in ("VALIDATION.md", "VALIDATION_TABS.md", "VALIDATION_FILES.md", "VALIDATION_FILES_COMPLETE.md", "VALIDATION_SETTINGS.md", "VALIDATION_FILES_DESKTOP.md", "VALIDATION_SEARCH.md", "VALIDATION_WATCH.md", "VALIDATION_ACTIONS.md", "VALIDATION_REGRESSIONS_0.5.md", "VALIDATION_APPS.md", "VALIDATION_APPS_CATALOG.md", "VALIDATION_APPS_DEFAULTS.md", "VALIDATION_APPS_RECENT.md", "VALIDATION_TOPBAR.md", "VALIDATION_ALLES_PROGRESS.md", "VALIDATION_TRAY.md", "VALIDATION_APP_ACTIVATION.md", "VALIDATION_SHORTCUTS.md", "VALIDATION_DESKTOP.md", "VALIDATION_WALLPAPER.md", "VALIDATION_INDEX_LIFECYCLE.md", "VALIDATION_PROCESS_MEMORY.md", "PACKAGING_VALIDATION.md"):
         if (root/report).is_file():
             shutil.copy2(root/report, stage/report)

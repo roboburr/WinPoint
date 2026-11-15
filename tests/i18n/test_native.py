@@ -11,7 +11,7 @@ registry.
   (the Settings app's own registry) without its Home page: the same pages in the same order, with the same parent,
   icon, titles, descriptions and keywords. Change both, or Start finds a page by a title Settings no longer has;
 * every app kind has its name (the window title, kit AppSpec) in both languages, as the WebKit host's C4 title test
-  had it (`git show last-webkit:host/src/window.rs`, title_tests).
+  had it (`git show 6ebf169f:host/src/window.rs`, title_tests).
 
 The fixture lives in tests/i18n/.run/ while a test runs (never /tmp: notes/claude/plan.md).
 """

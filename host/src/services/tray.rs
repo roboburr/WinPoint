@@ -1475,18 +1475,16 @@ impl Tray {
         let args = (item_id, event, 0i32.to_variant(), (now_ms() / 1000) as u32).to_variant();
         if event != "clicked" {
             if let Some(bus) = self.bus() {
-                bus.call(
-                    Some(&item.bus),
-                    path,
-                    MENU,
-                    "Event",
-                    Some(&args),
-                    None,
-                    gio::DBusCallFlags::NO_AUTO_START,
-                    2000,
-                    gio::Cancellable::NONE,
-                    |_| {},
+                // Fire and forget from an HTTP request thread. That thread has no main context of its own and the
+                // backend's main thread owns the default one, so gio's async bus.call asserts there (every opened
+                // and closed panicked before it was sent); a message that expects no reply needs no context.
+                let msg =
+                    gio::DBusMessage::new_method_call(Some(&item.bus), path, Some(MENU), "Event");
+                msg.set_body(&args);
+                msg.set_flags(
+                    gio::DBusMessageFlags::NO_REPLY_EXPECTED | gio::DBusMessageFlags::NO_AUTO_START,
                 );
+                let _ = bus.send_message(&msg, gio::DBusSendMessageFlags::NONE);
             }
             return Ok(json!({"ok":true}));
         }
@@ -1899,5 +1897,159 @@ mod i18n_tests {
                 ("not_found", gone, Some("tray.iconGone"))
             );
         }
+    }
+}
+#[cfg(test)]
+mod menu_event_tests {
+    //! tray.menuEvent on the private session bus of tests/rust-sandbox/run-tests.sh, as win11-panel runs it: every
+    //! request on a fresh thread without a main context of its own, while another thread owns the default one (the
+    //! backend's main loop, lib.rs). Until 14-11 "opened", "hovered" and "closed" went out with the async
+    //! bus.call, whose gio assert panicked there before anything was sent.
+    use super::*;
+    const EVENT_XML: &str = r#"<node><interface name="com.canonical.dbusmenu"><method name="Event"><arg type="i" direction="in"/><arg type="s" direction="in"/><arg type="v" direction="in"/><arg type="u" direction="in"/></method></interface></node>"#;
+    /// The sandbox's own bus (`unix:path=$TMPDIR/dbus-…`, run-tests.sh), never the live session's.
+    fn private_bus() -> Option<String> {
+        let address = std::env::var("DBUS_SESSION_BUS_ADDRESS").ok()?;
+        let own = format!("unix:path={}/dbus-", std::env::temp_dir().display());
+        (address.starts_with(&own) && !address.contains("/run/user/")).then_some(address)
+    }
+    fn connect(address: &str) -> gio::DBusConnection {
+        gio::DBusConnection::for_address_sync(
+            address,
+            gio::DBusConnectionFlags::AUTHENTICATION_CLIENT
+                | gio::DBusConnectionFlags::MESSAGE_BUS_CONNECTION,
+            None,
+            gio::Cancellable::NONE,
+        )
+        .unwrap()
+    }
+    #[test]
+    fn every_menu_event_reaches_the_app_from_a_request_thread() {
+        let Some(address) = private_bus() else {
+            eprintln!(
+                "skipped: no private session bus (run through tests/rust-sandbox/run-tests.sh)"
+            );
+            return;
+        };
+        // the app: its own connection, thread and context; it records each Event and whether it wants a reply
+        let seen = Arc::new(Mutex::new(Vec::<(String, i32, bool)>::new()));
+        let stop = Arc::new(AtomicBool::new(false));
+        let (name_tx, name_rx) = mpsc::channel();
+        let app = {
+            let (seen, stop, address) = (seen.clone(), stop.clone(), address.clone());
+            thread::spawn(move || {
+                let context = glib::MainContext::new();
+                context
+                    .with_thread_default(|| {
+                        let conn = connect(&address);
+                        let info = gio::DBusNodeInfo::for_xml(EVENT_XML).unwrap();
+                        let iface = info.interfaces().first().cloned().unwrap();
+                        let reg = conn
+                            .register_object(
+                                "/MenuBar",
+                                &iface,
+                                move |_, _, _, _, _, params, inv| {
+                                    if let Some((id, event, _, _)) =
+                                        params.get::<(i32, String, Variant, u32)>()
+                                    {
+                                        let no_reply = inv
+                                            .message()
+                                            .flags()
+                                            .contains(gio::DBusMessageFlags::NO_REPLY_EXPECTED);
+                                        seen.lock().unwrap().push((event, id, no_reply));
+                                    }
+                                    inv.return_value(None);
+                                },
+                                |_, _, _, _, _| false.to_variant(),
+                                |_, _, _, _, _, _| false,
+                            )
+                            .unwrap();
+                        name_tx
+                            .send(conn.unique_name().unwrap().to_string())
+                            .unwrap();
+                        while !stop.load(Ordering::Relaxed) {
+                            while context.pending() {
+                                context.iteration(false);
+                            }
+                            thread::sleep(Duration::from_millis(5));
+                        }
+                        let _ = conn.unregister_object(reg);
+                    })
+                    .unwrap();
+            })
+        };
+        let app_name = name_rx.recv_timeout(Duration::from_secs(5)).unwrap();
+        let lc = crate::services::system::common::LangContext::new("en", "panel");
+        let ctx = lc.ctx.clone();
+        let (tx, _rx) = mpsc::sync_channel(1);
+        let tray = Arc::new_cyclic(|weak| Tray {
+            cache: icons::Cache::new(ctx.cache_dir.join("tray")),
+            ctx,
+            weak: weak.clone(),
+            state: Mutex::new(State::default()),
+            connection: Mutex::new(Some(connect(&address))),
+            tx,
+            stop: AtomicBool::new(true),
+            host_name: "org.kde.StatusNotifierHost-test".into(),
+        });
+        tray.state.lock().unwrap().items.insert(
+            "sni:test".into(),
+            Item {
+                id: "sni:test".into(),
+                bus: app_name,
+                path: "/StatusNotifierItem".into(),
+                seq: 1,
+                names: HashSet::new(),
+                services: HashSet::new(),
+                iface: Some(ITEM.into()),
+                pid: None,
+                public: Some(json!({"id":"sni:test","hasMenu":true})),
+                menu: Some("/MenuBar".into()),
+                resolved: None,
+                fetching: false,
+                dirty: false,
+                attempt: 0,
+                due: None,
+                menu_due: None,
+                refreshes: Vec::new(),
+                waiting: false,
+            },
+        );
+        // win11-panel's main thread: it owns the default main context for the life of the backend
+        let main = glib::MainContext::default();
+        let owner = main.acquire().expect("the default main context is free");
+        for event in ["opened", "hovered", "closed", "clicked"] {
+            let tray = tray.clone();
+            let answer = thread::spawn(move || {
+                tray.call(
+                    "tray.menuEvent",
+                    &json!({"id":"sni:test","itemId":7,"event":event}),
+                )
+                .map(|r| r.map_err(|e| e.json()))
+            })
+            .join();
+            assert!(
+                matches!(&answer, Ok(Some(Ok(v))) if v["ok"] == true),
+                "{event}: {answer:?}"
+            );
+        }
+        drop(owner);
+        let until = Instant::now() + Duration::from_secs(4);
+        while seen.lock().unwrap().len() < 4 && Instant::now() < until {
+            thread::sleep(Duration::from_millis(10));
+        }
+        stop.store(true, Ordering::Relaxed);
+        app.join().unwrap();
+        // in order on one connection; only "clicked" waits for the app's answer
+        assert_eq!(
+            *seen.lock().unwrap(),
+            [
+                ("opened".to_string(), 7, true),
+                ("hovered".into(), 7, true),
+                ("closed".into(), 7, true),
+                ("clicked".into(), 7, false)
+            ]
+        );
+        drop(lc);
     }
 }

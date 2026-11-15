@@ -75,7 +75,9 @@ fn main() -> glib::ExitCode {
         // The shell is resident: it lives as long as the session, whatever windows are mapped.
         std::mem::forget(app.hold());
     });
-    app.connect_activate(|_| {});
+    // Resident: an activate (the extension's open_new_window when it comes back after the lock screen) only shows
+    // the taskbar again if the extension closed it.
+    app.connect_activate(|_| panel::show_again());
     app.run_with_args::<&str>(&[])
 }
 

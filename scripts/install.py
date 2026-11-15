@@ -15,8 +15,34 @@ one, --lang; on an update of an existing install without a stored choice, nl (H 
 language of Win11 Shell for Hyprland (~/.config/win11shell/settings.json), else one guess from the locale (H D4).
 A first install stores that choice in a complete settings.json (the defaults of host/src/settings-defaults.json).
 Messages follow --lang when it is given, else that language.
+
+An install is prepare() (every check, nothing written) and apply() (every change in one Transaction): an error,
+SIGTERM, SIGHUP or Ctrl+C puts everything back, the binaries' original inodes included (before any change they stop
+it with exit 1 and "interrupted"). The installer holds a flock
+on the payload's parent folder, so a second one is refused (busy), and it first repairs what a killed install left:
+running the same tree again rolls forward. Before any change it also refuses a GNOME Shell other than the extension's
+shell-version (/usr/bin/gnome-shell --version) and a binary that ldd -r cannot load (missing symbols or versions).
+
+WinPoint's updater (D-G74; frozen from 0.9.0 on, since version N's updater runs version N+1's installer) runs the
+release bundle's own copy, only after a click in Settings:
+  /usr/bin/python3 -E -s -B <bundle>/scripts/install.py <bundle> --lang nl|en --no-session [--check | --status FILE --log FILE]
+with exactly HOME, USER, LOGNAME, PATH=/usr/bin:/bin, LANG=C.UTF-8, XDG_DATA_HOME, XDG_CONFIG_HOME, XDG_CACHE_HOME,
+XDG_RUNTIME_DIR, WIN11_BUILD_DIR=<bundle>/bin, WIN11_NO_SESSION=1 and, only for a prefix other than ~/.local,
+WIN11_INSTALL_PREFIX (never WIN11_NATIVE_BUILD_DIR, a session bus address or a tty).
+  --check        every check of an install; nothing is written (what a killed install left is repaired first, as
+                 an install does). Exactly one JSON line on stdout, then exit 0 or 1:
+                 {"ok":true,"version":"V"|null,"extensionChanged":bool,"systemFiles":["session"|"system",...]}
+                 {"ok":false,"code":KEY,"params":{...},"message":TEXT}   KEY: a key of T (or of icon_bundle's or
+                 file_portal's T), params its placeholders, TEXT in --lang. extensionChanged: the extension's files
+                 differ from the installed ones (a sign-out is needed); systemFiles: root-owned files of
+                 install-session.py ("session") or install-system.py ("system") that are installed and differ.
+  exit codes     0 installed; 1 refused before any change; 3 failed and everything was put back; 4 failed and
+                 putting it back was incomplete (run it again); 2 a bad argument.
+  --status FILE  the exit code and a newline, written atomically at the very end, also after a SIGTERM rollback.
+  --log FILE     fds 1 and 2 go there from the start (os.dup2), with the output of the programs this runs.
 """
 from __future__ import annotations
+from dataclasses import dataclass
 import fcntl
 import importlib.util
 import json
@@ -25,11 +51,14 @@ from pathlib import Path
 import re
 import shlex
 import shutil
+import signal
 import stat
 import struct
 import subprocess
 import sys
 import tempfile
+import time
+import traceback
 import icon_bundle
 import file_portal
 
@@ -78,6 +107,8 @@ T = {
     "missingBinary": {"nl": "Ontbreekt: {source}. Bouw eerst met scripts/build.sh.", "en": "Missing: {source}. Build it first with scripts/build.sh."},
     "missingSource": {"nl": "Ontbrekende interfacebron: {directory}", "en": "Missing interface source: {directory}"},
     "badTable": {"nl": "Ontbrekend of ongeldig projectbestand: {file}", "en": "Missing or invalid project file: {file}"},
+    "packageVersion": {"nl": "{file} heeft version-name {found}, maar Cargo.toml versie {version}. Gebruik tools/release.py bump.", "en": "{file} has version-name {found}, but Cargo.toml has version {version}. Use tools/release.py bump."},
+    "packageMarker": {"nl": "{binary} is niet gebouwd voor versie {version}. Bouw eerst opnieuw met scripts/build.sh.", "en": "{binary} wasn’t built for version {version}. Build it again first with scripts/build.sh."},
     "notOwned": {"nl": "Niet overschreven: {payload} bevat geen installatiemarker van dit project.", "en": "Not overwritten: {payload} has no installation marker of this project."},
     "conflicts": {"nl": "Niet overschreven: bestaande bestanden zonder installatiemarker:", "en": "Not overwritten: existing files without an installation marker:"},
     "previousCopy": {"nl": "Eerdere installatiekopie bestaat nog: {backup}", "en": "A previous installation copy still exists: {backup}"},
@@ -126,6 +157,21 @@ T = {
                          "en": "Win11’s system files are still installed; remove them with: {command}"},
     # GW7: Name= of the post-upgrade check's autostart entry (design §6.6), in Win11's language (D-G4)
     "postUpgradeName": {"nl": "Win11-controle na een Ubuntu-upgrade", "en": "Win11 check after an Ubuntu upgrade"},
+    # D-G74: the installer's lock, its two new checks, the rollback and --check
+    "busy": {"nl": "Er loopt al een andere installatie in {path}; probeer het opnieuw als die klaar is.",
+             "en": "Another installation is running in {path}; try again when it’s done."},
+    "gnomeMismatch": {"nl": "Deze versie van WinPoint is gemaakt voor GNOME {needs}; deze pc heeft GNOME {running}.",
+                      "en": "This version of WinPoint is made for GNOME {needs}; this PC has GNOME {running}."},
+    "abi": {"nl": "{binary} werkt niet met de systeembibliotheken van deze pc: {detail}",
+            "en": "{binary} doesn’t work with this PC’s system libraries: {detail}"},
+    "interrupted": {"nl": "De installatie is onderbroken.", "en": "The installation was interrupted."},
+    "rolledBack": {"nl": "De installatie is mislukt; alles is teruggezet zoals het was.",
+                   "en": "The installation failed; everything was put back as it was."},
+    "rollbackIncomplete": {"nl": "De installatie is mislukt en kon niet helemaal worden teruggezet. Start de installatie opnieuw om haar af te ronden.",
+                           "en": "The installation failed and couldn’t be fully undone. Run the installation again to finish it."},
+    "notRestored": {"nl": "Niet teruggezet: {path} ({error})", "en": "Not restored: {path} ({error})"},
+    "checkFailed": {"nl": "De controle is mislukt: {detail}", "en": "The check failed: {detail}"},
+    "testFail": {"nl": "Testfout na stap {step} (WIN11_INSTALL_TEST_FAIL)", "en": "Test failure after step {step} (WIN11_INSTALL_TEST_FAIL)"},
 }
 LANGUAGE = "nl"          # the language of the messages; set_language() also sets it in icon_bundle and file_portal
 
@@ -140,12 +186,26 @@ def set_language(language: str) -> None:
     LANGUAGE = icon_bundle.LANGUAGE = file_portal.LANGUAGE = language if language in LANGUAGES else "nl"
 
 
+class Refusal(SystemExit):
+    """An install refused before any change (exit 1; the message on stderr, as SystemExit always printed it). The key
+    of T and its params go into --check's answer."""
+
+    def __init__(self, key: str, params: dict, message: str):
+        super().__init__(message)
+        self.key = key
+        self.params = {name: str(value) if isinstance(value, Path) else value for name, value in params.items()}
+
+
+def refuse(key: str, **params):
+    raise Refusal(key, params, t(key, **params))
+
+
 def absolute_path(value: str, label: str) -> Path:
     if any(ord(c) < 32 for c in value):
-        raise SystemExit(t("controlChars", label=label))
+        refuse("controlChars", label=label)
     path = Path(value).expanduser()
     if not path.is_absolute():
-        raise SystemExit(t("notAbsolute", label=label, value=value))
+        refuse("notAbsolute", label=label, value=value)
     return path
 
 
@@ -199,13 +259,13 @@ def session_script():
     return module
 
 
-def session_ready() -> bool:
+def session_ready(offer: bool = True) -> bool:
     """The WinPoint login session is installed, after running install-session.py when it is missing and allowed
-    (a terminal, no --no-session or WIN11_NO_SESSION=1, gnome-session and pkexec present)."""
+    (offer: not for --check; a terminal, no --no-session or WIN11_NO_SESSION=1, gnome-session and pkexec present)."""
     session = session_script()
     if session.installed():
         return True
-    if (NO_SESSION or os.environ.get("WIN11_NO_SESSION") == "1" or not sys.stdin.isatty()
+    if (not offer or NO_SESSION or os.environ.get("WIN11_NO_SESSION") == "1" or not sys.stdin.isatty()
             or not Path("/usr/bin/gnome-session").is_file() or not shutil.which("pkexec")):
         return False
     print(t("sessionAsk"))
@@ -332,10 +392,33 @@ def resolve_language(explicit: str | None, config: Path, data: Path, payload: Pa
 NO_SESSION = False   # --no-session (or WIN11_NO_SESSION=1): never run install-session.py from here
 
 
-def parse_arguments(argv: list[str]) -> str | None:
-    """--lang nl|en (also --lang=X, any case), --no-session; -h/--help prints the usage. Exit 2 on a bad value or
-    option."""
+@dataclass
+class Options:
+    explicit: str | None = None      # --lang
+    check: bool = False              # --check
+    status: str | None = None        # --status FILE
+    log: str | None = None           # --log FILE
+
+
+FILE_OPTIONS = ("--status", "--log")
+
+
+def option_value(argv: list[str], name: str) -> str | None:
+    """The value of --status/--log (FILE or =FILE), read before anything else: the status file is written and the
+    output goes to the log whatever else the arguments hold."""
+    for index, argument in enumerate(argv):
+        if argument == name and index + 1 < len(argv):
+            return argv[index + 1] or None
+        if argument.startswith(name + "="):
+            return argument.split("=", 1)[1] or None
+    return None
+
+
+def parse_arguments(argv: list[str]) -> Options:
+    """--lang nl|en (also --lang=X, any case), --no-session, and the updater's --check, --status FILE and --log FILE
+    (module docstring); -h/--help prints the usage. Exit 2 on a bad value or option."""
     global NO_SESSION
+    options = Options()
     explicit = None
     rest = []
     index = 0
@@ -343,6 +426,16 @@ def parse_arguments(argv: list[str]) -> str | None:
         argument = argv[index]
         if argument == "--no-session":
             NO_SESSION = True
+        elif argument == "--check":
+            options.check = True
+        elif argument in FILE_OPTIONS or argument.startswith(tuple(f"{name}=" for name in FILE_OPTIONS)):
+            name, _, value = argument.partition("=")
+            if argument in FILE_OPTIONS:
+                index += 1
+                value = argv[index] if index < len(argv) else ""
+            if not value:
+                rest.append(name)
+            setattr(options, name[2:], value or None)
         elif argument == "--lang" or argument.startswith("--lang="):
             if argument == "--lang":
                 index += 1
@@ -364,7 +457,8 @@ def parse_arguments(argv: list[str]) -> str | None:
             raise SystemExit(0)
         print(t("badOption", option=argument) + "\n" + t("usage"), file=sys.stderr)
         raise SystemExit(2)
-    return explicit
+    options.explicit = explicit
+    return options
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -401,7 +495,8 @@ def choose_build(root: Path) -> Path:
                      next((c for c in candidates if c.is_dir()), candidates[0]))
         missing = [build/name for name in BINS if not executable(build/name)]
     if missing:
-        raise SystemExit("\n".join(t("missingBinary", source=path) for path in missing))
+        raise Refusal("missingBinary", {"source": missing[0], "sources": [str(path) for path in missing]},
+                      "\n".join(t("missingBinary", source=path) for path in missing))
     return build
 
 
@@ -494,10 +589,11 @@ def preflight_runtime(build: Path) -> None:
         missing.append("glib-compile-schemas")
         packages.append("libglib2.0-bin")
     if missing:
+        packages = " ".join(dict.fromkeys(packages))
         lines = [t("missingParts", missing=", ".join(missing))]
         if packages:
-            lines.append(t("installParts", packages=" ".join(dict.fromkeys(packages))))
-        raise SystemExit("\n".join(lines))
+            lines.append(t("installParts", packages=packages))
+        raise Refusal("missingParts", {"missing": ", ".join(missing), "packages": packages}, "\n".join(lines))
     if not shutil.which("update-desktop-database"):
         print(t("noDesktopDatabase"), file=sys.stderr)
 
@@ -512,7 +608,7 @@ def load_entries(root: Path) -> dict:
                                                  for p in pairs for k in LANGUAGES):
             raise ValueError
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        raise SystemExit(t("badTable", file=path))
+        refuse("badTable", file=path)
     return table
 
 
@@ -523,7 +619,7 @@ def load_defaults(root: Path) -> dict:
         if not isinstance(defaults, dict):
             raise ValueError
     except (OSError, ValueError):
-        raise SystemExit(t("badTable", file=path))
+        refuse("badTable", file=path)
     return defaults
 
 
@@ -532,7 +628,7 @@ def check_config_dir(directory: Path) -> None:
     if os.path.lexists(directory):
         info = directory.lstat()
         if directory.is_symlink() or not directory.is_dir() or info.st_uid != os.geteuid():
-            raise SystemExit(t("configNotOwn", path=directory))
+            refuse("configNotOwn", path=directory)
 
 
 def store_language(directory: Path, defaults: dict, language: str) -> bool:
@@ -592,10 +688,12 @@ def set_scheme_default(config: Path, desktop_id: str, mime: str) -> None:
     subprocess.run(command, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
 
 
-def install_extension(root: Path, extension: Path) -> None:
+def install_extension(root: Path, extension: Path, tx: Transaction | None = None) -> None:
     """Every file of extension/ except the schemas (contracts C7, plan-critique F18), so a new module is never
     left out; a top-level file this version does not ship is removed from its own extension folder, and each one
-    is named (ge1c-review m3: nothing goes without a trace)."""
+    is named (ge1c-review m3: nothing goes without a trace). tx saves the whole folder first."""
+    if tx:
+        tx.save(extension)
     extension.mkdir(parents=True, exist_ok=True)
     shipped = {source.name for source in (root/"extension").iterdir() if source.is_file()}
     for name in sorted(shipped):
@@ -619,7 +717,7 @@ def rescue_calendar(payload: Path, data: Path) -> None:
         old.rename(new)
 
 
-# The WebKit apps' own storage, up to the last-webkit tag: WebKitGTK kept each app's in $XDG_DATA_HOME/<app id> and
+# The WebKit apps' own storage, up to commit 6ebf169f: WebKitGTK kept each app's in $XDG_DATA_HOME/<app id> and
 # $XDG_CACHE_HOME/<app id> (the file picker's under the portal's bus name), and the first builds' caches (1 Nov) in
 # $XDG_CACHE_HOME/win11-gnome/{WebKitCache,CacheStorage} and $XDG_CACHE_HOME/win11-explorer. Nothing reads them now.
 WEBKIT_APPS = ("Explorer", "Settings", "TaskManager", "Search", "Disks", "DefaultApps", "Installer", "Panel", "Start",
@@ -675,10 +773,57 @@ def remove_webkit_state(data: Path, cache: Path, runtime: Path) -> None:
         print(t("webkitRemoved", path=path))
 
 
+VERSION_FILE = "VERSION"
+VERSION_RE = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?")
+
+
+def bundle_version(root: Path) -> str | None:
+    """WinPoint's version (D-G74a): `[workspace.package] version` of the tree's root Cargo.toml, the one source.
+    None without that file (the installer tests' trees) or without a plain X.Y.Z[-pre] there. The payload's VERSION
+    holds it: WinPoint's update check compares with it (host/src/services/winpoint.rs); a payload without one is
+    older than 0.9.0."""
+    try:
+        import tomllib
+        version = tomllib.loads((root/"Cargo.toml").read_text(encoding="utf-8"))["workspace"]["package"]["version"]
+    except (ImportError, OSError, UnicodeDecodeError, ValueError, KeyError, TypeError):
+        return None
+    return version if isinstance(version, str) and VERSION_RE.fullmatch(version) else None
+
+
+def process_start(pid: int, proc: Path = Path("/proc")) -> str | None:
+    """Field 22 of /proc/<pid>/stat (the start time), as the host's update::store::process_start reads it."""
+    try:
+        return (proc/str(pid)/"stat").read_text().rsplit(") ", 1)[1].split()[19]
+    except (OSError, IndexError, UnicodeError):
+        return None
+
+
+def installer_running(folder: Path, proc: Path = Path("/proc")) -> bool:
+    """job.json of WinPoint's updater (D-G74) says it is installing and its installer {pid, start} still runs."""
+    try:
+        job = json.loads((folder/"job.json").read_text(encoding="utf-8"))
+        installer = job["installer"]
+        pid, start = installer["pid"], installer["start"]
+    except (OSError, UnicodeError, ValueError, KeyError, TypeError):
+        return False
+    if job.get("state") != "installing" or not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        return False
+    return isinstance(start, str) and process_start(pid, proc) == start
+
+
+def remove_winpoint_cache(cache: Path) -> None:
+    """The update check's state (D-G74a: $XDG_CACHE_HOME/win11-gnome/winpoint, the host's 0700 folder of this
+    user), on uninstall. Only that real folder of this user, never a link; nothing else of win11-gnome/ goes. It stays
+    while job.json says an update's installer is still running (D-G74): that installer writes there."""
+    folder = cache/"win11-gnome/winpoint"
+    if own_entry(cache/"win11-gnome", stat.S_ISDIR) and own_entry(folder, stat.S_ISDIR) and not installer_running(folder):
+        shutil.rmtree(folder, ignore_errors=True)
+
+
 def cache_home() -> Path:
     """The XDG cache folder: $XDG_CACHE_HOME when it is absolute, else ~/.cache (the spec ignores a relative value;
-    GLib's g_get_user_cache_dir an empty one). Only remove_webkit_state and runtime_dir read it, so a bad value never
-    stops an install or an uninstall."""
+    GLib's g_get_user_cache_dir an empty one). Only remove_webkit_state, remove_winpoint_cache and runtime_dir read
+    it, so a bad value never stops an install or an uninstall."""
     value = os.environ.get("XDG_CACHE_HOME", "")
     return Path(value) if value.startswith("/") else Path.home()/".cache"
 
@@ -699,102 +844,473 @@ def remove_legacy(prefix: Path, applications: Path) -> None:
             path.unlink()
 
 
-def main(root: Path, argv: list[str] | None = None) -> None:
-    explicit = parse_arguments(list(argv or []))
+# ---------------------------------------------------------------------------------------------------------------
+# The lock, the repair of a killed install, and the checks of D-G74
+# ---------------------------------------------------------------------------------------------------------------
+
+PREVIOUS = ".win11-gnome-previous"           # the old payload until the commit
+STAGE = ".win11-gnome-install-"              # the new payload while it is built
+TX = ".win11-gnome-tx-"                      # Transaction's copies until the commit
+LOCKED: list[tuple[Path, int]] = []          # (folder, fd) of the installer's flocks, held until the process ends
+
+
+def owned(payload: Path) -> bool:
+    try:
+        return (payload/MARKER).is_file() and (payload/MARKER).read_text() == MAGIC
+    except (OSError, UnicodeError):
+        return False
+
+
+def lock_share(share: Path) -> None:
+    """flock(LOCK_EX | LOCK_NB) on a directory fd of the payload's parent (no new file, so a payload tree stays
+    3b898e6's), or of its nearest existing folder before a first install creates it; held until this process ends.
+    A second installer (or uninstall.py) meanwhile is refused: busy."""
+    folder = share
+    while not folder.is_dir() and folder != folder.parent:
+        folder = folder.parent
+    if any(path == folder for path, _fd in LOCKED):
+        return
+    fd = os.open(folder, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        os.close(fd)
+        refuse("busy", path=share)
+    LOCKED.append((folder, fd))
+
+
+def discard(folder: Path) -> None:
+    """Remove a folder of ours (an old payload) without ever leaving half of it in its place: first one atomic rename
+    to a Transaction name next to it, which repair() and uninstall.py remove without asking for the marker, then the
+    tree. shutil.rmtree unlinks the top-level files first (the marker, the portal's and the icons' records) and the
+    35,000 icons a second later; a kill in between used to leave a payload nobody would touch again."""
+    aside = folder.with_name(f"{TX}discard-{os.getpid()}-{time.time_ns()}")
+    folder.rename(aside)
+    shutil.rmtree(aside, ignore_errors=True)
+
+
+def leftovers(share: Path) -> list[Path]:
+    """The stage and Transaction folders of this installer in the payload's parent, real folders of this user."""
+    try:
+        names = sorted(os.listdir(share))
+    except OSError:
+        return []
+    return [share/name for name in names
+            if name.startswith((STAGE, TX)) and own_entry(share/name, stat.S_ISDIR)]
+
+
+def repair(payload: Path, prefix: Path) -> bool:
+    """Inside the lock, what a killed install (SIGKILL, a power cut) left: an own previous payload is removed next to
+    an own payload and renamed back without one; stage and Transaction folders and the binaries' .new copies go.
+    Running the same tree again then rolls forward. True when an install was killed after its first visible change
+    (a previous payload or a Transaction folder), so --check cannot tell which extension GNOME Shell runs."""
+    share = payload.parent
+    previous = share/PREVIOUS
+    killed = False
+    if own_entry(previous, stat.S_ISDIR) and owned(previous):
+        killed = True
+        if owned(payload):
+            discard(previous)
+        elif not os.path.lexists(payload):
+            previous.rename(payload)
+    for folder in leftovers(share):
+        killed = killed or folder.name.startswith(TX)
+        shutil.rmtree(folder, ignore_errors=True)
+    for name in BINS:
+        temporary = prefix/"bin"/f".{name}.new"
+        if own_entry(temporary, stat.S_ISREG):
+            temporary.unlink()
+    return killed
+
+
+GNOME_SHELL = "/usr/bin/gnome-shell"
+
+
+def gnome_major() -> str | None:
+    """The major of the GNOME Shell the next login runs: `gnome-shell --version` prints it and exits while it parses
+    its options. None when it is missing or says something else."""
+    try:
+        out = subprocess.run([GNOME_SHELL, "--version"], stdin=subprocess.DEVNULL, capture_output=True, text=True,
+                             errors="replace", timeout=30, env={"PATH": "/usr/bin:/bin", "LC_ALL": "C"}).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    match = re.match(r"GNOME Shell (\d+)\b", out.strip())
+    return match.group(1) if match else None
+
+
+def check_gnome(root: Path) -> None:
+    """GNOME's own rule for an extension (host/src/services/update/compat.rs shell_matches): the running major is
+    one of metadata.json's shell-version, or one of them starts with it and a dot. An unknown major is no refusal."""
+    path = root/"extension/metadata.json"
+    try:
+        shells = json.loads(path.read_text(encoding="utf-8"))["shell-version"]
+        if not isinstance(shells, list) or not all(isinstance(value, str) for value in shells):
+            raise ValueError
+    except (OSError, UnicodeError, ValueError, KeyError, TypeError):
+        refuse("badTable", file=path)
+    running = gnome_major()
+    if running and not any(value == running or value.startswith(running + ".") for value in shells):
+        refuse("gnomeMismatch", needs=", ".join(shells), running=running)
+
+
+ABI_PROBLEM = re.compile(r"not found|undefined symbol")
+
+
+def check_abi(build: Path) -> None:
+    """`LC_ALL=C /usr/bin/ldd -r` on every binary that is ELF (the installer tests' stubs are not): a library, symbol
+    version or symbol that this system lacks, e.g. a build made on a newer Ubuntu, refuses before any change."""
+    if not os.access("/usr/bin/ldd", os.X_OK):
+        return
+    for name in BINS:
+        path = binary_source(build, name)
+        if elf_needed(path) is None:
+            continue
+        try:
+            proc = subprocess.run(["/usr/bin/ldd", "-r", str(path)], stdin=subprocess.DEVNULL, capture_output=True,
+                                  text=True, errors="replace", timeout=60, env={**os.environ, "LC_ALL": "C"})
+        except (OSError, subprocess.SubprocessError):
+            continue
+        problems = [line.strip() for line in (proc.stdout + proc.stderr).splitlines() if ABI_PROBLEM.search(line)]
+        if problems:
+            refuse("abi", binary=name, detail="; ".join(problems[:3]))
+
+
+def read_bytes(path: Path) -> bytes | None:
+    try:
+        return path.read_bytes()
+    except OSError:
+        return None
+
+
+def system_files(root: Path, system: Path = Path("/")) -> list[str]:
+    """--check's report of root-owned files that only a password installs: "session" when the four files of
+    install-session.py are there and one differs from what this tree's would write, "system" when one of
+    install-system.py's (SYSTEM_FILES) is there and differs from root/host/data. No refusal: a terminal install
+    leaves them to those commands, and the updater sends the user to the terminal."""
+    found = []
+    session = session_script()
+    if session.installed(system):
+        wanted = session.contents(system)
+        if any(read_bytes(system/directory.lstrip("/")/name) != wanted[name] for name, directory in session.FILES):
+            found.append("session")
+    if any((system/rel).is_file() and read_bytes(system/rel) != read_bytes(root/"host/data"/Path(rel).name)
+           for rel in SYSTEM_FILES):
+        found.append("system")
+    return found
+
+
+def extension_files(folder: Path) -> dict[str, bytes | None]:
+    """The top-level files and schemas/*.gschema.xml of an extension folder (install_extension's set), by name."""
+    paths = [*folder.glob("*"), *folder.glob("schemas/*.gschema.xml")] if folder.is_dir() else []
+    return {path.relative_to(folder).as_posix(): read_bytes(path) for path in sorted(paths) if path.is_file()}
+
+
+def extension_changed(root: Path, extension: Path) -> bool:
+    """The file set and bytes of extension/'s top-level files and schemas/*.gschema.xml differ from the installed
+    folder's: GNOME Shell loads an extension at login, so the new one runs after a sign-out."""
+    return not extension.is_dir() or extension_files(root/"extension") != extension_files(extension)
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# The transaction
+# ---------------------------------------------------------------------------------------------------------------
+
+SIGNALS = (signal.SIGTERM, signal.SIGHUP, signal.SIGINT)
+
+
+class Interrupted(BaseException):
+    """SIGTERM (the updater's timeout, systemd's stop), SIGHUP (a closed terminal) or Ctrl+C: raised once, and the
+    handler ignores all three first, so no later signal interrupts the rollback."""
+
+
+def hold_signals() -> None:
+    for each in SIGNALS:
+        signal.signal(each, signal.SIG_IGN)
+
+
+def interrupted(number, _frame):
+    hold_signals()
+    raise Interrupted(number)
+
+
+TEST_FAIL = os.environ.get("WIN11_INSTALL_TEST_FAIL", "")
+
+
+def test_point(step: str) -> None:
+    """Test seam (tests/installer only; the updater's environment never has it): WIN11_INSTALL_TEST_FAIL=<step> makes
+    the install fail right after that step, <step>:wait first waits up to 30 s for a signal (the variable's value goes
+    to stderr then), <step>:pause only waits 3 s the same way and goes on, <step>:rollback also leaves the first undo
+    step out. It can only make an install fail or wait."""
+    wanted, _, mode = TEST_FAIL.partition(":")
+    if wanted != step:
+        return
+    if mode in ("wait", "pause"):
+        sys.stderr.write(TEST_FAIL + "\n")
+        sys.stderr.flush()
+        deadline = time.monotonic() + (30 if mode == "wait" else 3)
+        while time.monotonic() < deadline:
+            time.sleep(0.05)
+    if mode != "pause":
+        raise RuntimeError(t("testFail", step=step))
+
+
+def remove(path: Path) -> None:
+    if path.is_dir() and not path.is_symlink():
+        shutil.rmtree(path)
+    elif os.path.lexists(path):
+        path.unlink()
+
+
+class Transaction:
+    """Every change of apply(), undone in reverse order after an error or a signal (D-G74). Before a file, link or
+    folder is written, save() copies it into <prefix>/share/.win11-gnome-tx-*/ (or notes that it is new, with the
+    folders that do not exist yet); the old payload waits as .win11-gnome-previous; a replaced binary keeps its
+    original inode as a hard link there, so rolling back renames that very file back (running programs and the
+    host's restart check see their own inode again). The commit removes the copies and the old payload. Not rolled
+    back, on purpose: store_language (it only adds a missing settings.json), rescue_calendar (a one-way move of the
+    Calendar's events that both versions read) and set_scheme_default (one idempotent line)."""
+
+    def __init__(self, share: Path):
+        self.share = share
+        self.dir: Path | None = None
+        self.log: list[tuple] = []
+        self.seen: set[Path] = set()                # saved paths
+        self.folders: set[Path] = set()             # folders noted as missing (a writer makes them)
+        self.problems: list[tuple[Path, OSError]] = []
+        self.skip_first = TEST_FAIL.endswith(":rollback")
+
+    def begin(self) -> None:
+        self.dir = Path(tempfile.mkdtemp(prefix=TX, dir=self.share))
+
+    def makedirs(self, path: Path) -> None:
+        missing = []
+        while not os.path.lexists(path):
+            missing.append(path)
+            path = path.parent
+        for folder in reversed(missing):
+            self.log.append(("dir", folder))
+            folder.mkdir()
+
+    def track(self, path: Path) -> Path:
+        """A new folder or file of this install (the stage, a .new copy): removed on a rollback."""
+        self.log.append(("new", path))
+        return path
+
+    def save(self, path: Path) -> None:
+        path = Path(path)
+        if path in self.seen:
+            return
+        self.seen.add(path)
+        if path.is_symlink():
+            self.log.append(("link", path, os.readlink(path)))
+        elif os.path.lexists(path):
+            copy = self.dir/str(len(self.log))
+            if path.is_dir():
+                shutil.copytree(path, copy, symlinks=True)
+            else:
+                shutil.copy2(path, copy, follow_symlinks=False)
+            self.log.append(("copy", path, copy))
+        else:
+            missing, folder = [], path.parent
+            while not os.path.lexists(folder) and folder not in self.folders:
+                self.folders.add(folder)
+                missing.append(folder)
+                folder = folder.parent
+            self.log += [("dir", folder) for folder in reversed(missing)]
+            self.log.append(("new", path))
+
+    def swap(self, stage: Path, payload: Path) -> None:
+        """The payload swap: the old one waits as PREVIOUS until the commit (it used to go right away). One log entry,
+        so its undo is two renames (undo())."""
+        previous = payload.with_name(PREVIOUS) if os.path.lexists(payload) else None
+        self.log.append(("swapped", payload, previous))     # first: undo() copes with either rename not done yet
+        if previous is not None:
+            payload.rename(previous)
+        stage.rename(payload)
+
+    def binary(self, temporary: Path, destination: Path) -> None:
+        """The second phase of the binaries: one rename each (the slow copies to .new came first)."""
+        backup = None
+        if os.path.lexists(destination):
+            (self.dir/"bin").mkdir(exist_ok=True)
+            backup = self.dir/"bin"/destination.name
+            try:
+                os.link(destination, backup, follow_symlinks=False)
+            except OSError:
+                shutil.copy2(destination, backup, follow_symlinks=False)
+        self.log.append(("bin", destination, backup))
+        os.replace(temporary, destination)
+
+    def undo(self, entry: tuple) -> None:
+        kind, path = entry[0], entry[1]
+        if kind == "dir":
+            try:
+                path.rmdir()
+            except OSError:
+                pass                                    # gone already, or it holds something else: it stays
+        elif kind == "new":
+            remove(path)
+        elif kind == "copy":
+            remove(path)
+            shutil.move(entry[2], path)
+        elif kind == "link":
+            remove(path)
+            os.symlink(entry[2], path)
+        elif kind == "swapped":
+            # the new payload first goes aside into the Transaction folder (one rename in the same folder; that
+            # folder goes at the end of rollback(), or with repair()), then the old one comes back: never a half
+            # removed payload in its place
+            previous = entry[2]
+            if os.path.lexists(path) and (previous is None or os.path.lexists(previous)):
+                path.rename(self.dir/"payload")
+            if previous is not None and os.path.lexists(previous):
+                previous.rename(path)
+        elif kind == "bin":
+            if entry[2] is None:
+                remove(path)
+            else:
+                shutil.move(entry[2], path)             # a rename: the original inode is back
+
+    def rollback(self) -> bool:
+        """Everything back, the last change first; False when something could not be put back (problems). The new
+        folders go last, after the copies' own folder (which sits in one of them on a first install)."""
+        complete = True
+        for entry in reversed(self.log):
+            if entry[0] == "dir":
+                continue
+            try:
+                if self.skip_first:
+                    self.skip_first = False
+                    raise OSError(t("testFail", step="rollback"))
+                self.undo(entry)
+            except OSError as error:
+                complete = False
+                self.problems.append((entry[1], error))
+        if complete and self.dir:
+            shutil.rmtree(self.dir, ignore_errors=True)
+        for entry in reversed(self.log):
+            if entry[0] == "dir":
+                self.undo(entry)
+        self.log = []
+        return complete
+
+    def commit(self) -> None:
+        previous = next((entry[2] for entry in self.log if entry[0] == "swapped"), None)
+        self.log = []
+        if previous is not None and os.path.lexists(previous):
+            try:
+                previous.rename(self.dir/"previous")
+            except OSError:
+                shutil.rmtree(previous, ignore_errors=True)
+        if self.dir:
+            shutil.rmtree(self.dir, ignore_errors=True)
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# prepare, apply, --check
+# ---------------------------------------------------------------------------------------------------------------
+
+@dataclass
+class Plan:
+    root: Path
+    explicit: str | None
+    prefix: Path
+    data: Path
+    config: Path
+    cache: Path
+    payload: Path
+    choice: dict | None = None
+    language: str = "nl"
+    build: Path | None = None
+    extension: Path | None = None
+    applications: Path | None = None
+    entries: dict | None = None
+    defaults: dict | None = None
+    updating: bool = False
+    previous_icons: dict | None = None
+    session: bool = False
+    portal: dict | None = None
+
+
+def locate(root: Path, options: Options) -> Plan:
     prefix = absolute_path(os.environ.get("WIN11_INSTALL_PREFIX", str(Path.home()/".local")), t("labelPrefix"))
     data = absolute_path(os.environ.get("XDG_DATA_HOME", str(Path.home()/".local/share")), "XDG_DATA_HOME")
     config = absolute_path(os.environ.get("XDG_CONFIG_HOME", str(Path.home()/".config")), "XDG_CONFIG_HOME")
-    cache = cache_home()
-    payload = prefix/"share/win11-gnome"
-    choice = resolve_language(explicit, config, data, payload)
-    language = choice["lang"]
-    set_language(explicit or language)
-    build = choose_build(root)
-    extension = data/"gnome-shell/extensions"/UUID
-    applications = data/"applications"
+    return Plan(root, options.explicit, prefix, data, config, cache_home(), prefix/"share/win11-gnome")
+
+
+def prepare(plan: Plan, check: bool = False) -> Plan:
+    """Every check of an install, nothing written; the order and messages of 3b898e6's are kept, the new checks
+    (GNOME, ABI, previousCopy) sit where they refuse least surprisingly. Only a terminal install may first add the
+    login session (session_ready), as before. check: --check (no session offer)."""
+    root, payload, data, config = plan.root, plan.payload, plan.data, plan.config
+    plan.choice = resolve_language(plan.explicit, config, data, payload)
+    plan.language = plan.choice["lang"]
+    set_language(plan.explicit or plan.language)
+    plan.build = choose_build(root)
+    plan.extension = data/"gnome-shell/extensions"/UUID
+    plan.applications = data/"applications"
     # The wallpapers and icons the native shell and apps fetch (/ui/assets/). vendor/host, the Python reference, is
-    # not installed since D-G72 and left the tree with D-G73 (git show last-webkit:vendor/host).
+    # not installed since D-G72 and left the tree with D-G73 (git show 6ebf169f:vendor/host).
     if not (root/"vendor/ui/assets").is_dir():
-        raise SystemExit(t("missingSource", directory=root/"vendor/ui/assets"))
-    entries = load_entries(root)
-    defaults = load_defaults(root) if choice["store"] else None
-    preflight_runtime(build)
+        refuse("missingSource", directory=root/"vendor/ui/assets")
+    plan.entries = load_entries(root)
+    plan.defaults = load_defaults(root) if plan.choice["store"] else None
+    check_gnome(root)
+    preflight_runtime(plan.build)
+    check_abi(plan.build)
     if payload.exists() and (not (payload/MARKER).is_file() or (payload/MARKER).read_text() != MAGIC):
-        raise SystemExit(t("notOwned", payload=payload))
-    updating = payload.exists()
-    if not updating:
-        conflicts = [prefix/"bin"/name for name in BINS]
-        conflicts += [applications/f"io.github.win11shell.{name}.desktop" for name in ENTRIES]
-        conflicts += [extension, config/"autostart"/AUTOSTART]
+        refuse("notOwned", payload=payload)
+    plan.updating = payload.exists()
+    if plan.updating and os.path.lexists(payload.with_name(PREVIOUS)):
+        refuse("previousCopy", backup=payload.with_name(PREVIOUS))
+    if not plan.updating:
+        conflicts = [plan.prefix/"bin"/name for name in BINS]
+        conflicts += [plan.applications/f"io.github.win11shell.{name}.desktop" for name in ENTRIES]
+        conflicts += [plan.extension, config/"autostart"/AUTOSTART]
         existing = [str(path) for path in conflicts if path.exists()]
         if existing:
-            raise SystemExit(t("conflicts") + "\n" + "\n".join(existing))
-    if choice["store"]:
+            raise Refusal("conflicts", {"paths": existing}, t("conflicts") + "\n" + "\n".join(existing))
+    if plan.choice["store"]:
         check_config_dir(config/"win11-gnome")
     icon_bundle.validate(root/"vendor")
-    previous_icons = icon_bundle.preflight_aliases(payload, data)
-    session = session_ready()
-    portal_plan = file_portal.preflight(payload, prefix, data, config, session)
-    # The choice is stored after every check and before the first change (ge1c-review m1): when a later step
-    # fails (glib-compile-schemas, update-desktop-database, a portal or icon step), the rerun finds settings.json
-    # and keeps this language, instead of taking the update-without-choice path (nl, H D13). It never replaces
-    # an existing file. The language line goes out with it, as the first line, as before.
-    if choice["store"]:
-        store_language(config/"win11-gnome", defaults, language)
-    for line in language_lines(choice, explicit):
-        print(line)
-    rescue_calendar(payload, data)
-    payload.parent.mkdir(parents=True, exist_ok=True)
-    stage = Path(tempfile.mkdtemp(prefix=".win11-gnome-install-", dir=payload.parent))
-    try:
-        # ui/: only vendor/ui/assets (wallpapers, the Settings icon), whatever else vendor/ui still holds: the HTML
-        # apps are gone (git show last-webkit:vendor/ui). config/: the Windows 11 caption buttons for other GTK apps
-        # (D-G65), imported from gtk.css by the panel host.
-        for source, target in (("ui/assets", "ui/assets"), ("config", "config")):
-            if not (root/"vendor"/source).is_dir():
-                continue
-            shutil.copytree(root/"vendor"/source, stage/target,
-                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
-        for manifest in ("ui-sha256.json", "ui-original-sha256.json", "ui-patches.json"):
-            if (root/"vendor"/manifest).is_file():
-                shutil.copy2(root/"vendor"/manifest, stage/manifest)
-        icon_bundle.copy_into_payload(root, stage)
-        (stage/MARKER).write_text(MAGIC)
-        if payload.exists():
-            backup = payload.with_name(".win11-gnome-previous")
-            if backup.exists():
-                raise SystemExit(t("previousCopy", backup=backup))
-            payload.rename(backup)
-            try:
-                stage.rename(payload)
-            except BaseException:
-                backup.rename(payload)
-                raise
-            shutil.rmtree(backup)
-        else:
-            stage.rename(payload)
-    finally:
-        if stage.exists():
-            shutil.rmtree(stage)
-    (prefix/"bin").mkdir(parents=True, exist_ok=True)
-    for binary in BINS:
-        # Replace through a temporary file so running app processes keep their original inode.
-        destination = prefix/"bin"/binary
-        temporary = destination.with_name(f".{binary}.new")
-        shutil.copy2(binary_source(build, binary), temporary)
-        temporary.chmod(0o755)
-        temporary.replace(destination)
-    if updating:
-        # D-G70: an earlier version's WebKit Start and desktop (the payload is ours, so these files are too)
-        remove_legacy(prefix, applications)
-        remove_webkit_state(data, cache, runtime_dir(cache))
-    icon_bundle.register_aliases(payload, data, previous_icons)
-    file_portal.register(payload, portal_plan)
-    install_extension(root, extension)
-    applications.mkdir(parents=True, exist_ok=True)
+    plan.previous_icons = icon_bundle.preflight_aliases(payload, data)
+    plan.session = session_ready(offer=not check)
+    plan.portal = file_portal.preflight(payload, plan.prefix, data, config, plan.session)
+    return plan
+
+
+def stage_payload(plan: Plan, stage: Path) -> None:
+    """The new payload in its stage, before the swap. The old payload's own records (the portal's and the icon
+    aliases') go along until register_aliases and file_portal.register rewrite them, so a killed install still finds
+    them when it is run again (repair)."""
+    root, payload = plan.root, plan.payload
+    # ui/: only vendor/ui/assets (wallpapers, the Settings icon), whatever else vendor/ui still holds: the HTML
+    # apps are gone (git show 6ebf169f:vendor/ui). config/: the Windows 11 caption buttons for other GTK apps
+    # (D-G65), imported from gtk.css by the panel host.
+    for source, target in (("ui/assets", "ui/assets"), ("config", "config")):
+        if not (root/"vendor"/source).is_dir():
+            continue
+        shutil.copytree(root/"vendor"/source, stage/target, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    for manifest in ("ui-sha256.json", "ui-original-sha256.json", "ui-patches.json"):
+        if (root/"vendor"/manifest).is_file():
+            shutil.copy2(root/"vendor"/manifest, stage/manifest)
+    icon_bundle.copy_into_payload(root, stage)
+    for record in (file_portal.MANIFEST, icon_bundle.TRACKER, icon_bundle.STATE):
+        if plan.updating and own_entry(payload/record, stat.S_ISREG):
+            shutil.copy2(payload/record, stage/record)
+    (stage/MARKER).write_text(MAGIC)
+    version = bundle_version(root)
+    if version:
+        (stage/VERSION_FILE).write_text(version + "\n")
+
+
+def write_entries(plan: Plan, tx: Transaction) -> None:
+    payload, applications, language = plan.payload, plan.applications, plan.language
+    tx.makedirs(applications)
     common = "Terminal=false\nStartupNotify=true\n"
     # Name= and Comment= in Win11's language (C6); win11-panel later rewrites only these two lines after a switch.
-    comment = entries["comment"][language]
+    comment = plan.entries["comment"][language]
     # The Windows 11 calendar of the bundled Win11 icon theme (vendor/icons, icon_bundle.py), else the theme's own
     calendar_icon = payload/"icons/Win11/apps/scalable/office-calendar.svg"
 
@@ -816,26 +1332,110 @@ def main(root: Path, argv: list[str] | None = None) -> None:
          f"Categories=Office;Calendar;\nMimeType={CALENDAR_SCHEME};\n"),
     ]
     for name, binary, icon, extra in rows:
-        title = entries["entries"][name][language]
+        title = plan.entries["entries"][name][language]
         text = f"[Desktop Entry]\nType=Application\nName={title}\n"
         text += f"Comment={comment}\n"
         arguments = " %U" if name == "Explorer" else {"TaskManager": " --app taskmgr", "Settings": " --app settings", "Search": " --app alles", "Disks": " --app disks", "Calendar": " %u"}.get(name, "")
-        text += f"Exec=/usr/bin/env -- {desktop_exec(prefix/'bin'/binary)}{arguments}\n"
+        text += f"Exec=/usr/bin/env -- {desktop_exec(plan.prefix/'bin'/binary)}{arguments}\n"
         text += f"Icon={icon}\n" + common + f"StartupWMClass=io.github.win11shell.{name}\n" + extra
-        (applications/f"io.github.win11shell.{name}.desktop").write_text(text)
-    autostart = config/"autostart"
-    autostart.mkdir(parents=True, exist_ok=True)
-    (autostart/AUTOSTART).write_text(autostart_entry(prefix, language))
-    if session:
-        (autostart/GNOME_LOOK).write_text(gnome_look_entry(prefix, language))
-    else:
-        (autostart/GNOME_LOOK).unlink(missing_ok=True)
-    if shutil.which("update-desktop-database"):
-        subprocess.run(["update-desktop-database", str(applications)], check=True)
-    set_scheme_default(config, CALENDAR_DESKTOP, CALENDAR_SCHEME)
+        path = applications/f"io.github.win11shell.{name}.desktop"
+        tx.save(path)
+        path.write_text(text)
+
+
+def apply(plan: Plan) -> int:
+    """Every change, in one Transaction (module docstring): 0, or after an error or a signal 3 (all put back) or 4
+    (not all). After the commit only the removal of an earlier version's leftovers and the closing lines follow."""
+    payload, prefix, data, config = plan.payload, plan.prefix, plan.data, plan.config
+    tx = Transaction(payload.parent)
+    try:
+        # The choice is stored after every check and before the first change (ge1c-review m1): when a later step
+        # fails, the rerun finds settings.json and keeps this language, instead of taking the update-without-choice
+        # path (nl, H D13). It never replaces an existing file. The language line goes out with it, as the first
+        # line, as before.
+        if plan.choice["store"]:
+            store_language(config/"win11-gnome", plan.defaults, plan.language)
+        for line in language_lines(plan.choice, plan.explicit):
+            print(line)
+        rescue_calendar(payload, data)
+        tx.makedirs(payload.parent)
+        lock_share(payload.parent)
+        tx.begin()
+        stage = tx.track(Path(tempfile.mkdtemp(prefix=STAGE, dir=payload.parent)))
+        stage_payload(plan, stage)
+        # The binaries in two phases: the slow copies first (nothing visible yet), then one rename each, so running
+        # app processes keep their original inode and a rollback can rename it back.
+        bindir = prefix/"bin"
+        tx.makedirs(bindir)
+        for binary in BINS:
+            temporary = tx.track(bindir/f".{binary}.new")
+            shutil.copy2(binary_source(plan.build, binary), temporary)
+            temporary.chmod(0o755)
+        tx.swap(stage, payload)
+        test_point("payload")
+        for index, binary in enumerate(BINS):
+            tx.binary(bindir/f".{binary}.new", bindir/binary)
+            if index == 0:
+                test_point("binary")
+        test_point("binaries")
+        icon_bundle.register_aliases(payload, data, plan.previous_icons, tx)
+        test_point("aliases")
+        file_portal.register(payload, plan.portal, tx)
+        test_point("portal")
+        install_extension(plan.root, plan.extension, tx)
+        test_point("extension")
+        write_entries(plan, tx)
+        test_point("entries")
+        autostart = config/"autostart"
+        tx.makedirs(autostart)
+        for name in (AUTOSTART, GNOME_LOOK):
+            tx.save(autostart/name)
+        (autostart/AUTOSTART).write_text(autostart_entry(prefix, plan.language))
+        if plan.session:
+            (autostart/GNOME_LOOK).write_text(gnome_look_entry(prefix, plan.language))
+        else:
+            (autostart/GNOME_LOOK).unlink(missing_ok=True)
+        test_point("autostart")
+        if shutil.which("update-desktop-database"):
+            tx.save(plan.applications/"mimeinfo.cache")
+            subprocess.run(["update-desktop-database", str(plan.applications)], check=True)
+        set_scheme_default(config, CALENDAR_DESKTOP, CALENDAR_SCHEME)
+        # the last statement of the try: a signal until all three are ignored still rolls back; once they are,
+        # CPython drops any that is pending, so the commit below cannot be interrupted any more
+        hold_signals()
+    except BaseException as error:
+        # a signal handled before this ignores them (also at the first instruction of this clause) raises once
+        # more: ignore it and go on, so the rollback always runs
+        while True:
+            try:
+                hold_signals()
+                break
+            except Interrupted:
+                pass
+        complete = tx.rollback()
+        try:
+            if isinstance(error, (Interrupted, KeyboardInterrupt)):
+                print(t("interrupted"), file=sys.stderr)
+            elif isinstance(error, SystemExit) and isinstance(error.code, str):
+                print(error.code, file=sys.stderr)
+            else:
+                traceback.print_exception(error)
+            for path, problem in tx.problems:
+                print(t("notRestored", path=path, error=problem), file=sys.stderr)
+            print(t("rolledBack") if complete else t("rollbackIncomplete"), file=sys.stderr)
+        except OSError:
+            pass
+        return 3 if complete else 4
+    hold_signals()                      # installed: nothing left to put back, so nothing may stop the rest
+    tx.commit()
+    if plan.updating:
+        # D-G70: an earlier version's WebKit Start and desktop (the payload is ours, so these files are too); only
+        # now, so a rollback finds that version's own files still there
+        remove_legacy(prefix, plan.applications)
+        remove_webkit_state(data, plan.cache, runtime_dir(plan.cache))
     print(t("done1", prefix=prefix))
     print(t("done2"))
-    if session:
+    if plan.session:
         print(t("session1"))
         print(t("session2"))
     else:
@@ -846,7 +1446,119 @@ def main(root: Path, argv: list[str] | None = None) -> None:
     hint = system_hint(False)
     if hint and sys.stdout.isatty():
         print(hint)
+    return 0
+
+
+def answer_of(error: BaseException) -> dict:
+    """--check's answer to a refusal: install.py's Refusal, file_portal's SystemExit and icon_bundle's ValueError
+    carry their key; anything else is checkFailed."""
+    key = getattr(error, "key", None)
+    if key:
+        message = error.code if isinstance(error, SystemExit) else str(error)
+        return {"ok": False, "code": key, "params": getattr(error, "params", {}), "message": str(message)}
+    if isinstance(error, (Interrupted, KeyboardInterrupt)):
+        return {"ok": False, "code": "interrupted", "params": {}, "message": t("interrupted")}
+    detail = error.code if isinstance(error, SystemExit) and isinstance(error.code, str) else \
+        "".join(traceback.format_exception_only(error)).strip()
+    return {"ok": False, "code": "checkFailed", "params": {"detail": detail}, "message": t("checkFailed", detail=detail)}
+
+
+def check(root: Path, options: Options) -> int:
+    """--check: prepare() and the reports (module docstring); stdout gets the answer only."""
+    out, sys.stdout = sys.stdout, sys.stderr
+    try:
+        plan = locate(root, options)
+        lock_share(plan.payload.parent)
+        killed = repair(plan.payload, plan.prefix) if plan.payload.parent.is_dir() else False
+        prepare(plan, check=True)
+        answer = {"ok": True, "version": bundle_version(root),
+                  "extensionChanged": killed or extension_changed(root, plan.extension),
+                  "systemFiles": system_files(root)}
+    except BaseException as error:              # every refusal and error, also a signal, is the answer
+        answer = answer_of(error)
+    finally:
+        sys.stdout = out
+    print(json.dumps(answer, ensure_ascii=True, separators=(",", ":")))
+    sys.stdout.flush()
+    return 0 if answer["ok"] else 1
+
+
+def main(root: Path, argv: list[str] | None = None) -> int:
+    options = parse_arguments(list(argv or []))
+    if options.check:
+        return check(root, options)
+    plan = locate(root, options)
+    lock_share(plan.payload.parent)
+    if plan.payload.parent.is_dir():
+        repair(plan.payload, plan.prefix)
+    return apply(prepare(plan))
+
+
+def redirect_output(path: Path) -> None:
+    """--log: fds 1 and 2 into FILE (0600, a new file each run), so the programs this runs write there too."""
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os.dup2(fd, 1)
+    os.dup2(fd, 2)
+    os.close(fd)
+    sys.stdout.reconfigure(line_buffering=True)
+
+
+def write_status(path: Path, code: int) -> None:
+    """--status: "<code>\n" through a temporary file and a rename, so a reader never sees half of it."""
+    try:
+        fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    except OSError:
+        return
+    try:
+        with os.fdopen(fd, "w") as stream:
+            stream.write(f"{code}\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    except OSError:
+        pass
+    finally:
+        if os.path.lexists(temporary):
+            os.unlink(temporary)
+
+
+def run(argv: list[str]) -> int:
+    """install.py ROOT [options]: the exit code of the frozen contract (module docstring). A signal this process was
+    started with ignored stays ignored (nohup, the SIGINT of a background job): only the others interrupt it."""
+    for number in SIGNALS:
+        if signal.getsignal(number) is not signal.SIG_IGN:
+            signal.signal(number, interrupted)
+    status = option_value(argv[1:], "--status")
+    code = 1
+    try:
+        log = option_value(argv[1:], "--log")
+        if log:
+            redirect_output(Path(log))
+        code = main(Path(argv[0]).resolve(), argv[1:])
+    except SystemExit as error:
+        if error.code is None or isinstance(error.code, int):
+            code = error.code or 0
+        else:
+            print(error.code, file=sys.stderr)
+            code = 1
+    except (Interrupted, KeyboardInterrupt):
+        print(t("interrupted"), file=sys.stderr)
+        code = 1
+    except Exception:
+        traceback.print_exc()
+        code = 1
+    finally:
+        hold_signals()
+        try:
+            sys.stdout.flush()
+        except OSError:
+            pass
+        if status:
+            write_status(Path(status), code)
+    return code
 
 
 if __name__ == "__main__":
-    main(Path(sys.argv[1]).resolve(), sys.argv[2:])
+    sys.exit(run(sys.argv[1:]))

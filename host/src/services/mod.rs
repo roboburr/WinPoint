@@ -10,6 +10,7 @@ pub(crate) mod sysmon;
 pub(crate) mod system;
 pub(crate) mod tray;
 pub(crate) mod update;
+pub(crate) mod winpoint;
 // Remaining native services. Public wire contracts retain the original UI API.
 use crate::{
     events::Events,
@@ -172,6 +173,8 @@ pub(crate) struct NativeServices {
     storage: LazyService<storage::Storage>,
     software: LazyService<software::Software>,
     update: LazyService<update::Update>,
+    // D-G74a: WinPoint's own update check (services/winpoint.rs)
+    winpoint: LazyService<winpoint::WinPoint>,
     notifications: Arc<notifications::Notifications>,
 }
 impl NativeServices {
@@ -191,6 +194,7 @@ impl NativeServices {
             storage: LazyService::default(),
             software: LazyService::default(),
             update: LazyService::default(),
+            winpoint: LazyService::default(),
             notifications,
         });
         // Explicit fixture switch for measured A/B comparison with the prior runtime.
@@ -241,6 +245,11 @@ impl NativeServices {
                 s.call(method, args)
             });
         }
+        if method.starts_with("winpoint.") {
+            return invoke(&self.winpoint, &self.ctx, winpoint::WinPoint::new, |s| {
+                s.call(method, args)
+            });
+        }
         if method.starts_with("notifications.") {
             return self.notifications.call(method, args);
         }
@@ -286,7 +295,17 @@ impl NativeServices {
         }
         None
     }
+    /// D-G74a: this host (win11-shell's backend, lib.rs run_http_only) owns WinPoint's update check: the service
+    /// starts now, not on the first call, so its owner lock and daily schedule run from the start.
+    pub fn winpoint_start(&self) {
+        if let Ok(s) = self.winpoint.load(&self.ctx, winpoint::WinPoint::new) {
+            s.start();
+        }
+    }
     pub fn shutdown(&self) {
+        if let Some(s) = self.winpoint.value.get() {
+            s.shutdown();
+        }
         if let Some(s) = self.update.value.get() {
             s.shutdown();
         }

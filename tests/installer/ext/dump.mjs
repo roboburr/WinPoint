@@ -116,7 +116,7 @@ function failures(prefix) {
     // panel.power is newer than 3b898e6 (an unknown method there): its own key, outside the unchanged-code rule
     const power = call('panel.power', {action: 'zap'});
     emit(`${prefix}added.powerAction`, power?.ok === false ? `${power.error.code}\t${power.error.message}` : `ok\t${JSON.stringify(power)}`);
-    // windows.hostState and windows.hostRestore went with the WebKit apps' window state (git tag last-webkit), and
+    // windows.hostState and windows.hostRestore went with the WebKit apps' window state (commit 6ebf169f), and
     // their texts with them: test_extension_text.py REMOVED_KEYS
     f('windowGone', 'windows.focus', {id: 'nope'}, windows([fakeWindow()]));
     f('explorerGone', 'explorer.tabPosition', {pid: 1});

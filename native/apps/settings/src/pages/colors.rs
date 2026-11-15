@@ -1,4 +1,4 @@
-//! Instellingen › Persoonlijke instellingen › Kleuren (last-webkit:vendor/ui/js/apps/settings/pages/colors.js): the
+//! Instellingen › Persoonlijke instellingen › Kleuren (6ebf169f:vendor/ui/js/apps/settings/pages/colors.js): the
 //! mode, transparency, the accent colour (manual or automatic from the wallpaper, Windows’ 48 swatches, recent and
 //! custom colours), the accent on Start and the taskbar, the GTK theme of other apps (theme.gtkFamily) and the
 //! Windows 11 caption buttons in other apps (theme.captionButtons).
@@ -107,7 +107,7 @@ fn page(p: Page) -> PageFuture {
         let mode_card = SettingsCard::new(
             "theme",
             t("Kies je modus", "Choose your mode"),
-            t("De kleuren van Win11 Shell en je apps: licht of donker", "The colours of Win11 Shell and your apps: light or dark"),
+            t("De kleuren van WinPoint en je apps: licht of donker", "The colours of WinPoint and your apps: light or dark"),
         );
         mode_card.set_control(&common::sized(mode_dd.widget(), 160));
         let (trans_card, trans_sw) = common::toggle_card(

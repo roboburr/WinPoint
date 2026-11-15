@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Beeldscherm (last-webkit:vendor/ui/js/apps/settings/pages/display.js): monitors
+//! Instellingen › Systeem › Beeldscherm (6ebf169f:vendor/ui/js/apps/settings/pages/display.js): monitors
 //! (arrangement, scale, resolution, refresh rate with the Windows "Deze beeldscherminstellingen behouden?" countdown),
 //! brightness and night light. Under GNOME display.set and the night light belong to GNOME's own Settings app
 //! (D-G2): the host reports the monitors read-only and the page shows the values greyed out.
@@ -644,7 +644,7 @@ fn display(p: Page) -> PageFuture {
         out.push(st.scale_slot.clone().upcast());
 
         let related = SettingsGroup::new(ct::related(), "");
-        related.add(common::link_card_with(&p, "textsize", None, Some(t("Tekst groter maken in Win11 Shell", "Make text bigger in Win11 Shell")), None).widget());
+        related.add(common::link_card_with(&p, "textsize", None, Some(t("Tekst groter maken in WinPoint", "Make text bigger in WinPoint")), None).widget());
         related.add(common::link_card(&p, "colors").widget());
         out.push(related.widget().clone().upcast());
         out

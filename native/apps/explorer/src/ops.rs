@@ -1,4 +1,4 @@
-//! File operations (last-webkit:vendor/ui/js/apps/explorer/main.js `op`, `act`, `trashPaths`, `trashNamesFor`,
+//! File operations (6ebf169f:vendor/ui/js/apps/explorer/main.js `op`, `act`, `trashPaths`, `trashNamesFor`,
 //! `restoreNames`, `dropTo`, `renameItem`, `setAttributes`, `loadOpenWith`, `showJob`): open, rename, new
 //! folder and text document, cut, copy, paste, move and copy by drag and drop, to the Prullenbak (Del and
 //! Shift+Del: the WebKit app never deleted permanently, and the host has no such method), compress, extract,

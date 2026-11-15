@@ -7,8 +7,8 @@ W = `/home/robin/Documents/Codex/2026-11-01/chat/work`. Sources: `notes/claude/m
 Paths without a prefix are relative to G.
 
 **Note 2026-11-14 (D-G73).** This map is the record of G at `3b898e6` and stays as written. Since then the WebKit
-apps left (D-G70, D-G72; tag `last-webkit`), and `vendor/host`, the Python reference of 1.8, 6 and 7.3, was deleted:
-no installer requires or ships it, and `git show last-webkit:vendor/host/<path>` still shows it. Windows Update runs
+apps left (D-G70, D-G72; commit `6ebf169f`), and `vendor/host`, the Python reference of 1.8, 6 and 7.3, was deleted:
+no installer requires or ships it, and `git show 6ebf169f:vendor/host/<path>` still shows it. Windows Update runs
 no Python of WinPoint's own either (it still starts Ubuntu's check-new-release and do-release-upgrade, which are
 Python). `plan.md` has the current decisions.
 

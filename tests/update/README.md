@@ -20,6 +20,7 @@ in `/usr/share/dbus-1/interfaces/` (the fake registers exactly those interfaces,
 | `enums.json`, `test_enums.py` | pinned PackageKit/NM enum values; equal to the PackageKitGlib-1.0 and NM-1.0 typelibs (no D-Bus) |
 | `stubs/stub.py`, `stubs/names.json` | the one stub program (its answers per argv come from the timeline) and the stub names (guard-bin on PATH, the update tool dir) |
 | `stubs/bus-tests.json` | GW2b: the expectations of each Rust bus test for `run.sh bus-tests` (stub log, calls, timeout, datagrams) |
+| `fixtures/winpoint/` | D-G74a, WinPoint's own update check (not this layer: the host's unit and e2e tests in `host/src/services/winpoint/` read them through `include_str!`): `releases.json`, a GitHub release list with a draft, a prerelease, an `-rc.1` tag, a fork's page, `.sha256.sig` assets of the phase 1 design (ignored: there is no signature, D-G74), `state:"open"`, a foreign download URL, size 0 and over 256 MiB, an aarch64-only release and `digest` present, null or absent; `selfsigned.pem`, a self-signed certificate and key for `localhost` (made once with `openssl req -x509 -newkey rsa:2048 -nodes -subj /CN=localhost -days 36500`), which the TLS test's loopback server presents and the client must refuse |
 | `../../tools/update/probe.py` | R1 probe; without `--live` it accepts only a marked private bus inside a sandbox |
 
 ## Run it
@@ -239,6 +240,6 @@ APT::Cmd::Pattern-Only=true <name:arch>…` and `apt-mark showhold`. Every timel
 * `apt-mark`: `{"argv": ["showhold"]}`, one apt name per held package (empty in every timeline).
 
 These responses replaced the one answer of the script classifier before D-G73 (`git show
-last-webkit:tests/update/timelines/<name>.json`) and keep every package's candidate, phased flag, percentage, hold
+6ebf169f:tests/update/timelines/<name>.json`) and keep every package's candidate, phased flag, percentage, hold
 and installed version. `available-mixed` (2 phased), `only-phased` (2) and `phased-as-normal` (1) are the
 timelines with phased packages; their `expect.stubs` are the three calls of their client's `phasing` step.

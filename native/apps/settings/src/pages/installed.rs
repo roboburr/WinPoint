@@ -1,4 +1,4 @@
-//! Instellingen › Apps › Geïnstalleerde apps (last-webkit:vendor/ui/js/apps/settings/pages/installed.js): a searchable,
+//! Instellingen › Apps › Geïnstalleerde apps (6ebf169f:vendor/ui/js/apps/settings/pages/installed.js): a searchable,
 //! sortable, filterable list (apps.list) with an "…" menu per app: Openen, Vastmaken aan Start / taakbalk, and
 //! Verwijderen with the reviewed plan of core/software.js (software.uninstallInfo, software.prepare,
 //! software.execute, software.status), ported in `software` below.
@@ -69,7 +69,7 @@ const PRIORITY: &[&str] = &[
 fn describe(app: &Value) -> String {
     let id = common::value_key(&app["id"]);
     if id.starts_with("win11shell-") {
-        return t("Onderdeel van Win11 Shell", "Part of Win11 Shell").to_owned();
+        return t("Onderdeel van WinPoint", "Part of WinPoint").to_owned();
     }
     let names = if kit::i18n::en() { CAT_EN } else { CAT_NL };
     let cats: Vec<&str> = app["categories"].as_array().map(|a| a.iter().filter_map(Value::as_str).collect()).unwrap_or_default();
@@ -432,7 +432,7 @@ fn installed(p: Page) -> PageFuture {
     })
 }
 
-/// last-webkit:vendor/ui/js/core/software.js: the review of a plan (software.prepare; software.execute only from the
+/// 6ebf169f:vendor/ui/js/core/software.js: the review of a plan (software.prepare; software.execute only from the
 /// reviewed plan's own button) and the job view that follows software.status until the job is finished.
 mod software {
     use kit::controls::{self as c, Dialog, DialogResult, InfoBar, ProgressState, Severity, Toast, Variant};

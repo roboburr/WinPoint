@@ -290,13 +290,24 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> Rc<System> {
     sys
 }
 
-/// Settings or the language changed.
-pub fn settings_changed() {
+/// Settings (`data`, core::touches) or the language changed: the texts and tooltips by the language, the clock by
+/// time.* and taskbar.showSeconds, the bell by notifications.dnd, the battery's bolt by the theme.
+pub fn settings_changed(data: &Value, lang_changed: bool) {
+    let touches = |keys: &[&str]| lang_changed || crate::core::touches(data, keys);
     with(|s| {
-        s.update_texts();
-        s.render_tray();
-        s.tick();
-        s.render_bell();
+        if lang_changed {
+            s.update_texts();
+            s.render_tray();
+        }
+        if touches(&["time", "taskbar.showSeconds"]) {
+            s.tick();
+        }
+        if touches(&["notifications.dnd"]) {
+            s.render_bell();
+        }
+        if crate::core::touches(data, &["theme"]) {
+            s.bat.queue_draw();
+        }
     });
 }
 

@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 import install
@@ -74,10 +75,18 @@ config = absolute_path(os.environ.get("XDG_CONFIG_HOME", str(Path.home()/".confi
 cache = install.cache_home()
 set_language(explicit or language_of_file(config/"win11-gnome/settings.json"))
 payload = prefix/"share/win11-gnome"
-if not (payload/MARKER).is_file() or (payload/MARKER).read_text() != MAGIC:
-    raise SystemExit(t("nothingRemoved", payload=payload))
 if arguments not in ([], ["--files-only"]):
     raise SystemExit(t("usage"))
+# D-G74: an uninstall (or an install) stopped halfway may have left no payload but an own old copy next to it and
+# its Transaction and stage folders: install.repair, inside the lock as in install.py, puts a lone own old copy back
+# in the payload's place (removed below like any payload) and removes the folders, so running it again finishes it.
+if not os.path.lexists(payload) and payload.parent.is_dir():
+    install.lock_share(payload.parent)
+    install.repair(payload, prefix)
+if not (payload/MARKER).is_file() or (payload/MARKER).read_text() != MAGIC:
+    raise SystemExit(t("nothingRemoved", payload=payload))
+# D-G74: not while an install runs (install.py's flock on the payload's parent; busy, nothing removed)
+install.lock_share(payload.parent)
 # WinPoint's own login session (install-session.py): GNOME's own look back now, while win11-app is still there
 if "--files-only" not in arguments and (prefix/"bin/win11-app").is_file() and (config/"autostart"/install.GNOME_LOOK).is_file():
     subprocess.run([str(prefix/"bin/win11-app"), "--gnome-look"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -169,8 +178,19 @@ except OSError:
     pass
 # The WebKit apps' storage of an earlier version (install.remove_webkit_state, its exact list); also with --files-only
 install.remove_webkit_state(data, cache, install.runtime_dir(cache))
+# D-G74a: WinPoint's update check (last result, owner lock, the update's download); also with --files-only, and not
+# while job.json says an update's installer still runs (D-G74)
+install.remove_winpoint_cache(cache)
 install.rescue_calendar(payload, data)
-shutil.rmtree(payload)
+# renamed aside first (D-G74), as everywhere: a Ctrl+C or a closed terminal halfway leaves a Transaction folder, which
+# the next install or uninstall removes, and never a payload without its marker that every installer refuses (notOwned)
+install.discard(payload)
+# D-G74: what a killed install left next to the payload (its old payload, stage and Transaction folders, all ours)
+previous = payload.with_name(install.PREVIOUS)
+if install.own_entry(previous, stat.S_ISDIR) and install.owned(previous):
+    install.discard(previous)
+for leftover in install.leftovers(payload.parent):
+    shutil.rmtree(leftover, ignore_errors=True)
 if shutil.which("update-desktop-database") and (data/"applications").is_dir():
     subprocess.run(["update-desktop-database", str(data/"applications")], check=True)
 print(t("removed"))

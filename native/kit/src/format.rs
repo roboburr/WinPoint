@@ -1,5 +1,5 @@
 //! Number, size, rate, duration, date and time formatting after the HTML apps' core/format.js (`git show
-//! last-webkit:vendor/ui/js/core/format.js`), in the current language (nl-NL: "1.234,5", "1,2 GB", "2 u 5 min",
+//! 6ebf169f:vendor/ui/js/core/format.js`), in the current language (nl-NL: "1.234,5", "1,2 GB", "2 u 5 min",
 //! "25-10-2026 14:05"; en-GB: "1,234.5", "2 h 5 min", "25/10/2026 14:05"). Times are Unix milliseconds in the local
 //! time zone. Missing or non-finite values are "–".
 use crate::i18n::en;
@@ -450,7 +450,7 @@ fn fold(c: char) -> String {
 #[cfg(test)]
 mod tests {
     //! The nl-NL / en-GB table of tests/i18n/intl_jsc.py (format.js and i18n.js in JavaScriptCore, H's
-    //! notes/english-option-design.md §2.8.1), ported when WebKit went (git show last-webkit:tests/i18n/intl_jsc.py).
+    //! notes/english-option-design.md §2.8.1), ported when WebKit went (git show 6ebf169f:tests/i18n/intl_jsc.py).
     //! The moment is Sunday 25 October 2026 14:35 local time, built in the local zone, so the rows hold in any TZ.
     //! Not ported: the full date with "om"/"at" (no such format here; the shell has its own), list(.., disjunction),
     //! the default and locale collators, makeT plurals and Intl.PluralRules (the native apps keep .one/.other keys).

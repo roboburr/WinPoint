@@ -1,6 +1,6 @@
 # Native Apps-service — versie 0.6.0
 
-> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit is `6ebf169f`; zie [native/APPS.md](native/APPS.md).
 
 De oorspronkelijke acht Apps-API’s worden in Rust afgehandeld, met `X-Win11-Service: rust-apps`. De nieuwe host behoudt de bestaande HTML/CSS-interface. De API’s voor catalogus, recente bestanden en associaties hebben eigen uitgebreide rapporten: `VALIDATION_APPS_CATALOG.md`, `VALIDATION_APPS_RECENT.md` en `VALIDATION_APPS_DEFAULTS.md`.
 

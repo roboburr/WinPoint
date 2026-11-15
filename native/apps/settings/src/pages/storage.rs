@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Opslag (last-webkit:vendor/ui/js/apps/settings/pages/storage.js): the drive with the home
+//! Instellingen › Systeem › Opslag (6ebf169f:vendor/ui/js/apps/settings/pages/storage.js): the drive with the home
 //! folder, what fills the personal folder (a coloured stacked bar and a category list, like Windows 11) and
 //! every drive.
 use super::{Builder, Content, Page, PageFuture};
@@ -158,8 +158,8 @@ fn render_cats(p: &Page, st: &Rc<Cats>) {
                 "",
                 t("Bezig met berekenen…", "Calculating…"),
                 t(
-                    "Win11 Shell bekijkt welke bestanden de meeste ruimte innemen. Dit kan even duren.",
-                    "Win11 Shell is looking at which files take up the most space. This can take a moment.",
+                    "WinPoint bekijkt welke bestanden de meeste ruimte innemen. Dit kan even duren.",
+                    "WinPoint is looking at which files take up the most space. This can take a moment.",
                 ),
             );
             card.set_icon_widget(ProgressRing::new(20, None).widget());

@@ -41,6 +41,9 @@ impl Flyout for Handle {
     fn placement(&self) -> Placement {
         Placement::BottomCenter
     }
+    fn covers_monitor(&self) -> bool {
+        true
+    }
     fn opened(&self) {
         let tv = self.0.clone();
         tv.fill_frame();

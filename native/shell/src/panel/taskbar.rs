@@ -124,7 +124,14 @@ pub fn build(shell: &Rc<Shell>) -> gtk::Widget {
         tray_box.append(w);
     }
     tray_box.append(&sys.desktop_btn);
-    center.set_end_widget(Some(&tray_box));
+    // the tray's size once GTK has allocated it (an icon, the clock, the bell's count) decides the room too
+    let tray_slot = gtk::Overlay::new();
+    tray_slot.set_child(Some(&tray_box));
+    let tray_sizer = gtk::DrawingArea::new();
+    tray_sizer.set_can_target(false);
+    tray_sizer.connect_resize(|_, _, _| apps::queue_layout());
+    tray_slot.add_overlay(&tray_sizer);
+    center.set_end_widget(Some(&tray_slot));
     apps::set_layout_widgets(group.upcast_ref(), tray_box.upcast_ref());
 
     let bar = Rc::new(Bar {
@@ -164,10 +171,10 @@ pub fn build(shell: &Rc<Shell>) -> gtk::Widget {
     });
     root.add_controller(right);
 
-    shell.on("settings.changed", |_, _| {
-        with(|b| b.apply_settings());
+    shell.on("settings.changed", |_, data| {
+        with(|b| b.apply_settings(data));
     });
-    bar.apply_settings();
+    bar.apply_settings(&serde_json::Value::Null);
 
     // the flyout host exists once panel::install has the window: follow which flyout is open
     glib::idle_add_local_once(|| {
@@ -181,9 +188,10 @@ pub(crate) fn before_flyout() {
     apps::flyout_opened();
 }
 
-/// The tray changed size: the app buttons may have more or less room.
+/// The tray's icons changed: the app buttons may have more or less room. At once (the layout measures the tray),
+/// so the group changes in the same frame as the tray.
 pub(crate) fn tray_resized() {
-    apps::queue_layout();
+    apps::layout_now();
 }
 
 /// Taakbeheer and Taakbalkinstellingen (the end of the system button's menu, as taskbar.js).
@@ -229,35 +237,43 @@ impl Bar {
         }
     }
 
-    fn apply_settings(&self) {
+    /// A settings.changed (`data`, core::touches; Null: all): each part renders for its own keys only, so a write
+    /// of another one (the host's taskbar.tray.known for a new tray icon) leaves the strip as it is.
+    fn apply_settings(&self, data: &serde_json::Value) {
         let shell = &self.shell;
         let lang = shell.lang().to_owned();
         let lang_changed = *self.lang.borrow() != lang;
         *self.lang.borrow_mut() = lang;
 
-        // alignment: centred on the screen, or 8 px from the left edge
-        let align = if shell.setting("taskbar.alignment").as_str() == Some("left") { "left" } else { "center" };
-        if *self.align.borrow() != align {
-            *self.align.borrow_mut() = align.to_owned();
-            self.center.set_start_widget(None::<&gtk::Widget>);
-            self.center.set_center_widget(None::<&gtk::Widget>);
-            if align == "left" {
-                self.group.set_margin_start(8);
-                self.center.set_start_widget(Some(&self.group));
-            } else {
-                self.group.set_margin_start(0);
-                self.center.set_center_widget(Some(&self.group));
+        if lang_changed || crate::core::touches(data, &["taskbar.alignment", "taskbar.taskView", "taskbar.search"]) {
+            // alignment: centred on the screen, or 8 px from the left edge
+            let align = if shell.setting("taskbar.alignment").as_str() == Some("left") { "left" } else { "center" };
+            if *self.align.borrow() != align {
+                *self.align.borrow_mut() = align.to_owned();
+                self.center.set_start_widget(None::<&gtk::Widget>);
+                self.center.set_center_widget(None::<&gtk::Widget>);
+                if align == "left" {
+                    self.group.set_margin_start(8);
+                    self.center.set_start_widget(Some(&self.group));
+                } else {
+                    self.group.set_margin_start(0);
+                    self.center.set_center_widget(Some(&self.group));
+                }
+                util::set_class(&self.root, "is-left", align == "left");
             }
-            util::set_class(&self.root, "is-left", align == "left");
+            self.taskview_btn.set_visible(shell.setting("taskbar.taskView") != false);
+            self.start_btn.set_tooltip_text(Some("Start"));
+            self.taskview_btn.set_tooltip_text(Some(&shell.t("Taakweergave", "Task view")));
+            self.render_search(lang_changed);
+            // the group's own width changed: how many app buttons fit
+            apps::queue_layout();
         }
-        self.taskview_btn.set_visible(shell.setting("taskbar.taskView") != false);
-        self.start_btn.set_tooltip_text(Some("Start"));
-        self.taskview_btn.set_tooltip_text(Some(&shell.t("Taakweergave", "Task view")));
-        self.render_search(lang_changed);
-        system::settings_changed();
-        tray::settings_changed();
-        apps::settings_changed(lang_changed);
-        self.root.queue_draw();
+        system::settings_changed(data, lang_changed);
+        tray::settings_changed(data, lang_changed);
+        apps::settings_changed(data, lang_changed);
+        if crate::core::touches(data, &["theme"]) {
+            self.root.queue_draw();
+        }
     }
 
     fn render_search(&self, force: bool) {

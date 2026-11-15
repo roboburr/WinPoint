@@ -4,8 +4,8 @@ Robin (13-11): "zet de apps ook om naar GTK 4". The shell (native/shell) and the
 GTK 4 already; the apps were HTML in GTK 3 web views, served by the host (host/, `win11-app`, `win11-explorer`,
 `win11-default-apps`, `win11-installer`). Each app was rebuilt as a native GTK 4 program with the same look, the
 same behaviour and the same backend. Since D-G72 (14-11) these are the only apps: the HTML apps, the web engine
-and the host's GTK 3 are gone (notes/claude/plan.md D-G72). The last commit that has them is tagged `last-webkit`.
-Comments cite the HTML sources as `last-webkit:vendor/ui/<path>`; `git show last-webkit:vendor/ui/<path>` prints
+and the host's GTK 3 are gone (notes/claude/plan.md D-G72). The last commit that has them is `6ebf169f`.
+Comments cite the HTML sources as `6ebf169f:vendor/ui/<path>`; `git show 6ebf169f:vendor/ui/<path>` prints
 one (the shell's own HTML went earlier, with D-G70: `git show 418ea594:<path>`).
 
 ## How an app starts
@@ -28,7 +28,7 @@ one (the shell's own HTML went earlier, with D-G70: `git show 418ea594:<path>`).
    argsJSON)`, signal `Event(name, dataJSON)`): window actions, the blur (`nativeBackdrop.configure` with the app's
    own pid and kind), `explorer.tabPosition`, activation tokens.
 
-| kind | binary | GApplication id (= Wayland app id) | one process | HTML sources at `last-webkit` (the reference) |
+| kind | binary | GApplication id (= Wayland app id) | one process | HTML sources at `6ebf169f` (the reference) |
 |---|---|---|---|---|
 | explorer | win11-gtk-explorer | io.github.win11shell.Explorer | yes, a window per launch | js/apps/explorer/, css/explorer.css, css/picker.css |
 | settings | win11-gtk-settings | io.github.win11shell.Settings | yes, a relaunch navigates | js/apps/settings/, css/settings.css |
@@ -41,7 +41,7 @@ one (the shell's own HTML went earlier, with D-G70: `git show 418ea594:<path>`).
 Paths are under `vendor/ui/` at the tag. Shared JS the apps were built on: `js/core/` (components, icons, i18n,
 api) and `js/apps/appframe.js` (title bar, caption buttons); shared CSS: `tokens.css`, `base.css`,
 `components.css`, `appframe.css` (now native/kit/css). Arguments: what the HTML app got as URL query (the host's
-`run_inner` built it, `git show last-webkit:host/src/lib.rs`: `--params JSON` became query keys, `--tab-ticket T`,
+`run_inner` built it, `git show 6ebf169f:host/src/lib.rs`: `--params JSON` became query keys, `--tab-ticket T`,
 or paths); each app parses the same arguments itself, and host/src/app_params.rs still validates them.
 A second launch of a one-process app is handed to the running one (GApplication HANDLES_COMMAND_LINE).
 
@@ -69,7 +69,7 @@ toast), the harness dev channel and the Wayland app id.
   scripts/ or tests/ unless your task says so. The kit is read-only for app builders: put app-specific helpers
   in your own crate; if the kit has a real bug that blocks you, make the smallest fix without changing a public
   signature and say so in your report.
-- Same behaviour as the HTML app at `last-webkit`: read its JS for every screen, the backend calls it makes, their
+- Same behaviour as the HTML app at `6ebf169f`: read its JS for every screen, the backend calls it makes, their
   arguments and the answers it expects, empty and error states, keyboard shortcuts and context menus. Same backend
   methods (host/src/api-methods.json lists them; the services are in host/src/services/, host/src/files/,
   host/src/apps/).

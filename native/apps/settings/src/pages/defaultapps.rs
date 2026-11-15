@@ -1,4 +1,4 @@
-//! Instellingen › Apps › Standaard-apps (last-webkit:vendor/ui/js/apps/settings/pages/defaultapps.js): which app opens
+//! Instellingen › Apps › Standaard-apps (6ebf169f:vendor/ui/js/apps/settings/pages/defaultapps.js): which app opens
 //! web pages, mail, folders, music, video, pictures, text and the terminal (apps.defaults, apps.list,
 //! apps.setDefault). A choice that a desktop-specific mimeapps.list overrides says so and shows what really opens.
 use super::{Builder, Content, Page, PageFuture};

@@ -1,7 +1,7 @@
 //! The address row (back, forward, up, refresh; the breadcrumb address bar with its sub folder menus, the
 //! overflow menu, edit mode with suggestions and the recent locations; the search box) and the command bar
 //! (Nieuw, the clipboard row, the Prullenbak row, Sorteren, Weergeven, "..." and Details), after
-//! last-webkit:vendor/ui/js/apps/explorer/toolbar.js.
+//! 6ebf169f:vendor/ui/js/apps/explorer/toolbar.js.
 use crate::explorer::{Explorer, Resolved, WeakExplorer};
 use crate::i18n::{f, s};
 use crate::menus;

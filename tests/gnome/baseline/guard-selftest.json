@@ -1,5 +1,5 @@
 {
- "cases": 136,
+ "cases": 141,
  "failed": 0,
  "results": [
   {
@@ -499,6 +499,24 @@
    "expect": "update-seam-extra",
    "codes": [
     "update-seam-extra"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WinPoint seam without --winpoint-feed",
+   "layer": "in-process",
+   "expect": "winpoint-seam-not-private",
+   "codes": [
+    "winpoint-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WinPoint seam in the run dir",
+   "layer": "in-process",
+   "expect": "winpoint-seam-not-private",
+   "codes": [
+    "winpoint-seam-not-private"
    ],
    "passed": true
   },
@@ -1260,6 +1278,26 @@
    "passed": true
   },
   {
+   "case": "WinPoint seam without --winpoint-feed",
+   "layer": "sandbox",
+   "expect": "winpoint-seam-not-private",
+   "exit": 2,
+   "codes": [
+    "winpoint-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
+   "case": "WinPoint seam in the run dir",
+   "layer": "sandbox",
+   "expect": "winpoint-seam-not-private",
+   "exit": 2,
+   "codes": [
+    "winpoint-seam-not-private"
+   ],
+   "passed": true
+  },
+  {
    "case": "F24 composite",
    "layer": "sandbox",
    "expect": [
@@ -1328,7 +1366,7 @@
     "varLib": false,
     "snapdSocket": false,
     "masked": [
-     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d3618163.s",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d3051405.s",
      "/run/udev/control",
      "/run/udev/io.systemd.Udev"
     ],
@@ -1396,7 +1434,7 @@
     "host-socket-visible"
    ],
    "messages": [
-    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d3618163.s is still a socket inside the sandbox (listed, not masked)"
+    "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/logs/d3051405.s is still a socket inside the sandbox (listed, not masked)"
    ],
    "decoyConnections": 0,
    "passed": true
@@ -1525,11 +1563,32 @@
    "passed": true
   },
   {
+   "case": "D-G74 exec rule: a python3 below a WinPoint process is only the release bundle's installer with its frozen argv and environment, one --check and then one install per click mark; the harness and GNOME's own Python are not WinPoint's; with the winpoint-update scenario exactly the runs its clicks caused",
+   "layer": "strace",
+   "expect": [
+    5,
+    13,
+    15,
+    18,
+    20,
+    23
+   ],
+   "codes": [
+    5,
+    13,
+    15,
+    18,
+    20,
+    23
+   ],
+   "passed": true
+  },
+  {
    "case": "socket watch: a socket that appears during the run is found within two scans and stops the session",
    "layer": "sockets",
    "expect": "one call, <= 2 scans",
    "codes": [
-    0.37
+    0.38
    ],
    "scans": 4,
    "passed": true
@@ -1585,6 +1644,6 @@
    "passed": true
   }
  ],
- "when": "2026-11-14 02:15:41",
+ "when": "2026-11-15 01:35:57",
  "commit": "ref: refs/heads/claude/gnome-english-update"
 }

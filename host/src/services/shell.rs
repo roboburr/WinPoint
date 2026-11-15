@@ -116,7 +116,7 @@ impl NativeCore {
         .map(|name| (name.to_owned(), json!({"ok":true})))
         .collect::<serde_json::Map<_, _>>();
         let mut out = json!({"mode":mode,"compositor":"gnome","dryRun":self.ctx.dry_run,
-            "version":env!("CARGO_PKG_VERSION"),"layerShell":mode=="layer","layerShellInstalled":false,
+            "version":crate::VERSION,"layerShell":mode=="layer","layerShellInstalled":false,
             "user":user(self.ctx.lang()),"apps":APPS,"services":services,
             "dev":false,"pid":std::process::id(),"gpu":gpu_info(),"mainLoopLagMs":null,"runId":null,"problem":null});
         if let (Some(out), Some(extra)) = (

@@ -1,6 +1,6 @@
 //! # The Settings pages and their interface
 //!
-//! Each file here ports one last-webkit:vendor/ui/js/apps/settings/pages/<name>.js (screen by screen, same backend
+//! Each file here ports one 6ebf169f:vendor/ui/js/apps/settings/pages/<name>.js (screen by screen, same backend
 //! calls, same texts) and exports its pages in a table:
 //!
 //! ```ignore
@@ -138,6 +138,7 @@ pub mod update;
 pub mod update_advanced;
 pub mod update_history;
 pub mod update_release;
+pub mod update_winpoint;
 
 /// A page's body: the widgets of the scrolling column, top to bottom.
 pub type Content = Vec<gtk::Widget>;
@@ -212,6 +213,7 @@ const MODULE_CSS: &[&str] = &[
     update_history::CSS,
     update_advanced::CSS,
     update_release::CSS,
+    update_winpoint::CSS,
 ];
 
 /// The builder of a page id.

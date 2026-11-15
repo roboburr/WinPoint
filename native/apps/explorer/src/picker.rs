@@ -1,4 +1,4 @@
-//! The file picker (last-webkit:vendor/ui/js/apps/explorer/picker.js, css/picker.css): the Explorer as the Open / Save
+//! The file picker (6ebf169f:vendor/ui/js/apps/explorer/picker.js, css/picker.css): the Explorer as the Open / Save
 //! / Choose folder dialog of the desktop portal (win11-file-portal, host/src/portal.rs) and of anyone who runs it.
 //! The regular Explorer is reused; the title bar shows the dialog's title instead of the tabs, and a footer under
 //! the status bar holds the file name box, the file type filter (the portal's glob and MIME rules), the portal's
@@ -85,7 +85,7 @@ fn tr(key: &str) -> &'static str {
 }
 
 /// The window title: the caller's own (the portal's `title`; trimmed, at most 200 characters), else the mode's, in
-/// the current language. The WebKit picker's rules (`git show last-webkit:host/src/window.rs`, title).
+/// the current language. The WebKit picker's rules (`git show 6ebf169f:host/src/window.rs`, title).
 fn picker_title(own: Option<&str>, folder: bool, save: bool) -> String {
     if let Some(own) = own.map(str::trim).filter(|s| !s.is_empty()) {
         return own.chars().take(200).collect();
@@ -1045,7 +1045,7 @@ mod tests {
 
     #[test]
     fn titles_follow_the_mode_and_the_caller_s_own_title() {
-        // window.rs's picker title test (last-webkit), for the portal's callers
+        // window.rs's picker title test (6ebf169f), for the portal's callers
         for (lang, open, save_as, folder) in
             [("nl", "Openen", "Opslaan als", "Map kiezen"), ("en", "Open", "Save as", "Choose a folder")]
         {

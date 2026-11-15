@@ -64,8 +64,12 @@ export class NativeDesktopBridge {
         connect('notify::above', () => { if (entry.original && window.is_above()) window.unmake_above(); });
         connect('unmanaged', () => {
             this._inhibitedDing.delete(window);
-            this._readyPids.delete(window.get_pid());
+            const pid = window.get_pid();
             this._unwatchWindow(window);
+            // Only the desktop window takes its pid along: Start, a popup menu or a dialog of the same
+            // win11-shell is unmanaged on every close, and the shell reports ready once per desktop window.
+            if (entry.original && ![...this._windows].some(([other, e]) => e.original && other.get_pid() === pid))
+                this._readyPids.delete(pid);
             this._sync();
         });
         this._consider(window);
@@ -86,12 +90,15 @@ export class NativeDesktopBridge {
             }
             const actor = window.get_compositor_private();
             if (actor && actor !== entry.actor) {
-                for (const [oldActor, id] of entry.actorSignals) oldActor.disconnect(id);
-                entry.actorSignals = [];
+                this._dropActor(entry);
                 entry.actor = actor;
                 if (!actor.mapped) Main.wm.skipNextEffect(actor);
                 entry.actorSignals.push([actor, actor.connect('first-frame', () => { entry.painted = true; this._sync(); })]);
                 entry.actorSignals.push([actor, actor.connect('notify::mapped', () => this._sync())]);
+                // Mutter destroys the actor before the window's 'unmanaged': its handlers go with it.
+                entry.actorSignals.push([actor, actor.connect('destroy', () => {
+                    if (entry.actor === actor) { entry.actorSignals = []; entry.actor = null; }
+                })]);
             }
             this._queueGeometry();
         }
@@ -101,6 +108,9 @@ export class NativeDesktopBridge {
     ready(args) {
         if (!Number.isInteger(args.pid) || args.pid <= 0 || args.pid > 0x7fffffff)
             throw new Error(this._t('badPid'));
+        // Once per desktop window: an older win11-shell repeats this every 2 s. A re-map, a new actor or a
+        // monitor change lowers and sizes the desktop through its own signals.
+        if (this._readyPids.has(args.pid)) return {ready: true, present: this._present};
         if (this._readyPids.size > 512) this._readyPids.clear();
         this._readyPids.add(args.pid);
         for (const window of this._windows.keys()) if (this.isDesktop(window)) this._consider(window);
@@ -214,9 +224,18 @@ export class NativeDesktopBridge {
     _unwatchWindow(window) {
         const entry = this._windows.get(window);
         if (!entry) return;
-        for (const id of entry.signals) window.disconnect(id);
-        for (const [actor, id] of entry.actorSignals) actor.disconnect(id);
+        // The entry goes first, so a failing disconnect can never leave a stale one behind.
         this._windows.delete(window);
+        for (const id of entry.signals) window.disconnect(id);
+        this._dropActor(entry);
+    }
+
+    _dropActor(entry) {
+        for (const [actor, id] of entry.actorSignals) {
+            try { actor.disconnect(id); } catch { /* Disposed meanwhile. */ }
+        }
+        entry.actorSignals = [];
+        entry.actor = null;
     }
 
     disable() {

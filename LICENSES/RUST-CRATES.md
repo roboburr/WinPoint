@@ -2,7 +2,7 @@
 
 This is the list of third-party Rust crates that are compiled into the Win11 for GNOME programs, with the licence each one is used under and its copyright notice. It belongs to [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md); the licence texts are in this folder.
 
-How it was made (2026-11-13, commit 07cb8014, offline; made again on 2026-11-14 on the working tree after tag `last-webkit`, when WebKit and GTK 3 left the host):
+How it was made (2026-11-13, commit 07cb8014, offline; made again on 2026-11-14 on the working tree after commit `6ebf169f`, when WebKit and GTK 3 left the host):
 
 - The crate set comes from `cargo tree --frozen -e normal,no-proc-macro --target x86_64-unknown-linux-gnu`, run on `Cargo.lock` (the host workspace: the 10 host programs `win11-app`, `win11-panel`, `win11-explorer`, `win11-launch`, `win11-default-apps`, `win11-installer`, `win11-file-portal` and the three workers) and on `native/Cargo.lock` (the 9 GTK 4 programs: `win11-shell`, `win11-calendar` and the seven apps `win11-gtk-explorer`, `-settings`, `-taskmgr`, `-alles`, `-disks`, `-defaultapps` and `-installer`, with their shared kit). Together they are the 19 programs in `bin/` of the release archive.
 - The licence of each crate comes from the `license` field of its `Cargo.toml`. The copyright notices are the `Copyright` lines of the licence files inside the crate, as published on crates.io (read from the local cargo registry). Where those files name nobody, the `authors` field of `Cargo.toml` is given instead. The 2026-11-14 run found no crate that was not already in the list of 2026-11-13, so the remaining rows are unchanged; only the column "In" was worked out again.
@@ -20,7 +20,7 @@ When these crates change, run the same `cargo tree` command again and update thi
 | Zlib | 1: `foldhash` 0.2.0, pulled in by `serde_json` | [Zlib.txt](Zlib.txt) | No notice is required in binaries; the notice may not be removed from source copies. Listed here as an acknowledgement. |
 | (toolchain) | The Rust standard library, linked into every program | see [below](#rust-standard-library) | MIT notice of the Rust project, and the Unicode notice for the Unicode tables in `core`. `compiler_builtins` is also under Apache-2.0 WITH LLVM-exception (per upstream), which needs no notice in binaries. |
 
-Until tag `last-webkit` the host also linked `wry`, `webkit2gtk`, `javascriptcore-rs`, `soup3` and the GTK 3 crates (`gtk`, `gdk`, `atk`, `cairo-rs` and `pango` 0.18, with their `-sys` crates), and through `wry` the MPL-2.0 crate `option-ext` and the Apache-2.0 AND MIT crate `dpi`. None of them is linked any more; `git show last-webkit:LICENSES/RUST-CRATES.md` has their rows.
+Until commit `6ebf169f` the host also linked `wry`, `webkit2gtk`, `javascriptcore-rs`, `soup3` and the GTK 3 crates (`gtk`, `gdk`, `atk`, `cairo-rs` and `pango` 0.18, with their `-sys` crates), and through `wry` the MPL-2.0 crate `option-ext` and the Apache-2.0 AND MIT crate `dpi`. None of them is linked any more; `git show 6ebf169f:LICENSES/RUST-CRATES.md` has their rows.
 In the column "In", `host` means the host programs (`Cargo.lock`) and `native` means the GTK 4 programs (`native/Cargo.lock`). 84 distinct crate versions are linked: 47 only in host, 23 only in native, 14 in both.
 
 ## MIT permission notice

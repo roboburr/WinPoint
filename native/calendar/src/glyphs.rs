@@ -1,5 +1,5 @@
 //! Fluent-style line glyphs drawn with cairo in the widget's CSS `color` (so hover, pressed and disabled
-//! colours apply like a symbolic icon), on the 20 x 20 grid of last-webkit:vendor/ui/js/core/icons.js with its 1.35
+//! colours apply like a symbolic icon), on the 20 x 20 grid of 6ebf169f:vendor/ui/js/core/icons.js with its 1.35
 //! stroke, and the title bar's caption glyphs on appframe.js's 10 x 10 grid with a 1 px stroke.
 use gtk::cairo;
 use gtk::gdk;

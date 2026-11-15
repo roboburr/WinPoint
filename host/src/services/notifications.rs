@@ -149,12 +149,7 @@ impl Notifications {
                                         .to_variant(),
                                 )),
                                 "GetServerInformation" => invocation.return_value(Some(
-                                    &(
-                                        "Win11 Shell",
-                                        "Win11 Shell",
-                                        env!("CARGO_PKG_VERSION"),
-                                        "1.2",
-                                    )
+                                    &("Win11 Shell", "Win11 Shell", crate::VERSION, "1.2")
                                         .to_variant(),
                                 )),
                                 "CloseNotification" => {

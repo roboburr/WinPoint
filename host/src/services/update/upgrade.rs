@@ -1166,7 +1166,7 @@ mod tests {
         verdict(&shared, json!({"state":"hold","allowAnyway":false}));
         assert_eq!(
             refused(json!({})).message,
-            "Win11 Shell isn’t ready for this Ubuntu version yet."
+            "WinPoint isn’t ready for this Ubuntu version yet."
         );
         assert_eq!(f.stub_log(), "", "a refusal runs no program");
         assert!(shared.store.read(UPGRADE).is_none());

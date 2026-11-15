@@ -3,8 +3,9 @@
 Every run happens in a case directory under tests/installer/run/ and, inside it:
 * bubblewrap: the whole filesystem read-only, Robin's home hidden behind a tmpfs (only this repository is bound
   back, read-only, and the case directory read-write), private /tmp, /var/tmp, /run/user and /run/dbus, no network,
-  its own PID namespace, and /dev/null over the WinPoint login session files when this machine has them
-  (hide_system_session); so nothing outside the case directory can be written or even read from the live session;
+  its own PID namespace, and /dev/null over the WinPoint login session files and install-system.py's files when this
+  machine has them (hide_system_session); so nothing outside the case directory can be written or even read from the
+  live session;
 * a complete replacement environment (HOME, XDG_*, WIN11_INSTALL_PREFIX, PATH with stubs for gnome-extensions,
   gsettings, dconf, systemctl, … that only log and fail), keyfile GSettings, no session or system bus;
 * optionally strace -f: every mutating file syscall must name a path inside the case directory.
@@ -57,16 +58,22 @@ def strace_paths(line: str):
     return call, [bytes(p, "utf-8").decode("unicode_escape").encode("latin-1").decode("utf-8", "replace") for p in paths]
 
 
+# scripts/install.py SYSTEM_FILES (install-system.py's four files; read here so sandbox needs no import of install.py)
+SYSTEM_FILES = ("usr/libexec/win11-gnome/release-upgrades-helper", "usr/libexec/win11-gnome/release-upgrade-attach",
+                "usr/share/polkit-1/actions/io.github.win11shell.gnome.release-upgrades.policy",
+                "usr/share/polkit-1/actions/io.github.win11shell.gnome.release-upgrade-attach.policy")
+
+
 def hide_system_session() -> list[str]:
     """bwrap arguments that put /dev/null over the WinPoint login session files this machine has installed
-    (scripts/install-session.py FILES, D-G71). install.py reads them from the real /usr, and with them its closing
-    text, the portal choice and the GnomeLook autostart entry change; the cases expect a system without the session."""
+    (scripts/install-session.py FILES, D-G71) and over install-system.py's files (GW5). install.py reads them from the
+    real /usr, and with them its closing text, the portal choice, the GnomeLook autostart entry and --check's
+    systemFiles (D-G74) change; the cases expect a system without either."""
     spec = importlib.util.spec_from_file_location("install_session", G/"scripts/install-session.py")
     session = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(session)
     args = []
-    for name, directory in session.FILES:
-        path = Path(directory)/name
+    for path in [Path(directory)/name for name, directory in session.FILES] + [Path("/")/rel for rel in SYSTEM_FILES]:
         if path.is_file():
             args += ["--ro-bind", "/dev/null", str(path)]
     return args
@@ -122,12 +129,12 @@ class Case:
         env.update(extra or {})
         return {k: v for k, v in env.items() if v is not None}
 
-    def run(self, script: Path, root: Path, args: list[str], env: dict, strace: bool = False,
-            timeout: int = 900) -> subprocess.CompletedProcess:
-        """script (install.py/uninstall.py, any copy) inside bwrap (+ strace); returns stdout/stderr/returncode."""
+    def argv(self, script: Path, root: Path, args: list[str], strace: bool = False,
+             interpreter: list[str] | None = None) -> tuple[list[str], str, Path]:
+        """(bwrap argv, log tag, strace file) of one run; interpreter: e.g. the updater's python3 -E -s -B (D-G74)."""
         self.runs += 1
         tag = f"{self.runs:02d}-{script.stem}"
-        interpreter = ["/bin/bash"] if script.suffix == ".sh" else ["/usr/bin/python3", "-B"]
+        interpreter = interpreter or (["/bin/bash"] if script.suffix == ".sh" else ["/usr/bin/python3", "-B"])
         argv = interpreter + [str(script)] + ([str(root)] if root else []) + list(args)
         trace = self.dir/"logs"/f"{tag}.strace"
         if strace:
@@ -136,11 +143,24 @@ class Case:
               "--tmpfs", "/tmp", "--tmpfs", "/var/tmp", "--tmpfs", "/run/user", "--tmpfs", "/run/dbus",
               "--tmpfs", str(REAL_HOME), "--ro-bind", str(G), str(G), "--bind", str(self.dir), str(self.dir),
               "--unshare-all", "--die-with-parent", "--new-session", "--chdir", str(self.dir), "--"]
-        proc = subprocess.run(bw + argv, env=env, capture_output=True, text=True, timeout=timeout)
+        return bw + argv, tag, trace
+
+    def run(self, script: Path, root: Path, args: list[str], env: dict, strace: bool = False,
+            timeout: int = 900, interpreter: list[str] | None = None) -> subprocess.CompletedProcess:
+        """script (install.py/uninstall.py, any copy) inside bwrap (+ strace); returns stdout/stderr/returncode."""
+        argv, tag, trace = self.argv(script, root, args, strace, interpreter)
+        proc = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=timeout)
         (self.dir/"logs"/f"{tag}.out").write_text(proc.stdout)
         (self.dir/"logs"/f"{tag}.err").write_text(proc.stderr)
         proc.trace = trace if strace else None
         return proc
+
+    def start(self, script: Path, root: Path, args: list[str], env: dict,
+              interpreter: list[str] | None = None) -> subprocess.Popen:
+        """As run(), in the background (the signal cases): stdout and stderr go to the run's log files."""
+        argv, tag, _trace = self.argv(script, root, args, False, interpreter)
+        with open(self.dir/"logs"/f"{tag}.out", "w") as out, open(self.dir/"logs"/f"{tag}.err", "w") as err:
+            return subprocess.Popen(argv, env=env, stdout=out, stderr=err, stdin=subprocess.DEVNULL)
 
     def writes_outside(self, trace: Path) -> tuple[int, list[str], list[str]]:
         """(mutating paths, successful writes outside the case dir, failed attempts outside it). Read line by line: a
@@ -198,6 +218,29 @@ class Case:
                 else:
                     out[rel] = f"file {oct(st.st_mode & 0o7777)} {hashlib.sha256(Path(path).read_bytes()).hexdigest()}"
         return out
+
+
+def descendant(pid: int, program: str = "/usr/bin/python3") -> int | None:
+    """The process below `pid` (a bwrap of start()) that runs `program` (its argv[0]), by its pid outside the
+    sandbox's own PID namespace (the signal cases signal it from here)."""
+    parents = {}
+    for entry in os.listdir("/proc"):
+        if entry.isdigit():
+            try:
+                parents[int(entry)] = int(Path(f"/proc/{entry}/stat").read_text().rsplit(") ", 1)[1].split()[1])
+            except (OSError, IndexError, ValueError):
+                continue
+    for child in sorted(parents):
+        ancestor = parents.get(child)
+        while ancestor and ancestor != pid:
+            ancestor = parents.get(ancestor)
+        if ancestor == pid:
+            try:
+                if Path(f"/proc/{child}/cmdline").read_bytes().split(b"\0")[0] == program.encode():
+                    return child
+            except OSError:
+                continue
+    return None
 
 
 def write_json(path: Path, data, mode: int = 0o600) -> None:
@@ -296,7 +339,7 @@ def fixture_root(directory: Path, extension_extra: dict[str, str] | None = None,
 def old_installer_host(vendor: Path) -> None:
     """The vendor/host that only 3b898e6's installer requires: it refuses without the directory and copies it to the
     payload's host/, which same_as_baseline leaves out. The repository has none since D-G73 (the Python reference
-    is history: git show last-webkit:vendor/host), and the current installer never reads it, so a test tree gets
+    is history: git show 6ebf169f:vendor/host), and the current installer never reads it, so a test tree gets
     this placeholder."""
     (vendor/"host").mkdir(parents=True, exist_ok=True)
     (vendor/"host/README").write_text("GE1c fixture\n")

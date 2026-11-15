@@ -1,7 +1,8 @@
-//! Instellingen › Update en herstel (`git show last-webkit:vendor/ui/js/apps/settings/pages/update.js`): Windows Update
-//! for Ubuntu (the update.* service: the hero with its state and one button, the info bars, the feature-update card of
-//! update_release.rs, the update rows with their packages and "Wat is er nieuw", the metered / removals confirm, Meer
-//! opties), the settings backup (export / import), reset everything, and Over Win11 Shell.
+//! Instellingen › Update en herstel (`git show 6ebf169f:vendor/ui/js/apps/settings/pages/update.js`): WinPoint's own
+//! update check first (update_winpoint.rs, D-G74a), then Windows Update for Ubuntu (the update.* service: the hero with
+//! its state and one button, the info bars, the feature-update card of update_release.rs, the update rows with their
+//! packages and "Wat is er nieuw", the metered / removals confirm, Meer opties), the settings backup (export /
+//! import), reset everything, and Over WinPoint.
 //!
 //! Every text is rendered here from the snapshot's codes and params ({phase, rows, job, restart, ...}), so a
 //! language switch needs no host round trip; host texts (error.message, warnings[].message) come with the next
@@ -9,6 +10,7 @@
 //! host: update.status is an unknown method) the hero falls back to system.updates. Structural changes
 //! (update.changed) read the snapshot again; update.progress patches it in place.
 use super::update_release::{Disc, Host, PRODUCT, PromptRow, ReleaseCard, Tone, bar, err_message, err_value};
+use super::update_winpoint::WinPointCard;
 use super::{Builder, Content, Later, Page, PageFuture, later};
 use crate::common;
 use kit::controls::{self as c, Chevron, Dialog, DialogResult, Expander, InfoBar, ProgressBar, ProgressRing, ProgressState, SettingsCard, SettingsExpander, SettingsGroup, Severity, Toast, Variant};
@@ -54,7 +56,7 @@ pub const CSS: &str = r#"
 // ------------------------------------------------------------------------------------------ texts from codes
 
 /// "7 uur geleden (25-10-2026 07:35)".
-fn when_text(at: f64) -> String {
+pub(super) fn when_text(at: f64) -> String {
     format!(
         "{} ({} {})",
         kit::format::rel_time(at, kit::format::now_ms()),
@@ -211,6 +213,17 @@ fn part_name(p: &str) -> String {
 /// processes of an old app broke at once); the native apps have no such part.
 fn shell_bar_shown(r: &Value) -> bool {
     r["shell"] == true && r["reboot"] != true
+}
+
+/// The parts the restart bar names, or None when it is hidden (shell_bar_shown). While WinPoint's own update waits
+/// for a sign-out (`hide_self`, the WinPoint card's installed + relogin; the updater design §6.2) the bar is hidden
+/// whatever it names: its button is shell.restartAll, which the host refuses until the sign-out (restarting the new
+/// programs against the old extension is the skew the sign-out avoids), and the sign-out restarts every part anyway.
+fn bar_parts(r: &Value, hide_self: bool) -> Option<Vec<String>> {
+    if !shell_bar_shown(r) || hide_self {
+        return None;
+    }
+    Some(r["shellParts"].as_array().map(|a| a.iter().map(common::value_key).collect()).unwrap_or_default())
 }
 
 fn key_of(e: &Value) -> &str {
@@ -487,6 +500,8 @@ struct Upd {
     pending: RefCell<Vec<gtk::Button>>,
     /// shell.restartAll answered (not a dry run): every Win11 process restarts, so its button stays disabled
     restart_all_sent: Cell<bool>,
+    /// WinPoint's own update waits for a sign-out (the WinPoint card): the restart bar waits for it too
+    hide_self: Cell<bool>,
     hero: crate::widgets::Wrap,
     glyph: gtk::Box,
     glyph_key: RefCell<String>,
@@ -582,6 +597,7 @@ impl Upd {
                 confirm_answered: RefCell::new(None),
                 pending: RefCell::new(Vec::new()),
                 restart_all_sent: Cell::new(false),
+                hide_self: Cell::new(false),
                 hero,
                 glyph,
                 glyph_key: RefCell::new(String::new()),
@@ -911,9 +927,7 @@ impl Upd {
                 exp.set_content(&sc);
                 self.bars.append(exp.widget());
             }
-            let r = &s["restart"];
-            let parts: Vec<String> = r["shellParts"].as_array().map(|a| a.iter().map(common::value_key).collect()).unwrap_or_default();
-            if shell_bar_shown(r) {
+            if let Some(parts) = bar_parts(&s["restart"], self.hide_self.get()) {
                 let mut names: Vec<String> = Vec::new();
                 for p in &parts {
                     let n = part_name(p);
@@ -1569,7 +1583,7 @@ fn export(p: &Page, slot: &gtk::Box) {
 }
 
 fn bad_file() -> &'static str {
-    t("Dit bestand bevat geen instellingen van Win11 Shell.", "This file doesn’t contain Win11 Shell settings.")
+    t("Dit bestand bevat geen instellingen van WinPoint.", "This file doesn’t contain WinPoint settings.")
 }
 
 fn import(p: &Page, slot: &gtk::Box) {
@@ -1632,8 +1646,8 @@ fn reset(p: &Page) {
     let pp = p.clone();
     Dialog::new(t("Alle instellingen terugzetten?", "Reset all settings?"))
         .text(t(
-            "Achtergrond, kleuren, taakbalk, Start en alle andere instellingen van Win11 Shell gaan terug naar de standaard. Je bestanden en apps blijven gewoon bewaard. Dit kan niet ongedaan worden gemaakt, tenzij je eerst exporteert.",
-            "Background, colours, taskbar, Start and all other Win11 Shell settings go back to the defaults. Your files and apps are kept. This can’t be undone unless you export first.",
+            "Achtergrond, kleuren, taakbalk, Start en alle andere instellingen van WinPoint gaan terug naar de standaard. Je bestanden en apps blijven gewoon bewaard. Dit kan niet ongedaan worden gemaakt, tenzij je eerst exporteert.",
+            "Background, colours, taskbar, Start and all other WinPoint settings go back to the defaults. Your files and apps are kept. This can’t be undone unless you export first.",
         ))
         .icon("warning")
         .primary(t("Terugzetten", "Reset"))
@@ -1679,7 +1693,7 @@ fn about_group(sh: &Value) -> gtk::Widget {
         (t("Vensterbeheer", "Window manager"), compositor),
         (t("Testmodus", "Test mode"), (sh["dryRun"] == true).then(|| t("Aan (er wordt niets echt gewijzigd)", "On (nothing is actually changed)").to_owned())),
     ];
-    let exp = SettingsExpander::new("info", t("Over Win11 Shell", "About Win11 Shell"), t("Een Windows 11-achtig bureaublad voor Ubuntu", "A Windows 11-style desktop for Ubuntu"));
+    let exp = SettingsExpander::new("info", t("Over WinPoint", "About WinPoint"), t("Een Windows 11-achtig bureaublad voor Ubuntu", "A Windows 11-style desktop for Ubuntu"));
     exp.header_button().set_widget_name("update-about");
     exp.header().set_control(&common::value_label(&version.as_ref().map(|v| format!("{} {v}", t("Versie", "Version"))).unwrap_or_default()));
     let grid = gtk::Grid::new();
@@ -1740,8 +1754,23 @@ fn update(p: Page) -> PageFuture {
     Box::pin(async move {
         let upd = Upd::new(&p);
         let sh = p.get("shell.info", json!({}));
+        // WinPoint's own check (winpoint.status) is read alongside update.status
+        let winpoint = WinPointCard::new(&p);
+        {
+            // while WinPoint's update waits for a sign-out the restart bar is hidden (its button would be refused)
+            let weak = Rc::downgrade(&upd);
+            winpoint.on_relogin(move |pending| {
+                if let Some(u) = weak.upgrade() {
+                    u.hide_self.set(pending);
+                    u.paint_bars();
+                }
+            });
+        }
+        winpoint.listen();
+        let winpoint_load = winpoint.load();
         upd.listen();
         upd.load().await;
+        winpoint_load.await;
         let sh = sh.await.unwrap_or_else(common::shell_info);
         if !p.alive() {
             return Content::new();
@@ -1797,7 +1826,7 @@ fn update(p: Page) -> PageFuture {
         reset_btn.connect_clicked(move |_| reset(&pp));
         let backup = SettingsGroup::new(
             t("Back-up van instellingen", "Settings backup"),
-            t("Bewaar je Win11 Shell-instellingen in een bestand, of zet ze terug", "Save your Win11 Shell settings in a file, or restore them"),
+            t("Bewaar je WinPoint-instellingen in een bestand, of zet ze terug", "Save your WinPoint settings in a file, or restore them"),
         );
         backup.widget().set_widget_name("update-backup");
         let ex = SettingsCard::new(
@@ -1819,8 +1848,8 @@ fn update(p: Page) -> PageFuture {
             "restart",
             t("Alles terugzetten", "Reset everything"),
             t(
-                "Alle instellingen van Win11 Shell terugzetten naar de standaardwaarden. Je bestanden blijven bewaard.",
-                "Reset all Win11 Shell settings to their defaults. Your files are kept.",
+                "Alle instellingen van WinPoint terugzetten naar de standaardwaarden. Je bestanden blijven bewaard.",
+                "Reset all WinPoint settings to their defaults. Your files are kept.",
             ),
         );
         rs.set_control(&reset_btn);
@@ -1832,6 +1861,7 @@ fn update(p: Page) -> PageFuture {
         }
 
         let out: Content = vec![
+            winpoint.widget().clone().upcast(),
             upd.hero.clone().upcast(),
             upd.bars.clone().upcast(),
             upd.release.widget().clone().upcast(),
@@ -1861,5 +1891,19 @@ mod tests {
         assert_eq!(part_name("gobject"), "GLib");
         assert_eq!(part_name("self"), PRODUCT);
         assert_eq!(part_name("libfoo"), "libfoo", "an unknown code is shown as it is");
+    }
+
+    /// While WinPoint's update waits for a sign-out the bar is hidden, also when it names other parts: its Restart
+    /// WinPoint button would only be refused (signOutFirst), and the sign-out restarts them too (the updater design
+    /// §6.2).
+    #[test]
+    fn the_restart_bar_waits_for_the_sign_out() {
+        let both = json!({"shell":true,"reboot":false,"shellParts":["gtk4","self"]});
+        assert_eq!(bar_parts(&both, false), Some(vec!["gtk4".to_owned(), "self".to_owned()]));
+        assert_eq!(bar_parts(&both, true), None, "no button the host refuses until the sign-out");
+        let own = json!({"shell":true,"reboot":false,"shellParts":["self"]});
+        assert_eq!(bar_parts(&own, false), Some(vec!["self".to_owned()]));
+        assert_eq!(bar_parts(&own, true), None, "nothing else to restart before the sign-out");
+        assert_eq!(bar_parts(&json!({"shell":true,"reboot":true,"shellParts":["gtk4"]}), false), None, "the reboot covers it");
     }
 }

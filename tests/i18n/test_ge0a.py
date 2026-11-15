@@ -10,7 +10,7 @@ tests/i18n/test_e0b.py, dropping its Python-host, bash, audit and transcript par
 
 Until the WebKit removal this file also held the UI ratchet, the mock coverage of the HTML apps, the nl/en UI text
 dumps (baseline-nl.txt, baseline-en.txt of surfaces.json, BASELINE-CHANGES) and the dump server; they went with
-the HTML apps (git show last-webkit:tests/i18n/test_ge0a.py).
+the HTML apps (git show 6ebf169f:tests/i18n/test_ge0a.py).
 
 Temporary files go to tests/i18n/.run/ (never /tmp: notes/claude/plan.md).
 """

@@ -165,7 +165,7 @@ fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
     m.lock().unwrap_or_else(|e| e.into_inner())
 }
 
-/// Texts of the bridge (last-webkit:vendor/ui/js/core/bridge.js), by language.
+/// Texts of the bridge (6ebf169f:vendor/ui/js/core/bridge.js), by language.
 fn text(key: &str, en: bool) -> &'static str {
     match (key, en) {
         ("offline", false) => "Geen verbinding met Win11 Shell. Probeer het zo opnieuw.",

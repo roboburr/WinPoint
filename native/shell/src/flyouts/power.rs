@@ -129,6 +129,13 @@ impl Flyout for PowerFlyout {
     fn placement(&self) -> Placement {
         Placement::BottomCenter
     }
+    fn covers_monitor(&self) -> bool {
+        true
+    }
+    fn holds_focus(&self) -> bool {
+        // the shutdown screen stays while its action runs; the question itself goes on focus loss ("Annuleren")
+        power().is_some_and(|p| p.on_screen.get())
+    }
     fn opened(&self) {
         if let Some(p) = power() {
             p.on_open();

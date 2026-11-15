@@ -1,6 +1,6 @@
 # Verkenner: lokale desktopfuncties — versie 0.5.0
 
-> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit is `6ebf169f`; zie [native/APPS.md](native/APPS.md).
 
 Op 1 november 2026 slagen twaalf integratiegroepen met echte Rust/WebKit-Verkenners in een private GNOME 50.1/Wayland-sessie. De definitieve build is opnieuw gecontroleerd. De acht laatste oorspronkelijke Files-methoden zijn geporteerd: `files.places`, `files.find`, `files.watch`, `files.unwatch`, `files.open`, `files.openWith`, `files.openTerminal` en `files.trustLauncher`. Daarmee zijn alle 28 openbare methoden uit de oorspronkelijke Files-service native afgehandeld. De volledige shell en haar andere diensten zijn hiermee nog niet volledig naar Rust omgezet.
 

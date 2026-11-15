@@ -581,6 +581,26 @@ export class NativePanelBridge {
         return {keyboard: args.exclusive ? 'exclusive' : 'on-demand'};
     }
 
+    /** The compositor focus is on the taskbar window or on one of its popups (win11-shell's light dismiss). */
+    _panelFocused() {
+        const focus = global.display.focus_window;
+        return Boolean(this._panel && focus && (focus === this._panel || focus.get_transient_for() === this._panel));
+    }
+
+    /**
+     * panel.inputChanged: win11-shell set a new input region on the taskbar window (a flyout opened, closed or
+     * changed size, a toast came or went) and the frame that commits it went out. mutter keeps a new input region
+     * without repicking, so a pointer above an area the panel just gave up stayed with the invisible panel surface:
+     * clicks on the window under it did nothing until the pointer crossed the strip (Robin, 14-11). A relayout
+     * repicks every pointer.
+     */
+    _panelInputChanged() {
+        if (!this._panel)
+            return failure('session_unavailable', this._t('panelMissing'));
+        this._panel.get_compositor_private()?.queue_relayout();
+        return {};
+    }
+
     _queueFocusReturn() {
         if (this._returnId)
             GLib.source_remove(this._returnId);
@@ -739,8 +759,19 @@ export class NativePanelBridge {
     }
 
     _considerPanel(window) {
-        if (!this._enabled || !this._isPanel(window))
+        if (!this._enabled)
             return;
+        if (!this._isPanel(window)) {
+            // A new win11-shell window (the desktop after the lock screen, Start) can carry the Panel's app ID for
+            // a moment before it takes its own: if it was taken for the taskbar, let it go and take the real one.
+            if (this._panel === window) {
+                this._releasePanel();
+                const panel = [...this._windows.keys()].find(other => other !== window && this._isPanel(other));
+                if (panel)
+                    this._considerPanel(panel);
+            }
+            return;
+        }
         if (this._panel && this._panel !== window)
             return;
         if (!this._panel) {
@@ -784,6 +815,26 @@ export class NativePanelBridge {
             this._pendingTaskView = false;
             this._openTaskView();
         }
+    }
+
+    // Undo only what _considerPanel did and nobody changed since (the desktop bridge may already have made the
+    // window its desktop), then forget it.
+    _releasePanel() {
+        const panel = this._panel;
+        const original = this._panelOriginal;
+        if (panel && original) {
+            try {
+                if (this._panelInhibited)
+                    panel.uninhibit_mapped();
+                if (panel.get_window_type() === Meta.WindowType.DOCK)
+                    panel.set_type(original.type);
+                if (!original.above && panel.is_above())
+                    panel.unmake_above();
+            } catch (e) {
+                logError(e, 'win11-gnome: releasing a window taken for the taskbar');
+            }
+        }
+        this._forgetPanel();
     }
 
     _forgetPanel() {
@@ -1040,6 +1091,8 @@ export class NativePanelBridge {
             return this._notificationsBridge.call(method, args);
         if (method === 'panel.keyboard')
             return this._setPanelKeyboard(args);
+        if (method === 'panel.inputChanged')
+            return this._panelInputChanged();
         if (method === 'desktop.ready')
             return this._desktopBridge.ready(args);
         if (method === 'desktop.geometry')
@@ -1080,7 +1133,8 @@ export class NativePanelBridge {
         if (method === 'shell.info')
             return {mode: 'gnome', compositor: 'gnome', layerShell: false, nativeWindows: true,
                 nativePanel: this._panelPresent, panelAppId: PANEL_APP_ID,
-                startFocused: Boolean(global.display.focus_window && this._isStart(global.display.focus_window))};
+                startFocused: Boolean(global.display.focus_window && this._isStart(global.display.focus_window)),
+                panelFocused: this._panelFocused()};
         if (method === 'windows.list')
             return {supported: true, windows: this._userWindows().map(window => this._windowJSON(window))};
         if (method === 'windows.setIconRects')
@@ -1257,17 +1311,24 @@ export class NativePanelBridge {
         const panel = this._panel;
         const original = this._panelOriginal;
         if (panel && original) {
-            if (this._panelInhibited)
-                panel.uninhibit_mapped();
-            panel.set_type(original.type);
-            if (!original.above)
-                panel.unmake_above();
-            if (!original.sticky)
-                panel.unstick();
-            if (!original.skip)
-                panel.show_in_window_list();
-            // An unmanaged full-monitor transparent client must not outlive its bridge.
-            // This closes only our own panel, never an application or a system surface.
+            // On the lock screen GNOME's overview can throw from inside show_in_window_list (a workspace without
+            // its layout manager): the rest of disable, the close below included, must still run.
+            try {
+                if (this._panelInhibited)
+                    panel.uninhibit_mapped();
+                panel.set_type(original.type);
+                if (!original.above)
+                    panel.unmake_above();
+                if (!original.sticky)
+                    panel.unstick();
+                if (!original.skip)
+                    panel.show_in_window_list();
+            } catch (e) {
+                logError(e, 'win11-gnome: restoring the taskbar window');
+            }
+            // An unmanaged full-monitor transparent client must not outlive its bridge. This closes only our own
+            // panel, never an application or a system surface; win11-shell hides it and shows it again when the
+            // extension asks for the taskbar on its return (open_new_window).
             panel.delete(global.get_current_time());
         }
         this._forgetPanel();

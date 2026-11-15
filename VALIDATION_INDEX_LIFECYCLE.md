@@ -1,6 +1,6 @@
 # Everything ownership and lifetime — 0.7.0
 
-> **History (D-G72, 14 November 2026):** measured with the HTML interface in WebKitGTK of the time. It is gone: File Explorer, Settings, Task Manager and the other apps are native GTK 4 programs now, and WinPoint has no WebKit and no GTK 3 host any more. The Rust services this report checks still exist. The last commit with WebKit is tagged `last-webkit`; see [native/APPS.md](native/APPS.md).
+> **History (D-G72, 14 November 2026):** measured with the HTML interface in WebKitGTK of the time. It is gone: File Explorer, Settings, Task Manager and the other apps are native GTK 4 programs now, and WinPoint has no WebKit and no GTK 3 host any more. The Rust services this report checks still exist. The last commit with WebKit is `6ebf169f`; see [native/APPS.md](native/APPS.md).
 
 The GNOME backend receives `WIN11_GNOME_APP` from its Rust host. Only `alles` can start an index worker. Panel, the resident Start menu, Desktop, Explorer, Settings, Task Manager and Disks cannot start one through `index.status`, `index.search`, direct startup, or an inherited `WIN11SHELL_INDEX_AUTOSTART=1`. The original non-GNOME host, without this role, keeps its behavior.
 

@@ -1,14 +1,25 @@
 //! The shared state of the shell: the backend client, the GNOME extension client, the settings cache and an
 //! event bus. One `Shell` per process, used from the GTK main thread only (`Rc`); other threads reach it through
 //! `dispatch`, which runs on the main context.
+//!
+//! The extension's events come twice: straight from its D-Bus signal (gnome.rs) and relayed by the backend's event
+//! stream (host/src/gnome.rs `relays_event`: windows.*, nativeBackdrop.changed, notifications.*). The direct one
+//! counts and the backend's copy is dropped, so every event arrives once (a second windows.changed refreshed Task
+//! View with four more windows.list calls, a second notifications.new pulsed the bell again) and a copy that trails
+//! the direct one (by up to 80 ms) never puts an older state back.
 use crate::backend::Backend;
 use crate::gnome::Gnome;
 use gtk::glib;
 use serde_json::{Value, json};
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 type Listener = Rc<dyn Fn(&str, &Value)>;
+
+/// The extension's notifications.closed and notifications.action that came over D-Bus and whose backend copy has
+/// not come yet (they name no source, unlike notifications.new); a bound for a backend that relays nothing.
+const AWAITED: usize = 64;
 
 pub struct Shell {
     pub app: gtk::Application,
@@ -17,6 +28,9 @@ pub struct Shell {
     settings: RefCell<Value>,
     listeners: RefCell<Vec<(String, Listener)>>,
     pub flyouts: RefCell<Option<Rc<crate::flyouts::FlyoutHost>>>,
+    // an extension event came over D-Bus: the backend's copies of them are not needed
+    direct: Cell<bool>,
+    awaited: RefCell<VecDeque<(String, Value)>>,
 }
 
 thread_local! {
@@ -35,6 +49,61 @@ pub fn dispatch(event: String, data: Value) {
             shell.emit(&event, &data);
         }
     });
+}
+
+/// The extension's signal (gnome.rs, on the main thread).
+fn dispatch_gnome(event: String, data: Value) {
+    glib::MainContext::default().invoke(move || {
+        if let Some(shell) = SHELL.with(|s| s.borrow().clone()) {
+            shell.direct.set(true);
+            if matches!(event.as_str(), "notifications.closed" | "notifications.action") {
+                let mut awaited = shell.awaited.borrow_mut();
+                if awaited.len() >= AWAITED {
+                    awaited.pop_front();
+                }
+                awaited.push_back((event.clone(), data.clone()));
+            }
+            shell.emit(&event, &data);
+        }
+    });
+}
+
+/// The backend's event stream (its reader thread): all but the copies of what the extension's signal brought.
+fn dispatch_backend(event: String, data: Value) {
+    glib::MainContext::default().invoke(move || {
+        if let Some(shell) = SHELL.with(|s| s.borrow().clone())
+            && !shell.relayed(&event, &data)
+        {
+            shell.emit(&event, &data);
+        }
+    });
+}
+
+/// Whether a backend event is a copy of the extension's (`awaited`: the signal's closed and action events whose
+/// copy is still due; a match is taken out). What only the backend sends stays: the backdrop's reset when the
+/// extension went or came (NameOwnerChanged), the notifications of its own store (no GNOME, a test: another
+/// source) and their closed and action events, which no signal matches.
+fn relayed_copy(event: &str, data: &Value, awaited: &mut VecDeque<(String, Value)>) -> bool {
+    match event {
+        "windows.changed" | "windows.focused" => true,
+        "nativeBackdrop.changed" => data["reset"] != true,
+        "notifications.new" => data["notification"]["source"] == "gnome",
+        "notifications.closed" | "notifications.action" => {
+            let copy = awaited.iter().position(|(e, d)| e == event && d == data);
+            copy.and_then(|i| awaited.remove(i)).is_some()
+        }
+        _ => false,
+    }
+}
+
+/// Whether a settings.changed touches one of `keys` (dotted paths; a key covers what lies under it, and a change
+/// of a whole object above it counts too). The host sends the leaf paths that changed (`changed`,
+/// host/src/settings.rs `diff_paths`, which stops at 200); an event without that list, or with a full one, touches
+/// every key (backend.ready's first settings, and `Value::Null` for a first render).
+pub fn touches(data: &Value, keys: &[&str]) -> bool {
+    let Some(changed) = data["changed"].as_array().filter(|c| c.len() < 200) else { return true };
+    let under = |path: &str, key: &str| path == key || path.strip_prefix(key).is_some_and(|rest| rest.starts_with('.'));
+    changed.iter().filter_map(Value::as_str).any(|path| keys.iter().any(|key| under(path, key) || under(key, path)))
 }
 
 /// The user's settings.json as the host keeps it (XDG_CONFIG_HOME or ~/.config, win11-gnome/settings.json).
@@ -63,10 +132,12 @@ impl Shell {
             settings: RefCell::new(settings),
             listeners: RefCell::new(Vec::new()),
             flyouts: RefCell::new(None),
+            direct: Cell::new(false),
+            awaited: RefCell::new(VecDeque::new()),
         });
         SHELL.with(|s| *s.borrow_mut() = Some(shell.clone()));
-        shell.backend.events(dispatch);
-        shell.gnome.events(dispatch);
+        shell.backend.events(dispatch_backend);
+        shell.gnome.events(dispatch_gnome);
         shell.on("backend.ready", |_, _| {
             crate::core::shell().call("settings.get", json!({}), |result| {
                 if let Ok(settings) = result && settings.is_object() {
@@ -91,6 +162,12 @@ impl Shell {
     /// "tray.changed"); "" listens to all.
     pub fn on(&self, prefix: &str, f: impl Fn(&str, &Value) + 'static) {
         self.listeners.borrow_mut().push((prefix.to_owned(), Rc::new(f)));
+    }
+
+    /// A backend event that is the relayed copy of one the extension's signal brought. Until a signal came (no
+    /// session bus of our own) the backend's copies are the only ones.
+    fn relayed(&self, event: &str, data: &Value) -> bool {
+        self.direct.get() && relayed_copy(event, data, &mut self.awaited.borrow_mut())
     }
 
     pub fn emit(&self, event: &str, data: &Value) {
@@ -167,5 +244,52 @@ impl Shell {
 
     pub fn flyouts(&self) -> Rc<crate::flyouts::FlyoutHost> {
         self.flyouts.borrow().clone().expect("panel not installed")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn touches_follows_the_changed_paths() {
+        let known = json!({"path": "taskbar.tray.known", "changed": ["taskbar.tray.known.sni:org.kde.Nord-1"]});
+        assert!(!touches(&known, &["start", "theme", "accessibility", "taskbar.pinned"]));
+        assert!(!touches(&known, &["taskbar.tray.hiddenMenu", "taskbar.tray.shown", "taskbar.tray.order"]));
+        assert!(touches(&known, &["taskbar.tray"]));
+        // a key above or below the changed path, not a sibling with the same start
+        let pins = json!({"changed": ["start.pinned"]});
+        assert!(touches(&pins, &["start"]) && touches(&pins, &["start.pinned"]));
+        assert!(!touches(&json!({"changed": ["start.pinnedOld"]}), &["start.pinned"]));
+        assert!(touches(&json!({"changed": ["taskbar"]}), &["taskbar.tray.shown"]));
+        // no list (backend.ready, a first render) or a cut-off one: everything
+        assert!(touches(&json!({"path": null}), &["start"]));
+        assert!(touches(&Value::Null, &["start"]));
+        let many: Vec<String> = (0..200).map(|i| format!("explorer.columns.c{i}")).collect();
+        assert!(touches(&json!({"changed": many}), &["start"]));
+        assert!(!touches(&json!({"changed": []}), &["start"]));
+    }
+
+    #[test]
+    fn backend_copies_of_extension_events_are_dropped_once() {
+        let mut awaited = VecDeque::new();
+        assert!(relayed_copy("windows.changed", &json!({"windows": []}), &mut awaited));
+        assert!(relayed_copy("windows.focused", &json!({"id": 7}), &mut awaited));
+        assert!(relayed_copy("nativeBackdrop.changed", &json!({"available": true, "windows": []}), &mut awaited));
+        // the backend's own: the extension's name owner changed
+        let reset = json!({"available": false, "reset": true, "windows": []});
+        assert!(!relayed_copy("nativeBackdrop.changed", &reset, &mut awaited));
+        // GNOME's notifications by their source; the backend's own store keeps its events
+        let gnome = json!({"notification": {"id": 3, "source": "gnome"}});
+        assert!(relayed_copy("notifications.new", &gnome, &mut awaited));
+        let own = json!({"notification": {"id": 3, "source": "dbus"}});
+        assert!(!relayed_copy("notifications.new", &own, &mut awaited));
+        let closed = json!({"id": 3, "reason": 2});
+        assert!(!relayed_copy("notifications.closed", &closed, &mut awaited));
+        awaited.push_back(("notifications.closed".into(), closed.clone()));
+        assert!(relayed_copy("notifications.closed", &closed, &mut awaited));
+        assert!(!relayed_copy("notifications.closed", &closed, &mut awaited));
+        assert!(!relayed_copy("tray.changed", &json!({"items": []}), &mut awaited));
+        assert!(!relayed_copy("settings.changed", &json!({"changed": []}), &mut awaited));
     }
 }

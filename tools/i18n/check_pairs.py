@@ -9,7 +9,8 @@ What it checks (exit 1 on any error):
   anywhere with only one of nl:/en: is an error; no literal text is left in the visible call sites (failure(),
   fail(), new Error(), Main.notify(), accessible_name:, _button(), ctrlAltTabManager.addGroup()).
 * scripts/*.py: every dict literal whose values are {"nl": …, "en": …} dicts (read with ast, nothing is run); the
-  same rules; t/_t/install.t("key") calls name existing keys; print/SystemExit/ValueError take no literal text.
+  same rules; t/_t/install.t("key") calls (and the installer's refuse/_error/_stop("key"), D-G74) name existing keys;
+  print/SystemExit/ValueError take no literal text.
 * scripts/*.sh, tools/h-remnants.sh: every `pair 'NL' 'EN'` (or `section 'NL' 'EN'`) has two non-empty texts with the same printf
   directives; no other echo/printf of a literal sentence.
 * host/src/desktop-entries.json (C6, owned by GE1b; read only): version 1, nl/en for the comment and the 10
@@ -324,7 +325,8 @@ def check_py_uses(report: Report, path: Path, tree, tables_by_module: dict):
         func = node.func
         first = node.args[0]
         name = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else None
-        if name in ("t", "_t") and isinstance(first, ast.Constant) and isinstance(first.value, str):
+        # refuse/_error/_stop: the installer's refusals (D-G74), which take the key of their text first
+        if name in ("t", "_t", "refuse", "_error", "_stop") and isinstance(first, ast.Constant) and isinstance(first.value, str):
             module = func.value.id if isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name) else None
             keys = install if module == "install" else own
             used.add((module or path.stem, first.value))

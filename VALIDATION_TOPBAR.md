@@ -1,6 +1,6 @@
 # GNOME-bovenbalk bij de native taakbalk — 0.6.1
 
-> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit heeft de tag `last-webkit`; zie [native/APPS.md](native/APPS.md).
+> **Historisch (D-G72, 14 november 2026):** gemeten met de HTML-interface in WebKitGTK van toen. Die is verwijderd: Verkenner, Instellingen, Taakbeheer en de andere apps zijn nu native GTK 4-programma's, en Win11 voor GNOME bevat geen WebKit en geen GTK 3-host meer. De Rust-diensten die dit rapport controleert, bestaan nog. De laatste commit met WebKit is `6ebf169f`; zie [native/APPS.md](native/APPS.md).
 
 > **Historisch (D-G70, 13 november 2026):** dit rapport is gemeten met de verwijderde WebKit-taakbalk. De extensie verbergt de GNOME-bovenbalk nog steeds, nu naast de native GTK 4-shell `win11-shell`; zie [notes/claude/gtk-native.md](notes/claude/gtk-native.md).
 

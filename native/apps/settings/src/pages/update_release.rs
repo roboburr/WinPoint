@@ -1,5 +1,5 @@
 //! Instellingen › Update en herstel: Ubuntu release upgrades on the Update page
-//! (`git show last-webkit:vendor/ui/js/apps/settings/pages/update-release.js`): the feature-update card "Ubuntu 26.10
+//! (`git show 6ebf169f:vendor/ui/js/apps/settings/pages/update-release.js`): the feature-update card "Ubuntu 26.10
 //! is beschikbaar" (states checking, ok, warn, hold, ubuntuHold, blocked, unknown, and the hand-over states
 //! updatesFirst, rebootFirst, running, waiting, startFailed, ended) with its start dialog, and the "Nieuwe
 //! Ubuntu-versies" row of Meer opties (Ubuntu's Prompt=). No page of its own: update.rs builds both and calls
@@ -32,8 +32,8 @@ pub const CSS: &str = r#"
 .st-updrel-reason { padding: 2px 0; color: var(--text-1); }
 "#;
 
-/// The product name in every text ("Win11 Shell" in both languages).
-pub const PRODUCT: &str = "Win11 Shell";
+/// The product name in every text ("WinPoint" in both languages since D-G74a; the host's update.product).
+pub const PRODUCT: &str = "WinPoint";
 
 /// Ubuntu's main.log of the release upgrader (design §3.5 ended; the host may name another in release.logPath).
 const UPGRADE_LOG: &str = "/var/log/dist-upgrade/main.log";
@@ -260,15 +260,15 @@ fn hold_text(r: &Value) -> String {
     match r["gnomeMajor"].as_i64().map(|n| n.to_string()).or_else(|| r["gnomeMajor"].as_str().filter(|s| !s.is_empty()).map(str::to_owned)) {
         Some(major) => common::fill(
             t(
-                "Wacht op een compatibele Win11-versie. {product} werkt nog niet met GNOME {major}, dat bij Ubuntu {version} hoort.",
-                "Wait for a compatible Win11 version. {product} doesn’t work with GNOME {major} yet, which comes with Ubuntu {version}.",
+                "Wacht op een compatibele {product}-versie. {product} werkt nog niet met GNOME {major}, dat bij Ubuntu {version} hoort.",
+                "Wait for a compatible {product} version. {product} doesn’t work with GNOME {major} yet, which comes with Ubuntu {version}.",
             ),
             &[("product", PRODUCT), ("major", &major), ("version", &version)],
         ),
         None => common::fill(
             t(
-                "Wacht op een compatibele Win11-versie. Zodra {product} klaar is voor deze versie, zie je de upgrade hier.",
-                "Wait for a compatible Win11 version. As soon as {product} is ready for this version, you’ll see the upgrade here.",
+                "Wacht op een compatibele {product}-versie. Zodra {product} klaar is voor deze versie, zie je de upgrade hier.",
+                "Wait for a compatible {product} version. As soon as {product} is ready for this version, you’ll see the upgrade here.",
             ),
             &[("product", PRODUCT), ("version", &version)],
         ),

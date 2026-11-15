@@ -1,4 +1,4 @@
-//! The app (last-webkit:vendor/ui/js/apps/disks/main.js): the snapshot of disks.list, the pages (overview, a volume's
+//! The app (6ebf169f:vendor/ui/js/apps/disks/main.js): the snapshot of disks.list, the pages (overview, a volume's
 //! and a disk's properties) with Back and the breadcrumb, the selection, live updates (disks.changed, a 30 s poll,
 //! window focus, F5), the language switch and the deep links (--params {volume|disk|select|page|id|open}).
 use crate::model::{self, find_disk, find_volume, st, truthy};
@@ -87,7 +87,7 @@ thread_local! {
 }
 
 /// The query keys of `--params JSON` (the WebKit host's run_inner turned them into the page's query: `git show
-/// last-webkit:host/src/lib.rs`).
+/// 6ebf169f:host/src/lib.rs`).
 pub fn parse_args(args: &[String]) -> Value {
     let mut out = serde_json::Map::new();
     let mut i = 0;

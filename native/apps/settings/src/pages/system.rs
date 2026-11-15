@@ -1,4 +1,4 @@
-//! Instellingen › Systeem (last-webkit:vendor/ui/js/apps/settings/pages/system.js): the device hero and the links to
+//! Instellingen › Systeem (6ebf169f:vendor/ui/js/apps/settings/pages/system.js): the device hero and the links to
 //! the System sub-pages. The hero (`device_hero`) and the rename hint are shared with Startpagina and Info.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;

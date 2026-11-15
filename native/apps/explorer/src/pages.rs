@@ -1,4 +1,4 @@
-//! The special pages (last-webkit:vendor/ui/js/apps/explorer/pages.js): Start (Snelle toegang, Favorieten, Recent),
+//! The special pages (6ebf169f:vendor/ui/js/apps/explorer/pages.js): Start (Snelle toegang, Favorieten, Recent),
 //! Deze pc (folders, devices and drives) and Galerij (the newest pictures by month, justified rows). Their
 //! items behave like Explorer items: click, Ctrl+click, double click / Enter, arrows (by position), the item
 //! context menu, the middle button for a new tab, drag and drop (dnd.rs).

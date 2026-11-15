@@ -1,4 +1,4 @@
-//! Win11 GNOME Disks in GTK 4 (see ../../APPS.md): the Schijven app of last-webkit:vendor/ui/js/apps/disks on the
+//! Win11 GNOME Disks in GTK 4 (see ../../APPS.md): the Schijven app of 6ebf169f:vendor/ui/js/apps/disks on the
 //! shared kit. Windows 11 Instellingen > Systeem > Opslag > "Schijven en volumes" merged with Schijfbeheer: a card per
 //! disk with a proportional partition bar and its volumes; properties pages for a volume and a disk; the
 //! format, label, delete, new volume, unlock and initialise dialogs; live through disks.changed.

@@ -3,7 +3,7 @@
 H (the frozen Hyprland project these tools come from) had its UI in ``ui/js`` and a Python host; G has a Rust host in
 ``host/src`` with its catalogues in ``host/i18n/*.tsv`` (decision D-G8) and the native GTK 4 programs in ``native/``
 (the shell, Calendar, the kit and the seven apps; their texts are inline nl/en pairs, check_native.py). The
-vendored HTML UI went with the WebKit apps (tag ``last-webkit``). Every tool imports its paths from here, so a move
+vendored HTML UI went with the WebKit apps (commit ``6ebf169f``). Every tool imports its paths from here, so a move
 is one edit.
 """
 
@@ -14,7 +14,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 
-NATIVE_REL = "native"                   # H: ui/js; G up to last-webkit: the vendored UI
+NATIVE_REL = "native"                   # H: ui/js; G up to 6ebf169f: the vendored UI
 TESTS_REL = "tests/i18n"
 
 # The Rust host's embedded {nl, en} string tables (H had them as Python _STR dicts). GE1b moves them into

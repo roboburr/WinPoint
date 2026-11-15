@@ -221,6 +221,8 @@ impl Events {
     fn to_pages(&self, event: &str) -> bool {
         match event {
             "update.request" | "update.owner" => false,
+            // D-G74a: a Settings host's forwarded winpoint.check and the owner's answer (services/winpoint.rs)
+            "winpoint.request" | "winpoint.reply" => false,
             "update.progress" | "update.reply" => self.update_pages.load(Ordering::Relaxed),
             _ => true,
         }
@@ -371,6 +373,7 @@ fn valid_name(name: &str) -> bool {
         "sysmon.",
         "windows.",
         "update.",
+        "winpoint.",
     ]
     .iter()
     .any(|prefix| name.starts_with(prefix))

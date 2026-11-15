@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Meldingen (last-webkit:vendor/ui/js/apps/settings/pages/notifications.js): toasts and their
+//! Instellingen › Systeem › Meldingen (6ebf169f:vendor/ui/js/apps/settings/pages/notifications.js): toasts and their
 //! sounds, Niet storen and a test notification.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;
@@ -102,8 +102,8 @@ fn notifications(p: Page) -> PageFuture {
         if !supported {
             out.push(
                 common::notice(t(
-                    "Onder GNOME toont GNOME zelf de meldingen. Deze instellingen gelden voor Win11 Shell.",
-                    "In GNOME, notifications are shown by GNOME itself. These settings apply to Win11 Shell.",
+                    "Onder GNOME toont GNOME zelf de meldingen. Deze instellingen gelden voor WinPoint.",
+                    "In GNOME, notifications are shown by GNOME itself. These settings apply to WinPoint.",
                 ))
                 .widget()
                 .clone()

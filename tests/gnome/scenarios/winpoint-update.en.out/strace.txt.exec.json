@@ -1,0 +1,91 @@
+{
+ "files": [
+  "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/logs/install.strace",
+  "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.en.out/strace.txt"
+ ],
+ "execs": 818,
+ "ok": true,
+ "violations": [],
+ "forbidden": [
+  "pkexec",
+  "check-new-release",
+  "apt-get",
+  "apt-cache",
+  "do-release-upgrade",
+  "loginctl",
+  "apt",
+  "pkcon"
+ ],
+ "byProgram": [
+  {
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/stubs/apt",
+   "where": "stub",
+   "result": "ran",
+   "count": 1
+  }
+ ],
+ "winpointPython": {
+  "execs": [
+   {
+    "line": 4355,
+    "pid": "2678",
+    "path": "/usr/bin/python3",
+    "argv": [
+     "/usr/bin/python3",
+     "-E",
+     "-s",
+     "-B",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle",
+     "--lang",
+     "en",
+     "--no-session",
+     "--check"
+    ],
+    "env": 12,
+    "mode": "check",
+    "click": 1
+   },
+   {
+    "line": 4713,
+    "pid": "2841",
+    "path": "/usr/bin/python3",
+    "argv": [
+     "/usr/bin/python3",
+     "-E",
+     "-s",
+     "-B",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle",
+     "--lang",
+     "en",
+     "--no-session",
+     "--status",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/install.status",
+     "--log",
+     "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/install.log"
+    ],
+    "env": 12,
+    "mode": "install",
+    "click": 1
+   }
+  ],
+  "clicks": 3,
+  "perClick": {
+   "1": [
+    "check",
+    "install"
+   ],
+   "2": [],
+   "3": []
+  },
+  "expected": {
+   "1": [
+    "check",
+    "install"
+   ],
+   "2": [],
+   "3": []
+  }
+ }
+}

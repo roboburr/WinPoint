@@ -1,5 +1,5 @@
 //! Win11 GNOME Alles (`win11-gtk-alles`): the Everything-style instant file name search in GTK 4, the native
-//! port of the HTML app (last-webkit:vendor/ui/js/apps/alles/, css/alles.css; see ../../APPS.md).
+//! port of the HTML app (6ebf169f:vendor/ui/js/apps/alles/, css/alles.css; see ../../APPS.md).
 //!
 //! One process per session (GApplication "io.github.win11shell.Search", HANDLES_COMMAND_LINE): a second launch
 //! hands its arguments to the running one, which brings its window to the front and searches (a deep link).

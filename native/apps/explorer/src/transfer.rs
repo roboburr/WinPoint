@@ -1,5 +1,5 @@
-//! Tabs between windows and the saved session (last-webkit:vendor/ui/js/apps/explorer/tabtransfer.js, tabs.js and the
-//! session part of main.js, `git show last-webkit:host/src/window_state.rs`).
+//! Tabs between windows and the saved session (6ebf169f:vendor/ui/js/apps/explorer/tabtransfer.js, tabs.js and the
+//! session part of main.js, `git show 6ebf169f:host/src/window_state.rs`).
 //!
 //! # Moving a tab
 //!
@@ -28,7 +28,7 @@
 //!
 //! A window that closes keeps its tabs (at most 20: location, history, selection, filter, scroll positions) in
 //! `apps.explorer.session` of $XDG_CONFIG_HOME/win11-gnome/window-state.json (WIN11_GNOME_CONFIG_DIR overrides
-//! the folder), the file the WebKit host kept them in up to last-webkit, with its lock and its private-file rules,
+//! the folder), the file the WebKit host kept them in up to 6ebf169f, with its lock and its private-file rules,
 //! so the tabs an earlier version saved come back. A window opened without arguments gets the last saved tabs back.
 //! The window size is the kit's (native-windows.json).
 use crate::explorer::{Explorer, Params, WeakExplorer};
@@ -343,7 +343,7 @@ fn before_at(x: &Explorer, strip: &gtk::Widget, px: f64) -> Option<u64> {
 }
 
 /// Whether a drag over the strip is a tab (tabtransfer.js isTabDrag). Only an Explorer makes the tab type; the
-/// plain-text envelope of the WebKit Explorer went with it (last-webkit).
+/// plain-text envelope of the WebKit Explorer went with it (6ebf169f).
 fn is_tab_drag(drop: &gdk::Drop) -> bool {
     drop.formats().contain_mime_type(TAB_MIME)
 }
@@ -565,7 +565,7 @@ fn private_error(what: &str) -> io::Error {
     io::Error::new(io::ErrorKind::PermissionDenied, what.to_owned())
 }
 
-/// The WebKit host's private_file (last-webkit:host/src/window_state.rs): ours, one link, no group or other bits,
+/// The WebKit host's private_file (6ebf169f:host/src/window_state.rs): ours, one link, no group or other bits,
 /// no symlink.
 fn private_file(path: &Path, create: bool) -> io::Result<File> {
     let f = OpenOptions::new()
@@ -583,7 +583,7 @@ fn private_file(path: &Path, create: bool) -> io::Result<File> {
     Ok(f)
 }
 
-/// The window-state lock (last-webkit:host/src/window_state.rs, locked); released when the file closes.
+/// The window-state lock (6ebf169f:host/src/window_state.rs, locked); released when the file closes.
 fn locked(config: &Path) -> io::Result<File> {
     fs::DirBuilder::new().recursive(true).mode(0o700).create(config)?;
     let st = fs::symlink_metadata(config)?;
@@ -618,7 +618,7 @@ fn read_root(config: &Path) -> io::Result<Value> {
     Ok(if v["version"] == 1 && v["apps"].is_object() { v } else { json!({ "version": 1, "apps": {} }) })
 }
 
-/// The session of last-webkit:host/src/window_state.rs: {version: 1, tabs: [1..=20 valid tab states], active}, at
+/// The session of 6ebf169f:host/src/window_state.rs: {version: 1, tabs: [1..=20 valid tab states], active}, at
 /// most 1 MB.
 fn session(v: &Value) -> Option<Value> {
     let tabs = v["tabs"].as_array().filter(|t| !t.is_empty() && t.len() <= 20)?;

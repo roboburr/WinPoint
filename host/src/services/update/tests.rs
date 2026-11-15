@@ -866,7 +866,7 @@ fn two_settings_hosts_elect_one_owner_and_the_mirror_forwards_and_takes_over() {
     assert_eq!(reply["nonce"], forwarded["nonce"]);
     assert_eq!(reply["ok"], false);
     assert_eq!(reply["error"]["key"], "update.err.noPackageKit", "no bus here, so no PackageKit");
-    assert_eq!(reply["error"]["message"], "PackageKit is missing, so Win11 Shell can’t install updates itself.");
+    assert_eq!(reply["error"]["message"], "PackageKit is missing, so WinPoint can’t install updates itself.");
     // a bad forwarded request is refused by the owner's own allowlist
     mirror_ctx.emit("update.request", json!({"nonce":"0123456789abcdef0123456789abcdef","method":"update.install","args":{"rows":["nope"]}}));
     let reply = rx.recv_timeout(Duration::from_secs(10)).expect("the owner refused");
@@ -1657,7 +1657,7 @@ fn the_snapshot_view_counts_only_offered_packages_and_shows_restarts() {
     store.write(store::SNAPSHOT, &json!({"rev":11,"backend":null})).unwrap();
     let view = service.call("update.status", &json!({})).unwrap().unwrap();
     assert_eq!(view["phase"], "unsupported");
-    assert_eq!(view["error"]["message"], "PackageKit is missing, so Win11 Shell can’t install updates itself.");
+    assert_eq!(view["error"]["message"], "PackageKit is missing, so WinPoint can’t install updates itself.");
     // offline from the owner's network record
     store.write(store::SNAPSHOT, &json!({"rev":12,"backend":"packagekit","network":{"state":"portal","online":false,"metered":true}})).unwrap();
     let view = service.call("update.status", &json!({})).unwrap().unwrap();

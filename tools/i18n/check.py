@@ -11,8 +11,8 @@ Layers (each one file next to this one; a layer whose file does not exist yet is
 
 * ``native`` — ``check_native.py``: the nl/en pairs of the GTK 4 programs in ``native/`` (the shell, Calendar, the
   kit and the seven apps: ``t(nl, en)`` calls, match and row tables, the settings registry, NL/EN arrays, JSON).
-  It replaced GE1a's ``ui`` layer (check_ui.py over the WebKit apps' dictionaries) when WebKit went (tag
-  ``last-webkit``)
+  It replaced GE1a's ``ui`` layer (check_ui.py over the WebKit apps' dictionaries) when WebKit went (commit
+  ``6ebf169f``)
 * ``rust``   — ``check_rust.py`` (GE1b): the Rust catalogues and call sites
 * ``pairs``  — ``check_pairs.py`` (GE1c): the extension's and the installer's inline ``{nl, en}`` tables
 

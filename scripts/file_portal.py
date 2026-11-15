@@ -2,6 +2,8 @@
 
 No running portal or browser is restarted. Only owned files and the single
 FileChooser preference are changed; unrelated portal configuration stays intact.
+preflight() only reads (install.py --check, D-G74): a record that names the other selector is undone by register(),
+which also saves every file it changes in install.py's Transaction (tx) first, so a failed install puts them back.
 """
 from __future__ import annotations
 import base64
@@ -36,13 +38,20 @@ def _t(key, **params):
     return (pair.get(LANGUAGE) or pair['nl']).format_map(params)
 
 
+def _stop(key, **params):
+    """SystemExit with the text in Win11's language, as before; its key and params for install.py --check."""
+    error = SystemExit(_t(key, **params))
+    error.key, error.params = key, {name: str(value) for name, value in params.items()}
+    return error
+
+
 def _bytes(path: Path):
     if path.is_symlink():
-        raise SystemExit(_t('symlink', path=path))
+        raise _stop('symlink', path=path)
     if not path.exists():
         return None
     if not path.is_file() or path.stat().st_uid != os.getuid():
-        raise SystemExit(_t('foreign', path=path))
+        raise _stop('foreign', path=path)
     return path.read_bytes()
 
 
@@ -87,7 +96,7 @@ def _parse(raw: bytes):
             if match:
                 rows.append((i, match[2].strip()))
     if len(sections) > 1 or len(rows) > 1:
-        raise SystemExit(_t('duplicate'))
+        raise _stop('duplicate')
     return lines, sections, rows
 
 
@@ -126,7 +135,9 @@ def _desktop_names():
     return list(dict.fromkeys(values+['gnome']))
 
 
-def _effective(config: Path, data: Path):
+def _effective(config: Path, data: Path, undo=None):
+    """The portals.conf that decides now; `undo` (_undo_plan) as if it had been undone already."""
+    undo = undo or {}
     names = [n+'-portals.conf' for n in _desktop_names()]+['portals.conf']
     locations = [config]
     locations += [Path(p) for p in os.environ.get('XDG_CONFIG_DIRS','/etc/xdg').split(':') if p]
@@ -136,15 +147,22 @@ def _effective(config: Path, data: Path):
     for location in dict.fromkeys(locations):
         for name in names:
             path = location/'xdg-desktop-portal'/name
-            if path.is_file():
+            if path in undo:
+                if undo[path][0] is not None:
+                    return path, undo[path][0]
+            elif path.is_file():
                 return path, path.read_bytes()
     return None, b'[preferred]\ndefault=gnome;gtk;\n'
 
 
-def _selector(config: Path):
+def _selector(config: Path, undo=None):
+    undo = undo or {}
     for name in [n+'-portals.conf' for n in _desktop_names()]+['portals.conf']:
         candidate = config/'xdg-desktop-portal'/name
-        if candidate.exists() or candidate.is_symlink():
+        if candidate in undo:
+            if undo[candidate][0] is not None:
+                return candidate
+        elif candidate.exists() or candidate.is_symlink():
             return candidate
     return config/'xdg-desktop-portal/gnome-portals.conf'
 
@@ -191,7 +209,7 @@ def _load(payload: Path, prefix: Path, data: Path, config: Path):
             _unb64(entry['before']);_unb64(entry['owned'])
         return value
     except (KeyError,TypeError,ValueError,OSError) as error:
-        raise SystemExit(_t('badRecord', path=path, error=error))
+        raise _stop('badRecord', path=path, error=error)
 
 
 def session_selector(config: Path):
@@ -202,30 +220,32 @@ def session_selector(config: Path):
 def preflight(payload: Path, prefix: Path, data: Path, config: Path, session: bool = False):
     """With the WinPoint session (session=True) the FileChooser choice lives in winpoint-portals.conf, so GNOME and
     Ubuntu keep their own file chooser; a record that names the other file is undone first (an install from before
-    the session, or a session removed since)."""
+    the session, or a session removed since). Nothing is written here: that undo is planned (_undo_plan, the plan's
+    "undo") and the plan is made as if it had happened; register() does it."""
     previous = _load(payload,prefix,data,config)
     wanted = session_selector(config)
+    undo = {}
     if previous and (Path(previous['files']['selector']['path']) == wanted) != session:
-        unregister(payload,prefix,data,config)
+        undo = _undo_plan(previous)
         previous = None
-    selector = Path(previous['files']['selector']['path']) if previous else (wanted if session else _selector(config))
+    selector = Path(previous['files']['selector']['path']) if previous else (wanted if session else _selector(config,undo))
     paths = _paths(prefix,data,config,selector)
     generated = _contents(prefix)
-    _, effective = _effective(config,data)
+    _, effective = _effective(config,data,undo)
     planned = {'marker':MAGIC,'files':{}}
     for key,path in paths.items():
-        current = _bytes(path)
+        current = undo[path][0] if path in undo else _bytes(path)
         old = previous['files'].get(key) if previous else None
         if old:
             before = _unb64(old['before'])
             mode = old['mode']
             if key != 'selector' and current is not None and current != _unb64(old['owned']):
-                raise SystemExit(_t('changed', path=path))
+                raise _stop('changed', path=path)
         else:
             if key != 'selector' and current is not None:
-                raise SystemExit(_t('unowned', path=path))
+                raise _stop('unowned', path=path)
             before = current
-            mode = stat.S_IMODE(path.stat().st_mode) if current is not None else 0o644
+            mode = (undo[path][1] if path in undo else stat.S_IMODE(path.stat().st_mode)) if current is not None else 0o644
         if key == 'selector':
             source = current if current is not None else effective
             # Preserve an explicit FileChooser change made by the user after install.
@@ -235,20 +255,27 @@ def preflight(payload: Path, prefix: Path, data: Path, config: Path, session: bo
             owned = generated[key]
             original_value = None
         planned['files'][key] = {'path':str(path),'before':_b64(before),'owned':_b64(owned),'mode':mode,'value':original_value,'managed':not (key=='selector' and old and (not old.get('managed',True) or current is not None and _value(current)!=OWNED))}
+    if undo:
+        planned['undo'] = undo
     return planned
 
 
-def register(payload: Path, plan):
+def register(payload: Path, plan, tx=None):
+    """The plan's undo first, then the record, then the files; tx (install.py's Transaction) saves each file before
+    it changes. The record in the payload is the plan without its undo."""
+    _undo(plan.get('undo', {}), tx)
+    record = {key: value for key, value in plan.items() if key != 'undo'}
     # Persist recovery ownership before any external registration is changed.
-    _write(payload/MANIFEST,(json.dumps(plan,indent=2)+'\n').encode(),0o600)
-    for key,entry in plan['files'].items():
+    _write(payload/MANIFEST,(json.dumps(record,indent=2)+'\n').encode(),0o600)
+    for key,entry in record['files'].items():
+        if tx:
+            tx.save(Path(entry['path']))
         _write(Path(entry['path']),_unb64(entry['owned']),entry['mode'])
 
 
-def unregister(payload: Path, prefix: Path, data: Path, config: Path):
-    state = _load(payload,prefix,data,config)
-    if state is None:
-        return
+def _undo_plan(state):
+    """What undoing the record `state` writes, read only: {path: (bytes, or None to remove it, mode)}."""
+    changes = {}
     for key,entry in state['files'].items():
         path = Path(entry['path'])
         if key == 'selector' and not entry.get('managed', True):
@@ -261,11 +288,26 @@ def unregister(payload: Path, prefix: Path, data: Path, config: Path):
             continue
         owned,before = _unb64(entry['owned']),_unb64(entry['before'])
         if current == owned:
-            if before is None:
-                path.unlink()
-            else:
-                _write(path,before,entry['mode'])
+            changes[path] = (before, entry['mode'])
         elif key == 'selector' and _value(current) == OWNED:
             # Restore only our key when unrelated settings were edited meanwhile.
-            _write(path,_patch(current,entry['value']),entry['mode'])
+            changes[path] = (_patch(current,entry['value']), entry['mode'])
+    return changes
+
+
+def _undo(changes, tx=None):
+    for path,(value,mode) in changes.items():
+        if tx:
+            tx.save(path)
+        if value is None:
+            path.unlink()
+        else:
+            _write(path,value,mode)
+
+
+def unregister(payload: Path, prefix: Path, data: Path, config: Path):
+    state = _load(payload,prefix,data,config)
+    if state is None:
+        return
+    _undo(_undo_plan(state))
     (payload/MANIFEST).unlink(missing_ok=True)

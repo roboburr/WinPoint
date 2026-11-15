@@ -6,7 +6,7 @@
 //! the panel's, and the extension tells our surfaces apart by application ID. It carries the Wayland app ID
 //! io.github.win11shell.Desktop, so the extension (extension/desktopBridge.js) makes it the desktop (type
 //! DESKTOP, below every window, on all workspaces) and hides Ubuntu's DING icons once we report `desktop.ready`
-//! after the first frame (and every 2 s after, like host/src/gnome.rs DESKTOP_ADAPTER). The bus name
+//! after the first frame (again only while it has not taken the window: report_ready). The bus name
 //! io.github.win11shell.Desktop carries the action group the extension activates on disable (`desktop-quit`).
 mod actions;
 mod dialogs;
@@ -31,6 +31,23 @@ const BRIDGE_NAME: &str = "io.github.win11shell.GnomeBridge";
 thread_local! {
     static DESK: RefCell<Option<Rc<grid::Desk>>> = const { RefCell::new(None) };
     static QUIT: Cell<bool> = const { Cell::new(false) };
+    static READY: Cell<Ready> = const { Cell::new(Ready::Unpainted) };
+    /// The one pending desktop.ready (a retry, or one after the bridge came back).
+    static RETRY: RefCell<Option<glib::SourceId>> = const { RefCell::new(None) };
+}
+
+/// Where desktop.ready stands for the current desktop window.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Ready {
+    /// No frame drawn yet: nothing to report.
+    Unpainted,
+    /// Drawn; the next desktop.ready is due (a failure is logged).
+    Pending,
+    /// Drawn; desktop.ready failed before (the bridge is not there yet), or the extension had the pid but did not
+    /// show the window: retried every 2 s, quietly.
+    Retrying,
+    /// The extension answered ready: it has our pid, nothing repeats.
+    Known,
 }
 
 pub fn install(shell: &Rc<Shell>) {
@@ -39,6 +56,19 @@ pub fn install(shell: &Rc<Shell>) {
     shell.on("files", |event, data| with(|d| d.on_files(event, data)));
     shell.on("settings.changed", |_, data| with(|d| d.on_settings(data)));
     shell.on("desktop.geometry", |_, data| with(|d| d.on_geometry(data)));
+    shell.on("desktop.changed", |_, data| {
+        // present false while we are known: the extension lost our pid (an older one dropped it whenever any window
+        // of this process closed) or lost the window; one desktop.ready tells it again. Present true ends the quiet
+        // retries of an answer that had the pid but not the window (announce).
+        let state = READY.with(Cell::get);
+        if data["present"] == false && state == Ready::Known {
+            READY.with(|r| r.set(Ready::Pending));
+            schedule(Duration::ZERO);
+        } else if data["present"] == true && state == Ready::Retrying {
+            READY.with(|r| r.set(Ready::Known));
+            cancel_retry();
+        }
+    });
     show(shell);
 }
 
@@ -54,6 +84,7 @@ fn show(shell: &Rc<Shell>) {
         return;
     }
     QUIT.with(|q| q.set(false));
+    READY.with(|r| r.set(Ready::Unpainted));
     let desk = grid::Desk::new(shell);
     DESK.with(|d| *d.borrow_mut() = Some(desk.clone()));
     report_ready(&desk);
@@ -66,6 +97,8 @@ fn show(shell: &Rc<Shell>) {
 /// enable finds no stale desktop to wait for and adopts the window we make when its bridge is back.
 fn quit() {
     QUIT.with(|q| q.set(true));
+    READY.with(|r| r.set(Ready::Unpainted));
+    cancel_retry();
     if let Some(desk) = DESK.with(|d| d.borrow_mut().take()) {
         desk.destroy();
     }
@@ -94,7 +127,9 @@ fn own_name() {
     std::mem::forget(owner);
 }
 
-/// After a desktop-quit, the extension's bridge returning (its enable) brings the desktop back.
+/// After a desktop-quit, the extension's bridge returning (its enable) brings the desktop back. A bridge that went
+/// away without a desktop-quit (GNOME Shell restarted) knows nothing of our window when it returns: desktop.ready
+/// again.
 fn watch_bridge() {
     let watcher = gio::bus_watch_name(
         gio::BusType::Session,
@@ -103,15 +138,24 @@ fn watch_bridge() {
         |_, _, _| {
             if QUIT.with(|q| q.get()) {
                 glib::timeout_add_local_once(Duration::from_millis(300), || show(&crate::core::shell()));
+            } else if READY.with(Cell::get) != Ready::Unpainted {
+                READY.with(|r| r.set(Ready::Pending));
+                schedule(Duration::from_millis(300));
             }
         },
-        |_, _| {},
+        |_, _| {
+            if READY.with(Cell::get) != Ready::Unpainted {
+                READY.with(|r| r.set(Ready::Pending));
+            }
+            cancel_retry();
+        },
     );
     std::mem::forget(watcher);
 }
 
-/// desktop.ready {pid} once the first frame is drawn, then every 2 s while the window lives (the extension
-/// re-registers after its bridge was away, as the WebKit desktop's adapter did).
+/// desktop.ready {pid} once the first frame is drawn. The extension answers ready when it has our pid; from then on
+/// nothing repeats (until 14-11 it went out every 2 s for good, and each one lowered the window, sent
+/// desktop.geometry and drew a desktop frame). Only while it has not answered: a retry every 2 s.
 fn report_ready(desk: &Rc<grid::Desk>) {
     let weak = Rc::downgrade(desk);
     let handler: Rc<RefCell<Option<(gdk::FrameClock, glib::SignalHandlerId)>>> = Rc::new(RefCell::new(None));
@@ -129,23 +173,62 @@ fn report_ready(desk: &Rc<grid::Desk>) {
             if let Some((clock, id)) = taken {
                 clock.disconnect(id);
             }
-            let Some(desk) = weak.upgrade() else { return };
-            let shell = crate::core::shell();
-            let pid = std::process::id();
-            if let Err(error) = shell.gnome.call("desktop.ready", &json!({"pid": pid})) {
-                eprintln!("win11-shell: desktop.ready: {error}");
+            if weak.upgrade().is_none_or(|desk| !desk.alive.get()) {
+                return;
             }
-            let weak = Rc::downgrade(&desk);
-            glib::timeout_add_local(Duration::from_secs(2), move || match weak.upgrade() {
-                Some(desk) if desk.alive.get() => {
-                    crate::core::shell().gnome.send("desktop.ready", json!({"pid": pid}));
-                    glib::ControlFlow::Continue
-                }
-                _ => glib::ControlFlow::Break,
-            });
+            READY.with(|r| r.set(Ready::Pending));
+            announce();
         });
         *handler.borrow_mut() = Some((clock, id));
     });
+}
+
+/// One desktop.ready for the drawn window, while the extension does not have it yet.
+fn announce() {
+    let alive = DESK.with(|d| d.borrow().as_ref().is_some_and(|d| d.alive.get()));
+    let state = READY.with(Cell::get);
+    if !alive || !matches!(state, Ready::Pending | Ready::Retrying) {
+        cancel_retry();
+        return;
+    }
+    match crate::core::shell().gnome.call("desktop.ready", &json!({"pid": std::process::id()})) {
+        Ok(answer) if answer["ready"] == true && answer["present"] != false => {
+            READY.with(|r| r.set(Ready::Known));
+            cancel_retry();
+        }
+        Ok(answer) if answer["ready"] == true => {
+            // the pid is known but the window is not shown (the overview hides it; an older extension, still loaded
+            // until the next login, may also drop the pid meanwhile and then sends no new desktop.changed): ask again
+            // quietly every 2 s until desktop.changed reports the window present. The current extension answers
+            // these from its pid list without touching the window.
+            READY.with(|r| r.set(Ready::Retrying));
+            schedule(Duration::from_secs(2));
+        }
+        answer => {
+            if state == Ready::Pending {
+                eprintln!("win11-shell: desktop.ready: {}", answer.err().unwrap_or_else(|| "not ready".into()));
+            }
+            READY.with(|r| r.set(Ready::Retrying));
+            schedule(Duration::from_secs(2));
+        }
+    }
+}
+
+/// announce() after `delay`, in place of any pending one.
+fn schedule(delay: Duration) {
+    cancel_retry();
+    let id = glib::timeout_add_local_once(delay, || {
+        // fired: the source is gone, so cancel_retry must not remove it again
+        RETRY.with(|r| r.borrow_mut().take());
+        announce();
+    });
+    RETRY.with(|r| *r.borrow_mut() = Some(id));
+}
+
+fn cancel_retry() {
+    if let Some(id) = RETRY.with(|r| r.borrow_mut().take()) {
+        id.remove();
+    }
 }
 
 /// The extension's view of the monitors (desktop.geometry): logical size of the whole desktop.

@@ -1,4 +1,4 @@
-//! What the buttons and menus do (last-webkit:vendor/ui/js/apps/disks/actions.js): dialogs in Windows wording and calls
+//! What the buttons and menus do (6ebf169f:vendor/ui/js/apps/disks/actions.js): dialogs in Windows wording and calls
 //! to disks.*. The destructive ones (format, delete, initialise) say that data is lost and need the volume's (or
 //! disk's) name typed before the red button works; Enter in those dialogs means Cancel, and while the operation
 //! runs Escape does not close them. The host checks again: system volumes are refused there too, and

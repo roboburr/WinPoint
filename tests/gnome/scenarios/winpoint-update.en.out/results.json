@@ -1,0 +1,3489 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "en",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "ref: refs/heads/claude/gnome-english-update",
+ "startedAt": "2026-11-15 04:00:13",
+ "seconds": 343.8,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 452,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 668192,
+   "rss_kb": 955344,
+   "processes": 23,
+   "t": 185.9
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 550422,
+   "rss_kb": 799140
+  },
+  "minMemAvailableKb": 7411640,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 309931,
+    "rss_kb": 366792
+   },
+   "python3": {
+    "count": 4,
+    "pss_kb": 190595,
+    "rss_kb": 249828
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 57829,
+    "rss_kb": 96812
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 26844,
+    "rss_kb": 60464
+   },
+   "win11-panel": {
+    "count": 2,
+    "pss_kb": 19240,
+    "rss_kb": 28464
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17980,
+    "rss_kb": 34288
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 12097,
+    "rss_kb": 20448
+   },
+   "gjs": {
+    "count": 1,
+    "pss_kb": 12055,
+    "rss_kb": 31912
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 11660,
+    "rss_kb": 20072
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4127,
+    "rss_kb": 11556
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2340,
+    "rss_kb": 4856
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1464,
+    "rss_kb": 10048
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 828,
+    "rss_kb": 7936
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 775,
+    "rss_kb": 7812
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 242,
+    "rss_kb": 1460
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 185,
+    "rss_kb": 2596
+   },
+   "glycin-svg": {
+    "count": 1,
+    "pss_kb": 0,
+    "rss_kb": 0
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 325017,
+    "first": 1.0
+   },
+   "python3": {
+    "pss_kb": 80478,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 59914,
+    "first": 2.6
+   },
+   "glycin-svg": {
+    "pss_kb": 41499,
+    "first": 2.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 27140,
+    "first": 17.1
+   },
+   "win11-panel": {
+    "pss_kb": 20744,
+    "first": 2.6
+   },
+   "nvidia-smi": {
+    "pss_kb": 19237,
+    "first": 197.5
+   },
+   "ibus-extension-": {
+    "pss_kb": 18930,
+    "first": 2.0
+   },
+   "gjs": {
+    "pss_kb": 14092,
+    "first": 8.3
+   },
+   "win11-app": {
+    "pss_kb": 12100,
+    "first": 17.1
+   },
+   "glycin-image-rs": {
+    "pss_kb": 10568,
+    "first": 2.0
+   },
+   "gtk-update-icon": {
+    "pss_kb": 4977,
+    "first": 191.7
+   },
+   "ibus-daemon": {
+    "pss_kb": 4201,
+    "first": 1.5
+   },
+   "strace": {
+    "pss_kb": 2362,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 891,
+    "first": 2.6
+   },
+   "ibus-memconf": {
+    "pss_kb": 858,
+    "first": 2.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 825,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 243,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 187,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+  "buildDir": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release",
+  "exit": 0,
+  "seconds": 66.7,
+  "mutatingSyscallPaths": 87295,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome"
+  }
+ },
+ "guardStubCalls": [
+  "04:01:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:01:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:01:56\tpw-dump\t--monitor --no-colors",
+  "04:01:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:01:58\tpw-dump\t--monitor --no-colors",
+  "04:01:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:02\tpw-dump\t--monitor --no-colors",
+  "04:02:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:04\tpw-dump\t--monitor --no-colors",
+  "04:02:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:06\tpw-dump\t--monitor --no-colors",
+  "04:02:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:10\tpw-dump\t--monitor --no-colors",
+  "04:02:11\tpw-dump\t--monitor --no-colors",
+  "04:02:11\tapt\tlist --upgradable",
+  "04:02:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:13\tpw-dump\t--monitor --no-colors",
+  "04:02:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:17\tpw-dump\t--monitor --no-colors",
+  "04:02:18\tpw-dump\t--monitor --no-colors",
+  "04:02:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:25\tpw-dump\t--monitor --no-colors",
+  "04:02:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:34\tpw-dump\t--monitor --no-colors",
+  "04:02:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:41\tpw-dump\t--monitor --no-colors",
+  "04:02:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:02:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:04\tpw-dump\t--monitor --no-colors",
+  "04:03:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:11\tpw-dump\t--monitor --no-colors",
+  "04:03:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:03:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:04:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:11\tpw-dump\t--monitor --no-colors",
+  "04:05:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:12\tpw-dump\t--monitor --no-colors",
+  "04:05:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:13\tpw-dump\t--monitor --no-colors",
+  "04:05:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:14\tpw-dump\t--monitor --no-colors",
+  "04:05:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:17\tpw-dump\t--monitor --no-colors",
+  "04:05:18\tpw-dump\t--monitor --no-colors",
+  "04:05:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:25\tpw-dump\t--monitor --no-colors",
+  "04:05:26\tpw-dump\t--monitor --no-colors",
+  "04:05:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:41\tpw-dump\t--monitor --no-colors",
+  "04:05:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:42\tpw-dump\t--monitor --no-colors",
+  "04:05:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "04:05:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [
+  "04:03:51\tsnap\trefresh --time --abs-time",
+  "04:03:51\tapt-config\tdump APT::Periodic::Unattended-Upgrade",
+  "04:03:53\tsnap\trefresh --time --abs-time",
+  "04:03:53\tapt-config\tdump APT::Periodic::Unattended-Upgrade"
+ ],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [
+   "cache/ibus/dbus-Q7buSWfJ"
+  ],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 88,
+  "maxScanSeconds": 0.728,
+  "roots": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [
+   "cache/ibus/dbus-Q7buSWfJ"
+  ],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/logs/install.strace",
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.en.out/strace.txt"
+  ],
+  "connects": 494,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 159
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 69
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/ibus/dbus-*",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "ENOENT",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 34
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 11
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 6
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 15
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 118
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "UNFINISHED",
+    "count": 5
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   }
+  ]
+ },
+ "straceExec": {
+  "files": [
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/logs/install.strace",
+   "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.en.out/strace.txt"
+  ],
+  "execs": 818,
+  "ok": true,
+  "violations": [],
+  "forbidden": [
+   "pkexec",
+   "check-new-release",
+   "apt-get",
+   "apt-cache",
+   "do-release-upgrade",
+   "loginctl",
+   "apt",
+   "pkcon"
+  ],
+  "byProgram": [
+   {
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/stubs/apt",
+    "where": "stub",
+    "result": "ran",
+    "count": 1
+   }
+  ],
+  "winpointPython": {
+   "execs": [
+    {
+     "line": 4355,
+     "pid": "2678",
+     "path": "/usr/bin/python3",
+     "argv": [
+      "/usr/bin/python3",
+      "-E",
+      "-s",
+      "-B",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle",
+      "--lang",
+      "en",
+      "--no-session",
+      "--check"
+     ],
+     "env": 12,
+     "mode": "check",
+     "click": 1
+    },
+    {
+     "line": 4713,
+     "pid": "2841",
+     "path": "/usr/bin/python3",
+     "argv": [
+      "/usr/bin/python3",
+      "-E",
+      "-s",
+      "-B",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle",
+      "--lang",
+      "en",
+      "--no-session",
+      "--status",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/install.status",
+      "--log",
+      "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/install.log"
+     ],
+     "env": 12,
+     "mode": "install",
+     "click": 1
+    }
+   ],
+   "clicks": 3,
+   "perClick": {
+    "1": [
+     "check",
+     "install"
+    ],
+    "2": [],
+    "3": []
+   },
+   "expected": {
+    "1": [
+     "check",
+     "install"
+    ],
+    "2": [],
+    "3": []
+   }
+  }
+ },
+ "scenario": {
+  "scenario": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.py",
+  "startLanguage": "en",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "versions"
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.82,
+    "args": {
+     "key": "requests after start"
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.83,
+    "args": {
+     "key": "notifications owned before"
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 0.83,
+    "args": {
+     "name": "gnome-shell-notifications",
+     "argv": [
+      "/usr/bin/gjs",
+      "-m",
+      "/usr/share/gnome-shell/org.gnome.Shell.Notifications"
+     ]
+    },
+    "result": {
+     "pid": 1368
+    }
+   },
+   {
+    "step": "extension_labels",
+    "t": 1.34,
+    "result": {
+     "present": true,
+     "barVisible": false,
+     "barMapped": false,
+     "nativePanelActive": true,
+     "panelPresent": true,
+     "clock": "04:02\n15/11/2026",
+     "accessibleNames": [
+      "Start",
+      "Search",
+      "Task view",
+      "Win11 File Explorer",
+      "Settings",
+      "Network, sound and quick settings"
+     ],
+     "labels": [
+      "⌕   Search",
+      "04:02\n15/11/2026"
+     ],
+     "nodes": [
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Start"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button win11-task-search",
+       "visible": true,
+       "accessibleName": "Search"
+      },
+      {
+       "type": "St_Label",
+       "style": null,
+       "visible": true,
+       "text": "⌕   Search"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Task view"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Win11 File Explorer"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Settings"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Network, sound and quick settings"
+      },
+      {
+       "type": "St_Label",
+       "style": "win11-clock",
+       "visible": true,
+       "text": "04:02\n15/11/2026"
+      }
+     ],
+     "ctrlAltTab": [
+      "Win11 Taskbar"
+     ],
+     "ctrlAltTabAll": [
+      "Top Bar",
+      "Dash",
+      "Search",
+      "Apps",
+      "Windows",
+      "Win11 Taskbar"
+     ],
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 2.48,
+    "args": {
+     "name": "fallback-bar"
+    },
+    "result": {
+     "png": "fallback-bar.png",
+     "area": [
+      0,
+      852,
+      1440,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       48
+      ],
+      "distinctColours": 74,
+      "meanLevel": 37.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "extension_labels",
+    "t": 2.49,
+    "result": {
+     "present": true,
+     "barVisible": true,
+     "barMapped": true,
+     "nativePanelActive": false,
+     "panelPresent": false,
+     "clock": "04:02\n15/11/2026",
+     "accessibleNames": [
+      "Start",
+      "Search",
+      "Task view",
+      "Win11 File Explorer",
+      "Settings",
+      "Network, sound and quick settings"
+     ],
+     "labels": [
+      "⌕   Search",
+      "04:02\n15/11/2026"
+     ],
+     "nodes": [
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Start"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button win11-task-search",
+       "visible": true,
+       "accessibleName": "Search"
+      },
+      {
+       "type": "St_Label",
+       "style": null,
+       "visible": true,
+       "text": "⌕   Search"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Task view"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Win11 File Explorer"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Settings"
+      },
+      {
+       "type": "St_Button",
+       "style": "win11-task-button",
+       "visible": true,
+       "accessibleName": "Network, sound and quick settings"
+      },
+      {
+       "type": "St_Label",
+       "style": "win11-clock",
+       "visible": true,
+       "text": "04:02\n15/11/2026"
+      }
+     ],
+     "ctrlAltTab": [
+      "Win11 Taskbar"
+     ],
+     "ctrlAltTabAll": [
+      "Top Bar",
+      "Dash",
+      "Search",
+      "Apps",
+      "Windows",
+      "Win11 Taskbar"
+     ],
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "kill_panel",
+    "t": 2.49,
+    "result": {
+     "pid": 525,
+     "fallbackShownSeconds": 0.1,
+     "png": "fallback-bar.png"
+    }
+   },
+   {
+    "step": "restart_panel",
+    "t": 2.7,
+    "result": {
+     "launched": true,
+     "pid": 1400,
+     "boot": {
+      "kind": "native-shell",
+      "pid": 1400,
+      "tag": "boot"
+     },
+     "panelMapped": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 8.71,
+    "args": {
+     "key": "notifications"
+    }
+   },
+   {
+    "step": "notifications",
+    "t": 8.72,
+    "result": [
+     {
+      "source": "Win11 Settings",
+      "notifications": [
+       {
+        "title": "WinPoint 0.9.0 is available",
+        "body": "Open Settings › Update & recovery to install it."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "step": "record",
+    "t": 8.72,
+    "args": {
+     "key": "message tray"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.49,
+    "args": {
+     "name": "winpoint-notification"
+    },
+    "result": {
+     "png": "winpoint-notification.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2223,
+      "meanLevel": 61.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 10.1,
+    "args": {
+     "spec": "settings:system"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1850,
+     "page": "system",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1850,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.1,
+    "args": {
+     "key": "activate the notification"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 10.85,
+    "args": {
+     "name": "winpoint-available",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-available.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 351,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 39.43,
+    "args": {
+     "key": "click check (not announced)"
+    }
+   },
+   {
+    "step": "record",
+    "t": 42.54,
+    "args": {
+     "key": "fake mode error"
+    }
+   },
+   {
+    "step": "record",
+    "t": 70.7,
+    "args": {
+     "key": "click check (500)"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 72.36,
+    "args": {
+     "name": "winpoint-failed",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-failed.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 350,
+      "meanLevel": 43.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 72.43,
+    "args": {
+     "key": "nm.standin"
+    }
+   },
+   {
+    "step": "record",
+    "t": 101.91,
+    "args": {
+     "key": "click check (offline)"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 102.61,
+    "args": {
+     "name": "winpoint-offline",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-offline.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 354,
+      "meanLevel": 43.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 102.61,
+    "args": {
+     "key": "fake mode current"
+    }
+   },
+   {
+    "step": "record",
+    "t": 103.04,
+    "args": {
+     "key": "click check (current)"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 106.0,
+    "args": {
+     "name": "winpoint-checking",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-checking.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 337,
+      "meanLevel": 42.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 109.71,
+    "args": {
+     "name": "winpoint-uptodate",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-uptodate.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 343,
+      "meanLevel": 43.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 109.71,
+    "args": {
+     "key": "fake mode current"
+    }
+   },
+   {
+    "step": "open",
+    "t": 110.12,
+    "args": {
+     "spec": "settings:update-advanced"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1850,
+     "page": "update-advanced",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 110.89,
+    "args": {
+     "name": "winpoint-toggle",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-toggle.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 311,
+      "meanLevel": 45.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 111.74,
+    "args": {
+     "spec": "settings:update"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1850,
+     "page": "update",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 112.23,
+    "args": {
+     "spec": "settings:update-advanced"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1850,
+     "page": "update-advanced",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 112.62,
+    "args": {
+     "key": "requests"
+    }
+   },
+   {
+    "step": "record",
+    "t": 112.63,
+    "args": {
+     "key": "winpoint installer runs"
+    }
+   },
+   {
+    "step": "record",
+    "t": 112.63,
+    "args": {
+     "key": "fake mode newer"
+    }
+   },
+   {
+    "step": "open",
+    "t": 113.04,
+    "args": {
+     "spec": "settings:update"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1850,
+     "page": "update",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 140.28,
+    "args": {
+     "key": "click check (newer)"
+    }
+   },
+   {
+    "step": "record",
+    "t": 140.36,
+    "args": {
+     "key": "before the install"
+    }
+   },
+   {
+    "step": "record",
+    "t": 140.36,
+    "args": {
+     "key": "click mark"
+    }
+   },
+   {
+    "step": "record",
+    "t": 140.75,
+    "args": {
+     "key": "click Download and install"
+    }
+   },
+   {
+    "step": "record",
+    "t": 141.93,
+    "args": {
+     "key": "download share"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 142.32,
+    "args": {
+     "name": "winpoint-downloading",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-downloading.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 339,
+      "meanLevel": 42.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 169.67,
+    "args": {
+     "name": "winpoint-installing",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-installing.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 342,
+      "meanLevel": 43.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 169.67,
+    "args": {
+     "key": "titles until installing"
+    }
+   },
+   {
+    "step": "record",
+    "t": 187.77,
+    "args": {
+     "key": "job"
+    }
+   },
+   {
+    "step": "record",
+    "t": 187.77,
+    "args": {
+     "key": "downloads"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 188.36,
+    "args": {
+     "name": "winpoint-installed",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-installed.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 363,
+      "meanLevel": 44.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 188.9,
+    "args": {
+     "key": "click Restart WinPoint"
+    }
+   },
+   {
+    "step": "record",
+    "t": 191.1,
+    "args": {
+     "key": "restart boots"
+    }
+   },
+   {
+    "step": "record",
+    "t": 191.27,
+    "args": {
+     "key": "fake mode damaged"
+    }
+   },
+   {
+    "step": "record",
+    "t": 191.27,
+    "args": {
+     "key": "click mark"
+    }
+   },
+   {
+    "step": "record",
+    "t": 191.76,
+    "args": {
+     "key": "click Download and install (damaged)"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 194.75,
+    "args": {
+     "name": "winpoint-damaged",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-damaged.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 355,
+      "meanLevel": 43.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 194.75,
+    "args": {
+     "key": "fake mode nodigest"
+    }
+   },
+   {
+    "step": "record",
+    "t": 194.75,
+    "args": {
+     "key": "click mark"
+    }
+   },
+   {
+    "step": "record",
+    "t": 195.25,
+    "args": {
+     "key": "click Retry (no digest)"
+    }
+   },
+   {
+    "step": "record",
+    "t": 226.6,
+    "args": {
+     "key": "click check (no digest)"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 227.37,
+    "args": {
+     "name": "winpoint-nodigest",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "winpoint-nodigest.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 365,
+      "meanLevel": 43.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 227.37,
+    "args": {
+     "key": "fake mode newer"
+    }
+   },
+   {
+    "step": "close",
+    "t": 227.89,
+    "args": {
+     "name": "settings"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the run has --winpoint-feed (the seam and the fake GitHub)",
+    "ok": true,
+    "t": 0.81,
+    "seam": "/tmp/w11-winpoint"
+   },
+   {
+    "check": "the fake offers this tree as a real release above the running version",
+    "ok": true,
+    "t": 0.81,
+    "info": {
+     "running": "0.8.9",
+     "offered": "0.9.0",
+     "tarball": "winpoint-0.9.0-linux-x86_64.tar.gz",
+     "size": 67246920,
+     "digest": "c279dc5b059e084753befc617da252b0c4b3e6a39c89d476e3ffe31e73d7aa9b"
+    }
+   },
+   {
+    "check": "the automatic check asked the fake GitHub once",
+    "ok": true,
+    "t": 0.82,
+    "requests": [
+     {
+      "at": 1794711721765,
+      "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+      "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+      "accept": "application/vnd.github+json",
+      "apiVersion": "2022-11-28",
+      "mode": "newer",
+      "status": 200
+     }
+    ]
+   },
+   {
+    "check": "the request carries WinPoint's User-Agent and GitHub's API version",
+    "ok": true,
+    "t": 0.83,
+    "request": [
+     {
+      "at": 1794711721765,
+      "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+      "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+      "accept": "application/vnd.github+json",
+      "apiVersion": "2022-11-28",
+      "mode": "newer",
+      "status": 200
+     }
+    ]
+   },
+   {
+    "check": "GNOME's notification service owns org.freedesktop.Notifications",
+    "ok": true,
+    "t": 1.34
+   },
+   {
+    "check": "the restarted owner, with no state, checked again on its own",
+    "ok": true,
+    "t": 8.71,
+    "requests": 2
+   },
+   {
+    "check": "exactly one WinPoint notification, for the newer version",
+    "ok": true,
+    "t": 8.72,
+    "notifications": [
+     {
+      "title": "WinPoint 0.9.0 is available",
+      "body": "Open Settings › Update & recovery to install it.",
+      "source": "Win11 Settings",
+      "actions": [
+       "View"
+      ]
+     }
+    ]
+   },
+   {
+    "check": "the notification brings Settings to Update & recovery (the card shows the newer version)",
+    "ok": true,
+    "t": 10.16,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the notification is gone after its action",
+    "ok": true,
+    "t": 10.16,
+    "notifications": []
+   },
+   {
+    "check": "the card offers the newer version",
+    "ok": true,
+    "t": 10.26,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the card names the running version and the release date",
+    "ok": true,
+    "t": 10.27,
+    "facts": "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB"
+   },
+   {
+    "check": "the card links to the release notes and offers Download and install",
+    "ok": true,
+    "t": 10.27,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "no download link and no how-to: WinPoint installs it itself (D-G74)",
+    "ok": true,
+    "t": 10.27,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the automatic check recorded the announced version",
+    "ok": true,
+    "t": 10.85,
+    "notified": "0.9.0"
+   },
+   {
+    "check": "no job and no work folder before a click",
+    "ok": true,
+    "t": 10.85
+   },
+   {
+    "check": "state.json stays 0600 after the edit",
+    "ok": true,
+    "t": 10.85,
+    "mode": "0o100600"
+   },
+   {
+    "check": "the manual check found the newer version and recorded notified",
+    "ok": true,
+    "t": 39.43,
+    "notified": "0.9.0",
+    "requests": 3
+   },
+   {
+    "check": "the card still offers the newer version",
+    "ok": true,
+    "t": 39.54,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "a manual check of a version not announced yet sends no notification",
+    "ok": true,
+    "t": 42.54,
+    "notifications": []
+   },
+   {
+    "check": "a failed check says why",
+    "ok": true,
+    "t": 70.75,
+    "card": {
+     "shown": true,
+     "title": "WinPoint can’t check for updates",
+     "labels": [
+      "WinPoint can’t check for updates",
+      "GitHub returned an error (500)",
+      "WinPoint 0.9.0 is available",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Technical details",
+      "HTTP 500 from http://127.0.0.1:47811/repos/roboburr/WinPoint/releases?per_page=10"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-details",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the last known release stays below the failure",
+    "ok": true,
+    "t": 70.75,
+    "labels": [
+     "WinPoint can’t check for updates",
+     "GitHub returned an error (500)",
+     "WinPoint 0.9.0 is available",
+     "Release notes",
+     "Check for updates",
+     "Check for updates",
+     "Technical details",
+     "HTTP 500 from http://127.0.0.1:47811/repos/roboburr/WinPoint/releases?per_page=10"
+    ]
+   },
+   {
+    "check": "the raw detail is in Technical details",
+    "ok": true,
+    "t": 70.75,
+    "names": [
+     "update-winpoint",
+     "update-winpoint-check",
+     "update-winpoint-details",
+     "update-winpoint-notes",
+     "update-winpoint-title"
+    ]
+   },
+   {
+    "check": "offline: the card says there is no internet connection",
+    "ok": true,
+    "t": 102.02,
+    "card": {
+     "shown": true,
+     "title": "WinPoint can’t check for updates",
+     "labels": [
+      "WinPoint can’t check for updates",
+      "No internet connection",
+      "WinPoint 0.9.0 is available",
+      "Release notes",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the offline refusal made no request",
+    "ok": true,
+    "t": 102.03,
+    "requests": 4,
+    "before": 4
+   },
+   {
+    "check": "the card shows the check running",
+    "ok": true,
+    "t": 103.1,
+    "card": {
+     "shown": true,
+     "title": "Checking for a new version of WinPoint…",
+     "labels": [
+      "Checking for a new version of WinPoint…"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-checking",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the check's start is in state.json (its rev is past the click's)",
+    "ok": true,
+    "t": 105.6,
+    "before": 7,
+    "after": 8
+   },
+   {
+    "check": "the owner holds check.lock while GitHub answers",
+    "ok": true,
+    "t": 105.6
+   },
+   {
+    "check": "winpoint.status keeps the card checking (the owner's lock, not the click)",
+    "ok": true,
+    "t": 105.72,
+    "card": {
+     "shown": true,
+     "title": "Checking for a new version of WinPoint…",
+     "labels": [
+      "Checking for a new version of WinPoint…"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-checking",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the ring replaces the button while it checks",
+    "ok": true,
+    "t": 105.72,
+    "names": [
+     "update-winpoint",
+     "update-winpoint-checking",
+     "update-winpoint-title"
+    ]
+   },
+   {
+    "check": "the card says WinPoint is up to date",
+    "ok": true,
+    "t": 109.14,
+    "card": {
+     "shown": true,
+     "title": "WinPoint is up to date",
+     "labels": [
+      "WinPoint is up to date",
+      "Version 0.8.9 · Last checked: just now (15/11/2026 04:03)",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "up to date names the version and the time of the check",
+    "ok": true,
+    "t": 109.14,
+    "facts": "Version 0.8.9 · Last checked: just now (15/11/2026 04:03)"
+   },
+   {
+    "check": "no release links when up to date",
+    "ok": true,
+    "t": 109.14,
+    "names": [
+     "update-winpoint",
+     "update-winpoint-check",
+     "update-winpoint-title"
+    ]
+   },
+   {
+    "check": "wait_text settings: 'Check for new versions of WinPoint automatically'",
+    "ok": true,
+    "t": 110.24,
+    "seconds": 0.13
+   },
+   {
+    "check": "Advanced options has the daily check, on",
+    "ok": true,
+    "t": 110.31,
+    "switch": [
+     {
+      "active": true,
+      "children": [
+       {
+        "children": [],
+        "classes": [],
+        "label": null,
+        "name": "GtkImage",
+        "rect": [
+         1004,
+         151,
+         16,
+         16
+        ],
+        "sensitive": true,
+        "type": "GtkImage",
+        "visible": true
+       },
+       {
+        "children": [],
+        "classes": [],
+        "label": null,
+        "name": "GtkImage",
+        "rect": [
+         1023,
+         151,
+         16,
+         16
+        ],
+        "sensitive": true,
+        "type": "GtkImage",
+        "visible": true
+       },
+       {
+        "children": [],
+        "classes": [],
+        "label": null,
+        "name": "GtkGizmo",
+        "rect": [
+         1024,
+         152,
+         15,
+         14
+        ],
+        "sensitive": true,
+        "type": "GtkGizmo",
+        "visible": true
+       }
+      ],
+      "classes": [
+       "w11-switch"
+      ],
+      "label": null,
+      "name": "advanced-winpoint",
+      "rect": [
+       1002,
+       149,
+       40,
+       20
+      ],
+      "sensitive": true,
+      "type": "GtkSwitch",
+      "visible": true,
+      "top": 0
+     }
+    ]
+   },
+   {
+    "check": "the toggle writes update.winpointAutoCheck false",
+    "ok": true,
+    "t": 111.33,
+    "value": false
+   },
+   {
+    "check": "the card says automatic checks are off",
+    "ok": true,
+    "t": 111.81,
+    "card": {
+     "shown": true,
+     "title": "WinPoint is up to date",
+     "labels": [
+      "WinPoint is up to date",
+      "Version 0.8.9 · Last checked: just now (15/11/2026 04:03)",
+      "Automatic checks are off",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the toggle writes update.winpointAutoCheck true again",
+    "ok": true,
+    "t": 112.62,
+    "value": true
+   },
+   {
+    "check": "one request per check: two automatic, not announced, 500, current (none offline)",
+    "ok": true,
+    "t": 112.62,
+    "statuses": [
+     200,
+     200,
+     200,
+     500,
+     200
+    ]
+   },
+   {
+    "check": "every request has the User-Agent",
+    "ok": true,
+    "t": 112.62
+   },
+   {
+    "check": "no notification after the first (every later check was manual)",
+    "ok": true,
+    "t": 112.63,
+    "notifications": []
+   },
+   {
+    "check": "no download before a click",
+    "ok": true,
+    "t": 112.63,
+    "downloads": []
+   },
+   {
+    "check": "the card offers the release with Download and install",
+    "ok": true,
+    "t": 140.36,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the card shows the download with its progress and Cancel",
+    "ok": true,
+    "t": 140.84,
+    "card": {
+     "shown": true,
+     "title": "Downloading WinPoint 0.9.0: 0%",
+     "labels": [
+      "Downloading WinPoint 0.9.0: 0%",
+      "0 bytes of 64.1 MB",
+      "Cancel",
+      "Cancel"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-cancel",
+      "update-winpoint-progress",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the download moves on (the card patched in place)",
+    "ok": true,
+    "t": 141.93,
+    "card": {
+     "shown": true,
+     "title": "Downloading WinPoint 0.9.0: 12%",
+     "labels": [
+      "Downloading WinPoint 0.9.0: 12%",
+      "8 MB of 64.1 MB",
+      "Cancel",
+      "Cancel"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-cancel",
+      "update-winpoint-progress",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the job asked GitHub for the release list again first",
+    "ok": true,
+    "t": 142.32,
+    "requests": 7,
+    "before": 6
+   },
+   {
+    "check": "the card shows the installer running (no Cancel)",
+    "ok": true,
+    "t": 169.39,
+    "card": {
+     "shown": true,
+     "title": "Installing WinPoint 0.9.0…",
+     "labels": [
+      "Installing WinPoint 0.9.0…",
+      "Don’t sign out or turn off your PC."
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-progress",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "no Cancel while it installs",
+    "ok": true,
+    "t": 169.67,
+    "names": [
+     "update-winpoint",
+     "update-winpoint-progress",
+     "update-winpoint-title"
+    ]
+   },
+   {
+    "check": "the card says the release is installed, with Restart WinPoint",
+    "ok": true,
+    "t": 187.77,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is installed",
+     "labels": [
+      "WinPoint 0.9.0 is installed",
+      "Restart WinPoint to finish.",
+      "Restart WinPoint",
+      "Restart WinPoint"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-restart",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "installed: restart WinPoint to finish (the extension did not change)",
+    "ok": true,
+    "t": 187.77,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is installed",
+     "labels": [
+      "WinPoint 0.9.0 is installed",
+      "Restart WinPoint to finish.",
+      "Restart WinPoint",
+      "Restart WinPoint"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-restart",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "job.json: installed with restart",
+    "ok": true,
+    "t": 187.77,
+    "job": {
+     "state": "installed",
+     "restart": "restart",
+     "error": null,
+     "outcome": null
+    }
+   },
+   {
+    "check": "the run prefix's VERSION is the release's (it said the running version before)",
+    "ok": true,
+    "t": 187.77,
+    "version": "0.9.0\n"
+   },
+   {
+    "check": "the installer swapped in a new payload: another directory, without the stray file",
+    "ok": true,
+    "t": 187.77,
+    "inode": 7082665,
+    "before": 5643017,
+    "stray": false
+   },
+   {
+    "check": "install.log is there and has no error",
+    "ok": true,
+    "t": 187.77,
+    "lines": [],
+    "tail": "Installed in /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix/bin\nFile Explorer can be opened from the app overview.\nWinPoint is its own choice at the login screen. GNOME and Ubuntu stay as they were.\nSign out and choose WinPoint at the login screen: click your name, then the gear at the bottom right.\nYour current Win11Shell, default file manager and desktop settings have not been changed.\n"
+   },
+   {
+    "check": "check.log is there and has no error",
+    "ok": true,
+    "t": 187.77,
+    "lines": [],
+    "tail": ""
+   },
+   {
+    "check": "the installed release left no tarball and no bundle in work/",
+    "ok": true,
+    "t": 187.77,
+    "left": [
+     "check.log",
+     "install.log",
+     "install.status",
+     "winpoint-0.9.0-linux-x86_64.tar.gz.sha256"
+    ]
+   },
+   {
+    "check": "the fake saw the .sha256, the 302 hop to its CDN and the whole tarball",
+    "ok": true,
+    "t": 187.77,
+    "downloads": [
+     {
+      "at": 1794711862331,
+      "path": "/roboburr/WinPoint/releases/download/v0.9.0/winpoint-0.9.0-linux-x86_64.tar.gz.sha256",
+      "mode": "newer",
+      "status": 200,
+      "bytes": 101
+     },
+     {
+      "at": 1794711862367,
+      "path": "/roboburr/WinPoint/releases/download/v0.9.0/winpoint-0.9.0-linux-x86_64.tar.gz",
+      "mode": "newer",
+      "status": 302,
+      "bytes": 0
+     },
+     {
+      "at": 1794711870521,
+      "path": "/cdn/winpoint-0.9.0-linux-x86_64.tar.gz?token=fake",
+      "mode": "newer",
+      "status": 200,
+      "bytes": 67246920
+     }
+    ]
+   },
+   {
+    "check": "one \"installed\" notification that says how to finish",
+    "ok": true,
+    "t": 187.78,
+    "notifications": [
+     {
+      "title": "WinPoint 0.9.0 is installed",
+      "body": "Restart WinPoint to finish the update.",
+      "source": "Win11 Settings",
+      "actions": [
+       "View"
+      ]
+     }
+    ]
+   },
+   {
+    "check": "Settings and the shell restarted",
+    "ok": true,
+    "t": 191.1,
+    "boots": {
+     "settings": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1850,
+      "renderer": "cairo",
+      "tag": "boot"
+     },
+     "shell": {
+      "kind": "native-shell",
+      "pid": 1400,
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "check": "the restarted owner (version V) cleared job.json and work/",
+    "ok": true,
+    "t": 191.1,
+    "job": null
+   },
+   {
+    "check": "the card offers the release again (the hosts still pretend to run the lower version)",
+    "ok": true,
+    "t": 191.27,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "Release notes",
+      "Check for updates",
+      "Check for updates",
+      "Download and install",
+      "Download and install"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-install",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "a damaged download ends the job: not installed, the download deleted",
+    "ok": true,
+    "t": 193.08,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 wasn’t installed",
+     "labels": [
+      "WinPoint 0.9.0 wasn’t installed",
+      "The download is damaged and was deleted",
+      "Nothing was changed.",
+      "Release notes",
+      "Retry",
+      "Retry",
+      "Technical details",
+      "winpoint-0.9.0-linux-x86_64.tar.gz: 67246920 bytes, sha256 0c5cb4c20fb4af4ade060e71bd8237b283377526553d52ccc0fcf91c1bd9d13b"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-details",
+      "update-winpoint-notes",
+      "update-winpoint-retry",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "nothing changed, and Retry is offered",
+    "ok": true,
+    "t": 193.09,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 wasn’t installed",
+     "labels": [
+      "WinPoint 0.9.0 wasn’t installed",
+      "The download is damaged and was deleted",
+      "Nothing was changed.",
+      "Release notes",
+      "Retry",
+      "Retry",
+      "Technical details",
+      "winpoint-0.9.0-linux-x86_64.tar.gz: 67246920 bytes, sha256 0c5cb4c20fb4af4ade060e71bd8237b283377526553d52ccc0fcf91c1bd9d13b"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-details",
+      "update-winpoint-notes",
+      "update-winpoint-retry",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "job.json: failed with checksum, nothing changed",
+    "ok": true,
+    "t": 193.09,
+    "job": {
+     "schema": 1,
+     "jobId": "6d84e096bcf642a31fb85ee593b8731a",
+     "version": "0.9.0",
+     "from": "0.8.9",
+     "found": "0.8.9",
+     "tag": "v0.9.0",
+     "state": "failed",
+     "done": 0,
+     "total": 67246920,
+     "startedAt": 1794711913292,
+     "finishedAt": 1794711914164,
+     "owner": {
+      "pid": 3124,
+      "start": "21525069"
+     },
+     "installer": null,
+     "restart": null,
+     "sessionKey": "<boot id>:21505410",
+     "prefix": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix",
+     "lang": "en",
+     "error": {
+      "code": "checksum",
+      "key": "update.winpoint.err.checksum",
+      "params": {},
+      "detail": "winpoint-0.9.0-linux-x86_64.tar.gz: 67246920 bytes, sha256 0c5cb4c20fb4af4ade060e71bd8237b283377526553d52ccc0fcf91c1bd9d13b"
+     },
+     "outcome": "nothingChanged",
+     "logTail": null,
+     "rev": 20
+    }
+   },
+   {
+    "check": "the damaged tarball was deleted at once (no tarball, no .part, no bundle)",
+    "ok": true,
+    "t": 193.09,
+    "left": [
+     "winpoint-0.9.0-linux-x86_64.tar.gz.sha256"
+    ]
+   },
+   {
+    "check": "the damaged tarball was fetched whole",
+    "ok": true,
+    "t": 193.09,
+    "downloads": [
+     {
+      "at": 1794711913370,
+      "path": "/roboburr/WinPoint/releases/download/v0.9.0/winpoint-0.9.0-linux-x86_64.tar.gz.sha256",
+      "mode": "damaged",
+      "status": 200,
+      "bytes": 101
+     },
+     {
+      "at": 1794711913447,
+      "path": "/roboburr/WinPoint/releases/download/v0.9.0/winpoint-0.9.0-linux-x86_64.tar.gz",
+      "mode": "damaged",
+      "status": 302,
+      "bytes": 0
+     },
+     {
+      "at": 1794711913671,
+      "path": "/cdn/winpoint-0.9.0-linux-x86_64.tar.gz?token=fake",
+      "mode": "damaged",
+      "status": 200,
+      "bytes": 67246920
+     }
+    ]
+   },
+   {
+    "check": "the version on disk is still the installed one, in the same payload",
+    "ok": true,
+    "t": 193.09
+   },
+   {
+    "check": "Retry with a release without a digest: refused, a check offered instead",
+    "ok": true,
+    "t": 195.43,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 wasn’t installed",
+     "labels": [
+      "WinPoint 0.9.0 wasn’t installed",
+      "This release has no checksum from GitHub; download it from the link",
+      "Nothing was changed.",
+      "Unpack winpoint-0.9.0-linux-x86_64.tar.gz and run ./scripts/install.sh in its winpoint-0.9.0 folder. Your settings are kept.",
+      "Release notes",
+      "Download on GitHub",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-download",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "the refusal says to download it from the link, and the link is there: Release notes, Download on GitHub and the how-to line",
+    "ok": true,
+    "t": 195.44,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 wasn’t installed",
+     "labels": [
+      "WinPoint 0.9.0 wasn’t installed",
+      "This release has no checksum from GitHub; download it from the link",
+      "Nothing was changed.",
+      "Unpack winpoint-0.9.0-linux-x86_64.tar.gz and run ./scripts/install.sh in its winpoint-0.9.0 folder. Your settings are kept.",
+      "Release notes",
+      "Download on GitHub",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-download",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "job.json: failed with noDigest",
+    "ok": true,
+    "t": 195.44,
+    "job": {
+     "schema": 1,
+     "jobId": "5a13393330031f6adeb71d9caa3613a6",
+     "version": "0.9.0",
+     "from": "0.8.9",
+     "found": "0.8.9",
+     "tag": "v0.9.0",
+     "state": "failed",
+     "done": 0,
+     "total": 67246920,
+     "startedAt": 1794711916786,
+     "finishedAt": 1794711916826,
+     "owner": {
+      "pid": 3124,
+      "start": "21525069"
+     },
+     "installer": null,
+     "restart": null,
+     "sessionKey": "<boot id>:21505410",
+     "prefix": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/prefix",
+     "lang": "en",
+     "error": {
+      "code": "noDigest",
+      "key": "update.winpoint.reason.noDigest",
+      "params": {},
+      "detail": ""
+     },
+     "outcome": "nothingChanged",
+     "logTail": null,
+     "rev": 23
+    }
+   },
+   {
+    "check": "a release without a digest: phase 1's card",
+    "ok": true,
+    "t": 226.78,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "This release has no checksum from GitHub; download it from the link",
+      "Unpack winpoint-0.9.0-linux-x86_64.tar.gz and run ./scripts/install.sh in its winpoint-0.9.0 folder. Your settings are kept.",
+      "Release notes",
+      "Download on GitHub",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-download",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   },
+   {
+    "check": "Release notes, Download on GitHub and the how-to line; no install button",
+    "ok": true,
+    "t": 226.78,
+    "card": {
+     "shown": true,
+     "title": "WinPoint 0.9.0 is available",
+     "labels": [
+      "WinPoint 0.9.0 is available",
+      "You have version 0.8.9 · Released on 20 Nov 2026 · Download size: 64.1 MB",
+      "This release has no checksum from GitHub; download it from the link",
+      "Unpack winpoint-0.9.0-linux-x86_64.tar.gz and run ./scripts/install.sh in its winpoint-0.9.0 folder. Your settings are kept.",
+      "Release notes",
+      "Download on GitHub",
+      "Check for updates",
+      "Check for updates"
+     ],
+     "names": [
+      "update-winpoint",
+      "update-winpoint-check",
+      "update-winpoint-download",
+      "update-winpoint-notes",
+      "update-winpoint-title"
+     ]
+    }
+   }
+  ],
+  "records": {
+   "versions": {
+    "running": "0.8.9",
+    "offered": "0.9.0",
+    "fake": {
+     "running": "0.8.9",
+     "offered": "0.9.0",
+     "tarball": "winpoint-0.9.0-linux-x86_64.tar.gz",
+     "size": 67246920,
+     "digest": "c279dc5b059e084753befc617da252b0c4b3e6a39c89d476e3ffe31e73d7aa9b"
+    }
+   },
+   "requests after start": [
+    {
+     "at": 1794711721765,
+     "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+     "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+     "accept": "application/vnd.github+json",
+     "apiVersion": "2022-11-28",
+     "mode": "newer",
+     "status": 200
+    }
+   ],
+   "notifications owned before": false,
+   "notifications": [
+    {
+     "title": "WinPoint 0.9.0 is available",
+     "body": "Open Settings › Update & recovery to install it.",
+     "source": "Win11 Settings",
+     "actions": [
+      "View"
+     ]
+    }
+   ],
+   "message tray": [
+    {
+     "source": "Win11 Settings",
+     "notifications": [
+      {
+       "title": "WinPoint 0.9.0 is available",
+       "body": "Open Settings › Update & recovery to install it."
+      }
+     ]
+    }
+   ],
+   "activate the notification": true,
+   "click check (not announced)": {
+    "input": "clutter",
+    "x": 965,
+    "y": 236,
+    "rect": [
+     722,
+     164,
+     146,
+     32
+    ],
+    "name": "update-winpoint-check",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      965,
+      236
+     ],
+     "focusPid": 1850
+    }
+   },
+   "fake mode error": {
+    "mode": "error",
+    "delay": 0.0,
+    "slow": 0.0
+   },
+   "click check (500)": {
+    "input": "clutter",
+    "x": 965,
+    "y": 236,
+    "rect": [
+     722,
+     164,
+     146,
+     32
+    ],
+    "name": "update-winpoint-check",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      965,
+      236
+     ],
+     "focusPid": 1850
+    }
+   },
+   "nm.standin": {
+    "pid": 2235,
+    "connectivity": 1
+   },
+   "click check (offline)": {
+    "input": "clutter",
+    "x": 1139,
+    "y": 238,
+    "rect": [
+     896,
+     166,
+     146,
+     32
+    ],
+    "name": "update-winpoint-check",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1139,
+      238
+     ],
+     "focusPid": 1850
+    }
+   },
+   "fake mode current": {
+    "mode": "current",
+    "delay": 0.0,
+    "slow": 0.0
+   },
+   "click check (current)": {
+    "input": "clutter",
+    "x": 1139,
+    "y": 238,
+    "rect": [
+     896,
+     166,
+     146,
+     32
+    ],
+    "name": "update-winpoint-check",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1139,
+      238
+     ],
+     "focusPid": 1850
+    }
+   },
+   "requests": [
+    {
+     "at": 1794711721765,
+     "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+     "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+     "accept": "application/vnd.github+json",
+     "apiVersion": "2022-11-28",
+     "mode": "newer",
+     "status": 200
+    },
+    {
+     "at": 1794711729759,
+     "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+     "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+     "accept": "application/vnd.github+json",
+     "apiVersion": "2022-11-28",
+     "mode": "newer",
+     "status": 200
+    },
+    {
+     "at": 1794711760969,
+     "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+     "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+     "accept": "application/vnd.github+json",
+     "apiVersion": "2022-11-28",
+     "mode": "newer",
+     "status": 200
+    },
+    {
+     "at": 1794711792231,
+     "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+     "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+     "accept": "application/vnd.github+json",
+     "apiVersion": "2022-11-28",
+     "mode": "error",
+     "status": 500
+    },
+    {
+     "at": 1794711830590,
+     "path": "/repos/roboburr/WinPoint/releases?per_page=10",
+     "userAgent": "WinPoint/0.9.0 (+https://github.com/roboburr/WinPoint)",
+     "accept": "application/vnd.github+json",
+     "apiVersion": "2022-11-28",
+     "mode": "current",
+     "status": 200
+    }
+   ],
+   "winpoint installer runs": {
+    "1": [
+     "check",
+     "install"
+    ],
+    "2": [],
+    "3": []
+   },
+   "fake mode newer": {
+    "mode": "newer",
+    "delay": 0.0,
+    "slow": 0.0
+   },
+   "click check (newer)": {
+    "input": "clutter",
+    "x": 1139,
+    "y": 215,
+    "rect": [
+     896,
+     143,
+     146,
+     32
+    ],
+    "name": "update-winpoint-check",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1139,
+      215
+     ],
+     "focusPid": 1850
+    }
+   },
+   "before the install": {
+    "version": "0.8.9\n",
+    "payloadInode": 5643017
+   },
+   "click mark": 3,
+   "click Download and install": {
+    "input": "clutter",
+    "x": 1129,
+    "y": 236,
+    "rect": [
+     876,
+     164,
+     166,
+     32
+    ],
+    "name": "update-winpoint-install",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1129,
+      236
+     ],
+     "focusPid": 1850
+    }
+   },
+   "download share": "Downloading WinPoint 0.9.0: 12%",
+   "titles until installing": [
+    "Checking the download…",
+    "Downloading WinPoint 0.9.0: 12%",
+    "Downloading WinPoint 0.9.0: 24%",
+    "Downloading WinPoint 0.9.0: 37%",
+    "Downloading WinPoint 0.9.0: 49%",
+    "Downloading WinPoint 0.9.0: 62%",
+    "Downloading WinPoint 0.9.0: 74%",
+    "Downloading WinPoint 0.9.0: 87%",
+    "Downloading WinPoint 0.9.0: 99%",
+    "Installing WinPoint 0.9.0…"
+   ],
+   "job": {
+    "state": "installed",
+    "version": "0.9.0",
+    "restart": "restart",
+    "outcome": null,
+    "error": null,
+    "installer": {
+     "pid": 2841,
+     "start": "21522999",
+     "script": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py"
+    }
+   },
+   "downloads": [
+    {
+     "at": 1794711862331,
+     "path": "/roboburr/WinPoint/releases/download/v0.9.0/winpoint-0.9.0-linux-x86_64.tar.gz.sha256",
+     "mode": "newer",
+     "status": 200,
+     "bytes": 101
+    },
+    {
+     "at": 1794711862367,
+     "path": "/roboburr/WinPoint/releases/download/v0.9.0/winpoint-0.9.0-linux-x86_64.tar.gz",
+     "mode": "newer",
+     "status": 302,
+     "bytes": 0
+    },
+    {
+     "at": 1794711870521,
+     "path": "/cdn/winpoint-0.9.0-linux-x86_64.tar.gz?token=fake",
+     "mode": "newer",
+     "status": 200,
+     "bytes": 67246920
+    }
+   ],
+   "click Restart WinPoint": {
+    "input": "clutter",
+    "x": 1144,
+    "y": 215,
+    "rect": [
+     906,
+     143,
+     136,
+     32
+    ],
+    "name": "update-winpoint-restart",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1144,
+      215
+     ],
+     "focusPid": 1850
+    }
+   },
+   "restart boots": {
+    "settings": {
+     "app": "settings",
+     "fontRendering": "manual",
+     "kind": "native-app",
+     "pid": 1850,
+     "renderer": "cairo",
+     "tag": "boot"
+    },
+    "shell": {
+     "kind": "native-shell",
+     "pid": 1400,
+     "tag": "boot"
+    }
+   },
+   "fake mode damaged": {
+    "mode": "damaged",
+    "delay": 0.0,
+    "slow": 0.0
+   },
+   "click Download and install (damaged)": {
+    "input": "clutter",
+    "x": 1129,
+    "y": 236,
+    "rect": [
+     876,
+     164,
+     166,
+     32
+    ],
+    "name": "update-winpoint-install",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1129,
+      236
+     ],
+     "focusPid": 1850
+    }
+   },
+   "fake mode nodigest": {
+    "mode": "nodigest",
+    "delay": 0.0,
+    "slow": 0.0
+   },
+   "click Retry (no digest)": {
+    "input": "clutter",
+    "x": 1182,
+    "y": 238,
+    "rect": [
+     983,
+     166,
+     59,
+     32
+    ],
+    "name": "update-winpoint-retry",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1182,
+      238
+     ],
+     "focusPid": 1850
+    }
+   },
+   "click check (no digest)": {
+    "input": "clutter",
+    "x": 1139,
+    "y": 258,
+    "rect": [
+     896,
+     186,
+     146,
+     32
+    ],
+    "name": "update-winpoint-check",
+    "window": [
+     170,
+     56,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      1139,
+      258
+     ],
+     "focusPid": 1850
+    }
+   }
+  },
+  "shots": [
+   "fallback-bar.png",
+   "winpoint-notification.png",
+   "winpoint-available.png",
+   "winpoint-failed.png",
+   "winpoint-offline.png",
+   "winpoint-checking.png",
+   "winpoint-uptodate.png",
+   "winpoint-toggle.png",
+   "winpoint-downloading.png",
+   "winpoint-installing.png",
+   "winpoint-installed.png",
+   "winpoint-damaged.png",
+   "winpoint-nodigest.png"
+  ],
+  "error": null,
+  "seconds": 227.89,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 1400,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 1400,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 1400,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=0585abf2c2549a03efcdde236af920a3",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 525,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 1400
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "update-advanced",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "update",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "update-advanced",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "update",
+     "exit": 0,
+     "seconds": 0.03
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "fallback-bar.png",
+    "group": "scenario",
+    "bytes": 11795,
+    "area": [
+     0,
+     852,
+     1440,
+     48
+    ]
+   },
+   {
+    "file": "winpoint-notification.png",
+    "group": "scenario",
+    "bytes": 941996,
+    "area": null
+   },
+   {
+    "file": "winpoint-available.png",
+    "group": "scenario",
+    "bytes": 231308,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-failed.png",
+    "group": "scenario",
+    "bytes": 221231,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-offline.png",
+    "group": "scenario",
+    "bytes": 219478,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-checking.png",
+    "group": "scenario",
+    "bytes": 217291,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-uptodate.png",
+    "group": "scenario",
+    "bytes": 223935,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-toggle.png",
+    "group": "scenario",
+    "bytes": 237318,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-downloading.png",
+    "group": "scenario",
+    "bytes": 219839,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-installing.png",
+    "group": "scenario",
+    "bytes": 218641,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-installed.png",
+    "group": "scenario",
+    "bytes": 229036,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-damaged.png",
+    "group": "scenario",
+    "bytes": 224865,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "winpoint-nodigest.png",
+    "group": "scenario",
+    "bytes": 236126,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/winpoint-update.en.out/fallback-bar.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-notification.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-available.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-failed.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-offline.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-checking.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-uptodate.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-toggle.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-downloading.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-installing.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-installed.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-damaged.png",
+  "tests/gnome/scenarios/winpoint-update.en.out/winpoint-nodigest.png"
+ ]
+}

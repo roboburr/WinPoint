@@ -1,4 +1,4 @@
-//! The custom colour dialog "Een aangepaste kleur kiezen" (last-webkit:vendor/ui/js/apps/settings/colorpicker.js): a
+//! The custom colour dialog "Een aangepaste kleur kiezen" (6ebf169f:vendor/ui/js/apps/settings/colorpicker.js): a
 //! hue/saturation spectrum, a brightness slider and a hex field, with a readability check for accent colours.
 //! `pick_color(anchor, value, title, accent, done)` gives `done(Some("#rrggbb"))` on Gereed, None otherwise.
 use kit::controls::{self as c, Dialog, DialogResult, Slider};

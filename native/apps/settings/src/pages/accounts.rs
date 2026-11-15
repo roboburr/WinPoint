@@ -1,4 +1,4 @@
-//! Instellingen › Accounts (last-webkit:vendor/ui/js/apps/settings/pages/accounts.js): who you are on this PC (name,
+//! Instellingen › Accounts (6ebf169f:vendor/ui/js/apps/settings/pages/accounts.js): who you are on this PC (name,
 //! picture) and where to change it, and "Nu vergrendelen".
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;
@@ -65,8 +65,8 @@ fn page(p: Page) -> PageFuture {
                 t("Je naam en profielfoto", "Your name and profile picture"),
                 t("Naam en profielfoto wijzigen", "Change name and picture"),
                 t(
-                    "Win11 Shell gebruikt de naam en foto van je Ubuntu-account. Je wijzigt ze in de app Instellingen van Ubuntu: Systeem › Gebruikers. Daarna zie je de nieuwe naam en foto ook hier.",
-                    "Win11 Shell uses the name and picture of your Ubuntu account. Change them in Ubuntu’s Settings app: System › Users. The new name and picture then appear here too.",
+                    "WinPoint gebruikt de naam en foto van je Ubuntu-account. Je wijzigt ze in de app Instellingen van Ubuntu: Systeem › Gebruikers. Daarna zie je de nieuwe naam en foto ook hier.",
+                    "WinPoint uses the name and picture of your Ubuntu account. Change them in Ubuntu’s Settings app: System › Users. The new name and picture then appear here too.",
                 ),
                 "accounts-info",
             )
@@ -80,8 +80,8 @@ fn page(p: Page) -> PageFuture {
                 t("Wachtwoord wijzigen, automatisch aanmelden", "Change password, automatic sign-in"),
                 t("Aanmelden en wachtwoord", "Sign-in and password"),
                 t(
-                    "Je wachtwoord wijzig je in de app Instellingen van Ubuntu: Systeem › Gebruikers › Wachtwoord. Kies een wachtwoord dat je goed onthoudt; Win11 Shell bewaart nooit je wachtwoord.",
-                    "Change your password in Ubuntu’s Settings app: System › Users › Password. Choose a password you remember well; Win11 Shell never stores your password.",
+                    "Je wachtwoord wijzig je in de app Instellingen van Ubuntu: Systeem › Gebruikers › Wachtwoord. Kies een wachtwoord dat je goed onthoudt; WinPoint bewaart nooit je wachtwoord.",
+                    "Change your password in Ubuntu’s Settings app: System › Users › Password. Choose a password you remember well; WinPoint never stores your password.",
                 ),
                 "accounts-signin",
             )
@@ -112,8 +112,8 @@ fn page(p: Page) -> PageFuture {
             SettingsCard::new(
                 "shield",
                 t(
-                    "Je account blijft op deze computer. Win11 Shell stuurt geen gegevens naar internet.",
-                    "Your account stays on this computer. Win11 Shell doesn’t send any data to the internet.",
+                    "Je account blijft op deze computer. WinPoint stuurt geen gegevens over jou naar internet; alleen de dagelijkse updatecontrole vraagt GitHub naar de nieuwste versie van WinPoint.",
+                    "Your account stays on this computer. WinPoint doesn’t send any data about you to the internet; only the daily update check asks GitHub for WinPoint’s latest version.",
                 ),
                 "",
             )

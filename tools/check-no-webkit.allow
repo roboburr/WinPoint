@@ -1,10 +1,10 @@
 # tools/check-no-webkit.allow: the mentions of WebKit, JavaScriptCore, libsoup and wry that stay after the WebKit
-# removal (tag last-webkit), for tools/check-no-webkit.py. None of them is a dependency or a feature of WinPoint.
+# removal (commit 6ebf169f), for tools/check-no-webkit.py. None of them is a dependency or a feature of WinPoint.
 #
 # Columns (one tab each): path<TAB>pattern<TAB>class<TAB>reason
 #   path     a repository path; * and ? stay within one folder, ** spans folders
 #   pattern  a Python regular expression searched in the line, or * for every line of the file
-#   class    history         records and comments about the WebKit apps up to last-webkit (where a behaviour came from)
+#   class    history         records and comments about the WebKit apps up to 6ebf169f (where a behaviour came from)
 #            update-category Ubuntu's packages that Windows Update lists (decision 1: the webkit and soup rows stay)
 #            fixture         test data: recorded or synthetic package lists, seeded folders, stray files to refuse
 #            frozen-data     i18n baselines at 3b898e6 and the logs of intended text changes (append only)
@@ -59,20 +59,17 @@ tests/gnome/harness.py	WebKit Start and desktop|(?i:no WebKit)( panel|\))|GStrea
 # --- other programs' names
 host/src/services/sysmon/text.json	"WebKit(Network|Web)Process"	third-party	friendly names of the WebKit processes of other apps (GNOME Web, Evolution …) in Task Manager
 tests/gnome/scenarios/native-shell.py	(?i)webkit	third-party	regression guard: no WebKit process below win11-shell, no WebKit host of before D-G70
-tests/gnome/scenarios/native-gtk-apps.py	WebKit	third-party	regression guard: no WebKitWebProcess or WebKitNetworkProcess under an app; the docstring names the last-webkit comparison
+tests/gnome/scenarios/native-gtk-apps.py	WebKit	third-party	regression guard: no WebKitWebProcess or WebKitNetworkProcess under an app; the docstring names the 6ebf169f comparison
 tools/i18n/scan_rust.py	"webkit", "gtk"	third-party	PROPER: language-neutral names the 3b898e6 classifier knows
 tools/heavy.sh	WebKit processes	third-party	earlyoom on Robin's machine spares win11-* and WebKit processes (its own configuration)
 vendor/icons/**/*.svg	-webkit-print-color-adjust	third-party	a CSS property in the SVG source of other projects' logos (CurseForge, Plex)
 vendor/icon-bundle.json	"Win11/apps/scalable/epiphany-webkit\.svg"	third-party	the icon of GNOME Web (Epiphany), by its own icon name
 #
 # --- history comments and docs (where a behaviour or a file came from)
-README.md	HTML versions in WebKitGTK|earlier WebKit taskbar|WebKit app, 13 Nov|final build without WebKit|neither WebKitGTK nor GTK 3|former WebKit apps	history	the README's history: the memory comparison with the WebKit apps, what is no longer needed, the switches that went
-README.nl.md	HTML-versies in WebKit|eerdere WebKit-taakbalk|WebKit-app, 13 nov|build zonder WebKit|met de WebKit-Start|WebKitGTK en GTK 3 zijn niet nodig	history	the same history in the Dutch README
-README.nl.md	versie met de WebKit-(shell|apps)	legacy-cleanup	what an install over an earlier version removes
-THIRD_PARTY_NOTICES.md	since the WebKit apps went|when WebKitGTK, JavaScriptCore, libsoup and GTK 3 left|the same drawings were also in `vendor/ui/js`|The WebKit and GTK 3 crates the host linked	history	the notices until last-webkit: the WebKit apps' drawings and the crates and libraries linked then
-LICENSES/RUST-CRATES.md	when WebKit and GTK 3 left the host|the host also linked `wry`	history	the crates linked until last-webkit (git show last-webkit:LICENSES/RUST-CRATES.md lists them)
+THIRD_PARTY_NOTICES.md	since the WebKit apps went|when WebKitGTK, JavaScriptCore, libsoup and GTK 3 left|the same drawings were also in `vendor/ui/js`|The WebKit and GTK 3 crates the host linked	history	the notices until 6ebf169f: the WebKit apps' drawings and the crates and libraries linked then
+LICENSES/RUST-CRATES.md	when WebKit and GTK 3 left the host|the host also linked `wry`	history	the crates linked until 6ebf169f (git show 6ebf169f:LICENSES/RUST-CRATES.md lists them)
 vendor/ui-patches.json	"reason": "Robin 2026-11-13, the WebKit removal	history	the html_apps_removed entry of the UI patch log
-native/**/*.rs	^(?!.*vendor/ui/(js|css|index\.html))\s*//.*WebKit	history	a comment on where a native behaviour comes from (the WebKit app, host or picker up to last-webkit)
+native/**/*.rs	^(?!.*vendor/ui/(js|css|index\.html))\s*//.*WebKit	history	a comment on where a native behaviour comes from (the WebKit app, host or picker up to 6ebf169f)
 native/kit/src/format.rs	the_intl_table_of_the_webkit_apps_holds|the JavaScriptCore table|i18n\.js in JavaScriptCore	history	the Intl table the WebKit apps' format.js produced in JavaScriptCore, ported as a Rust test
 native/apps/explorer/css/*.css	[Cc]lasses are the WebKit	history	the CSS class names follow the WebKit app's
 host/Cargo.toml	which the WebKit crates used to switch on	history	why glib and gio name the v2_70 feature

@@ -19,7 +19,9 @@ Robin's live desktop is this GNOME version. Nothing here may reach it. Layers, o
    unreachable). ``run --strace FILE`` logs every connect() inside and fails the run if one reached a socket
    outside the sandbox; a run ends by removing the socket files it left in run/ and failing if any socket file
    is left in the checkout. Every run gets GIO_USE_VFS=local and the update service's private test seams
-   (WIN11_UPDATE_TOOL_DIR, WIN11_UPDATE_FIXTURE_ROOT in run/; D-G44).
+   (WIN11_UPDATE_TOOL_DIR, WIN11_UPDATE_FIXTURE_ROOT in run/; D-G44). WinPoint's own update check (D-G74a) gets
+   its seam only with ``--winpoint-feed`` (WIN11_WINPOINT_TEST=/tmp/w11-winpoint, a fake GitHub on loopback,
+   tests/gnome/lib/fake_github.py); without it the seeded settings turn its daily check off.
 2. ``run`` and ``_inner`` refuse to start unless the guard passes: HOME is not the real home,
    XDG_RUNTIME_DIR is not /run/user/<uid>, the session bus address does not point into /run/user/<uid>,
    DISPLAY and WAYLAND_DISPLAY are unset, GSETTINGS_BACKEND=keyfile, plus the stricter checks in
@@ -167,6 +169,22 @@ UPDATE_TOOL_NAMES = ('loginctl xdg-terminal-exec pkexec check-new-release apt-ge
                      'dpkg-query snap screen nice ionice sh do-release-upgrade release-upgrades-helper '
                      'release-upgrade-attach').split()
 UPDATE_SCHEMAS = G / 'tests' / 'update' / 'fixtures' / 'options' / 'schemas'   # update-notifier's (GW4 N2/N3)
+# D-G74a: WinPoint's own update check (host/src/services/winpoint/seam.rs). --winpoint-feed gives every process
+# WIN11_WINPOINT_TEST, a 0700 directory on the sandbox's own /tmp (so the seam's mode checks hold on any checkout
+# file system) with the update fixtures' marker and seam.json {origin, running}: the hosts then ask the fake GitHub
+# (tests/gnome/lib/fake_github.py, started by run inside the sandbox, loopback only) and never api.github.com. Without
+# the option the variable must be unset, and the seeded settings turn the daily check off (update.winpointAutoCheck).
+# D-G74: the fake offers a real release, scripts/package.py's bundle of this run's build dir and source tree
+# (winpoint_bundle, RUN/winpoint-dist), and the hosts pretend to run a lower version, so they can install it.
+WINPOINT_FEED = False                             # set from --winpoint-feed (set_winpoint_feed) before private_env()
+WINPOINT_SEAM = Path('/tmp/w11-winpoint')
+WINPOINT_VAR = 'WIN11_WINPOINT_TEST'
+WINPOINT_PORT = 47811
+WINPOINT_DIST = RUN / 'winpoint-dist'
+# D-G74: WinPoint starts one Python program of its own, the release bundle's installer, and only after a click in
+# Settings. A scenario marks each such click in the session trace by running /usr/bin/true <WINPOINT_CLICK>-<n> first
+# (strace_exec_report: no WinPoint python3 before the first mark).
+WINPOINT_CLICK = 'w11-winpoint-click'
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -190,6 +208,7 @@ def private_env() -> dict[str, str]:
         # D-G44 (gw4.md N1): GIO's local VFS only, so no GVfs client contacts a session bus on its own
         'GIO_USE_VFS': 'local',
         **{key: str(path) for key, path in UPDATE_SEAMS.items()},
+        **({WINPOINT_VAR: str(WINPOINT_SEAM)} if WINPOINT_FEED else {}),
         # Outer stage: a socket that never exists, so an accidental session-bus use fails.
         # dbus-run-session replaces it with RT/bus for the inner stage.
         'DBUS_SESSION_BUS_ADDRESS': f'unix:path={RT}/no-session-bus',
@@ -297,6 +316,10 @@ def env_problems(env: dict[str, str], stage: str) -> list[tuple[str, str]]:
     for key in env:
         if key.startswith('WIN11_UPDATE_') and key not in UPDATE_SEAMS:
             add('update-seam-extra', f'{key} is set (this harness has no fake PackageKit yet: D-G42, GW8)')
+    if env.get(WINPOINT_VAR) != want.get(WINPOINT_VAR):
+        add('winpoint-seam-not-private', f'{WINPOINT_VAR}={env.get(WINPOINT_VAR)!r} is not '
+                                         f'{want.get(WINPOINT_VAR)!r} (D-G74a: unset, or exactly {WINPOINT_SEAM} '
+                                         'with --winpoint-feed: else the update check could ask GitHub)')
     for key in ('XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME', 'TMPDIR', 'WIN11_INSTALL_PREFIX'):
         if os.path.normpath(env.get(key, '')) != want[key]:
             add('xdg-not-private', f'{key}={env.get(key)!r} is not {want[key]}')
@@ -467,6 +490,11 @@ def install_bins(root: Path | None = None) -> list[str]:
 def set_session_mode(value: str | None) -> None:
     global SESSION_MODE
     SESSION_MODE = value or None
+
+
+def set_winpoint_feed(value: bool) -> None:
+    global WINPOINT_FEED
+    WINPOINT_FEED = bool(value)
 
 
 def set_build_dir(value: str | None) -> Path:
@@ -826,6 +854,7 @@ def launch_problems(opts) -> list[tuple[str, str]]:
     """Checks of the run options before any lock or sandbox: build dir, source, scenario and output paths."""
     p = []
     set_session_mode(getattr(opts, 'session_mode', None))
+    set_winpoint_feed(getattr(opts, 'winpoint_feed', False))
     if not opts.guard_only:
         p += build_dir_problems(set_build_dir(opts.build_dir))
     p += source_problems(opts.source)
@@ -946,11 +975,135 @@ def strace_connect_report(traces: list[Path]) -> dict:
 # stubs (run/stubs on PATH, run/update-tools for the update service's tool table) are the only allowed copies.
 EXECVE = re.compile(r'^(\d+)\s+(execve|execveat)\((?:[^,]*, )?"((?:[^"\\]|\\.)*)"(.*?)'
                     r'(?:\) = (-?\d+)(?: (\w+)(?: \(.*\))?)?|( <unfinished \.\.\.>))\s*$')
-EXEC_RESUMED = re.compile(r'^(\d+)\s+<\.\.\. (?:execve|execveat) resumed>.*\) = (-?\d+)(?: (\w+))?')
+# strace pads a short line's result to its column: ')                 = 0'
+EXEC_RESUMED = re.compile(r'^(\d+)\s+<\.\.\. (?:execve|execveat) resumed>.*\)\s+=\s+(-?\d+)(?: (\w+))?')
 FORBIDDEN_EXEC = ('pkexec', 'check-new-release', 'apt-get', 'apt-cache', 'do-release-upgrade', 'loginctl', 'apt', 'pkcon')
+# D-G74: the process tree of a session trace (strace -f with clone, clone3, fork and vfork traced): parent -> child
+CLONE = re.compile(r'^(\d+)\s+(?:clone3?|v?fork)\(.*\)\s+=\s+(\d+)\s*$')
+CLONE_RESUMED = re.compile(r'^(\d+)\s+<\.\.\. (?:clone3?|v?fork) resumed>.*\)\s+=\s+(\d+)\s*$')
+ARGV_ITEM = re.compile(r'\s*"((?:[^"\\]|\\.)*)"(\.\.\.)?\s*([,\]])')
+PYTHON_EXEC = re.compile(r'python3(?:\.\d+)?')
+VERSION_DIR = re.compile(r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)')
 
 
-def strace_exec_report(traces: list[Path]) -> dict:
+def winpoint_python_report(trace: Path) -> dict:
+    """D-G74's harness exec rule, on one session trace. WinPoint starts exactly one Python program of its own: the
+    release bundle's installer, /usr/bin/python3 -E -s -B <RUN>/cache/win11-gnome/winpoint/work/<V>/bundle/scripts/
+    install.py <bundle> --lang nl|en --no-session and then --check or --status <work>/install.status --log
+    <work>/install.log (host/src/services/winpoint/job.rs, the frozen contract of scripts/install.py), with exactly
+    its 11 or 12 environment variables. Every python3 that a WinPoint process (one that executed a win11-* program) or
+    any process below it executes must be exactly that, and each must belong to a click: the scenario marks every click
+    on Download and install or Retry (/usr/bin/true WINPOINT_CLICK-<n>, run right before it), and each mark allows at
+    most one --check and then at most one install, in that order, until the next mark. A python3 before the first
+    mark, a second --check or install after one mark (a restarted owner or a check that ran it on its own), or an
+    install before its --check is a violation. The harness's own Python and GNOME's (an ibus engine) are no WinPoint
+    processes. Returns {execs, clicks, perClick: {n: [modes]}, violations}."""
+    lines = trace.read_text(errors='replace').splitlines() if trace.is_file() else []
+    parent: dict[str, str] = {}
+    for line in lines:
+        m = CLONE.match(line) or CLONE_RESUMED.match(line)
+        if m:
+            parent[m.group(2)] = m.group(1)
+    pending: dict[str, tuple[int, str, str]] = {}
+    execs: list[tuple[int, str, str, str]] = []                 # (line, pid, path, rest) of every exec that ran
+    for index, line in enumerate(lines):
+        m = EXECVE.match(line)
+        if m:
+            pid, _call, raw, rest, rc, _errno, unfinished = m.groups()
+            if unfinished:
+                pending[pid] = (index, raw, rest)
+            elif rc == '0':
+                execs.append((index, pid, raw, rest))
+            continue
+        m = EXEC_RESUMED.match(line)
+        if m and m.group(1) in pending:
+            start, raw, rest = pending.pop(m.group(1))
+            if m.group(2) == '0':
+                execs.append((start, m.group(1), raw, rest))
+    execs.sort()
+    winpoint = {pid for _i, pid, raw, _r in execs if raw.rsplit('/', 1)[-1].startswith('win11-')}
+
+    def ours(pid: str) -> bool:
+        seen = set()
+        while pid and pid not in seen:
+            if pid in winpoint:
+                return True
+            seen.add(pid)
+            pid = parent.get(pid, '')
+        return False
+
+    found, violations, clicks = [], [], []
+    per_click: dict[int, list[str]] = {}
+    window: int | None = None                                   # the click mark the next installer run belongs to
+    for index, pid, raw, rest in execs:
+        if raw == '/usr/bin/true' and f'"{WINPOINT_CLICK}-' in rest:
+            mark = re.search(rf'"{WINPOINT_CLICK}-(\d+)"', rest)
+            window = int(mark.group(1)) if mark else len(clicks) + 1
+            clicks.append(index)
+            per_click.setdefault(window, [])
+            continue
+        if not PYTHON_EXEC.fullmatch(raw.rsplit('/', 1)[-1]) or not ours(pid):
+            continue
+        argv, cut, at = [], False, rest.find('[') + 1
+        while at > 0:
+            item = ARGV_ITEM.match(rest, at)
+            if not item:
+                cut = True                           # an array strace shortened ("...") or could not read
+                break
+            argv.append(item.group(1).encode('latin-1', 'backslashreplace').decode('unicode_escape', 'replace'))
+            cut = cut or bool(item.group(2))
+            at = item.end()
+            if item.group(3) == ']':
+                break
+        env = re.search(r'/\* (\d+) vars \*/', rest[at:])
+        row = {'line': index + 1, 'pid': pid, 'path': raw, 'argv': argv, 'env': int(env.group(1)) if env else None}
+        found.append(row)
+        work = f'{RUN}/cache/win11-gnome/winpoint/work/'
+        version = argv[4][len(work):].split('/', 1)[0] if len(argv) > 4 and argv[4].startswith(work) else ''
+        bundle = f'{work}{version}/bundle'
+        head = ['/usr/bin/python3', '-E', '-s', '-B', f'{bundle}/scripts/install.py', bundle, '--lang']
+        tail = argv[8:]
+        check = tail == ['--no-session', '--check']
+        install = tail == ['--no-session', '--status', f'{work}{version}/install.status', '--log',
+                           f'{work}{version}/install.log']
+        frozen = raw == '/usr/bin/python3' and not cut and bool(VERSION_DIR.fullmatch(version)) \
+            and argv[:7] == head and len(argv) > 7 and argv[7] in ('nl', 'en') and (check or install)
+        row['mode'] = ('check' if check else 'install') if frozen else None
+        row['click'] = window
+        problems = []
+        if not frozen:
+            problems.append('not the release bundle\'s installer with its frozen argv')
+        if row['env'] not in (11, 12):
+            problems.append(f'{row["env"]} environment variables (the frozen contract has 11 or 12)')
+        if window is None:
+            problems.append('before the first click on Download and install')
+        elif row['mode']:
+            done = per_click[window]
+            allowed = 'check' if not done else ('install' if done == ['check'] else None)
+            if row['mode'] != allowed:
+                problems.append(f'not tied to a click on Download and install (click {window} already ran '
+                                f'{done or "nothing"}; a {row["mode"]} needs a click of its own)')
+            done.append(row['mode'])
+        for problem in problems:
+            violations.append(f'line {index + 1}: python3 of WinPoint (pid {pid}) {problem}: {argv[:12]}')
+    return {'execs': found, 'clicks': len(clicks), 'perClick': per_click, 'violations': violations}
+
+
+def winpoint_expected_problems(per_click: dict, expected) -> list[str]:
+    """--winpoint-feed with the winpoint-update scenario: the installer runs of each click mark must be exactly what
+    the scenario says it caused (its record ``winpoint installer runs``, {n: [modes]}), so a run in which the installer
+    never ran, or ran outside the trace (a transient unit), fails instead of passing."""
+    if not isinstance(expected, dict) or not expected:
+        return ['the scenario recorded no expected installer runs (records["winpoint installer runs"])']
+    want = {int(k): list(v) for k, v in expected.items()}
+    got = {int(k): list(v) for k, v in per_click.items()}
+    if got != want:
+        return [f'installer runs per click {got}, the scenario caused {want} (one --check and one install for the '
+                'installing click; none for a click whose job ends before --check)']
+    return []
+
+
+def strace_exec_report(traces: list[Path], winpoint_expected=None) -> dict:
     """WU-FIX (D-G51): every execve()/execveat() in the strace logs of a run (the session traces execve since WU-FIX,
     the install's trace=%file always did). A program of FORBIDDEN_EXEC that was executed (the call returned 0, or the
     process ended inside it) from anywhere but this run's own stub directories (under RUN) is a violation: the real
@@ -1017,9 +1170,22 @@ def strace_exec_report(traces: list[Path]) -> dict:
     missing = [str(trace) for trace in traces if not trace.is_file()]
     if missing:
         violations.append(f'no strace log: {", ".join(missing)}')
+    # D-G74: the one Python program, per trace (each has its own process tree; the install's has no WinPoint process)
+    python = [winpoint_python_report(trace) for trace in traces if trace.is_file()]
+    violations += [v for report in python for v in report['violations']]
+    per_click: dict[int, list[str]] = {}
+    for report in python:
+        for click, modes in report['perClick'].items():
+            per_click.setdefault(click, []).extend(modes)
+    if winpoint_expected is not None:
+        violations += winpoint_expected_problems(per_click, winpoint_expected)
     return {'files': [str(trace) for trace in traces], 'execs': total, 'ok': not violations, 'violations': violations,
             'forbidden': list(FORBIDDEN_EXEC),
-            'byProgram': [{'path': pth, 'where': w, 'result': res, 'count': n} for (pth, w, res), n in sorted(rows.items())]}
+            'byProgram': [{'path': pth, 'where': w, 'result': res, 'count': n} for (pth, w, res), n in sorted(rows.items())],
+            'winpointPython': {'execs': [row for report in python for row in report['execs']],
+                               'clicks': sum(report['clicks'] for report in python),
+                               'perClick': {str(k): v for k, v in sorted(per_click.items())},
+                               **({'expected': winpoint_expected} if winpoint_expected is not None else {})}}
 # WU-FIX end
 
 
@@ -1189,6 +1355,9 @@ def cmd_guard_selftest(args) -> int:
         ('update tool dir unset', {'WIN11_UPDATE_TOOL_DIR': None}, 'update-seam-not-private'),
         ('update fixture root not the private one', {'WIN11_UPDATE_FIXTURE_ROOT': str(G)}, 'update-seam-not-private'),
         ('update PackageKit bus set', {'WIN11_UPDATE_PK_BUS': 'unix:path=/run/dbus/system_bus_socket'}, 'update-seam-extra'),
+        # D-G74a: WinPoint's update check seam only with --winpoint-feed (this self-test runs without it)
+        ('WinPoint seam without --winpoint-feed', {WINPOINT_VAR: str(WINPOINT_SEAM)}, 'winpoint-seam-not-private'),
+        ('WinPoint seam in the run dir', {WINPOINT_VAR: str(RUN / 'winpoint')}, 'winpoint-seam-not-private'),
     ]
     results, failed = [], 0
 
@@ -1486,6 +1655,73 @@ def cmd_guard_selftest(args) -> int:
                     'layer': 'strace', 'expect': sorted(want), 'codes': sorted(flagged), 'passed': passed,
                     **({} if passed else {'violations': report['violations'], 'execs': report['execs']})})
 
+    # 3c3. D-G74: the one Python program. A python3 below a WinPoint process must be the release bundle's installer
+    #      with its frozen argv and environment, after the scenario's first click mark; the harness's own Python and
+    #      GNOME's are no WinPoint processes (synthetic log; nothing is traced or executed).
+    synthetic = G / 'tests' / 'logs' / f'strace-python-selftest-{os.getpid()}.txt'
+    work = f'{RUN}/cache/win11-gnome/winpoint/work/0.9.0'
+    installer = ['/usr/bin/python3', '-E', '-s', '-B', f'{work}/bundle/scripts/install.py', f'{work}/bundle', '--lang', 'nl',
+                 '--no-session']
+    check_argv = installer + ['--check']
+    install_argv = installer + ['--status', f'{work}/install.status', '--log', f'{work}/install.log']
+
+    def ex(pid: int, argv: list[str], env: int = 12) -> str:
+        return f'{pid} execve("{argv[0]}", [{", ".join(json.dumps(a) for a in argv)}], 0x7ffd0000 /* {env} vars */) = 0'
+    python_lines = [
+        ex(200, ['/usr/bin/python3', '-B', '-I', str(HERE / 'harness.py'), '_inner']),
+        ex(201, [f'{RUN}/prefix/bin/win11-panel', '--http-only'], 40),
+        '201 clone3({flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD, exit_signal=0}, 88) = 202',
+        '202 clone3({flags=CLONE_VM|CLONE_VFORK|CLONE_CLEAR_SIGHAND, exit_signal=SIGCHLD}, 88 <unfinished ...>',
+        ex(203, check_argv),                                                      # before the click: refused
+        '202 <... clone3 resumed>) = 203',
+        ex(300, ['/usr/bin/true', f'{WINPOINT_CLICK}-1'], 40),
+        '202 clone3({flags=CLONE_VM|CLONE_VFORK, exit_signal=SIGCHLD}, 88) = 204',
+        ex(204, check_argv),                                                      # click 1's --check: allowed
+        '202 clone3({flags=CLONE_VM|CLONE_VFORK, exit_signal=SIGCHLD}, 88) = 209',
+        ex(209, install_argv),                                                    # and its install: allowed
+        '202 clone3({flags=CLONE_VM|CLONE_VFORK, exit_signal=SIGCHLD}, 88) = 205',
+        ex(205, ['/usr/bin/python3', '-c', 'print(1)']),                          # any other Python: refused
+        '202 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|SIGCHLD, child_tidptr=0x7f00) = 206',
+        ex(206, ['/usr/bin/python3', '-I', '-s', '-B'] + installer[4:] + ['--check']),     # -I: refused
+        ex(207, ['/usr/bin/python3', '/usr/share/ibus-table/engine/main.py', '--xml'], 45),  # GNOME's: no WinPoint
+        '202 vfork() = 208',
+        ex(208, check_argv, 40),                                  # the session's environment, and no click of its own
+        '202 clone3({flags=CLONE_VM|CLONE_VFORK, exit_signal=SIGCHLD}, 88) = 210',
+        ex(210, install_argv),                                    # a second install with no new click: refused
+        ex(301, ['/usr/bin/true', f'{WINPOINT_CLICK}-2'], 40),
+        '202 clone3({flags=CLONE_VM|CLONE_VFORK, exit_signal=SIGCHLD}, 88) = 211',
+        ex(211, install_argv),                                    # click 2: an install before its --check, refused
+    ]
+    synthetic.write_text(''.join(line + '\n' for line in python_lines))
+    try:
+        report = winpoint_python_report(synthetic)
+    finally:
+        synthetic.unlink(missing_ok=True)
+    flagged = sorted({int(v.split()[1].rstrip(':')) for v in report['violations']})
+    want = [5, 13, 15, 18, 20, 23]
+    modes = [(row['line'], row['mode']) for row in report['execs']]
+    passed = flagged == want and report['clicks'] == 2 and modes == [
+        (5, 'check'), (9, 'check'), (11, 'install'), (13, None), (15, None), (18, 'check'), (20, 'install'),
+        (23, 'install')] and report['perClick'] == {1: ['check', 'install', 'check', 'install'], 2: ['install']}
+    # the runs the winpoint-update scenario's clicks caused: exactly those (none missing, none extra, none recorded)
+    expectations = [
+        ({1: ['check', 'install'], 2: []}, {'1': ['check', 'install'], '2': []}, False),
+        ({1: [], 2: []}, {'1': ['check', 'install'], '2': []}, True),             # marks, but no installer in the trace
+        ({1: ['check', 'install'], 2: ['check']}, {'1': ['check', 'install'], '2': []}, True),
+        ({1: ['check', 'install']}, {}, True),
+        ({1: ['check', 'install']}, None, True),
+    ]
+    expected_ok = [bool(winpoint_expected_problems(got, recorded)) == bad for got, recorded, bad in expectations]
+    passed = passed and all(expected_ok)
+    failed += not passed
+    results.append({'case': "D-G74 exec rule: a python3 below a WinPoint process is only the release bundle's "
+                            'installer with its frozen argv and environment, one --check and then one install per '
+                            "click mark; the harness and GNOME's own Python are not WinPoint's; with the "
+                            'winpoint-update scenario exactly the runs its clicks caused', 'layer': 'strace',
+                    'expect': want, 'codes': flagged, 'passed': passed,
+                    **({} if passed else {'violations': report['violations'], 'execs': modes,
+                                          'perClick': report['perClick'], 'expected': expected_ok})})
+
     # 3d. Fix round m2: the socket watch finds a socket that appears during a run and calls its stop handler
     #     (in-process, on a scratch directory; the listener is ours and nothing connects to it).
     scratch_dir = G / 'tests' / 'logs' / f'sw{os.getpid()}'
@@ -1766,7 +2002,88 @@ def prepare(lang: str, seed: str = 'defaults') -> None:
     else:
         # A file the host has saved once: the complete defaults with the wanted language.
         defaults = json.loads((SRC / 'host/src/settings-defaults.json').read_text())
-        write_settings({**defaults, 'language': lang}, create=True)
+        write_settings({**seed_defaults(defaults), 'language': lang}, create=True)
+
+
+def seed_defaults(defaults: dict) -> dict:
+    """D-G74a: without --winpoint-feed WinPoint's daily update check is off in the seeded settings (its owner would
+    ask the real GitHub 3 to 10 minutes into a run, which the loopback-only sandbox cannot reach: a failed card and a
+    resolver connect in the strace report). The page's "Controleren op updates" still works (and fails the same way)."""
+    if WINPOINT_FEED:
+        return defaults
+    return {**defaults, 'update': {**defaults.get('update', {}), 'winpointAutoCheck': False}}
+
+
+def tree_version() -> str:
+    """The installed tree's own version (D-G74a, the root Cargo.toml's [workspace.package] version): the release the
+    fake GitHub offers (winpoint_bundle)."""
+    import tomllib
+    return tomllib.loads((SRC / 'Cargo.toml').read_text())['workspace']['package']['version']
+
+
+def winpoint_running() -> str:
+    """The version the run's hosts pretend to be (seam.json running, D-G74): one below the tree's own (0.9.0: 0.8.9,
+    as the updater design's harness), so the tree's real bundle is an update they can install."""
+    major, minor, patch = (int(x) for x in tree_version().split('-')[0].split('.'))
+    if patch:
+        return f'{major}.{minor}.{patch - 1}'
+    return f'{major}.{minor - 1}.9' if minor else f'{major - 1}.9.9'
+
+
+def winpoint_bundle() -> Path:
+    """--winpoint-feed (D-G74): the release the fake GitHub offers is a real one, made by the project's own packaging
+    (scripts/package.py, as tools/release.py makes a release) from this run's build dir and source tree into
+    RUN/winpoint-dist: dist/winpoint-V-linux-ARCH.tar.gz and its .sha256. Removed again when the run ends."""
+    if WINPOINT_DIST.exists():
+        shutil.rmtree(WINPOINT_DIST)
+    (WINPOINT_DIST / 'tmp').mkdir(parents=True)
+    env = {k: v for k, v in os.environ.items() if k != 'WIN11_NATIVE_BUILD_DIR'}
+    env.update(WIN11_BUILD_DIR=str(BUILD), WIN11_PACKAGE_DIR=str(WINPOINT_DIST), WIN11_LANG='en',
+               TMPDIR=str(WINPOINT_DIST / 'tmp'), PYTHONDONTWRITEBYTECODE='1')
+    t0 = time.monotonic()
+    try:
+        made = subprocess.run([sys.executable, '-B', str(SRC / 'scripts' / 'package.py'), str(SRC)], env=env,
+                              capture_output=True, text=True, timeout=900)
+    except subprocess.TimeoutExpired as error:
+        raise Fatal(f'scripts/package.py took longer than {error.timeout} s') from error
+    shutil.rmtree(WINPOINT_DIST / 'tmp', ignore_errors=True)
+    (RUN / 'logs' / 'winpoint-package.log').write_text(made.stdout + made.stderr)
+    bundles = sorted(WINPOINT_DIST.glob(f'winpoint-{tree_version()}-linux-*.tar.gz'))
+    if made.returncode or len(bundles) != 1:
+        raise Fatal(f'scripts/package.py made no bundle (exit {made.returncode}); see logs/winpoint-package.log')
+    log(f'WinPoint bundle {bundles[0].name}: {bundles[0].stat().st_size} bytes in {time.monotonic() - t0:.1f} s')
+    return bundles[0]
+
+
+def start_fake_github() -> subprocess.Popen:
+    """--winpoint-feed: the seam directory on the sandbox's own /tmp and the fake GitHub on loopback (a child of run,
+    outside the strace'd session; it stops with run). Returns once it listens."""
+    if WINPOINT_SEAM.exists():
+        shutil.rmtree(WINPOINT_SEAM)
+    WINPOINT_SEAM.mkdir(mode=0o700)
+    os.chmod(WINPOINT_SEAM, 0o700)
+    running = winpoint_running()
+    bundle = winpoint_bundle()
+    # seam.rs: the one tarball this run may install, by its SHA-256 (whoever answers on the port cannot choose it)
+    digest = hashlib.sha256()
+    with bundle.open('rb') as data:
+        for block in iter(lambda: data.read(1 << 20), b''):
+            digest.update(block)
+    seam = {'origin': f'http://127.0.0.1:{WINPOINT_PORT}/', 'running': running, 'digest': f'sha256:{digest.hexdigest()}'}
+    for name, text in ((UPDATE_MARKER, 'GE0c harness: WinPoint update check test seam (D-G74a)\n'),
+                       ('seam.json', json.dumps(seam))):
+        (WINPOINT_SEAM / name).write_text(text)
+        os.chmod(WINPOINT_SEAM / name, 0o644)       # seam.rs: neither group- nor other-writable
+    proc = subprocess.Popen([sys.executable, '-B', '-I', str(HERE / 'lib' / 'fake_github.py'), '--port', str(WINPOINT_PORT),
+                             '--running', running, '--bundle', str(bundle),
+                             '--log', str(RUN / 'logs' / 'fake-github.jsonl')],
+                            stdout=subprocess.PIPE, stderr=open(RUN / 'logs' / 'fake-github.log', 'w'), text=True)
+    line = proc.stdout.readline().strip() if proc.stdout else ''
+    if line != 'ready':
+        proc.kill()
+        raise Fatal(f'fake GitHub did not start ({line!r}); see logs/fake-github.log')
+    log(f'fake GitHub on 127.0.0.1:{WINPOINT_PORT} (running {running}, offers {bundle.name}), seam {WINPOINT_SEAM}')
+    return proc
 
 
 def write_settings(patch: dict, create: bool = False) -> None:
@@ -2065,9 +2382,17 @@ def scenario_out(args) -> Path:
     return BASELINE / args.lang
 
 
+def winpoint_scenario(args) -> bool:
+    """--winpoint-feed with tests/gnome/scenarios/winpoint-update.py: D-G74's exec rule then also requires the
+    installer runs the scenario's clicks caused (winpoint_expected_problems), and the run needs --strace."""
+    return bool(getattr(args, 'winpoint_feed', False)) and Path(getattr(args, 'scenario', None) or '').name == \
+        'winpoint-update.py'
+
+
 def cmd_run(args) -> int:
     set_build_dir(args.build_dir)
     set_session_mode(args.session_mode)
+    set_winpoint_feed(args.winpoint_feed)
     guard_or_exit('outer')
     if os.environ.get('WIN11_BUILD_DIR') != str(BUILD):
         print(f'GUARD REFUSED [build-dir-mismatch] WIN11_BUILD_DIR={os.environ.get("WIN11_BUILD_DIR")!r} '
@@ -2079,6 +2404,9 @@ def cmd_run(args) -> int:
     problems = build_dir_problems(BUILD)
     if args.scenario and not Path(args.scenario).is_file():
         problems.append(('scenario-invalid', f'--scenario {args.scenario} does not exist'))
+    if winpoint_scenario(args) and not args.strace:
+        problems.append(('winpoint-needs-strace', 'the winpoint-update scenario with --winpoint-feed needs --strace '
+                                                  "(D-G74: the exec rule proves the installer ran only after its clicks)"))
     out = scenario_out(args)
     if out_problem(out):
         problems.append(('out-invalid', f'output {out} must be inside {HERE}, outside {RUN}, not {HERE} itself'))
@@ -2116,7 +2444,7 @@ def cmd_run(args) -> int:
         SRC = Path(source['path'])
         defaults = json.loads((SRC / 'host/src/settings-defaults.json').read_text())
         if args.seed != 'minimal':
-            write_settings({**defaults, 'language': args.lang}, create=True)
+            write_settings({**seed_defaults(defaults), 'language': args.lang}, create=True)
     log(f'GE0c run lang={args.lang} switch={args.switch} seed={args.seed} MemAvailable={available} kB; '
         f'heavy lock {lock_note}; run dir {RUN}; build {BUILD}; source {source["rev"]} '
         f'{source.get("commit", "")[:12]}; scenario {args.scenario or "-"}')
@@ -2142,7 +2470,15 @@ def cmd_run(args) -> int:
     # the install has its own. (The GStreamer warm-up the WebKit apps needed, gst-inspect-1.0 under FILE.warm and
     # FILE.warm2, went with them: no native program builds the registry, so no gst-plugin-scanner runs.)
     trace = Path(args.strace) if args.strace else None
-    traced = lambda name: (['strace', '-f', '-qq', '--seccomp-bpf', '-e', 'trace=connect,execve,execveat', '-e',
+    try:
+        fake = start_fake_github() if WINPOINT_FEED else None
+    except (Fatal, OSError) as error:
+        log(f'--winpoint-feed: {error}')
+        return 1
+    # D-G74: also every new process and thread (clone, fork) for the process tree of the python3 exec rule, and whole
+    # argv strings (-s 512) so that rule sees the installer's paths
+    traced = lambda name: (['strace', '-f', '-qq', '--seccomp-bpf', '-s', '512', '-e',
+                            'trace=connect,execve,execveat,clone,clone3,fork,vfork', '-e',
                             'signal=none', '-o', str(trace.with_name(trace.name + name))] if trace else [])
     sampler = Sampler()
     sampler.start()
@@ -2164,6 +2500,8 @@ def cmd_run(args) -> int:
         inner += ['--surfaces', args.surfaces]
     if args.patch_extension:
         inner.append('--patch-extension')
+    if args.winpoint_feed:
+        inner.append('--winpoint-feed')
     if args.scenario:
         inner += ['--scenario', str(Path(args.scenario).resolve())]
     argv = traced('') + ['dbus-run-session', f'--config-file={RUN / "session-bus.conf"}', '--'] + inner
@@ -2180,6 +2518,9 @@ def cmd_run(args) -> int:
     sampler.join(timeout=5)
     watch.stop_event.set()
     watch.join(timeout=5)
+    if fake:
+        stop_pids([fake.pid], 'fake GitHub', grace=3)
+        shutil.rmtree(WINPOINT_DIST, ignore_errors=True)        # the release bundle (about 100 MB): the run's own
     reap()
     leftovers = stop_pids(descendants(os.getpid()), 'final sweep')
     reap()
@@ -2202,13 +2543,21 @@ def cmd_run(args) -> int:
             log(f'strace connect: {row["count"]:6d} x {row["family"]} {row["target"]} -> {row["result"]}')
         log(f'strace connect check: {connects["connects"]} connect() calls, '
             f'{"OK" if connects["ok"] else "FAIL " + "; ".join(connects["violations"][:5])}')
-        # WU-FIX (D-G51): no real pkexec, check-new-release, apt-get, apt-cache, do-release-upgrade or loginctl ran
-        execs = strace_exec_report([RUN / 'logs' / 'install.strace', trace])
+        # WU-FIX (D-G51): no real pkexec, check-new-release, apt-get, apt-cache, do-release-upgrade or loginctl ran;
+        # D-G74: with the winpoint-update scenario, exactly the installer runs its clicks caused
+        expected = None
+        if winpoint_scenario(args):
+            records = (inner_results.get('scenario') or {}).get('records') or {}
+            expected = records.get('winpoint installer runs') or {}
+        execs = strace_exec_report([RUN / 'logs' / 'install.strace', trace], winpoint_expected=expected)
         trace.with_name(trace.name + '.exec.json').write_text(json.dumps(execs, indent=1) + '\n')
         for row in execs['byProgram']:
             log(f'strace exec: {row["count"]:6d} x {row["path"]} ({row["where"]}) -> {row["result"]}')
         log(f'strace exec check: {execs["execs"]} execve() calls, '
             f'{"OK" if execs["ok"] else "FAIL " + "; ".join(execs["violations"][:5])}')
+        for row in execs['winpointPython']['execs']:
+            log(f'strace exec: WinPoint python3 at line {row["line"]} ({row["mode"] or "?"}, {row["env"]} vars): '
+                f'{" ".join(row["argv"][4:6])}')
     scenario = inner_results.get('scenario')
     result = {
         'harness': 'GE0c/GE1h tests/gnome/harness.py', 'lang': args.lang, 'switch': args.switch, 'seed': args.seed,
@@ -2241,7 +2590,8 @@ def cmd_run(args) -> int:
     out.mkdir(parents=True, exist_ok=True)
     result['copiedScreenshots'] = [str(Path(c).relative_to(G)) for c in copied]
     (out / 'results.json').write_text(json.dumps(result, indent=1, ensure_ascii=False) + '\n')
-    names = ['shell.log', 'harness.log', 'install-verify.json', 'guard-calls.log', 'update-tool-calls.log', 'memory.tsv']
+    names = ['shell.log', 'harness.log', 'install-verify.json', 'guard-calls.log', 'update-tool-calls.log', 'memory.tsv',
+             'fake-github.jsonl', 'fake-github.log']
     if args.scenario:
         names += sorted(p.name for p in (RUN / 'logs').glob('app-*.log'))
     for name in names:
@@ -2867,6 +3217,7 @@ def cmd_inner(args) -> int:
     global SRC
     set_build_dir(args.build_dir)
     set_session_mode(args.session_mode)
+    set_winpoint_feed(args.winpoint_feed)
     SRC = G if args.source == 'worktree' else RUN / 'src'
     guard_or_exit('inner')
     set_subreaper()
@@ -2959,6 +3310,9 @@ def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
                    help='tree to install the assets, extension and scripts from: "worktree" (default) or a git '
                         'revision (exported with git archive into run/src)')
     p.add_argument('--scenario', help='Python file with def run(h), run inside the sandbox after the session is up')
+    p.add_argument('--winpoint-feed', action='store_true',
+                   help="D-G74a: WinPoint's update check against a fake GitHub on loopback (tests/gnome/lib/"
+                        'fake_github.py) through its test seam WIN11_WINPOINT_TEST; without it the daily check is off')
     p.add_argument('--strace', metavar='FILE',
                    help='D-G42: every connect() of the install and the whole session under strace into FILE '
                         '(inside tests/gnome, outside run/); the run fails when one reached a socket outside the '
@@ -3004,6 +3358,11 @@ def main(argv: list[str]) -> int:
         execs = strace_exec_report([Path(f) for f in args.files])
         for row in execs['byProgram']:
             print(f'strace exec: {row["count"]:6d} x {row["path"]} ({row["where"]}) -> {row["result"]}')
+        # D-G74: WinPoint's one Python program
+        for row in execs['winpointPython']['execs']:
+            print(f'strace exec: WinPoint python3 at line {row["line"]} ({row["mode"] or "?"}, {row["env"]} vars): '
+                  f'{" ".join(row["argv"][4:6])}')
+        print(f'strace exec: {execs["winpointPython"]["clicks"]} click mark(s)')
         print(f'strace exec check: {execs["execs"]} execve() calls in {len(args.files)} logs, '
               f'{"OK" if execs["ok"] else "FAIL " + "; ".join(execs["violations"][:5])}')
         return 0 if report['ok'] and execs['ok'] else 1

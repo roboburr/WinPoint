@@ -1,4 +1,4 @@
-//! The navigation pane (last-webkit:vendor/ui/js/apps/explorer/navpane.js): Start, Galerij, the pinned folders, Deze pc
+//! The navigation pane (6ebf169f:vendor/ui/js/apps/explorer/navpane.js): Start, Galerij, the pinned folders, Deze pc
 //! with its drives, the Prullenbak; a tree with lazily loaded sub folders, chevrons while the pointer is on
 //! the pane, the accent pill on the selected row, Win11 TreeView keys, a context menu per row and drop
 //! targets (dnd.rs).

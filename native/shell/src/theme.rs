@@ -1,4 +1,4 @@
-//! Look: GTK CSS from the UI's tokens (last-webkit:vendor/ui/css/tokens.css, shell.css, flyouts.css), one stylesheet
+//! Look: GTK CSS from the UI's tokens (6ebf169f:vendor/ui/css/tokens.css, shell.css, flyouts.css), one stylesheet
 //! per module in css/, plus a generated part for the user's choices (theme.js `apply`): the accent palette from
 //! theme.accent (OKLCH steps like Windows' AccentPalette, theme.js `accentPalette`), the text scale, and
 //! "Accentkleur weergeven op Start en taakbalk" (theme.accentOnTaskbar, dark mode only, shell.js
@@ -84,20 +84,26 @@ pub fn install(shell: &Rc<Shell>) {
     TOPLEVELS.with(|t| *t.borrow_mut() = Some(toplevels));
 
     refresh(shell);
-    shell.on("settings.changed", |_, _| refresh(&crate::core::shell()));
+    shell.on("settings.changed", |_, data| {
+        if crate::core::touches(data, &["theme", "accessibility"]) {
+            refresh(&crate::core::shell());
+        }
+    });
 }
 
 /// The user's choices as CSS: the accent palette, the text scale and the accent surfaces as custom
 /// properties, and the classes on every toplevel.
 pub fn refresh(shell: &Shell) {
     let look = look_of(shell);
+    // Only a value that differs: a set notifies and restyles every widget, also when the value stays the same.
     if let Some(settings) = gtk::Settings::default() {
-        settings.set_gtk_interface_color_scheme(if look.dark {
-            gtk::InterfaceColorScheme::Dark
-        } else {
-            gtk::InterfaceColorScheme::Light
-        });
-        settings.set_gtk_enable_animations(!look.reduce_motion);
+        let scheme = if look.dark { gtk::InterfaceColorScheme::Dark } else { gtk::InterfaceColorScheme::Light };
+        if settings.gtk_interface_color_scheme() != scheme {
+            settings.set_gtk_interface_color_scheme(scheme);
+        }
+        if settings.is_gtk_enable_animations() == look.reduce_motion {
+            settings.set_gtk_enable_animations(!look.reduce_motion);
+        }
     }
     let css = dynamic_css(&look);
     let changed = LAST_CSS.with(|last| {

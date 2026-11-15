@@ -1,6 +1,8 @@
 //! The power and restart guard (design §4.9) and the release-upgrader detection every update write runs first
 //! (§4.3, §6.4 step 5). Files and `/proc` only: no D-Bus, no program, so it runs in any host (the panel's
-//! `system/power.rs` in reader mode, GX1's `shell.restartAll`).
+//! `system/power.rs` in reader mode, GX1's `shell.restartAll`). D-G74: WinPoint's own update job
+//! (`services/winpoint/job.rs`) blocks power actions while its installer runs and `shell.restartAll` while it runs at
+//! all or waits for a sign-out; it asks [`busy_for_winpoint`] before it starts.
 use super::{
     paths::{Paths, Setup, process_setup},
     store::{self, JOB, Store},
@@ -43,6 +45,10 @@ pub(crate) fn power_blocked(ctx: &ServiceContext, action: &str) -> Option<ApiErr
 pub(crate) fn power_blocked_in(ctx: &ServiceContext, setup: &Setup, lang: crate::i18n::Lang) -> Option<ApiError> {
     if upgrader_running(&setup.paths) {
         return Some(ApiError::tr("update_busy", lang, "update.guard.upgrade", crate::i18n::NO_PARAMS));
+    }
+    // D-G74: WinPoint's installer replaces its own programs; a power action now would cut it off mid-way
+    if crate::services::winpoint::job::installing(&ctx.cache_dir) {
+        return Some(ApiError::tr("update_busy", lang, "update.winpoint.err.installing", crate::i18n::NO_PARAMS));
     }
     let store = Store::open(ctx.cache_dir.join("update")).ok()?;
     let job = store.read(JOB)?;
@@ -87,7 +93,33 @@ pub(crate) fn restart_all_blocked(ctx: &ServiceContext) -> Option<ApiError> {
     if software_job_active(&ctx.cache_dir.join("software/jobs")) {
         return Some(ApiError::tr("software_busy", lang, "update.guard.software", crate::i18n::NO_PARAMS));
     }
+    // D-G74: not while WinPoint updates itself, and not while its update waits for a sign-out (new shell binaries
+    // against the old extension are the mix the sign-out avoids)
+    if crate::services::winpoint::job::job_active(&ctx.cache_dir) {
+        return Some(ApiError::tr("update_busy", lang, "update.winpoint.err.installing", crate::i18n::NO_PARAMS));
+    }
+    if crate::services::winpoint::job::relogin_pending(&ctx.cache_dir) {
+        return Some(ApiError::tr("update_busy", lang, "update.winpoint.err.signOutFirst", crate::i18n::NO_PARAMS));
+    }
     None
+}
+
+/// D-G74: what keeps WinPoint's own update from starting (`winpoint.install`, the code `busy`): Ubuntu's release
+/// upgrader, an update job of ours (any phase, live owner) or an active Software job. A failed `WIN11_UPDATE_*` seam
+/// counts as busy (fail closed).
+pub(crate) fn busy_for_winpoint(ctx: &ServiceContext) -> bool {
+    let Ok(setup) = process_setup() else { return true };
+    if upgrader_running(&setup.paths) {
+        return true;
+    }
+    if let Ok(store) = Store::open(ctx.cache_dir.join("update"))
+        && let Some(job) = store.read(JOB)
+        && job.get("finishedAt").is_none_or(Value::is_null)
+        && store::owner_alive(&job["owner"])
+    {
+        return true;
+    }
+    software_job_active(&ctx.cache_dir.join("software/jobs"))
 }
 /// A Software job file (`software.rs` jobs dir) that is active with a live owner (its own `active()` rule).
 pub(crate) fn software_job_active(dir: &Path) -> bool {

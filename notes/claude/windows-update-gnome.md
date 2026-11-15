@@ -28,7 +28,7 @@ backend.rs, bin/launch.rs, process_scope.rs, services/system/info.rs}`, `/usr/bi
 names through `python3 -I` (no D-Bus, no cache opened). Still no PackageKit call, apt run, build or launch.
 
 **Updated 2026-11-13: WinPoint without WebKit.** The WebKit hosts and the page code under `vendor/ui/js` are gone
-(the last commit with them is tagged `last-webkit`: `git show last-webkit:vendor/ui/js/apps/settings/pages/update.js`).
+(the last commit with them is `6ebf169f`: `git show 6ebf169f:vendor/ui/js/apps/settings/pages/update.js`).
 The page is the native Settings (`native/apps/settings/src/pages/update*.rs`), and the owner of the update service is
 its backend `win11-app --app settings --http-only`. Rewritten to that: §3.4 (the restart InfoBar and its component
 names), §4.1 (the keep-alive), §4.8 (the scan, without WebKit children and without the history fallback) and the
@@ -38,10 +38,10 @@ rows of §3.3 stay: they group Ubuntu's packages, which other apps use; the nati
 it was built in GW1–GW9.
 
 **Updated 2026-11-14 (D-G73): the phasing classifier without Python.** `phasing.rs` no longer runs a python3-apt
-script (`git show last-webkit:host/data/phasing.py`). It asks apt itself, with three read-only programs from the tool
+script (`git show 6ebf169f:host/data/phasing.py`). It asks apt itself, with three read-only programs from the tool
 table, in this order: `apt-cache policy ?phasing` (apt's own per-machine decision), `apt-cache policy -o
 APT::Cmd::Pattern-Only=true <name:arch>…` and `apt-mark showhold`. `Tool::Python3` and `probe.py --phasing` are gone, and so is vendor/host, the Python reference host
-(`git show last-webkit:vendor/host/<path>`). Rewritten to that, each place marked *[D-G73]*: §0 (the phasing line),
+(`git show 6ebf169f:vendor/host/<path>`). Rewritten to that, each place marked *[D-G73]*: §0 (the phasing line),
 §1.1 (the cleanup-helper template), §4.2 (the `phasing.rs` row), §4.6 (phasing and held packages), §4.11 (the stub
 list), §6.4 (the `updatesPending` rule), §9.1 (the phased-as-normal timeline, probe.py), §9.2, §9.4, §11 R1 and §14. §1.2's observations and §15's
 review table stay as they were written.
@@ -129,7 +129,7 @@ review table stay as they were written.
 | Services | `LazyService` per process, routing by prefix, `ctx.language()` read fresh per call, `ctx.dry_run` | `services/mod.rs:62-69, 94-134, 203-253` |
 | Events | Unix datagrams to every `*.sock` in the runtime dir, 60 KiB limit, prefix allowlist **without** `update.` | `events.rs:20, 160-200, 334-362`; `Events::on` observers `:248` |
 | API registry | 172 methods with `dangerous`; dangerous + dry host → envelope `dryRun:true` (the method itself must avoid effects) | `api-methods.json`, `runtime.rs:524-546` |
-| pkexec precedent | root-owned helper check (file and parent uid 0, no g/o write), else `pkexec /bin/sh -c <constant> win11shell-cleanup <args>`; rc 126/127 → "geen wachtwoord"/"wachtwoord klopte niet"; markers `@@ok`/`@@fail`; helper path `/usr/libexec/win11shell/cleanup-helper` is **not installed** by `install.py` | `services/storage/cleanup.rs:661-735`; template *[D-G73]* `git show last-webkit:vendor/host/data/{nl.win11shell.cleanup.policy, win11shell-cleanup-helper}` (vendor/host is deleted) |
+| pkexec precedent | root-owned helper check (file and parent uid 0, no g/o write), else `pkexec /bin/sh -c <constant> win11shell-cleanup <args>`; rc 126/127 → "geen wachtwoord"/"wachtwoord klopte niet"; markers `@@ok`/`@@fail`; helper path `/usr/libexec/win11shell/cleanup-helper` is **not installed** by `install.py` | `services/storage/cleanup.rs:661-735`; template *[D-G73]* `git show 6ebf169f:vendor/host/data/{nl.win11shell.cleanup.policy, win11shell-cleanup-helper}` (vendor/host is deleted) |
 | Terminal precedent | `default_terminal()` (xdg-terminals.list, then Ptyxis, GNOME Terminal, Console, …), `terminal_command`, sanitised `user_environment(true)`, activation token, spawn through `process_scope::spawn(…, "file-open", Some(env))`. *[review]* `user_environment` is private (`fn`, no `pub`), so `update/upgrade.rs` needs a one-line visibility change (GW7) | `host/src/files/actions.rs:531-685, 910-916` |
 | Single instance? *[review]* | every kind except start/panel/desktop/alles gets `ApplicationFlags::NON_UNIQUE`, so each Settings launch is a new process; `shell.openApp` always spawns (Taakbeheer's health item opens `settings` `page:update`) | `lib.rs:295-301`, `services/shell.rs:177`, `sysmon/health.rs:333` |
 | Preloaded Start *[review]* | the panel prewarms Start as its child, SIGTERMs it on its own shutdown and prewarms a new one after it starts again | `lib.rs:515, 559-585` |

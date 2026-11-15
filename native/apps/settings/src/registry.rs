@@ -1,4 +1,4 @@
-//! The page registry (last-webkit:vendor/ui/js/apps/settings/registry.js): every page with its parent, glyph, title,
+//! The page registry (6ebf169f:vendor/ui/js/apps/settings/registry.js): every page with its parent, glyph, title,
 //! description and search keywords in Dutch and English, the aliases deep links may use, and the search of the
 //! navigation pane's "Zoek een instelling" (the same scoring as registry.js searchSettings).
 //!

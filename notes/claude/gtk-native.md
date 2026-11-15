@@ -114,8 +114,8 @@ on a shared kit (native/apps, native/kit; native/APPS.md has their design, state
 (`win11-app --app <kind>`, `win11-explorer`, `win11-default-apps`, `win11-installer`): in their own scope they exec
 `win11-gtk-<kind>`, which starts `win11-app --app <kind> --http-only` as its backend, the same API the shell uses.
 The file portal shows `win11-gtk-explorer --picker-stdio` per request and runs no GTK itself. The last commit with
-the HTML apps and WebKit is tagged `last-webkit`; native comments cite those sources as `last-webkit:<path>`
-(`git show last-webkit:<path>`), the shell's own HTML (gone with D-G70) as `git show 418ea594:<path>`.
+the HTML apps and WebKit is `6ebf169f`; native comments cite those sources as `6ebf169f:<path>`
+(`git show 6ebf169f:<path>`), the shell's own HTML (gone with D-G70) as `git show 418ea594:<path>`.
 
 Gone: the host's WebKit windows, its hand-off and window state, wry, webkit2gtk, javascriptcore, soup3 and gtk (the
 host links GLib, GIO and GDK Pixbuf only), vendor/ui's HTML, JS and CSS (the wallpapers and the Settings icon stay),
@@ -144,7 +144,7 @@ session, software rendering, cairo):
 
 The 13-11 columns are one run with both versions, before the last kit fixes (anonymous memory plus swap: 24.9,
 73.3 and 30.9 MiB native against 90.2, 112.2 and 89.0 for the WebKit apps with their web and network processes). The
-results.json kept at the tag (`git show last-webkit:tests/gnome/scenarios/native-gtk-apps.out/results.json`) is
+results.json kept at that commit (`git show 6ebf169f:tests/gnome/scenarios/native-gtk-apps.out/results.json`) is
 another run of that day: 48.2, 96.6 and 53.8 MiB native against 170.3, 192.5 and 169.7. Alles varies with how far
 its index of the sandbox's / has got.
 

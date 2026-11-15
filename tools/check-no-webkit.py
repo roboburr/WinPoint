@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Acceptance check of the WebKit removal (tag last-webkit, 2026-11-13; decision 10 of that workflow).
+"""Acceptance check of the WebKit removal (commit 6ebf169f, 2026-11-13; decision 10 of that workflow).
 
     python3 -B tools/check-no-webkit.py [--build-dir DIR] [--no-binaries] [--allowed]
 
@@ -25,7 +25,7 @@ left the tree with D-G73) and the records (notes, validation, VALIDATION*.md), w
              libgtk-4.so.1 and the host binaries no libgtk or libgdk at all. ldd must not resolve one of them either.
 
 A hit of checks 1 and 3 can be covered only by a history, frozen-data or fixture row. A reference through the tag
-(`git show last-webkit:host/src/window.rs`, "last-webkit:vendor/ui/js/…") or another commit (`git show 418ea594:…`)
+(`git show 6ebf169f:host/src/window.rs`, "6ebf169f:vendor/ui/js/…") or another commit (`git show 418ea594:…`)
 is history by construction and never counts. This file and the allow list name the patterns and are not searched.
 Standard library plus readelf and ldd; reads only. Exit 0 when everything holds, 1 when anything is found (each hit
 is printed), 2 on a usage error or a missing binary or tool (check 5 could not run: the other checks' hits are still
@@ -55,8 +55,9 @@ CODE = re.compile(r"wry::|webkit2gtk::|javascriptcore::|WebViewBuilder|WebContex
                   r"webkit2gtk-4\.1 >=|WIN11_WEBKIT_APPS|WIN11_DEV_SCRIPT|NATIVE_BRIDGE|window_state|WEBKIT_EXE_DIR")
 VENDOR_REF = re.compile(r"vendor/ui/(?:js|css|index\.html)")
 WORDS = re.compile(r"webkit|javascriptcore|libsoup|soup3|\bwry\b", re.IGNORECASE)
-# A citation of the tag (or of any commit) through git: history by construction (decision 11).
-CITATION = re.compile(r"git show [0-9A-Za-z_.-]+:\S+|last-webkit(?::\S+)?")
+# A citation of a commit (6ebf169f, the last one with WebKit, or any other) through git or as <commit>:<path>:
+# history by construction (decision 11). last-webkit is that commit's old tag name.
+CITATION = re.compile(r"git show [0-9A-Za-z_.-]+:\S+|\b[0-9a-f]{8,40}:\S+|last-webkit(?::\S+)?")
 
 BANNED_CRATE = re.compile(r"wry|webkit|javascriptcore|soup")
 GTK3_CRATES = {"gtk", "gtk-sys", "gdk", "gdk-sys", "atk", "atk-sys", "gtk3-macros"}

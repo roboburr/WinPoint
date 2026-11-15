@@ -10,7 +10,10 @@ use std::{
     io::Read,
     os::{
         fd::{AsRawFd, FromRawFd, OwnedFd, RawFd},
-        unix::ffi::{OsStrExt, OsStringExt},
+        unix::{
+            ffi::{OsStrExt, OsStringExt},
+            fs::MetadataExt,
+        },
     },
     path::{Path, PathBuf},
     time::{Duration, UNIX_EPOCH},
@@ -227,6 +230,43 @@ fn pids(proc: &Path) -> Vec<u32> {
 /// picks up replaced libraries when it is next started.
 const NOT_RESTARTED: &[&str] = &["win11-calendar"];
 
+/// D-G74: is this process's program, which the kernel calls " (deleted)", really replaced? Only when the file at its
+/// path now is another inode than the one running (`/proc/<pid>/exe` against the path, as device and inode). After
+/// WinPoint's installer rolled back, the path holds the running inode again (it renames the old file back), so no
+/// restart is asked for then. A fake procfs, whose `exe` link does not lead to a file, keeps the " (deleted)" rule.
+fn replaced(p: &Proc, exe: &str) -> bool {
+    let Some(path) = exe.strip_suffix(DELETED) else { return false };
+    match (fs::metadata(p.dir.join("exe")), fs::metadata(path)) {
+        (Ok(running), Ok(now)) => (running.dev(), running.ino()) != (now.dev(), now.ino()),
+        _ => true,
+    }
+}
+
+/// Our uid's GNOME Shells: comm `gnome-shell` with an `org.gnome.Shell@` cgroup (the session's own), else any
+/// `gnome-shell` of ours (a session without a systemd user manager).
+fn gnome_shells<'a>(all: &'a [Proc], uid: u32) -> Vec<&'a Proc> {
+    let shells: Vec<&Proc> = all.iter().filter(|p| p.uid == Some(uid) && p.comm == "gnome-shell").collect();
+    let session: Vec<&Proc> = shells
+        .iter()
+        .copied()
+        .filter(|p| read_limited(&p.dir.join("cgroup"), 64 << 10).is_some_and(|c| c.contains("org.gnome.Shell@")))
+        .collect();
+    if session.is_empty() { shells } else { session }
+}
+/// D-G74: the start time (clock ticks since boot, `/proc/<pid>/stat` field 22) of the oldest GNOME Shell of our uid
+/// (see [`gnome_shells`]): a sign-out and sign-in starts a new one, which is how WinPoint's updater knows that the
+/// sign-out it asked for happened (services/winpoint/job.rs, the session key). None: no GNOME Shell runs.
+pub(crate) fn gnome_shell_start(paths: &Paths, uid: u32) -> Option<String> {
+    let all: Vec<Proc> = pids(&paths.proc).into_iter().filter_map(|pid| proc_entry(&paths.proc, pid)).collect();
+    gnome_shells(&all, uid)
+        .into_iter()
+        .filter_map(|p| {
+            let pid = p.dir.file_name()?.to_str()?.parse::<u32>().ok()?;
+            super::store::process_start_in(&paths.proc, pid)
+        })
+        .min_by_key(|start| (start.len(), start.clone()))
+}
+
 /// The scan (design §4.8 step 2): our processes (exe in `own_dir`, named `win11-*` and not [`NOT_RESTARTED`]: the
 /// host binaries, the native shell and apps, and their `--http-only` backends) and gnome-shell (our uid, comm,
 /// `org.gnome.Shell@` cgroup). Our programs start no helper processes of their own whose maps would need a look.
@@ -256,7 +296,7 @@ pub(crate) fn scan(paths: &Paths, uid: u32, own_dir: &Path) -> Scan {
             break;
         }
         budget -= 1;
-        if p.exe.as_deref().is_some_and(|e| e.ends_with(DELETED)) {
+        if p.exe.as_deref().is_some_and(|e| replaced(p, e)) {
             parts.insert("self");
         }
         if let Some(maps) = read_limited(&p.dir.join("maps"), MAX_MAPS) {

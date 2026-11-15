@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Native layer of the language checker: the Dutch and English texts of the GTK 4 programs in ``native/`` (the shell,
 Calendar, the kit and the seven ``win11-gtk-*`` apps), read from their Rust sources and JSON tables. It took over
-from the UI layer of the WebKit apps (``git show last-webkit:tools/i18n/check_ui.py``).
+from the UI layer of the WebKit apps (``git show 6ebf169f:tools/i18n/check_ui.py``).
 
     python3 -B tools/i18n/check.py                            # all layers (this one included)
     python3 -B tools/i18n/check_native.py [--warnings]        # the native rules alone

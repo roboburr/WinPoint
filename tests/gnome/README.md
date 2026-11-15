@@ -65,9 +65,24 @@ python3 -B tests/gnome/harness.py strace-check tests/gnome/scenarios/native-shel
   shots in `baseline/switch/`), a scenario writes `<scenario dir>/<stem>.out/`. With `--out`, the `--switch` shots go to
   `<out>/switch/`.
 * `--strace FILE` (inside the output directory) runs the whole session under
-  `strace -f --seccomp-bpf -e trace=connect,execve,execveat` (section "strace").
+  `strace -f --seccomp-bpf -s 512 -e trace=connect,execve,execveat,clone,clone3,fork,vfork` (section "strace").
 * `--seed minimal` seeds `settings.json` with only `{"language": …}`. This reproduces the partial-settings
   finding in `findings/`.
+* `--winpoint-feed` (D-G74a, D-G74) gives WinPoint's own updater its test seam and a fake GitHub: `run` first packs
+  a real release with the project's own packaging (`scripts/package.py` on this run's source tree and build dir, into
+  `run/winpoint-dist/`, about 100 MB, removed when the run ends; `logs/winpoint-package.log`), makes
+  `/tmp/w11-winpoint/` on the sandbox's own tmpfs (0700, the update fixtures' marker, `seam.json` with the origin
+  `http://127.0.0.1:47811/`, `running`, one below this tree's root `Cargo.toml` version, so the tree's release is
+  an update the hosts can install, and `digest`, the packed tarball's SHA-256: the only tarball a job of this run may
+  install, whoever answers on the port) and starts `lib/fake_github.py` there with that bundle (inside the loopback-only
+  namespace, outside the strace'd session; its list requests in `logs/fake-github.jsonl`). The fake serves the
+  release list with GitHub's `digest` of each asset, the tarball through a 302 to its own `/cdn/` (optionally spread
+  over a few seconds) and the `.sha256`; on request a release whose download arrives damaged (mode `damaged`) and
+  one without a digest (mode `nodigest`). Every process gets `WIN11_WINPOINT_TEST=/tmp/w11-winpoint`, so the hosts
+  ask the fake and never api.github.com; the owner (win11-shell's backend) checks 5 s after it starts. Without the
+  option the variable must be unset and the seeded settings get `update.winpointAutoCheck: false` (the owner would
+  otherwise ask the real GitHub 3 to 10 minutes into a run; `--seed minimal` keeps the default).
+  `scenarios/winpoint-update.py` uses it.
 * `--patch-extension` is a fallback for a shell without `--unsafe-mode`. It patches only the private extension
   copy, the way Codex did. It is not needed on GNOME 50.1.
 * `python3 -B tests/gnome/harness.py launch probe` shows what the guard sees inside the sandbox.
@@ -130,7 +145,8 @@ There are four layers. Each layer works without the others.
    * `GSETTINGS_BACKEND` is not `keyfile` [`gsettings-not-keyfile`].
    * `GIO_USE_VFS` is not `local` [`gio-vfs-not-local`]; `WIN11_UPDATE_TOOL_DIR` or `WIN11_UPDATE_FIXTURE_ROOT` is
      not the private one [`update-seam-not-private`], or another `WIN11_UPDATE_*` variable is set
-     [`update-seam-extra`].
+     [`update-seam-extra`]; `WIN11_WINPOINT_TEST` is set without `--winpoint-feed` or to anything but
+     `/tmp/w11-winpoint` [`winpoint-seam-not-private`] (D-G74a).
    * Stricter checks:
      * `NO_AT_BRIDGE=1` and `GTK_A11Y=none` must be set (any other value, empty included, is refused)
        [`at-bridge`, `gtk-a11y`].
@@ -159,8 +175,9 @@ There are four layers. Each layer works without the others.
    also proves the heavy-lock decision (no ancestor: refused; a `flock` or `tools/heavy.sh` ancestor holding the
    lock: accepted; a `flock` ancestor on another file: refused; `--own-lock`: taken) with a scratch lock file in
    `tests/logs/`, so the real `.heavy.lock` is never taken or waited for. It also checks the host-socket masking
-   with a decoy socket, the socket watch, and the two strace checks on synthetic logs (section "strace"). 110
-   cases at GE1h (56 at GE0c), 135 at round 3, 136 with WU-FIX's execve case.
+   with a decoy socket, the socket watch, and the strace checks on synthetic logs (section "strace"). 110
+   cases at GE1h (56 at GE0c), 135 at round 3, 136 with WU-FIX's execve case, 140 with D-G74a's WinPoint seam cases,
+   141 with D-G74's exec rule for WinPoint's one Python program.
 3. **Private buses.** The session bus comes from `dbus-run-session` with `run/session-bus.conf`, and the system
    bus is a second `dbus-daemon` with `run/system-bus.conf`. Neither has a `<servicedir>`, so nothing is ever
    auto-activated. That means no PackageKit, no logind, no polkit, no NetworkManager, no portals and no GDM.
@@ -175,10 +192,11 @@ There are four layers. Each layer works without the others.
 
 ## strace
 
-`--strace FILE` puts the session (`FILE`) under `strace -f -qq --seccomp-bpf -e trace=connect,execve,execveat`; the
-install has its own `logs/install.strace` (`trace=%file,connect`). After the session two checks read both logs, and
-either one fails the run (runs before the WebKit removal also had `FILE.warm` and `FILE.warm2`, the GStreamer
-warm-up's):
+`--strace FILE` puts the session (`FILE`) under `strace -f -qq --seccomp-bpf -s 512 -e
+trace=connect,execve,execveat,clone,clone3,fork,vfork` (whole argv strings, and every new process and thread for the
+process tree of the Python rule below); the install has its own `logs/install.strace` (`trace=%file,connect`). After
+the session two checks read both logs, and either one fails the run (runs before the WebKit removal also had
+`FILE.warm` and `FILE.warm2`, the GStreamer warm-up's):
 
 * **connect** (D-G42, `strace_connect_report`, `FILE.json`, `results.json` `straceConnect`): a `connect()` that
   succeeded (or whose outcome strace did not see) may only reach a socket of the sandbox itself: under `run/` or in
@@ -189,7 +207,18 @@ warm-up's):
   `check-new-release`, `apt-get`, `apt-cache`, `do-release-upgrade`, `loginctl`, `apt` or `pkcon` may be executed
   from anywhere but this run's own stub directories under `run/` (`run/stubs`, `run/update-tools`). A failed
   attempt (ENOENT while PATH is searched) ran nothing and does not count; paths are folded as above, and a relative
-  path counts as outside.
+  path counts as outside. D-G74 (`winpoint_python_report`, `straceExec.winpointPython`): WinPoint starts exactly one
+  Python program of its own, the release bundle's installer, and only after a click in Settings. Every `python3` that
+  a WinPoint process (one that executed a `win11-*` program) or a process below it executes must be exactly
+  `/usr/bin/python3 -E -s -B <run>/cache/win11-gnome/winpoint/work/<V>/bundle/scripts/install.py <bundle> --lang nl|en
+  --no-session` with `--check` or `--status <work>/install.status --log <work>/install.log`, with the 11 or 12
+  variables of its frozen environment, and each belongs to a click: the scenario runs `/usr/bin/true
+  w11-winpoint-click-<n>` right before every click on Download and install or Retry, and each mark allows one
+  `--check` and then one install until the next mark (none before the first mark, no second run for one click, no
+  install before its `--check`). With `--winpoint-feed` and `scenarios/winpoint-update.py` (which then needs
+  `--strace`) the runs per mark (`straceExec.winpointPython.perClick`) must equal what the scenario recorded its
+  clicks cause (`records["winpoint installer runs"]`), so a run whose installer never ran, or ran outside the trace,
+  fails too. The harness's own Python and GNOME's (an ibus engine) are no WinPoint processes.
 
 `python3 -B tests/gnome/harness.py strace-check FILE [FILE …]` runs both checks again on saved logs. Run the
 scenarios that touch the update page (or anything that could reach a root helper) with `--strace`.
@@ -241,6 +270,8 @@ Committed results:
 | `scenarios/native-gtk-apps.py`, `native-restart.py`, `taskbar-app-icons.py`, `kit-ui.py` | The native GTK 4 apps (13-11): launch, memory, a short use of each app through the dev channel (Disks with a UDisks2 stand-in on the private system bus) and Task Manager's Processen rows; `shell.restartAll` re-execs every native program (Explorer with two windows, Settings back on its update page); each app's icon on the taskbar, in GNOME's window list, in the catalogue and in Start (All apps, search), each own app listed once; the kit UI fixes (Explorer's column headers, one colour under Alles's command bar, manual font rendering under cairo) |
 | `scenarios/r2d-picker.py`, `scenarios/picker-helper.py` | Win11's file picker as other apps reach it (13-11): the scenario starts `win11-file-portal` and `xdg-desktop-portal` itself (no activation on the private bus), then the native Settings (whose kit sets `GDK_DEBUG=portals` for itself since 14-11) and a GTK 4 helper app (`org.example.PickerTest`, started with it) open GTK's file dialog (unsandboxed GTK 4 shows its own chooser without it); the picker's identity (`io.github.win11shell.FilePicker`, the portal's `win11-gtk-explorer` child, transient for the caller, modal or not, skip-taskbar, also the non-modal one: the extension hides a picker with a parent from the window list), the taskbar, and the cancel on close |
 | `scenarios/readme-shots.py`, `scenarios/readme-shots.out/` | The README screenshots, run with `--lang en --out tests/gnome/scenarios/readme-shots.out` (English, dark and light, the private 1440×900 monitor; `readme-shots.nl.out/` is a Dutch run). `docs/screenshots/` holds copies saved as RGB without metadata; `notifications.png` and `quick-settings.png` are the bottom-right 760×840 of their shots and `light.png` is `light-start.png`. Re-shot on 14-11 after the WebKit apps went. The apps get the Win11 icon theme the installed session sets (Win11-dark, Win11 for the light shots) through the private `gtk-4.0/settings.ini`; without it GTK shows Adwaita's icons |
+| `scenarios/lock-unlock.py` | The taskbar and Start after the lock screen (14-11): the extension disabled and enabled through the session mode, then the taskbar back over the whole monitor, the strip and Start frosted |
+| `scenarios/winpoint-update.py`, `scenarios/winpoint-update.out/`, `scenarios/winpoint-update.en.out/` | WinPoint's own updater (D-G74a and D-G74), run with `--winpoint-feed --strace` in nl and en (results kept; the PNGs stay local, gitignored): the owner's automatic check reaches the fake GitHub once with WinPoint's User-Agent; the private bus activates nothing, so the scenario starts GNOME's notification service (`org.gnome.Shell.Notifications`, which owns `org.freedesktop.Notifications`) and restarts the taskbar with no `state.json`: its second automatic check gives exactly one notification for the newer release (`winpoint-notification.png`), whose action brings Settings to Update & recovery; the card at the top (the newer version, not the draft or prerelease, its release date, Release notes and Download and install; `winpoint-available.png`), a manual check of that version with `notified` cleared in `state.json` (it records the version and sends nothing: only the trigger rule stops it), a 500 (`winpoint-failed.png`, with Technical details), offline from a NetworkManager stand-in on the private system bus (`winpoint-offline.png`, no request), the check running, still shown 2.5 s later while the harness finds the owner's `check.lock` taken (so `winpoint.status` says it, not the card's own click), and up to date (`winpoint-checking.png`, `winpoint-uptodate.png`), the toggle in Advanced options (`winpoint-toggle.png`; off shows "automatic checks are off"), one request per check and no notification after the first, then the install (D-G74): a click on Download and install after a click mark in the trace, the download with its progress and Cancel (`winpoint-downloading.png`), the installer running (`winpoint-installing.png`), installed with Restart WinPoint and the installed notification (`winpoint-installed.png`; the run prefix's `share/win11-gnome/VERSION`, set to the running version before the click, is the release's again in a new payload directory, `install.log` has no error, the fake saw the 302 hop and the whole tarball), Restart WinPoint (the new owner clears the job), a damaged download (`winpoint-damaged.png`: not installed, the download deleted, Retry), and a release without GitHub's digest (Retry refuses it with the links its text points at; `winpoint-nodigest.png`: phase 1's links and how-to, no install button); the exec rule holds (only the installer, one `--check` and one install for the first click and none for the two later ones) |
 | `scenarios/readme-explorer.py`, `scenarios/readme-explorer.out/` | Only `docs/screenshots/explorer.png` (readme-shots.py's explorer step), with the Win11 icon theme; re-shot on 14-11 |
 | `scenarios/<step>-*.py`, `scenarios/<step>-*.out/` | Later steps' scenarios and results (owned by those steps) |
 
@@ -249,7 +280,7 @@ are history and nothing compares against them. The scenarios that tested only th
 start-hover, power-handoff, desktop-selfheal, ge1a-switch, ge1a-start-switch, ge1b-core, ge1b-perf, cross-r1,
 r5-fullscreen, leak-soak/-events/-churn, example) and the restart scenarios that assumed restartable panel, Start
 and desktop hosts (gx1-restart, wf-restart-copy) were removed with D-G70; git history keeps them. Since the WebKit
-apps went (tag `last-webkit`) every scenario drives the native apps; the outputs from before that (the `*.out`,
+apps went (commit `6ebf169f`) every scenario drives the native apps; the outputs from before that (the `*.out`,
 `*.a1`, `*.r3` … folders of frosted-glass, ge1c-extension, r2d-picker, r3-ontop and the others, `findings/`) show the
 WebKit apps and are history too. ge1a-disks-race (superseded by r2b-disks-race) was removed with them.
 
@@ -330,6 +361,9 @@ Each launcher execs `win11-gtk-<kind>` in place (host `native_app_switch`), whic
   * Settings shows "Netwerk: Niet verbonden" and "Geen Bluetooth gevonden".
   * Schijven shows "UDisks is op deze computer niet beschikbaar".
   * Update shows "Kan niet controleren op updates".
+  * Nothing owns `org.freedesktop.Notifications` (GNOME's `org.gnome.Shell.Notifications` service is D-Bus
+    activated in a real session), so a program's notifications go nowhere unless a scenario starts that service
+    (`scenarios/winpoint-update.py`).
   * The panel has no volume icon.
 * **Sandbox-only views.** Task Manager sees only the sandbox's processes. Explorer, "Deze pc" and Storage see the
   sandbox's mounts: the system drive (`/`, the empty `run/root`) and the read-only binds, not the real data drives.

@@ -98,6 +98,9 @@ pub struct Start {
     focus_hide_at: Cell<Option<Instant>>,
     glass_known: Cell<bool>,
     wheel_at: Cell<Option<Instant>>,
+    // a setting Start shows changed while it was open: the footer renders when it opens next (the pins and the
+    // recommendations render on every open)
+    stale: Cell<bool>,
 }
 
 thread_local! {
@@ -127,13 +130,22 @@ pub fn install(shell: &Rc<Shell>) {
             s.load_apps_soon();
         }
     });
-    shell.on("settings.changed", |_, _| {
+    shell.on("settings.changed", |_, data| {
         if let Some(s) = get() {
-            s.on_settings();
+            s.on_settings(data);
         }
     });
     shell.on("nativeBackdrop.changed", |_, data| {
         if let Some(s) = get() {
+            // the extension started anew (the backend's "reset", e.g. after the lock screen) and no longer knows
+            // Start: register it again now, or at the next open when the extension is not back yet
+            if data["reset"] == true {
+                s.glass_known.set(false);
+                if data["available"] == true {
+                    s.configure_backdrop();
+                    return;
+                }
+            }
             s.apply_backdrop(data);
         }
     });
@@ -661,6 +673,7 @@ impl Start {
             focus_hide_at: Cell::new(None),
             glass_known: Cell::new(false),
             wheel_at: Cell::new(None),
+            stale: Cell::new(false),
         });
         // the buttons that need the Rc
         let w = Rc::downgrade(&start);
@@ -805,6 +818,9 @@ impl Start {
             self.page.set(0);
             self.render_pinned(0);
             self.load_recommended();
+            if self.stale.replace(false) {
+                self.render_footer();
+            }
             stop(&self.panel, "w11-drop");
             play(&self.panel, "w11-rise");
             for w in [self.top.upcast_ref::<gtk::Widget>(), self.stack.upcast_ref(), self.footer.upcast_ref()] {
@@ -933,25 +949,43 @@ impl Start {
         if hc { self.panel.add_css_class("w11-hc") } else { self.panel.remove_css_class("w11-hc") }
     }
 
-    fn on_settings(self: &Rc<Self>) {
+    /// A settings.changed (`data`, core::touches). Start renders only for what it shows: its own settings (pins,
+    /// layout, folders, recommendations), the language and the look (theme icons, high contrast); a write of
+    /// another key (the host's taskbar.tray.known for a new tray icon) leaves it alone. Never under the user's
+    /// pointer while it is open: a change of the pins (their own pin, unpin or move) refreshes the pinned page in
+    /// place, the rest waits for the next open.
+    fn on_settings(self: &Rc<Self>, data: &Value) {
+        let touches = |keys: &[&str]| crate::core::touches(data, keys);
         let lang = self.shell.lang().to_owned();
-        let changed = *self.lang.borrow() != lang;
-        if changed {
+        let lang_changed = *self.lang.borrow() != lang;
+        if lang_changed {
             *self.lang.borrow_mut() = lang;
             self.relabel();
             self.load_apps();
         }
-        self.apply_surface();
-        self.configure_backdrop();
-        self.render_pinned(0);
-        self.render_recommended();
-        self.render_footer();
-        if self.view.get() == View::All {
-            self.render_all();
-        } else {
-            self.all_dirty.set(true);
+        if touches(&["theme", "accessibility"]) {
+            self.apply_surface();
         }
-        self.search.refresh();
+        // a blocking call to the extension: only for what it is told
+        if touches(&["theme.transparency", "accessibility.highContrast", "taskbar.autoHide"]) {
+            self.configure_backdrop();
+        }
+        if lang_changed || touches(&["start", "theme", "accessibility"]) {
+            self.all_dirty.set(true);
+            if self.open.get() {
+                if touches(&["start.pinned"]) {
+                    self.render_pinned(0);
+                }
+                self.stale.set(true);
+            } else {
+                self.render_pinned(0);
+                self.render_recommended();
+                self.render_footer();
+            }
+        }
+        if lang_changed || touches(&["theme", "notifications.dnd", "taskbar.alignment", "search"]) {
+            self.search.refresh();
+        }
     }
 
     fn relabel(&self) {

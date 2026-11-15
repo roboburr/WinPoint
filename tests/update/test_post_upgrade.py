@@ -414,7 +414,7 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
             ('rc 0', rc == 0), ('one notification', len(n) == 1),
             ('nl title', n and n[0]['args']['summary'] == 'Ubuntu is bijgewerkt naar 26.10'),
             ('no actions', n and n[0]['args']['actions'] == []),
-            ('app name and desktop entry', n and n[0]['args']['app'] == 'Win11 Shell'
+            ('app name and desktop entry', n and n[0]['args']['app'] == 'WinPoint'
              and n[0]['args']['hints'].get('desktop-entry') == 'io.github.win11shell.Settings'),
             ('state read', 'GetExtensionInfo' in methods(calls)), ('no EnableExtension', 'EnableExtension' not in methods(calls)),
             ('record now 26.10', rec['versionId'] == '26.10' and rec['gnomeMajor'] == '51'),
@@ -432,8 +432,8 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         acted = [c for c in calls if c['method'] == 'emit:ActionInvoked']
         r.check(f'out-of-date-dock [{took:.2f} s]', [
             ('rc 0', rc == 0), ('one notification', len(n) == 1),
-            ('en title', n and n[0]['args']['summary'] == 'GNOME 51 turned Win11 Shell off'),
-            ('en body', n and n[0]['args']['body'] == 'Win11 Shell’s taskbar doesn’t work with this GNOME version yet. '
+            ('en title', n and n[0]['args']['summary'] == 'GNOME 51 turned WinPoint off'),
+            ('en body', n and n[0]['args']['body'] == 'WinPoint’s taskbar doesn’t work with this GNOME version yet. '
                                                        'Turn on the Ubuntu Dock until there’s an update.'),
             ('actions', n and n[0]['args']['actions'] == ['dockOn', 'Turn on Ubuntu Dock', 'later', 'Later']),
             ('EnableExtension(ubuntu-dock) once', [c['args'] for c in enables] == [[DOCK]]),
@@ -445,7 +445,7 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         rc, took, calls = r.launch(sc)
         n = notifies(calls)
         r.check('inactive-enabled-dismissed', [
-            ('rc 0', rc == 0), ('extOff', len(n) == 1 and n[0]['args']['summary'] == 'GNOME 51 heeft Win11 Shell uitgezet'),
+            ('rc 0', rc == 0), ('extOff', len(n) == 1 and n[0]['args']['summary'] == 'GNOME 51 heeft WinPoint uitgezet'),
             ('nl actions', n and n[0]['args']['actions'] == ['dockOn', 'Ubuntu Dock aanzetten', 'later', 'Later']),
             ('no EnableExtension without the click', 'EnableExtension' not in methods(calls))])
     if want('inactive-not-enabled'):
@@ -460,21 +460,21 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         sc.spec = {'extensionState': 3.0, 'answer': 'action:later'}
         rc, took, calls = r.launch(sc)
         n = notifies(calls)
-        r.check('error-later', [('rc 0', rc == 0), ('extError', len(n) == 1 and n[0]['args']['summary'] == 'Win11 Shell kon niet starten'),
-                                ('body', n and n[0]['args']['body'] == 'GNOME meldt een fout in Win11 Shell. Zet de Ubuntu Dock aan of installeer Win11 Shell opnieuw.'),
+        r.check('error-later', [('rc 0', rc == 0), ('extError', len(n) == 1 and n[0]['args']['summary'] == 'WinPoint kon niet starten'),
+                                ('body', n and n[0]['args']['body'] == 'GNOME meldt een fout in WinPoint. Zet de Ubuntu Dock aan of installeer WinPoint opnieuw.'),
                                 ('later does nothing', 'EnableExtension' not in methods(calls))])
     if want('state-missing'):
         sc = Scenario(base, 'state-missing')
         sc.spec = {'extensionState': None}
         rc, took, calls = r.launch(sc)
         n = notifies(calls)
-        r.check('state-missing', [('rc 0', rc == 0), ('missing state counts as ERROR', len(n) == 1 and n[0]['args']['summary'] == 'Win11 Shell kon niet starten')])
+        r.check('state-missing', [('rc 0', rc == 0), ('missing state counts as ERROR', len(n) == 1 and n[0]['args']['summary'] == 'WinPoint kon niet starten')])
     if want('state-not-a-number'):
         sc = Scenario(base, 'state-not-a-number')
         sc.spec = {'extensionState': '1'}
         rc, took, calls = r.launch(sc)
         n = notifies(calls)
-        r.check('state-not-a-number', [('rc 0', rc == 0), ('a string state counts as ERROR', len(n) == 1 and n[0]['args']['summary'] == 'Win11 Shell kon niet starten')])
+        r.check('state-not-a-number', [('rc 0', rc == 0), ('a string state counts as ERROR', len(n) == 1 and n[0]['args']['summary'] == 'WinPoint kon niet starten')])
     if want('extensions-off'):
         sc = Scenario(base, 'extensions-off', 'en')
         sc.shell_keys(True, [UUID])
@@ -484,7 +484,7 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         keyfile = sc.keyfile.read_text()
         r.check('extensions-off', [
             ('rc 0', rc == 0), ('extsOff', len(n) == 1 and n[0]['args']['summary'] == 'GNOME turned extensions off'),
-            ('body', n and n[0]['args']['body'] == 'After an error, GNOME turned off all extensions, including Win11 Shell.'),
+            ('body', n and n[0]['args']['body'] == 'After an error, GNOME turned off all extensions, including WinPoint.'),
             ('actions', n and n[0]['args']['actions'] == ['extsOn', 'Turn extensions back on', 'dockOn', 'Turn on Ubuntu Dock']),
             ('disable-user-extensions now false', 'disable-user-extensions=false' in keyfile),
             ('no GetExtensionInfo, no EnableExtension', not ({'GetExtensionInfo', 'EnableExtension'} & set(methods(calls))))])
@@ -508,7 +508,7 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         apt = [line for line in sc.tool_log() if line[0] == 'apt-cache']
         r.check(f'missing-parts [{took:.2f} s]', [
             ('rc 0', rc == 0), ('two notifications', len(n) == 2),
-            ('missing title', len(n) == 2 and n[1]['args']['summary'] == 'Win11 Shell mist onderdelen'),
+            ('missing title', len(n) == 2 and n[1]['args']['summary'] == 'WinPoint mist onderdelen'),
             ('missing body', len(n) == 2 and n[1]['args']['body'] == 'Na de upgrade ontbreekt: GTK 4, GDK Pixbuf (afbeeldingen).'),
             ('actions', len(n) == 2 and n[1]['args']['actions'] == ['installParts', 'Onderdelen installeren…', 'later', 'Later']),
             ('names resolved on the new release', apt == [['apt-cache', 'policy', 'libgtk-4-1'],
@@ -535,7 +535,7 @@ def scenarios(r: Run, base: Path, only: list[str]) -> None:
         n = notifies(calls)
         r.check(f'shell-absent-dpkg [{took:.2f} s]', [('rc 0', rc == 0), (f'retried ShellVersion ({took:.1f} s)', 2 <= took < 8),
                                       ('dpkg-query fallback', ['dpkg-query', '-W', '-f=${Version}', 'gnome-shell'] in sc.tool_log()),
-                                      ('major from dpkg-query', len(n) == 1 and n[0]['args']['summary'] == 'GNOME 51 turned Win11 Shell off')])
+                                      ('major from dpkg-query', len(n) == 1 and n[0]['args']['summary'] == 'GNOME 51 turned WinPoint off')])
     if want('upgrader-running'):
         sc = Scenario(base, 'upgrader-running')
         write(sc.root / 'proc/77/cmdline', 'python3\0-s\0/tmp/ubuntu-release-upgrader-x1/stonking\0')

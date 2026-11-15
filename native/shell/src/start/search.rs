@@ -376,7 +376,8 @@ fn run_action(shell: &Rc<Shell>, id: &str, q: &str) {
         "settings" => data::open_app(shell, "settings", json!({})),
         "cleanup" => data::open_app(shell, "taskmgr", json!({"page": "storage", "tab": "cleanup"})),
         "storage" => data::open_app(shell, "taskmgr", json!({"page": "storage"})),
-        "clipboard" => open_flyout("clipboard"),
+        // no clipboard flyout of its own: the Settings page Klembord (its history and Super+V)
+        "clipboard" => data::open_app(shell, "settings", json!({"page": "clipboard"})),
         "alles" => data::open_app(shell, "alles", if q.is_empty() { json!({}) } else { json!({"query": q}) }),
         "quick" => open_flyout("quick"),
         "notif" => open_flyout("notifications"),

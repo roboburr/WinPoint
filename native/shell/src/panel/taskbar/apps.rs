@@ -11,11 +11,13 @@ use gtk::prelude::*;
 use gtk::{gdk, glib};
 use serde_json::{Value, json};
 use std::cell::{Cell, RefCell};
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::rc::Rc;
 use std::time::{Duration, Instant};
 
 const PITCH: i32 = 44; // 40 px button + 4 px gap
+// how long a wider tray keeps its room after it got narrower (layout)
+const TRAY_MEMORY: Duration = Duration::from_secs(30);
 const PREVIEW_DELAY: u64 = 450;
 const SHIPPED_TASKBAR: [&[&str]; 2] = [
     &["win11shell-explorer.desktop", "firefox_firefox.desktop", "snap-store_snap-store.desktop", "win11shell-settings.desktop"],
@@ -69,6 +71,11 @@ pub struct Apps {
     overflow_keys: RefCell<Vec<String>>,
     max_apps: Cell<usize>,
     layout_queued: Cell<bool>,
+    // the tray's earlier widths, each with the moment it stopped being the width, and the re-check when the
+    // widest of the last TRAY_MEMORY runs out
+    tray_seen: RefCell<VecDeque<(Instant, i32)>>,
+    tray_last: Cell<i32>,
+    tray_timer: RefCell<Option<glib::SourceId>>,
     render_timer: RefCell<Option<glib::SourceId>>,
     // where each window's button rests, for GNOME's minimize animation (windows.setIconRects)
     icon_timer: RefCell<Option<glib::SourceId>>,
@@ -255,6 +262,18 @@ fn preview_sig(g: &Group) -> String {
     out
 }
 
+/// How many buttons (with the "..." one) fit in a strip `width` wide next to a tray `tray` wide, the group's fixed
+/// part (Start, search, Task View) `fixed`: the same clearance on both sides, 16 px from the tray.
+fn fits(width: i32, tray: i32, fixed: i32) -> usize {
+    ((PITCH.max(width - 2 * (tray + 16)) - fixed + 4) / PITCH).max(1) as usize
+}
+
+/// The cap after a layout: fewer at once when `old` no longer fits (`now`: next to the tray as it is), more only
+/// as far as they fit next to the widest tray of the last TRAY_MEMORY (`widest`).
+fn next_cap(old: usize, now: usize, widest: usize) -> usize {
+    if old > now { now } else { old.max(widest) }
+}
+
 fn is_focused(w: &Value) -> bool {
     w["focused"] == true && w["minimized"] != true
 }
@@ -298,6 +317,9 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> gtk::Box {
         overflow_keys: RefCell::new(Vec::new()),
         max_apps: Cell::new(usize::MAX),
         layout_queued: Cell::new(false),
+        tray_seen: RefCell::new(VecDeque::new()),
+        tray_last: Cell::new(0),
+        tray_timer: RefCell::new(None),
         render_timer: RefCell::new(None),
         icon_timer: RefCell::new(None),
         icon_key: RefCell::new(String::new()),
@@ -368,13 +390,18 @@ pub fn set_layout_widgets(group: &gtk::Widget, tray: &gtk::Widget) {
     });
 }
 
-/// The strip's width changed, or the tray did: check how many buttons fit.
+/// The strip's width changed, or the tray's allocation did: check how many buttons fit.
 pub fn queue_layout() {
     with(|a| a.queue_layout());
 }
 
-/// Settings changed (pins, language).
-pub fn settings_changed(lang_changed: bool) {
+/// The tray's icons changed: check now (the layout measures, so it need not wait for GTK's allocation).
+pub fn layout_now() {
+    with(|a| a.layout());
+}
+
+/// Settings changed (`data`, core::touches): the buttons render for the pins and the language only.
+pub fn settings_changed(data: &Value, lang_changed: bool) {
     with(|a| {
         let done = {
             let pending = a.pending_pins.borrow();
@@ -392,7 +419,9 @@ pub fn settings_changed(lang_changed: bool) {
             update_texts();
             load_catalog();
         }
-        a.render();
+        if done || lang_changed || crate::core::touches(data, &["taskbar.pinned"]) {
+            a.render();
+        }
     });
 }
 
@@ -764,25 +793,64 @@ impl Apps {
     }
 
     /// How many buttons fit: the same clearance on both sides, so the group never leaves the screen's centre.
+    /// The tray and the group's fixed part (Start, search, Task View) are measured, so a tray that just changed
+    /// counts before GTK has allocated it (its last allocation lagged, and the cap with it until an unrelated
+    /// render). Fewer buttons the moment they no longer fit; more only when they would fit next to the widest tray
+    /// of the last 30 s, so an icon that comes, goes or turns passive every few seconds on a full bar does not move
+    /// the whole group 44 px each time.
     fn layout(self: &Rc<Self>) {
         let width = self.strip.width();
         if width <= 0 {
             return;
         }
-        let tray_w = self.tray.borrow().as_ref().map(|t| t.width()).unwrap_or(0);
-        let group_w = self.group_box.borrow().as_ref().map(|g| g.width()).unwrap_or(0);
-        let right_reserve = tray_w + 16;
-        let avail = PITCH.max(width - 2 * right_reserve);
-        let fixed = (group_w - self.boxw.width()).max(0);
-        let cap = ((avail - fixed + 4) / PITCH).max(1) as usize;
-        let n = self.groups.borrow().len();
+        let natural = |w: &gtk::Widget| w.measure(gtk::Orientation::Horizontal, -1).1;
+        let tray_w = self.tray.borrow().as_ref().map(natural).unwrap_or(0);
+        let fixed = self
+            .group_box
+            .borrow()
+            .as_ref()
+            .map(|g| natural(g) - g.margin_start() - g.margin_end() - natural(self.boxw.upcast_ref()))
+            .unwrap_or(0)
+            .max(0);
+        let widest = self.tray_widest(tray_w);
         let old = self.max_apps.get();
+        let cap = next_cap(old, fits(width, tray_w, fixed), fits(width, widest, fixed));
+        let n = self.groups.borrow().len();
         self.max_apps.set(cap);
         if cap != old && (n > cap || old < n) {
             self.render();
         } else {
             self.icon_rects_soon();
         }
+    }
+
+    /// The widest the tray has been in the last TRAY_MEMORY, `now` (its width at this moment) included. While an
+    /// earlier width is wider, a layout is due when it runs out, so the room comes back by itself and not at the
+    /// next unrelated render.
+    fn tray_widest(self: &Rc<Self>, now: i32) -> i32 {
+        let at = Instant::now();
+        let last = self.tray_last.replace(now);
+        let mut seen = self.tray_seen.borrow_mut();
+        if last != now && last > 0 {
+            seen.push_back((at, last));
+        }
+        while seen.front().is_some_and(|(t, _)| at.duration_since(*t) >= TRAY_MEMORY) {
+            seen.pop_front();
+        }
+        let widest = seen.iter().map(|(_, w)| *w).max().unwrap_or(0).max(now);
+        let due = seen.iter().filter(|(_, w)| *w > now).map(|(t, _)| *t + TRAY_MEMORY).min();
+        drop(seen);
+        cancel(&self.tray_timer);
+        if let Some(due) = due {
+            let wait = due.saturating_duration_since(at) + Duration::from_millis(50);
+            *self.tray_timer.borrow_mut() = Some(glib::timeout_add_local_once(wait, || {
+                with(|a| {
+                    *a.tray_timer.borrow_mut() = None;
+                    a.layout();
+                });
+            }));
+        }
+        widest
     }
 
     fn make_button(self: &Rc<Self>, key: &str) -> Rc<AppButton> {
@@ -1321,5 +1389,39 @@ impl Apps {
         if let Some(p) = p {
             p.popdown();
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_tray_icon_that_comes_and_goes_keeps_the_cap() {
+        // stutter run C: 1440 px, the tray 322 px with a passive icon and 354 px with it active
+        let fixed = 92;
+        let (narrow, wide) = (fits(1440, 322, fixed), fits(1440, 354, fixed));
+        assert!(narrow > wide);
+        let mut cap = next_cap(usize::MAX, wide, wide);
+        assert_eq!(cap, wide);
+        for _ in 0..6 {
+            // passive: room for more, but the wide tray of the last 30 s still counts
+            cap = next_cap(cap, narrow, wide);
+            assert_eq!(cap, wide);
+            cap = next_cap(cap, wide, wide);
+            assert_eq!(cap, wide);
+        }
+        // 30 s narrow: the room comes back; wider again: fewer at once
+        cap = next_cap(cap, narrow, narrow);
+        assert_eq!(cap, narrow);
+        assert_eq!(next_cap(cap, wide, wide), wide);
+    }
+
+    #[test]
+    fn other_room_changes_apply_at_once() {
+        // a smaller search box or a wider screen: more buttons now, whatever the tray did before
+        assert_eq!(next_cap(8, 12, 11), 11);
+        assert_eq!(next_cap(8, 8, 8), 8);
+        assert_eq!(fits(320, 400, 92), 1);
     }
 }

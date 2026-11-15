@@ -1,4 +1,4 @@
-//! Instellingen › Systeem › Energie en batterij (last-webkit:vendor/ui/js/apps/settings/pages/power.js): GNOME's own
+//! Instellingen › Systeem › Energie en batterij (6ebf169f:vendor/ui/js/apps/settings/pages/power.js): GNOME's own
 //! power settings (power mode, screen off, dimming, automatic sleep), the battery and the confirmed power actions.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, UsageBar};
@@ -78,6 +78,14 @@ fn power_action(p: &Page, a: &'static Action) {
             });
         }
         _ => run(),
+    }
+}
+
+/// Sign out with Energie's own question (WinPoint's update card: the sign-out that finishes an update whose extension
+/// changed, update_winpoint.rs).
+pub fn sign_out(p: &Page) {
+    if let Some(a) = ACTIONS.iter().find(|a| a.action == "logout") {
+        power_action(p, a);
     }
 }
 

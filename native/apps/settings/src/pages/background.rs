@@ -1,4 +1,4 @@
-//! Instellingen › Persoonlijke instellingen › Achtergrond (last-webkit:vendor/ui/js/apps/settings/pages/background.js):
+//! Instellingen › Persoonlijke instellingen › Achtergrond (6ebf169f:vendor/ui/js/apps/settings/pages/background.js):
 //! a picture or a solid colour, the built-in wallpaper grid with "Foto’s zoeken", the fit, and the picture that
 //! follows light and dark.
 //!

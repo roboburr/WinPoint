@@ -1,4 +1,4 @@
-//! Instellingen › Tijd en taal (last-webkit:vendor/ui/js/apps/settings/pages/time.js): the overview with a live clock,
+//! Instellingen › Tijd en taal (6ebf169f:vendor/ui/js/apps/settings/pages/time.js): the overview with a live clock,
 //! Datum en tijd (read-only system time, the taskbar clock's display) and Taal en regio (the display language and
 //! how dates, times and numbers look).
 use super::network::specs;
@@ -210,10 +210,10 @@ fn language(p: Page) -> PageFuture {
         }
         let card = SettingsCard::new(
             "language",
-            t("Weergavetaal van Win11 Shell", "Win11 Shell display language"),
+            t("Weergavetaal van WinPoint", "WinPoint display language"),
             t(
-                "De taal van Instellingen, Start, de taakbalk en de andere onderdelen van Win11 Shell",
-                "The language of Settings, Start, the taskbar and the other parts of Win11 Shell",
+                "De taal van Instellingen, Start, de taakbalk en de andere onderdelen van WinPoint",
+                "The language of Settings, Start, the taskbar and the other parts of WinPoint",
             ),
         );
         card.set_control(&common::sized(dd.widget(), 260));

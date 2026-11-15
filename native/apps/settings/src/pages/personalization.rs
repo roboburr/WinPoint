@@ -1,4 +1,4 @@
-//! Instellingen › Persoonlijke instellingen (last-webkit:vendor/ui/js/apps/settings/pages/personalization.js): the live
+//! Instellingen › Persoonlijke instellingen (6ebf169f:vendor/ui/js/apps/settings/pages/personalization.js): the live
 //! mini desktop and the theme picker, then the links to Achtergrond, Kleuren, Thema’s, Start, Taakbalk and
 //! Bureaubladpictogrammen.
 use super::themes::theme_grid;

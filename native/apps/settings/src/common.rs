@@ -1,4 +1,4 @@
-//! The helpers every page uses (last-webkit:vendor/ui/js/apps/settings/common.js), on the kit's controls: shared texts,
+//! The helpers every page uses (6ebf169f:vendor/ui/js/apps/settings/common.js), on the kit's controls: shared texts,
 //! error and dry-run toasts, controls bound to a settings path, link cards, notices, "not available" cards,
 //! colour names and maths, the wallpaper (path, twin, texture), the hero row and its tiles, the usage bar,
 //! the accent colour from the wallpaper, recently opened pages, and small layout helpers.

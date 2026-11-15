@@ -33,6 +33,36 @@ mod wallpaper;
 mod backend;
 mod runtime;
 
+/// WinPoint's version: `[workspace.package] version` of the root Cargo.toml, the one source (D-G74a). Settings
+/// shows it (`shell.info`), the updater compares it (services/winpoint.rs).
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+/// `win11-panel --version` prints this line (bin/panel.rs). The same bytes are the marker that tools look for in the
+/// file: scripts/package.py and tools/release.py read a binary's version without running it.
+pub const VERSION_LINE: &str = concat!("WinPoint ", env!("CARGO_PKG_VERSION"), "\n");
+
+#[cfg(test)]
+mod version_tests {
+    #[test]
+    fn metadata_has_the_workspace_version() {
+        let metadata: serde_json::Value =
+            serde_json::from_str(include_str!("../../extension/metadata.json")).unwrap();
+        assert_eq!(
+            metadata["version-name"],
+            super::VERSION,
+            "tools/release.py bump"
+        );
+        assert_eq!(
+            super::VERSION_LINE,
+            format!("WinPoint {}\n", super::VERSION)
+        );
+        let version = super::services::winpoint::version::Version::parse(super::VERSION);
+        assert!(
+            version.is_some_and(|v| v.pre.is_empty()),
+            "a release version"
+        );
+    }
+}
+
 /// The UI folder: `share/win11-gnome/ui` of the installed payload (or WIN11_UI_DIR), `vendor/ui` in a checkout.
 /// It holds only assets now (the built-in wallpapers and the Settings icon, served below `/ui/assets/`), so the
 /// wallpapers' SOURCES.json marks it; its parent is the payload root (caption CSS, runtime.rs).
@@ -671,8 +701,13 @@ fn run_http_only(kind: &'static str) -> Result<(), String> {
     if kind == "panel" && DESKTOP_ENTRIES.load(Ordering::Relaxed) && !backend::dry_run() {
         watch_entries(&runtime);
     }
-    let (port, stop) = runtime.server()?;
     let native = std::env::var_os("WIN11_NATIVE_INSTANCE").map(PathBuf::from);
+    // D-G74a: win11-shell's backend is the one owner of WinPoint's update check (services/winpoint.rs): its
+    // timers run on this main loop. Diagnostic and CI panel hosts (no instance file, or a dry run) never ask GitHub.
+    if kind == "panel" && native.is_some() && !backend::dry_run() {
+        runtime.winpoint_start();
+    }
+    let (port, stop) = runtime.server()?;
     let instance = native.clone().unwrap_or_else(|| {
         glib::user_runtime_dir().join(format!("win11-gnome/http-{}.json", std::process::id()))
     });
