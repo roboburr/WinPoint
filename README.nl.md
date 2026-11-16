@@ -56,7 +56,7 @@ WinPoint geeft GNOME 50 een taakbalk, Startmenu, snelle instellingen, meldingenc
 - **Win+X-menu** en **taakweergave**.
 - **Bureaublad** met Deze pc, Prullenbak, je eigen bestanden, contextmenu's, hernoemen en slepen.
 - **Matglas** met de vervaging van GNOME Shell zelf, en Windows 11-vensterknoppen voor je andere GTK-apps.
-- **Apps**: Verkenner (ook het venster voor openen en opslaan in apps die de desktopportal gebruiken), Instellingen, Taakbeheer, Alles (direct zoeken in bestanden), Schijven, Standaard-apps, App-installatieprogramma (AppImage, DEB, Flatpak, Snap) en Agenda.
+- **Apps**: Verkenner (ook het venster voor openen en opslaan in apps die de desktopportal gebruiken), Instellingen, Taakbeheer, Alles (direct zoeken in bestanden, naar het voorbeeld van [Everything](https://www.voidtools.com/) van voidtools), Schijven, Standaard-apps, App-installatieprogramma (AppImage, DEB, Flatpak, Snap) en Agenda.
 - **Nederlands en Engels**, op elk moment om te schakelen, los van de taal van GNOME.
 - **Sneltoetsen**: de Windows-toets opent Start, Alt+Tab de taakweergave en Ctrl+Alt+Delete Taakbeheer.
 
@@ -126,6 +126,7 @@ Instellingen staan in `~/.config/win11-gnome/settings.json` (standaardwaarden in
 - De taakweergave toont app-pictogrammen, geen live miniaturen van de vensters.
 - De sneltoets Win+X werkt nog niet; open dat menu met een rechtsklik op Start.
 - Beeldscherminstellingen zijn in de Instellingen van WinPoint alleen te bekijken; wijzig ze in de Instellingen van GNOME.
+- Met meer dan één beeldscherm staan de taakbalk, Start en de andere uitklapvensters alleen op het hoofdscherm, en loopt het bureaublad (achtergrond en pictogrammen) als één vlak over alle schermen. Een taakbalk op elk scherm is in de maak.
 - Het App-installatieprogramma is nog niet getest met echte installaties op een systeem.
 - Wachtwoordvensters, berichten van PackageKit en NetworkManager en de onderdelen van GNOME zelf volgen de taal van het systeem, niet die van WinPoint.
 
@@ -137,4 +138,4 @@ WinPoint valt onder de [MIT-licentie](LICENSE); details staan in [THIRD_PARTY_NO
 - de **Lotus-achtergronden**, met AI gemaakt en vrijgegeven onder [CC0-1.0](LICENSES/CC0-1.0.txt);
 - de Rust-crates, die hun eigen licentie houden ([LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md)), en twee Rust-bestanden die uit CPython zijn vertaald (PSF-2.0).
 
-WinPoint is een onafhankelijk project, niet verbonden aan of goedgekeurd door Microsoft. Windows en Windows 11 zijn handelsmerken van Microsoft Corporation. Er zit geen code, materiaal of lettertype van Microsoft in.
+WinPoint is een onafhankelijk project, niet verbonden aan of goedgekeurd door Microsoft. Windows en Windows 11 zijn handelsmerken van Microsoft Corporation. Er zit geen code, materiaal of lettertype van Microsoft in. Alles volgt het uiterlijk en de zoektaal van Everything van voidtools; er zit geen code van voidtools in en het is niet verbonden aan voidtools.

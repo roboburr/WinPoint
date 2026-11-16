@@ -56,7 +56,7 @@ WinPoint gives GNOME 50 a Windows 11 style taskbar, Start menu, quick settings, 
 - **Win+X menu** and **Task View**.
 - **Desktop** with This PC, Recycle Bin, your files, context menus, rename and drag.
 - **Frosted glass** from GNOME Shell's own blur, and Windows 11 caption buttons for your other GTK apps.
-- **Apps**: File Explorer (also the Open and Save dialog for apps that use the desktop portal), Settings, Task Manager, Alles (instant file search), Disks, Default apps, App Installer (AppImage, DEB, Flatpak, Snap) and Calendar.
+- **Apps**: File Explorer (also the Open and Save dialog for apps that use the desktop portal), Settings, Task Manager, Alles (instant file search, modelled on [Everything](https://www.voidtools.com/) by voidtools), Disks, Default apps, App Installer (AppImage, DEB, Flatpak, Snap) and Calendar.
 - **Dutch and English**, switchable at any time, separate from GNOME's language.
 - **Shortcuts**: the Windows key opens Start, Alt+Tab Task View and Ctrl+Alt+Delete Task Manager.
 
@@ -126,6 +126,7 @@ Settings live in `~/.config/win11-gnome/settings.json` (defaults in [host/src/se
 - Task View shows app icons, not live window thumbnails.
 - The Win+X shortcut does not work yet; right-click Start for that menu.
 - Display settings are read-only in WinPoint's Settings; change them in GNOME's Settings.
+- With more than one display, the taskbar, Start and the other flyouts are only on the main display, and the desktop (wallpaper and icons) spans all displays as one area. A taskbar on each display is on the way.
 - App Installer has not yet been tested with real system installs.
 - Password dialogs, PackageKit and NetworkManager messages and GNOME's own parts follow the system language, not WinPoint's.
 
@@ -137,4 +138,4 @@ WinPoint is under the [MIT licence](LICENSE); [THIRD_PARTY_NOTICES.md](THIRD_PAR
 - the **Lotus wallpapers**, AI-generated and released under [CC0-1.0](LICENSES/CC0-1.0.txt);
 - the Rust crates, which keep their own licences ([LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md)), and two Rust files translated from CPython (PSF-2.0).
 
-WinPoint is an independent project, not affiliated with or endorsed by Microsoft. Windows and Windows 11 are trademarks of Microsoft Corporation. No Microsoft code, assets or fonts are included.
+WinPoint is an independent project, not affiliated with or endorsed by Microsoft. Windows and Windows 11 are trademarks of Microsoft Corporation. No Microsoft code, assets or fonts are included. Alles follows the look and search syntax of Everything by voidtools; it contains no voidtools code and is not affiliated with voidtools.
