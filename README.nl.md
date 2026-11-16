@@ -63,6 +63,7 @@ WinPoint geeft GNOME 50 een taakbalk, Startmenu, snelle instellingen, meldingenc
 ## Vereisten
 
 - Ubuntu 26.04 met GNOME Shell 50 op Wayland, het enige geteste systeem. De uitgaven zijn gebouwd voor x86_64.
+- **Nog niet op Ubuntu 26.10** (GNOME 51): de installer stopt met een melding over de GNOME-versie. Ondersteuning is onderweg, zie [#1](https://github.com/roboburr/WinPoint/issues/1).
 - Python 3 voor de installer; die controleert de rest zelf (PyGObject inbegrepen) en noemt de Ubuntu-pakketten die ontbreken.
 - Optioneel: FFmpeg voor videominiaturen; PackageKit, Flatpak of snapd voor het App-installatieprogramma.
 
@@ -123,6 +124,7 @@ Instellingen staan in `~/.config/win11-gnome/settings.json` (standaardwaarden in
 
 ## Bekende beperkingen
 
+- Ubuntu 26.10 (GNOME 51) wordt nog niet ondersteund; ondersteuning is onderweg ([#1](https://github.com/roboburr/WinPoint/issues/1)). Gebruik tot die tijd Ubuntu 26.04 LTS.
 - De taakweergave toont app-pictogrammen, geen live miniaturen van de vensters.
 - De sneltoets Win+X werkt nog niet; open dat menu met een rechtsklik op Start.
 - Beeldscherminstellingen zijn in de Instellingen van WinPoint alleen te bekijken; wijzig ze in de Instellingen van GNOME.

@@ -63,6 +63,7 @@ WinPoint gives GNOME 50 a Windows 11 style taskbar, Start menu, quick settings, 
 ## Requirements
 
 - Ubuntu 26.04 with GNOME Shell 50 on Wayland, the only tested system. Releases are built for x86_64.
+- **Not yet on Ubuntu 26.10** (GNOME 51): the installer stops with a message about the GNOME version. Support is on the way, see [#1](https://github.com/roboburr/WinPoint/issues/1).
 - Python 3 for the installer, which checks everything else (PyGObject included) and names any missing Ubuntu package.
 - Optional: FFmpeg for video thumbnails; PackageKit, Flatpak or snapd for App Installer.
 
@@ -123,6 +124,7 @@ Settings live in `~/.config/win11-gnome/settings.json` (defaults in [host/src/se
 
 ## Known limitations
 
+- Ubuntu 26.10 (GNOME 51) is not supported yet; support is on the way ([#1](https://github.com/roboburr/WinPoint/issues/1)). Use Ubuntu 26.04 LTS until then.
 - Task View shows app icons, not live window thumbnails.
 - The Win+X shortcut does not work yet; right-click Start for that menu.
 - Display settings are read-only in WinPoint's Settings; change them in GNOME's Settings.
