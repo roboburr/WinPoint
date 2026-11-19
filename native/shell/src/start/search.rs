@@ -1628,6 +1628,11 @@ pub fn glyph_tile(name: &str, size: i32, px: i32, class: &str) -> gtk::Widget {
     }
     b.set_size_request(size, size);
     b.set_halign(gtk::Align::Center);
+    // The glyph expands only inside this fixed tile. Letting its vexpand propagate
+    // makes the search row and detail hero consume all spare vertical space.
+    b.set_valign(gtk::Align::Center);
+    b.set_hexpand(false);
+    b.set_vexpand(false);
     let g = crate::icons::glyph(name, px);
     g.set_valign(gtk::Align::Center);
     g.set_halign(gtk::Align::Center);

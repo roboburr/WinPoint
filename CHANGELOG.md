@@ -3,6 +3,16 @@
 What changed in each release of WinPoint, newest first. `tools/release.py` takes a release’s notes from its
 section here.
 
+## 0.9.4
+
+- **Clean glass around icons and menus.** While a frosted backdrop is active, redraw complete frames so the
+  background blur cannot reuse old icon, text or dropdown pixels. This addresses square coloured halos and
+  flickering on partial updates. It does not schedule continuous repaints while the desktop is idle, and restores
+  the previous redraw setting when no backdrop remains.
+- **Compact Start search results.** Glyph tiles keep their square size instead of stretching the detail icon and
+  search rows to fill the available height. Includes rendered allocation checks for web, settings and app searches.
+- Includes the Start-close session crash fix from 0.9.3.
+
 ## 0.9.3
 
 - **Closing Start keeps the session running.** Fixed a GNOME/Mutter crash that could return you to the login

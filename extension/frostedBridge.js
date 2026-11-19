@@ -80,6 +80,8 @@ export class NativeFrostedBridge {
         this._lastState = '';
         this._options = {blur: true, windowBlur: true, shadows: true, taskbarAutoHide: false, radius: 6};
         this._entries = new Map();
+        this._fullRedraws = false;
+        this._ownsRedrawFlag = false;
         // Start's window stays mapped while its glass slides out; the host reports when the menu opens and
         // starts closing (nativeBackdrop.start), so the blur exists only while the menu is really open.
         this._startPhase = new Map();
@@ -206,7 +208,29 @@ export class NativeFrostedBridge {
         // Actor notifications can arrive inside a compositor animation frame. Remove
         // synchronously; the coalesced sync may restore only a stable final frame.
         this._destroy(window);
+        this._syncRedraws();
         this._publish();
+    }
+
+    /** Shell.BlurEffect copies its entire background from the stage framebuffer. With clipped redraws,
+     * unchanged pixels there still contain the previous foreground (icons, text or a closed menu). Blurring
+     * those pixels feeds square coloured halos back into the glass and makes dropdowns flicker. Require a
+     * complete frame only while a backdrop is active. This does not schedule continuous/idle repaints. */
+    _syncRedraws() {
+        const needed = [...this._entries.values()].some(entry => entry.effect !== null);
+        if (needed === this._fullRedraws) return;
+        const flag = Clutter.DrawDebugFlag.DISABLE_CLIPPED_REDRAWS;
+        if (needed) {
+            const [, drawFlags] = Clutter.get_debug_flags();
+            this._ownsRedrawFlag = !(drawFlags & flag);
+            if (this._ownsRedrawFlag) Clutter.add_debug_flags(0, flag, 0);
+        } else {
+            // Preserve a flag that was already enabled by another extension or Mutter's environment.
+            if (this._ownsRedrawFlag) Clutter.remove_debug_flags(0, flag, 0);
+            this._ownsRedrawFlag = false;
+        }
+        this._fullRedraws = needed;
+        global.stage.queue_redraw();
     }
 
     /** A window with a backdrop moved or changed size: redraw the whole stage. GNOME redraws only the damaged
@@ -328,7 +352,10 @@ export class NativeFrostedBridge {
         outer.connect('destroy', () => {
             // A compositor shutdown can dispose the containing window group before
             // the extension's disable callback; never revisit an already dead actor.
-            if (this._entries.get(item.window) === entry) this._entries.delete(item.window);
+            if (this._entries.get(item.window) === entry) {
+                this._entries.delete(item.window);
+                this._syncRedraws();
+            }
             entry.effect = null;
         });
         return entry;
@@ -379,6 +406,7 @@ export class NativeFrostedBridge {
                 entry.effect.radius = this._options.radius * scale;
             entry.outer.show();
         }
+        this._syncRedraws();
         this._publish();
     }
 
@@ -436,6 +464,7 @@ export class NativeFrostedBridge {
     disable() {
         this._enabled = false;
         for (const key of [...this._entries.keys()]) this._destroy(key);
+        this._syncRedraws();
         this._publish();
         this._hosts.clear();
     }
