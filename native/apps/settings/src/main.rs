@@ -9,6 +9,8 @@
 //!                                                       `win11-app --app settings --params ..` passes it
 //!   win11-gtk-settings --params '{"page":"bluetooth","add":1}'   page parameters (host/src/app_params.rs)
 //!   win11-gtk-settings --page display                   the same, for hand use (also a bare page id)
+//!   win11-gtk-settings --goa-add google                 GNOME Online Accounts' add dialog in a process of its own
+//!                                                       (goa_helper.rs, the host's goa.add)
 //!
 //! The backend is `win11-app --app settings --http-only` (the kit starts it; WIN11_APP_BACKEND=port:token
 //! names a running one). Recently opened pages are kept in $XDG_CONFIG_HOME/win11-gnome/settings-app.json.
@@ -23,9 +25,16 @@ mod app;
 mod colorpicker;
 #[allow(dead_code)]
 mod common;
+mod goa_helper;
+// GNOME's settings and the pickers of the settings-parity pages (notes/claude/settings-parity.md §6.3): their first
+// callers are the batches' pages.
+#[allow(dead_code)]
+mod gs;
 mod keepalive;
 mod navicons;
 mod pages;
+#[allow(dead_code)]
+mod pickers;
 #[allow(dead_code)]
 mod preview;
 mod registry;
@@ -118,11 +127,24 @@ fn restart_plan(restart: &kit::Restart) -> kit::RestartPlan {
 }
 
 fn main() -> glib::ExitCode {
+    let argv: Vec<String> = std::env::args().skip(1).collect();
+    if let Some(provider) = goa_helper::requested(&argv) {
+        return glib::ExitCode::from(goa_helper::run(&provider) as u8);
+    }
     kit::run(SPEC, |ctx, args, first| {
         let (page, params) = parse_args(&args);
         if first {
             kit::theme::install_app_css(&format!("{}\n{}", include_str!("../css/settings.css"), pages::css()));
             common::load_shell_info();
+            // the first answer (or a device plugged in or out) rebuilds an overview page in place
+            common::load_caps(|| {
+                if let Some(r) = open_router()
+                    && let Some((id, params)) = r.current()
+                    && common::shows_caps_links(id)
+                {
+                    r.refresh(id, params);
+                }
+            });
             kit::on_restart(restart_plan);
             keepalive::install(ctx);
         } else if let Some(r) = open_router() {
@@ -143,6 +165,15 @@ fn main() -> glib::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_goa_helper_mode_is_seen_before_the_application_starts() {
+        let args = |a: &[&str]| a.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        assert_eq!(goa_helper::requested(&args(&["--goa-add", "google"])), Some("google".into()));
+        assert_eq!(goa_helper::requested(&args(&["--goa-add=ms365"])), Some("ms365".into()));
+        assert_eq!(goa_helper::requested(&args(&["--page", "display"])), None);
+        assert_eq!(goa_helper::run(""), 2);
+    }
 
     #[test]
     fn a_restart_argv_reopens_its_page() {

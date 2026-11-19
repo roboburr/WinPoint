@@ -1,0 +1,269 @@
+01:05:39 GE0c run lang=en switch=False seed=defaults MemAvailable=6900256 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-a11y.py
+01:06:58 private install: exit 0 in 63.8 s, 87327 mutated paths, 0 outside the run dir, ok=True
+01:07:01 GNOME Shell 50.1 up (mode user, unsafe True)
+01:07:06 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-a11y.py
+01:07:06   check PASS: the tool seam run/stubs is private (no group or world write), so system_tool uses the stubs
+01:07:07   check PASS: accessibility: st-accessibility-reduced-motion is on the page
+01:07:07   check PASS: accessibility: title and breadcrumb "Accessibility"
+01:07:08   check PASS: Toegankelijkheid has link-textsize
+01:07:08   check PASS: Toegankelijkheid has link-visualeffects
+01:07:08   check PASS: Toegankelijkheid has link-mousepointer
+01:07:08   check PASS: Toegankelijkheid has link-textcursor
+01:07:09   check PASS: Toegankelijkheid has link-contrast
+01:07:09   check PASS: Toegankelijkheid has link-a11y-audio
+01:07:09   check PASS: Toegankelijkheid has link-a11y-keyboard
+01:07:09   check PASS: Toegankelijkheid has link-a11y-mouse
+01:07:09   check PASS: Toegankelijkheid has st-accessibility-reduced-motion
+01:07:09   check PASS: Toegankelijkheid has st-accessibility-always-show-universal-access-status
+01:07:09   check PASS: Toegankelijkheid links to magnifier (needs gnome) exactly while caps.gnome
+01:07:09   check PASS: Toegankelijkheid links to narrator (needs gnome) exactly while caps.gnome
+01:07:09   check PASS: Toegankelijkheidsmenu altijd weergeven writes always-show-universal-access-status true
+01:07:09   check PASS: Toegankelijkheid: no Dutch words in English
+01:07:10   check PASS: Snelle instellingen opens
+01:07:10   check PASS: Snelle instellingen shows the Toegankelijkheid tile while the menu is on
+01:07:10   check PASS: its page lists GNOME's functions (Plaktoetsen)
+01:07:10   check PASS: ... and screen-magnifier-enabled
+01:07:10   check PASS: ... and high-contrast
+01:07:10   check PASS: ... and screen-reader-enabled
+01:07:10   check PASS: ... and mousekeys-enable
+01:07:11   check PASS: Plaktoetsen in Snelle instellingen writes stickykeys-enable true
+01:07:11   check PASS: ... and off again
+01:07:12   check PASS: the menu off again
+01:07:12   check PASS: always-show-universal-access-status true written from outside moves its switch (gsettings.changed)
+01:07:14   check PASS: Animatie-effecten (Toegankelijkheid): a click writes reduced-motion 'reduce'
+01:07:14   check PASS: Animatie-effecten (Toegankelijkheid): the control shows the new value
+01:07:14   check PASS: Animatie-effecten (Toegankelijkheid): reduced-motion 'no-preference' written from outside moves the control back (gsettings.changed)
+01:07:14   check PASS: ... and the mirror makes enable-animations agree again
+01:07:14   check PASS: accessibility: every switch and check box on the page was flipped by a click
+01:07:14   check PASS: Toegankelijkheid: no key the page binds is Owned (no pointer to a WinPoint page)
+01:07:14   check PASS: Toegankelijkheid: reduced-motion is Mirrored with accessibility.reduceMotion
+01:07:14   check PASS: Toegankelijkheid: enable-animations is Mirrored with accessibility.reduceMotion
+01:07:15   check PASS: textsize: st-textsize-value is on the page
+01:07:15   check PASS: textsize: title and breadcrumb "Accessibility > Text size"
+01:07:17   check PASS: Tekstgrootte shows 100 %
+01:07:17   check PASS: text-scaling-factor 1.5 from outside: the page follows (150%)
+01:07:18   check PASS: the kit scales its text by GNOME's factor once (x1.5, never x2.25)
+01:07:23   check PASS: Tekstgrootte at 125 % and Toepassen write text-scaling-factor 1.25
+01:07:23   check PASS: Tekstgrootte: no Dutch words in English
+01:07:23   check PASS: Tekstgrootte: no key the page binds is Owned (no pointer to a WinPoint page)
+01:07:23   check PASS: Tekstgrootte: text-scaling-factor is Mirrored with accessibility.textScale
+01:07:23   check PASS: visualeffects: st-visualeffects-overlay-scrolling is on the page
+01:07:24   check PASS: visualeffects: title and breadcrumb "Accessibility > Visual effects"
+01:07:25   check PASS: Schuifbalken altijd weergeven: a click writes overlay-scrolling false
+01:07:25   check PASS: Schuifbalken altijd weergeven: the control shows the new value
+01:07:25   check PASS: Schuifbalken altijd weergeven: overlay-scrolling true written from outside moves the control back (gsettings.changed)
+01:07:26   check PASS: Animatie-effecten off writes reduced-motion reduce
+01:07:26   check PASS: ... and enable-animations false
+01:07:26   check PASS: the mirror brings accessibility.reduceMotion true
+01:07:26   check PASS: reduced-motion written from outside moves Animatie-effecten (gsettings.changed)
+01:07:26   check PASS: ... and the mirror brings accessibility.reduceMotion false
+01:07:26   check PASS: ... and makes enable-animations agree
+01:07:27   check PASS: Vormen voor aan/uit-status writes show-status-shapes true
+01:07:28   check PASS: the kit's switches show GtkSwitch's I and O shapes
+01:07:28   check PASS: show-status-shapes false written from outside moves its switch back
+01:07:29   check PASS: Transparantie-effecten: a click writes settings.json theme.transparency false
+01:07:30   check PASS: Transparantie-effecten: a second click puts theme.transparency back
+01:07:30   check PASS: visualeffects: every switch and check box on the page was flipped by a click
+01:07:30   check PASS: Visuele effecten: no key the page binds is Owned (no pointer to a WinPoint page)
+01:07:30   check PASS: Visuele effecten: no Dutch words in English
+01:07:31   check PASS: contrast: st-contrast-high-contrast is on the page
+01:07:31   check PASS: contrast: title and breadcrumb "Accessibility > Contrast themes"
+01:07:34   check PASS: Hoog contrast is not written before Toepassen
+01:07:35   check PASS: Hoog contrast and Toepassen write high-contrast true
+01:07:35   check PASS: the mirror brings accessibility.highContrast true
+01:07:35   check PASS: the Settings window gets w11-hc
+01:07:35   check PASS: the shell gets w11-high-contrast
+01:07:38   check PASS: Geen and Toepassen write high-contrast false
+01:07:38   check PASS: ... and the mirror brings it back to settings.json
+01:07:39   check PASS: high-contrast true written from outside shows Hoog contrast
+01:07:39   check PASS: ... and false shows Geen
+01:07:39   check PASS: Transparantie uitzetten: a click writes settings.json theme.transparency false
+01:07:40   check PASS: Transparantie uitzetten: a second click puts theme.transparency back
+01:07:40   check PASS: contrast: every switch and check box on the page was flipped by a click
+01:07:40   check PASS: Contrastthema's: no key the page binds is Owned (no pointer to a WinPoint page)
+01:07:40   check PASS: Contrastthema's: high-contrast is Mirrored with accessibility.highContrast
+01:07:40   check PASS: Contrastthema's: no Dutch words in English
+01:07:41   check PASS: mousepointer: st-mousepointer-cursor-size is on the page
+01:07:42   check PASS: mousepointer: title and breadcrumb "Accessibility > Mouse pointer and touch"
+01:07:45   check PASS: Grootte at step 3 writes cursor-size 48
+01:07:45   check PASS: cursor-size written from outside shows (96 px)
+01:07:45   check PASS: Muisaanwijzerindicator: a click writes locate-pointer true
+01:07:45   check PASS: Muisaanwijzerindicator: the control shows the new value
+01:07:46   check PASS: Muisaanwijzerindicator: locate-pointer false written from outside moves the control back (gsettings.changed)
+01:07:46   check PASS: Aanraakscherm toewijzen aan beeldscherm is there exactly while caps has a touchscreen
+01:07:46   check PASS: mousepointer: every switch and check box on the page was flipped by a click
+01:07:46   check PASS: Muisaanwijzer en aanraken: no key the page binds is Owned (no pointer to a WinPoint page)
+01:07:46   check PASS: Muisaanwijzer en aanraken: no Dutch words in English
+01:07:47   check PASS: textcursor: st-textcursor-cursor-blink is on the page
+01:07:48   check PASS: textcursor: title and breadcrumb "Accessibility > Text cursor"
+01:07:49   check PASS: Knipperende tekstcursor off writes cursor-blink false
+01:07:49   check PASS: Knippersnelheid is insensitive while the cursor does not blink
+01:07:49   check PASS: cursor-blink true written from outside turns its switch on again
+01:07:51   check PASS: Knippersnelheid near 500 ms by a click at its place (Snel is right: 2600 - position)
+01:07:51   check PASS: textcursor: every switch and check box on the page was flipped by a click
+01:07:51   check PASS: Tekstcursor: no key the page binds is Owned (no pointer to a WinPoint page)
+01:07:52   check PASS: Tekstcursor: no Dutch words in English
+01:07:52   check PASS: magnifier: st-magnifier-screen-magnifier-enabled is on the page
+01:07:53   check PASS: magnifier: title and breadcrumb "Accessibility > Magnifier"
+01:07:55   check PASS: the Vergrootglas switch on its header writes screen-magnifier-enabled true
+01:07:55   check PASS: screen-magnifier-enabled written from outside moves the switch back (gsettings.changed)
+01:07:57   check PASS: + writes mag-factor 2.25 (GNOME Settings' quarter steps)
+01:07:57   check PASS: ... and shows 225%
+01:07:57   check PASS: mag-factor 3.0 written from outside shows 300%
+01:07:58   check PASS: - writes mag-factor 2.75
+01:08:00   check PASS: Weergave Lens writes lens-mode true
+01:08:00   check PASS: ... with screen-position top-half (a lens over the full screen does nothing)
+01:08:00   check PASS: Schermgebied can be chosen for the lens
+01:08:03   check PASS: Volledig scherm writes lens-mode false
+01:08:03   check PASS: ... and screen-position full-screen
+01:08:04   check PASS: Kleuren omkeren: a click writes invert-lightness true
+01:08:04   check PASS: Kleuren omkeren: the control shows the new value
+01:08:04   check PASS: Kleuren omkeren: invert-lightness false written from outside moves the control back (gsettings.changed)
+01:08:05   check PASS: Buiten de schermranden doorgaan: a click writes scroll-at-edges true
+01:08:05   check PASS: Buiten de schermranden doorgaan: the control shows the new value
+01:08:05   check PASS: Buiten de schermranden doorgaan: scroll-at-edges false written from outside moves the control back (gsettings.changed)
+01:08:09   check PASS: Vergrootglas laten volgen: Muisaanwijzer: a click writes mouse-tracking
+01:08:09   check PASS: Vergrootglas laten volgen: Muisaanwijzer: the control shows the new value
+01:08:09   check PASS: Vergrootglas laten volgen: Muisaanwijzer: mouse-tracking 'proportional' written from outside moves the control back (gsettings.changed)
+01:08:10   check PASS: Vergrootglas laten volgen: Toetsenbordfocus: a click writes focus-tracking 'none'
+01:08:11   check PASS: Vergrootglas laten volgen: Toetsenbordfocus: the control shows the new value
+01:08:11   check PASS: Vergrootglas laten volgen: Toetsenbordfocus: focus-tracking 'proportional' written from outside moves the control back (gsettings.changed)
+01:08:12   check PASS: Vergrootglas laten volgen: Tekstcursor: a click writes caret-tracking 'none'
+01:08:12   check PASS: Vergrootglas laten volgen: Tekstcursor: the control shows the new value
+01:08:13   check PASS: Vergrootglas laten volgen: Tekstcursor: caret-tracking 'centered' written from outside moves the control back (gsettings.changed)
+01:08:15   check PASS: De muisaanwijzer houden: Binnen de randen van het scherm writes mouse-tracking push
+01:08:20   check PASS: Helderheid writes brightness-red, -green and -blue together (near 0.4)
+01:08:23   check PASS: Kleur (verzadiging): a click at 0.4 writes color-saturation near 0.4
+01:08:25   check PASS: the Dradenkruis switch on its header writes show-cross-hairs true
+01:08:28   check PASS: Over muisaanwijzer heen: a click writes cross-hairs-clip true
+01:08:28   check PASS: Over muisaanwijzer heen: the control shows the new value
+01:08:29   check PASS: Over muisaanwijzer heen: cross-hairs-clip false written from outside moves the control back (gsettings.changed)
+01:08:31   check PASS: Dikte: a click at 26 writes cross-hairs-thickness near 26
+01:08:32   check PASS: Dikte: cross-hairs-thickness 12 written from outside changes its value text
+01:08:35   check PASS: Dekking: a click at 30 writes cross-hairs-opacity near 0.3
+01:08:36   check PASS: Dekking: cross-hairs-opacity 0.9 written from outside changes its value text
+01:08:37   check PASS: show-cross-hairs false written from outside moves the Dradenkruis switch back
+01:08:37   check PASS: magnifier: every switch and check box on the page was flipped by a click
+01:08:37   check PASS: Vergrootglas: no key the page binds is Owned (no pointer to a WinPoint page)
+01:08:37   check PASS: Vergrootglas: no Dutch words in English
+01:08:44   check PASS: a shortcut row of Vergrootglas opens Sneltoetsen with Toegankelijkheid open
+01:08:45   check PASS: narrator: st-narrator-preferences is on the page
+01:08:46   check PASS: narrator: title and breadcrumb "Accessibility > Narrator"
+01:08:48   check PASS: Instellingen voor Verteller openen is insensitive while the screen reader is off
+01:08:49   check PASS: the Verteller switch writes screen-reader-enabled true
+01:08:50   check PASS: Instellingen voor Verteller openen calls ShowPreferences on the running Orca, once
+01:08:50   check PASS: ... a plain call, without interactive authorization
+01:08:50   check PASS: ... and WinPoint starts no orca program itself
+01:08:51   check PASS: screen-reader-enabled false written from outside moves the Verteller switch back
+01:08:51   check PASS: ... and Instellingen voor Verteller openen is insensitive again
+01:08:52   check PASS: narrator: every switch and check box on the page was flipped by a click
+01:08:52   check PASS: Verteller: no key the page binds is Owned (no pointer to a WinPoint page)
+01:08:52   check PASS: Verteller: no Dutch words in English
+01:08:53   check PASS: a11y-audio: st-a11y-audio-visual-bell is on the page
+01:08:54   check PASS: a11y-audio: title and breadcrumb "Accessibility > Audio"
+01:08:58   check PASS: Het hele scherm laten knipperen writes visual-bell true
+01:08:58   check PASS: ... and visual-bell-type fullscreen-flash
+01:09:01   check PASS: Het actieve venster laten knipperen writes frame-flash
+01:09:03   check PASS: Testen leaves the page running
+01:09:07   check PASS: Uit writes visual-bell false
+01:09:07   check PASS: visual-bell true written from outside shows the window flash (frame-flash)
+01:09:08   check PASS: Overversterking: a click writes allow-volume-above-100-percent true
+01:09:09   check PASS: Overversterking: the control shows the new value
+01:09:09   check PASS: Overversterking: allow-volume-above-100-percent false written from outside moves the control back (gsettings.changed)
+01:09:10   check PASS: a11y-audio: every switch and check box on the page was flipped by a click
+01:09:10   check PASS: Audio: no key the page binds is Owned (no pointer to a WinPoint page)
+01:09:10   check PASS: Audio: no Dutch words in English
+01:09:11   check PASS: a11y-keyboard: st-a11y-keyboard-stickykeys-enable is on the page
+01:09:12   check PASS: a11y-keyboard: title and breadcrumb "Accessibility > Keyboard"
+01:09:14   check PASS: Plaktoetsen: a click writes stickykeys-enable true
+01:09:14   check PASS: Plaktoetsen: the control shows the new value
+01:09:15   check PASS: Plaktoetsen: stickykeys-enable false written from outside moves the control back (gsettings.changed)
+01:09:18   check PASS: amendment 14's note is in Plaktoetsen
+01:09:19   check PASS: Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt: a click writes stickykeys-two-key-off true
+01:09:20   check PASS: Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt: the control shows the new value
+01:09:20   check PASS: Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt: stickykeys-two-key-off false written from outside moves the control back (gsettings.changed)
+01:09:22   check PASS: Plaktoetsen: een geluid bij de sneltoetsen: a click writes stickykeys-modifier-beep true
+01:09:22   check PASS: Plaktoetsen: een geluid bij de sneltoetsen: the control shows the new value
+01:09:23   check PASS: Plaktoetsen: een geluid bij de sneltoetsen: stickykeys-modifier-beep false written from outside moves the control back (gsettings.changed)
+01:09:24   check PASS: Sneltoets voor Plaktoetsen writes enable true
+01:09:30   check PASS: amendment 24: Sneltoets voor Filtertoetsen is the same key and follows
+01:09:31   check PASS: Sneltoets voor Filtertoetsen: a click writes enable false
+01:09:32   check PASS: Sneltoets voor Filtertoetsen: the control shows the new value
+01:09:32   check PASS: Sneltoets voor Filtertoetsen: enable true written from outside moves the control back (gsettings.changed)
+01:09:34   check PASS: Filtertoetsen' switch writes slowkeys-enable true
+01:09:36   check PASS: Filtertoetsen off writes slowkeys-enable false
+01:09:36   check PASS: ... and bouncekeys-enable false
+01:09:37   check PASS: Korte toetsaanslagen negeren (Trage toetsen): a click writes slowkeys-enable true
+01:09:38   check PASS: Korte toetsaanslagen negeren (Trage toetsen): the control shows the new value
+01:09:38   check PASS: Korte toetsaanslagen negeren (Trage toetsen): slowkeys-enable false written from outside moves the control back (gsettings.changed)
+01:09:40   check PASS: Onbedoelde toetsaanslagen negeren (Stuitertoetsen): a click writes bouncekeys-enable true
+01:09:41   check PASS: Onbedoelde toetsaanslagen negeren (Stuitertoetsen): the control shows the new value
+01:09:41   check PASS: Onbedoelde toetsaanslagen negeren (Stuitertoetsen): bouncekeys-enable false written from outside moves the control back (gsettings.changed)
+01:09:44   check PASS: Trage toetsen: pieptoon bij indrukken: a click writes slowkeys-beep-press true
+01:09:44   check PASS: Trage toetsen: pieptoon bij indrukken: the control shows the new value
+01:09:45   check PASS: Trage toetsen: pieptoon bij indrukken: slowkeys-beep-press false written from outside moves the control back (gsettings.changed)
+01:09:47   check PASS: Trage toetsen: pieptoon bij accepteren: a click writes slowkeys-beep-accept true
+01:09:48   check PASS: Trage toetsen: pieptoon bij accepteren: the control shows the new value
+01:09:48   check PASS: Trage toetsen: pieptoon bij accepteren: slowkeys-beep-accept false written from outside moves the control back (gsettings.changed)
+01:09:51   check PASS: Trage toetsen: pieptoon bij weigeren: a click writes slowkeys-beep-reject true
+01:09:51   check PASS: Trage toetsen: pieptoon bij weigeren: the control shows the new value
+01:09:52   check PASS: Trage toetsen: pieptoon bij weigeren: slowkeys-beep-reject false written from outside moves the control back (gsettings.changed)
+01:09:56   check PASS: Stuitertoetsen: pieptoon bij weigeren: a click writes bouncekeys-beep-reject true
+01:09:56   check PASS: Stuitertoetsen: pieptoon bij weigeren: the control shows the new value
+01:09:57   check PASS: Stuitertoetsen: pieptoon bij weigeren: bouncekeys-beep-reject false written from outside moves the control back (gsettings.changed)
+01:10:02   check PASS: Trage toetsen: Acceptatievertraging: a click at 300 writes slowkeys-delay near 300
+01:10:03   check PASS: Trage toetsen: Acceptatievertraging: slowkeys-delay 100 written from outside changes its value text
+01:10:06   check PASS: Stuitertoetsen: Acceptatievertraging: a click at 450 writes bouncekeys-delay near 450
+01:10:07   check PASS: Stuitertoetsen: Acceptatievertraging: bouncekeys-delay 200 written from outside changes its value text
+01:10:10   check PASS: Wisseltoetsen: a click writes togglekeys-enable true
+01:10:11   check PASS: Wisseltoetsen: the control shows the new value
+01:10:12   check PASS: Wisseltoetsen: togglekeys-enable false written from outside moves the control back (gsettings.changed)
+01:10:16   check PASS: Sneltoets voor Wisseltoetsen: a click writes enable true
+01:10:17   check PASS: Sneltoets voor Wisseltoetsen: the control shows the new value
+01:10:18   check PASS: Sneltoets voor Wisseltoetsen: enable false written from outside moves the control back (gsettings.changed)
+01:10:21   check PASS: Schermtoetsenbord: a click writes screen-keyboard-enabled true
+01:10:22   check PASS: Schermtoetsenbord: the control shows the new value
+01:10:22   check PASS: Schermtoetsenbord: screen-keyboard-enabled false written from outside moves the control back (gsettings.changed)
+01:10:24   check PASS: Print Screen off takes Print from show-screenshot-ui
+01:10:26   check PASS: ... and on puts it back
+01:10:27   check PASS: Een geluid wanneer een functie aan of uit gaat: a click writes feature-state-change-beep true
+01:10:28   check PASS: Een geluid wanneer een functie aan of uit gaat: the control shows the new value
+01:10:28   check PASS: Een geluid wanneer een functie aan of uit gaat: feature-state-change-beep false written from outside moves the control back (gsettings.changed)
+01:10:29   check PASS: a11y-keyboard: every switch and check box on the page was flipped by a click
+01:10:29   check PASS: Toetsenbord: no key the page binds is Owned (no pointer to a WinPoint page)
+01:10:30   check PASS: Toetsenbord: no Dutch words in English
+01:10:31   check PASS: a11y-mouse: st-a11y-mouse-mousekeys-enable is on the page
+01:10:33   check PASS: a11y-mouse: title and breadcrumb "Accessibility > Mouse"
+01:10:35   check PASS: Muistoetsen: a click writes mousekeys-enable true
+01:10:35   check PASS: Muistoetsen: the control shows the new value
+01:10:36   check PASS: Muistoetsen: mousekeys-enable false written from outside moves the control back (gsettings.changed)
+01:10:42   check PASS: Snelheid van muistoetsen: a click at 500 writes mousekeys-max-speed near 500
+01:10:43   check PASS: Snelheid van muistoetsen: mousekeys-max-speed 100 written from outside changes its value text
+01:10:47   check PASS: Versnelling van muistoetsen: a click at 800 writes mousekeys-accel-time near 2300
+01:10:48   check PASS: Versnelling van muistoetsen: mousekeys-accel-time 1000 written from outside changes its value text
+01:10:52   check PASS: Een venster activeren door de muisaanwijzer erop te plaatsen: a click writes focus-mode 'sloppy'
+01:10:53   check PASS: Een venster activeren door de muisaanwijzer erop te plaatsen: the control shows the new value
+01:10:54   check PASS: Een venster activeren door de muisaanwijzer erop te plaatsen: focus-mode 'click' written from outside moves the control back (gsettings.changed)
+01:10:56   check PASS: Dubbelkliksnelheid: a click at 6 writes double-click near 500
+01:10:58   check PASS: Dubbelkliksnelheid: double-click 400 written from outside changes its value text
+01:11:00   check PASS: Gesimuleerde secundaire klik: a click writes secondary-click-enabled true
+01:11:00   check PASS: Gesimuleerde secundaire klik: the control shows the new value
+01:11:01   check PASS: Gesimuleerde secundaire klik: secondary-click-enabled false written from outside moves the control back (gsettings.changed)
+01:11:07   check PASS: Gesimuleerde secundaire klik: Acceptatievertraging: a click at 1.5 writes secondary-click-time near 1.5
+01:11:09   check PASS: Gesimuleerde secundaire klik: Acceptatievertraging: secondary-click-time 2.0 written from outside changes its value text
+01:11:14   check PASS: Klikken door te zweven: a click writes dwell-click-enabled true
+01:11:14   check PASS: Klikken door te zweven: the control shows the new value
+01:11:15   check PASS: Klikken door te zweven: dwell-click-enabled false written from outside moves the control back (gsettings.changed)
+01:11:22   check PASS: Klikken door te zweven: Vertraging: a click at 1.6 writes dwell-time near 1.6
+01:11:23   check PASS: Klikken door te zweven: Vertraging: dwell-time 1.2 written from outside changes its value text
+01:11:27   check PASS: Bewegingsdrempel: a click at 15 writes dwell-threshold near 15
+01:11:29   check PASS: Bewegingsdrempel: dwell-threshold 10 written from outside changes its value text
+01:11:29   check PASS: Klikken door te zweven is off at the end
+01:11:30   check PASS: a11y-mouse: every switch and check box on the page was flipped by a click
+01:11:30   check PASS: Muis (Toegankelijkheid): no key the page binds is Owned (no pointer to a WinPoint page)
+01:11:31   check PASS: Muis: no Dutch words in English
+01:11:31 shutdown shell clients: signalled own descendants 180:ibus-daemon, 470:win11-shell, 1543:glycin-image-rs, 623:win11-panel, 305:ibus-memconf, 307:ibus-extension-, 578:ibus-engine-sim
+01:11:32 shutdown gnome-shell: signalled own descendants 160:gnome-shell
+01:11:32 shutdown system bus: signalled own descendants 159:dbus-daemon
+01:11:32 inner sweep: signalled own descendants 3204:glycin-image-rs
+01:11:32 inner done: 0 surfaces, 0 failed []

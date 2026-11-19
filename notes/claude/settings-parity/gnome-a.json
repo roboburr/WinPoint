@@ -1,0 +1,1489 @@
+{
+ "summary": "I made a read-only inventory of the GNOME Settings 50 panels assigned to this step (installed gnome-control-center 1:50.3-0ubuntu0.2, gnome-settings-daemon 50.0, gnome-shell 50.1). There are 212 items, covering every user-visible setting or action with its backing. Nothing talked to the live session.\n\n**How I checked.** The labels come from the UI files built into /usr/bin/gnome-control-center. I extracted them with `gresource extract` into /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/ui/. Keys, types, ranges, enums and defaults come from /usr/share/glib-2.0/schemas/*.gschema.xml plus the installed overrides (mainly 10_ubuntu-settings and 10_ubuntu-dock). D-Bus APIs come from /usr/share/dbus-1/interfaces/*.xml and strings in the service binaries, and polkit actions from /usr/share/polkit-1/actions. Preset lists are as the UI shows them: number-row values from the UI XML, and the suspend delays from a table in the binary (900, 1200, 1500, 1800, 2700, 3600, 4800, 5400, 6000, 7200 s). Two values are not confirmed: the cursor-size list (I give 24/32/48/64/96 from GNOME's code) and the exact meaning of the stylus 'default' button action.\n\n**Ubuntu 26.04 differences.**\n- **Overrides:** power-button-action='interactive', sleep-inactive-ac-timeout=0, sound theme 'Yaru', DING start-corner 'bottom-right', and the dock set to fixed, panel mode, on the left.\n- **Ubuntu-only pages:** Lock Screen on Suspend (ubuntu-lock-on-suspend), Telemetry (whoopsie and ubuntu-insights), Security Center, Startup Sound (org.gnome.shell.ubuntu startup-sound='warty-startup') and the Ubuntu Desktop panel. That panel now has only Desktop Icons, Dock and Enhanced Tiling; appearance and accent colour moved to the Appearance panel.\n- **Hidden here:** some rows don't show on this machine because a package is missing or the hardware isn't there:\n  - packages not installed: gnome-user-share (File Sharing), openssh-server (Secure Shell), malcontent-control (Parental Controls), realmd (Enterprise Login), usbguard (Forbid New USB Devices);\n  - hardware-dependent: Thunderbolt, privacy screen, light sensor and battery rows.\n- **Not in GNOME 50 Privacy:** the Microphone page is gone. The disable-microphone key still exists, so I listed it because Windows 11 has a Microphone page.\n\n**Design constraints.** Everything is GSettings, D-Bus or polkit, so it all fits GTK 4 + Rust:\n- **Online Accounts** can link libgoa-backend-1.0 (GTK 4 + libadwaita, no WebKit; OAuth goes through the external browser).\n- **Printers** use cups-pk-helper. They also use system-config-printer's D-Bus service for drivers; that service is Python, but it runs as an existing system service, not inside WinPoint.\n- **System changes** each go through the polkit action that GNOME itself uses.\n- **External apps:** Orca's configuration, language-selector, update-manager and desktop-security-center are separate apps GNOME launches; WinPoint can launch them the same way.\n\n**WinPoint today.** Of these functions WinPoint covers:\n- Power: idle-delay, idle-dim, sleep-inactive-* and the power profile.\n- Sound: output volume and sink.\n- Battery status, Clear History and Empty Trash.\n- Its own copies, not the GNOME keys: notification do-not-disturb, text size, 24-hour clock and show-seconds.\n- About: partial.\n\nMissing entirely: Printers, Users/sign-in, Online Accounts, Sharing and Remote Desktop, Secure Shell, Search, Graphics Tablets, Wellbeing, most of Privacy (screen lock, location, camera, telemetry, Thunderbolt, device security), most of Accessibility, Region/login-screen locale and the Date & Time writes.\n\n**Where it goes in Windows 11.** Each item's notes give the suggested page and nl-NL wording (Win11:). In short:\n- System: Notifications, Power & battery, Sound, Remote Desktop, About.\n- Accounts: Email & accounts, Your info, Sign-in options, Other users, Family.\n- Bluetooth & devices: Printers & scanners, Pen & Windows Ink.\n- Privacy & security: Location, Camera, Diagnostics & feedback, Search permissions, Searching Windows, Windows Security; Storage Sense for trash and temp files.\n- Time & language: Date & time, Language & region, including administrative language settings for the login screen.\n- Accessibility: text size, visual effects, mouse pointer, magnifier, audio, keyboard, mouse, colour filters.\n- Personalisation: Taskbar, desktop icons; Multitasking: snap windows.\n- Wellbeing has no Settings counterpart in Windows 11; it fits under System > Focus or Accounts > Family.\n\n**Mouse.** You named mouse settings as missing. The gnome-mouse-panel itself was not in this step's list, but I saw its UI while extracting. It has primary button left/right, pointer speed, mouse acceleration, scroll direction, a touchpad tab (on/off, disable while typing, speed, secondary click, tap to click, scroll method and direction), a pointing-stick tab and Test Settings, all backed by org.gnome.desktop.peripherals.mouse/touchpad/pointingstick. It must be covered by whichever step owns the mouse panel. The mouse-related accessibility options (double-click delay, mouse keys, locate pointer, hover click) are in this list under universal-access.",
+ "items": [
+  {
+   "area": "notifications",
+   "function": "Do Not Disturb",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications show-banners (b, default true); DND on = show-banners false",
+   "notes": "Win11: System > Meldingen > 'Niet storen'. WP: partial (own notifications.dnd of WinPoint's server, not this key)."
+  },
+  {
+   "area": "notifications",
+   "function": "Lock Screen Notifications",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications show-in-lock-screen (b, default true); same key as Privacy > Screen Lock",
+   "notes": "Win11: Meldingen > 'Meldingen weergeven op het vergrendelingsscherm'. WP: missing."
+  },
+  {
+   "area": "notifications",
+   "function": "App Notifications list (per app row opening a subpage)",
+   "control": "list",
+   "backing": "Apps = desktop files with X-GNOME-UsesNotifications=true plus org.gnome.desktop.notifications application-children (as, default []); each child is relocatable org.gnome.desktop.notifications.application at /org/gnome/desktop/notifications/application/<desktop-id lowercased, non-alnum -> '-'>/ with application-id (s)",
+   "notes": "Win11: 'Meldingen van apps en andere afzenders' list with per-app switch + chevron. WP: missing."
+  },
+  {
+   "area": "notifications",
+   "function": "App: Notifications (show in notifications list)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application enable (b, default true)",
+   "notes": "Win11 per-app page: 'Meldingen' master switch."
+  },
+  {
+   "area": "notifications",
+   "function": "App: Sound (allow notification sounds)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application enable-sound-alerts (b, default true)",
+   "notes": "Win11: 'Een geluid afspelen wanneer een melding binnenkomt'."
+  },
+  {
+   "area": "notifications",
+   "function": "App: Banners > Show Banners",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application show-banners (b, default true)",
+   "notes": "Win11: 'Meldingsbanners weergeven'."
+  },
+  {
+   "area": "notifications",
+   "function": "App: Banners > Show Content (include message details)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application force-expanded (b, default false)",
+   "notes": "No direct Win11 equivalent; place under the banner option."
+  },
+  {
+   "area": "notifications",
+   "function": "App: Lock Screen > Show Banners",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application show-in-lock-screen (b, default true)",
+   "notes": "Win11 per-app: lock-screen notification option."
+  },
+  {
+   "area": "notifications",
+   "function": "App: Lock Screen > Show Content",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application details-in-lock-screen (b, default false)",
+   "notes": "Win11: 'Inhoud van meldingen verbergen op het vergrendelingsscherm' (inverted)."
+  },
+  {
+   "area": "online-accounts",
+   "function": "Your Accounts list (provider icon, identity, Error badge when attention needed)",
+   "control": "list",
+   "backing": "GNOME Online Accounts 3.58: session bus org.gnome.OnlineAccounts, /org/gnome/OnlineAccounts (ObjectManager); iface org.gnome.OnlineAccounts.Account ProviderName, PresentationIdentity, AttentionNeeded; stored in ~/.config/goa-1.0/accounts.conf, secrets in libsecret",
+   "notes": "Win11: Accounts > 'E-mail en accounts' > 'Accounts die worden gebruikt door e-mail, agenda en contactpersonen'. WP: missing."
+  },
+  {
+   "area": "online-accounts",
+   "function": "Connect an Account (Google, Nextcloud, Microsoft 365, Microsoft Exchange, IMAP and SMTP, WebDAV, Enterprise Login (Kerberos))",
+   "control": "dialog",
+   "backing": "libgoa-backend-1.0.so.2 (GTK4 + libadwaita, no WebKit; OAuth via external browser + /usr/libexec/goa-oauth2-handler) goa_provider_get_all()/goa_provider_add_account() -> org.gnome.OnlineAccounts.Manager AddAccount(s provider, s identity, s presentation_identity, a{sv} credentials, a{ss} details)",
+   "notes": "Win11: 'Een account toevoegen'. WinPoint can FFI libgoa-backend from Rust."
+  },
+  {
+   "area": "online-accounts",
+   "function": "Account details: Use for (Mail, Calendar, Contacts, Files, Photos, Documents, Printers, Maps, Music, To Do, Chat, Ticketing, Read Later, as the provider supports)",
+   "control": "toggle",
+   "backing": "org.gnome.OnlineAccounts.Account writable b properties MailDisabled, CalendarDisabled, ContactsDisabled, FilesDisabled, PhotosDisabled, DocumentsDisabled, PrintersDisabled, MapsDisabled, MusicDisabled, TodoDisabled, ChatDisabled, TicketingDisabled, ReadLaterDisabled (switch on = Disabled false); goa_provider_show_account()",
+   "notes": "Win11: account > 'Beheren' > 'Instellingen voor synchronisatie' (E-mail, Agenda, Contactpersonen)."
+  },
+  {
+   "area": "online-accounts",
+   "function": "Account: Sign In again (credentials expired)",
+   "control": "button",
+   "backing": "org.gnome.OnlineAccounts.Account EnsureCredentials() / goa_provider_refresh_account() (libgoa-backend)",
+   "notes": "Win11: 'Account herstellen'."
+  },
+  {
+   "area": "online-accounts",
+   "function": "Account: Remove",
+   "control": "button",
+   "backing": "org.gnome.OnlineAccounts.Account Remove() (confirmation dialog)",
+   "notes": "Win11: account > 'Verwijderen'."
+  },
+  {
+   "area": "online-accounts",
+   "function": "Offline banner 'unable to connect accounts'",
+   "control": "info",
+   "backing": "GNetworkMonitor / NetworkManager connectivity",
+   "notes": ""
+  },
+  {
+   "area": "power",
+   "function": "Battery status (charge %, time to full/empty, level bar)",
+   "control": "info",
+   "backing": "UPower system bus org.freedesktop.UPower GetDisplayDevice(); org.freedesktop.UPower.Device Percentage, State, TimeToEmpty, TimeToFull, IconName, WarningLevel",
+   "notes": "Win11: Energie en batterij header + 'Batterijgebruik'. WP: has (system.battery.get)."
+  },
+  {
+   "area": "power",
+   "function": "Battery Charging: Maximize Charge / Preserve Battery Health",
+   "control": "dropdown",
+   "backing": "UPower Device ChargeThresholdSupported (b), ChargeThresholdEnabled (b), ChargeStartThreshold/ChargeEndThreshold (u); method EnableChargeThreshold(b); polkit org.freedesktop.UPower.enable-charging-limit (allow_active yes); shown only when supported",
+   "notes": "Radio pair. Win11 24H2: Energie en batterij > 'Slim opladen'. WP: missing."
+  },
+  {
+   "area": "power",
+   "function": "Connected Devices (battery of mice, keyboards, headsets, UPS)",
+   "control": "info",
+   "backing": "UPower EnumerateDevices() + Device Type/Model/Percentage/BatteryLevel",
+   "notes": "Win11: Bluetooth en apparaten shows per-device battery."
+  },
+  {
+   "area": "power",
+   "function": "Power Mode: Performance / Balanced / Power Saver (+ degraded/hold notices)",
+   "control": "dropdown",
+   "backing": "power-profiles-daemon 0.30: system bus org.freedesktop.UPower.PowerProfiles (also net.hadess.PowerProfiles) ActiveProfile (s rw: 'performance','balanced','power-saver'), Profiles (aa{sv}), PerformanceDegraded (s: 'lap-detected','high-operating-temperature'), ActiveProfileHolds; polkit org.freedesktop.UPower.PowerProfiles.switch-profile (yes)",
+   "notes": "Radio list in GNOME. Win11: 'Energiestand' (Beste energie-efficiëntie / Gebalanceerd / Beste prestaties). WP: has."
+  },
+  {
+   "area": "power",
+   "function": "Power Button Behavior (Suspend / Power Off / Hibernate / Nothing)",
+   "control": "dropdown",
+   "backing": "org.gnome.settings-daemon.plugins.power power-button-action enum {nothing,suspend,hibernate,interactive}; schema default 'suspend', Ubuntu override 'interactive' (= Power Off menu); Hibernate only if logind CanHibernate",
+   "notes": "Win11 24H2: 'Besturingselementen voor deksel- en aan/uit-knop' > 'Als ik op de aan/uit-knop druk'. Lid keys lid-close-ac-action/lid-close-battery-action (enum, default suspend) and lid-close-suspend-with-external-monitor (b false) exist but GNOME Settings has no UI for them; Win11 has 'Als ik het deksel sluit'. WP: missing."
+  },
+  {
+   "area": "power",
+   "function": "Show Battery Percentage (top bar)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface show-battery-percentage (b, default false); battery systems only",
+   "notes": "Win11: battery % in the system tray / Energie en batterij. WP: map to own taskbar."
+  },
+  {
+   "area": "power",
+   "function": "Automatic Screen Brightness",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.power ambient-enabled (b, default true); visible only with a light sensor (iio-sensor-proxy net.hadess.SensorProxy HasAmbientLight)",
+   "notes": "Win11: Beeldscherm > Helderheid > 'Helderheid automatisch wijzigen wanneer de verlichting verandert'."
+  },
+  {
+   "area": "power",
+   "function": "Dim Screen (when inactive)",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.power idle-dim (b, default true); idle-brightness (i 30) has no UI",
+   "notes": "Win11: 'Scherm dimmen' timeout. WP: has."
+  },
+  {
+   "area": "power",
+   "function": "Automatic Power Saver (on low battery)",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.power power-saver-profile-on-low-battery (b, default true); battery + power-profiles-daemon only",
+   "notes": "Win11: 'Energiebesparing' > 'Energiebesparing automatisch inschakelen bij'."
+  },
+  {
+   "area": "power",
+   "function": "Automatic Screen Blank + Delay",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.session idle-delay (u seconds, default 300; 0 = off via the switch; presets 60,120,180,240,300,480,600,720,900)",
+   "notes": "Switch + delay row. Win11: 'Scherm, slaapstand en sluimerstand time-outs' > 'Mijn scherm uitschakelen na'. WP: has."
+  },
+  {
+   "area": "power",
+   "function": "Automatic Suspend: On Battery Power + Delay",
+   "control": "dropdown",
+   "backing": "org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type enum {blank,suspend,shutdown,hibernate,interactive,nothing,logout} ('suspend' on / 'nothing' off, default 'suspend') + sleep-inactive-battery-timeout (i seconds, default 900; presets 900,1200,1500,1800,2700,3600,4800,5400,6000,7200)",
+   "notes": "Win11: 'Mijn apparaat in de slaapstand zetten na' (op batterij). WP: has."
+  },
+  {
+   "area": "power",
+   "function": "Automatic Suspend: When Plugged In + Delay",
+   "control": "dropdown",
+   "backing": "sleep-inactive-ac-type (enum as above, default 'suspend') + sleep-inactive-ac-timeout (i; schema 900, Ubuntu override 0 = off); same presets",
+   "notes": "GNOME also shows the warning 'Disabling automatic suspend will result in higher power consumption'. Win11: '...(aangesloten)'. WP: has."
+  },
+  {
+   "area": "printers",
+   "function": "Printer list with search, status, model, location, ink level",
+   "control": "list",
+   "backing": "CUPS 2.4 via libcups (cupsGetDests, IPP Get-Printer-Attributes: printer-state, printer-state-reasons, printer-location, printer-make-and-model, marker-levels/marker-colors/marker-names); 'No Print Service' state when cupsd unreachable",
+   "notes": "Win11: Bluetooth en apparaten > 'Printers en scanners'. WP: missing."
+  },
+  {
+   "area": "printers",
+   "function": "Unlock (admin permission for printer changes)",
+   "control": "button",
+   "backing": "polkit org.opensuse.cupspkhelper.mechanism.all-edit (auth_admin_keep) through cups-pk-helper (system bus org.opensuse.CupsPkHelper.Mechanism)",
+   "notes": "Win11 asks UAC per action instead."
+  },
+  {
+   "area": "printers",
+   "function": "Add Printer… (discover local/network printers, enter address, choose driver, SMB/print-server authentication)",
+   "control": "dialog",
+   "backing": "cups-pk-helper DevicesGet (polkit org.opensuse.cupspkhelper.mechanism.devices-get) + DNS-SD/Avahi browse + address probing (ipp/ipps/socket/lpd/smb); drivers via session-bus org.fedoraproject.Config.Printing GetBestDrivers/GroupPhysicalDevices/MissingExecutables (system-config-printer-common service); add with CupsPkHelper PrinterAdd / PrinterAddWithPpdFile (polkit org.opensuse.cupspkhelper.mechanism.printeraddremove)",
+   "notes": "Win11: 'Apparaat toevoegen' + 'De printer die ik wil gebruiken, staat niet in de lijst'."
+  },
+  {
+   "area": "printers",
+   "function": "Jobs dialog: pause/resume, cancel, move to top, Clear All (confirm), authenticate held jobs",
+   "control": "dialog",
+   "backing": "IPP Get-Jobs; CupsPkHelper JobCancelPurge, JobSetHoldUntil ('indefinite'/'no-hold'), JobRestart; job-priority via IPP Set-Job-Attributes; polkit org.opensuse.cupspkhelper.mechanism.job-edit (yes) / job-not-owned-edit (admin)",
+   "notes": "Win11: 'Afdrukwachtrij openen'."
+  },
+  {
+   "area": "printers",
+   "function": "Printing Options (PPD/IPP defaults: paper size, duplex, colour, quality, …) + Test Page",
+   "control": "dialog",
+   "backing": "PPD options and *-default IPP attributes; written with CupsPkHelper PrinterAddOptionDefault (polkit printer-local-edit / printer-remote-edit); test page = print /usr/share/cups/data/testprint (or org.fedoraproject.Config.Printing PrintTestPage)",
+   "notes": "Win11: 'Voorkeursinstellingen voor afdrukken' + 'Een testpagina afdrukken'."
+  },
+  {
+   "area": "printers",
+   "function": "Printer Details: Name, Location, Address (open), Driver; Search for Drivers, Select from Database…, Install PPD File…",
+   "control": "dialog",
+   "backing": "CupsPkHelper PrinterRename, PrinterSetLocation, PrinterAddWithPpdFile (change driver), CUPS-Get-PPDs / GetBestDrivers; names cannot contain space, tab, # or /",
+   "notes": "Win11: 'Printereigenschappen'."
+  },
+  {
+   "area": "printers",
+   "function": "Use Printer by Default",
+   "control": "button",
+   "backing": "CupsPkHelper PrinterSetDefault (polkit org.opensuse.cupspkhelper.mechanism.printer-set-default)",
+   "notes": "Win11: 'Als standaard instellen' + 'Windows mijn standaardprinter laten beheren'."
+  },
+  {
+   "area": "printers",
+   "function": "Clean Print Heads",
+   "control": "button",
+   "backing": "CUPS maintenance command job ('Clean all' CUPS-Command) when printer advertises it",
+   "notes": "Win11: under the printer's 'Printereigenschappen'/onderhoud."
+  },
+  {
+   "area": "printers",
+   "function": "Remove Printer",
+   "control": "button",
+   "backing": "CupsPkHelper PrinterDelete (polkit org.opensuse.cupspkhelper.mechanism.printeraddremove)",
+   "notes": "Win11: 'Verwijderen'."
+  },
+  {
+   "area": "printers",
+   "function": "Restart printer after an error",
+   "control": "button",
+   "backing": "CupsPkHelper PrinterSetEnabled(true) + PrinterSetAcceptJobs(true) (polkit printer-enable)",
+   "notes": "Win11: 'Probleemoplosser uitvoeren'."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Lock: Blank Screen Delay",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.session idle-delay (u, default 300; 0 = 'Never'; presets 60,120,180,240,300,480,600,720,900) - same key as Power",
+   "notes": "Win11: Energie en batterij > 'Mijn scherm uitschakelen na'. WP: has (power page)."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Lock: Automatic Screen Lock",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.screensaver lock-enabled (b, default true)",
+   "notes": "Win11: Accounts > Aanmeldingsopties > 'Als je bent weggeweest, wanneer moet Windows vereisen dat je je opnieuw aanmeldt?'. WP: missing."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Lock: Automatic Screen Lock Delay",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.screensaver lock-delay (u seconds, default 0 = 'Screen Turns Off'; presets 30,60,120,180,300,1800,3600)",
+   "notes": "Win11: same Aanmeldingsopties dropdown / 'Dynamische vergrendeling'."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Lock: Lock Screen Notifications",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications show-in-lock-screen (b, default true)",
+   "notes": "Win11: Meldingen > 'Meldingen weergeven op het vergrendelingsscherm'."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Lock: Lock Screen on Suspend (Ubuntu)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.screensaver ubuntu-lock-on-suspend (b, default true)",
+   "notes": "Win11: Aanmeldingsopties 'Wanneer de pc uit de slaapstand komt'."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Lock: Forbid New USB Devices (when locked)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy usb-protection (b, default true); usb-protection-level enum {lockscreen,always} ('lockscreen', no UI); row only when usbguard runs (gsd-usb-protection) - usbguard not installed here",
+   "notes": "Win11: no equivalent (Windows-beveiliging). Hidden on this machine."
+  },
+  {
+   "area": "privacy",
+   "function": "Screen Privacy: Restrict Viewing Angle",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy privacy-screen (b, default false); only with a hardware privacy screen (Mutter DisplayConfig privacy-screen-state)",
+   "notes": "Win11: no equivalent (vendor tools). Hardware-dependent."
+  },
+  {
+   "area": "privacy",
+   "function": "Location: Automatic Device Location",
+   "control": "toggle",
+   "backing": "org.gnome.system.location enabled (b, default false); max-accuracy-level enum {country,city,neighborhood,street,exact} ('exact', no UI); geoclue-2.0 2.7.2",
+   "notes": "Win11: Privacy en beveiliging > Locatie > 'Locatievoorzieningen'. WP: missing."
+  },
+  {
+   "area": "privacy",
+   "function": "Location: Permitted Apps (sandboxed apps)",
+   "control": "list",
+   "backing": "xdg-desktop-portal permission store, session bus org.freedesktop.impl.portal.PermissionStore /org/freedesktop/impl/portal/PermissionStore Lookup/SetPermission(table 'location', id 'location', app, ['EXACT','0'] or ['NONE','0'])",
+   "notes": "Per-app switches. Win11: 'Apps toegang geven tot je locatie' + per-app."
+  },
+  {
+   "area": "privacy",
+   "function": "Cameras: Camera Access",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy disable-camera (b, default false; access = !disable-camera)",
+   "notes": "Win11: Privacy en beveiliging > Camera > 'Cameratoegang'. WP: missing."
+  },
+  {
+   "area": "privacy",
+   "function": "Cameras: Permitted Apps",
+   "control": "list",
+   "backing": "PermissionStore table 'devices', id 'camera', per app ['yes'] / ['no']",
+   "notes": "Win11: 'Apps toegang geven tot je camera' + per-app."
+  },
+  {
+   "area": "privacy",
+   "function": "Microphone access (not a page in GNOME 50 Privacy; key used per app in Apps panel)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy disable-microphone (b, default false); per app PermissionStore table 'devices' id 'microphone'; also disable-sound-output (b false)",
+   "notes": "Add for Win11 parity: Privacy en beveiliging > 'Microfoon' > 'Microfoontoegang'."
+  },
+  {
+   "area": "privacy",
+   "function": "File History: File History (remember recently used files)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy remember-recent-files (b, default true)",
+   "notes": "Win11: Persoonlijke instellingen > Start > 'Aanbevolen bestanden in Start, recente bestanden in Verkenner en items in jumplists weergeven'."
+  },
+  {
+   "area": "privacy",
+   "function": "File History Duration",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.privacy recent-files-max-age (i days, default -1 = 'Forever'; presets 1,7,30)",
+   "notes": ""
+  },
+  {
+   "area": "privacy",
+   "function": "Clear History…",
+   "control": "button",
+   "backing": "Purges ~/.local/share/recently-used.xbel (GtkRecentManager purge), confirm 'Clear File History?'",
+   "notes": "Win11: Activiteitengeschiedenis wissen. WP: has (apps.clearRecent)."
+  },
+  {
+   "area": "privacy",
+   "function": "Automatically Empty Trash",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy remove-old-trash-files (b, default false); run by gsd-housekeeping",
+   "notes": "Win11: Systeem > Opslag > Opslagzin > 'Bestanden in mijn Prullenbak verwijderen als ze er langer in staan dan'. WP: missing."
+  },
+  {
+   "area": "privacy",
+   "function": "Automatically Delete Temporary Files",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy remove-old-temp-files (b, default false)",
+   "notes": "Win11: Opslagzin > 'Tijdelijke bestanden opschonen'."
+  },
+  {
+   "area": "privacy",
+   "function": "Automatic Deletion Period",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.privacy old-files-age (u days, default 30; presets 0 = '1 hour',1,2,3,4,5,6,7,14,30)",
+   "notes": "Win11 offers 1/14/30/60 days."
+  },
+  {
+   "area": "privacy",
+   "function": "Empty Trash…",
+   "control": "button",
+   "backing": "Deletes all of trash:/// via GIO (confirm 'Empty all items from Trash?')",
+   "notes": "WP: has (files.emptyTrash)."
+  },
+  {
+   "area": "privacy",
+   "function": "Delete Temporary Files…",
+   "control": "button",
+   "backing": "Deletes user-owned files in g_get_tmp_dir() (confirm)",
+   "notes": "Win11: Opslag > 'Tijdelijke bestanden'. WP: storage cleanup partly."
+  },
+  {
+   "area": "privacy",
+   "function": "Telemetry: Send error reports to Canonical (Never / Automatic / Manual)",
+   "control": "dropdown",
+   "backing": "whoopsie-preferences: system bus com.ubuntu.WhoopsiePreferences /com/ubuntu/WhoopsiePreferences properties ReportCrashes (b), AutomaticallyReportCrashes (b); SetReportCrashes(b), SetAutomaticallyReportCrashes(b), GetIdentifier(); polkit com.ubuntu.whoopsiepreferences.change (auth_admin_keep)",
+   "notes": "Win11: Privacy en beveiliging > 'Diagnostische gegevens en feedback'. WP: missing."
+  },
+  {
+   "area": "privacy",
+   "function": "Telemetry: Automatic Error Reporting (ABRT)",
+   "control": "toggle",
+   "backing": "ABRT D-Bus (Fedora); not present on Ubuntu, row hidden",
+   "notes": "Skip on Ubuntu."
+  },
+  {
+   "area": "privacy",
+   "function": "Telemetry: Send a system report every month",
+   "control": "toggle",
+   "backing": "libinsights (ubuntu-insights) consent for source 'linux' -> ~/.config/ubuntu-insights/linux-consent.toml",
+   "notes": "Win11: 'Optionele diagnostische gegevens verzenden'."
+  },
+  {
+   "area": "privacy",
+   "function": "Telemetry: Send a system report when upgrading to a new Ubuntu version",
+   "control": "toggle",
+   "backing": "libinsights consent for source 'ubuntu_release_upgrader'",
+   "notes": ""
+  },
+  {
+   "area": "privacy",
+   "function": "Telemetry: Show Report / Cancel Report Generation",
+   "control": "dialog",
+   "backing": "libinsights insights_compile() example report shown read-only; cancellable",
+   "notes": "Win11: 'Diagnostische gegevens weergeven'."
+  },
+  {
+   "area": "privacy",
+   "function": "Connectivity: Connectivity Checking",
+   "control": "toggle",
+   "backing": "NetworkManager system bus org.freedesktop.NetworkManager property ConnectivityCheckEnabled (b rw), ConnectivityCheckAvailable (b); polkit org.freedesktop.NetworkManager.enable-disable-connectivity-check (yes)",
+   "notes": "Win11: no toggle (NCSI); put under Privacy > Diagnostische gegevens or Netwerk > Geavanceerde netwerkinstellingen."
+  },
+  {
+   "area": "privacy",
+   "function": "Security Center (external)",
+   "control": "button",
+   "backing": "Launches desktop-security-center_desktop-security-center.desktop (snap, installed)",
+   "notes": "Win11: Privacy en beveiliging > 'Windows-beveiliging'."
+  },
+  {
+   "area": "privacy",
+   "function": "Thunderbolt: Direct Access (allow docks/eGPUs)",
+   "control": "toggle",
+   "backing": "boltd: system bus org.freedesktop.bolt /org/freedesktop/bolt iface org.freedesktop.bolt1.Manager AuthMode (s rw 'enabled'/'disabled'); polkit org.freedesktop.bolt.manage; page only with Thunderbolt hardware",
+   "notes": "Win11: Bluetooth en apparaten > USB / Windows-beveiliging > Kernel-DMA-beveiliging."
+  },
+  {
+   "area": "privacy",
+   "function": "Thunderbolt: Devices & Pending Devices; device dialog (Status, UUID, Timestamp, depends-on) with Authorize and Connect / Forget Device",
+   "control": "dialog",
+   "backing": "org.freedesktop.bolt1.Manager ListDevices(), EnrollDevice(s uid, s policy, s flags), ForgetDevice(s uid); org.freedesktop.bolt1.Device Authorize(s flags), Status, Stored, Policy, AuthorizeTime; polkit org.freedesktop.bolt.enroll / .authorize / .manage",
+   "notes": ""
+  },
+  {
+   "area": "privacy",
+   "function": "Device Security: HSI level, Secure Boot state, Security Events, details + Copy Technical Report",
+   "control": "info",
+   "backing": "fwupd 2.1: system bus org.freedesktop.fwupd / HostSecurityId property, GetHostSecurityAttrs(), GetHostSecurityEvents(u limit); read-only",
+   "notes": "Win11: Windows-beveiliging > 'Apparaatbeveiliging' (Kernisolatie, Beveiligingsprocessor, Beveiligd opstarten)."
+  },
+  {
+   "area": "region",
+   "function": "Your Account: Language",
+   "control": "dialog",
+   "backing": "AccountsService system bus org.freedesktop.Accounts.User SetLanguage(s) (+ Languages as) on own user (polkit org.freedesktop.accounts.change-own-user-data, yes); list of locales with translations (gnome-desktop locale list); applies after re-login",
+   "notes": "Win11: Tijd en taal > Taal en regio > 'Weergavetaal van Windows'. WP: partial (WinPoint UI language only)."
+  },
+  {
+   "area": "region",
+   "function": "Your Account: Formats (with preview: Dates, Times, Dates & Times, Numbers, Measurement, Paper)",
+   "control": "dialog",
+   "backing": "org.gnome.system.locale region (s, default '') + AccountsService User.SetFormatsLocale(s)",
+   "notes": "Win11: 'Regionale notatie' + 'Notaties wijzigen'. WP: missing."
+  },
+  {
+   "area": "region",
+   "function": "Login Screen: Language",
+   "control": "dialog",
+   "backing": "systemd-localed system bus org.freedesktop.locale1 SetLocale(as ['LANG=…'], b interactive); polkit org.freedesktop.locale1.set-locale (auth_admin_keep)",
+   "notes": "Win11: Taal en regio > 'Beheertaalinstellingen' (welkomstscherm en nieuwe gebruikers)."
+  },
+  {
+   "area": "region",
+   "function": "Login Screen: Formats",
+   "control": "dialog",
+   "backing": "org.freedesktop.locale1 SetLocale with LC_NUMERIC, LC_TIME, LC_MONETARY, LC_MEASUREMENT, LC_PAPER (+LANG kept); polkit org.freedesktop.locale1.set-locale",
+   "notes": ""
+  },
+  {
+   "area": "region",
+   "function": "Manage Installed Languages",
+   "control": "button",
+   "backing": "Launches gnome-language-selector.desktop (language-selector-gnome; system service com.ubuntu.LanguageSelector, polkit com.ubuntu.languageselector.setsystemdefaultlanguage)",
+   "notes": "Win11: 'Voorkeurstalen' > 'Een taal toevoegen'."
+  },
+  {
+   "area": "region",
+   "function": "Banner 'Language and format will be changed after next login' + Log Out",
+   "control": "button",
+   "backing": "org.gnome.SessionManager Logout(u 0)",
+   "notes": "Win11 shows 'Afmelden' after a display-language change. Input sources belong to the Keyboard panel."
+  },
+  {
+   "area": "search",
+   "function": "App Search (include app-provided results)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.search-providers disable-external (b, default false; on = !disable-external)",
+   "notes": "Win11: Privacy en beveiliging > 'Zoekmachtigingen'. WP: missing."
+  },
+  {
+   "area": "search",
+   "function": "Search Results: per-app provider on/off",
+   "control": "list",
+   "backing": "Providers from /usr/share/gnome-shell/search-providers/*.ini (org.gnome.Shell.SearchProvider2); turning off a default-on provider adds its desktop id to org.gnome.desktop.search-providers disabled (as []); turning on a DefaultDisabled=true provider (here org.gnome.Characters) adds it to enabled (as [])",
+   "notes": "Win11 has no per-app list; place under Zoekmachtigingen / 'Meer instellingen'."
+  },
+  {
+   "area": "search",
+   "function": "Search Results order (drag, Move Up / Move Down)",
+   "control": "list",
+   "backing": "org.gnome.desktop.search-providers sort-order (as, default ['org.gnome.Settings.desktop','org.gnome.Contacts.desktop','org.gnome.Nautilus.desktop'])",
+   "notes": ""
+  },
+  {
+   "area": "search",
+   "function": "Search Locations: Default Locations (Home, Desktop, Documents, Downloads, Music, Pictures, Videos)",
+   "control": "toggle",
+   "backing": "org.freedesktop.Tracker3.Miner.Files index-recursive-directories (as, installed default ['$HOME']; tokens &DESKTOP &DOCUMENTS &DOWNLOAD &MUSIC &PICTURES &VIDEOS) and index-single-directories (as, default [])",
+   "notes": "Win11: Privacy en beveiliging > 'Windows doorzoeken' > 'Zoeklocaties aanpassen' (Klassiek/Uitgebreid). WP has its own index (index.setRoots), separate from Tracker."
+  },
+  {
+   "area": "search",
+   "function": "Search Locations: Bookmarked Locations",
+   "control": "toggle",
+   "backing": "Same Tracker keys; bookmarks read from ~/.config/gtk-3.0/bookmarks",
+   "notes": ""
+  },
+  {
+   "area": "search",
+   "function": "Search Locations: Custom Locations (Add Location, remove)",
+   "control": "list",
+   "backing": "Folder chooser -> append/remove path in index-recursive-directories",
+   "notes": "Win11: 'Uitgesloten mappen' / 'Een uitgesloten map toevoegen' (inverse model)."
+  },
+  {
+   "area": "sharing",
+   "function": "Device Name",
+   "control": "dialog",
+   "backing": "systemd-hostnamed system bus org.freedesktop.hostname1 SetPrettyHostname(s, b) + SetStaticHostname(s, b); polkit org.freedesktop.hostname1.set-static-hostname (implies set-hostname, set-machine-info); same row in About",
+   "notes": "Editable entry row. Win11: Systeem > Info > 'Naam van deze pc wijzigen'. WP: missing (read-only)."
+  },
+  {
+   "area": "sharing",
+   "function": "File Sharing dialog: switch, File Sharing Address (copy), Open Public Folder, Require Password, Password, networks",
+   "control": "dialog",
+   "backing": "gnome-user-share WebDAV (NOT installed here -> row hidden): gsd-sharing service 'gnome-user-share-webdav'; org.gnome.desktop.file-sharing require-password enum {never,on_write,always}; password htdigest in ~/.config/user-share/passwd; folder ~/Public",
+   "notes": "Win11: Netwerk en internet > Geavanceerde netwerkinstellingen > 'Geavanceerde instellingen voor delen' > 'Bestands- en printerdeling' / 'Openbare map delen'."
+  },
+  {
+   "area": "sharing",
+   "function": "Media Sharing dialog: switch, Folders (add/remove; defaults Music, Pictures, Videos)",
+   "control": "dialog",
+   "backing": "rygel 45 (installed): folders in ~/.config/rygel.conf [MediaExport] uris=; enable/disable via gsd-sharing session bus org.gnome.SettingsDaemon.Sharing /org/gnome/SettingsDaemon/Sharing EnableService('rygel') / DisableService('rygel', s network)",
+   "notes": "Win11: 'Mediastreaming' (advanced sharing / Configuratiescherm)."
+  },
+  {
+   "area": "sharing",
+   "function": "Networks per service (enabled on current network, remove other networks)",
+   "control": "list",
+   "backing": "gsd-sharing ListNetworks(s service) -> a(sss); properties CurrentNetwork, CurrentNetworkName, CarrierType, SharingStatus; stored in relocatable org.gnome.settings-daemon.plugins.sharing.service at /org/gnome/settings-daemon/plugins/sharing/<service>/ enabled-connections (as NM connection UUIDs)",
+   "notes": "Win11: per network profile (Privé / Openbaar) in advanced sharing."
+  },
+  {
+   "area": "sound",
+   "function": "Output Device",
+   "control": "dropdown",
+   "backing": "PulseAudio protocol on PipeWire (libpulse/libgvc): default sink (pa_context_set_default_sink) and sink port (pa_context_set_sink_port_by_index)",
+   "notes": "Win11: Systeem > Geluid > 'Kies waar je geluid wilt afspelen'. WP: has (system.audio.setSink)."
+  },
+  {
+   "area": "sound",
+   "function": "Output Configuration (card profile)",
+   "control": "dropdown",
+   "backing": "pa_context_set_card_profile_by_index (e.g. Analog Stereo, HDMI, A2DP/HFP)",
+   "notes": "Win11: device properties > 'Indeling'. WP: missing."
+  },
+  {
+   "area": "sound",
+   "function": "Output Volume + mute",
+   "control": "slider",
+   "backing": "Default sink volume/mute (pa_context_set_sink_volume/mute); max 100 % or ~153 % with Overamplification",
+   "notes": "Win11: 'Volume'. WP: has."
+  },
+  {
+   "area": "sound",
+   "function": "Balance",
+   "control": "slider",
+   "backing": "Sink cvolume balance (pa_cvolume_set_balance on the channel map)",
+   "notes": "Win11: device properties > 'Links' / 'Rechts'. WP: missing."
+  },
+  {
+   "area": "sound",
+   "function": "Fade (front/rear, surround only)",
+   "control": "slider",
+   "backing": "pa_cvolume_set_fade",
+   "notes": "Hardware-dependent."
+  },
+  {
+   "area": "sound",
+   "function": "Subwoofer (LFE, when present)",
+   "control": "slider",
+   "backing": "pa_cvolume_set_position(PA_CHANNEL_POSITION_LFE)",
+   "notes": "Hardware-dependent."
+  },
+  {
+   "area": "sound",
+   "function": "Overamplification",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.sound allow-volume-above-100-percent (b, default false); legacy com.ubuntu.sound allow-amplified-volume (b false) unused",
+   "notes": "Win11 has none; put in Geluid > Geavanceerd. Also in Accessibility > Hearing."
+  },
+  {
+   "area": "sound",
+   "function": "Test… (speaker test per channel)",
+   "control": "dialog",
+   "backing": "GSound/libcanberra event ids audio-channel-<position> (and audio-test-signal) played on the chosen sink",
+   "notes": "Win11: output device properties > 'Testen'."
+  },
+  {
+   "area": "sound",
+   "function": "Output / input level meters",
+   "control": "info",
+   "backing": "Peak-detect record streams on sink monitor / source",
+   "notes": ""
+  },
+  {
+   "area": "sound",
+   "function": "Input Device",
+   "control": "dropdown",
+   "backing": "Default source (pa_context_set_default_source) + source port",
+   "notes": "Win11: 'Kies een apparaat voor spreken of opnemen'. WP: missing."
+  },
+  {
+   "area": "sound",
+   "function": "Input Configuration (card profile)",
+   "control": "dropdown",
+   "backing": "pa_context_set_card_profile_by_index",
+   "notes": ""
+  },
+  {
+   "area": "sound",
+   "function": "Input Volume + mute",
+   "control": "slider",
+   "backing": "Default source volume/mute",
+   "notes": "Win11: input device properties > 'Invoervolume' + 'Test starten'."
+  },
+  {
+   "area": "sound",
+   "function": "Volume Levels (per-app streams + System Sounds)",
+   "control": "dialog",
+   "backing": "Sink-inputs/source-outputs volume and mute (pa_context_set_sink_input_volume/mute); 'System Sounds' = event-role stream (module-stream-restore 'sink-input-by-media-role:event')",
+   "notes": "Win11: Geluid > Geavanceerd > 'Volumemixer'."
+  },
+  {
+   "area": "sound",
+   "function": "Alert Sound: None / Default / Click / String / Swing / Hum",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.sound event-sounds (b, default true; None = false) + theme-name (s; schema 'freedesktop', Ubuntu override 'Yaru'); a custom choice writes ~/.local/share/sounds/__custom/ (index.theme inheriting the theme, bell-terminal/bell-window-system -> /usr/share/sounds/gnome/default/alerts/{click,string,swing,hum}.ogg) and sets theme-name '__custom'",
+   "notes": "Radio list. Win11: 'Meer geluidsinstellingen' > Geluiden > 'Geluidsschema'."
+  },
+  {
+   "area": "sound",
+   "function": "Startup Sound (Ubuntu)",
+   "control": "toggle",
+   "backing": "org.gnome.shell.ubuntu startup-sound (s, default '' = off; on = sound-theme name 'warty-startup' or a file path)",
+   "notes": "Win11: Geluiden > 'Opstartgeluid van Windows afspelen'."
+  },
+  {
+   "area": "system",
+   "function": "System overview rows: Region & Language, Date & Time, Users, Remote Desktop, Secure Shell, About, Software Updates",
+   "control": "list",
+   "backing": "Navigation only (sub-pages below)",
+   "notes": "Win11 spreads these over Systeem, Accounts, Tijd en taal, Windows Update."
+  },
+  {
+   "area": "system",
+   "function": "Date & Time: Automatic Date & Time",
+   "control": "toggle",
+   "backing": "systemd-timedated system bus org.freedesktop.timedate1 NTP (b) / SetNTP(b use_ntp, b interactive); polkit org.gnome.controlcenter.datetime.configure (auth_admin_keep, implies org.freedesktop.timedate1.set-ntp/set-time/set-timezone/set-local-rtc)",
+   "notes": "Win11: Tijd en taal > Datum en tijd > 'Tijd automatisch instellen'. WP: read-only (system.time)."
+  },
+  {
+   "area": "system",
+   "function": "Date & Time: manual Date & Time dialog (time editor, AM/PM, Year, Month, Day)",
+   "control": "dialog",
+   "backing": "org.freedesktop.timedate1 SetTime(x usec_utc, b relative=false, b interactive); polkit org.freedesktop.timedate1.set-time; only when NTP is off",
+   "notes": "Win11: 'Datum en tijd handmatig instellen' > 'Wijzigen'."
+  },
+  {
+   "area": "system",
+   "function": "Date & Time: Automatic Time Zone",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.datetime automatic-timezone (b, default false); gsd-datetime + geoclue; requires org.gnome.system.location enabled",
+   "notes": "Win11: 'Tijdzone automatisch instellen'."
+  },
+  {
+   "area": "system",
+   "function": "Date & Time: Time Zone (search cities)",
+   "control": "dialog",
+   "backing": "org.freedesktop.timedate1 SetTimezone(s, b interactive); polkit org.freedesktop.timedate1.set-timezone; city list from libgweather",
+   "notes": "Win11: 'Tijdzone' dropdown."
+  },
+  {
+   "area": "system",
+   "function": "Date & Time: Time Format (24-hour / AM/PM)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-format enum {24h,12h} (default '24h'); mirrored to org.gtk.Settings.FileChooser clock-format and org.gtk.gtk4.Settings.FileChooser clock-format",
+   "notes": "Two-way toggle group. Win11: Taal en regio > Regionale notatie > 'Notaties wijzigen' > Korte/Lange tijd. WP: partial (own time.h24)."
+  },
+  {
+   "area": "system",
+   "function": "Date & Time: First Day of the Week",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.calendar week-start-day enum {default,monday,tuesday,wednesday,thursday,friday,saturday,sunday} (default 'default' = from locale)",
+   "notes": "Win11: 'Notaties wijzigen' > 'Eerste dag van de week'."
+  },
+  {
+   "area": "system",
+   "function": "Clock & Calendar: Week Day in top bar clock",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-weekday (b, default false)",
+   "notes": "Win11 24H2: Datum en tijd > 'Tijd en datum weergeven in het systeemvak'. Map to WinPoint taskbar clock."
+  },
+  {
+   "area": "system",
+   "function": "Clock & Calendar: Date in top bar clock",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-date (b, default true)",
+   "notes": ""
+  },
+  {
+   "area": "system",
+   "function": "Clock & Calendar: Seconds",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-seconds (b, default false)",
+   "notes": "Win11: 'Seconden weergeven in de klok in het systeemvak'. WP: partial (own time.showSeconds)."
+  },
+  {
+   "area": "system",
+   "function": "Clock & Calendar: Week Numbers (dropdown calendar)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.calendar show-weekdate (b, default false)",
+   "notes": ""
+  },
+  {
+   "area": "system",
+   "function": "Remote Desktop > Desktop Sharing: Desktop Sharing",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.remote-desktop.rdp enable (b, default false) + user unit gnome-remote-desktop.service enabled/started (session bus org.freedesktop.systemd1 EnableUnitFiles/StartUnit); gnome-remote-desktop 50.2",
+   "notes": "Win11: Systeem > 'Extern bureaublad'. WP: missing."
+  },
+  {
+   "area": "system",
+   "function": "Remote Desktop > Desktop Sharing: Remote Control",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.remote-desktop.rdp view-only (b, default true; Remote Control = !view-only)",
+   "notes": ""
+  },
+  {
+   "area": "system",
+   "function": "Remote Desktop > Desktop Sharing: How to Connect (Hostname, Port, copy)",
+   "control": "info",
+   "backing": "hostname1 Hostname; port from session bus org.gnome.RemoteDesktop.Rdp.Server Port (config rdp port q 3389, negotiate-port b true)",
+   "notes": "Win11: 'Poort extern bureaublad' + pc-naam."
+  },
+  {
+   "area": "system",
+   "function": "Remote Desktop > Desktop Sharing: Login Details (Username, Password, copy) + Generate New Password",
+   "control": "dialog",
+   "backing": "libsecret schema org.gnome.RemoteDesktop.RdpCredentials in the login keyring; banner 'Some settings are locked' when the keyring is locked",
+   "notes": ""
+  },
+  {
+   "area": "system",
+   "function": "Remote Desktop > Desktop Sharing: Verify Fingerprint",
+   "control": "dialog",
+   "backing": "SHA-256 of org.gnome.desktop.remote-desktop.rdp tls-cert (s); Settings generates ~/.local/share/gnome-remote-desktop/certificates/rdp-tls.crt/.key and sets tls-cert/tls-key; screen-share-mode enum {mirror-primary,extend} has no UI",
+   "notes": ""
+  },
+  {
+   "area": "system",
+   "function": "Remote Desktop > Remote Login (headless, system daemon)",
+   "control": "toggle",
+   "backing": "system bus org.gnome.RemoteDesktop.Configuration /org/gnome/RemoteDesktop/Configuration iface org.gnome.RemoteDesktop.Configuration.Rdp.Server Enable()/Disable(), Enabled; system unit gnome-remote-desktop.service; polkit org.gnome.controlcenter.remote-session-helper (implies systemd1.manage-units, manage-unit-files, org.gnome.remotedesktop.configure-system-daemon) + org.gnome.remotedesktop.enable-system-daemon (/usr/libexec/gnome-remote-desktop-enable-service)",
+   "notes": "Win11 has a single Extern bureaublad switch; offer as second tab."
+  },
+  {
+   "area": "system",
+   "function": "Remote Login: Hostname/Port, Username/Password, Generate New Password, Verify Fingerprint",
+   "control": "dialog",
+   "backing": "org.gnome.RemoteDesktop.Configuration.Rdp.Server Port, TlsCert, TlsKey, TlsFingerprint, GetCredentials(), SetCredentials(a{sv}), ImportCertificate(); polkit org.gnome.remotedesktop.configure-system-daemon",
+   "notes": ""
+  },
+  {
+   "area": "system",
+   "function": "Secure Shell: Secure Shell switch + SSH Login Command (copy)",
+   "control": "toggle",
+   "backing": "systemd system bus org.freedesktop.systemd1 Start/StopUnit + Enable/DisableUnitFiles 'ssh.service'; polkit org.gnome.controlcenter.remote-login-helper (auth_admin_keep, implies systemd1.manage-units, manage-unit-files); command = 'ssh <user>@<hostname>'; openssh-server NOT installed here",
+   "notes": "Win11: Systeem > Optionele onderdelen (OpenSSH-server) / Voor ontwikkelaars. WP: missing."
+  },
+  {
+   "area": "system",
+   "function": "About: OS logo and name",
+   "control": "info",
+   "backing": "/etc/os-release (PRETTY_NAME, LOGO)",
+   "notes": "Win11: Info > 'Windows-specificaties'. WP: has."
+  },
+  {
+   "area": "system",
+   "function": "About: Device Name",
+   "control": "dialog",
+   "backing": "org.freedesktop.hostname1 SetPrettyHostname + SetStaticHostname (polkit org.freedesktop.hostname1.set-static-hostname)",
+   "notes": "Editable entry row. Win11: Info > 'Naam van deze pc wijzigen'."
+  },
+  {
+   "area": "system",
+   "function": "About: Hardware Model, Processor, Memory, Disk Capacity",
+   "control": "info",
+   "backing": "hostname1 HardwareVendor/HardwareModel; libgtop sysinfo/mem; UDisks2 drive sizes",
+   "notes": "Win11: 'Apparaatspecificaties'. WP: has (system.info)."
+  },
+  {
+   "area": "system",
+   "function": "About: System Details window (Model, Memory, Processor, Graphics, Disk, Firmware Version, OS Name, OS Build, OS Type, GNOME Version, Windowing System, Virtualization, Kernel) + Copy",
+   "control": "dialog",
+   "backing": "hostname1 FirmwareVersion; os-release BUILD_ID; /usr/share/gnome/gnome-version.xml; GDK backend; systemd1 Virtualization; uname; GPUs via switcheroo-control / GL renderer",
+   "notes": "Win11: Info > 'Kopiëren'."
+  },
+  {
+   "area": "system",
+   "function": "About: Support GNOME / Donate",
+   "control": "button",
+   "backing": "Opens https://donate.gnome.org (donation-reminder-enabled is off on Ubuntu)",
+   "notes": "Optional in WinPoint."
+  },
+  {
+   "area": "system",
+   "function": "Software Updates (external)",
+   "control": "button",
+   "backing": "Launches update-manager.desktop on Ubuntu (gnome-software/snap-store --mode=updates when present)",
+   "notes": "Win11: Windows Update. WP: has (native update pages)."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Desktop Icons: on/off",
+   "control": "toggle",
+   "backing": "Extension ding@rastersoft.com via session bus org.gnome.Shell.Extensions EnableExtension/DisableExtension (-> org.gnome.shell enabled-extensions / disabled-extensions)",
+   "notes": "Win11: Thema's > 'Instellingen voor bureaubladpictogrammen'. WP: own desktop (desktopicons page)."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Desktop Icons: Size (Tiny, Small, Medium, Large)",
+   "control": "dropdown",
+   "backing": "org.gnome.shell.extensions.ding icon-size enum {tiny,small,standard,large} (default 'standard')",
+   "notes": "Win11: desktop menu Beeld > Grote/Normale/Kleine pictogrammen."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Desktop Icons: Position of New Icons (Top Left, Top Right, Bottom Left, Bottom Right)",
+   "control": "dropdown",
+   "backing": "org.gnome.shell.extensions.ding start-corner enum {top-left,top-right,bottom-left,bottom-right} (schema 'top-left', Ubuntu override 'bottom-right')",
+   "notes": ""
+  },
+  {
+   "area": "ubuntu",
+   "function": "Desktop Icons: Show Home Folder",
+   "control": "toggle",
+   "backing": "org.gnome.shell.extensions.ding show-home (b, default true); show-trash (override false) and show-volumes (override false) have no Settings UI",
+   "notes": "Win11: Bureaubladpictogrammen 'Bestanden van gebruiker'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock: on/off",
+   "control": "toggle",
+   "backing": "Extension ubuntu-dock@ubuntu.com via org.gnome.Shell.Extensions Enable/DisableExtension",
+   "notes": "WinPoint replaces the dock with its taskbar; map the dock options to Taakbalk."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock: Auto-hide the Dock",
+   "control": "toggle",
+   "backing": "org.gnome.shell.extensions.dash-to-dock dock-fixed (b; schema false, Ubuntu override true; auto-hide = !dock-fixed)",
+   "notes": "Win11: Taakbalk > Taakbalkgedrag > 'De taakbalk automatisch verbergen'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock: Panel Mode (extend to screen edge)",
+   "control": "toggle",
+   "backing": "dash-to-dock extend-height (b; schema false, Ubuntu override true)",
+   "notes": ""
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock: Icon Size",
+   "control": "slider",
+   "backing": "dash-to-dock dash-max-icon-size (i, default 48; slider 16–64 px)",
+   "notes": "Win11 24H2: 'Kleinere taakbalkknoppen weergeven'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock: Show on (All Displays / Primary Display / a monitor)",
+   "control": "dropdown",
+   "backing": "dash-to-dock multi-monitor (b, default false) + preferred-monitor-by-connector (s, default 'primary'); deprecated preferred-monitor (i -2)",
+   "notes": "Win11: Taakbalkgedrag > 'Mijn taakbalk weergeven op alle beeldschermen'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock: Position on Screen (Left, Bottom, Right)",
+   "control": "dropdown",
+   "backing": "dash-to-dock dock-position enum {TOP,RIGHT,BOTTOM,LEFT} (schema 'BOTTOM', Ubuntu override 'LEFT')",
+   "notes": "Win11: 'Uitlijning taakbalk'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock Behavior: Show Volumes and Devices, Include Unmounted Volumes, Include Network Volumes",
+   "control": "dialog",
+   "backing": "dash-to-dock show-mounts (b true), show-mounts-only-mounted (b; schema true, override false; 'Include Unmounted' = !only-mounted), show-mounts-network (b; schema false, override true)",
+   "notes": ""
+  },
+  {
+   "area": "ubuntu",
+   "function": "Dock Behavior: Show Trash",
+   "control": "toggle",
+   "backing": "dash-to-dock show-trash (b, default true)",
+   "notes": ""
+  },
+  {
+   "area": "ubuntu",
+   "function": "Enhanced Tiling: on/off",
+   "control": "toggle",
+   "backing": "Extension tiling-assistant@ubuntu.com via org.gnome.Shell.Extensions Enable/DisableExtension",
+   "notes": "Win11: Systeem > Multitasking > 'Vensters uitlijnen'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Enhanced Tiling: Tiling Popup",
+   "control": "toggle",
+   "backing": "org.gnome.shell.extensions.tiling-assistant enable-tiling-popup (b, default true)",
+   "notes": "Win11: 'Wanneer ik een venster uitlijn, voorstellen wat ik ernaast kan uitlijnen'."
+  },
+  {
+   "area": "ubuntu",
+   "function": "Enhanced Tiling: Tile Groups",
+   "control": "toggle",
+   "backing": "org.gnome.shell.extensions.tiling-assistant disable-tile-groups (b, default false; on = !disable-tile-groups)",
+   "notes": "Win11: 'Uitgelijnde groepen weergeven…'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Always Show Accessibility Menu (top bar)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y always-show-universal-access-status (b, default false)",
+   "notes": "Win11: Toegankelijkheid tile in Snelle instellingen. WP: missing."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Screen Reader",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.applications screen-reader-enabled (b, default false) -> Orca 50.3",
+   "notes": "Win11: Toegankelijkheid > 'Verteller'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Screen Reader Configure",
+   "control": "button",
+   "backing": "Launches Orca preferences (orca, external app)",
+   "notes": "Win11: Verteller-instellingen."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: High Contrast",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.interface high-contrast (b, default false)",
+   "notes": "Win11: 'Contrastthema's'. WP: contrast page exists (check it writes this key)."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: On/Off Shapes",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.interface show-status-shapes (b, default false)",
+   "notes": "Win11: none; put under Visuele effecten."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Reduced Motion",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.interface reduced-motion enum {no-preference,reduce} (default 'no-preference'); org.gnome.desktop.interface enable-animations (b true) still exists, but Settings 50 writes reduced-motion",
+   "notes": "Win11: Visuele effecten > 'Animatie-effecten'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Text Size (Cancel / Apply)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.interface text-scaling-factor (d, default 1.0; schema 0.5..3.0; UI 1.0..2.0 step 0.01)",
+   "notes": "Slider in a dialog. Win11: 'Tekstgrootte'. WP: partial (own accessibility.textScale)."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Cursor Size",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.interface cursor-size (i, default 24); presets 24 (Default), 32, 48, 64, 96 px",
+   "notes": "Grid picker. The 96 px preset needs checking against the GNOME 50 build. Win11: 'Muisaanwijzer en aanraken' > 'Grootte'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Sound Keys (beep on Num/Caps Lock)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard togglekeys-enable (b, default false)",
+   "notes": "Win11: Toetsenbord > 'Wisseltoetsen'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Seeing: Always Show Scrollbars",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface overlay-scrolling (b, default true; on = false)",
+   "notes": "Win11: Visuele effecten > 'Schuifbalken altijd weergeven'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Hearing: Overamplification",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.sound allow-volume-above-100-percent (b, default false)",
+   "notes": "Same key as Sound."
+  },
+  {
+   "area": "universal-access",
+   "function": "Hearing: Visual Alerts",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.wm.preferences visual-bell (b, default false)",
+   "notes": "Win11: Toegankelijkheid > Audio > 'Mijn scherm laten knipperen tijdens audiomeldingen'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Hearing: Flash Area (Entire Screen / Entire Window)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.wm.preferences visual-bell-type enum {fullscreen-flash,frame-flash} (default 'fullscreen-flash')",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Hearing: Test Flash",
+   "control": "button",
+   "backing": "Rings the bell (GDK beep -> Mutter visual bell)",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Screen Keyboard",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.applications screen-keyboard-enabled (b, default false)",
+   "notes": "Win11: Toetsenbord > 'Schermtoetsenbord'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Enable by Keyboard (a11y shortcuts)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard enable (b, default false); feature-state-change-beep, timeout-enable, disable-timeout have no UI",
+   "notes": "Win11: 'Sneltoets voor Plaktoetsen/Filtertoetsen'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Cursor Blinking",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface cursor-blink (b, default true)",
+   "notes": "Win11: Toegankelijkheid > 'Tekstcursor'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Blink Speed",
+   "control": "slider",
+   "backing": "org.gnome.desktop.interface cursor-blink-time (i ms, default 1200, range 100..2500; slider inverted)",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Repeat Keys + Speed + Delay",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.keyboard repeat (b true), repeat-interval (u ms, default 30; slider 1.5–110 inverted), delay (u ms, default 500; slider 100–2000)",
+   "notes": "Expander row. Shared with the Keyboard panel; Win11 Configuratiescherm Toetsenbord 'Vertraging' / 'Herhalingssnelheid'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Sticky Keys (+ Disable if two keys pressed together, Beep on modifier)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard stickykeys-enable, stickykeys-two-key-off, stickykeys-modifier-beep (all b, default false)",
+   "notes": "Win11: Toetsenbord > 'Plaktoetsen'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Slow Keys (+ Acceptance Delay, beep on press/accept/reject)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard slowkeys-enable (b false), slowkeys-delay (i ms, default 300; UI 0–500), slowkeys-beep-press, slowkeys-beep-accept, slowkeys-beep-reject (b false)",
+   "notes": "Win11: 'Filtertoetsen' (trage toetsen)."
+  },
+  {
+   "area": "universal-access",
+   "function": "Typing: Bounce Keys (+ Acceptance Delay, beep on reject)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard bouncekeys-enable (b false), bouncekeys-delay (i ms, default 300; UI 0–900), bouncekeys-beep-reject (b false)",
+   "notes": "Win11: Filtertoetsen > herhaalde toetsaanslagen negeren."
+  },
+  {
+   "area": "universal-access",
+   "function": "Pointing & Clicking: Mouse Keys",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard mousekeys-enable (b, default false); mousekeys-max-speed (i 10), mousekeys-accel-time (i 300), mousekeys-init-delay (i 300) have no UI",
+   "notes": "Win11: Toegankelijkheid > Muis > 'Muistoetsen'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Pointing & Clicking: Locate Pointer (Left Ctrl)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface locate-pointer (b, default false)",
+   "notes": "Win11: Muis > Aanvullende muisinstellingen > 'Locatie van aanwijzer weergeven als ik op Ctrl druk'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Pointing & Clicking: Activate Windows on Hover",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.wm.preferences focus-mode enum {click,sloppy,mouse} (default 'click'; on = 'sloppy')",
+   "notes": "Win11: Configuratiescherm Toegankelijkheid 'Een venster activeren door de muisaanwijzer erboven te houden'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Pointing & Clicking: Double-Click Delay",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.mouse double-click (i ms, default 400; UI 100–1000 step 100)",
+   "notes": "Win11: Muis > Aanvullende muisinstellingen > 'Dubbelkliksnelheid'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Click Assist: Simulated Secondary Click + Acceptance Delay",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.mouse secondary-click-enabled (b, default false), secondary-click-time (d s, default 1.2; UI 0.5–3.0)",
+   "notes": "Expander row with switch."
+  },
+  {
+   "area": "universal-access",
+   "function": "Click Assist: Hover Click + Delay + Motion Threshold",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.mouse dwell-click-enabled (b false), dwell-time (d s, default 1.2; UI 0.2–3.0), dwell-threshold (i px, default 10; UI 0–30); dwell-mode {window,gesture}, dwell-gesture-*, click-type-window-visible have no UI",
+   "notes": "Expander row with switch."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Desktop Zoom",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.applications screen-magnifier-enabled (b, default false)",
+   "notes": "Win11: Toegankelijkheid > 'Vergrootglas'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Magnification Factor",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.magnifier mag-factor (d, default 2.0; schema 0.1..32; UI spin 1.00–20.00 step 0.25)",
+   "notes": "Spin row. Win11: 'Zoomniveau' / 'Zoomstap'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Magnifier View (Follow Mouse Cursor / Screen Area)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.a11y.magnifier lens-mode (b, default false; Follow Mouse Cursor = true)",
+   "notes": "Win11: Vergrootglas > 'Weergave' (Volledig scherm / Lens / Vastgezet)."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Extend Outside Screen Edges",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.magnifier scroll-at-edges (b, default false)",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Screen Area (Full Screen, Top/Bottom/Left/Right Half)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.a11y.magnifier screen-position enum {none,full-screen,top-half,bottom-half,left-half,right-half} (default 'full-screen')",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Follow Behavior (Moves with Contents / Pushes Contents Around / Remains Centered)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.a11y.magnifier mouse-tracking enum {none,centered,proportional,push} (default 'proportional'); focus-tracking ('proportional') and caret-tracking ('centered') have no UI",
+   "notes": "Win11: 'De muisaanwijzer centreren / binnen de randen houden' + 'Vergrootglas volgt'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Crosshair Lines (+ Overlap Mouse Cursor, Thickness, Length, Color)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.magnifier show-cross-hairs (b false), cross-hairs-clip (b false; Overlap = !clip), cross-hairs-thickness (i px 8; UI 1–100), cross-hairs-length (i px 4096, schema 20..4096; UI 0–100 % of screen), cross-hairs-color (s '#ff0000'), cross-hairs-opacity (d 0.66)",
+   "notes": "Expander row with sliders and a colour button. Win11: none."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Color Filters > Inverted",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.magnifier invert-lightness (b, default false)",
+   "notes": "Win11: Vergrootglas > 'Kleuren omkeren'."
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Color Filters > Brightness",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.magnifier brightness-red/-green/-blue (d, default 0.0, schema -1..1; UI -0.8..0.8, all three set together)",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Color Filters > Contrast",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.magnifier contrast-red/-green/-blue (d, default 0.0; UI -0.8..0.8)",
+   "notes": ""
+  },
+  {
+   "area": "universal-access",
+   "function": "Zoom: Color Filters > Color (saturation)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.a11y.magnifier color-saturation (d, default 1.0, range 0..1)",
+   "notes": "Win11: Toegankelijkheid > 'Kleurfilters' (Grijswaarden)."
+  },
+  {
+   "area": "users",
+   "function": "Unlock for administration (permission infobar)",
+   "control": "button",
+   "backing": "polkit org.gnome.controlcenter.user-accounts.administration (auth_admin_keep; implies org.freedesktop.accounts.user-administration, realmd configure-realm/login-policy, Malcontent admin, ParentalControls AppFilter)",
+   "notes": "Win11 uses UAC per action. WP: missing."
+  },
+  {
+   "area": "users",
+   "function": "Avatar: change (face gallery, Select a File…) / Remove Avatar",
+   "control": "dialog",
+   "backing": "AccountsService system bus org.freedesktop.Accounts.User SetIconFile(s) ('' removes); gallery /usr/share/pixmaps/faces (gnome-control-center-faces); own user polkit org.freedesktop.accounts.change-own-user-data (yes)",
+   "notes": "Win11: Accounts > Uw info > 'Uw foto aanpassen' (Een bestand kiezen / Camera openen)."
+  },
+  {
+   "area": "users",
+   "function": "Name (full name)",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts.User SetRealName(s)",
+   "notes": "Editable entry row. Win11: Uw info (local account)."
+  },
+  {
+   "area": "users",
+   "function": "Password (own): Current / New / Confirm, generate, strength",
+   "control": "dialog",
+   "backing": "Own password changed through PAM (passwd child process); strength by libpwquality",
+   "notes": "Win11: Aanmeldingsopties > Wachtwoord > 'Wijzigen'."
+  },
+  {
+   "area": "users",
+   "function": "Password (other user, admin): 'change on next login' or 'Set a password now'",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts.User SetPasswordMode(i 1) or SetPassword(s crypted, s hint); polkit org.freedesktop.accounts.user-administration",
+   "notes": ""
+  },
+  {
+   "area": "users",
+   "function": "Fingerprint Login: choose reader, enroll fingers, Delete Fingerprints",
+   "control": "dialog",
+   "backing": "fprintd 1.94 system bus net.reactivated.Fprint Manager GetDevices()/GetDefaultDevice(); Device Claim(s user), EnrollStart(s finger)/EnrollStop + EnrollStatus signal, ListEnrolledFingers(s), DeleteEnrolledFingers2(), Release(); polkit net.reactivated.fprint.device.enroll (auth_self_keep), .setusername (admin, other users); row only with a reader; login-screen enable-fingerprint-authentication (b true)",
+   "notes": "Win11: Aanmeldingsopties > 'Vingerafdrukherkenning (Windows Hello)'."
+  },
+  {
+   "area": "users",
+   "function": "Automatic Login",
+   "control": "toggle",
+   "backing": "org.freedesktop.Accounts.User SetAutomaticLogin(b) (writes GDM config); polkit org.freedesktop.accounts.set-login-option / user-administration",
+   "notes": "Win11: no toggle (netplwiz); put under Aanmeldingsopties."
+  },
+  {
+   "area": "users",
+   "function": "Administrator (account type)",
+   "control": "toggle",
+   "backing": "org.freedesktop.Accounts.User SetAccountType(i 0 = standard, 1 = administrator; sudo group); polkit user-administration",
+   "notes": "Win11: Andere gebruikers > 'Accounttype wijzigen'."
+  },
+  {
+   "area": "users",
+   "function": "Parental Controls (open app)",
+   "control": "button",
+   "backing": "Launches malcontent-control (NOT installed -> row hidden); data in AccountsService extensions com.endlessm.ParentalControls.AppFilter/SessionLimits/AccountInfo, polkit com.endlessm.ParentalControls.*",
+   "notes": "Win11: Accounts > 'Familie'."
+  },
+  {
+   "area": "users",
+   "function": "Language (other users)",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts.User SetLanguage(s); polkit user-administration",
+   "notes": ""
+  },
+  {
+   "area": "users",
+   "function": "Remove User… (+ Delete Files and Settings)",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts DeleteUser(x uid, b remove_files); polkit user-administration; not for the logged-in user",
+   "notes": "Win11: Andere gebruikers > 'Verwijderen' (Account en gegevens verwijderen)."
+  },
+  {
+   "area": "users",
+   "function": "Other Users list",
+   "control": "list",
+   "backing": "org.freedesktop.Accounts ListCachedUsers() + UserAdded/UserRemoved; User props RealName, UserName, IconFile, AccountType, SystemAccount, LocalAccount",
+   "notes": "Win11: Accounts > 'Andere gebruikers'."
+  },
+  {
+   "area": "users",
+   "function": "Add User: Full Name, Username, Administrator, password at first login or Set Password (+ confirm, strength)",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts CreateUser(s name, s fullname, i accountType) then User.SetPasswordMode(1) or SetPassword(s crypted, s hint); polkit user-administration",
+   "notes": "Win11: 'Account toevoegen'."
+  },
+  {
+   "area": "users",
+   "function": "Add Enterprise Login: Domain, Username, Password; enroll with admin name/password",
+   "control": "dialog",
+   "backing": "realmd org.freedesktop.realmd (Provider Discover/Join, Kerberos) + Accounts CacheUser(s); realmd/adcli NOT installed here (sssd is)",
+   "notes": "Win11: Accounts > 'Toegang tot werk of school' > 'Verbinden'."
+  },
+  {
+   "area": "wacom",
+   "function": "Tablet detection / 'No tablet detected'",
+   "control": "info",
+   "backing": "libwacom 9 + GUdev/Mutter input devices; per tablet relocatable schema at /org/gnome/desktop/peripherals/tablets/<VID>:<PID>/",
+   "notes": "Win11: Bluetooth en apparaten > 'Pen en Windows Ink'. WP: missing."
+  },
+  {
+   "area": "wacom",
+   "function": "Tablet Mode (absolute pen positioning)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.tablet mapping enum {absolute,relative} (default 'absolute'; on = absolute)",
+   "notes": ""
+  },
+  {
+   "area": "wacom",
+   "function": "Button Location (Left / Right) - left-handed orientation",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.tablet left-handed (b, default false)",
+   "notes": "Two-way toggle group. Win11: Pen en Windows Ink > 'Kies met welke hand je schrijft'."
+  },
+  {
+   "area": "wacom",
+   "function": "Map Buttons (pad / ExpressKey Remote)",
+   "control": "dialog",
+   "backing": "GNOME Shell pad OSD (org.gnome.Shell.PadOsd iface; shell Wacom ShowOSD in edition mode); per button org.gnome.desktop.peripherals.tablet.pad-button at …/tablets/<VID:PID>/button<X>/ action enum {none,help,switch-monitor,keybinding} (default 'none') + keybinding (s '')",
+   "notes": "Win11: Wacom vendor panel."
+  },
+  {
+   "area": "wacom",
+   "function": "Map to Monitor",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.peripherals.tablet output (as [vendor, product, serial], default ['','',''] = automatic)",
+   "notes": "Win11: Tablet-pc-instellingen 'Configureren'."
+  },
+  {
+   "area": "wacom",
+   "function": "Keep Aspect Ratio",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.tablet keep-aspect (b, default false)",
+   "notes": ""
+  },
+  {
+   "area": "wacom",
+   "function": "Calibrate (4-point full-screen calibrator)",
+   "control": "dialog",
+   "backing": "Writes org.gnome.desktop.peripherals.tablet area (ad [0,0,0,0], edge margins as fractions)",
+   "notes": "Win11: Configuratiescherm > Tablet-pc-instellingen > 'Kalibreren'."
+  },
+  {
+   "area": "wacom",
+   "function": "Stylus: Tip Pressure Feel (Soft–Firm)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.tablet.stylus (relocatable /org/gnome/desktop/peripherals/stylus/<serial>/) pressure-curve (ai, default [0,0,100,100]; slider picks preset curves); pressure-range (ai [0,100]) has no UI",
+   "notes": ""
+  },
+  {
+   "area": "wacom",
+   "function": "Stylus: Button 1 / 2 / 3 mapping (Left, Middle, Right click, Back, Forward, Send Keystroke + Assign Keystroke, Switch Monitor)",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.peripherals.tablet.stylus button-action (default 'right'), secondary-button-action ('middle'), tertiary-button-action ('default'), enum {default,middle,right,back,forward,switch-monitor,keybinding}; button-keybinding / secondary-button-keybinding / tertiary-button-keybinding (s '')",
+   "notes": "Win11: Pen en Windows Ink > 'Penknoppen'."
+  },
+  {
+   "area": "wacom",
+   "function": "Stylus: Eraser Pressure Feel",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.tablet.stylus eraser-pressure-curve (ai [0,0,100,100]); eraser-button-mode/-action/-keybinding have no UI",
+   "notes": ""
+  },
+  {
+   "area": "wacom",
+   "function": "Test Settings (drawing area)",
+   "control": "dialog",
+   "backing": "No backing (test canvas in a popover)",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Screen Time chart (Today, average weekday, This Week, Average Week, Previous/Next Week)",
+   "control": "info",
+   "backing": "~/.local/share/gnome-shell/session-active-history.json written by gnome-shell; session bus org.gnome.Shell.ScreenTime State (u), LastBreakEndTime (t)",
+   "notes": "Win11: none in Settings (Microsoft Family 'Schermtijd'); suggest Systeem > 'Focus' or a new 'Digitaal welzijn' page. WP: missing."
+  },
+  {
+   "area": "wellbeing",
+   "function": "Disable Screen Time / Enable (recording)",
+   "control": "button",
+   "backing": "org.gnome.desktop.screen-time-limits history-enabled (b, default true)",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Screen Limits: Screen Time Limit",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.screen-time-limits daily-limit-enabled (b, default false)",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Screen Limits: Daily Limit",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.screen-time-limits daily-limit-seconds (u, default 28800 = 8 h, min 10; UI duration editor, minimum 1 min)",
+   "notes": "Hours/minutes duration editor."
+  },
+  {
+   "area": "wellbeing",
+   "function": "Screen Limits: Grayscale (when limit reached)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.screen-time-limits grayscale (b, default true)",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Break Reminders: Eyesight Reminders",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.break-reminders selected-breaks (as, default []) contains 'eyesight'; child .eyesight interval-seconds (u 1200), duration-seconds (u 20); fade-screen, lock-screen, notify*, countdown, delay-seconds have no UI",
+   "notes": "Win11: none; put next to Focus."
+  },
+  {
+   "area": "wellbeing",
+   "function": "Break Reminders: Movement Reminders",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.break-reminders selected-breaks contains 'movement'",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Break Reminders: Movement Break Schedule ('<duration> every <interval>')",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.break-reminders.movement duration-seconds (u, default 300) + interval-seconds (u, default 1800), min 10 each",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Break Reminders: Sounds (when a break ends)",
+   "control": "toggle",
+   "backing": "play-sound (b, default true) in org.gnome.desktop.break-reminders.movement and .eyesight",
+   "notes": ""
+  },
+  {
+   "area": "wellbeing",
+   "function": "Parental Controls banner + Open Parental Controls",
+   "control": "info",
+   "backing": "Malcontent session limits (com.endlessm.ParentalControls.SessionLimits via AccountsService) lock the screen-limit rows; launches malcontent-control (not installed)",
+   "notes": ""
+  }
+ ]
+}

@@ -1,5 +1,17 @@
 // SPDX-License-Identifier: MIT
+// The Windows key, WinPoint's Task View (Alt+Tab) and Task Manager (Ctrl+Alt+Delete) shortcuts.
+//
+// * The Windows key (mutter's overlay-key signal; GNOME's own handler is blocked) opens WinPoint's Start, unless
+//   Sticky Keys is on or WinPoint's setting start.windowsKey is false (Geavanceerde toetsenbordinstellingen ›
+//   "Windows-toets opent Start", notes/claude/settings-parity.md amendment 58), read from Win11's settings.json at
+//   each press. GNOME's overlay-key itself is a separate GNOME-only row on that page.
+// * The extension's task-view and task-manager keys (editable on Sneltoetsen, amendment 13) hold their accelerators
+//   one by one: while task-view has <Alt>Tab, <Alt>Tab is taken from every org.gnome.desktop.wm.keybindings key (the
+//   user's value kept in task-view-restore); while task-manager has Ctrl+Alt+Delete, that is taken from media-keys
+//   logout (logout-restore). When the user gives task-view or task-manager another shortcut, the keys it took from
+//   get their value back.
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
@@ -17,12 +29,32 @@ const TEXT = {
 };
 // The media-keys daemon owns this shortcut by default. Keep every other logout
 // shortcut, including a user's custom shortcuts, and preserve its default state.
+const isAltTab = value => /^<(?:alt|mod1)>tab$/i.test(value);
 const isCtrlAltDelete = value => {
     const parts = value.toLowerCase().match(/<[^>]+>|[^<>]+/g) ?? [];
     if (parts.pop() !== 'delete') return false;
     return parts.length === 2 && parts.includes('<alt>') &&
         (parts.includes('<control>') || parts.includes('<ctrl>') || parts.includes('<primary>'));
 };
+
+/** start.windowsKey from the text of Win11's settings.json: only an explicit false turns the Windows key off. */
+export function windowsKeyOpensStart(text) {
+    try {
+        return JSON.parse(text)?.start?.windowsKey !== false;
+    } catch {
+        return true;
+    }
+}
+
+function readWindowsKey() {
+    try {
+        const path = GLib.build_filenamev([GLib.get_user_config_dir(), 'win11-gnome', 'settings.json']);
+        const [ok, bytes] = Gio.File.new_for_path(path).load_contents(null);
+        return ok ? windowsKeyOpensStart(new TextDecoder().decode(bytes)) : true;
+    } catch {
+        return true;
+    }
+}
 
 export class ShortcutBridge {
     constructor(extension, toggleStart, openTaskView = () => {}, language = () => 'nl') {
@@ -32,7 +64,7 @@ export class ShortcutBridge {
         this._openTaskView = openTaskView;
         this._wm = new Gio.Settings({schema_id: 'org.gnome.desktop.wm.keybindings'});
         this._wmKeys = this._wm.settings_schema.list_keys();
-        this._wmId = this._taskViewHiddenId = 0;
+        this._wmId = this._taskViewHiddenId = this._taskViewId = this._taskManagerId = 0;
         this._taskViewBinding = this._changingTaskView = false;
         this._enabled = false;
         this._overlayId = this._originalOverlayId = this._startupId = this._overviewHiddenId = 0;
@@ -58,7 +90,8 @@ export class ShortcutBridge {
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT, MODES, () => this._openTaskManager()) !== Meta.KeyBindingAction.NONE;
         if (this._binding) {
             this._logoutId = this._logout.connect('changed::logout', () => this._takeLogout());
-            this._takeLogout();
+            this._taskManagerId = this._settings.connect('changed::task-manager', () => this._syncLogout());
+            this._syncLogout();
         } else {
             this._restoreLogout();
             console.warn('Win11 Task Manager shortcut could not be registered.');
@@ -67,8 +100,31 @@ export class ShortcutBridge {
             Meta.KeyBindingFlags.IGNORE_AUTOREPEAT, MODES, () => this._requestTaskView()) !== Meta.KeyBindingAction.NONE;
         if (this._taskViewBinding) {
             this._wmId = this._wm.connect('changed', (_settings, key) => this._takeTaskView(key));
-            for (const key of this._wmKeys) this._takeTaskView(key);
+            this._taskViewId = this._settings.connect('changed::task-view', () => this._syncTaskView());
+            this._syncTaskView();
         } else this._restoreTaskView();
+    }
+
+    /** Whether task-view holds <Alt>Tab now (amendment 13: held per accelerator). */
+    _holdsAltTab() {
+        return this._settings.get_strv('task-view').some(isAltTab);
+    }
+
+    _holdsCtrlAltDelete() {
+        return this._settings.get_strv('task-manager').some(isCtrlAltDelete);
+    }
+
+    /** task-view changed: take <Alt>Tab from the wm keys while it holds it, give it back when it no longer does. */
+    _syncTaskView() {
+        if (!this._enabled) return;
+        if (this._holdsAltTab()) for (const key of this._wmKeys) this._takeTaskView(key);
+        else this._restoreTaskView();
+    }
+
+    _syncLogout() {
+        if (!this._enabled) return;
+        if (this._holdsCtrlAltDelete()) this._takeLogout();
+        else this._restoreLogout();
     }
 
     _requestTaskView() {
@@ -101,11 +157,11 @@ export class ShortcutBridge {
     }
 
     _takeTaskView(key) {
-        if (!this._enabled || this._changingTaskView) return;
+        if (!this._enabled || this._changingTaskView || !this._holdsAltTab()) return;
         const current = this._wm.get_strv(key);
         const saved = this._savedTaskView();
         if (saved[key] && same(current, saved[key].owned)) return;
-        const owned = current.filter(value => !/^<(?:alt|mod1)>tab$/i.test(value));
+        const owned = current.filter(value => !isAltTab(value));
         this._changingTaskView = true;
         try {
             if (same(current, owned)) { delete saved[key]; this._saveTaskView(saved); return; }
@@ -138,7 +194,7 @@ export class ShortcutBridge {
         if (this._originalOverlayId)
             GObject.signal_handler_block(global.display, this._originalOverlayId);
         this._overlayId = global.display.connect('overlay-key', () => {
-            if (!this._isUserSession() || this._a11y.get_boolean('stickykeys-enable')) return;
+            if (!this._isUserSession() || this._a11y.get_boolean('stickykeys-enable') || !readWindowsKey()) return;
             if (!Main.overview.visible) {
                 this._toggleStart();
                 return;
@@ -181,7 +237,7 @@ export class ShortcutBridge {
     }
 
     _takeLogout() {
-        if (this._changingLogout || !this._enabled) return;
+        if (this._changingLogout || !this._enabled || !this._holdsCtrlAltDelete()) return;
         const current = this._logout.get_strv('logout');
         const saved = this._savedLogout();
         // A crash/restarted Shell can leave the owned value on disk. Reuse its
@@ -224,7 +280,8 @@ export class ShortcutBridge {
         if (this._taskViewBinding) Main.wm.removeKeybinding('task-view');
         this._taskViewBinding = false;
         if (this._wmId) this._wm.disconnect(this._wmId);
-        this._wmId = 0;
+        if (this._taskViewId) this._settings.disconnect(this._taskViewId);
+        this._wmId = this._taskViewId = 0;
         this._restoreTaskView();
         if (this._overlayId) global.display.disconnect(this._overlayId);
         if (this._originalOverlayId && GObject.signal_handler_is_connected(global.display, this._originalOverlayId))
@@ -233,7 +290,8 @@ export class ShortcutBridge {
         if (this._binding) Main.wm.removeKeybinding('task-manager');
         this._binding = false;
         if (this._logoutId) this._logout.disconnect(this._logoutId);
-        this._logoutId = 0;
+        if (this._taskManagerId) this._settings.disconnect(this._taskManagerId);
+        this._logoutId = this._taskManagerId = 0;
         this._restoreLogout();
         this._settings = this._logout = this._a11y = this._wm = this._toggleStart = this._openTaskView = this._language = null;
     }

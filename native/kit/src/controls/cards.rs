@@ -16,8 +16,16 @@ pub enum Chevron {
     None,
 }
 
+/// The class of a clickable card's root (the gtk::Overlay around its button; the harness's dev click on it clicks
+/// the button, native/kit/src/dev.rs).
+pub const CARD_HOST_CLASS: &str = "w11-sc-host";
+/// The class a clickable card's button has while the pointer is over the card, also over its control (which lies
+/// above the button, not in it): the card keeps its hover colour there.
+const HOVER_CLASS: &str = "w11-sc-hover";
+
 struct CardInner {
     root: gtk::Widget,
+    button: Option<gtk::Button>,
     icon_slot: gtk::Box,
     title: gtk::Label,
     desc: gtk::Label,
@@ -26,6 +34,12 @@ struct CardInner {
 
 /// A settings card (`.fl-settings-card`): icon, title, description and a trailing control; a clickable card is
 /// a button with a chevron. Classes: w11-settings-card, w11-sc-icon / -title / -desc / -control / -chevron.
+///
+/// A clickable card's control is not inside its button: GtkButton's click gesture runs in the capture phase and
+/// claims the press on release, before a switch, drop-down or button inside it could take the click. Its root is
+/// a gtk::Overlay (class w11-sc-host) whose child is the button and whose overlay is the control box, drawn exactly
+/// over an empty place in the button's row that keeps the control's size (a size group), so title and
+/// description keep their room. CSS classes added to the root are given to the button too.
 #[derive(Clone)]
 pub struct SettingsCard {
     inner: Rc<CardInner>,
@@ -34,18 +48,15 @@ pub struct SettingsCard {
 impl SettingsCard {
     /// A card with an icon (glyph name, app icon name, or "" for none), title and description ("" for none).
     pub fn new(icon: &str, title: &str, description: &str) -> SettingsCard {
-        let b = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-        SettingsCard::build(b.upcast(), icon, title, description, Chevron::None)
+        SettingsCard::build(false, icon, title, description, Chevron::None)
     }
 
-    /// A clickable card (a gtk::Button: `connect_clicked`), with a chevron.
+    /// A clickable card (`connect_clicked`, `button()`), with a chevron.
     pub fn clickable(icon: &str, title: &str, description: &str, chevron: Chevron) -> SettingsCard {
-        let b = gtk::Button::new();
-        SettingsCard::build(b.upcast(), icon, title, description, chevron)
+        SettingsCard::build(true, icon, title, description, chevron)
     }
 
-    fn build(root: gtk::Widget, icon: &str, title: &str, description: &str, chevron: Chevron) -> SettingsCard {
-        root.add_css_class("w11-settings-card");
+    fn build(clickable: bool, icon: &str, title: &str, description: &str, chevron: Chevron) -> SettingsCard {
         let inner_box = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         inner_box.set_valign(gtk::Align::Center);
         let icon_slot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
@@ -68,39 +79,93 @@ impl SettingsCard {
         control.set_visible(false);
         inner_box.append(&icon_slot);
         inner_box.append(&text);
-        inner_box.append(&control);
-        match chevron {
-            Chevron::None => {}
-            Chevron::Right | Chevron::External => {
-                let g = if chevron == Chevron::External { icons::glyph("external", 14) } else { icons::glyph("chevron-right", 12) };
-                let slot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-                slot.add_css_class("w11-sc-chevron");
-                slot.set_valign(gtk::Align::Center);
-                slot.set_hexpand(false);
-                g.set_halign(gtk::Align::Center);
-                slot.append(&g);
-                inner_box.append(&slot);
-            }
-        }
-        if let Some(b) = root.downcast_ref::<gtk::Box>() {
-            b.append(&inner_box);
-        } else if let Some(b) = root.downcast_ref::<gtk::Button>() {
+        let (root, button) = if clickable {
+            let button = gtk::Button::new();
+            button.add_css_class("w11-settings-card");
+            // The control's place in the row: as wide and as high as the control box, which lies over it.
+            let place = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+            place.set_valign(gtk::Align::Center);
+            place.set_hexpand(false);
+            place.set_can_target(false);
+            control.bind_property("visible", &place, "visible").sync_create().build();
+            let size = gtk::SizeGroup::new(gtk::SizeGroupMode::Both);
+            size.add_widget(&place);
+            size.add_widget(&control);
+            inner_box.append(&place);
+            append_chevron(&inner_box, chevron);
             inner_box.set_hexpand(true);
-            b.set_child(Some(&inner_box));
-        }
-        let me = SettingsCard { inner: Rc::new(CardInner { root, icon_slot, title: title_l, desc: desc_l, control }) };
+            button.set_child(Some(&inner_box));
+            let host = gtk::Overlay::new();
+            host.add_css_class(CARD_HOST_CLASS);
+            host.set_child(Some(&button));
+            host.add_overlay(&control);
+            // without a place (not allocated yet) GTK's default: the end of the card, centred
+            let (c, p) = (control.downgrade(), place.downgrade());
+            host.connect_get_child_position(move |host, child| {
+                let (control, place) = (c.upgrade()?, p.upgrade()?);
+                if child != control.upcast_ref::<gtk::Widget>() || !place.is_visible() {
+                    return None;
+                }
+                let r = place.compute_bounds(host)?;
+                Some(gtk::gdk::Rectangle::new(
+                    r.x().round() as i32,
+                    r.y().round() as i32,
+                    r.width().round() as i32,
+                    r.height().round() as i32,
+                ))
+            });
+            let motion = gtk::EventControllerMotion::new();
+            let b = button.downgrade();
+            motion.connect_enter(move |_, _, _| {
+                if let Some(b) = b.upgrade() {
+                    b.add_css_class(HOVER_CLASS);
+                }
+            });
+            let b = button.downgrade();
+            motion.connect_leave(move |_| {
+                if let Some(b) = b.upgrade() {
+                    b.remove_css_class(HOVER_CLASS);
+                }
+            });
+            host.add_controller(motion);
+            // a page's classes on the card (`card.widget().add_css_class(..)`, styled as button.w11-settings-card.x)
+            let b = button.downgrade();
+            let mirrored: RefCell<Vec<String>> = RefCell::new(Vec::new());
+            host.connect_css_classes_notify(move |host| {
+                let Some(b) = b.upgrade() else { return };
+                let now: Vec<String> = host.css_classes().iter().map(|c| c.to_string()).filter(|c| c != CARD_HOST_CLASS).collect();
+                let mut mirrored = mirrored.borrow_mut();
+                for c in mirrored.iter().filter(|c| !now.contains(c)) {
+                    b.remove_css_class(c);
+                }
+                for c in &now {
+                    b.add_css_class(c);
+                }
+                *mirrored = now;
+            });
+            (host.upcast::<gtk::Widget>(), Some(button))
+        } else {
+            let b = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+            b.add_css_class("w11-settings-card");
+            inner_box.append(&control);
+            append_chevron(&inner_box, chevron);
+            b.append(&inner_box);
+            (b.upcast::<gtk::Widget>(), None)
+        };
+        let me = SettingsCard { inner: Rc::new(CardInner { root, button, icon_slot, title: title_l, desc: desc_l, control }) };
         me.set_icon(icon);
         me
     }
 
-    /// The card (a gtk::Box, or a gtk::Button when clickable).
+    /// The card: a gtk::Box, or for a clickable card the gtk::Overlay (class w11-sc-host) around its button and
+    /// control.
     pub fn widget(&self) -> &gtk::Widget {
         &self.inner.root
     }
 
-    /// The button of a clickable card.
+    /// The button of a clickable card (class w11-settings-card; its control is not inside it).
     pub fn button(&self) -> Option<gtk::Button> {
-        self.inner.root.downcast_ref::<gtk::Button>().cloned()
+        self.inner.button.clone()
     }
 
     /// Run `f` when a clickable card is clicked (no effect on a plain card).
@@ -170,6 +235,21 @@ impl SettingsCard {
     }
 }
 
+/// The trailing chevron (or external glyph) of a clickable card, in its row.
+fn append_chevron(row: &gtk::Box, chevron: Chevron) {
+    if chevron == Chevron::None {
+        return;
+    }
+    let g = if chevron == Chevron::External { icons::glyph("external", 14) } else { icons::glyph("chevron-right", 12) };
+    let slot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    slot.add_css_class("w11-sc-chevron");
+    slot.set_valign(gtk::Align::Center);
+    slot.set_hexpand(false);
+    g.set_halign(gtk::Align::Center);
+    slot.append(&g);
+    row.append(&slot);
+}
+
 struct ExpanderInner {
     root: gtk::glib::WeakRef<gtk::Box>,
     header: gtk::Button,
@@ -212,7 +292,7 @@ impl SettingsExpander {
     /// Add a nested row.
     pub fn add(&self, w: &impl IsA<gtk::Widget>) {
         let w = w.as_ref();
-        if !w.has_css_class("w11-settings-card") {
+        if !w.has_css_class("w11-settings-card") && !w.has_css_class(CARD_HOST_CLASS) {
             w.add_css_class("w11-nested-other");
         }
         self.inner.content.append(w);
@@ -280,7 +360,8 @@ impl Expander {
         content.add_css_class("w11-expander-inner");
         content_frame.append(&content);
         revealer.set_child(Some(&content_frame));
-        root.append(&header);
+        // the header card's root (the overlay with the header button and a control set on it later)
+        root.append(card.widget());
         root.append(&revealer);
         let inner = Rc::new(ExpanderInner {
             root: root.downgrade(),

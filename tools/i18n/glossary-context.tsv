@@ -40,3 +40,7 @@ host/src/services/disks/data.json:unavailable	Schijfbeheer	Disk management	name,
 #host	host/i18n/update.tsv:update.part.pixbuf	Afbeeldingen	images	-	what GDK Pixbuf does (loading images), not the Pictures folder (as the Start search's clipboard entry, native/shell/src/start/search.rs)
 #host	host/i18n/sysmon.tsv:sysmon.restart.noEnviron	Instellingen	environment	-	the process's own settings, i.e. its environment variables, not the Settings app
 #host	host/i18n/disks.tsv:disks.unavailableBody	Schijfbeheer	Disk Management	name,known	known deviation: the en ("UDisks isn’t available on this computer.") leaves out the nl's "Schijfbeheer werkt niet:" (D-G35: its nl is the frozen data.json text the disks oracle pins); for R2-B's owner and Robin (D-G1b, the disks tables), like the data.json:unavailable row above
+# a person's name: Windows (Control Panel's User Accounts) and GNOME Settings say Change name; Rename is File Explorer's
+native/apps/settings/src/pages/yourinfo.rs:*	Je naam wijzigen	Change your name	-	the dialog of Je info's name row (Windows Control Panel: "Change your name"), not Verkenner's Rename
+native/apps/settings/src/pages/yourinfo.rs:*	Naam wijzigen	Change name	-	a person's name (Windows Control Panel, GNOME), not Verkenner's Rename
+native/apps/settings/src/pages/background.rs:*	Recente afbeeldingen	Recent images	-	Windows' own en-GB Background page: "Recent images" (the Pictures folder is Afbeeldingen elsewhere)

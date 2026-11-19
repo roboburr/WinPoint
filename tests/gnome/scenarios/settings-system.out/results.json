@@ -1,0 +1,8136 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-17 00:49:52",
+ "seconds": 380.8,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 553,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 983186,
+   "rss_kb": 1303116,
+   "processes": 26,
+   "t": 185.0
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 656838,
+   "rss_kb": 963156
+  },
+  "minMemAvailableKb": 3608020,
+  "abortedForMemory": false,
+  "peakByName": {
+   "python3": {
+    "count": 5,
+    "pss_kb": 378027,
+    "rss_kb": 455916
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 362871,
+    "rss_kb": 420608
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 126251,
+    "rss_kb": 166380
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 26444,
+    "rss_kb": 58724
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 18121,
+    "rss_kb": 29404
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 16678,
+    "rss_kb": 34708
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 16353,
+    "rss_kb": 24756
+   },
+   "win11-app": {
+    "count": 2,
+    "pss_kb": 15577,
+    "rss_kb": 26560
+   },
+   "pipewire": {
+    "count": 1,
+    "pss_kb": 5117,
+    "rss_kb": 11556
+   },
+   "wireplumber": {
+    "count": 1,
+    "pss_kb": 4567,
+    "rss_kb": 15772
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4221,
+    "rss_kb": 11692
+   },
+   "pipewire-pulse": {
+    "count": 1,
+    "pss_kb": 3149,
+    "rss_kb": 12108
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2154,
+    "rss_kb": 4736
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1659,
+    "rss_kb": 10224
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 793,
+    "rss_kb": 7920
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 755,
+    "rss_kb": 7932
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 259,
+    "rss_kb": 1476
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 190,
+    "rss_kb": 2644
+   },
+   "pw-play": {
+    "count": 1,
+    "pss_kb": 0,
+    "rss_kb": 0
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 363291,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 178292,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 127050,
+    "first": 1.5
+   },
+   "glycin-svg": {
+    "pss_kb": 52553,
+    "first": 1.5
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 30562,
+    "first": 8.3
+   },
+   "win11-panel": {
+    "pss_kb": 18121,
+    "first": 1.5
+   },
+   "ibus-extension-": {
+    "pss_kb": 17532,
+    "first": 1.5
+   },
+   "win11-app": {
+    "pss_kb": 15578,
+    "first": 8.3
+   },
+   "glycin-image-rs": {
+    "pss_kb": 12527,
+    "first": 1.5
+   },
+   "pipewire": {
+    "pss_kb": 6615,
+    "first": 7.8
+   },
+   "wireplumber": {
+    "pss_kb": 4610,
+    "first": 8.3
+   },
+   "ibus-daemon": {
+    "pss_kb": 4233,
+    "first": 1.5
+   },
+   "pipewire-pulse": {
+    "pss_kb": 4036,
+    "first": 8.3
+   },
+   "pw-play": {
+    "pss_kb": 2409,
+    "first": 83.8
+   },
+   "strace": {
+    "pss_kb": 2156,
+    "first": 0.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 874,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 805,
+    "first": 1.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 767,
+    "first": 1.5
+   },
+   "bwrap": {
+    "pss_kb": 259,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 192,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/build/native-release",
+  "exit": 0,
+  "seconds": 62.4,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d"
+  }
+ },
+ "guardStubCalls": [
+  "00:51:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:51:11\tpw-dump\t--monitor --no-colors",
+  "00:51:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:51:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:51:13\tpw-dump\t--monitor --no-colors",
+  "00:51:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:51:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:51:17\tpw-dump\t--monitor --no-colors",
+  "00:51:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:51:25\tpw-dump\t--monitor --no-colors",
+  "00:51:41\tpw-dump\t--monitor --no-colors",
+  "00:52:11\tpw-dump\t--monitor --no-colors",
+  "00:53:15\tsystemctl\tsuspend",
+  "00:56:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 144,
+  "maxScanSeconds": 0.104,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/scenarios/settings-system.out/strace.txt"
+  ],
+  "connects": 544,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 280
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 46
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 5
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/snapd.socket",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 49
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ok",
+    "count": 8
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0-manager",
+    "result": "ok",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 5
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 19
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 12
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 43
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "UNFINISHED",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 5
+   }
+  ]
+ },
+ "straceExec": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/scenarios/settings-system.out/strace.txt"
+  ],
+  "execs": 231,
+  "ok": true,
+  "violations": [],
+  "forbidden": [
+   "pkexec",
+   "check-new-release",
+   "apt-get",
+   "apt-cache",
+   "do-release-upgrade",
+   "loginctl",
+   "apt",
+   "pkcon"
+  ],
+  "byProgram": [],
+  "winpointPython": {
+   "execs": [],
+   "clicks": 0,
+   "perClick": {}
+  }
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/scenarios/settings-system.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 0.82,
+    "args": {
+     "name": "pipewire",
+     "argv": [
+      "/usr/bin/pipewire"
+     ]
+    },
+    "result": {
+     "pid": 1345
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 1.02,
+    "args": {
+     "name": "wireplumber",
+     "argv": [
+      "/usr/bin/wireplumber"
+     ]
+    },
+    "result": {
+     "pid": 1350
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 1.02,
+    "args": {
+     "name": "pipewire-pulse",
+     "argv": [
+      "/usr/bin/pipewire-pulse"
+     ]
+    },
+    "result": {
+     "pid": 1351
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 1.02,
+    "args": {
+     "name": "pw-cli-w11-speakers",
+     "argv": [
+      "/usr/bin/pw-cli",
+      "create-node",
+      "adapter",
+      "{ factory.name=support.null-audio-sink node.name=w11-speakers node.description=\"WinPoint Test Speakers\" media.class=Audio/Sink object.linger=true audio.position=[FL FR] priority.session=1000 priority.driver=1000 }"
+     ]
+    },
+    "result": {
+     "pid": 1352
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 1.03,
+    "args": {
+     "name": "pw-cli-w11-headphones",
+     "argv": [
+      "/usr/bin/pw-cli",
+      "create-node",
+      "adapter",
+      "{ factory.name=support.null-audio-sink node.name=w11-headphones node.description=\"WinPoint Test Headphones\" media.class=Audio/Sink object.linger=true audio.position=[FL FR] priority.session=900 priority.driver=900 }"
+     ]
+    },
+    "result": {
+     "pid": 1359
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 1.04,
+    "args": {
+     "name": "pw-cli-w11-mic",
+     "argv": [
+      "/usr/bin/pw-cli",
+      "create-node",
+      "adapter",
+      "{ factory.name=support.null-audio-sink node.name=w11-mic node.description=\"WinPoint Test Microphone\" media.class=Audio/Source object.linger=true audio.position=[FL FR] priority.session=1000 priority.driver=1000 }"
+     ]
+    },
+    "result": {
+     "pid": 1363
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.66,
+    "args": {
+     "spec": "settings:display"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "display",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1366,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.67,
+    "args": {
+     "key": "maximize.1366"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 2.69,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.69,
+    "args": {
+     "key": "display.state"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 3.4,
+    "args": {
+     "name": "display.nl"
+    },
+    "result": {
+     "png": "display.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 519,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.72,
+    "args": {
+     "name": "display-more.nl"
+    },
+    "result": {
+     "png": "display-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 532,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 6.48,
+    "args": {
+     "surface": "settings",
+     "method": "system.brightness.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.48,
+    "args": {
+     "key": "system.brightness.get"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 6.98,
+    "args": {
+     "surface": "settings",
+     "method": "display.nightLight.status"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.98,
+    "args": {
+     "key": "display.nightLight.status"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.04,
+    "args": {
+     "name": "display-multiple.nl"
+    },
+    "result": {
+     "png": "display-multiple.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 541,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 11.04,
+    "args": {
+     "key": "displayBridge.ids"
+    }
+   },
+   {
+    "step": "open",
+    "t": 11.35,
+    "args": {
+     "spec": "settings:display"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "display",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 12.92,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 13.71,
+    "args": {
+     "name": "display-keep.nl"
+    },
+    "result": {
+     "png": "display-keep.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 286,
+      "meanLevel": 18.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.71,
+    "args": {
+     "key": "keep.dialogs"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 13.71,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 13.92,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 14.12,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 14.33,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 14.53,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 14.73,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 14.94,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 15.14,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 15.35,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 15.55,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 15.76,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 15.96,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 16.16,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 16.37,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 16.57,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 16.78,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 16.98,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 17.18,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 17.39,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 17.59,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 17.8,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 18.0,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 18.21,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 18.41,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 18.61,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 18.82,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 19.02,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 19.23,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 19.43,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 19.63,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 19.84,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 20.04,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 20.25,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 20.45,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 20.65,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 20.86,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 21.06,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 21.27,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 21.47,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 21.68,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 21.88,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 22.08,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 22.29,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 22.49,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 22.7,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 22.9,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 23.1,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 23.31,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 23.51,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 23.72,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 23.92,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.13,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.33,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.53,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.74,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.94,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.15,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.35,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.56,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.76,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.96,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.17,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.37,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.58,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.78,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.98,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.19,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.39,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.6,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.8,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 28.01,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 28.21,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 28.42,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 28.62,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 28.82,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.03,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.23,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.44,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.64,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.85,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 30.05,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 30.25,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 30.46,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 30.66,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 30.87,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 31.07,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 31.27,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 31.48,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 31.68,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 31.89,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 32.09,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 32.3,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 32.5,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 32.7,
+    "args": {
+     "surface": "settings",
+     "method": "display.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 33.39,
+    "args": {
+     "spec": "settings:display"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "display",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 34.78,
+    "args": {
+     "surface": "settings",
+     "method": "display.nightLight.status"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 35.48,
+    "args": {
+     "name": "nightlight.nl"
+    },
+    "result": {
+     "png": "nightlight.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 425,
+      "meanLevel": 36.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 36.01,
+    "args": {
+     "spec": "settings:display-advanced"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "display-advanced",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 36.81,
+    "args": {
+     "name": "display-advanced.nl"
+    },
+    "result": {
+     "png": "display-advanced.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 526,
+      "meanLevel": 42.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 38.15,
+    "args": {
+     "name": "display-advanced-more.nl"
+    },
+    "result": {
+     "png": "display-advanced-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 526,
+      "meanLevel": 42.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.77,
+    "args": {
+     "schema": "org.gnome.mutter.wayland",
+     "key": "xwayland-scaling-factor",
+     "path": null
+    },
+    "result": "1.0"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.77,
+    "args": {
+     "schema": "org.gnome.mutter.wayland",
+     "key": "xwayland-scaling-factor",
+     "path": null
+    },
+    "result": "1.0"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 40.95,
+    "args": {
+     "schema": "org.gnome.mutter.wayland",
+     "key": "xwayland-scaling-factor",
+     "path": null,
+     "value": "0.0"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 41.15,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 41.15,
+    "args": {
+     "key": "sound.state"
+    }
+   },
+   {
+    "step": "open",
+    "t": 41.6,
+    "args": {
+     "spec": "settings:sound"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "sound",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 42.46,
+    "args": {
+     "name": "sound.nl"
+    },
+    "result": {
+     "png": "sound.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 531,
+      "meanLevel": 42.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 43.89,
+    "args": {
+     "name": "sound-more.nl"
+    },
+    "result": {
+     "png": "sound-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 533,
+      "meanLevel": 42.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 47.93,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 47.94,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 47.94,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 48.24,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 49.24,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 49.85,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 50.46,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 51.07,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 51.08,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 51.08,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 51.08,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 51.38,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 53.01,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 53.01,
+    "args": {
+     "surface": "settings",
+     "method": "system.audio.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 53.01,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 53.01,
+    "args": {
+     "key": "system.audio.get"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 55.17,
+    "args": {
+     "name": "sound-alerts.nl"
+    },
+    "result": {
+     "png": "sound-alerts.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 425,
+      "meanLevel": 33.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 55.45,
+    "args": {
+     "schema": "org.gnome.shell.ubuntu",
+     "key": "startup-sound",
+     "path": null,
+     "value": "''"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 56.26,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-sound-startup-sound"
+    },
+    "result": {
+     "clicked": "st-sound-startup-sound"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.27,
+    "args": {
+     "schema": "org.gnome.shell.ubuntu",
+     "key": "startup-sound",
+     "path": null
+    },
+    "result": "'warty-startup'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.27,
+    "args": {
+     "schema": "org.gnome.shell.ubuntu",
+     "key": "startup-sound",
+     "path": null
+    },
+    "result": "'warty-startup'"
+   },
+   {
+    "step": "dev",
+    "t": 56.43,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 56.43,
+    "args": {
+     "surface": "settings",
+     "method": "sound.alerts.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 56.43,
+    "args": {
+     "key": "sound.alerts.set click"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.44,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "theme-name",
+     "path": null
+    },
+    "result": "'__custom'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.44,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "theme-name",
+     "path": null
+    },
+    "result": "'__custom'"
+   },
+   {
+    "step": "backend",
+    "t": 56.45,
+    "args": {
+     "surface": "settings",
+     "method": "sound.alerts.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.45,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "theme-name",
+     "path": null
+    },
+    "result": "'Yaru'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.45,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "theme-name",
+     "path": null
+    },
+    "result": "'Yaru'"
+   },
+   {
+    "step": "open",
+    "t": 57.73,
+    "args": {
+     "spec": "settings:sound"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "sound",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "settings_data_page",
+    "t": 58.54,
+    "args": {
+     "parent": "sound",
+     "item": "st-sound-out-0-props",
+     "title": "WinPoint Test Speakers"
+    },
+    "result": {
+     "input": "clutter",
+     "x": 1291,
+     "y": 235,
+     "rect": [
+      1275,
+      219,
+      32,
+      32
+     ],
+     "name": "st-sound-out-0-props",
+     "window": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "shell": {
+      "pointer": [
+       1291,
+       235
+      ],
+      "focusPid": 1366
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 59.32,
+    "args": {
+     "name": "sound-device.nl"
+    },
+    "result": {
+     "png": "sound-device.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 473,
+      "meanLevel": 40.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 60.71,
+    "args": {
+     "name": "sound-device-more.nl"
+    },
+    "result": {
+     "png": "sound-device-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 473,
+      "meanLevel": 40.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 62.73,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 63.4,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 63.41,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 63.41,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 63.71,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 65.41,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 66.41,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setBalance"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 66.41,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 66.71,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 68.38,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 68.38,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 69.39,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 69.39,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 69.69,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 71.88,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 71.88,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 72.07,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 73.36,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 73.36,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 73.36,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "open",
+    "t": 74.09,
+    "args": {
+     "spec": "settings:sound-devices"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "sound-devices",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 75.07,
+    "args": {
+     "name": "sound-devices.nl"
+    },
+    "result": {
+     "png": "sound-devices.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 463,
+      "meanLevel": 38.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 76.76,
+    "args": {
+     "name": "pw-play",
+     "argv": [
+      "/usr/bin/pw-play",
+      "--target",
+      "w11-speakers",
+      "--raw"
+     ]
+    },
+    "result": {
+     "pid": 2271
+    }
+   },
+   {
+    "step": "backend",
+    "t": 76.76,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 77.06,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 77.61,
+    "args": {
+     "spec": "settings:volume-mixer"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "volume-mixer",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 79.61,
+    "args": {
+     "name": "volume-mixer.nl"
+    },
+    "result": {
+     "png": "volume-mixer.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 478,
+      "meanLevel": 40.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 81.03,
+    "args": {
+     "name": "volume-mixer-more.nl"
+    },
+    "result": {
+     "png": "volume-mixer-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 478,
+      "meanLevel": 40.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 83.02,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 85.0,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 85.01,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 85.01,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 85.31,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 87.06,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 87.07,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setEventVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 87.07,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 87.37,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 89.12,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 89.12,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 89.13,
+    "args": {
+     "key": "mixer.stream"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 89.56,
+    "args": {
+     "surface": "settings",
+     "method": "sound.setVolume"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 91.33,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 91.33,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 91.94,
+    "args": {
+     "name": "volume-mixer-app.nl"
+    },
+    "result": {
+     "png": "volume-mixer-app.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 481,
+      "meanLevel": 40.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 93.99,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 93.99,
+    "args": {
+     "name": "pw-cli-w11-usb",
+     "argv": [
+      "/usr/bin/pw-cli",
+      "create-node",
+      "adapter",
+      "{ factory.name=support.null-audio-sink node.name=w11-usb node.description=\"WinPoint Test USB\" media.class=Audio/Sink object.linger=true audio.position=[FL FR] priority.session=100 priority.driver=100 }"
+     ]
+    },
+    "result": {
+     "pid": 2315
+    }
+   },
+   {
+    "step": "backend",
+    "t": 94.0,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 94.3,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 97.39,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 97.39,
+    "args": {
+     "surface": "settings",
+     "method": "sound.state"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 97.97,
+    "args": {
+     "spec": "settings:power"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "power",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 100.07,
+    "args": {
+     "name": "power.nl"
+    },
+    "result": {
+     "png": "power.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 525,
+      "meanLevel": 43.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 101.56,
+    "args": {
+     "name": "power-more.nl"
+    },
+    "result": {
+     "png": "power-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 504,
+      "meanLevel": 43.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 106.27,
+    "args": {
+     "schema": "org.gnome.desktop.session",
+     "key": "idle-delay",
+     "path": null
+    },
+    "result": "uint32 0"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 108.55,
+    "args": {
+     "schema": "org.gnome.desktop.session",
+     "key": "idle-delay",
+     "path": null
+    },
+    "result": "3600"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 108.55,
+    "args": {
+     "schema": "org.gnome.desktop.session",
+     "key": "idle-delay",
+     "path": null
+    },
+    "result": "3600"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 108.55,
+    "args": {
+     "schema": "org.gnome.desktop.session",
+     "key": "idle-delay",
+     "path": null,
+     "value": "uint32 600"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 108.85,
+    "args": {
+     "schema": "org.gnome.desktop.session",
+     "key": "idle-delay",
+     "path": null,
+     "value": "uint32 0"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 109.14,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "idle-dim",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 109.4,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "idle-dim",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 110.89,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "idle-dim",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 110.89,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "idle-dim",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "screenshot",
+    "t": 112.32,
+    "args": {
+     "name": "power-sleep.nl"
+    },
+    "result": {
+     "png": "power-sleep.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 527,
+      "meanLevel": 43.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 113.68,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-button-action",
+     "path": null,
+     "value": "'interactive'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 116.58,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-button-action",
+     "path": null
+    },
+    "result": "'nothing'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 116.58,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-button-action",
+     "path": null
+    },
+    "result": "'nothing'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 116.58,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-button-action",
+     "path": null,
+     "value": "'suspend'"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 120.67,
+    "args": {
+     "name": "power-restart.nl"
+    },
+    "result": {
+     "png": "power-restart.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 425,
+      "meanLevel": 31.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 120.97,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "open",
+    "t": 123.17,
+    "args": {
+     "spec": "settings:notifications"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1366,
+     "page": "notifications",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 126.69,
+    "args": {
+     "key": "kit.headerControl"
+    }
+   },
+   {
+    "step": "record",
+    "t": 126.76,
+    "args": {
+     "key": "standin.upower"
+    }
+   },
+   {
+    "step": "record",
+    "t": 126.83,
+    "args": {
+     "key": "standin.power-profiles"
+    }
+   },
+   {
+    "step": "record",
+    "t": 126.9,
+    "args": {
+     "key": "standin.sensor-proxy"
+    }
+   },
+   {
+    "step": "close",
+    "t": 127.42,
+    "args": {
+     "name": "settings"
+    }
+   },
+   {
+    "step": "open",
+    "t": 129.66,
+    "args": {
+     "spec": "settings:power"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 2499,
+     "page": "power",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 2499,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 129.66,
+    "args": {
+     "key": "maximize.2499"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 132.16,
+    "args": {
+     "surface": "settings",
+     "method": "system.battery.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 132.16,
+    "args": {
+     "surface": "settings",
+     "method": "battery.charging.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 132.17,
+    "args": {
+     "surface": "settings",
+     "method": "system.power.settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 132.17,
+    "args": {
+     "key": "power.battery"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 132.79,
+    "args": {
+     "name": "power-battery.nl"
+    },
+    "result": {
+     "png": "power-battery.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 522,
+      "meanLevel": 43.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 134.38,
+    "args": {
+     "name": "power-battery-more.nl"
+    },
+    "result": {
+     "png": "power-battery-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 510,
+      "meanLevel": 43.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 144.23,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-saver-profile-on-low-battery",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 144.63,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-saver-profile-on-low-battery",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 146.32,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-saver-profile-on-low-battery",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 146.32,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-saver-profile-on-low-battery",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "screenshot",
+    "t": 146.95,
+    "args": {
+     "name": "power-saver.nl"
+    },
+    "result": {
+     "png": "power-saver.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 528,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 146.95,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 147.36,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.07,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.07,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.08,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "native",
+    "t": 149.49,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 149.49,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 158.17,
+    "args": {
+     "surface": "settings",
+     "method": "battery.history"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 162.3,
+    "args": {
+     "name": "power-levels.nl"
+    },
+    "result": {
+     "png": "power-levels.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 543,
+      "meanLevel": 42.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 162.34,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 162.34,
+    "args": {
+     "key": "caps.withStandIns"
+    }
+   },
+   {
+    "step": "open",
+    "t": 163.23,
+    "args": {
+     "spec": "settings:display"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 2499,
+     "page": "display",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 164.97,
+    "args": {
+     "schema": "org.gnome.settings-daemon.peripherals.touchscreen",
+     "key": "orientation-lock",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 165.38,
+    "args": {
+     "schema": "org.gnome.settings-daemon.peripherals.touchscreen",
+     "key": "orientation-lock",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 167.16,
+    "args": {
+     "schema": "org.gnome.settings-daemon.peripherals.touchscreen",
+     "key": "orientation-lock",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 167.16,
+    "args": {
+     "schema": "org.gnome.settings-daemon.peripherals.touchscreen",
+     "key": "orientation-lock",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 167.16,
+    "args": {
+     "schema": "org.gnome.settings-daemon.peripherals.touchscreen",
+     "key": "orientation-lock",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 168.68,
+    "args": {
+     "name": "display-rotation.nl"
+    },
+    "result": {
+     "png": "display-rotation.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 519,
+      "meanLevel": 43.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 169.22,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 169.23,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "open",
+    "t": 170.03,
+    "args": {
+     "spec": "settings:storage"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 2499,
+     "page": "storage",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 171.57,
+    "args": {
+     "name": "storage.nl"
+    },
+    "result": {
+     "png": "storage.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 541,
+      "meanLevel": 41.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 173.27,
+    "args": {
+     "name": "storage-more.nl"
+    },
+    "result": {
+     "png": "storage-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 540,
+      "meanLevel": 41.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 176.24,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 176.24,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 176.25,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 176.25,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 176.25,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 176.25,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 180.17,
+    "args": {
+     "name": "storagesense.nl"
+    },
+    "result": {
+     "png": "storagesense.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 533,
+      "meanLevel": 41.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 184.15,
+    "args": {
+     "name": "storagesense-more.nl"
+    },
+    "result": {
+     "png": "storagesense-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 534,
+      "meanLevel": 41.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 189.67,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 191.05,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 191.05,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 191.06,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 192.87,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 192.87,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 196.52,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 196.52,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "old-files-age",
+     "path": null
+    },
+    "result": "14"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 196.53,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "old-files-age",
+     "path": null
+    },
+    "result": "14"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 196.53,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "old-files-age",
+     "path": null,
+     "value": "uint32 7"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 198.69,
+    "args": {
+     "surface": "settings",
+     "method": "storage.cleanTemp"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 198.69,
+    "args": {
+     "key": "storage.cleanTemp sense"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 201.93,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 201.93,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "old-files-age",
+     "path": null
+    },
+    "result": "uint32 7"
+   },
+   {
+    "step": "screenshot",
+    "t": 204.27,
+    "args": {
+     "name": "storagesense-empty.nl"
+    },
+    "result": {
+     "png": "storagesense-empty.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 430,
+      "meanLevel": 31.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 205.92,
+    "args": {
+     "key": "storagesense.emptyDialog.click"
+    }
+   },
+   {
+    "step": "record",
+    "t": 211.38,
+    "args": {
+     "key": "storagesense.emptyDialog"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 212.38,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 212.4,
+    "args": {
+     "schema": "org.gnome.shell.app-switcher",
+     "key": "current-workspace-only",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "open",
+    "t": 213.29,
+    "args": {
+     "spec": "settings:multitasking"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 2499,
+     "page": "multitasking",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 217.49,
+    "args": {
+     "name": "multitasking.nl"
+    },
+    "result": {
+     "png": "multitasking.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 522,
+      "meanLevel": 41.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 219.26,
+    "args": {
+     "name": "multitasking-more.nl"
+    },
+    "result": {
+     "png": "multitasking-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 523,
+      "meanLevel": 41.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 224.07,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "edge-tiling",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 224.64,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "edge-tiling",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 226.84,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "edge-tiling",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 226.84,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "edge-tiling",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 226.84,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "edge-tiling",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 235.27,
+    "args": {
+     "schema": "org.gnome.shell.app-switcher",
+     "key": "current-workspace-only",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 235.28,
+    "args": {
+     "schema": "org.gnome.shell.window-switcher",
+     "key": "current-workspace-only",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 235.29,
+    "args": {
+     "schema": "org.gnome.shell.app-switcher",
+     "key": "current-workspace-only",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 235.29,
+    "args": {
+     "schema": "org.gnome.shell.window-switcher",
+     "key": "current-workspace-only",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 235.29,
+    "args": {
+     "schema": "org.gnome.shell.app-switcher",
+     "key": "current-workspace-only",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 235.82,
+    "args": {
+     "schema": "org.gnome.shell.app-switcher",
+     "key": "current-workspace-only",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 236.32,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "dynamic-workspaces",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 238.19,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "dynamic-workspaces",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 238.73,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "num-workspaces",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 240.06,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "num-workspaces",
+     "path": null
+    },
+    "result": "5"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 240.06,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "num-workspaces",
+     "path": null
+    },
+    "result": "5"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 240.06,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "dynamic-workspaces",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 240.57,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "workspaces-only-on-primary",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 242.42,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "workspaces-only-on-primary",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 242.43,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-hot-corners",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 242.97,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-hot-corners",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 244.97,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-hot-corners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 244.97,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-hot-corners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 244.97,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-hot-corners",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 245.49,
+    "args": {
+     "surface": "settings",
+     "method": "wellbeing.history"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 245.49,
+    "args": {
+     "key": "wellbeing.history"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 245.5,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "history-enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "open",
+    "t": 246.41,
+    "args": {
+     "spec": "settings:screentime"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 2499,
+     "page": "screentime",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 248.63,
+    "args": {
+     "name": "screentime.nl"
+    },
+    "result": {
+     "png": "screentime.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 518,
+      "meanLevel": 42.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 250.42,
+    "args": {
+     "name": "screentime-more.nl"
+    },
+    "result": {
+     "png": "screentime-more.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 510,
+      "meanLevel": 42.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 253.02,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "history-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 254.42,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "history-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 254.43,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "history-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 254.97,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "history-enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 255.51,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders",
+     "key": "selected-breaks",
+     "path": null,
+     "value": "@as []"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 257.42,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders",
+     "key": "selected-breaks",
+     "path": null
+    },
+    "result": "['eyesight']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 257.42,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders",
+     "key": "selected-breaks",
+     "path": null
+    },
+    "result": "['eyesight']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 258.86,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders",
+     "key": "selected-breaks",
+     "path": null
+    },
+    "result": "['eyesight', 'movement']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 258.86,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders",
+     "key": "selected-breaks",
+     "path": null
+    },
+    "result": "['eyesight', 'movement']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 262.92,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "duration-seconds",
+     "path": null
+    },
+    "result": "180"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 262.92,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "interval-seconds",
+     "path": null
+    },
+    "result": "1800"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 262.92,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "duration-seconds",
+     "path": null
+    },
+    "result": "180"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 266.54,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "play-sound",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 266.55,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.eyesight",
+     "key": "play-sound",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 266.55,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "play-sound",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 266.55,
+    "args": {
+     "schema": "org.gnome.desktop.break-reminders.eyesight",
+     "key": "play-sound",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "screenshot",
+    "t": 267.17,
+    "args": {
+     "name": "screentime-breaks.nl"
+    },
+    "result": {
+     "png": "screentime-breaks.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 514,
+      "meanLevel": 43.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 267.17,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 267.67,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 269.15,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 269.15,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 269.15,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-seconds",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 270.58,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-seconds",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 270.78,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-seconds",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 270.98,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-seconds",
+     "path": null
+    },
+    "result": "32400"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 270.98,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-seconds",
+     "path": null
+    },
+    "result": "32400"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 270.98,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "grayscale",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 271.59,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "grayscale",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 273.64,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "grayscale",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 273.64,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "grayscale",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "screenshot",
+    "t": 274.25,
+    "args": {
+     "name": "screentime-limits.nl"
+    },
+    "result": {
+     "png": "screentime-limits.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 514,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 274.26,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 275.41,
+    "args": {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "grayscale",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 275.41,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 275.41,
+    "args": {
+     "key": "owned.items"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 275.42,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "open",
+    "t": 276.38,
+    "args": {
+     "spec": "settings:notifications"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 2499,
+     "page": "notifications",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 279.26,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 279.26,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "open",
+    "t": 279.26,
+    "args": {
+     "spec": "panel"
+    },
+    "result": {
+     "name": "panel",
+     "kind": "panel",
+     "window": "native",
+     "pid": 521,
+     "page": null,
+     "alive": true,
+     "shell": true
+    }
+   },
+   {
+    "step": "native",
+    "t": 279.9,
+    "args": {
+     "native": "flyout",
+     "name": "quick"
+    },
+    "result": {
+     "open": "quick"
+    }
+   },
+   {
+    "step": "record",
+    "t": 279.9,
+    "args": {
+     "key": "mirror.quick"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 281.86,
+    "args": {
+     "name": "mirror-quick.nl"
+    },
+    "result": {
+     "png": "mirror-quick.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 286,
+      "meanLevel": 39.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.76,
+    "args": {
+     "key": "mirror.tileClick"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 282.76,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 282.76,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "native",
+    "t": 284.0,
+    "args": {
+     "native": "flyout",
+     "name": "quick"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 284.5,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 285.4,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "close",
+    "t": 285.98,
+    "args": {
+     "name": "settings"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "wait_text settings: 'Helderheid en kleur'",
+    "ok": true,
+    "t": 2.57,
+    "seconds": 0.1
+   },
+   {
+    "check": "display: title and breadcrumb Systeem > Beeldscherm",
+    "ok": true,
+    "t": 2.67,
+    "want": [
+     "Systeem",
+     "Beeldscherm"
+    ],
+    "got": [
+     "Systeem",
+     "Beeldscherm"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "display.state reads Mutter DisplayConfig",
+    "ok": true,
+    "t": 2.69
+   },
+   {
+    "check": "wait_text settings: 'Schaal en indeling'",
+    "ok": true,
+    "t": 2.74,
+    "seconds": 0.05
+   },
+   {
+    "check": "display: st-display-scale",
+    "ok": true,
+    "t": 5.86
+   },
+   {
+    "check": "display: st-display-resolution",
+    "ok": true,
+    "t": 5.96
+   },
+   {
+    "check": "display: st-display-orientation",
+    "ok": true,
+    "t": 6.07
+   },
+   {
+    "check": "display: st-display-multiple",
+    "ok": true,
+    "t": 6.19
+   },
+   {
+    "check": "display: no placeholder",
+    "ok": true,
+    "t": 6.25
+   },
+   {
+    "check": "display: Geavanceerd beeldscherm under Gerelateerde instellingen",
+    "ok": true,
+    "t": 6.36
+   },
+   {
+    "check": "display: Kleurprofiel is a row of Helderheid en kleur (amendment 19)",
+    "ok": true,
+    "t": 6.48
+   },
+   {
+    "check": "display: Helderheid without a backlight: the \"only built-in screens\" row, no slider",
+    "ok": true,
+    "t": 6.67,
+    "brightness": {
+     "available": false,
+     "value": null
+    }
+   },
+   {
+    "check": "display: no Privacyscherm without a privacy-screen panel",
+    "ok": true,
+    "t": 6.79
+   },
+   {
+    "check": "display: no Draaivergrendeling without an accelerometer (caps)",
+    "ok": true,
+    "t": 6.85
+   },
+   {
+    "check": "display: no automatic brightness without a light sensor",
+    "ok": true,
+    "t": 6.97
+   },
+   {
+    "check": "display: Nachtlampje says it is not available (mutter: NightLightSupported false), no switch",
+    "ok": true,
+    "t": 7.17
+   },
+   {
+    "check": "display: Meerdere beeldschermen holds Dit mijn hoofdbeeldscherm maken (on, insensitive: the only display) and Detecteren",
+    "ok": true,
+    "t": 8.38,
+    "main": {
+     "active": true,
+     "sensitive": false
+    }
+   },
+   {
+    "check": "wait_text settings: 'Geen ander beeldscherm gevonden'",
+    "ok": true,
+    "t": 9.78,
+    "seconds": 0.14
+   },
+   {
+    "check": "display: Meerdere beeldschermen stays open after Detecteren (the reload builds it again)",
+    "ok": true,
+    "t": 10.42
+   },
+   {
+    "check": "display: a new DisplayBridge (after a screen lock) never gives a keep-question id again",
+    "ok": true,
+    "t": 11.04,
+    "ids": [
+     376426547,
+     376426548
+    ]
+   },
+   {
+    "check": "keep: the Schaal drop-down applies 125% persistently (display.apply)",
+    "ok": true,
+    "t": 13.71,
+    "applied": 1.25
+   },
+   {
+    "check": "keep: GNOME Shell asks (displayBridge.js not routed until step I), Settings does not",
+    "ok": true,
+    "t": 13.71,
+    "shell": [
+     "DisplayChangeDialog"
+    ]
+   },
+   {
+    "check": "keep: without an answer the previous scale comes back",
+    "ok": true,
+    "t": 32.7
+   },
+   {
+    "check": "keep: the Schaal drop-down shows 100% again",
+    "ok": true,
+    "t": 33.08
+   },
+   {
+    "check": "wait_text settings: 'Helderheid en kleur'",
+    "ok": true,
+    "t": 33.47,
+    "seconds": 0.08
+   },
+   {
+    "check": "nightlight: title and breadcrumb Systeem > Beeldscherm > Nachtlampje",
+    "ok": true,
+    "t": 34.78,
+    "want": [
+     "Systeem",
+     "Beeldscherm",
+     "Nachtlampje"
+    ],
+    "got": [
+     "Systeem",
+     "Beeldscherm",
+     "Nachtlampje"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-display"
+    ]
+   },
+   {
+    "check": "wait_text settings: 'Nachtlampje is niet beschikbaar'",
+    "ok": true,
+    "t": 34.87,
+    "seconds": 0.09
+   },
+   {
+    "check": "nightlight: Night Light Unavailable (mutter NightLightSupported false: GNOME Settings shows the same)",
+    "ok": true,
+    "t": 35.57
+   },
+   {
+    "check": "wait_text settings: 'Beeldscherminformatie'",
+    "ok": true,
+    "t": 36.1,
+    "seconds": 0.09
+   },
+   {
+    "check": "display-advanced: title and breadcrumb Systeem > Beeldscherm > Geavanceerd beeldscherm",
+    "ok": true,
+    "t": 36.19,
+    "want": [
+     "Systeem",
+     "Beeldscherm",
+     "Geavanceerd beeldscherm"
+    ],
+    "got": [
+     "Systeem",
+     "Beeldscherm",
+     "Geavanceerd beeldscherm"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-display"
+    ]
+   },
+   {
+    "check": "display-advanced: st-display-advanced-select",
+    "ok": true,
+    "t": 39.39
+   },
+   {
+    "check": "display-advanced: st-display-advanced-info",
+    "ok": true,
+    "t": 39.48
+   },
+   {
+    "check": "display-advanced: st-display-advanced-refresh",
+    "ok": true,
+    "t": 39.58
+   },
+   {
+    "check": "display-advanced: no Dynamische vernieuwingsfrequentie (the virtual monitor has no variable mode)",
+    "ok": true,
+    "t": 39.68
+   },
+   {
+    "check": "display-advanced: no Aanpassen voor tv (mutter reports no underscanning)",
+    "ok": true,
+    "t": 39.78
+   },
+   {
+    "check": "display-advanced: one refresh rate (60 Hz), its drop-down insensitive",
+    "ok": true,
+    "t": 39.94,
+    "labels": [
+     "",
+     "",
+     "60 Hz",
+     ""
+    ]
+   },
+   {
+    "check": "display-advanced: Schaal voor apps herstellen writes xwayland-scaling-factor GNOME's way (on 0, off 1)",
+    "ok": true,
+    "t": 40.77,
+    "was_on": true,
+    "value": "1.0"
+   },
+   {
+    "check": "wait_text settings: 'Start apps opnieuw om de nieuwe schaal toe te passen'",
+    "ok": true,
+    "t": 40.95,
+    "seconds": 0.18
+   },
+   {
+    "check": "display-advanced: Schaal voor apps herstellen follows an outside xwayland-scaling-factor=0.0",
+    "ok": true,
+    "t": 41.15
+   },
+   {
+    "check": "sound.state reads pipewire-pulse through libpulse",
+    "ok": true,
+    "t": 41.15
+   },
+   {
+    "check": "wait_text settings: 'Kies waar je geluid wilt afspelen'",
+    "ok": true,
+    "t": 41.72,
+    "seconds": 0.12
+   },
+   {
+    "check": "sound: title and breadcrumb Systeem > Geluid",
+    "ok": true,
+    "t": 41.83,
+    "want": [
+     "Systeem",
+     "Geluid"
+    ],
+    "got": [
+     "Systeem",
+     "Geluid"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "sound: st-sound-outputs",
+    "ok": true,
+    "t": 45.1
+   },
+   {
+    "check": "sound: st-sound-inputs",
+    "ok": true,
+    "t": 45.21
+   },
+   {
+    "check": "sound: st-sound-volume",
+    "ok": true,
+    "t": 45.33
+   },
+   {
+    "check": "sound: st-sound-volume-mute",
+    "ok": true,
+    "t": 45.45
+   },
+   {
+    "check": "sound: st-sound-input-volume",
+    "ok": true,
+    "t": 45.58
+   },
+   {
+    "check": "sound: st-sound-input-level",
+    "ok": true,
+    "t": 45.78
+   },
+   {
+    "check": "sound: st-sound-out-0",
+    "ok": true,
+    "t": 45.91
+   },
+   {
+    "check": "sound: st-sound-out-1",
+    "ok": true,
+    "t": 46.03
+   },
+   {
+    "check": "sound: st-sound-out-0-props",
+    "ok": true,
+    "t": 46.16
+   },
+   {
+    "check": "sound: st-sound-in-0",
+    "ok": true,
+    "t": 46.38
+   },
+   {
+    "check": "sound: st-sound-pair-output",
+    "ok": true,
+    "t": 46.52
+   },
+   {
+    "check": "sound: st-sound-pair-input",
+    "ok": true,
+    "t": 46.65
+   },
+   {
+    "check": "sound: st-sound-more",
+    "ok": true,
+    "t": 46.78
+   },
+   {
+    "check": "sound: no placeholder and not the wpctl page",
+    "ok": true,
+    "t": 47.05
+   },
+   {
+    "check": "sound: link-sound-devices under Geavanceerd",
+    "ok": true,
+    "t": 47.19
+   },
+   {
+    "check": "sound: link-volume-mixer under Geavanceerd",
+    "ok": true,
+    "t": 47.32
+   },
+   {
+    "check": "sound: picking an output makes it the default",
+    "ok": true,
+    "t": 47.93,
+    "wanted": "w11-headphones"
+   },
+   {
+    "check": "sound: the volume slider writes the sink volume",
+    "ok": true,
+    "t": 49.85,
+    "before": 90,
+    "after": 50
+   },
+   {
+    "check": "sound: the mute button mutes the sink",
+    "ok": true,
+    "t": 50.46
+   },
+   {
+    "check": "sound: the input volume slider writes the source volume",
+    "ok": true,
+    "t": 53.01,
+    "source": "w11-speakers.monitor",
+    "after": 50
+   },
+   {
+    "check": "sound: system.audio.get is the pulse client with PipeWire object ids",
+    "ok": true,
+    "t": 53.01,
+    "legacy": {
+     "available": true,
+     "volume": 50,
+     "muted": false,
+     "sinks": [
+      {
+       "id": 35,
+       "name": "WinPoint Test Speakers",
+       "default": false
+      },
+      {
+       "id": 43,
+       "name": "WinPoint Test Headphones",
+       "default": true
+      }
+     ]
+    },
+    "ids": [
+     35,
+     43
+    ]
+   },
+   {
+    "check": "alerts: Meer geluidsinstellingen opens the Geluiden tab",
+    "ok": true,
+    "t": 54.57
+   },
+   {
+    "check": "alerts: Opstartgeluid afspelen (Ubuntu)",
+    "ok": true,
+    "t": 55.44
+   },
+   {
+    "check": "alerts: Opstartgeluid afspelen writes startup-sound warty-startup",
+    "ok": true,
+    "t": 56.27,
+    "value": "'warty-startup'"
+   },
+   {
+    "check": "alerts: Klik writes GNOME's __custom theme",
+    "ok": true,
+    "t": 56.44,
+    "theme": "'__custom'",
+    "link": "/usr/share/sounds/gnome/default/alerts/click.ogg"
+   },
+   {
+    "check": "alerts: Standaard puts the theme back",
+    "ok": true,
+    "t": 56.45,
+    "theme": "'Yaru'"
+   },
+   {
+    "check": "wait_text settings: 'WinPoint Test Speakers'",
+    "ok": true,
+    "t": 58.54,
+    "seconds": 0.17
+   },
+   {
+    "check": "sound-device: title and breadcrumb Systeem > Geluid > WinPoint Test Speakers",
+    "ok": true,
+    "t": 58.71,
+    "want": [
+     "Systeem",
+     "Geluid",
+     "WinPoint Test Speakers"
+    ],
+    "got": [
+     "Systeem",
+     "Geluid",
+     "WinPoint Test Speakers"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-sound"
+    ]
+   },
+   {
+    "check": "device: st-sound-device-default",
+    "ok": true,
+    "t": 62.02
+   },
+   {
+    "check": "device: st-sound-device-volume",
+    "ok": true,
+    "t": 62.19
+   },
+   {
+    "check": "device: st-sound-device-left",
+    "ok": true,
+    "t": 62.37
+   },
+   {
+    "check": "device: st-sound-device-right",
+    "ok": true,
+    "t": 62.55
+   },
+   {
+    "check": "device: st-sound-device-allow-volume-above-100-percent",
+    "ok": true,
+    "t": 62.73
+   },
+   {
+    "check": "device: Instellen als standaard makes it the default",
+    "ok": true,
+    "t": 63.41,
+    "sink": "w11-speakers"
+   },
+   {
+    "check": "device: Volume writes the sink volume",
+    "ok": true,
+    "t": 65.41
+   },
+   {
+    "check": "device: Rechterkanaal at half reaches the sink as GNOME's balance towards the left",
+    "ok": true,
+    "t": 68.38,
+    "sink": {
+     "index": 35,
+     "name": "w11-speakers",
+     "description": "WinPoint Test Speakers",
+     "card": null,
+     "cardIndex": null,
+     "ports": [],
+     "activePort": null,
+     "volume": 100,
+     "channels": [
+      {
+       "position": "front-left",
+       "volume": 100.0
+      },
+      {
+       "position": "front-right",
+       "volume": 50.0
+      }
+     ],
+     "mute": false,
+     "default": true,
+     "baseVolume": 100.0,
+     "decibel": true,
+     "state": "suspended",
+     "icon": null,
+     "formFactor": null,
+     "bus": null,
+     "objectId": 35,
+     "monitor": "w11-speakers.monitor",
+     "canBalance": true,
+     "canFade": false,
+     "hasLfe": false,
+     "balance": -0.5,
+     "fade": 0.0,
+     "lfe": null,
+     "left": 100.0,
+     "right": 50.0
+    }
+   },
+   {
+    "check": "device: after a volume change Rechterkanaal leaves Linkerkanaal at the new volume",
+    "ok": true,
+    "t": 71.88,
+    "before": 20.0,
+    "sink": {
+     "left": 20.0,
+     "right": 50.0,
+     "volume": 50,
+     "balance": 0.6
+    }
+   },
+   {
+    "check": "device: Volume boven 100% toestaan writes allow-volume-above-100-percent",
+    "ok": true,
+    "t": 73.36,
+    "before": "false",
+    "after": "true"
+   },
+   {
+    "check": "device: Volume boven 100% toestaan follows an outside allow-volume-above-100-percent=false",
+    "ok": true,
+    "t": 73.55
+   },
+   {
+    "check": "wait_text settings: 'Uitvoerapparaten'",
+    "ok": true,
+    "t": 74.28,
+    "seconds": 0.18
+   },
+   {
+    "check": "sound-devices: title and breadcrumb Systeem > Geluid > Alle geluidsapparaten",
+    "ok": true,
+    "t": 74.46,
+    "want": [
+     "Systeem",
+     "Geluid",
+     "Alle geluidsapparaten"
+    ],
+    "got": [
+     "Systeem",
+     "Geluid",
+     "Alle geluidsapparaten"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-sound"
+    ]
+   },
+   {
+    "check": "devices: Alle geluidsapparaten lists outputs and inputs",
+    "ok": true,
+    "t": 75.47
+   },
+   {
+    "check": "wait_text settings: 'Invoerinstellingen'",
+    "ok": true,
+    "t": 76.36,
+    "seconds": 0.18
+   },
+   {
+    "check": "sound-device: title and breadcrumb Systeem > Geluid > WinPoint Test Microphone",
+    "ok": true,
+    "t": 76.56,
+    "want": [
+     "Systeem",
+     "Geluid",
+     "WinPoint Test Microphone"
+    ],
+    "got": [
+     "Systeem",
+     "Geluid",
+     "WinPoint Test Microphone"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-sound"
+    ]
+   },
+   {
+    "check": "devices: the input's Eigenschappen has Je microfoon testen",
+    "ok": true,
+    "t": 76.76
+   },
+   {
+    "check": "wait_text settings: 'Systeemgeluiden'",
+    "ok": true,
+    "t": 77.81,
+    "seconds": 0.2
+   },
+   {
+    "check": "volume-mixer: title and breadcrumb Systeem > Geluid > Volumemixer",
+    "ok": true,
+    "t": 78.0,
+    "want": [
+     "Systeem",
+     "Geluid",
+     "Volumemixer"
+    ],
+    "got": [
+     "Systeem",
+     "Geluid",
+     "Volumemixer"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-sound"
+    ]
+   },
+   {
+    "check": "mixer: st-volume-mixer-output",
+    "ok": true,
+    "t": 82.41
+   },
+   {
+    "check": "mixer: st-volume-mixer-input",
+    "ok": true,
+    "t": 82.61
+   },
+   {
+    "check": "mixer: st-volume-mixer-volume",
+    "ok": true,
+    "t": 82.81
+   },
+   {
+    "check": "mixer: st-volume-mixer-event",
+    "ok": true,
+    "t": 83.01
+   },
+   {
+    "check": "mixer: the Uitvoerapparaat drop-down sets the default output",
+    "ok": true,
+    "t": 85.0,
+    "wanted": "w11-headphones"
+   },
+   {
+    "check": "mixer: the master volume writes the default output",
+    "ok": true,
+    "t": 87.06
+   },
+   {
+    "check": "mixer: Systeemgeluiden writes the event role (ext-stream-restore)",
+    "ok": true,
+    "t": 89.13,
+    "now": 50
+   },
+   {
+    "check": "mixer: the app row with its volume slider and its Uitvoerapparaat",
+    "ok": true,
+    "t": 89.56
+   },
+   {
+    "check": "mixer: the app's volume slider writes its stream",
+    "ok": true,
+    "t": 91.33,
+    "now": 50
+   },
+   {
+    "check": "mixer: the app's Uitvoerapparaat drop-down moves its stream (moveStream)",
+    "ok": true,
+    "t": 93.99
+   },
+   {
+    "check": "mixer: a sink that comes while the app plays is in its Uitvoerapparaat drop-down",
+    "ok": true,
+    "t": 97.39,
+    "streams": [
+     {
+      "index": 69,
+      "kind": "output",
+      "app": "pw-play",
+      "icon": null,
+      "appId": null,
+      "name": "/dev/zero",
+      "role": "music",
+      "volume": 50,
+      "mute": false,
+      "corked": false,
+      "hasVolume": true,
+      "volumeWritable": true,
+      "device": "w11-usb"
+     }
+    ]
+   },
+   {
+    "check": "wait_text settings: 'Besturingselementen voor deksel en aan/uit-knop'",
+    "ok": true,
+    "t": 98.22,
+    "seconds": 0.24
+   },
+   {
+    "check": "power: title and breadcrumb Systeem > Energie en batterij",
+    "ok": true,
+    "t": 98.46,
+    "want": [
+     "Systeem",
+     "Energie en batterij"
+    ],
+    "got": [
+     "Systeem",
+     "Energie en batterij"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "power: no placeholder",
+    "ok": true,
+    "t": 103.04
+   },
+   {
+    "check": "power: st-power-screen-sleep",
+    "ok": true,
+    "t": 103.31
+   },
+   {
+    "check": "power: st-power-lid-button",
+    "ok": true,
+    "t": 103.56
+   },
+   {
+    "check": "power: power-mode",
+    "ok": true,
+    "t": 103.82
+   },
+   {
+    "check": "power: without UPower no Batterij group, the Netstroom card instead",
+    "ok": true,
+    "t": 104.36
+   },
+   {
+    "check": "power: without power-profiles-daemon Energiestand is \"Niet beschikbaar\", insensitive",
+    "ok": true,
+    "t": 104.63,
+    "labels": [
+     "",
+     "",
+     "Niet beschikbaar",
+     ""
+    ]
+   },
+   {
+    "check": "power: no Energiebesparing without a power-saver profile",
+    "ok": true,
+    "t": 104.92
+   },
+   {
+    "check": "power: Scherm uitschakelen na 1 uur writes idle-delay 3600",
+    "ok": true,
+    "t": 108.55,
+    "value": "3600"
+   },
+   {
+    "check": "power: Scherm uitschakelen na follows an outside idle-delay (10 minuten)",
+    "ok": true,
+    "t": 108.84
+   },
+   {
+    "check": "power: Scherm dimmen bij inactiviteit writes idle-dim",
+    "ok": true,
+    "t": 110.89,
+    "before": "true",
+    "after": "false"
+   },
+   {
+    "check": "power: without logind automatic sleep is insensitive, with GNOME's reason",
+    "ok": true,
+    "t": 111.44
+   },
+   {
+    "check": "power: no \"Als je automatisch slapen uitschakelt\" warning where the pc cannot sleep (GNOME hides that row)",
+    "ok": true,
+    "t": 111.71
+   },
+   {
+    "check": "power: Niets doen writes power-button-action nothing",
+    "ok": true,
+    "t": 116.58,
+    "value": "'nothing'"
+   },
+   {
+    "check": "power: the power-button drop-down follows an outside power-button-action (Slaapstand)",
+    "ok": true,
+    "t": 116.9
+   },
+   {
+    "check": "power: Slaapstand runs systemctl suspend (the run's stub, logs/guard-calls.log)",
+    "ok": true,
+    "t": 118.86
+   },
+   {
+    "check": "wait_text settings: 'Opnieuw opstarten?'",
+    "ok": true,
+    "t": 120.07,
+    "seconds": 0.31
+   },
+   {
+    "check": "power: Opnieuw opstarten asks first; Escape runs nothing",
+    "ok": true,
+    "t": 122.47,
+    "guard": [
+     "00:51:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+     "00:51:25\tpw-dump\t--monitor --no-colors",
+     "00:51:41\tpw-dump\t--monitor --no-colors",
+     "00:52:11\tpw-dump\t--monitor --no-colors",
+     "00:53:15\tsystemctl\tsuspend"
+    ]
+   },
+   {
+    "check": "kit: a switch in an expander header takes a real pointer click",
+    "ok": false,
+    "t": 126.69,
+    "known": "kit",
+    "before": true,
+    "after": true
+   },
+   {
+    "check": "wait_text settings: 'Batterij opladen'",
+    "ok": true,
+    "t": 130.81,
+    "seconds": 0.35
+   },
+   {
+    "check": "power: title and breadcrumb Systeem > Energie en batterij",
+    "ok": true,
+    "t": 131.15,
+    "want": [
+     "Systeem",
+     "Energie en batterij"
+    ],
+    "got": [
+     "Systeem",
+     "Energie en batterij"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "power: system.battery.get and battery.charging.get read the UPower stand-in",
+    "ok": true,
+    "t": 132.17,
+    "battery": {
+     "present": true,
+     "percent": 76,
+     "state": "discharging",
+     "timeToEmpty": 9000,
+     "timeToFull": null,
+     "onAC": false,
+     "health": 88,
+     "cycles": 120,
+     "energyRate": 7.5
+    },
+    "charging": {
+     "available": true,
+     "supported": true,
+     "enabled": false,
+     "start": 75,
+     "end": 80,
+     "devices": [
+      "/org/freedesktop/UPower/devices/battery_BAT0"
+     ]
+    }
+   },
+   {
+    "check": "power: with UPower the battery hero shows (76 %)",
+    "ok": true,
+    "t": 136.04
+   },
+   {
+    "check": "power: with UPower and power-profiles-daemon st-power-battery shows",
+    "ok": true,
+    "t": 136.37
+   },
+   {
+    "check": "power: with UPower and power-profiles-daemon st-power-energy-saver shows",
+    "ok": true,
+    "t": 136.7
+   },
+   {
+    "check": "power: with UPower and power-profiles-daemon st-power-show-battery-percentage shows",
+    "ok": true,
+    "t": 137.05
+   },
+   {
+    "check": "power: with UPower and power-profiles-daemon st-power-charging shows",
+    "ok": true,
+    "t": 137.43
+   },
+   {
+    "check": "power: with UPower and power-profiles-daemon st-power-levels shows",
+    "ok": true,
+    "t": 137.76
+   },
+   {
+    "check": "power: no Netstroom card with a battery",
+    "ok": true,
+    "t": 138.13
+   },
+   {
+    "check": "power: Energiestand with power-profiles-daemon (Gebalanceerd)",
+    "ok": true,
+    "t": 138.47,
+    "labels": [
+     "",
+     "",
+     "Gebalanceerd",
+     ""
+    ],
+    "profiles": {
+     "available": true,
+     "writable": true,
+     "active": "balanced",
+     "choices": [
+      {
+       "id": "power-saver",
+       "disabled": false
+      },
+      {
+       "id": "balanced",
+       "disabled": false
+      },
+      {
+       "id": "performance",
+       "disabled": false
+      }
+     ],
+     "degraded": "",
+     "inhibited": ""
+    }
+   },
+   {
+    "check": "power: Beste prestaties sets ActiveProfile performance (Properties.Set)",
+    "ok": true,
+    "t": 141.2,
+    "calls": [
+     {
+      "path": "/org/freedesktop/UPower/PowerProfiles",
+      "iface": "org.freedesktop.UPower.PowerProfiles",
+      "method": "Set:ActiveProfile",
+      "args": "'performance'",
+      "interactive": false
+     }
+    ]
+   },
+   {
+    "check": "power: Altijd energiebesparing gebruiken sets ActiveProfile power-saver",
+    "ok": true,
+    "t": 143.84,
+    "calls": [
+     {
+      "path": "/org/freedesktop/UPower/PowerProfiles",
+      "iface": "org.freedesktop.UPower.PowerProfiles",
+      "method": "Set:ActiveProfile",
+      "args": "'performance'",
+      "interactive": false
+     },
+     {
+      "path": "/org/freedesktop/UPower/PowerProfiles",
+      "iface": "org.freedesktop.UPower.PowerProfiles",
+      "method": "Set:ActiveProfile",
+      "args": "'power-saver'",
+      "interactive": false
+     }
+    ]
+   },
+   {
+    "check": "power: Energiestand follows: Beste energie-efficiëntie",
+    "ok": true,
+    "t": 144.23
+   },
+   {
+    "check": "power: Energiebesparing automatisch inschakelen bij een laag batterijniveau writes power-saver-profile-on-low-battery",
+    "ok": true,
+    "t": 146.32,
+    "before": "true",
+    "after": "false"
+   },
+   {
+    "check": "power: Batterijpercentage writes show-battery-percentage",
+    "ok": true,
+    "t": 149.07,
+    "before": "false",
+    "after": "true"
+   },
+   {
+    "check": "mirror: show-battery-percentage reaches settings.json taskbar.batteryPercent",
+    "ok": true,
+    "t": 149.08,
+    "setting": true
+   },
+   {
+    "check": "mirror: the tray shows 76% next to the battery (taskbar/system.rs, section 8.2: step I)",
+    "ok": false,
+    "t": 149.49,
+    "known": "I"
+   },
+   {
+    "check": "power: Batterijpercentage follows an outside show-battery-percentage=false",
+    "ok": true,
+    "t": 149.89
+   },
+   {
+    "check": "power: Batterijgezondheid behouden sends EnableChargeThreshold(true), interactive",
+    "ok": true,
+    "t": 155.52,
+    "calls": [
+     {
+      "path": "/org/freedesktop/UPower/devices/battery_BAT0",
+      "iface": "org.freedesktop.UPower.Device",
+      "method": "EnableChargeThreshold",
+      "args": "(true,)",
+      "interactive": true
+     }
+    ]
+   },
+   {
+    "check": "power: battery.history reads GetHistory, oldest first",
+    "ok": true,
+    "t": 158.17,
+    "points": 25
+   },
+   {
+    "check": "power: Batterijniveaus draws the chart",
+    "ok": true,
+    "t": 158.61
+   },
+   {
+    "check": "power: Afgelopen 7 dagen asks UPower GetHistory over 604800 s",
+    "ok": true,
+    "t": 161.68,
+    "calls": [
+     "('charge', uint32 86400, uint32 200)",
+     "('charge', uint32 86400, uint32 200)",
+     "('charge', uint32 604800, uint32 200)"
+    ]
+   },
+   {
+    "check": "caps: the sensor stand-in gives accelerometer and ambientLight",
+    "ok": true,
+    "t": 162.34,
+    "caps": {
+     "session": "gnome",
+     "gnome": true,
+     "mouse": true,
+     "touchpad": false,
+     "pointingstick": false,
+     "tablet": false,
+     "touchscreen": false,
+     "thunderbolt": false,
+     "modem": false,
+     "ambientLight": true,
+     "accelerometer": true,
+     "privacyScreen": false,
+     "backlight": false,
+     "battery": false,
+     "hibernate": false,
+     "fingerprint": false,
+     "colorSensor": false,
+     "geoclue": true,
+     "tracker": true,
+     "usbguard": false,
+     "sshServer": false,
+     "userShare": false,
+     "malcontent": false,
+     "realmd": false,
+     "rygel": true,
+     "tecla": true,
+     "orca": true,
+     "simpleScan": true,
+     "securityCenter": false,
+     "insights": true,
+     "whoopsie": true
+    }
+   },
+   {
+    "check": "wait_text settings: 'Helderheid en kleur'",
+    "ok": true,
+    "t": 163.67,
+    "seconds": 0.44
+   },
+   {
+    "check": "display: title and breadcrumb Systeem > Beeldscherm",
+    "ok": true,
+    "t": 164.12,
+    "want": [
+     "Systeem",
+     "Beeldscherm"
+    ],
+    "got": [
+     "Systeem",
+     "Beeldscherm"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "display: Draaivergrendeling shows with an accelerometer",
+    "ok": true,
+    "t": 164.53
+   },
+   {
+    "check": "display: Draaivergrendeling writes orientation-lock",
+    "ok": true,
+    "t": 167.16,
+    "before": "false",
+    "after": "true"
+   },
+   {
+    "check": "display: Draaivergrendeling follows an outside orientation-lock=false",
+    "ok": true,
+    "t": 167.61
+   },
+   {
+    "check": "display: automatic brightness also needs a backlight (the virtual monitor has none)",
+    "ok": true,
+    "t": 169.22
+   },
+   {
+    "check": "wait_text settings: 'Opslagbeheer'",
+    "ok": true,
+    "t": 170.51,
+    "seconds": 0.48
+   },
+   {
+    "check": "storage: title and breadcrumb Systeem > Opslag",
+    "ok": true,
+    "t": 170.96,
+    "want": [
+     "Systeem",
+     "Opslag"
+    ],
+    "got": [
+     "Systeem",
+     "Opslag"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "storage: Opslaginzicht with its chevron",
+    "ok": true,
+    "t": 175.08
+   },
+   {
+    "check": "storage: the Opslaginzicht switch turns both purges on",
+    "ok": true,
+    "t": 176.25,
+    "trash": "true",
+    "temp": "true"
+   },
+   {
+    "check": "storage: the switch follows an outside write",
+    "ok": true,
+    "t": 176.68
+   },
+   {
+    "check": "wait_text settings: 'Opschoonschema’s configureren'",
+    "ok": true,
+    "t": 178.88,
+    "seconds": 0.92
+   },
+   {
+    "check": "storagesense: title and breadcrumb Systeem > Opslag > Opslaginzicht",
+    "ok": true,
+    "t": 179.49,
+    "want": [
+     "Systeem",
+     "Opslag",
+     "Opslaginzicht"
+    ],
+    "got": [
+     "Systeem",
+     "Opslag",
+     "Opslaginzicht"
+    ],
+    "crumbs": [
+     "crumb-system",
+     "crumb-storage"
+    ]
+   },
+   {
+    "check": "storagesense: no placeholder",
+    "ok": true,
+    "t": 186.11
+   },
+   {
+    "check": "storagesense: st-storagesense-remove-old-temp-files",
+    "ok": true,
+    "t": 186.63
+   },
+   {
+    "check": "storagesense: st-storagesense-storage-sense",
+    "ok": true,
+    "t": 187.17
+   },
+   {
+    "check": "storagesense: st-storagesense-old-files-age",
+    "ok": true,
+    "t": 187.7
+   },
+   {
+    "check": "storagesense: st-storagesense-run",
+    "ok": true,
+    "t": 188.15
+   },
+   {
+    "check": "storagesense: st-storagesense-empty-trash",
+    "ok": true,
+    "t": 188.65
+   },
+   {
+    "check": "storagesense: st-storagesense-delete-temp",
+    "ok": true,
+    "t": 189.16
+   },
+   {
+    "check": "storagesense: Opslaginzicht nu uitvoeren is off while both purges are off",
+    "ok": true,
+    "t": 189.67
+   },
+   {
+    "check": "storagesense: Tijdelijke bestanden opschonen writes remove-old-temp-files",
+    "ok": true,
+    "t": 191.06,
+    "before": "false",
+    "after": "true"
+   },
+   {
+    "check": "storagesense: Tijdelijke bestanden opschonen follows an outside remove-old-temp-files=false",
+    "ok": true,
+    "t": 191.55
+   },
+   {
+    "check": "storagesense: the Opslaginzicht switch on its page turns both purges on",
+    "ok": true,
+    "t": 192.87
+   },
+   {
+    "check": "storagesense: 14 dagen writes remove-old-trash-files true and old-files-age 14",
+    "ok": true,
+    "t": 196.53,
+    "age": "14"
+   },
+   {
+    "check": "storagesense: an outside age of 7 days is an option of its own, selected",
+    "ok": true,
+    "t": 197.0
+   },
+   {
+    "check": "wait_text settings: 'Opslaginzicht is uitgevoerd'",
+    "ok": true,
+    "t": 198.69,
+    "seconds": 0.47
+   },
+   {
+    "check": "storagesense: Opslaginzicht nu uitvoeren runs gsd's purge with the keys (nothing old enough here)",
+    "ok": true,
+    "t": 198.7,
+    "answer": {
+     "ok": true,
+     "age": 7,
+     "temp": {
+      "removed": 0,
+      "freed": 0,
+      "failed": 0
+     },
+     "trash": {
+      "removed": 0,
+      "freed": 0,
+      "failed": 0
+     },
+     "freed": 0
+    }
+   },
+   {
+    "check": "storagesense: Nooit writes remove-old-trash-files false (the age stays)",
+    "ok": true,
+    "t": 201.93
+   },
+   {
+    "check": "kit: a real pointer click on a kit dialog's button (Leegmaken)",
+    "ok": false,
+    "t": 210.92,
+    "known": "kit",
+    "click": {
+     "input": "clutter",
+     "x": 598,
+     "y": 490,
+     "rect": [
+      481,
+      474,
+      235,
+      32
+     ],
+     "name": "w11-dialog-primary",
+     "window": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "shell": {
+      "pointer": [
+       598,
+       490
+      ],
+      "focusPid": 2499
+     }
+    }
+   },
+   {
+    "check": "storagesense: Prullenbak nu leegmaken asks first, then empties the Prullenbak",
+    "ok": true,
+    "t": 212.38,
+    "asked": true
+   },
+   {
+    "check": "wait_text settings: 'Vensters uitlijnen'",
+    "ok": true,
+    "t": 213.72,
+    "seconds": 0.43
+   },
+   {
+    "check": "multitasking: title and breadcrumb Systeem > Multitasking",
+    "ok": true,
+    "t": 214.21,
+    "want": [
+     "Systeem",
+     "Multitasking"
+    ],
+    "got": [
+     "Systeem",
+     "Multitasking"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "multitasking: no placeholder",
+    "ok": true,
+    "t": 214.72
+   },
+   {
+    "check": "multitasking: st-multitasking-edge-tiling",
+    "ok": true,
+    "t": 221.32
+   },
+   {
+    "check": "multitasking: st-multitasking-taskbar-all-desktops",
+    "ok": true,
+    "t": 221.87
+   },
+   {
+    "check": "multitasking: st-multitasking-app-switcher-current-workspace-only",
+    "ok": true,
+    "t": 222.4
+   },
+   {
+    "check": "multitasking: st-multitasking-dynamic-workspaces",
+    "ok": true,
+    "t": 222.94
+   },
+   {
+    "check": "multitasking: st-multitasking-workspaces-only-on-primary",
+    "ok": true,
+    "t": 223.49
+   },
+   {
+    "check": "multitasking: st-multitasking-enable-hot-corners",
+    "ok": true,
+    "t": 224.07
+   },
+   {
+    "check": "multitasking: Vensters uitlijnen writes edge-tiling",
+    "ok": true,
+    "t": 226.84,
+    "before": "true",
+    "after": "false"
+   },
+   {
+    "check": "multitasking: Vensters uitlijnen follows an outside edge-tiling=true",
+    "ok": true,
+    "t": 227.59
+   },
+   {
+    "check": "multitasking: Op de taakbalk ... Op alle bureaubladen writes taskbar.allDesktops (amendment 12)",
+    "ok": true,
+    "t": 231.39,
+    "setting": {
+     "alignment": "center",
+     "search": "box",
+     "taskView": true,
+     "widgets": false,
+     "autoHide": false,
+     "allDisplays": true,
+     "multiDisplayApps": "window",
+     "showSeconds": false,
+     "batteryPercent": false,
+     "allDesktops": true,
+     "pinned": [
+      "win11shell-explorer.desktop",
+      "firefox_firefox.desktop",
+      "snap-store_snap-store.desktop",
+      "win11shell-settings.desktop"
+     ],
+     "tray": {
+      "hiddenMenu": true,
+      "shown": [],
+      "order": [],
+      "known": {}
+     }
+    }
+   },
+   {
+    "check": "multitasking: Alt+Tab on all desktops writes taskView.allDesktops and both GNOME switchers (amendment 12)",
+    "ok": true,
+    "t": 235.29,
+    "setting": {
+     "allDesktops": true
+    },
+    "apps": "false",
+    "windows": "false"
+   },
+   {
+    "check": "multitasking: an outside current-workspace-only true shows \"Alleen op het bureaublad dat ik gebruik\" and sets taskView.allDesktops false",
+    "ok": true,
+    "t": 235.82,
+    "setting": {
+     "allDesktops": false
+    }
+   },
+   {
+    "check": "multitasking: an outside current-workspace-only false shows \"Op alle bureaubladen\" and sets taskView.allDesktops true",
+    "ok": true,
+    "t": 236.32,
+    "setting": {
+     "allDesktops": true
+    }
+   },
+   {
+    "check": "multitasking: Vast aantal bureaubladen writes dynamic-workspaces false",
+    "ok": true,
+    "t": 238.19
+   },
+   {
+    "check": "multitasking: Aantal bureaubladen shows for a fixed number",
+    "ok": true,
+    "t": 238.73
+   },
+   {
+    "check": "multitasking: Aantal bureaubladen + writes num-workspaces 5",
+    "ok": true,
+    "t": 240.06,
+    "value": "5"
+   },
+   {
+    "check": "multitasking: an outside dynamic-workspaces true selects Lege bureaubladen automatisch verwijderen and hides the number",
+    "ok": true,
+    "t": 240.57
+   },
+   {
+    "check": "multitasking: Bureaubladen op alle beeldschermen writes workspaces-only-on-primary false",
+    "ok": true,
+    "t": 242.43
+   },
+   {
+    "check": "multitasking: Actieve hoek writes enable-hot-corners",
+    "ok": true,
+    "t": 244.97,
+    "before": "true",
+    "after": "false"
+   },
+   {
+    "check": "multitasking: Actieve hoek follows an outside enable-hot-corners=true",
+    "ok": true,
+    "t": 245.48
+   },
+   {
+    "check": "screentime: wellbeing.history reads gnome-shell's record",
+    "ok": true,
+    "t": 245.49,
+    "history": {
+     "available": true,
+     "today": "2026-11-17",
+     "active": false,
+     "parental": false,
+     "days": []
+    }
+   },
+   {
+    "check": "wait_text settings: 'Pauzeherinneringen'",
+    "ok": true,
+    "t": 246.93,
+    "seconds": 0.53
+   },
+   {
+    "check": "screentime: title and breadcrumb Systeem > Schermtijd",
+    "ok": true,
+    "t": 247.5,
+    "want": [
+     "Systeem",
+     "Schermtijd"
+    ],
+    "got": [
+     "Systeem",
+     "Schermtijd"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "screentime: no placeholder",
+    "ok": true,
+    "t": 252.46
+   },
+   {
+    "check": "screentime: the chart with gnome-shell's record, else Screen Time Unavailable",
+    "ok": true,
+    "t": 253.01,
+    "data": false
+   },
+   {
+    "check": "screentime: Schermtijd vastleggen writes history-enabled",
+    "ok": true,
+    "t": 254.43,
+    "before": "true",
+    "after": "false"
+   },
+   {
+    "check": "screentime: recording off shows GNOME's Screen Time Recording Disabled",
+    "ok": true,
+    "t": 254.97
+   },
+   {
+    "check": "screentime: Schermtijd vastleggen follows an outside history-enabled=true",
+    "ok": true,
+    "t": 255.51
+   },
+   {
+    "check": "screentime: Herinneringen voor je ogen adds eyesight to selected-breaks",
+    "ok": true,
+    "t": 257.42,
+    "value": "['eyesight']"
+   },
+   {
+    "check": "screentime: Herinneringen om te bewegen adds movement to selected-breaks",
+    "ok": true,
+    "t": 258.87,
+    "value": "['eyesight', 'movement']"
+   },
+   {
+    "check": "screentime: the movement schedule writes 180 s every 1800 s",
+    "ok": true,
+    "t": 262.92,
+    "duration": "180"
+   },
+   {
+    "check": "screentime: Geluiden writes play-sound of both breaks",
+    "ok": true,
+    "t": 266.55,
+    "movement": "false",
+    "eyesight": "false"
+   },
+   {
+    "check": "screentime: Limiet voor schermtijd writes daily-limit-enabled",
+    "ok": true,
+    "t": 269.15,
+    "before": "false",
+    "after": "true"
+   },
+   {
+    "check": "screentime: Dagelijkse limiet + 1 uur writes daily-limit-seconds (0.5 s after the last change)",
+    "ok": true,
+    "t": 270.98,
+    "value": "32400"
+   },
+   {
+    "check": "screentime: Grijswaarden writes grayscale",
+    "ok": true,
+    "t": 273.64,
+    "before": "true",
+    "after": "false"
+   },
+   {
+    "check": "screentime: Limiet voor schermtijd follows an outside daily-limit-enabled=false",
+    "ok": true,
+    "t": 274.85
+   },
+   {
+    "check": "screentime: Grijswaarden is insensitive while the limit is off",
+    "ok": true,
+    "t": 275.4,
+    "node": {
+     "active": false,
+     "sensitive": false
+    }
+   },
+   {
+    "check": "owned: no key of Systeem's pages is WinPoint-owned (no pointer card instead of a control)",
+    "ok": true,
+    "t": 275.41,
+    "owned": [],
+    "count": 32
+   },
+   {
+    "check": "owned: every bound key is available and writable here (allow/system.rs)",
+    "ok": true,
+    "t": 275.41,
+    "missing": []
+   },
+   {
+    "check": "owned: show-battery-percentage is Mirrored to taskbar.batteryPercent",
+    "ok": true,
+    "t": 275.42,
+    "item": {
+     "schema": "org.gnome.desktop.interface",
+     "path": "/org/gnome/desktop/interface/",
+     "key": "show-battery-percentage",
+     "allowed": true,
+     "available": true,
+     "writable": true,
+     "mode": "mirrored",
+     "setting": "taskbar.batteryPercent",
+     "method": null,
+     "value": false,
+     "default": false,
+     "isDefault": false,
+     "type": "b",
+     "range": null
+    }
+   },
+   {
+    "check": "notifications: title and breadcrumb Systeem > Meldingen",
+    "ok": true,
+    "t": 277.03,
+    "want": [
+     "Systeem",
+     "Meldingen"
+    ],
+    "got": [
+     "Systeem",
+     "Meldingen"
+    ],
+    "crumbs": [
+     "crumb-system"
+    ]
+   },
+   {
+    "check": "mirror: show-banners true is notifications.dnd false",
+    "ok": true,
+    "t": 277.03
+   },
+   {
+    "check": "mirror: Niet storen in Settings sets show-banners false",
+    "ok": true,
+    "t": 279.26,
+    "banners": "false"
+   },
+   {
+    "check": "mirror: the Snelle instellingen tile Niet storen is on",
+    "ok": true,
+    "t": 281.3,
+    "classes": [
+     "vertical",
+     "fo-tile",
+     "is-on"
+    ]
+   },
+   {
+    "check": "mirror: the tile in Snelle instellingen sets show-banners true again",
+    "ok": true,
+    "t": 282.76,
+    "banners": "true",
+    "input": "clutter"
+   },
+   {
+    "check": "mirror: an outside show-banners false reaches settings.json notifications.dnd",
+    "ok": true,
+    "t": 284.7
+   },
+   {
+    "check": "mirror: the Settings switch Niet storen follows",
+    "ok": true,
+    "t": 285.4
+   }
+  ],
+  "records": {
+   "maximize.1366": [
+    1100,
+    740
+   ],
+   "display.state": {
+    "supported": true,
+    "backend": "mutter",
+    "serial": 2,
+    "allowed": true,
+    "nightLightSupported": false,
+    "panelOrientationManaged": false,
+    "layoutMode": 1,
+    "supportsChangingLayoutMode": true,
+    "globalScaleRequired": false,
+    "monitors": [
+     {
+      "connector": "Meta-0",
+      "vendor": "MetaVendor",
+      "product": "MetaVirtualMonitor",
+      "serial": "0x00",
+      "displayName": "MetaVendor",
+      "builtin": false,
+      "forLease": false,
+      "underscanning": null,
+      "privacyScreen": null,
+      "minRefreshRate": null,
+      "colorMode": 0,
+      "rgbRange": 1,
+      "colorModes": [
+       0
+      ],
+      "modes": [
+       {
+        "id": "1440x900@60.000",
+        "width": 1440,
+        "height": 900,
+        "refresh": 60.0,
+        "preferredScale": 1.0,
+        "scales": [
+         1.0,
+         1.25,
+         1.3333333730697632,
+         1.5,
+         1.6666666269302368
+        ],
+        "current": true,
+        "preferred": true,
+        "interlaced": false,
+        "variable": false
+       }
+      ],
+      "current": "1440x900@60.000",
+      "preferred": "1440x900@60.000",
+      "logical": 0,
+      "x": 0,
+      "y": 0,
+      "scale": 1.0,
+      "transform": 0,
+      "primary": true
+     }
+    ],
+    "logical": [
+     {
+      "x": 0,
+      "y": 0,
+      "scale": 1.0,
+      "transform": 0,
+      "primary": true,
+      "monitors": [
+       "Meta-0"
+      ]
+     }
+    ]
+   },
+   "system.brightness.get": {
+    "available": false,
+    "value": null
+   },
+   "display.nightLight.status": {
+    "available": false,
+    "supported": false,
+    "active": false,
+    "disabledUntilTomorrow": false,
+    "temperature": null,
+    "sunrise": null,
+    "sunset": null
+   },
+   "displayBridge.ids": [
+    376426547,
+    376426548
+   ],
+   "keep.dialogs": {
+    "shell": [
+     "DisplayChangeDialog"
+    ],
+    "settings": 0,
+    "applied": 1.25
+   },
+   "sound.state": {
+    "available": true,
+    "server": "PulseAudio (on PipeWire 1.6.2)",
+    "version": "15.0.0",
+    "defaultSink": "w11-speakers",
+    "defaultSource": "w11-speakers.monitor",
+    "maxVolume": 153.0,
+    "outputs": [
+     {
+      "id": "w11-speakers",
+      "kind": "sink",
+      "title": "WinPoint Test Speakers",
+      "subtitle": "",
+      "device": "w11-speakers",
+      "port": null,
+      "card": null,
+      "profile": null,
+      "default": true,
+      "available": "unknown",
+      "icon": null,
+      "formFactor": null,
+      "bus": null
+     },
+     {
+      "id": "w11-headphones",
+      "kind": "sink",
+      "title": "WinPoint Test Headphones",
+      "subtitle": "",
+      "device": "w11-headphones",
+      "port": null,
+      "card": null,
+      "profile": null,
+      "default": false,
+      "available": "unknown",
+      "icon": null,
+      "formFactor": null,
+      "bus": null
+     }
+    ],
+    "inputs": [
+     {
+      "id": "w11-mic",
+      "kind": "source",
+      "title": "WinPoint Test Microphone",
+      "subtitle": "",
+      "device": "w11-mic",
+      "port": null,
+      "card": null,
+      "profile": null,
+      "default": false,
+      "available": "unknown",
+      "icon": null,
+      "formFactor": null,
+      "bus": null
+     }
+    ],
+    "sinks": [
+     {
+      "index": 35,
+      "name": "w11-speakers",
+      "description": "WinPoint Test Speakers",
+      "card": null,
+      "cardIndex": null,
+      "ports": [],
+      "activePort": null,
+      "volume": 100,
+      "channels": [
+       {
+        "position": "front-left",
+        "volume": 100.0
+       },
+       {
+        "position": "front-right",
+        "volume": 100.0
+       }
+      ],
+      "mute": false,
+      "default": true,
+      "baseVolume": 100.0,
+      "decibel": true,
+      "state": "suspended",
+      "icon": null,
+      "formFactor": null,
+      "bus": null,
+      "objectId": 35,
+      "monitor": "w11-speakers.monitor",
+      "canBalance": true,
+      "canFade": false,
+      "hasLfe": false,
+      "balance": 0.0,
+      "fade": 0.0,
+      "lfe": null,
+      "left": 100.0,
+      "right": 100.0
+     },
+     {
+      "index": 44,
+      "name": "w11-headphones",
+      "description": "WinPoint Test Headphones",
+      "card": null,
+      "cardIndex": null,
+      "ports": [],
+      "activePort": null,
+      "volume": 100,
+      "channels": [
+       {
+        "position": "front-left",
+        "volume": 100.0
+       },
+       {
+        "position": "front-right",
+        "volume": 100.0
+       }
+      ],
+      "mute": false,
+      "default": false,
+      "baseVolume": 100.0,
+      "decibel": true,
+      "state": "suspended",
+      "icon": null,
+      "formFactor": null,
+      "bus": null,
+      "objectId": 43,
+      "monitor": "w11-headphones.monitor",
+      "canBalance": true,
+      "canFade": false,
+      "hasLfe": false,
+      "balance": 0.0,
+      "fade": 0.0,
+      "lfe": null,
+      "left": 100.0,
+      "right": 100.0
+     }
+    ],
+    "sources": [
+     {
+      "index": 35,
+      "name": "w11-speakers.monitor",
+      "description": "Monitor of WinPoint Test Speakers",
+      "card": null,
+      "cardIndex": null,
+      "ports": [],
+      "activePort": null,
+      "volume": 100,
+      "channels": [
+       {
+        "position": "front-left",
+        "volume": 100.0
+       },
+       {
+        "position": "front-right",
+        "volume": 100.0
+       }
+      ],
+      "mute": false,
+      "default": true,
+      "baseVolume": 100.0,
+      "decibel": true,
+      "state": "suspended",
+      "icon": null,
+      "formFactor": null,
+      "bus": null,
+      "objectId": 35,
+      "monitorOf": "w11-speakers",
+      "canBalance": true,
+      "canFade": false,
+      "hasLfe": false,
+      "balance": 0.0,
+      "fade": 0.0,
+      "lfe": null,
+      "left": 100.0,
+      "right": 100.0
+     },
+     {
+      "index": 44,
+      "name": "w11-headphones.monitor",
+      "description": "Monitor of WinPoint Test Headphones",
+      "card": null,
+      "cardIndex": null,
+      "ports": [],
+      "activePort": null,
+      "volume": 100,
+      "channels": [
+       {
+        "position": "front-left",
+        "volume": 100.0
+       },
+       {
+        "position": "front-right",
+        "volume": 100.0
+       }
+      ],
+      "mute": false,
+      "default": false,
+      "baseVolume": 100.0,
+      "decibel": true,
+      "state": "suspended",
+      "icon": null,
+      "formFactor": null,
+      "bus": null,
+      "objectId": 43,
+      "monitorOf": "w11-headphones",
+      "canBalance": true,
+      "canFade": false,
+      "hasLfe": false,
+      "balance": 0.0,
+      "fade": 0.0,
+      "lfe": null,
+      "left": 100.0,
+      "right": 100.0
+     },
+     {
+      "index": 46,
+      "name": "w11-mic",
+      "description": "WinPoint Test Microphone",
+      "card": null,
+      "cardIndex": null,
+      "ports": [],
+      "activePort": null,
+      "volume": 100,
+      "channels": [
+       {
+        "position": "front-left",
+        "volume": 100.0
+       },
+       {
+        "position": "front-right",
+        "volume": 100.0
+       }
+      ],
+      "mute": false,
+      "default": false,
+      "baseVolume": 100.0,
+      "decibel": true,
+      "state": "suspended",
+      "icon": null,
+      "formFactor": null,
+      "bus": null,
+      "objectId": 44,
+      "monitorOf": null,
+      "canBalance": true,
+      "canFade": false,
+      "hasLfe": false,
+      "balance": 0.0,
+      "fade": 0.0,
+      "lfe": null,
+      "left": 100.0,
+      "right": 100.0
+     }
+    ],
+    "cards": [],
+    "streams": [],
+    "eventVolume": 100,
+    "eventMute": false
+   },
+   "system.audio.get": {
+    "available": true,
+    "volume": 50,
+    "muted": false,
+    "sinks": [
+     {
+      "id": 35,
+      "name": "WinPoint Test Speakers",
+      "default": false
+     },
+     {
+      "id": 43,
+      "name": "WinPoint Test Headphones",
+      "default": true
+     }
+    ]
+   },
+   "sound.alerts.set click": {
+    "alert": "click",
+    "choices": [
+     "none",
+     "default",
+     "click",
+     "string",
+     "swing",
+     "hum"
+    ],
+    "available": [
+     "click",
+     "string",
+     "swing",
+     "hum"
+    ],
+    "eventSounds": true,
+    "theme": "__custom",
+    "defaultTheme": "Yaru",
+    "writable": true,
+    "startupSound": true,
+    "startupAvailable": true,
+    "startupWritable": true,
+    "ok": true
+   },
+   "mixer.stream": {
+    "index": 69,
+    "kind": "output",
+    "app": "pw-play",
+    "icon": null,
+    "appId": null,
+    "name": "/dev/zero",
+    "role": "music",
+    "volume": 100,
+    "mute": false,
+    "corked": false,
+    "hasVolume": true,
+    "volumeWritable": true,
+    "device": "w11-speakers"
+   },
+   "kit.headerControl": {
+    "click": {
+     "input": "clutter",
+     "x": 1243,
+     "y": 150,
+     "rect": [
+      1223,
+      140,
+      40,
+      20
+     ],
+     "name": "notifications-toggle",
+     "window": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "shell": {
+      "pointer": [
+       1243,
+       150
+      ],
+      "focusPid": 1366
+     }
+    },
+    "before": true,
+    "after": true
+   },
+   "standin.upower": {
+    "pid": 2369,
+    "bus": "system",
+    "name": "org.freedesktop.UPower",
+    "objects": [
+     "/org/freedesktop/UPower",
+     "/org/freedesktop/UPower/devices/DisplayDevice",
+     "/org/freedesktop/UPower/devices/battery_BAT0",
+     "/org/freedesktop/UPower/devices/line_power_AC"
+    ]
+   },
+   "standin.power-profiles": {
+    "pid": 2373,
+    "bus": "system",
+    "name": "org.freedesktop.UPower.PowerProfiles",
+    "objects": [
+     "/org/freedesktop/UPower/PowerProfiles"
+    ]
+   },
+   "standin.sensor-proxy": {
+    "pid": 2493,
+    "bus": "system",
+    "name": "net.hadess.SensorProxy",
+    "objects": [
+     "/net/hadess/SensorProxy"
+    ]
+   },
+   "maximize.2499": [
+    1440,
+    852
+   ],
+   "power.battery": {
+    "battery": {
+     "present": true,
+     "percent": 76,
+     "state": "discharging",
+     "timeToEmpty": 9000,
+     "timeToFull": null,
+     "onAC": false,
+     "health": 88,
+     "cycles": 120,
+     "energyRate": 7.5
+    },
+    "charging": {
+     "available": true,
+     "supported": true,
+     "enabled": false,
+     "start": 75,
+     "end": 80,
+     "devices": [
+      "/org/freedesktop/UPower/devices/battery_BAT0"
+     ]
+    },
+    "profiles": {
+     "available": true,
+     "writable": true,
+     "active": "balanced",
+     "choices": [
+      {
+       "id": "power-saver",
+       "disabled": false
+      },
+      {
+       "id": "balanced",
+       "disabled": false
+      },
+      {
+       "id": "performance",
+       "disabled": false
+      }
+     ],
+     "degraded": "",
+     "inhibited": ""
+    }
+   },
+   "caps.withStandIns": {
+    "session": "gnome",
+    "gnome": true,
+    "mouse": true,
+    "touchpad": false,
+    "pointingstick": false,
+    "tablet": false,
+    "touchscreen": false,
+    "thunderbolt": false,
+    "modem": false,
+    "ambientLight": true,
+    "accelerometer": true,
+    "privacyScreen": false,
+    "backlight": false,
+    "battery": false,
+    "hibernate": false,
+    "fingerprint": false,
+    "colorSensor": false,
+    "geoclue": true,
+    "tracker": true,
+    "usbguard": false,
+    "sshServer": false,
+    "userShare": false,
+    "malcontent": false,
+    "realmd": false,
+    "rygel": true,
+    "tecla": true,
+    "orca": true,
+    "simpleScan": true,
+    "securityCenter": false,
+    "insights": true,
+    "whoopsie": true
+   },
+   "storage.cleanTemp sense": {
+    "ok": true,
+    "age": 7,
+    "temp": {
+     "removed": 0,
+     "freed": 0,
+     "failed": 0
+    },
+    "trash": {
+     "removed": 0,
+     "freed": 0,
+     "failed": 0
+    },
+    "freed": 0
+   },
+   "storagesense.emptyDialog.click": {
+    "input": "clutter",
+    "x": 598,
+    "y": 490,
+    "rect": [
+     481,
+     474,
+     235,
+     32
+    ],
+    "name": "w11-dialog-primary",
+    "window": [
+     0,
+     0,
+     1440,
+     852
+    ],
+    "shell": {
+     "pointer": [
+      598,
+      490
+     ],
+     "focusPid": 2499
+    }
+   },
+   "storagesense.emptyDialog": "the real click did not reach the button; dev click",
+   "wellbeing.history": {
+    "available": true,
+    "today": "2026-11-17",
+    "active": false,
+    "parental": false,
+    "days": []
+   },
+   "owned.items": [
+    {
+     "schema": "org.gnome.settings-daemon.plugins.color",
+     "key": "night-light-enabled",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.color",
+     "key": "night-light-temperature",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.color",
+     "key": "night-light-schedule-automatic",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.color",
+     "key": "night-light-schedule-from",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.color",
+     "key": "night-light-schedule-to",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "ambient-enabled",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "privacy-screen",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.peripherals.touchscreen",
+     "key": "orientation-lock",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.mutter.wayland",
+     "key": "xwayland-scaling-factor",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-button-action",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.settings-daemon.plugins.power",
+     "key": "power-saver-profile-on-low-battery",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.interface",
+     "key": "show-battery-percentage",
+     "mode": "mirrored",
+     "setting": "taskbar.batteryPercent",
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-trash-files",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remove-old-temp-files",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "old-files-age",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.mutter",
+     "key": "edge-tiling",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.mutter",
+     "key": "dynamic-workspaces",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.mutter",
+     "key": "workspaces-only-on-primary",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "num-workspaces",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-hot-corners",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.shell.app-switcher",
+     "key": "current-workspace-only",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.shell.window-switcher",
+     "key": "current-workspace-only",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "history-enabled",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-enabled",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "daily-limit-seconds",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.screen-time-limits",
+     "key": "grayscale",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.break-reminders",
+     "key": "selected-breaks",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "duration-seconds",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "interval-seconds",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.break-reminders.movement",
+     "key": "play-sound",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    },
+    {
+     "schema": "org.gnome.desktop.break-reminders.eyesight",
+     "key": "play-sound",
+     "mode": "write",
+     "setting": null,
+     "available": true,
+     "writable": true
+    }
+   ],
+   "mirror.quick": {
+    "open": "quick"
+   },
+   "mirror.tileClick": {
+    "input": "clutter",
+    "x": 1141,
+    "y": 666,
+    "rect": [
+     1094,
+     642,
+     94,
+     48
+    ],
+    "name": null,
+    "window": [
+     0,
+     0,
+     1440,
+     900
+    ],
+    "shell": {
+     "pointer": [
+      1141,
+      666
+     ],
+     "focusPid": 521
+    }
+   }
+  },
+  "shots": [
+   "display.nl.png",
+   "display-more.nl.png",
+   "display-multiple.nl.png",
+   "display-keep.nl.png",
+   "nightlight.nl.png",
+   "display-advanced.nl.png",
+   "display-advanced-more.nl.png",
+   "sound.nl.png",
+   "sound-more.nl.png",
+   "sound-alerts.nl.png",
+   "sound-device.nl.png",
+   "sound-device-more.nl.png",
+   "sound-devices.nl.png",
+   "volume-mixer.nl.png",
+   "volume-mixer-more.nl.png",
+   "volume-mixer-app.nl.png",
+   "power.nl.png",
+   "power-more.nl.png",
+   "power-sleep.nl.png",
+   "power-restart.nl.png",
+   "power-battery.nl.png",
+   "power-battery-more.nl.png",
+   "power-saver.nl.png",
+   "power-levels.nl.png",
+   "display-rotation.nl.png",
+   "storage.nl.png",
+   "storage-more.nl.png",
+   "storagesense.nl.png",
+   "storagesense-more.nl.png",
+   "storagesense-empty.nl.png",
+   "multitasking.nl.png",
+   "multitasking-more.nl.png",
+   "screentime.nl.png",
+   "screentime-more.nl.png",
+   "screentime-breaks.nl.png",
+   "screentime-limits.nl.png",
+   "mirror-quick.nl.png"
+  ],
+  "error": null,
+  "seconds": 285.98,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 521,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 521,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 521,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [
+   "kit: a switch in an expander header takes a real pointer click",
+   "mirror: the tray shows 76% next to the battery (taskbar/system.rs, section 8.2: step I)",
+   "kit: a real pointer click on a kit dialog's button (Leegmaken)"
+  ],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=6402bf8cf28dc53d58afc4e86afb96ed",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 521,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 521
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "display-advanced",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "sound",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "sound-devices",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "volume-mixer",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "power",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "notifications",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "display",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "storage",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "multitasking",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "screentime",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "notifications",
+     "exit": 0,
+     "seconds": 0.06
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "display.nl.png",
+    "group": "scenario",
+    "bytes": 338829,
+    "area": null
+   },
+   {
+    "file": "display-more.nl.png",
+    "group": "scenario",
+    "bytes": 334817,
+    "area": null
+   },
+   {
+    "file": "display-multiple.nl.png",
+    "group": "scenario",
+    "bytes": 333087,
+    "area": null
+   },
+   {
+    "file": "display-keep.nl.png",
+    "group": "scenario",
+    "bytes": 830569,
+    "area": null
+   },
+   {
+    "file": "nightlight.nl.png",
+    "group": "scenario",
+    "bytes": 280731,
+    "area": null
+   },
+   {
+    "file": "display-advanced.nl.png",
+    "group": "scenario",
+    "bytes": 337411,
+    "area": null
+   },
+   {
+    "file": "display-advanced-more.nl.png",
+    "group": "scenario",
+    "bytes": 337411,
+    "area": null
+   },
+   {
+    "file": "sound.nl.png",
+    "group": "scenario",
+    "bytes": 326094,
+    "area": null
+   },
+   {
+    "file": "sound-more.nl.png",
+    "group": "scenario",
+    "bytes": 322099,
+    "area": null
+   },
+   {
+    "file": "sound-alerts.nl.png",
+    "group": "scenario",
+    "bytes": 246321,
+    "area": null
+   },
+   {
+    "file": "sound-device.nl.png",
+    "group": "scenario",
+    "bytes": 296922,
+    "area": null
+   },
+   {
+    "file": "sound-device-more.nl.png",
+    "group": "scenario",
+    "bytes": 296922,
+    "area": null
+   },
+   {
+    "file": "sound-devices.nl.png",
+    "group": "scenario",
+    "bytes": 288047,
+    "area": null
+   },
+   {
+    "file": "volume-mixer.nl.png",
+    "group": "scenario",
+    "bytes": 300158,
+    "area": null
+   },
+   {
+    "file": "volume-mixer-more.nl.png",
+    "group": "scenario",
+    "bytes": 300158,
+    "area": null
+   },
+   {
+    "file": "volume-mixer-app.nl.png",
+    "group": "scenario",
+    "bytes": 300289,
+    "area": null
+   },
+   {
+    "file": "power.nl.png",
+    "group": "scenario",
+    "bytes": 344856,
+    "area": null
+   },
+   {
+    "file": "power-more.nl.png",
+    "group": "scenario",
+    "bytes": 333266,
+    "area": null
+   },
+   {
+    "file": "power-sleep.nl.png",
+    "group": "scenario",
+    "bytes": 348504,
+    "area": null
+   },
+   {
+    "file": "power-restart.nl.png",
+    "group": "scenario",
+    "bytes": 271768,
+    "area": null
+   },
+   {
+    "file": "power-battery.nl.png",
+    "group": "scenario",
+    "bytes": 332826,
+    "area": null
+   },
+   {
+    "file": "power-battery-more.nl.png",
+    "group": "scenario",
+    "bytes": 337518,
+    "area": null
+   },
+   {
+    "file": "power-saver.nl.png",
+    "group": "scenario",
+    "bytes": 335308,
+    "area": null
+   },
+   {
+    "file": "power-levels.nl.png",
+    "group": "scenario",
+    "bytes": 341322,
+    "area": null
+   },
+   {
+    "file": "display-rotation.nl.png",
+    "group": "scenario",
+    "bytes": 338395,
+    "area": null
+   },
+   {
+    "file": "storage.nl.png",
+    "group": "scenario",
+    "bytes": 319444,
+    "area": null
+   },
+   {
+    "file": "storage-more.nl.png",
+    "group": "scenario",
+    "bytes": 319363,
+    "area": null
+   },
+   {
+    "file": "storagesense.nl.png",
+    "group": "scenario",
+    "bytes": 339667,
+    "area": null
+   },
+   {
+    "file": "storagesense-more.nl.png",
+    "group": "scenario",
+    "bytes": 339669,
+    "area": null
+   },
+   {
+    "file": "storagesense-empty.nl.png",
+    "group": "scenario",
+    "bytes": 272985,
+    "area": null
+   },
+   {
+    "file": "multitasking.nl.png",
+    "group": "scenario",
+    "bytes": 332247,
+    "area": null
+   },
+   {
+    "file": "multitasking-more.nl.png",
+    "group": "scenario",
+    "bytes": 332540,
+    "area": null
+   },
+   {
+    "file": "screentime.nl.png",
+    "group": "scenario",
+    "bytes": 343631,
+    "area": null
+   },
+   {
+    "file": "screentime-more.nl.png",
+    "group": "scenario",
+    "bytes": 329701,
+    "area": null
+   },
+   {
+    "file": "screentime-breaks.nl.png",
+    "group": "scenario",
+    "bytes": 331020,
+    "area": null
+   },
+   {
+    "file": "screentime-limits.nl.png",
+    "group": "scenario",
+    "bytes": 332050,
+    "area": null
+   },
+   {
+    "file": "mirror-quick.nl.png",
+    "group": "scenario",
+    "bytes": 86883,
+    "area": null
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "settings",
+    "source": "Win11 Instellingen",
+    "title": "Win11 Instellingen",
+    "body": "“Energie en batterij – Instellingen” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-system.out/display.nl.png",
+  "tests/gnome/scenarios/settings-system.out/display-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/display-multiple.nl.png",
+  "tests/gnome/scenarios/settings-system.out/display-keep.nl.png",
+  "tests/gnome/scenarios/settings-system.out/nightlight.nl.png",
+  "tests/gnome/scenarios/settings-system.out/display-advanced.nl.png",
+  "tests/gnome/scenarios/settings-system.out/display-advanced-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/sound.nl.png",
+  "tests/gnome/scenarios/settings-system.out/sound-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/sound-alerts.nl.png",
+  "tests/gnome/scenarios/settings-system.out/sound-device.nl.png",
+  "tests/gnome/scenarios/settings-system.out/sound-device-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/sound-devices.nl.png",
+  "tests/gnome/scenarios/settings-system.out/volume-mixer.nl.png",
+  "tests/gnome/scenarios/settings-system.out/volume-mixer-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/volume-mixer-app.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-sleep.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-restart.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-battery.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-battery-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-saver.nl.png",
+  "tests/gnome/scenarios/settings-system.out/power-levels.nl.png",
+  "tests/gnome/scenarios/settings-system.out/display-rotation.nl.png",
+  "tests/gnome/scenarios/settings-system.out/storage.nl.png",
+  "tests/gnome/scenarios/settings-system.out/storage-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/storagesense.nl.png",
+  "tests/gnome/scenarios/settings-system.out/storagesense-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/storagesense-empty.nl.png",
+  "tests/gnome/scenarios/settings-system.out/multitasking.nl.png",
+  "tests/gnome/scenarios/settings-system.out/multitasking-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/screentime.nl.png",
+  "tests/gnome/scenarios/settings-system.out/screentime-more.nl.png",
+  "tests/gnome/scenarios/settings-system.out/screentime-breaks.nl.png",
+  "tests/gnome/scenarios/settings-system.out/screentime-limits.nl.png",
+  "tests/gnome/scenarios/settings-system.out/mirror-quick.nl.png"
+ ]
+}

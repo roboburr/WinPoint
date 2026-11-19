@@ -1,0 +1,6955 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-17 00:42:35",
+ "seconds": 350.3,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 515,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 742158,
+   "rss_kb": 1022092,
+   "processes": 19,
+   "t": 32.1
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 521302,
+   "rss_kb": 774612
+  },
+  "minMemAvailableKb": 5396668,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 304503,
+    "rss_kb": 375588
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 220906,
+    "rss_kb": 250264
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 84776,
+    "rss_kb": 127144
+   },
+   "glycin-svg": {
+    "count": 2,
+    "pss_kb": 42924,
+    "rss_kb": 68592
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 24491,
+    "rss_kb": 56944
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 15975,
+    "rss_kb": 34740
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 15925,
+    "rss_kb": 24840
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 12999,
+    "rss_kb": 21696
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 12192,
+    "rss_kb": 20668
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4224,
+    "rss_kb": 11764
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1435,
+    "rss_kb": 10024
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 793,
+    "rss_kb": 8004
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 759,
+    "rss_kb": 7940
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 195,
+    "rss_kb": 2624
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 61,
+    "rss_kb": 1260
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 315272,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 231213,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 84937,
+    "first": 1.5
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 31233,
+    "first": 7.8
+   },
+   "glycin-svg": {
+    "pss_kb": 28877,
+    "first": 1.5
+   },
+   "ibus-extension-": {
+    "pss_kb": 18843,
+    "first": 1.5
+   },
+   "win11-panel": {
+    "pss_kb": 15999,
+    "first": 2.1
+   },
+   "win11-app": {
+    "pss_kb": 13730,
+    "first": 7.8
+   },
+   "glycin-image-rs": {
+    "pss_kb": 8820,
+    "first": 1.5
+   },
+   "ibus-daemon": {
+    "pss_kb": 4251,
+    "first": 1.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 806,
+    "first": 2.1
+   },
+   "ibus-memconf": {
+    "pss_kb": 791,
+    "first": 1.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 769,
+    "first": 0.5
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 197,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 65,
+    "first": 0.0
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/build/native-release",
+  "exit": 0,
+  "seconds": 63.1,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a"
+  }
+ },
+ "guardStubCalls": [
+  "00:43:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:43:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:43:55\tpw-dump\t--monitor --no-colors",
+  "00:43:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:43:57\tpw-dump\t--monitor --no-colors",
+  "00:43:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:01\tpw-dump\t--monitor --no-colors",
+  "00:44:01\tpw-dump\t--monitor --no-colors",
+  "00:44:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:03\tpw-dump\t--monitor --no-colors",
+  "00:44:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:07\tpw-dump\t--monitor --no-colors",
+  "00:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:09\tpw-dump\t--monitor --no-colors",
+  "00:44:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:15\tpw-dump\t--monitor --no-colors",
+  "00:44:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:25\tpw-dump\t--monitor --no-colors",
+  "00:44:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:31\tpw-dump\t--monitor --no-colors",
+  "00:44:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:55\tpw-dump\t--monitor --no-colors",
+  "00:44:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:44:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:01\tpw-dump\t--monitor --no-colors",
+  "00:45:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:45:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:46:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:47:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "00:48:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 133,
+  "maxScanSeconds": 0.084,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-a11y.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.82,
+    "args": {
+     "key": "run/stubs mode"
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.42,
+    "args": {
+     "spec": "settings:accessibility"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "accessibility",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1473,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 2.84,
+    "args": {
+     "name": "accessibility.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "accessibility.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 261,
+      "meanLevel": 42.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 2.85,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.85,
+    "args": {
+     "key": "caps"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 4.2,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-accessibility-always-show-universal-access-status"
+    },
+    "result": {
+     "clicked": "st-accessibility-always-show-universal-access-status"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 4.22,
+    "args": {
+     "schema": "org.gnome.desktop.a11y",
+     "key": "always-show-universal-access-status",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 4.22,
+    "args": {
+     "schema": "org.gnome.desktop.a11y",
+     "key": "always-show-universal-access-status",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "native",
+    "t": 4.34,
+    "args": {
+     "native": "flyout",
+     "name": "quick"
+    },
+    "result": {
+     "open": "quick"
+    }
+   },
+   {
+    "step": "native",
+    "t": 4.53,
+    "args": {
+     "native": "click",
+     "name": "qs-tile-accessibility-main"
+    },
+    "result": {
+     "clicked": "qs-tile-accessibility-main"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.98,
+    "args": {
+     "name": "quick-accessibility.nl"
+    },
+    "result": {
+     "png": "quick-accessibility.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 703,
+      "meanLevel": 39.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 6.06,
+    "args": {
+     "native": "click",
+     "name": "qs-a11y-stickykeys-enable"
+    },
+    "result": {
+     "clicked": "qs-a11y-stickykeys-enable"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 6.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 6.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "native",
+    "t": 6.13,
+    "args": {
+     "native": "click",
+     "name": "qs-a11y-stickykeys-enable"
+    },
+    "result": {
+     "clicked": "qs-a11y-stickykeys-enable"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 6.13,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 6.13,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "native",
+    "t": 6.26,
+    "args": {
+     "native": "flyout",
+     "name": "quick"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "dev",
+    "t": 6.46,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-accessibility-always-show-universal-access-status"
+    },
+    "result": {
+     "clicked": "st-accessibility-always-show-universal-access-status"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 6.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y",
+     "key": "always-show-universal-access-status",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 6.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y",
+     "key": "always-show-universal-access-status",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 6.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y",
+     "key": "always-show-universal-access-status",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 6.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y",
+     "key": "always-show-universal-access-status",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 7.74,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 7.75,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 8.43,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null
+    },
+    "result": "'reduce'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 8.43,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null
+    },
+    "result": "'reduce'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 8.57,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null,
+     "value": "'no-preference'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 8.66,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-animations",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 8.66,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-animations",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "backend",
+    "t": 8.74,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 9.15,
+    "args": {
+     "spec": "settings:textsize"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "textsize",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.16,
+    "args": {
+     "name": "textsize.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "textsize.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 247,
+      "meanLevel": 39.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 11.38,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "text-scaling-factor",
+     "path": null,
+     "value": "1.5"
+    }
+   },
+   {
+    "step": "record",
+    "t": 12.55,
+    "args": {
+     "key": "text height 100% -> 150%"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 13.12,
+    "args": {
+     "name": "textsize-150.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "textsize-150.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 290,
+      "meanLevel": 43.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 13.12,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "text-scaling-factor",
+     "path": null,
+     "value": "1.0"
+    }
+   },
+   {
+    "step": "record",
+    "t": 15.85,
+    "args": {
+     "key": "text size after the click at 125"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 17.42,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "text-scaling-factor",
+     "path": null
+    },
+    "result": "1.25"
+   },
+   {
+    "step": "record",
+    "t": 17.42,
+    "args": {
+     "key": "text-scaling-factor after Toepassen"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 17.42,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "text-scaling-factor",
+     "path": null,
+     "value": "1.0"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 17.42,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 17.92,
+    "args": {
+     "spec": "settings:visualeffects"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "visualeffects",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 19.35,
+    "args": {
+     "name": "visualeffects.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "visualeffects.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 277,
+      "meanLevel": 42.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 19.51,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.51,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "overlay-scrolling",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.92,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "overlay-scrolling",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.92,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "overlay-scrolling",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 20.01,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "overlay-scrolling",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null
+    },
+    "result": "'reduce'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null
+    },
+    "result": "'reduce'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-animations",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-animations",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "reduced-motion",
+     "path": null,
+     "value": "'no-preference'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.72,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-animations",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.72,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "enable-animations",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.22,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "show-status-shapes",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.22,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "show-status-shapes",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "screenshot",
+    "t": 22.89,
+    "args": {
+     "name": "visualeffects-shapes.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "visualeffects-shapes.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 297,
+      "meanLevel": 42.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 22.9,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "show-status-shapes",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.22,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 24.7,
+    "args": {
+     "spec": "settings:contrast"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "contrast",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 26.08,
+    "args": {
+     "name": "contrast.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "contrast.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 282,
+      "meanLevel": 42.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 28.14,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 28.68,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 28.68,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "screenshot",
+    "t": 29.46,
+    "args": {
+     "name": "contrast-high.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "contrast-high.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 115,
+      "meanLevel": 42.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 32.15,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 32.15,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 32.16,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 32.29,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.interface",
+     "key": "high-contrast",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 33.83,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 34.31,
+    "args": {
+     "spec": "settings:mousepointer"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "mousepointer",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 35.74,
+    "args": {
+     "name": "mousepointer.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mousepointer.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 275,
+      "meanLevel": 39.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 37.46,
+    "args": {
+     "key": "size label after each click"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 38.02,
+    "args": {
+     "name": "mousepointer-size.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mousepointer-size.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 278,
+      "meanLevel": 39.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 38.02,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-size",
+     "path": null
+    },
+    "result": "48"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 38.02,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-size",
+     "path": null
+    },
+    "result": "48"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 38.03,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-size",
+     "path": null,
+     "value": "96"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 38.17,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-size",
+     "path": null,
+     "value": "24"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 38.31,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 38.32,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 38.77,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 38.77,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 38.92,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 39.07,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 39.22,
+    "args": {
+     "key": "touchscreen in caps"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 39.37,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 39.87,
+    "args": {
+     "spec": "settings:textcursor"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "textcursor",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 41.34,
+    "args": {
+     "name": "textcursor.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "textcursor.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 271,
+      "meanLevel": 40.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 41.96,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-blink",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 41.96,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-blink",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 42.12,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-blink",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 44.49,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "cursor-blink-time",
+     "path": null
+    },
+    "result": "500"
+   },
+   {
+    "step": "record",
+    "t": 44.49,
+    "args": {
+     "key": "cursor-blink-time after the click"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 44.65,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 45.15,
+    "args": {
+     "spec": "settings:magnifier"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "magnifier",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 47.33,
+    "args": {
+     "name": "magnifier.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "magnifier.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 294,
+      "meanLevel": 44.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 47.99,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-magnifier-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 47.99,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-magnifier-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 47.99,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-magnifier-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 49.84,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mag-factor",
+     "path": null
+    },
+    "result": "2.25"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 49.84,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mag-factor",
+     "path": null
+    },
+    "result": "2.25"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 50.01,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mag-factor",
+     "path": null,
+     "value": "3.0"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 50.84,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mag-factor",
+     "path": null
+    },
+    "result": "2.75"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 50.84,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mag-factor",
+     "path": null
+    },
+    "result": "2.75"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 53.23,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "lens-mode",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 53.23,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "lens-mode",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 53.23,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "screen-position",
+     "path": null
+    },
+    "result": "'top-half'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 53.23,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "screen-position",
+     "path": null
+    },
+    "result": "'top-half'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 55.82,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "lens-mode",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 55.82,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "lens-mode",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 55.82,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "screen-position",
+     "path": null
+    },
+    "result": "'full-screen'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 55.82,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "screen-position",
+     "path": null
+    },
+    "result": "'full-screen'"
+   },
+   {
+    "step": "backend",
+    "t": 56.02,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.02,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "invert-lightness",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "invert-lightness",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.54,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "invert-lightness",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 56.74,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "invert-lightness",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 57.15,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 57.15,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "scroll-at-edges",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 57.68,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "scroll-at-edges",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 57.68,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "scroll-at-edges",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 57.9,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "scroll-at-edges",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 61.2,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 61.2,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mouse-tracking",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 61.74,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mouse-tracking",
+     "path": null
+    },
+    "result": "'none'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 61.99,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mouse-tracking",
+     "path": null,
+     "value": "'proportional'"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 62.73,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 62.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "focus-tracking",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 63.32,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "focus-tracking",
+     "path": null
+    },
+    "result": "'none'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 63.32,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "focus-tracking",
+     "path": null
+    },
+    "result": "'none'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 63.56,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "focus-tracking",
+     "path": null,
+     "value": "'proportional'"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 64.33,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 64.33,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "caret-tracking",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 64.89,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "caret-tracking",
+     "path": null
+    },
+    "result": "'none'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 64.9,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "caret-tracking",
+     "path": null
+    },
+    "result": "'none'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 65.16,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "caret-tracking",
+     "path": null,
+     "value": "'centered'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 68.26,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mouse-tracking",
+     "path": null
+    },
+    "result": "'push'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 68.26,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "mouse-tracking",
+     "path": null
+    },
+    "result": "'push'"
+   },
+   {
+    "step": "screenshot",
+    "t": 68.84,
+    "args": {
+     "name": "magnifier-follow.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "magnifier-follow.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 290,
+      "meanLevel": 42.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 72.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "brightness-red",
+     "path": null
+    },
+    "result": "0.40000000000000002"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 72.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "brightness-green",
+     "path": null
+    },
+    "result": "0.40000000000000002"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 72.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "brightness-blue",
+     "path": null
+    },
+    "result": "0.40000000000000002"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 72.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "color-saturation",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 76.13,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "color-saturation",
+     "path": null
+    },
+    "result": "0.40000000000000002"
+   },
+   {
+    "step": "screenshot",
+    "t": 76.71,
+    "args": {
+     "name": "magnifier-colour.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "magnifier-colour.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 297,
+      "meanLevel": 42.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 77.63,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "show-cross-hairs",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 77.63,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "show-cross-hairs",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "backend",
+    "t": 80.14,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 80.14,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-clip",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 80.78,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-clip",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 80.78,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-clip",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 81.13,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-clip",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 81.47,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-thickness",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 83.75,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-thickness",
+     "path": null
+    },
+    "result": "26"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 84.08,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-thickness",
+     "path": null,
+     "value": "12"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 84.96,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-opacity",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 88.48,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-opacity",
+     "path": null
+    },
+    "result": "0.29999999999999999"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 88.84,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "cross-hairs-opacity",
+     "path": null,
+     "value": "0.9"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 89.79,
+    "args": {
+     "name": "magnifier-set.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "magnifier-set.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 298,
+      "meanLevel": 42.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 89.8,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.magnifier",
+     "key": "show-cross-hairs",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 90.51,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 95.52,
+    "args": {
+     "key": "the shortcut row clicked"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 97.18,
+    "args": {
+     "name": "magnifier-shortcut.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "magnifier-shortcut.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 289,
+      "meanLevel": 42.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 97.61,
+    "args": {
+     "key": "standin.orca"
+    }
+   },
+   {
+    "step": "open",
+    "t": 98.41,
+    "args": {
+     "spec": "settings:narrator"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "narrator",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 101.06,
+    "args": {
+     "name": "narrator.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "narrator.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 294,
+      "meanLevel": 42.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 102.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-reader-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 102.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-reader-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "backend",
+    "t": 102.53,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 102.53,
+    "args": {
+     "key": "orca in caps"
+    }
+   },
+   {
+    "step": "record",
+    "t": 104.04,
+    "args": {
+     "key": "orca calls"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 104.04,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-reader-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 105.42,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 106.18,
+    "args": {
+     "spec": "settings:a11y-audio"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "a11y-audio",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 108.62,
+    "args": {
+     "name": "a11y-audio.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-audio.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 261,
+      "meanLevel": 39.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.9,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.9,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.9,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell-type",
+     "path": null
+    },
+    "result": "'fullscreen-flash'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.91,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell-type",
+     "path": null
+    },
+    "result": "'fullscreen-flash'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 115.28,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell-type",
+     "path": null
+    },
+    "result": "'frame-flash'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 115.28,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell-type",
+     "path": null
+    },
+    "result": "'frame-flash'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 120.95,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 120.95,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 120.95,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 121.38,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "visual-bell",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 121.97,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 121.98,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 122.72,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 122.72,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 123.13,
+    "args": {
+     "schema": "org.gnome.desktop.sound",
+     "key": "allow-volume-above-100-percent",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 124.03,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 124.83,
+    "args": {
+     "spec": "settings:a11y-keyboard"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "a11y-keyboard",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 126.87,
+    "args": {
+     "name": "a11y-keyboard.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-keyboard.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 305,
+      "meanLevel": 43.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 127.32,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 127.32,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 128.05,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 128.05,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 128.48,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 132.76,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 132.76,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-two-key-off",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 133.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-two-key-off",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 133.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-two-key-off",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 133.97,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-two-key-off",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 135.3,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 135.3,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-modifier-beep",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 136.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-modifier-beep",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 136.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-modifier-beep",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 136.56,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "stickykeys-modifier-beep",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 138.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 138.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "screenshot",
+    "t": 139.31,
+    "args": {
+     "name": "a11y-keyboard-sticky.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-keyboard-sticky.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 306,
+      "meanLevel": 44.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 144.8,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 144.8,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 145.59,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 145.59,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 146.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 146.55,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 147.13,
+    "args": {
+     "name": "a11y-keyboard-filter.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-keyboard-filter.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 313,
+      "meanLevel": 43.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 148.39,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 148.4,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.7,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.7,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.71,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.71,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "backend",
+    "t": 150.66,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 150.66,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 151.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 151.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 151.96,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 153.46,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 153.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 154.3,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 154.3,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 154.79,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 155.32,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 155.32,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 156.87,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 156.87,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-press",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 157.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-press",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 157.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-press",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 158.2,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-press",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 158.71,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 158.72,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 158.72,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 160.37,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 160.37,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-accept",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 161.17,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-accept",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 161.17,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-accept",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 161.71,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-accept",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 162.26,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 162.26,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 162.26,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 163.91,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 163.91,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-reject",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 164.76,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-reject",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 164.76,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-reject",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 165.34,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-beep-reject",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 165.87,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 165.88,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 165.88,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 168.84,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 168.85,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-beep-reject",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 169.69,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-beep-reject",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 169.69,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-beep-reject",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 170.24,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-beep-reject",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 170.78,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 170.78,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 170.78,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 171.34,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-delay",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 175.67,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-delay",
+     "path": null
+    },
+    "result": "300"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 176.21,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-delay",
+     "path": null,
+     "value": "100"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 176.76,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-delay",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 179.8,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-delay",
+     "path": null
+    },
+    "result": "450"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 180.36,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-delay",
+     "path": null,
+     "value": "200"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 180.91,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "slowkeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 180.92,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "bouncekeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 183.42,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 183.42,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "togglekeys-enable",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 184.31,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "togglekeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 184.31,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "togglekeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 184.89,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "togglekeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 189.33,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 189.33,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 190.27,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 190.27,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 190.87,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 194.16,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 194.16,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 195.07,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 195.07,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 195.71,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 197.95,
+    "args": {
+     "schema": "org.gnome.shell.keybindings",
+     "key": "show-screenshot-ui",
+     "path": null
+    },
+    "result": "[]"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 197.95,
+    "args": {
+     "schema": "org.gnome.shell.keybindings",
+     "key": "show-screenshot-ui",
+     "path": null
+    },
+    "result": "[]"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 199.52,
+    "args": {
+     "schema": "org.gnome.shell.keybindings",
+     "key": "show-screenshot-ui",
+     "path": null
+    },
+    "result": "['Print']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 199.52,
+    "args": {
+     "schema": "org.gnome.shell.keybindings",
+     "key": "show-screenshot-ui",
+     "path": null
+    },
+    "result": "['Print']"
+   },
+   {
+    "step": "backend",
+    "t": 200.17,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 200.17,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "feature-state-change-beep",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 201.1,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "feature-state-change-beep",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 201.1,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "feature-state-change-beep",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 201.73,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "feature-state-change-beep",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 203.01,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 203.98,
+    "args": {
+     "spec": "settings:a11y-mouse"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1473,
+     "page": "a11y-mouse",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 206.5,
+    "args": {
+     "name": "a11y-mouse.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-mouse.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 304,
+      "meanLevel": 44.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 207.15,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 207.15,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-enable",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 208.16,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 208.16,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-enable",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 208.77,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-enable",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 212.31,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-max-speed",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 215.54,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-max-speed",
+     "path": null
+    },
+    "result": "500"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 216.19,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-max-speed",
+     "path": null,
+     "value": "100"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 216.84,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-accel-time",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 220.15,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-accel-time",
+     "path": null
+    },
+    "result": "2300"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 220.82,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.keyboard",
+     "key": "mousekeys-accel-time",
+     "path": null,
+     "value": "1000"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 222.18,
+    "args": {
+     "name": "a11y-mouse-keys.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-mouse-keys.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 326,
+      "meanLevel": 43.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 224.98,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 224.98,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "focus-mode",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 225.99,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "focus-mode",
+     "path": null
+    },
+    "result": "'sloppy'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 225.99,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "focus-mode",
+     "path": null
+    },
+    "result": "'sloppy'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 226.67,
+    "args": {
+     "schema": "org.gnome.desktop.wm.preferences",
+     "key": "focus-mode",
+     "path": null,
+     "value": "'click'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 227.35,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "double-click",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 230.05,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "double-click",
+     "path": null
+    },
+    "result": "500"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 230.74,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "double-click",
+     "path": null,
+     "value": "400"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 232.05,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 232.05,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-enabled",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 233.05,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 233.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 233.77,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 237.46,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-time",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 240.93,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-time",
+     "path": null
+    },
+    "result": "1.5"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 241.65,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "secondary-click-time",
+     "path": null,
+     "value": "2.0"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 244.55,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 244.55,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-time",
+     "path": null,
+     "value": "3.0"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 246.06,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 246.06,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-click-enabled",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 247.1,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-click-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 247.11,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-click-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 247.82,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-click-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 248.53,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-time",
+     "path": null,
+     "value": "1.2"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 251.63,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-time",
+     "path": null
+    },
+    "result": "1.2"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 255.21,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-time",
+     "path": null
+    },
+    "result": "1.6000000000000001"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 255.93,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-time",
+     "path": null,
+     "value": "1.2"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 256.71,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-threshold",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 260.23,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-threshold",
+     "path": null
+    },
+    "result": "15"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 261.0,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-threshold",
+     "path": null,
+     "value": "10"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 262.41,
+    "args": {
+     "name": "a11y-mouse-assist.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "a11y-mouse-assist.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 320,
+      "meanLevel": 43.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 262.41,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.mouse",
+     "key": "dwell-click-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "backend",
+    "t": 263.2,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 263.2,
+    "args": {
+     "key": "click inputs"
+    }
+   },
+   {
+    "step": "close",
+    "t": 263.73,
+    "args": {
+     "name": "settings"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the tool seam run/stubs is private (no group or world write), so system_tool uses the stubs",
+    "ok": true,
+    "t": 0.82,
+    "was": "0o775"
+   },
+   {
+    "check": "accessibility: st-accessibility-reduced-motion is on the page",
+    "ok": true,
+    "t": 1.53
+   },
+   {
+    "check": "accessibility: title and breadcrumb \"Toegankelijkheid\"",
+    "ok": true,
+    "t": 2.23,
+    "got": [
+     [
+      null,
+      "Toegankelijkheid"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid"
+    ]
+   },
+   {
+    "check": "Toegankelijkheid has link-textsize",
+    "ok": true,
+    "t": 2.91
+   },
+   {
+    "check": "Toegankelijkheid has link-visualeffects",
+    "ok": true,
+    "t": 3.01
+   },
+   {
+    "check": "Toegankelijkheid has link-mousepointer",
+    "ok": true,
+    "t": 3.12
+   },
+   {
+    "check": "Toegankelijkheid has link-textcursor",
+    "ok": true,
+    "t": 3.24
+   },
+   {
+    "check": "Toegankelijkheid has link-contrast",
+    "ok": true,
+    "t": 3.3
+   },
+   {
+    "check": "Toegankelijkheid has link-a11y-audio",
+    "ok": true,
+    "t": 3.41
+   },
+   {
+    "check": "Toegankelijkheid has link-a11y-keyboard",
+    "ok": true,
+    "t": 3.53
+   },
+   {
+    "check": "Toegankelijkheid has link-a11y-mouse",
+    "ok": true,
+    "t": 3.65
+   },
+   {
+    "check": "Toegankelijkheid has st-accessibility-reduced-motion",
+    "ok": true,
+    "t": 3.71
+   },
+   {
+    "check": "Toegankelijkheid has st-accessibility-always-show-universal-access-status",
+    "ok": true,
+    "t": 3.83
+   },
+   {
+    "check": "Toegankelijkheid links to magnifier (needs gnome) exactly while caps.gnome",
+    "ok": true,
+    "t": 3.95,
+    "gnome": true
+   },
+   {
+    "check": "Toegankelijkheid links to narrator (needs gnome) exactly while caps.gnome",
+    "ok": true,
+    "t": 4.01,
+    "gnome": true
+   },
+   {
+    "check": "Toegankelijkheidsmenu altijd weergeven writes always-show-universal-access-status true",
+    "ok": true,
+    "t": 4.22,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Snelle instellingen opens",
+    "ok": true,
+    "t": 4.34,
+    "result": {
+     "open": "quick"
+    }
+   },
+   {
+    "check": "Snelle instellingen shows the Toegankelijkheid tile while the menu is on",
+    "ok": true,
+    "t": 4.46
+   },
+   {
+    "check": "its page lists GNOME's functions (Plaktoetsen)",
+    "ok": true,
+    "t": 4.66
+   },
+   {
+    "check": "... and screen-magnifier-enabled",
+    "ok": true,
+    "t": 4.73
+   },
+   {
+    "check": "... and high-contrast",
+    "ok": true,
+    "t": 4.85
+   },
+   {
+    "check": "... and screen-reader-enabled",
+    "ok": true,
+    "t": 4.93
+   },
+   {
+    "check": "... and mousekeys-enable",
+    "ok": true,
+    "t": 5.05
+   },
+   {
+    "check": "Plaktoetsen in Snelle instellingen writes stickykeys-enable true",
+    "ok": true,
+    "t": 6.06,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "... and off again",
+    "ok": true,
+    "t": 6.13,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "the menu off again",
+    "ok": true,
+    "t": 6.46,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "always-show-universal-access-status true written from outside moves its switch (gsettings.changed)",
+    "ok": true,
+    "t": 6.53
+   },
+   {
+    "check": "Animatie-effecten (Toegankelijkheid): a click writes reduced-motion 'reduce'",
+    "ok": true,
+    "t": 8.43,
+    "want": "'reduce'",
+    "value": "'reduce'"
+   },
+   {
+    "check": "Animatie-effecten (Toegankelijkheid): the control shows the new value",
+    "ok": true,
+    "t": 8.57,
+    "active": false
+   },
+   {
+    "check": "Animatie-effecten (Toegankelijkheid): reduced-motion 'no-preference' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 8.65
+   },
+   {
+    "check": "... and the mirror makes enable-animations agree again",
+    "ok": true,
+    "t": 8.66,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "accessibility: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 8.74,
+    "left": [],
+    "flipped": [
+     "st-accessibility-always-show-universal-access-status",
+     "st-accessibility-reduced-motion"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Toegankelijkheid: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 8.74,
+    "owned": [],
+    "keys": 3,
+    "items": 3
+   },
+   {
+    "check": "Toegankelijkheid: reduced-motion is Mirrored with accessibility.reduceMotion",
+    "ok": true,
+    "t": 8.74,
+    "got": [
+     "mirrored",
+     "accessibility.reduceMotion"
+    ]
+   },
+   {
+    "check": "Toegankelijkheid: enable-animations is Mirrored with accessibility.reduceMotion",
+    "ok": true,
+    "t": 8.74,
+    "got": [
+     "mirrored",
+     "accessibility.reduceMotion"
+    ]
+   },
+   {
+    "check": "textsize: st-textsize-value is on the page",
+    "ok": true,
+    "t": 9.23
+   },
+   {
+    "check": "textsize: title and breadcrumb \"Toegankelijkheid > Tekstgrootte\"",
+    "ok": true,
+    "t": 9.98,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Tekstgrootte"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Tekstgrootte"
+    ]
+   },
+   {
+    "check": "Tekstgrootte shows 100 %",
+    "ok": true,
+    "t": 11.23,
+    "node": {
+     "children": [],
+     "classes": [
+      "w11-tabular",
+      "st-value"
+     ],
+     "label": "100%",
+     "name": "st-textsize-value",
+     "rect": [
+      899,
+      299,
+      36,
+      32
+     ],
+     "sensitive": true,
+     "type": "GtkLabel",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "text-scaling-factor 1.5 from outside: the page follows (150%)",
+    "ok": true,
+    "t": 11.47,
+    "node": {
+     "children": [],
+     "classes": [
+      "w11-tabular",
+      "st-value"
+     ],
+     "label": "150%",
+     "name": "st-textsize-value",
+     "rect": [
+      899,
+      304,
+      36,
+      32
+     ],
+     "sensitive": true,
+     "type": "GtkLabel",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "the kit scales its text by GNOME's factor once (x1.5, never x2.25)",
+    "ok": true,
+    "t": 12.55,
+    "ratio": 1.5
+   },
+   {
+    "check": "Tekstgrootte at 125 % and Toepassen write text-scaling-factor 1.25",
+    "ok": true,
+    "t": 17.42,
+    "value": "1.25",
+    "exact": true
+   },
+   {
+    "check": "Tekstgrootte: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 17.42,
+    "owned": [],
+    "keys": 1,
+    "items": 1
+   },
+   {
+    "check": "Tekstgrootte: text-scaling-factor is Mirrored with accessibility.textScale",
+    "ok": true,
+    "t": 17.42,
+    "got": [
+     "mirrored",
+     "accessibility.textScale"
+    ]
+   },
+   {
+    "check": "visualeffects: st-visualeffects-overlay-scrolling is on the page",
+    "ok": true,
+    "t": 18.08
+   },
+   {
+    "check": "visualeffects: title and breadcrumb \"Toegankelijkheid > Visuele effecten\"",
+    "ok": true,
+    "t": 18.78,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Visuele effecten"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Visuele effecten"
+    ]
+   },
+   {
+    "check": "Schuifbalken altijd weergeven: a click writes overlay-scrolling false",
+    "ok": true,
+    "t": 19.92,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Schuifbalken altijd weergeven: the control shows the new value",
+    "ok": true,
+    "t": 20.01,
+    "active": true
+   },
+   {
+    "check": "Schuifbalken altijd weergeven: overlay-scrolling true written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 20.11
+   },
+   {
+    "check": "Animatie-effecten off writes reduced-motion reduce",
+    "ok": true,
+    "t": 20.62,
+    "want": "'reduce'",
+    "value": "'reduce'"
+   },
+   {
+    "check": "... and enable-animations false",
+    "ok": true,
+    "t": 20.62,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "the mirror brings accessibility.reduceMotion true",
+    "ok": true,
+    "t": 20.62,
+    "want": true,
+    "value": true
+   },
+   {
+    "check": "reduced-motion written from outside moves Animatie-effecten (gsettings.changed)",
+    "ok": true,
+    "t": 20.72
+   },
+   {
+    "check": "... and the mirror brings accessibility.reduceMotion false",
+    "ok": true,
+    "t": 20.72,
+    "want": false,
+    "value": false
+   },
+   {
+    "check": "... and makes enable-animations agree",
+    "ok": true,
+    "t": 20.72,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Vormen voor aan/uit-status writes show-status-shapes true",
+    "ok": true,
+    "t": 21.22,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "the kit's switches show GtkSwitch's I and O shapes",
+    "ok": true,
+    "t": 22.32,
+    "images": 2
+   },
+   {
+    "check": "show-status-shapes false written from outside moves its switch back",
+    "ok": true,
+    "t": 23.0
+   },
+   {
+    "check": "Transparantie-effecten: a click writes settings.json theme.transparency false",
+    "ok": true,
+    "t": 23.52,
+    "want": false,
+    "value": false
+   },
+   {
+    "check": "Transparantie-effecten: a second click puts theme.transparency back",
+    "ok": true,
+    "t": 24.05,
+    "want": true,
+    "value": true
+   },
+   {
+    "check": "visualeffects: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 24.22,
+    "left": [],
+    "flipped": [
+     "st-visualeffects-overlay-scrolling",
+     "st-visualeffects-reduced-motion",
+     "st-visualeffects-show-status-shapes",
+     "st-visualeffects-transparency"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Visuele effecten: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 24.22,
+    "owned": [],
+    "keys": 4,
+    "items": 4
+   },
+   {
+    "check": "contrast: st-contrast-high-contrast is on the page",
+    "ok": true,
+    "t": 24.81
+   },
+   {
+    "check": "contrast: title and breadcrumb \"Toegankelijkheid > Contrastthema’s\"",
+    "ok": true,
+    "t": 25.51,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Contrastthema’s"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Contrastthema’s"
+    ]
+   },
+   {
+    "check": "Hoog contrast is not written before Toepassen",
+    "ok": true,
+    "t": 28.14
+   },
+   {
+    "check": "Hoog contrast and Toepassen write high-contrast true",
+    "ok": true,
+    "t": 28.68,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "the mirror brings accessibility.highContrast true",
+    "ok": true,
+    "t": 28.68,
+    "want": true,
+    "value": true
+   },
+   {
+    "check": "the Settings window gets w11-hc",
+    "ok": true,
+    "t": 28.79
+   },
+   {
+    "check": "the shell gets w11-high-contrast",
+    "ok": true,
+    "t": 28.91
+   },
+   {
+    "check": "Geen and Toepassen write high-contrast false",
+    "ok": true,
+    "t": 32.16,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "... and the mirror brings it back to settings.json",
+    "ok": true,
+    "t": 32.16,
+    "want": false,
+    "value": false
+   },
+   {
+    "check": "high-contrast true written from outside shows Hoog contrast",
+    "ok": true,
+    "t": 32.29
+   },
+   {
+    "check": "... and false shows Geen",
+    "ok": true,
+    "t": 32.42
+   },
+   {
+    "check": "Transparantie uitzetten: a click writes settings.json theme.transparency false",
+    "ok": true,
+    "t": 33.11,
+    "want": false,
+    "value": false
+   },
+   {
+    "check": "Transparantie uitzetten: a second click puts theme.transparency back",
+    "ok": true,
+    "t": 33.69,
+    "want": true,
+    "value": true
+   },
+   {
+    "check": "contrast: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 33.83,
+    "left": [],
+    "flipped": [
+     "st-contrast-transparency"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Contrastthema's: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 33.83,
+    "owned": [],
+    "keys": 2,
+    "items": 2
+   },
+   {
+    "check": "Contrastthema's: high-contrast is Mirrored with accessibility.highContrast",
+    "ok": true,
+    "t": 33.83,
+    "got": [
+     "mirrored",
+     "accessibility.highContrast"
+    ]
+   },
+   {
+    "check": "mousepointer: st-mousepointer-cursor-size is on the page",
+    "ok": true,
+    "t": 34.44
+   },
+   {
+    "check": "mousepointer: title and breadcrumb \"Toegankelijkheid > Muisaanwijzer en aanraken\"",
+    "ok": true,
+    "t": 35.17,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Muisaanwijzer en aanraken"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Muisaanwijzer en aanraken"
+    ]
+   },
+   {
+    "check": "Grootte at step 3 writes cursor-size 48",
+    "ok": true,
+    "t": 38.02,
+    "want": "48",
+    "value": "48"
+   },
+   {
+    "check": "cursor-size written from outside shows (96 px)",
+    "ok": true,
+    "t": 38.17
+   },
+   {
+    "check": "Muisaanwijzerindicator: a click writes locate-pointer true",
+    "ok": true,
+    "t": 38.77,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Muisaanwijzerindicator: the control shows the new value",
+    "ok": true,
+    "t": 38.92,
+    "active": true
+   },
+   {
+    "check": "Muisaanwijzerindicator: locate-pointer false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 39.06
+   },
+   {
+    "check": "Aanraakscherm toewijzen aan beeldscherm is there exactly while caps has a touchscreen",
+    "ok": true,
+    "t": 39.23,
+    "touchscreen": false
+   },
+   {
+    "check": "mousepointer: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 39.37,
+    "left": [],
+    "flipped": [
+     "st-mousepointer-locate-pointer"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Muisaanwijzer en aanraken: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 39.37,
+    "owned": [],
+    "keys": 2,
+    "items": 2
+   },
+   {
+    "check": "textcursor: st-textcursor-cursor-blink is on the page",
+    "ok": true,
+    "t": 40.02
+   },
+   {
+    "check": "textcursor: title and breadcrumb \"Toegankelijkheid > Tekstcursor\"",
+    "ok": true,
+    "t": 40.77,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Tekstcursor"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Tekstcursor"
+    ]
+   },
+   {
+    "check": "Knipperende tekstcursor off writes cursor-blink false",
+    "ok": true,
+    "t": 41.96,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Knippersnelheid is insensitive while the cursor does not blink",
+    "ok": true,
+    "t": 42.12
+   },
+   {
+    "check": "cursor-blink true written from outside turns its switch on again",
+    "ok": true,
+    "t": 42.28
+   },
+   {
+    "check": "Knippersnelheid near 500 ms by a click at its place (Snel is right: 2600 - position)",
+    "ok": true,
+    "t": 44.49,
+    "value": "500",
+    "exact": true
+   },
+   {
+    "check": "textcursor: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 44.65,
+    "left": [],
+    "flipped": [
+     "st-textcursor-cursor-blink"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Tekstcursor: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 44.65,
+    "owned": [],
+    "keys": 2,
+    "items": 2
+   },
+   {
+    "check": "magnifier: st-magnifier-screen-magnifier-enabled is on the page",
+    "ok": true,
+    "t": 45.32
+   },
+   {
+    "check": "magnifier: title and breadcrumb \"Toegankelijkheid > Vergrootglas\"",
+    "ok": true,
+    "t": 46.16,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Vergrootglas"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Vergrootglas"
+    ]
+   },
+   {
+    "check": "the Vergrootglas switch on its header writes screen-magnifier-enabled true",
+    "ok": true,
+    "t": 47.99,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "screen-magnifier-enabled written from outside moves the switch back (gsettings.changed)",
+    "ok": true,
+    "t": 48.17
+   },
+   {
+    "check": "+ writes mag-factor 2.25 (GNOME Settings' quarter steps)",
+    "ok": true,
+    "t": 49.84,
+    "want": "2.25",
+    "value": "2.25"
+   },
+   {
+    "check": "... and shows 225%",
+    "ok": true,
+    "t": 50.01,
+    "node": {
+     "children": [],
+     "classes": [
+      "st-value",
+      "st-a11y-zoom-value"
+     ],
+     "label": "225%",
+     "name": "st-magnifier-mag-factor",
+     "rect": [
+      938,
+      207,
+      64,
+      32
+     ],
+     "sensitive": true,
+     "type": "GtkLabel",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "mag-factor 3.0 written from outside shows 300%",
+    "ok": true,
+    "t": 50.18
+   },
+   {
+    "check": "- writes mag-factor 2.75",
+    "ok": true,
+    "t": 50.84,
+    "want": "2.75",
+    "value": "2.75"
+   },
+   {
+    "check": "Weergave Lens writes lens-mode true",
+    "ok": true,
+    "t": 53.23,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "... with screen-position top-half (a lens over the full screen does nothing)",
+    "ok": true,
+    "t": 53.23,
+    "want": "'top-half'",
+    "value": "'top-half'"
+   },
+   {
+    "check": "Schermgebied can be chosen for the lens",
+    "ok": true,
+    "t": 53.41
+   },
+   {
+    "check": "Volledig scherm writes lens-mode false",
+    "ok": true,
+    "t": 55.82,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "... and screen-position full-screen",
+    "ok": true,
+    "t": 55.82,
+    "want": "'full-screen'",
+    "value": "'full-screen'"
+   },
+   {
+    "check": "Kleuren omkeren: a click writes invert-lightness true",
+    "ok": true,
+    "t": 56.54,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Kleuren omkeren: the control shows the new value",
+    "ok": true,
+    "t": 56.74,
+    "active": true
+   },
+   {
+    "check": "Kleuren omkeren: invert-lightness false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 56.95
+   },
+   {
+    "check": "Buiten de schermranden doorgaan: a click writes scroll-at-edges true",
+    "ok": true,
+    "t": 57.68,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Buiten de schermranden doorgaan: the control shows the new value",
+    "ok": true,
+    "t": 57.9,
+    "active": true
+   },
+   {
+    "check": "Buiten de schermranden doorgaan: scroll-at-edges false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 58.11
+   },
+   {
+    "check": "Vergrootglas laten volgen: Muisaanwijzer: a click writes mouse-tracking",
+    "ok": true,
+    "t": 61.74,
+    "value": "'none'",
+    "before": null
+   },
+   {
+    "check": "Vergrootglas laten volgen: Muisaanwijzer: the control shows the new value",
+    "ok": true,
+    "t": 61.99,
+    "active": false
+   },
+   {
+    "check": "Vergrootglas laten volgen: Muisaanwijzer: mouse-tracking 'proportional' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 62.22
+   },
+   {
+    "check": "Vergrootglas laten volgen: Toetsenbordfocus: a click writes focus-tracking 'none'",
+    "ok": true,
+    "t": 63.32,
+    "want": "'none'",
+    "value": "'none'"
+   },
+   {
+    "check": "Vergrootglas laten volgen: Toetsenbordfocus: the control shows the new value",
+    "ok": true,
+    "t": 63.56,
+    "active": false
+   },
+   {
+    "check": "Vergrootglas laten volgen: Toetsenbordfocus: focus-tracking 'proportional' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 63.81
+   },
+   {
+    "check": "Vergrootglas laten volgen: Tekstcursor: a click writes caret-tracking 'none'",
+    "ok": true,
+    "t": 64.9,
+    "want": "'none'",
+    "value": "'none'"
+   },
+   {
+    "check": "Vergrootglas laten volgen: Tekstcursor: the control shows the new value",
+    "ok": true,
+    "t": 65.16,
+    "active": false
+   },
+   {
+    "check": "Vergrootglas laten volgen: Tekstcursor: caret-tracking 'centered' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 65.42
+   },
+   {
+    "check": "De muisaanwijzer houden: Binnen de randen van het scherm writes mouse-tracking push",
+    "ok": true,
+    "t": 68.26,
+    "want": "'push'",
+    "value": "'push'"
+   },
+   {
+    "check": "Helderheid writes brightness-red, -green and -blue together (near 0.4)",
+    "ok": true,
+    "t": 72.73,
+    "values": [
+     "0.40000000000000002",
+     "0.40000000000000002",
+     "0.40000000000000002"
+    ]
+   },
+   {
+    "check": "Kleur (verzadiging): a click at 0.4 writes color-saturation near 0.4",
+    "ok": true,
+    "t": 76.14,
+    "value": "0.40000000000000002",
+    "want": 0.4,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "the Dradenkruis switch on its header writes show-cross-hairs true",
+    "ok": true,
+    "t": 77.63,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Over muisaanwijzer heen: a click writes cross-hairs-clip true",
+    "ok": true,
+    "t": 80.79,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Over muisaanwijzer heen: the control shows the new value",
+    "ok": true,
+    "t": 81.13,
+    "active": false
+   },
+   {
+    "check": "Over muisaanwijzer heen: cross-hairs-clip false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 81.47
+   },
+   {
+    "check": "Dikte: a click at 26 writes cross-hairs-thickness near 26",
+    "ok": true,
+    "t": 83.75,
+    "value": "26",
+    "want": 26,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Dikte: cross-hairs-thickness 12 written from outside changes its value text",
+    "ok": true,
+    "t": 84.96,
+    "before": "26 px",
+    "after": "12 px"
+   },
+   {
+    "check": "Dekking: a click at 30 writes cross-hairs-opacity near 0.3",
+    "ok": true,
+    "t": 88.48,
+    "value": "0.29999999999999999",
+    "want": 0.3,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Dekking: cross-hairs-opacity 0.9 written from outside changes its value text",
+    "ok": true,
+    "t": 89.22,
+    "before": "30%",
+    "after": "90%"
+   },
+   {
+    "check": "show-cross-hairs false written from outside moves the Dradenkruis switch back",
+    "ok": true,
+    "t": 90.15
+   },
+   {
+    "check": "magnifier: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 90.5,
+    "left": [],
+    "flipped": [
+     "st-magnifier-caret-tracking",
+     "st-magnifier-cross-hairs-clip",
+     "st-magnifier-focus-tracking",
+     "st-magnifier-invert-lightness",
+     "st-magnifier-mouse-tracking-follow",
+     "st-magnifier-screen-magnifier-enabled",
+     "st-magnifier-scroll-at-edges",
+     "st-magnifier-show-cross-hairs"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Vergrootglas: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 90.51,
+    "owned": [],
+    "keys": 18,
+    "items": 18
+   },
+   {
+    "check": "a shortcut row of Vergrootglas opens Sneltoetsen with Toegankelijkheid open",
+    "ok": true,
+    "t": 97.53
+   },
+   {
+    "check": "narrator: st-narrator-preferences is on the page",
+    "ok": true,
+    "t": 98.77
+   },
+   {
+    "check": "narrator: title and breadcrumb \"Toegankelijkheid > Verteller\"",
+    "ok": true,
+    "t": 99.88,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Verteller"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Verteller"
+    ]
+   },
+   {
+    "check": "Instellingen voor Verteller openen is insensitive while the screen reader is off",
+    "ok": true,
+    "t": 101.44,
+    "node": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [],
+         "classes": [
+          "w11-glyph"
+         ],
+         "label": null,
+         "name": "GtkImage",
+         "rect": [
+          952,
+          387,
+          16,
+          30
+         ],
+         "sensitive": false,
+         "type": "GtkImage",
+         "visible": true
+        },
+        {
+         "children": [],
+         "classes": [],
+         "label": "Openen",
+         "name": "GtkLabel",
+         "rect": [
+          976,
+          387,
+          54,
+          30
+         ],
+         "sensitive": false,
+         "type": "GtkLabel",
+         "visible": true
+        }
+       ],
+       "classes": [
+        "horizontal"
+       ],
+       "label": null,
+       "name": "GtkBox",
+       "rect": [
+        952,
+        387,
+        78,
+        30
+       ],
+       "sensitive": false,
+       "type": "GtkBox",
+       "visible": true
+      }
+     ],
+     "classes": [
+      "w11-button"
+     ],
+     "label": "Schakel Verteller in om de instellingen te openen",
+     "name": "st-narrator-preferences",
+     "rect": [
+      940,
+      386,
+      102,
+      32
+     ],
+     "sensitive": false,
+     "type": "GtkButton",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "the Verteller switch writes screen-reader-enabled true",
+    "ok": true,
+    "t": 102.53,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Instellingen voor Verteller openen calls ShowPreferences on the running Orca, once",
+    "ok": true,
+    "t": 104.04,
+    "calls": [
+     {
+      "path": "/org/gnome/Orca/Service",
+      "iface": "org.gnome.Orca.Service",
+      "method": "ShowPreferences",
+      "args": "()",
+      "interactive": false
+     }
+    ]
+   },
+   {
+    "check": "... a plain call, without interactive authorization",
+    "ok": true,
+    "t": 104.04
+   },
+   {
+    "check": "... and WinPoint starts no orca program itself",
+    "ok": true,
+    "t": 104.04,
+    "orca": []
+   },
+   {
+    "check": "screen-reader-enabled false written from outside moves the Verteller switch back",
+    "ok": true,
+    "t": 104.45
+   },
+   {
+    "check": "... and Instellingen voor Verteller openen is insensitive again",
+    "ok": true,
+    "t": 104.91
+   },
+   {
+    "check": "narrator: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 105.42,
+    "left": [],
+    "flipped": [
+     "st-narrator-screen-reader-enabled"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Verteller: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 105.42,
+    "owned": [],
+    "keys": 2,
+    "items": 2
+   },
+   {
+    "check": "a11y-audio: st-a11y-audio-visual-bell is on the page",
+    "ok": true,
+    "t": 106.58
+   },
+   {
+    "check": "a11y-audio: title and breadcrumb \"Toegankelijkheid > Audio\"",
+    "ok": true,
+    "t": 107.59,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Audio"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Audio"
+    ]
+   },
+   {
+    "check": "Het hele scherm laten knipperen writes visual-bell true",
+    "ok": true,
+    "t": 111.9,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "... and visual-bell-type fullscreen-flash",
+    "ok": true,
+    "t": 111.91,
+    "want": "'fullscreen-flash'",
+    "value": "'fullscreen-flash'"
+   },
+   {
+    "check": "Het actieve venster laten knipperen writes frame-flash",
+    "ok": true,
+    "t": 115.29,
+    "want": "'frame-flash'",
+    "value": "'frame-flash'"
+   },
+   {
+    "check": "Testen leaves the page running",
+    "ok": true,
+    "t": 117.61
+   },
+   {
+    "check": "Uit writes visual-bell false",
+    "ok": true,
+    "t": 120.95,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "visual-bell true written from outside shows the window flash (frame-flash)",
+    "ok": true,
+    "t": 121.38
+   },
+   {
+    "check": "Overversterking: a click writes allow-volume-above-100-percent true",
+    "ok": true,
+    "t": 122.72,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Overversterking: the control shows the new value",
+    "ok": true,
+    "t": 123.11,
+    "active": true
+   },
+   {
+    "check": "Overversterking: allow-volume-above-100-percent false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 123.61
+   },
+   {
+    "check": "a11y-audio: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 124.02,
+    "left": [],
+    "flipped": [
+     "st-a11y-audio-allow-volume-above-100-percent"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Audio: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 124.03,
+    "owned": [],
+    "keys": 3,
+    "items": 3
+   },
+   {
+    "check": "a11y-keyboard: st-a11y-keyboard-stickykeys-enable is on the page",
+    "ok": true,
+    "t": 125.26
+   },
+   {
+    "check": "a11y-keyboard: title and breadcrumb \"Toegankelijkheid > Toetsenbord\"",
+    "ok": true,
+    "t": 126.3,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Toetsenbord"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Toetsenbord"
+    ]
+   },
+   {
+    "check": "Plaktoetsen: a click writes stickykeys-enable true",
+    "ok": true,
+    "t": 128.05,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Plaktoetsen: the control shows the new value",
+    "ok": true,
+    "t": 128.48,
+    "active": true
+   },
+   {
+    "check": "Plaktoetsen: stickykeys-enable false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 128.93
+   },
+   {
+    "check": "amendment 14's note is in Plaktoetsen",
+    "ok": true,
+    "t": 131.9
+   },
+   {
+    "check": "Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt: a click writes stickykeys-two-key-off true",
+    "ok": true,
+    "t": 133.53,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt: the control shows the new value",
+    "ok": true,
+    "t": 133.97,
+    "active": true
+   },
+   {
+    "check": "Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt: stickykeys-two-key-off false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 134.41
+   },
+   {
+    "check": "Plaktoetsen: een geluid bij de sneltoetsen: a click writes stickykeys-modifier-beep true",
+    "ok": true,
+    "t": 136.06,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Plaktoetsen: een geluid bij de sneltoetsen: the control shows the new value",
+    "ok": true,
+    "t": 136.56,
+    "active": true
+   },
+   {
+    "check": "Plaktoetsen: een geluid bij de sneltoetsen: stickykeys-modifier-beep false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 137.02
+   },
+   {
+    "check": "Sneltoets voor Plaktoetsen writes enable true",
+    "ok": true,
+    "t": 138.73,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "amendment 24: Sneltoets voor Filtertoetsen is the same key and follows",
+    "ok": true,
+    "t": 143.89
+   },
+   {
+    "check": "Sneltoets voor Filtertoetsen: a click writes enable false",
+    "ok": true,
+    "t": 145.59,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Sneltoets voor Filtertoetsen: the control shows the new value",
+    "ok": true,
+    "t": 146.06,
+    "active": false
+   },
+   {
+    "check": "Sneltoets voor Filtertoetsen: enable true written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 146.55
+   },
+   {
+    "check": "Filtertoetsen' switch writes slowkeys-enable true",
+    "ok": true,
+    "t": 148.4,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Filtertoetsen off writes slowkeys-enable false",
+    "ok": true,
+    "t": 149.7,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "... and bouncekeys-enable false",
+    "ok": true,
+    "t": 149.71,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Korte toetsaanslagen negeren (Trage toetsen): a click writes slowkeys-enable true",
+    "ok": true,
+    "t": 151.46,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Korte toetsaanslagen negeren (Trage toetsen): the control shows the new value",
+    "ok": true,
+    "t": 151.96,
+    "active": true
+   },
+   {
+    "check": "Korte toetsaanslagen negeren (Trage toetsen): slowkeys-enable false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 152.48
+   },
+   {
+    "check": "Onbedoelde toetsaanslagen negeren (Stuitertoetsen): a click writes bouncekeys-enable true",
+    "ok": true,
+    "t": 154.3,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Onbedoelde toetsaanslagen negeren (Stuitertoetsen): the control shows the new value",
+    "ok": true,
+    "t": 154.79,
+    "active": true
+   },
+   {
+    "check": "Onbedoelde toetsaanslagen negeren (Stuitertoetsen): bouncekeys-enable false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 155.32
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij indrukken: a click writes slowkeys-beep-press true",
+    "ok": true,
+    "t": 157.73,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij indrukken: the control shows the new value",
+    "ok": true,
+    "t": 158.19,
+    "active": true
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij indrukken: slowkeys-beep-press false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 158.71
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij accepteren: a click writes slowkeys-beep-accept true",
+    "ok": true,
+    "t": 161.17,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij accepteren: the control shows the new value",
+    "ok": true,
+    "t": 161.71,
+    "active": true
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij accepteren: slowkeys-beep-accept false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 162.26
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij weigeren: a click writes slowkeys-beep-reject true",
+    "ok": true,
+    "t": 164.76,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij weigeren: the control shows the new value",
+    "ok": true,
+    "t": 165.34,
+    "active": true
+   },
+   {
+    "check": "Trage toetsen: pieptoon bij weigeren: slowkeys-beep-reject false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 165.87
+   },
+   {
+    "check": "Stuitertoetsen: pieptoon bij weigeren: a click writes bouncekeys-beep-reject true",
+    "ok": true,
+    "t": 169.69,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Stuitertoetsen: pieptoon bij weigeren: the control shows the new value",
+    "ok": true,
+    "t": 170.23,
+    "active": true
+   },
+   {
+    "check": "Stuitertoetsen: pieptoon bij weigeren: bouncekeys-beep-reject false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 170.78
+   },
+   {
+    "check": "Trage toetsen: Acceptatievertraging: a click at 300 writes slowkeys-delay near 300",
+    "ok": true,
+    "t": 175.67,
+    "value": "300",
+    "want": 300,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Trage toetsen: Acceptatievertraging: slowkeys-delay 100 written from outside changes its value text",
+    "ok": true,
+    "t": 176.76,
+    "before": "300 ms",
+    "after": "100 ms"
+   },
+   {
+    "check": "Stuitertoetsen: Acceptatievertraging: a click at 450 writes bouncekeys-delay near 450",
+    "ok": true,
+    "t": 179.8,
+    "value": "450",
+    "want": 450,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Stuitertoetsen: Acceptatievertraging: bouncekeys-delay 200 written from outside changes its value text",
+    "ok": true,
+    "t": 180.91,
+    "before": "450 ms",
+    "after": "200 ms"
+   },
+   {
+    "check": "Wisseltoetsen: a click writes togglekeys-enable true",
+    "ok": true,
+    "t": 184.31,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Wisseltoetsen: the control shows the new value",
+    "ok": true,
+    "t": 184.89,
+    "active": true
+   },
+   {
+    "check": "Wisseltoetsen: togglekeys-enable false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 185.46
+   },
+   {
+    "check": "Sneltoets voor Wisseltoetsen: a click writes enable true",
+    "ok": true,
+    "t": 190.27,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Sneltoets voor Wisseltoetsen: the control shows the new value",
+    "ok": true,
+    "t": 190.87,
+    "active": true
+   },
+   {
+    "check": "Sneltoets voor Wisseltoetsen: enable false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 191.46
+   },
+   {
+    "check": "Schermtoetsenbord: a click writes screen-keyboard-enabled true",
+    "ok": true,
+    "t": 195.08,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Schermtoetsenbord: the control shows the new value",
+    "ok": true,
+    "t": 195.71,
+    "active": true
+   },
+   {
+    "check": "Schermtoetsenbord: screen-keyboard-enabled false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 196.38
+   },
+   {
+    "check": "Print Screen off takes Print from show-screenshot-ui",
+    "ok": true,
+    "t": 197.95,
+    "want": "[]",
+    "value": "[]"
+   },
+   {
+    "check": "... and on puts it back",
+    "ok": true,
+    "t": 199.52,
+    "want": "['Print']",
+    "value": "['Print']"
+   },
+   {
+    "check": "Een geluid wanneer een functie aan of uit gaat: a click writes feature-state-change-beep true",
+    "ok": true,
+    "t": 201.1,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Een geluid wanneer een functie aan of uit gaat: the control shows the new value",
+    "ok": true,
+    "t": 201.73,
+    "active": true
+   },
+   {
+    "check": "Een geluid wanneer een functie aan of uit gaat: feature-state-change-beep false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 202.4
+   },
+   {
+    "check": "a11y-keyboard: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 203.01,
+    "left": [],
+    "flipped": [
+     "st-a11y-keyboard-bouncekeys-beep-reject",
+     "st-a11y-keyboard-bouncekeys-enable",
+     "st-a11y-keyboard-enable-filter",
+     "st-a11y-keyboard-enable-sticky",
+     "st-a11y-keyboard-enable-toggle",
+     "st-a11y-keyboard-feature-state-change-beep",
+     "st-a11y-keyboard-filterkeys",
+     "st-a11y-keyboard-screen-keyboard-enabled",
+     "st-a11y-keyboard-show-screenshot-ui",
+     "st-a11y-keyboard-slowkeys-beep-accept",
+     "st-a11y-keyboard-slowkeys-beep-press",
+     "st-a11y-keyboard-slowkeys-beep-reject",
+     "st-a11y-keyboard-slowkeys-enable",
+     "st-a11y-keyboard-stickykeys-enable",
+     "st-a11y-keyboard-stickykeys-modifier-beep",
+     "st-a11y-keyboard-stickykeys-two-key-off",
+     "st-a11y-keyboard-togglekeys-enable"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Toetsenbord: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 203.01,
+    "owned": [],
+    "keys": 16,
+    "items": 16
+   },
+   {
+    "check": "a11y-mouse: st-a11y-mouse-mousekeys-enable is on the page",
+    "ok": true,
+    "t": 204.63
+   },
+   {
+    "check": "a11y-mouse: title and breadcrumb \"Toegankelijkheid > Muis\"",
+    "ok": true,
+    "t": 205.91,
+    "got": [
+     [
+      "accessibility",
+      "Toegankelijkheid"
+     ],
+     [
+      null,
+      "Muis"
+     ]
+    ],
+    "want": [
+     "Toegankelijkheid",
+     "Muis"
+    ]
+   },
+   {
+    "check": "Muistoetsen: a click writes mousekeys-enable true",
+    "ok": true,
+    "t": 208.16,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Muistoetsen: the control shows the new value",
+    "ok": true,
+    "t": 208.77,
+    "active": true
+   },
+   {
+    "check": "Muistoetsen: mousekeys-enable false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 209.41
+   },
+   {
+    "check": "Snelheid van muistoetsen: a click at 500 writes mousekeys-max-speed near 500",
+    "ok": true,
+    "t": 215.54,
+    "value": "500",
+    "want": 500,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Snelheid van muistoetsen: mousekeys-max-speed 100 written from outside changes its value text",
+    "ok": true,
+    "t": 216.84,
+    "before": "500 px/s",
+    "after": "100 px/s"
+   },
+   {
+    "check": "Versnelling van muistoetsen: a click at 800 writes mousekeys-accel-time near 2300",
+    "ok": true,
+    "t": 220.15,
+    "value": "2300",
+    "want": 2300,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Versnelling van muistoetsen: mousekeys-accel-time 1000 written from outside changes its value text",
+    "ok": true,
+    "t": 221.6,
+    "before": "2300 ms",
+    "after": "1000 ms"
+   },
+   {
+    "check": "Een venster activeren door de muisaanwijzer erop te plaatsen: a click writes focus-mode 'sloppy'",
+    "ok": true,
+    "t": 225.99,
+    "want": "'sloppy'",
+    "value": "'sloppy'"
+   },
+   {
+    "check": "Een venster activeren door de muisaanwijzer erop te plaatsen: the control shows the new value",
+    "ok": true,
+    "t": 226.67,
+    "active": true
+   },
+   {
+    "check": "Een venster activeren door de muisaanwijzer erop te plaatsen: focus-mode 'click' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 227.34
+   },
+   {
+    "check": "Dubbelkliksnelheid: a click at 6 writes double-click near 500",
+    "ok": true,
+    "t": 230.05,
+    "value": "500",
+    "want": 500,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Dubbelkliksnelheid: double-click 400 written from outside changes its value text",
+    "ok": true,
+    "t": 231.38,
+    "before": "500 ms",
+    "after": "400 ms"
+   },
+   {
+    "check": "Gesimuleerde secundaire klik: a click writes secondary-click-enabled true",
+    "ok": true,
+    "t": 233.06,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Gesimuleerde secundaire klik: the control shows the new value",
+    "ok": true,
+    "t": 233.77,
+    "active": true
+   },
+   {
+    "check": "Gesimuleerde secundaire klik: secondary-click-enabled false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 234.48
+   },
+   {
+    "check": "Gesimuleerde secundaire klik: Acceptatievertraging: a click at 1.5 writes secondary-click-time near 1.5",
+    "ok": true,
+    "t": 240.93,
+    "value": "1.5",
+    "want": 1.5,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Gesimuleerde secundaire klik: Acceptatievertraging: secondary-click-time 2.0 written from outside changes its value text",
+    "ok": true,
+    "t": 242.4,
+    "before": "1,5 s",
+    "after": "2,0 s"
+   },
+   {
+    "check": "Klikken door te zweven: a click writes dwell-click-enabled true",
+    "ok": true,
+    "t": 247.11,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Klikken door te zweven: the control shows the new value",
+    "ok": true,
+    "t": 247.82,
+    "active": true
+   },
+   {
+    "check": "Klikken door te zweven: dwell-click-enabled false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 248.53
+   },
+   {
+    "check": "Klikken door te zweven: Vertraging: a click at 1.6 writes dwell-time near 1.6",
+    "ok": true,
+    "t": 255.21,
+    "value": "1.6000000000000001",
+    "want": 1.6,
+    "before": "1.2",
+    "exact": true
+   },
+   {
+    "check": "Klikken door te zweven: Vertraging: dwell-time 1.2 written from outside changes its value text",
+    "ok": true,
+    "t": 256.7,
+    "before": "1,6 s",
+    "after": "1,2 s"
+   },
+   {
+    "check": "Bewegingsdrempel: a click at 15 writes dwell-threshold near 15",
+    "ok": true,
+    "t": 260.23,
+    "value": "15",
+    "want": 15,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Bewegingsdrempel: dwell-threshold 10 written from outside changes its value text",
+    "ok": true,
+    "t": 261.82,
+    "before": "15 px",
+    "after": "10 px"
+   },
+   {
+    "check": "Klikken door te zweven is off at the end",
+    "ok": true,
+    "t": 262.41
+   },
+   {
+    "check": "a11y-mouse: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 263.2,
+    "left": [],
+    "flipped": [
+     "st-a11y-mouse-dwell-click-enabled",
+     "st-a11y-mouse-focus-mode",
+     "st-a11y-mouse-mousekeys-enable",
+     "st-a11y-mouse-secondary-click-enabled"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Muis (Toegankelijkheid): no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 263.2,
+    "owned": [],
+    "keys": 10,
+    "items": 10
+   }
+  ],
+  "records": {
+   "run/stubs mode": {
+    "was": "0o775",
+    "now": "0o755"
+   },
+   "caps": {
+    "session": "gnome",
+    "gnome": true,
+    "mouse": true,
+    "touchpad": false,
+    "pointingstick": false,
+    "tablet": false,
+    "touchscreen": false,
+    "thunderbolt": false,
+    "modem": false,
+    "ambientLight": false,
+    "accelerometer": false,
+    "privacyScreen": false,
+    "backlight": false,
+    "battery": false,
+    "hibernate": false,
+    "fingerprint": false,
+    "colorSensor": false,
+    "geoclue": true,
+    "tracker": true,
+    "usbguard": false,
+    "sshServer": false,
+    "userShare": false,
+    "malcontent": false,
+    "realmd": false,
+    "rygel": true,
+    "tecla": true,
+    "orca": true,
+    "simpleScan": true,
+    "securityCenter": false,
+    "insights": true,
+    "whoopsie": true
+   },
+   "text height 100% -> 150%": [
+    20,
+    30,
+    1.5
+   ],
+   "text size after the click at 125": "125%",
+   "text-scaling-factor after Toepassen": "1.25",
+   "size label after each click": [
+    "48 px"
+   ],
+   "touchscreen in caps": false,
+   "cursor-blink-time after the click": "500",
+   "the shortcut row clicked": {
+    "name": "st-magnifier-magnifier-zoom-in",
+    "rect": [
+     322,
+     249,
+     736,
+     64
+    ],
+    "label": null
+   },
+   "standin.orca": {
+    "pid": 2208,
+    "bus": "session",
+    "name": "org.gnome.Orca.Service",
+    "objects": [
+     "/org/gnome/Orca/Service"
+    ]
+   },
+   "orca in caps": true,
+   "orca calls": [
+    {
+     "path": "/org/gnome/Orca/Service",
+     "iface": "org.gnome.Orca.Service",
+     "method": "ShowPreferences",
+     "args": "()",
+     "interactive": false
+    }
+   ],
+   "click inputs": {
+    "dev": 2,
+    "clutter": 97
+   }
+  },
+  "shots": [
+   "accessibility.nl.png",
+   "quick-accessibility.nl.png",
+   "textsize.nl.png",
+   "textsize-150.nl.png",
+   "visualeffects.nl.png",
+   "visualeffects-shapes.nl.png",
+   "contrast.nl.png",
+   "contrast-high.nl.png",
+   "mousepointer.nl.png",
+   "mousepointer-size.nl.png",
+   "textcursor.nl.png",
+   "magnifier.nl.png",
+   "magnifier-follow.nl.png",
+   "magnifier-colour.nl.png",
+   "magnifier-set.nl.png",
+   "magnifier-shortcut.nl.png",
+   "narrator.nl.png",
+   "a11y-audio.nl.png",
+   "a11y-keyboard.nl.png",
+   "a11y-keyboard-sticky.nl.png",
+   "a11y-keyboard-filter.nl.png",
+   "a11y-mouse.nl.png",
+   "a11y-mouse-keys.nl.png",
+   "a11y-mouse-assist.nl.png"
+  ],
+  "error": null,
+  "seconds": 263.74,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 514,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 514,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 514,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=c89d632f5750452fe2dae4206afb953a",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 514,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 514
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "textsize",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "visualeffects",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "contrast",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "mousepointer",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "textcursor",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "magnifier",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "narrator",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "a11y-audio",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "a11y-keyboard",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "a11y-mouse",
+     "exit": 0,
+     "seconds": 0.03
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "accessibility.nl.png",
+    "group": "scenario",
+    "bytes": 211307,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "quick-accessibility.nl.png",
+    "group": "scenario",
+    "bytes": 332707,
+    "area": null
+   },
+   {
+    "file": "textsize.nl.png",
+    "group": "scenario",
+    "bytes": 182698,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "textsize-150.nl.png",
+    "group": "scenario",
+    "bytes": 214127,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "visualeffects.nl.png",
+    "group": "scenario",
+    "bytes": 218335,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "visualeffects-shapes.nl.png",
+    "group": "scenario",
+    "bytes": 210650,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "contrast.nl.png",
+    "group": "scenario",
+    "bytes": 217360,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "contrast-high.nl.png",
+    "group": "scenario",
+    "bytes": 67770,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mousepointer.nl.png",
+    "group": "scenario",
+    "bytes": 196214,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mousepointer-size.nl.png",
+    "group": "scenario",
+    "bytes": 192022,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "textcursor.nl.png",
+    "group": "scenario",
+    "bytes": 198706,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "magnifier.nl.png",
+    "group": "scenario",
+    "bytes": 221314,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "magnifier-follow.nl.png",
+    "group": "scenario",
+    "bytes": 211489,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "magnifier-colour.nl.png",
+    "group": "scenario",
+    "bytes": 207415,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "magnifier-set.nl.png",
+    "group": "scenario",
+    "bytes": 205183,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "magnifier-shortcut.nl.png",
+    "group": "scenario",
+    "bytes": 207229,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "narrator.nl.png",
+    "group": "scenario",
+    "bytes": 216543,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-audio.nl.png",
+    "group": "scenario",
+    "bytes": 188945,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-keyboard.nl.png",
+    "group": "scenario",
+    "bytes": 232957,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-keyboard-sticky.nl.png",
+    "group": "scenario",
+    "bytes": 242103,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-keyboard-filter.nl.png",
+    "group": "scenario",
+    "bytes": 234862,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-mouse.nl.png",
+    "group": "scenario",
+    "bytes": 229370,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-mouse-keys.nl.png",
+    "group": "scenario",
+    "bytes": 233404,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "a11y-mouse-assist.nl.png",
+    "group": "scenario",
+    "bytes": 230595,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-a11y.out/accessibility.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/quick-accessibility.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/textsize.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/textsize-150.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/visualeffects.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/visualeffects-shapes.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/contrast.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/contrast-high.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/mousepointer.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/mousepointer-size.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/textcursor.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/magnifier.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/magnifier-follow.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/magnifier-colour.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/magnifier-set.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/magnifier-shortcut.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/narrator.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-audio.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-keyboard.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-keyboard-sticky.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-keyboard-filter.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-mouse.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-mouse-keys.nl.png",
+  "tests/gnome/scenarios/settings-a11y.out/a11y-mouse-assist.nl.png"
+ ]
+}

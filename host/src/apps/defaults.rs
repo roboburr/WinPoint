@@ -40,6 +40,23 @@ const SPECS: &[Spec] = &[
         main: Some("x-scheme-handler/mailto"),
         types: &["x-scheme-handler/mailto"],
     },
+    // GNOME Settings' Default Apps (cc-default-apps-page.c): Calendar, and Calls and SMS, which it shows only when
+    // an app handles them (settings parity §5.7)
+    Spec {
+        kind: "calendar",
+        main: Some("text/calendar"),
+        types: &["text/calendar"],
+    },
+    Spec {
+        kind: "calls",
+        main: Some("x-scheme-handler/tel"),
+        types: &["x-scheme-handler/tel"],
+    },
+    Spec {
+        kind: "sms",
+        main: Some("x-scheme-handler/sms"),
+        types: &["x-scheme-handler/sms"],
+    },
     Spec {
         kind: "files",
         main: Some("inode/directory"),
@@ -209,6 +226,8 @@ fn default_for(spec: &Spec) -> Option<gio::AppInfo> {
             .or_else(|| gio::AppInfo::default_for_uri_scheme("http"))
             .or_else(|| gio::AppInfo::default_for_type("text/html", false)),
         "mail" => gio::AppInfo::default_for_uri_scheme("mailto"),
+        "calls" => gio::AppInfo::default_for_uri_scheme("tel"),
+        "sms" => gio::AppInfo::default_for_uri_scheme("sms"),
         _ => spec
             .main
             .into_iter()
@@ -664,9 +683,93 @@ mod tests {
         assert_eq!(
             SPECS.iter().map(|spec| spec.kind).collect::<Vec<_>>(),
             [
-                "browser", "mail", "files", "music", "video", "image", "text", "terminal"
+                "browser", "mail", "calendar", "calls", "sms", "files", "music", "video", "image", "text",
+                "terminal"
             ]
         );
+    }
+    /// Settings parity §5.7: apps.setDefault takes GNOME's Calendar, Calls and SMS, each its single type, which is
+    /// always written (the main type), and an unknown kind stays refused.
+    #[test]
+    fn calendar_calls_and_sms_are_kinds_with_their_one_type() {
+        for (kind, content) in [
+            ("calendar", "text/calendar"),
+            ("calls", "x-scheme-handler/tel"),
+            ("sms", "x-scheme-handler/sms"),
+        ] {
+            let (spec, id, own) =
+                selected_default(&json!({"kind":kind,"id":"some.app.desktop"}), "en").unwrap();
+            assert_eq!((spec.kind, spec.main, spec.types), (kind, Some(content), &[content][..]));
+            assert_eq!((id.as_str(), own), ("some.app.desktop", false));
+            assert!(should_set(spec, content, &HashSet::from(["other/type".to_owned()])));
+        }
+        assert_eq!(
+            selected_default(&json!({"kind":"fax","id":"some.app.desktop"}), "en")
+                .unwrap_err()
+                .code,
+            "bad_args"
+        );
+        // a desktop file that handles tel: links is a candidate and becomes the default for it (private
+        // XDG_DATA_HOME / XDG_CONFIG_HOME of tests/rust-sandbox only: the whole environment, not keyfile
+        // GSettings alone, or a hand run would reset the user's own tel: and sms: defaults)
+        if crate::services::privacy::tests::sandbox().is_none() {
+            eprintln!("skipped the GIO part: not in tests/rust-sandbox");
+            return;
+        }
+        let _mimeapps = crate::services::privacy::tests::MIMEAPPS
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+        let apps = glib::user_data_dir().join("applications");
+        fs::create_dir_all(&apps).unwrap();
+        let file = apps.join("win11-test-dialer.desktop");
+        fs::write(
+            &file,
+            "[Desktop Entry]\nType=Application\nName=Test Dialer\nExec=true %u\nMimeType=x-scheme-handler/tel;x-scheme-handler/sms;\n",
+        )
+        .unwrap();
+        let calls = SPECS.iter().find(|s| s.kind == "calls").unwrap();
+        // GIO reads an app's types from mimeinfo.cache, which this private directory has not: once GIO has the
+        // file, Added Associations give it its types at once (as update-desktop-database's cache would)
+        let dialer = (0..150).find_map(|_| {
+            let info = desktop_info("win11-test-dialer.desktop");
+            if info.is_none() {
+                std::thread::sleep(std::time::Duration::from_millis(100));
+            }
+            info
+        });
+        let dialer = dialer.expect("GIO sees the test dialer");
+        for content in ["x-scheme-handler/tel", "x-scheme-handler/sms"] {
+            dialer.add_supports_type(content).unwrap();
+        }
+        let found = (0..20).any(|_| {
+            let hit = candidates(calls)
+                .iter()
+                .any(|i| i.id().as_deref() == Some("win11-test-dialer.desktop"));
+            if !hit {
+                std::thread::sleep(std::time::Duration::from_millis(100));
+            }
+            hit
+        });
+        assert!(found, "the dialer is a candidate for calls");
+        // the lock must be a private file: a sandbox on a file system without Unix modes (NTFS) cannot have one
+        if ConfigLock::acquire(&glib::user_config_dir()).is_err() {
+            eprintln!("skipped the write: the private config lock cannot be made here");
+            for content in ["x-scheme-handler/tel", "x-scheme-handler/sms"] {
+                gio::AppInfo::reset_type_associations(content);
+            }
+            let _ = fs::remove_file(file);
+            return;
+        }
+        let result = set_default(&json!({"kind":"calls","id":"win11-test-dialer.desktop"}), "en").unwrap();
+        assert_eq!(result["types"], json!(["x-scheme-handler/tel"]));
+        assert_eq!(
+            default_for(calls).and_then(|i| i.id()).as_deref(),
+            Some("win11-test-dialer.desktop")
+        );
+        for content in ["x-scheme-handler/tel", "x-scheme-handler/sms"] {
+            gio::AppInfo::reset_type_associations(content);
+        }
+        let _ = fs::remove_file(file);
     }
     #[test]
     fn terminal_write_prepends_selection_preserves_comments_order_and_disabled_entries() {

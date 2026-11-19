@@ -1,0 +1,6 @@
+# tests/i18n/allow-host-settings-c.txt: settings-parity batch C's additions to tests/i18n/allow-host.txt (contracts C9), same
+# format (path<TAB>selector<TAB>reason). Only batch C edits this file (notes/claude/settings-parity.md §3).
+host/src/services/net/settings_map.rs	text:pppoe	the NetworkManager setting name pppoe (a secret group), not a text
+host/src/services/net/modem.rs	text:mschap	MS-CHAP, the PPP sign-in method of an access point (NetworkManager ppp.refuse-mschap), not a text
+host/src/services/net/modem.rs	text:refuse-mschap	the NetworkManager ppp key refuse-mschap, not a text
+host/src/services/net/settings_map.rs	text:refuse-mschap	the NetworkManager ppp key refuse-mschap, not a text

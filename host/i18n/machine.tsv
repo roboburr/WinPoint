@@ -1,0 +1,68 @@
+# host/i18n/machine.tsv: host texts of services/machine.rs.
+# Owner: batch E (settings parity, §5.6).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+# --- host/src/services/machine.rs (notes/claude/settings-parity.md §5.6)
+# machine.setName: empty, longer than 64 characters, a control character, or no letter or digit left for the network name
+#@ new
+machine.badName	Voer een naam in van maximaal 64 tekens met minstens één letter of cijfer.	Enter a name of up to 64 characters with at least one letter or digit.
+# hostname1 (org.freedesktop.hostname1) is not on the system bus
+#@ new
+machine.hostnameUnavailable	De naam van deze pc kan hier niet worden gewijzigd.	The name of this PC can’t be changed here.
+# timedate1 (org.freedesktop.timedate1) is not on the system bus
+#@ new
+machine.timeUnavailable	De systeemklok kan hier niet worden ingesteld.	The system clock can’t be set here.
+# machine.time.setTime: a time before 2000 or after 2199
+#@ new
+machine.badTime	Kies een datum tussen 2000 en 2199.	Choose a date between 2000 and 2199.
+# machine.time.setTime while "Tijd automatisch instellen" is on (GNOME allows the manual time only then too)
+#@ new
+machine.ntpOn	Zet Tijd automatisch instellen eerst uit.	Turn off Set time automatically first.
+# machine.time.sync while "Tijd automatisch instellen" is off
+#@ new
+machine.ntpOff	Zet Tijd automatisch instellen eerst aan.	Turn on Set time automatically first.
+# machine.time.setTimezone: not a zone of tzdata
+#@ new
+machine.badZone	Deze tijdzone bestaat niet.	This time zone doesn’t exist.
+# the label of the UTC zone in the time zone list, after "(UTC)" (Windows: "(UTC) Coordinated Universal Time")
+#@ new
+machine.zone.utc	Gecoördineerde wereldtijd	Coordinated Universal Time
+# machine.login.setLocale: not a locale such as nl_NL.UTF-8
+#@ new
+machine.badLocale	Deze landinstelling is niet geldig.	This locale isn’t valid.
+# locale1 (org.freedesktop.locale1) is not on the system bus
+#@ new
+machine.localeUnavailable	De taal van het aanmeldingsscherm kan hier niet worden gewijzigd.	The sign-in screen’s language can’t be changed here.
+# machine.languages.install: a code language-selector's languagelist doesn't have
+#@ new
+machine.badLanguage	Deze taal is niet beschikbaar.	This language isn’t available.
+# PackageKit is not installed or not on the system bus
+#@ new
+machine.packagesUnavailable	Talen kunnen hier niet worden geïnstalleerd.	Languages can’t be installed here.
+# machine.languages.install while another language is being installed
+#@ new
+machine.installBusy	Er wordt al een taal geïnstalleerd. Wacht tot die klaar is.	A language is already being installed. Wait until it’s finished.
+# PackageKit's error text (ErrorCode details) after the install stopped
+#@ new
+machine.installFailed	De taal kan niet worden geïnstalleerd: {error}	The language can’t be installed: {error}
+# PackageKit knows none of the language's packages (no network, or the archive doesn't have them)
+#@ new
+machine.nothingToInstall	De pakketten van deze taal zijn niet gevonden. Controleer je internetverbinding.	This language’s packages weren’t found. Check your internet connection.
+# the install transaction ended without success and without a reason (cancelled, or PackageKit went away)
+#@ new
+machine.installStopped	De installatie van de taal is gestopt.	The language installation stopped.
+
+# --- Chinese script labels (integration H22)
+# Chinese script in the language picker, paired with country; Windows wording.
+#@ new
+machine.chineseSimplified	vereenvoudigd	Simplified
+# Chinese script in the language picker, paired with country; Windows wording.
+#@ new
+machine.chineseTraditional	traditioneel	Traditional

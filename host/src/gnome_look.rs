@@ -54,14 +54,26 @@ fn save(record: &Value) {
 
 /// Before WinPoint writes `target` to `key` of `settings`: keep what GNOME had (module docs).
 pub(crate) fn note(settings: &gio::Settings, key: &str, target: &glib::Variant) {
+    let mut record = load();
+    if note_in(&mut record, settings, key, target) {
+        save(&record);
+    }
+}
+
+/// [`note`] on a record in memory; whether it changed.
+pub(crate) fn note_in(
+    record: &mut Value,
+    settings: &gio::Settings,
+    key: &str,
+    target: &glib::Variant,
+) -> bool {
     let Some(schema) = settings.schema_id() else {
-        return;
+        return false;
     };
     let id = format!("{schema} {key}");
     let current = settings.value(key);
     let current_text = current.print(true).to_string();
     let target_text = target.print(true).to_string();
-    let mut record = load();
     let previous = record["keys"][&id].clone();
     let gnome = if previous.is_object() {
         if previous["winpoint"].as_str() == Some(current_text.as_str()) {
@@ -75,10 +87,10 @@ pub(crate) fn note(settings: &gio::Settings, key: &str, target: &glib::Variant) 
         Value::Null
     };
     if previous["gnome"] == gnome && previous["winpoint"].as_str() == Some(target_text.as_str()) {
-        return;
+        return false;
     }
     record["keys"][&id] = json!({"gnome": gnome, "winpoint": target_text});
-    save(&record);
+    true
 }
 
 fn schema(id: &str) -> Option<gio::Settings> {
@@ -112,13 +124,27 @@ pub fn restore() -> i32 {
                 .is_ok();
         }
     }
-    let record = load();
+    ok &= restore_keys(&load(), schema);
+    let config = config_home();
+    let captions =
+        crate::settings_runtime::effects::apply_captions(false, &PathBuf::new(), &config);
+    ok &= captions["ok"] == true;
+    ok &= crate::settings_runtime::effects::gtk4_remove(&config.join("gtk-4.0/gtk.css")).is_ok();
+    ok &= restore_keybindings();
+    gio::Settings::sync();
+    if ok { 0 } else { 1 }
+}
+
+/// Each recorded key that still holds WinPoint's value goes back to GNOME's (`open` gives a schema's settings);
+/// false when a value could not be written.
+pub(crate) fn restore_keys(record: &Value, open: impl Fn(&str) -> Option<gio::Settings>) -> bool {
+    let mut ok = true;
     if let Some(keys) = record["keys"].as_object() {
         for (id, entry) in keys {
             let Some((schema_id, key)) = id.split_once(' ') else {
                 continue;
             };
-            let Some(settings) = schema(schema_id) else {
+            let Some(settings) = open(schema_id) else {
                 continue;
             };
             if !settings
@@ -139,14 +165,7 @@ pub fn restore() -> i32 {
             }
         }
     }
-    let config = config_home();
-    let captions =
-        crate::settings_runtime::effects::apply_captions(false, &PathBuf::new(), &config);
-    ok &= captions["ok"] == true;
-    ok &= crate::settings_runtime::effects::gtk4_remove(&config.join("gtk-4.0/gtk.css")).is_ok();
-    ok &= restore_keybindings();
-    gio::Settings::sync();
-    if ok { 0 } else { 1 }
+    ok
 }
 
 /// The extension's own record of the keybindings it took (logout, Task View): as scripts/uninstall.py, only values

@@ -1,0 +1,332 @@
+# tests/i18n/windows-glossary/d.tsv: the Windows 11 UI strings settings-parity batch D uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch D
+# edits this file.
+# --- batch D slice 1 (display, display-advanced, nightlight; native/apps/settings/src/pages/{display,nightlight}.rs)
+# the keep dialog shared by the GNOME and Hyprland paths (amendment 69)
+Keep these display settings?	Deze beeldscherminstellingen behouden?	windows	no
+Keep changes	Wijzigingen behouden	windows	no
+Revert	Terugzetten	windows	no
+Reverting to previous display settings in {n} seconds.	Terugzetten naar de vorige beeldscherminstellingen over {n} seconden.	windows	no
+The previous display settings were restored	De vorige beeldscherminstellingen zijn teruggezet	winpoint	no
+This layout can’t be used	Deze indeling kan niet worden gebruikt	winpoint	no
+Display settings couldn’t be changed	Beeldscherminstellingen konden niet worden gewijzigd	winpoint	no
+Display settings can’t be changed right now.	Beeldscherminstellingen kunnen nu niet worden gewijzigd.	windows	no
+Select a display to change its settings. Drag displays to rearrange them.	Selecteer een beeldscherm om de instellingen ervan te wijzigen. Sleep beeldschermen om ze opnieuw te rangschikken.	winpoint	no
+Identify	Identificeren	windows	no
+Duplicate these displays	Deze beeldschermen dupliceren	windows	no
+Extend these displays	Deze beeldschermen uitbreiden	windows	no
+Show only on {n}	Alleen weergeven op {n}	windows	no
+Use HDR	HDR gebruiken	windows	no
+Brighter and more vibrant picture in HDR videos, games and apps	Helderder en levendiger beeld in HDR-video’s, games en apps	windows	no
+Scale & layout	Schaal en indeling	windows	no
+Scale & layout · Display {n}	Schaal en indeling · Beeldscherm {n}	winpoint	no
+This display is turned off. Choose above where to show your screen.	Dit beeldscherm is uitgeschakeld. Kies hierboven waar je beeld wilt weergeven.	winpoint	no
+Rotation lock	Draaivergrendeling	windows	no
+Scale	Schaal	windows	no
+Change the size of text, apps and other items	De grootte van tekst, apps en andere items wijzigen	windows	no
+Custom scaling	Aangepaste schaal	windows	no
+Enter a custom scaling size between 100% and 500%	Voer een aangepaste schaalgrootte in tussen 100% en 500%	windows	no
+Apply	Toepassen	glossary	yes
+Display resolution	Beeldschermresolutie	windows	no
+Adjust the resolution to fit your connected display	De resolutie aanpassen aan het aangesloten beeldscherm	windows	no
+Landscape	Liggend	windows	no
+Portrait	Staand	windows	no
+Landscape (flipped)	Liggend (gespiegeld)	windows	no
+Portrait (flipped)	Staand (gespiegeld)	windows	no
+The orientation follows how the device is held.	De afdrukstand volgt de stand van het apparaat.	winpoint	no
+Display orientation	Afdrukstand van beeldscherm	windows	no
+Multiple displays	Meerdere beeldschermen	windows	no
+Choose the presentation mode for your displays	Kies de presentatiemodus voor je beeldschermen	windows	no
+Make this my main display	Dit mijn hoofdbeeldscherm maken	windows	no
+Detect other display	Ander beeldscherm detecteren	windows	no
+Detect	Detecteren	windows	no
+Didn’t detect another display	Geen ander beeldscherm gevonden	windows	no
+Brightness	Helderheid	glossary	yes
+Only available for built-in screens, such as a laptop’s	Alleen beschikbaar voor ingebouwde schermen, zoals van een laptop	winpoint	no
+Adjust the brightness of the built-in display	De helderheid van het ingebouwde beeldscherm aanpassen	winpoint	no
+Change brightness automatically when lighting changes	Helderheid automatisch wijzigen wanneer de verlichting verandert	windows	no
+Night light	Nachtlampje	glossary	yes
+Use warmer colours to help block blue light	Warmere kleuren gebruiken om blauw licht te verminderen	windows	no
+Night light isn’t available on this computer.	Nachtlampje is op deze computer niet beschikbaar.	winpoint	no
+Brightness & colour	Helderheid en kleur	windows	no
+Privacy screen	Privacyscherm	windows	no
+Restrict viewing angle	Kijkhoek beperken	windows	no
+Display {n}: {name}	Beeldscherm {n}: {name}	windows	no
+Desktop mode	Bureaubladmodus	windows	no
+Active signal mode	Actieve signaalmodus	windows	no
+Status	Status	winpoint	no
+Turned off	Uitgeschakeld	winpoint	no
+Manufacturer	Fabrikant	winpoint	no
+Model	Model	winpoint	no
+Serial number	Serienummer	winpoint	no
+High dynamic range (HDR)	Hoog dynamisch bereik (HDR)	windows	no
+Standard dynamic range (SDR)	Standaard dynamisch bereik (SDR)	windows	no
+Colour space	Kleurruimte	windows	no
+Select a display to view or change its settings	Selecteer een beeldscherm om de instellingen ervan te bekijken of te wijzigen	windows	no
+Display information	Beeldscherminformatie	windows	no
+Display {n}: connected to {connector}	Beeldscherm {n}: verbonden met {connector}	winpoint	no
+Copy	Kopiëren	windows	no
+Choose a refresh rate	Een vernieuwingsfrequentie kiezen	windows	no
+A higher rate gives smoother motion but uses more power	Een hogere frequentie geeft vloeiendere beweging, maar kost meer stroom	winpoint	no
+Dynamic refresh rate	Dynamische vernieuwingsfrequentie	windows	no
+To help save power, WinPoint adjusts the refresh rate up to the rate above	Om energie te besparen past WinPoint de vernieuwingsfrequentie automatisch aan, tot de frequentie hierboven	winpoint	no
+Adjust for TV	Aanpassen voor tv	windows	no
+Shrink the picture so its edges show on a TV	Het beeld verkleinen zodat de randen op een tv zichtbaar zijn	winpoint	no
+Fix scaling for apps	Schaal voor apps herstellen	windows	no
+Legacy apps that support scaling look crisp, but some might not scale at all	Oudere apps die schalen ondersteunen worden scherp weergegeven, maar sommige worden mogelijk niet geschaald	winpoint	no
+Restart apps for the new scaling to take effect	Start apps opnieuw om de nieuwe schaal toe te passen	winpoint	no
+Display settings aren’t available here.	Beeldscherminstellingen zijn hier niet beschikbaar.	winpoint	no
+Sunset to sunrise ({from}; {to})	Zonsondergang tot zonsopkomst ({from}; {to})	windows	no
+Sunset to sunrise	Zonsondergang tot zonsopkomst	windows	no
+Night light is off	Nachtlampje is uitgeschakeld	winpoint	no
+Turn on Schedule night light below to use warmer colours	Schakel hieronder Nachtlampje plannen in om warmere kleuren te gebruiken	winpoint	no
+Night light is on	Nachtlampje is ingeschakeld	winpoint	no
+Until {time}	Tot {time}	winpoint	no
+Turn off now	Nu uitschakelen	windows	no
+Off until tomorrow	Uitgeschakeld tot morgen	winpoint	no
+Night light turns on by its schedule again tomorrow	Nachtlampje wordt morgen weer volgens de planning ingeschakeld	winpoint	no
+Turn on now	Nu inschakelen	windows	no
+Will turn on at {time}	Wordt om {time} ingeschakeld	winpoint	no
+Will turn on at sunset	Wordt bij zonsondergang ingeschakeld	winpoint	no
+Couldn’t change night light	Nachtlampje kon niet worden gewijzigd	winpoint	no
+Turn on location services to schedule night light at sunset.	Schakel locatieservices in om het nachtlampje bij zonsondergang te plannen.	windows	no
+Location settings	Locatie-instellingen	windows	no
+Night light isn’t available	Nachtlampje is niet beschikbaar	winpoint	no
+Strength	Sterkte	windows	no
+The warmer, the less blue light	Hoe warmer, hoe minder blauw licht	winpoint	no
+Schedule night light	Nachtlampje plannen	windows	no
+Set hours	Uren instellen	windows	no
+Turn on	Inschakelen	windows	no
+Turn off	Uitschakelen	windows	no
+# host texts of services/display.rs and display/mutter.rs (host/i18n/display.tsv), shown in Settings' error toasts
+Invalid display layout.	Ongeldige beeldschermindeling.	winpoint	no
+Your displays changed in the meantime. Try again.	De beeldschermen zijn intussen gewijzigd. Probeer het opnieuw.	winpoint	no
+Couldn’t apply the display settings: {error}	De beeldscherminstellingen konden niet worden toegepast: {error}	winpoint	no
+Identifying displays isn’t available right now.	Beeldschermen identificeren is nu niet beschikbaar.	winpoint	no
+Your answer couldn’t be passed on. The previous display settings will be restored shortly.	Je antwoord kon niet worden doorgegeven. De vorige beeldscherminstellingen worden zo teruggezet.	winpoint	no
+Couldn’t change night light.	Nachtlampje kon niet worden gewijzigd.	winpoint	no
+This display doesn’t support colour adjustment.	Dit beeldscherm ondersteunt geen kleuraanpassing.	winpoint	no
+# --- batch D slice 2 (sound, sound-device, sound-devices, volume-mixer; native/apps/settings/src/pages/{sound,sound_device,volume_mixer}.rs)
+# the Sound page (System › Sound): sections, device lists, volume
+Output	Uitvoer	windows	no
+Input	Invoer	windows	no
+Advanced	Geavanceerd	windows	no
+# WinPoint's existing nl, kept (amendment 28: windows.json has "Kies waar geluid moet worden afgespeeld", unverified)
+Choose where to play sound	Kies waar je geluid wilt afspelen	windows	no
+Choose a device for speaking or recording	Kies een apparaat om te spreken of op te nemen	windows	no
+Apps use the device you choose here	Apps gebruiken het apparaat dat je hier kiest	winpoint	no
+No sound devices found	Geen geluidsapparaten gevonden	winpoint	no
+No input devices found	Geen invoerapparaten gevonden	winpoint	no
+Properties	Eigenschappen	glossary	yes
+Pair a new output device	Een nieuw uitvoerapparaat koppelen	windows	no
+Pair a new input device	Een nieuw invoerapparaat koppelen	windows	no
+Add device	Apparaat toevoegen	windows	no
+Volume	Volume	windows	no
+Mute	Dempen	windows	no
+Unmute	Dempen opheffen	windows	no
+Muted	Gedempt	winpoint	no
+How loud the sound is	Hoe hard het geluid is	winpoint	no
+Turn devices on/off, troubleshoot, other options	Apparaten in-/uitschakelen, problemen oplossen, andere opties	windows	no
+App volume mix, app input & output devices	App-volumemix, invoer- en uitvoerapparaten van apps	windows	no
+More sound settings	Meer geluidsinstellingen	windows	no
+Couldn’t change the sound device	Het geluidsapparaat kon niet worden gewijzigd	winpoint	no
+# the page without a PulseAudio server (system.audio, wpctl): WinPoint's existing texts
+Notification sounds	Geluiden bij meldingen	winpoint	no
+Turn notification sounds on or off	Meldingsgeluiden aan of uit	winpoint	no
+Sound can’t be controlled here. Use Ubuntu’s sound settings.	Het geluid kan hier niet worden geregeld. Gebruik de geluidsinstellingen van Ubuntu.	winpoint	no
+# Meer geluidsinstellingen: the classic Sound dialog, tab Sounds (amendment 3); GNOME's alert sounds
+Sound	Geluid	windows	no
+Sounds	Geluiden	windows	no
+Sound scheme	Geluidsschema	windows	no
+No sounds	Geen geluiden	windows	no
+Default	Standaard	windows	no
+# GNOME's alert sound names (cc-alert-chooser-page: click, string, swing, hum); nl to check against gnome-control-center's nl.po
+Click	Klik	winpoint	no
+String	Snaar	winpoint	no
+Swing	Schommel	winpoint	no
+Hum	Brom	winpoint	no
+Test	Testen	windows	no
+A sound scheme is the sound that WinPoint and your apps play for an alert.	Een geluidsschema is het geluid dat WinPoint en je apps bij een waarschuwing afspelen.	winpoint	no
+# Windows: Play Windows Startup sound / Opstartgeluid van Windows afspelen (Ubuntu's startup-sound)
+Play startup sound	Opstartgeluid afspelen	rename	no
+Close	Sluiten	windows	no
+Couldn’t set the alert sound	Het waarschuwingsgeluid kon niet worden ingesteld	winpoint	no
+Couldn’t play the test sound	Het testgeluid kon niet worden afgespeeld	winpoint	no
+# Properties (System › Sound › Properties): Windows' device properties
+Audio	Audio	windows	no
+# Windows: Allow apps and Windows to use this device for audio
+Allow apps and WinPoint to use this device for audio	Toestaan dat apps en WinPoint dit apparaat gebruiken voor audio	rename	no
+Allow	Toestaan	windows	no
+Don’t allow	Niet toestaan	windows	no
+Set as default sound device	Instellen als standaardgeluidsapparaat	windows	no
+Set as default	Instellen als standaard	winpoint	no
+This is the default sound device	Dit is het standaardgeluidsapparaat	winpoint	no
+Output settings	Uitvoerinstellingen	windows	no
+Input settings	Invoerinstellingen	windows	no
+Format	Indeling	windows	no
+Couldn’t change the format	De indeling kon niet worden gewijzigd	winpoint	no
+# GNOME's port chooser (Speakers, Headphones)
+Port	Poort	winpoint	no
+Couldn’t change the port	De poort kon niet worden gewijzigd	winpoint	no
+Input volume	Invoervolume	windows	no
+Left channel	Linkerkanaal	windows	no
+Right channel	Rechterkanaal	windows	no
+# GNOME's Fade and Subwoofer sliders (surround only)
+Front and rear balance	Balans voor en achter	winpoint	no
+To the left the rear is louder, to the right the front	Naar links klinkt achter luider, naar rechts voor	winpoint	no
+Subwoofer	Subwoofer	winpoint	no
+# GNOME's Overamplification (allow-volume-above-100-percent)
+Allow volume above 100%	Volume boven 100% toestaan	winpoint	no
+With reduced sound quality	Met verminderde geluidskwaliteit	winpoint	no
+Test your microphone	Je microfoon testen	windows	no
+Speak into your microphone: the bar shows what it hears	Spreek in je microfoon: de balk laat zien wat hij hoort	winpoint	no
+Start test	Test starten	windows	no
+Stop test	Test stoppen	winpoint	no
+This sound device is no longer connected.	Dit geluidsapparaat is niet meer aangesloten.	winpoint	no
+Sound devices can’t be controlled here.	Geluidsapparaten kunnen hier niet worden geregeld.	winpoint	no
+# GNOME's speaker test (Test…): one button per channel
+Test speakers	Luidsprekers testen	winpoint	no
+Select a speaker to play a test sound on it.	Klik op een luidspreker om er een testgeluid op af te spelen.	winpoint	no
+Front left	Linksvoor	winpoint	no
+Front right	Rechtsvoor	winpoint	no
+Front centre	Middenvoor	winpoint	no
+Rear left	Linksachter	winpoint	no
+Rear right	Rechtsachter	winpoint	no
+Rear centre	Middenachter	winpoint	no
+Side left	Linkszijde	winpoint	no
+Side right	Rechtszijde	winpoint	no
+Front left of centre	Links van midden	winpoint	no
+Front right of centre	Rechts van midden	winpoint	no
+Mono	Mono	winpoint	no
+# All sound devices (amendment 1)
+Output devices	Uitvoerapparaten	windows	no
+Input devices	Invoerapparaten	windows	no
+Disabled	Uitgeschakeld	windows	no
+# Volume mixer
+System	Systeem	windows	no
+Output device	Uitvoerapparaat	windows	no
+Input device	Invoerapparaat	windows	no
+Apps	Apps	windows	no
+System sounds	Systeemgeluiden	windows	no
+No apps are playing or recording sound right now	Er spelen nu geen apps geluid af en er nemen geen apps op	winpoint	no
+Recording	Neemt op	winpoint	no
+Couldn’t change this app’s device	Het apparaat van deze app kon niet worden gewijzigd	winpoint	no
+# --- batch D slice 3 (power, storage, storagesense, multitasking, screentime; native/apps/settings/src/pages/{power,storage,storagesense,multitasking,screentime}.rs)
+# Multitasking (System › Multitasking; amendments 11 and 12). Windows: “Op de taakbalk …” and “… Alt+Tab …” with “Alleen op het bureaublad dat ik gebruik / Op alle bureaubladen”; the workspaces rows are GNOME's (Workspaces, Multi-Monitor), the hot corner GNOME's with amendment 11's label
+Only on the desktop I’m using	Alleen op het bureaublad dat ik gebruik	windows	no
+On all desktops	Op alle bureaubladen	windows	no
+On the taskbar, show all the open windows	Op de taakbalk alle geopende vensters weergeven	windows	no
+Show all open windows when I press Alt+Tab	Alle geopende vensters weergeven wanneer ik op Alt+Tab druk	windows	no
+Desktops	Bureaubladen	windows	no
+Open windows on the taskbar and with Alt+Tab, the number of desktops	Geopende vensters op de taakbalk en bij Alt+Tab, het aantal bureaubladen	winpoint	no
+Remove empty desktops automatically	Lege bureaubladen automatisch verwijderen	winpoint	no
+Fixed number of desktops	Vast aantal bureaubladen	windows	no
+Number of desktops	Aantal bureaubladen	windows	no
+Desktops on the main display only	Bureaubladen alleen op het hoofdbeeldscherm	windows	no
+Desktops on all displays	Bureaubladen op alle beeldschermen	windows	no
+Snap windows	Vensters uitlijnen	windows	no
+Drag windows against the top, left or right edge of the screen to resize them	Sleep vensters tegen de boven-, linker- of rechterrand van het scherm om hun formaat te wijzigen	winpoint	no
+Hot corner	Actieve hoek	windows	no
+Touch the top-left corner to open the Activities overview. Applies in the GNOME and Ubuntu sessions.	Raak de linkerbovenhoek aan om het activiteitenoverzicht te openen. Geldt in de GNOME- en Ubuntu-sessie.	winpoint	no
+# Storage (System › Storage): Windows' Opslagbeheer group with Opslaginzicht (switch and chevron)
+Storage management	Opslagbeheer	windows	no
+Open Storage Sense	Opslaginzicht openen	winpoint	no
+# Storage Sense (System › Storage › Storage Sense; amendment 21), GNOME's File History & Trash; the two buttons below are GNOME's Empty Trash… and Delete Temporary Files…
+1 hour	1 uur	winpoint	no
+1 day	1 dag	windows	no
+{n} days	{n} dagen	windows	no
+Never	Nooit	windows	no
+Run Storage Sense now	Opslaginzicht nu uitvoeren	windows	no
+{size} freed up	{size} vrijgemaakt	winpoint	no
+There was nothing to clean up.	Er hoefde niets te worden opgeruimd.	winpoint	no
+Storage Sense has run	Opslaginzicht is uitgevoerd	winpoint	no
+Storage Sense isn’t available on this computer.	Opslaginzicht is op deze computer niet beschikbaar.	winpoint	no
+Cleanup of temporary files	Tijdelijke bestanden opschonen	windows	no
+Keep your PC running smoothly by automatically cleaning up temporary app files	Zorg dat je pc soepel blijft werken door tijdelijke app-bestanden automatisch op te ruimen	winpoint	no
+Automatic User content cleanup	Automatisch opschonen van gebruikersinhoud	windows	no
+Automatically free up space by deleting temporary files and old items in the Recycle Bin	Automatisch ruimte vrijmaken door tijdelijke bestanden en oude items in de Prullenbak te verwijderen	winpoint	no
+Configure cleanup schedules	Opschoonschema’s configureren	windows	no
+Delete files in my Recycle Bin if they have been there for over:	Bestanden in mijn Prullenbak verwijderen als ze er langer in staan dan:	windows	no
+The same period applies to temporary files.	Dezelfde periode geldt voor tijdelijke bestanden.	winpoint	no
+Recycle Bin and temporary files	Prullenbak en tijdelijke bestanden	winpoint	no
+Empty Recycle Bin now	Prullenbak nu leegmaken	winpoint	no
+Permanently delete all items in the Recycle Bin	Alle items in de Prullenbak definitief verwijderen	winpoint	no
+Empty Recycle Bin	Prullenbak leegmaken	glossary	yes
+Empty Recycle Bin?	Prullenbak leegmaken?	winpoint	no
+All items in the Recycle Bin will be permanently deleted. This can’t be undone.	Alle items in de Prullenbak worden definitief verwijderd. Dit kun je niet ongedaan maken.	winpoint	no
+Empty	Leegmaken	winpoint	no
+The Recycle Bin has been emptied	De Prullenbak is leeggemaakt	winpoint	no
+Delete temporary files now	Tijdelijke bestanden nu verwijderen	winpoint	no
+Permanently delete all your temporary files	Al je tijdelijke bestanden definitief verwijderen	winpoint	no
+Delete	Verwijderen	winpoint	no
+Delete all temporary files?	Alle tijdelijke bestanden verwijderen?	winpoint	no
+All your temporary files will be permanently deleted. This can’t be undone.	Al je tijdelijke bestanden worden definitief verwijderd. Dit kun je niet ongedaan maken.	winpoint	no
+The temporary files have been deleted	De tijdelijke bestanden zijn verwijderd	winpoint	no
+# Power & battery (System › Power & battery; amendment 20), with GNOME's Power Button Behavior, Automatic Power Saver, Battery Charging and its suspend notice
+Always use energy saver	Altijd energiebesparing gebruiken	windows	no
+Disabling automatic sleep will result in higher power consumption. It’s recommended to keep automatic sleep turned on.	Als je automatisch slapen uitschakelt, verbruikt de pc meer energie. Het is beter om automatisch slapen ingeschakeld te laten.	winpoint	no
+Turn off the screen, dim it and sleep automatically	Scherm uitschakelen, dimmen en automatisch slapen	winpoint	no
+Do nothing	Niets doen	windows	no
+Sleep	Slaapstand	glossary	yes
+Hibernate	Sluimerstand	windows	no
+Shut down	Afsluiten	windows	no
+Lid & power button controls	Besturingselementen voor deksel en aan/uit-knop	windows	no
+What happens when you press the power button	Wat er gebeurt als je op de aan/uit-knop drukt	winpoint	no
+Pressing the power button will make my PC	Als ik op de aan/uit-knop druk, gaat mijn pc naar	windows	no
+Energy saver	Energiebesparing	windows	no
+Save energy by limiting performance	Energie besparen door de prestaties te beperken	winpoint	no
+Turn energy saver on automatically when the battery is low	Energiebesparing automatisch inschakelen bij een laag batterijniveau	windows	no
+Increases battery longevity by maintaining lower charge levels	Verlengt de levensduur van de batterij door een lager laadniveau aan te houden	winpoint	no
+The battery is charged up to {n}%.	De batterij wordt tot {n}% opgeladen.	winpoint	no
+Battery charging	Batterij opladen	windows	no
+Choose how far the battery is charged	Kiezen hoe ver de batterij wordt opgeladen	winpoint	no
+Maximise charge	Maximale lading	windows	no
+Uses all battery capacity. Degrades batteries more quickly.	Gebruikt de volledige capaciteit van de batterij. De batterij gaat sneller achteruit.	winpoint	no
+Preserve battery health	Batterijgezondheid behouden	windows	no
+Couldn’t change battery charging	Het opladen kon niet worden gewijzigd	winpoint	no
+Battery levels	Batterijniveaus	windows	no
+The battery level over time	Het batterijniveau in de loop van de tijd	winpoint	no
+Last 24 hours	Afgelopen 24 uur	windows	no
+Last 7 days	Afgelopen 7 dagen	windows	no
+Now	Nu	winpoint	no
+There’s no battery history yet.	Er is nog geen batterijgeschiedenis.	winpoint	no
+Battery percentage	Batterijpercentage	windows	no
+Show battery percentage next to battery icon in the system tray	Het batterijpercentage naast het batterijpictogram in het systeemvak weergeven	windows	no
+# Screen time (beside Focus; GNOME's Wellbeing panel: Screen Time, Screen Limits, Break Reminders, Parental Controls banner)
+Screen time recording is off	Vastleggen van schermtijd is uitgeschakeld	winpoint	no
+Turn on recording to see your screen usage history.	Schakel vastleggen in om de geschiedenis van je schermgebruik te bekijken.	winpoint	no
+Screen time isn’t available	Schermtijd is niet beschikbaar	winpoint	no
+Screen time information will appear here after a period of usage.	Informatie over schermtijd wordt hier weergegeven nadat je de pc een tijdje hebt gebruikt.	winpoint	no
+Today	Vandaag	winpoint	no
+Average {day}: {time}	Gemiddelde {day}: {time}	winpoint	no
+This week	Deze week	winpoint	no
+Week of {date}	Week van {date}	winpoint	no
+Average week: {time}	Gemiddelde week: {time}	winpoint	no
+Previous week	Vorige week	winpoint	no
+Next week	Volgende week	winpoint	no
+{duration} every {interval}	{duration} elke {interval}	winpoint	no
+hr	uur	winpoint	no
+min	min	winpoint	no
+Screen limits	Schermlimieten	winpoint	no
+Some settings are managed by Parental Controls.	Sommige instellingen worden beheerd door Ouderlijk toezicht.	winpoint	no
+Open Parental Controls	Ouderlijk toezicht openen	winpoint	no
+Screen time limit	Limiet voor schermtijd	windows	no
+Set a daily limit for your screen time	Een dagelijkse limiet voor je schermtijd instellen	winpoint	no
+Daily limit	Dagelijkse limiet	windows	no
+Greyscale	Grijswaarden	windows	no
+Black and white screen when the limit is reached	Zwart-wit scherm bij het bereiken van de limiet	windows	no
+Break reminders	Pauzeherinneringen	windows	no
+Eyesight reminders	Herinneringen voor je ogen	windows	no
+Reminders to look away from the screen	Herinneringen om van het scherm weg te kijken	winpoint	no
+Movement reminders	Herinneringen om te bewegen	windows	no
+Reminders to move around	Herinneringen om even rond te lopen	winpoint	no
+Movement break schedule	Schema voor bewegingspauzes	windows	no
+Play a sound when a break ends	Een geluid afspelen wanneer een pauze eindigt	windows	no
+Screen time isn’t available on this computer.	Schermtijd is op deze computer niet beschikbaar.	winpoint	no
+Record screen time	Schermtijd vastleggen	windows	no
+Turning this off stops screen time data from being saved. This data is never shared outside this device.	Als je dit uitschakelt, wordt er geen schermtijd meer opgeslagen. Deze gegevens worden nooit buiten dit apparaat gedeeld.	winpoint	no

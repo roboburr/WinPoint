@@ -5,6 +5,12 @@
 //!
 //! The window gets the classes `w11`, `w11-dark` or `w11-light` and `w11-opaque` (the app's Mica is the solid
 //! #202020 / #f3f3f3; the GNOME extension adds blur and the shadow around it).
+//!
+//! The text scale is GNOME's text-scaling-factor, as in the kit and the shell (settings parity, amendment 49):
+//! GTK 4.22 applies it to point sizes only and this ramp is px, so the ramp is scaled by exactly GNOME's factor,
+//! never by settings.json's textScale on top (config.rs `text_scale` is only the fallback). The key is read from
+//! GSettings itself (GTK's Wayland backend takes its settings from the portal only; GTK's gtk-xft-dpi is the next
+//! source), and a change of it applies the look again.
 use crate::config::Config;
 use crate::store::CalendarInfo;
 use gtk::gdk;
@@ -17,6 +23,32 @@ thread_local! {
     static DYNAMIC: RefCell<Option<gtk::CssProvider>> = const { RefCell::new(None) };
     static LAST_CSS: RefCell<String> = const { RefCell::new(String::new()) };
     static LOOK: RefCell<(bool, String)> = RefCell::new((true, "#4cc2ff".into()));
+    /// What `apply` had last, for a change of the text scale.
+    static LAST_APPLY: RefCell<Option<(Config, Vec<CalendarInfo>)>> = const { RefCell::new(None) };
+    /// org.gnome.desktop.interface, where it has text-scaling-factor.
+    static INTERFACE: RefCell<Option<gtk::gio::Settings>> = const { RefCell::new(None) };
+}
+
+/// GNOME's text-scaling-factor from GTK's dpi (96 x 1024 at 1.0), within the schema's 0.5 ..= 3.0; None for
+/// GTK's "no dpi".
+fn text_scale_of_dpi(dpi: i32) -> Option<f64> {
+    (dpi > 0).then(|| (f64::from(dpi) / (96.0 * 1024.0)).clamp(0.5, 3.0))
+}
+
+/// The text scale in effect (module docs).
+fn text_scale(cfg: &Config) -> f64 {
+    INTERFACE
+        .with(|i| i.borrow().as_ref().map(|i| i.double("text-scaling-factor")))
+        .filter(|v| v.is_finite() && *v > 0.0)
+        .map(|v| v.clamp(0.5, 3.0))
+        .or_else(|| gtk::Settings::default().and_then(|s| text_scale_of_dpi(s.gtk_xft_dpi())))
+        .unwrap_or(cfg.text_scale)
+}
+
+fn apply_again() {
+    if let Some((cfg, calendars)) = LAST_APPLY.with(|l| l.borrow().clone()) {
+        apply(&cfg, &calendars);
+    }
 }
 
 pub fn install() {
@@ -33,6 +65,17 @@ pub fn install() {
     });
     gtk::style_context_add_provider_for_display(&display, &dynamic, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
     DYNAMIC.with(|d| *d.borrow_mut() = Some(dynamic));
+    let interface = gtk::gio::SettingsSchemaSource::default()
+        .and_then(|source| source.lookup("org.gnome.desktop.interface", true))
+        .filter(|schema| schema.has_key("text-scaling-factor"))
+        .map(|_| gtk::gio::Settings::new("org.gnome.desktop.interface"));
+    if let Some(i) = &interface {
+        i.connect_changed(Some("text-scaling-factor"), |_, _| apply_again());
+    }
+    INTERFACE.with(|slot| *slot.borrow_mut() = interface);
+    if let Some(settings) = gtk::Settings::default() {
+        settings.connect_gtk_xft_dpi_notify(|_| apply_again());
+    }
 }
 
 /// Apply the settings and the calendars' colours: CSS, GTK's colour scheme, the window classes.
@@ -44,10 +87,11 @@ pub fn apply(cfg: &Config, calendars: &[CalendarInfo]) {
             gtk::InterfaceColorScheme::Light
         });
     }
+    LAST_APPLY.with(|l| *l.borrow_mut() = Some((cfg.clone(), calendars.to_vec())));
     let palette = accent_palette(&cfg.accent);
     let fill = if cfg.dark { palette.light2.clone() } else { palette.dark1.clone() };
     LOOK.with(|l| *l.borrow_mut() = (cfg.dark, fill));
-    let css = dynamic_css(cfg, &palette, calendars);
+    let css = dynamic_css(cfg, text_scale(cfg), &palette, calendars);
     let changed = LAST_CSS.with(|last| {
         let mut last = last.borrow_mut();
         if *last == css {
@@ -99,7 +143,7 @@ fn toggle(window: &gtk::Window, class: &str, on: bool) {
     }
 }
 
-fn dynamic_css(cfg: &Config, p: &Palette, calendars: &[CalendarInfo]) -> String {
+fn dynamic_css(cfg: &Config, ts: f64, p: &Palette, calendars: &[CalendarInfo]) -> String {
     let dark = cfg.dark;
     let (accent, accent_text) = if dark { (&p.light2, &p.on_dark) } else { (&p.dark1, &p.on_light) };
     let a = rgb(accent);
@@ -132,7 +176,6 @@ fn dynamic_css(cfg: &Config, p: &Palette, calendars: &[CalendarInfo]) -> String 
     css.push_str(&format!("  --selection-bg: {accent};\n"));
     css.push_str(&format!("  --selection-text: {};\n", if dark { "#000000" } else { "#ffffff" }));
     css.push_str(&format!("  --selection-subtle: {};\n", rgba(a, if dark { 0.22 } else { 0.18 })));
-    let ts = cfg.text_scale;
     for (name, px) in [
         ("fs-caption", 12.0),
         ("fs-body", 14.0),
@@ -350,4 +393,19 @@ fn text_on(fill: &str, prefer: &str) -> String {
         return prefer.to_owned();
     }
     if contrast(other, fill) > contrast(prefer, fill) { other.to_owned() } else { prefer.to_owned() }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_ramp_is_scaled_by_gtks_factor_once() {
+        assert_eq!(text_scale_of_dpi(96 * 1024), Some(1.0));
+        assert_eq!(text_scale_of_dpi(147_456), Some(1.5));
+        assert_eq!(text_scale_of_dpi(-1), None);
+        let cfg = Config { text_scale: 1.25, ..Config::default() };
+        let css = dynamic_css(&cfg, 1.5, &accent_palette(&cfg.accent), &[]);
+        assert!(css.contains("--fs-body: 21px;"), "14 px x GNOME's 1.5, not x 1.25 too");
+    }
 }

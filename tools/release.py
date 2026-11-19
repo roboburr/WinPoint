@@ -7,20 +7,23 @@ local half of a release. Standard library only; run it from the checkout.
     python3 -B tools/release.py build X.Y.Z --build-dir DIR [--host-target T] [--native-target T] [--source REV]
                                   [--allow-os] [--offline]
 
-* ``bump`` rewrites the three places of the version and needs no cargo: the root Cargo.toml's ``[workspace.package]
+* ``bump`` rewrites the places of the version and needs no cargo: the root Cargo.toml's ``[workspace.package]
   version`` (the one source; the host inherits it), the ``win11-host`` block of Cargo.lock (scripts/build.sh builds
-  with ``--locked``) and ``version-name`` in extension/metadata.json (GNOME's integer ``version`` is its own counter
-  and stays). It finds all three first and writes nothing unless each has exactly one version (each file is then
-  replaced atomically). Add the CHANGELOG.md section and build again afterwards.
-* ``check`` says whether those three agree (and equal X.Y.Z when it is given) and whether CHANGELOG.md has a
+  with ``--locked``), ``version-name`` in extension/metadata.json (GNOME's integer ``version`` is its own counter
+  and stays) and the install line of README.md and README.nl.md (``install_line``, the line the release notes give:
+  it names the release, so an older download next to it does not matter). It finds all of them first and writes
+  nothing unless each has exactly one version (each file is then replaced atomically). Add the CHANGELOG.md section
+  and build again afterwards.
+* ``check`` says whether those places agree (and equal X.Y.Z when it is given) and whether CHANGELOG.md has a
   ``## X.Y.Z`` section.
 * ``build`` does everything that stays on this machine and **prints** the publishing commands; it never tags, pushes,
   uploads or contacts GitHub except for one ``git ls-remote`` of the tag (``--offline`` skips it):
   1. ``check X.Y.Z``; no tag ``vX.Y.Z`` here or (``git ls-remote``) on origin;
-  2. the source is the commit to be tagged: ``--source`` (default ``winpoint-main``, the branch of the publish
-     recipe's clean commits, whose tree equals the local HEAD's) has the working tree's host, native, scripts,
-     extension, vendor, Cargo files and CHANGELOG.md (``git diff --quiet``; untracked files do not count), and its
-     own CHANGELOG.md has the ``## X.Y.Z`` section (the release notes are taken from there, the text of the tag);
+  2. the source is the commit to be tagged: ``--source`` (default ``main``, whose tree equals the local HEAD's)
+     has the working tree's host, native, scripts,
+     extension, vendor, Cargo files, CHANGELOG.md and the two READMEs with their install line (``git diff
+     --quiet``; untracked files do not count), and its own CHANGELOG.md has the ``## X.Y.Z`` section (the release
+     notes are taken from there, the text of the tag);
   3. the build is current: the 19 programs of scripts/install.py BINS in DIR, each byte for byte the one cargo
      left in its target folder (``--host-target`` for the host's, ``--native-target`` for the GTK 4 ones, NATIVE_BINS;
      both default to ``$CARGO_TARGET_DIR/release``, else ``target/release``, where scripts/build.sh puts all 19); each
@@ -34,9 +37,21 @@ local half of a release. Standard library only; run it from the checkout.
      and ``WIN11_PACKAGE_DIR=dist``: ``dist/winpoint-X.Y.Z-linux-ARCH.tar.gz`` and its ``.sha256``;
   6. the tarball's self-test with the update check's rules: one top folder ``winpoint-X.Y.Z/``, no hard links,
      devices or fifos, relative symbolic links that stay inside it; the ``.sha256`` names the archive and matches;
-  7. a warning when host/data or scripts/install-session.py changed since the previous ``v*`` tag: machines with
-     those system files installed must install that release by hand (it goes into the notes);
-  8. ``dist/notes-X.Y.Z.md`` from that commit's CHANGELOG section, then the ``git tag``, ``git push`` and ``gh release``
+  7. a warning when what lands on the system changed since the previous ``v*`` tag, as the commit's install.py
+     --check would report it on a PC set up with that tag (its names): "session" when the four files the tag's
+     scripts/install-session.py ``contents()`` writes, installed on a fake system root, are what the commit's
+     install-session.py ``installed()`` and ``stale()`` call different (0.9.1: winpoint.json by meaning, without the
+     keys it copies from Ubuntu's mode; a script without ``stale()``, as 0.9.0's, compares the bytes), on two roots,
+     one with Ubuntu's shell mode ``UBUNTU_MODE`` and one without, each revision's own script unpacked from git;
+     "system" when one of install-system.py's four files in host/data differs byte for byte. WinPoint's updater
+     refuses such a release on a PC that has those files ("manual", host/src/services/winpoint/job.rs), so the notes
+     then say to install it with the line; a change to a root script, a message, the formatting of winpoint.json or
+     host/data/releases.json alone is no reason (0.9.1: the one root step moved into install-session.py, its four
+     files stayed);
+  8. ``dist/notes-X.Y.Z.md``: that commit's CHANGELOG section, then the install (``release_notes``): the one line to
+     paste, ``cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-X.Y.Z-linux-ARCH.tar.gz &&
+     ./winpoint-X.Y.Z/scripts/install.sh`` (the browser's download folder, which Ubuntu names in the user's language),
+     and an optional ``sha256sum -c`` of the ``.sha256`` asset; then the ``git tag``, ``git push`` and ``gh release``
      lines: the two assets go up to a draft, the next line lists them with the digest GitHub computed for each, which
      must be the printed ``sha256:`` of the tarball (and of its ``.sha256``) before the last line publishes the draft
      (with immutable releases a published asset can no longer be replaced; a draft's can, with ``gh release upload
@@ -55,6 +70,7 @@ from __future__ import annotations
 import argparse
 import filecmp
 import hashlib
+import importlib.util
 import io
 import json
 import os
@@ -69,16 +85,41 @@ from pathlib import Path, PurePosixPath
 
 G = Path(__file__).resolve().parent.parent
 REPO = "roboburr/WinPoint"
-PUBLISHED = "winpoint-main"
+PUBLISHED = "main"
 SUPPORTED = ("26.04",)
-SOURCE_PATHS = ("host", "native", "scripts", "extension", "vendor", "Cargo.toml", "Cargo.lock", "CHANGELOG.md")
-SYSTEM_PATHS = ("host/data", "scripts/install-session.py")
+# step 2; the READMEs too: two of bump's version places, packed into the tarball (scripts/package.py), whose install
+# line must be the tagged commit's
+SOURCE_PATHS = ("host", "native", "scripts", "extension", "vendor", "Cargo.toml", "Cargo.lock", "CHANGELOG.md",
+                "README.md", "README.nl.md")
+# step 7: what a revision needs to say what it writes on the system (install-session.py, install-system.py, host/data)
+SYSTEM_PATHS = ("scripts", "host/data")
+# Ubuntu 26.04's /usr/share/gnome-shell/modes/ubuntu.json: step 7's second fake system root has it (winpoint.json copies
+# its stylesheetName, themeResourceName and iconsResourceName), the first has none, as on a GNOME without Ubuntu's mode
+UBUNTU_MODE = {
+    "parentMode": "user",
+    "stylesheetName": "Yaru/gnome-shell.css",
+    "colorScheme": "prefer-light",
+    "themeResourceName": "theme/Yaru/gnome-shell-theme.gresource",
+    "iconsResourceName": "theme/Yaru/gnome-shell-icons.gresource",
+    "debugFlags": ["backtrace-crashes-all"],
+    "enabledExtensions": ["ubuntu-dock@ubuntu.com", "ubuntu-appindicators@ubuntu.com", "ding@rastersoft.com",
+                          "tiling-assistant@ubuntu.com", "snapd-prompting@canonical.com",
+                          "snapd-search-provider@canonical.com", "web-search-provider@ubuntu.com"],
+}
+# step 7's names (install.py --check's systemFiles) in the warning
+CHANGED = {"session": "the login-session files of scripts/install-session.py",
+           "system": "the system files of host/data (scripts/install-system.py)"}
 VERSION_RE = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)")
-# the three places of the version (bump rewrites the second group of each, exactly once)
+# the places of the version (bump rewrites the second group of each, exactly once, and the group "again" where a
+# place names the version twice: the README's install line, install_line())
+README_LINE = re.compile(r'(cd "\$\(xdg-user-dir DOWNLOAD\)" && tar -xzf winpoint-)([^-\s]*)(-linux-x86_64\.tar\.gz && '
+                         r'\./winpoint-)(?P<again>[^/\s]*)(/scripts/install\.sh)')
 PLACES = (
     ("Cargo.toml", re.compile(r'(\[workspace\.package\]\n(?:[^\[\n][^\n]*\n|\n)*?version = ")([^"]*)(")')),
     ("Cargo.lock", re.compile(r'(\[\[package\]\]\nname = "win11-host"\nversion = ")([^"]*)(")')),
     ("extension/metadata.json", re.compile(r'("version-name": ")([^"]*)(")')),
+    ("README.md", README_LINE),
+    ("README.nl.md", README_LINE),
 )
 
 
@@ -97,13 +138,31 @@ def git(*args: str, check: bool = True, **kw) -> subprocess.CompletedProcess:
                           capture_output=kw.pop("capture_output", True), **kw)
 
 
+def install_line(name: str, top: str) -> str:
+    """The line to paste for the tarball `name` with its top folder `top` (README's and the release notes')."""
+    return f'cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf {name} && ./{top}/scripts/install.sh'
+
+
 def versions() -> dict[str, str | None]:
-    """Each place's version (None when a place has none)."""
+    """Each place's version (None when a place has none; both of a line that names it twice, when they differ)."""
     out = {}
     for name, pattern in PLACES:
         match = pattern.search((G / name).read_text(encoding="utf-8"))
-        out[name] = match.group(2) if match else None
+        if match and "again" in pattern.groupindex and match.group("again") != match.group(2):
+            out[name] = f"{match.group(2)} and {match.group('again')}"
+        else:
+            out[name] = match.group(2) if match else None
     return out
+
+
+def bumped(match: re.Match, version: str) -> str:
+    """`match`'s text with its version (group 2, and the group "again" when the place has it) set to `version`."""
+    spans = [match.span(2)] + ([match.span("again")] if "again" in match.re.groupindex else [])
+    text, at = "", match.start()
+    for start, end in spans:
+        text += match.string[at:start] + version
+        at = end
+    return text + match.string[at:match.end()]
 
 
 def changelog_section(version: str, text: str | None = None) -> str | None:
@@ -141,7 +200,7 @@ def cmd_bump(args) -> int:
     for name, pattern in PLACES:
         path = G / name
         text = path.read_text(encoding="utf-8")
-        new, count = pattern.subn(lambda m: m.group(1) + args.version + m.group(3), text)
+        new, count = pattern.subn(lambda m: bumped(m, args.version), text)
         if count != 1:
             problems.append(f"{name}: expected one version, found {count}")
         elif new != text:
@@ -175,7 +234,7 @@ def cmd_check(args) -> int:
     problems = problems_of_check(args.version)
     found = versions()
     print(f"version: {found['Cargo.toml']} (Cargo.toml, Cargo.lock {found['Cargo.lock']}, metadata.json "
-          f"{found['extension/metadata.json']})")
+          f"{found['extension/metadata.json']}, README.md {found['README.md']}, README.nl.md {found['README.nl.md']})")
     for problem in problems:
         print(f"FAIL {problem}")
     print("check: " + ("OK" if not problems else f"{len(problems)} problem(s)"))
@@ -312,8 +371,10 @@ def check_os(allow: bool) -> None:
         print(f"warning: build machine: {problem} (--allow-os)")
 
 
-def unpack_source(rev: str, into: Path) -> None:
-    archive = subprocess.run(["git", "-C", str(G), "archive", "--format=tar", rev], check=True, capture_output=True)
+def unpack_source(rev: str, into: Path, *paths: str) -> None:
+    """`rev`'s tree (only `paths` when given) unpacked into the new folder `into`."""
+    archive = subprocess.run(["git", "-C", str(G), "archive", "--format=tar", rev, *paths], check=True,
+                             capture_output=True)
     into.mkdir()
     # our own commit: the "tar" filter keeps link targets as they are ("data" rewrites "./go-up.svg" to "go-up.svg",
     # and scripts/icon_bundle.py validate compares them byte for byte with vendor/icon-bundle.json)
@@ -376,6 +437,119 @@ def previous_tag(version: str) -> str | None:
     return max(older, key=lambda t: tuple(map(int, t[1:].split("."))), default=None)
 
 
+def load_script(path: Path, name: str):
+    """A script of an unpacked revision as a module of its own, the way install.py loads install-session.py (not in
+    sys.modules, so two revisions never mix); None when the revision has no such file."""
+    if not path.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def written(tree: Path, roots: list[Path]):
+    """What the revision unpacked in `tree` puts on the system: its install-session.py (the module, None without
+    one), per fake system root in `roots` the session files of it ({destination: bytes}, None without the script),
+    and its install-system.py's files in host/data ({name: bytes, None when missing})."""
+    session = load_script(tree/"scripts/install-session.py", "release_install_session")
+    sessions = None
+    if session is not None:
+        sessions = []
+        for root in roots:
+            files = session.contents(root)
+            sessions.append({f"{entry[1]}/{entry[0]}": files[entry[0]] for entry in session.FILES})
+    system = load_script(tree/"scripts/install-system.py", "release_install_system")
+    data = {}
+    for entry in system.FILES if system is not None else ():
+        try:
+            data[entry[0]] = (tree/"host/data"/entry[0]).read_bytes()
+        except OSError:
+            data[entry[0]] = None
+    return session, sessions, data
+
+
+def session_changed(prev_files: list[dict[str, bytes]] | None, new, new_files: list[dict[str, bytes]] | None,
+                    roots: list[Path]) -> bool:
+    """"session" as the new revision's install.py --check finds it (system_files): on each root, with the previous
+    revision's four files installed there, the new install-session.py's installed() and stale(). A script without
+    stale() (0.9.0's) compares the bytes, as its --check did; nothing installed before is no change."""
+    if prev_files is None:
+        return False
+    if new is None or not (hasattr(new, "stale") and hasattr(new, "installed")):
+        return prev_files != new_files
+    for root, files in zip(roots, prev_files):
+        for destination, data in files.items():
+            path = root/destination.lstrip("/")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        if new.installed(root) and new.stale(root):
+            return True
+    return False
+
+
+def system_changes(prev: str, commit: str) -> list[str]:
+    """Step 7: what `commit`'s install.py --check would find changed on a PC set up with `prev`, in its names:
+    "session" (`prev`'s contents() on the two fake roots, judged by `commit`'s install-session.py: session_changed)
+    and "system" (the files of install-system.py in host/data, byte for byte); the updater blocks a release with
+    either ("manual"). What `prev` did not install (no install-session.py, a file its install-system.py does not
+    list) is no change."""
+    with tempfile.TemporaryDirectory(prefix="winpoint-system-") as temp:
+        temp = Path(temp)
+        plain, ubuntu = temp/"root", temp/"root-ubuntu"
+        plain.mkdir()
+        mode = ubuntu/"usr/share/gnome-shell/modes/ubuntu.json"
+        mode.parent.mkdir(parents=True)
+        mode.write_text(json.dumps(UBUNTU_MODE, indent=4) + "\n", encoding="utf-8")
+        found = {}
+        for label, rev in (("prev", prev), ("new", commit)):
+            try:
+                unpack_source(rev, temp/label, *SYSTEM_PATHS)
+                found[label] = written(temp/label, [plain, ubuntu])
+            except subprocess.CalledProcessError as error:
+                detail = error.stderr.decode(errors="replace").strip()[:200]
+                fail(f"git archive {rev} {' '.join(SYSTEM_PATHS)} failed: {detail}")
+            except Exception as error:   # a script of that revision that does not load or has no contents()
+                fail(f"{rev}'s install-session.py or install-system.py: {type(error).__name__}: {error}")
+        (_prev, prev_session, prev_system), (new, new_session, new_system) = found["prev"], found["new"]
+        changed = []
+        try:
+            if session_changed(prev_session, new, new_session, [plain, ubuntu]):
+                changed.append("session")
+        except Exception as error:   # the new script's installed() or stale() fails on a root
+            fail(f"{commit}'s install-session.py: {type(error).__name__}: {error}")
+        if any(name in prev_system and prev_system[name] != data for name, data in new_system.items()):
+            changed.append("system")
+        return changed
+
+
+def release_notes(section: str, name: str, top: str, changes: list[str]) -> str:
+    """notes-X.Y.Z.md: the CHANGELOG section, then the install (0.9.1, Robin's decisions of 16-11: one password,
+    WinPoint preselected at the login screen): the exact line to paste, with the version filled in (so an older
+    download next to it does not matter) and the download folder from xdg-user-dir (Ubuntu names it in the user's
+    language: Téléchargements, Descargas), and the optional checksum check; then the update button, or, when step 7
+    found `changes`, that the button sends PCs with those files to this line (update.winpoint.reason.manual)."""
+    if changes:
+        button = ("This release changes WinPoint’s system files: install it with this line, also if you already have "
+                  "WinPoint (**Download and install** in Settings › Update & recovery sends you here).")
+    else:
+        button = ("Already on WinPoint 0.9.0 or newer? **Download and install** in Settings › Update & recovery does "
+                  "it for you.")
+    return (f"{section}\n"
+            f"**Install**: download `{name}` into your Downloads folder, open a terminal and paste this line:\n\n"
+            "```bash\n"
+            f"{install_line(name, top)}\n"
+            "```\n\n"
+            "It asks for your password once (an account that isn’t an administrator needs an administrator’s "
+            "password). Then sign out: WinPoint starts at the next sign-in. Your settings are kept. "
+            f"{button}\n\n"
+            f"To check the download first (optional), also download `{name}.sha256` and run this line before the "
+            "one above; it must say OK:\n\n"
+            "```bash\n"
+            f"cd \"$(xdg-user-dir DOWNLOAD)\" && sha256sum -c {name}.sha256\n"
+            "```\n")
+
+
 def cmd_build(args) -> int:
     version = args.version
     problems = problems_of_check(version)
@@ -417,17 +591,13 @@ def cmd_build(args) -> int:
     if sha.read_text(encoding="utf-8") != f"{digest}  {name}\n":
         fail(f"{sha.name} does not name {name} with its SHA-256")
     assets = [archive, sha]
-    notes = [section,
-             f"Install: download {name}, unpack it and run `./scripts/install.sh` in its `{top}` folder. Your "
-             "settings are kept.\n"]
     prev = previous_tag(version)
-    if prev and git("diff", "--quiet", prev, commit, "--", *SYSTEM_PATHS, check=False).returncode:
-        print(f"warning: host/data or scripts/install-session.py changed since {prev}: machines with those system "
-              "files installed must install this release by hand (it is in the notes)")
-        notes.append("This release changes system files: if you installed them, run `scripts/install-system.py` "
-                     "or `scripts/install-session.py` again after the install.\n")
+    changes = system_changes(prev, commit) if prev else []
+    if changes:
+        print(f"warning: {' and '.join(CHANGED[c] for c in changes)} changed since {prev}: WinPoint's updater refuses "
+              "this release on PCs that have them installed (\"manual\"); the notes send those users to the line")
     note_file = dist / f"notes-{version}.md"
-    note_file.write_text("\n".join(notes), encoding="utf-8")
+    note_file.write_text(release_notes(section, name, top, changes), encoding="utf-8")
     size = archive.stat().st_size
     print(f"built {archive.relative_to(G)} ({size / 1048576:.1f} MiB, top folder {top}/, sha256:{digest}), "
           f"{sha.name}; notes {note_file.relative_to(G)}")
@@ -448,9 +618,9 @@ def cmd_build(args) -> int:
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
-    p = sub.add_parser("bump", help="set the version in Cargo.toml, Cargo.lock and extension/metadata.json")
+    p = sub.add_parser("bump", help="set the version in Cargo.toml, Cargo.lock, extension/metadata.json and the README install lines")
     p.add_argument("version", type=version_arg)
-    p = sub.add_parser("check", help="the three places agree; CHANGELOG.md has the section")
+    p = sub.add_parser("check", help="the version places agree; CHANGELOG.md has the section")
     p.add_argument("version", type=version_arg, nargs="?")
     p = sub.add_parser("build", help="build the release assets in dist/ and print the publishing commands")
     p.add_argument("version", type=version_arg)

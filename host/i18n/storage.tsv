@@ -94,3 +94,11 @@ storage.notScannable	Deze map kan niet worden gescand.	This folder can’t be sc
 # compute(): ApiError "not_found": storage.categories: the home folder cannot be read (the error is not shown: the categories scan then keeps its old data)
 #@ host/src/services/storage/categories.rs 23 86843058b5e12494 plain
 storage.noHome	Je persoonlijke map is niet gevonden.	Your home folder can’t be found.
+
+# --- host/src/services/storage/sense.rs (settings parity, batch D)
+# storage.cleanTemp: neither gsd-housekeeping nor a temporary files folder (g_get_tmp_dir) is there
+#@ new
+storage.tempUnavailable	De map met tijdelijke bestanden is niet gevonden.	The temporary files folder wasn’t found.
+# storage.cleanTemp: gsd-housekeeping's RemoveTempFiles or the host's own deletion failed
+#@ new
+storage.tempFailed	De tijdelijke bestanden konden niet worden verwijderd.	Couldn’t delete the temporary files.

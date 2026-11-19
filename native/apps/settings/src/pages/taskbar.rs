@@ -1,7 +1,7 @@
 //! Instellingen › Persoonlijke instellingen › Taakbalk (6ebf169f:vendor/ui/js/apps/settings/pages/taskbar.js): the
 //! items (search, task view, widgets), the notification area ("Andere systeemvakpictogrammen": which tray icons sit
-//! on the taskbar and which stay behind the ^ overflow) and the behaviour (alignment, auto-hide, seconds), with a
-//! live mini taskbar on the wallpaper.
+//! on the taskbar and which stay behind the ^ overflow) and the behaviour (alignment, auto-hide, the taskbars of the
+//! other monitors, seconds), with a live mini taskbar on the wallpaper.
 //!
 //! Deep link: {page: "taskbar", section: "tray"} opens the tray expander and scrolls to it.
 use super::background::Thumb;
@@ -715,6 +715,91 @@ fn reveal(p: &Page, w: gtk::Widget) {
     });
 }
 
+/// Windows 11's two rows for more than one display (Taakbalkgedrag): "Mijn taakbalk weergeven op alle
+/// beeldschermen" (taskbar.allDisplays) and "Bij gebruik van meerdere beeldschermen mijn taakbalk-apps weergeven op"
+/// (taskbar.multiDisplayApps, the three choices of MMTaskbarMode). As in Windows both are greyed out with one
+/// display, and the second also while the first is off. The display count is GDK's monitors (on GNOME Mutter's
+/// logical monitors, the ones that get a taskbar), followed while the page is shown as monitors are plugged in,
+/// unplugged or switched off; where the host reads the monitors itself (Hyprland: display.list supported, with
+/// display.changed) its count.
+fn multi_display(p: &Page) -> (SettingsCard, ToggleSwitch, SettingsCard) {
+    let (all_card, all_sw) = common::toggle_card(
+        p,
+        "",
+        t("Mijn taakbalk weergeven op alle beeldschermen", "Show my taskbar on all displays"),
+        "",
+        "taskbar.allDisplays",
+        false,
+    );
+    let apps_on = common::setting_dropdown(
+        p,
+        "taskbar.multiDisplayApps",
+        vec![
+            (json!("all"), t("Alle taakbalken", "All taskbars").into()),
+            (
+                json!("mainAndWindow"),
+                t("Hoofdtaakbalk en taakbalk waar het venster is geopend", "Main taskbar and taskbar where window is open").into(),
+            ),
+            (json!("window"), t("Taakbalk waar het venster is geopend", "Taskbar where window is open").into()),
+        ],
+        Some(json!("window")),
+    );
+    apps_on.widget().set_widget_name("taskbar-multi-display-apps");
+    let apps_card = SettingsCard::new(
+        "",
+        t("Bij gebruik van meerdere beeldschermen mijn taakbalk-apps weergeven op", "When using multiple displays, show my taskbar apps on"),
+        "",
+    );
+    apps_card.set_control(&common::sized(apps_on.widget(), 320));
+
+    let gdk_count = || gtk::gdk::Display::default().map(|d| d.monitors().n_items() as usize).unwrap_or(1);
+    let displays = Rc::new(Cell::new(gdk_count()));
+    let sync: Rc<dyn Fn()> = {
+        let (all, apps, n) = (all_card.clone(), apps_card.clone(), displays.clone());
+        Rc::new(move || {
+            let multi = n.get() > 1;
+            all.set_sensitive(multi);
+            apps.set_sensitive(multi && common::setting_bool("taskbar.allDisplays", true));
+        })
+    };
+    sync();
+    {
+        let sync = sync.clone();
+        p.on_settings(move |_, _| sync());
+    }
+    // GNOME's host sends no display.changed: GDK's list of monitors changes with every monitor that comes or goes
+    if let Some(display) = gtk::gdk::Display::default() {
+        let model = display.monitors();
+        let (n, sync) = (displays.clone(), sync.clone());
+        let id = model.connect_items_changed(move |model, _, _, _| {
+            n.set((model.n_items() as usize).max(1));
+            sync();
+        });
+        p.on_cleanup(move || model.disconnect(id));
+    }
+    {
+        let (n, sync) = (displays.clone(), sync.clone());
+        p.on("display.changed", move |d| {
+            if let Some(list) = d["monitors"].as_array() {
+                n.set(list.len().max(1));
+                sync();
+            }
+        });
+    }
+    let (pp, n) = (p.clone(), displays);
+    p.spawn(async move {
+        if let Ok(v) = pp.call("display.list", json!({})).await
+            && pp.alive()
+            && v["supported"] == true
+            && let Some(list) = v["monitors"].as_array()
+        {
+            n.set(list.len().max(1));
+            sync();
+        }
+    });
+    (all_card, all_sw, apps_card)
+}
+
 fn page(p: Page) -> PageFuture {
     Box::pin(async move {
         let open_tray = p.param("section").is_some_and(|s| TRAY_SECTIONS.contains(&s.to_lowercase().as_str()));
@@ -770,6 +855,8 @@ fn page(p: Page) -> PageFuture {
             false,
         );
         hide_sw.switch().set_widget_name("taskbar-autohide");
+        let (all_card, all_sw, apps_card) = multi_display(&p);
+        all_sw.switch().set_widget_name("taskbar-all-displays");
         let seconds_on = || common::setting_bool("taskbar.showSeconds", false);
         let secs = ToggleSwitch::new(seconds_on());
         secs.switch().set_widget_name("taskbar-seconds");
@@ -792,10 +879,16 @@ fn page(p: Page) -> PageFuture {
         }
         let secs_card = SettingsCard::new("", t("Seconden weergeven in de klok van het systeemvak", "Show seconds in system tray clock"), t("Gebruikt iets meer stroom", "Uses a little more power"));
         secs_card.set_control(secs.widget());
-        let behavior = SettingsExpander::new("settings", t("Gedrag van de taakbalk", "Taskbar behaviours"), t("Uitlijning, automatisch verbergen, klok", "Alignment, auto-hide, clock"));
+        let behavior = SettingsExpander::new(
+            "settings",
+            t("Gedrag van de taakbalk", "Taskbar behaviours"),
+            t("Uitlijning, automatisch verbergen, meerdere beeldschermen, klok", "Alignment, auto-hide, multiple displays, clock"),
+        );
         behavior.set_expanded(true);
         behavior.add(align_card.widget());
         behavior.add(hide_card.widget());
+        behavior.add(all_card.widget());
+        behavior.add(apps_card.widget());
         behavior.add(secs_card.widget());
 
         let preview = Preview::new(&p, tray.clone());
@@ -848,6 +941,13 @@ fn page(p: Page) -> PageFuture {
         group.add(items.widget());
         group.add(section.exp.widget());
         group.add(behavior.widget());
-        vec![preview.root.clone().upcast(), group.widget().clone().upcast()]
+        // GNOME Settings' Ubuntu Desktop panel has the dock's settings; WinPoint's taskbar replaces the Ubuntu Dock,
+        // which the WinPoint session never loads (settings parity, amendment 27)
+        let dock = common::notice(t(
+            "De Ubuntu Dock wordt in WinPoint niet gebruikt. Deze instellingen gelden voor de taakbalk van WinPoint.",
+            "The Ubuntu Dock isn’t used in WinPoint. These settings apply to WinPoint’s taskbar.",
+        ));
+        dock.widget().set_widget_name("taskbar-ubuntu-dock");
+        vec![dock.widget().clone().upcast(), preview.root.clone().upcast(), group.widget().clone().upcast()]
     })
 }

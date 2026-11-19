@@ -432,7 +432,8 @@ def check_json_apostrophes(r: Report, root: Path) -> None:
     import json  # noqa: PLC0415
 
     for p in sorted((root / "host" / "src").rglob("*.json")):
-        if p.name in JSON_SKIP:
+        # the api-methods fragments (host/src/api-methods/*.json, settings parity §3) are method lists like api-methods.json
+        if p.name in JSON_SKIP or p.parent.name == "api-methods":
             continue
         rel = p.relative_to(root).as_posix()
         try:

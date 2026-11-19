@@ -554,11 +554,84 @@ fn unknown(lang: crate::i18n::Lang, method: &str) -> files::ApiError {
     e.data = Some(json!({"method":method}));
     e
 }
-fn methods() -> &'static Vec<Value> {
+/// The method list (`/api/methods`): api-methods.json plus one fragment per Settings batch
+/// (notes/claude/settings-parity.md §3). Each entry is `{name, dangerous, doc}`, optionally `secret` (amendment 53).
+const METHOD_FILES: &[(&str, &str)] = &[
+    ("api-methods.json", include_str!("api-methods.json")),
+    (
+        "api-methods/foundation.json",
+        include_str!("api-methods/foundation.json"),
+    ),
+    (
+        "api-methods/input.json",
+        include_str!("api-methods/input.json"),
+    ),
+    (
+        "api-methods/devices.json",
+        include_str!("api-methods/devices.json"),
+    ),
+    (
+        "api-methods/network.json",
+        include_str!("api-methods/network.json"),
+    ),
+    (
+        "api-methods/system.json",
+        include_str!("api-methods/system.json"),
+    ),
+    (
+        "api-methods/accounts.json",
+        include_str!("api-methods/accounts.json"),
+    ),
+    (
+        "api-methods/apps.json",
+        include_str!("api-methods/apps.json"),
+    ),
+];
+/// The sorted union of the method files; a malformed entry or a name in two places is an error (the build's tests
+/// and the first call catch it).
+pub(crate) fn load_methods(files: &[(&str, &str)]) -> Result<Vec<Value>, String> {
+    let mut all: Vec<Value> = Vec::new();
+    let mut seen = std::collections::HashMap::new();
+    for (file, text) in files {
+        let list: Vec<Value> = serde_json::from_str(text).map_err(|e| format!("{file}: {e}"))?;
+        for entry in list {
+            let name = entry["name"]
+                .as_str()
+                .filter(|n| !n.is_empty() && n.len() <= 100)
+                .ok_or_else(|| format!("{file}: an entry without a name"))?
+                .to_owned();
+            let object = entry.as_object().ok_or_else(|| format!("{file}: {name}"))?;
+            if !entry["dangerous"].is_boolean()
+                || !entry["doc"].is_string()
+                || !entry["secret"].is_null() && !entry["secret"].is_boolean()
+                || object
+                    .keys()
+                    .any(|k| !matches!(k.as_str(), "name" | "dangerous" | "doc" | "secret"))
+            {
+                return Err(format!(
+                    "{file}: {name} is not {{name, dangerous, doc, secret?}}"
+                ));
+            }
+            if let Some(other) = seen.insert(name.clone(), *file) {
+                return Err(format!("{name} is listed in {other} and {file}"));
+            }
+            all.push(entry);
+        }
+    }
+    all.sort_by(|a, b| a["name"].as_str().cmp(&b["name"].as_str()));
+    Ok(all)
+}
+pub(crate) fn methods() -> &'static Vec<Value> {
     static METHODS: OnceLock<Vec<Value>> = OnceLock::new();
-    METHODS.get_or_init(|| {
-        serde_json::from_str(include_str!("api-methods.json")).expect("embedded API methods")
-    })
+    METHODS.get_or_init(|| load_methods(METHOD_FILES).expect("embedded API methods"))
+}
+/// A method whose arguments carry a password, PIN or key (amendment 53): its args, error data and dry-run toasts are
+/// never logged.
+#[allow(dead_code)] // the batches' logging paths and the harness redaction (step I)
+pub(crate) fn is_secret(method: &str) -> bool {
+    methods()
+        .iter()
+        .any(|m| m["name"] == method && m["secret"] == true)
 }
 fn is_known(method: &str) -> bool {
     methods().iter().any(|m| m["name"] == method)
@@ -743,5 +816,140 @@ mod i18n_tests {
         );
         assert_eq!(e.params, Some(json!({"n": "3"})));
         assert_eq!(e.key.as_deref(), Some("core.noSuchPluralForTests"));
+    }
+}
+
+#[cfg(test)]
+mod methods_tests {
+    use super::*;
+
+    /// The prefixes each fragment may list (notes/claude/settings-parity.md §3, §5).
+    const FRAGMENT_PREFIXES: &[(&str, &[&str])] = &[
+        ("api-methods/foundation.json", &["gsettings.", "caps."]),
+        ("api-methods/input.json", &["input."]),
+        ("api-methods/devices.json", &["devices.", "printers."]),
+        ("api-methods/network.json", &["net.", "sharing."]),
+        (
+            "api-methods/system.json",
+            &["display.", "sound.", "battery.", "wellbeing.", "storage."],
+        ),
+        ("api-methods/accounts.json", &["users.", "goa.", "machine."]),
+        (
+            "api-methods/apps.json",
+            &["privacy.", "background.", "notifications.", "apps."],
+        ),
+    ];
+
+    #[test]
+    fn the_old_list_loads_byte_for_byte_and_the_union_is_sorted_and_unique() {
+        let old: Vec<Value> = serde_json::from_str(include_str!("api-methods.json")).unwrap();
+        assert_eq!(
+            load_methods(&[("api-methods.json", include_str!("api-methods.json"))]).unwrap(),
+            old,
+            "api-methods.json alone gives /api/methods as before"
+        );
+        let all = methods();
+        let names: Vec<&str> = all.iter().map(|m| m["name"].as_str().unwrap()).collect();
+        let mut sorted = names.clone();
+        sorted.sort();
+        sorted.dedup();
+        assert_eq!(names, sorted, "sorted by name, no name twice");
+        // the drift of amendment 54
+        assert!(is_known("system.power.settings.get") && is_known("system.power.settings.set"));
+        assert!(
+            all.iter()
+                .any(|m| m["name"] == "system.power.settings.set" && m["dangerous"] == true)
+        );
+        assert!(is_known("gsettings.set") && is_known("caps.get"));
+        assert!(!is_secret("gsettings.set"));
+    }
+
+    #[test]
+    fn duplicates_and_malformed_entries_are_refused() {
+        let a = r#"[{"name":"x.a","dangerous":false,"doc":""}]"#;
+        let b = r#"[{"name":"x.a","dangerous":true,"doc":"again"}]"#;
+        assert!(
+            load_methods(&[("a", a), ("b", b)])
+                .unwrap_err()
+                .contains("x.a")
+        );
+        for bad in [
+            r#"[{"name":"x.b","doc":""}]"#,
+            r#"[{"name":"x.b","dangerous":"yes","doc":""}]"#,
+            r#"[{"name":"x.b","dangerous":true,"doc":"","secret":1}]"#,
+            r#"[{"name":"x.b","dangerous":true,"doc":"","extra":1}]"#,
+            r#"[{"dangerous":true,"doc":""}]"#,
+            r#"{"name":"x.b"}"#,
+        ] {
+            assert!(load_methods(&[("f", bad)]).is_err(), "{bad}");
+        }
+        let secret = r#"[{"name":"x.c","dangerous":true,"doc":"","secret":true}]"#;
+        assert_eq!(load_methods(&[("f", secret)]).unwrap()[0]["secret"], true);
+    }
+
+    #[test]
+    fn every_service_method_is_listed_with_its_dangerous_flag() {
+        let all = methods();
+        for (service, table) in crate::services::method_tables() {
+            for (name, dangerous) in table {
+                let entry = all.iter().find(|m| m["name"] == name);
+                assert!(
+                    entry.is_some(),
+                    "{service}: {name} is in no api-methods file"
+                );
+                if let Some(dangerous) = dangerous {
+                    assert_eq!(
+                        entry.unwrap()["dangerous"],
+                        dangerous,
+                        "{service}: {name}'s dangerous flag"
+                    );
+                }
+            }
+        }
+    }
+
+    /// The other direction (review of B0, finding 15): a batch's new method is in its service's METHODS table too,
+    /// so the flag test above sees its dangerous flag.
+    #[test]
+    fn every_fragment_method_is_in_its_services_table() {
+        let tables = crate::services::method_tables();
+        for (file, text) in METHOD_FILES.iter().skip(1) {
+            for entry in load_methods(&[(file, text)]).unwrap() {
+                let name = entry["name"].as_str().unwrap();
+                let service = name.split('.').next().unwrap_or("");
+                let (_, table) = tables
+                    .iter()
+                    .find(|(s, _)| *s == service)
+                    .unwrap_or_else(|| panic!("{file}: {name}: no METHODS table for {service}"));
+                assert!(
+                    table.iter().any(|(n, _)| *n == name),
+                    "{file}: {name} is not in {service}'s METHODS table"
+                );
+            }
+        }
+        for service in ["display", "storage", "notifications", "apps"] {
+            assert!(
+                tables.iter().any(|(s, t)| *s == service && !t.is_empty()),
+                "{service}"
+            );
+        }
+    }
+
+    #[test]
+    fn each_fragment_lists_only_its_batch_prefixes() {
+        for (file, text) in METHOD_FILES.iter().skip(1) {
+            let prefixes = FRAGMENT_PREFIXES
+                .iter()
+                .find(|(f, _)| f == file)
+                .map(|(_, p)| *p)
+                .unwrap_or_else(|| panic!("{file} has no prefix rule"));
+            for entry in load_methods(&[(file, text)]).unwrap() {
+                let name = entry["name"].as_str().unwrap();
+                assert!(
+                    prefixes.iter().any(|p| name.starts_with(p)),
+                    "{file}: {name} is outside {prefixes:?}"
+                );
+            }
+        }
     }
 }

@@ -37,7 +37,28 @@ def gsettings(h, verb, schema, key):
                   f".get_value('{key}').print(true);}})()")
 
 
+def protected_settings(h):
+    """Read only the private session's protected schemas and keys."""
+    return h.eval("""(()=>{
+        const Gio=imports.gi.Gio, source=Gio.SettingsSchemaSource.get_default(), out={};
+        const ids=['org.gnome.shell.extensions.ubuntu-dock','org.gnome.shell.extensions.dash-to-dock',
+                   'org.gnome.shell.extensions.ding','org.gnome.shell.extensions.tiling-assistant',
+                   'org.gnome.shell','org.gnome.mutter'];
+        for(const id of ids){
+            const schema=source.lookup(id,true);
+            if(!schema||!schema.get_path()){out[id]=null;continue;}
+            const settings=new Gio.Settings({settings_schema:schema});
+            const keys=id==='org.gnome.shell'?['enabled-extensions','disabled-extensions']:
+                id==='org.gnome.mutter'?['experimental-features']:schema.list_keys().sort();
+            out[id]=Object.fromEntries(keys.filter(k=>schema.has_key(k)).map(k=>[k,settings.get_value(k).print(true)]));
+        }
+        return out;
+    })()""")
+
+
 def run(h):
+    protected_before = protected_settings(h)
+    h.record('protected.before', protected_before)
     h.record('boot', h.s.facts.get('nativeBoot'))
     h.sleep(4)
     mode = h.eval(MODE_JS)
@@ -57,21 +78,26 @@ def run(h):
     # WinPoint's theme sync writes GNOME's interface keys when the theme changes: switch light and back
     settings = config / 'win11-gnome' / 'settings.json'
     data = json.loads(settings.read_text() or '{}')
-    before = {key: gsettings(h, 'get', 'org.gnome.desktop.interface', key) for key in ('color-scheme', 'icon-theme', 'gtk-theme')}
+    before = {key: gsettings(h, 'get', 'org.gnome.desktop.interface', key) for key in ('color-scheme', 'icon-theme', 'gtk-theme', 'accent-color')}
     h.record('interface.before', before)
     h.check('start: WinPoint sets its colour scheme at the session start', before['color-scheme'] == "'prefer-dark'",
             before=before)
     data.setdefault('theme', {})['mode'] = 'light'
+    data['theme']['accent'] = '#E81123'
+    data['theme']['accentFromWallpaper'] = False
+    data['theme']['syncSystem'] = True
     settings.write_text(json.dumps(data, indent=2))
     h.sleep(3)
-    winpoint = {key: gsettings(h, 'get', 'org.gnome.desktop.interface', key) for key in ('color-scheme', 'icon-theme', 'gtk-theme')}
+    winpoint = {key: gsettings(h, 'get', 'org.gnome.desktop.interface', key) for key in ('color-scheme', 'icon-theme', 'gtk-theme', 'accent-color')}
     h.record('interface.winpoint', winpoint)
+    h.check('look: WinPoint applies its nearest GNOME accent', winpoint['accent-color'] == "'red'", accent=winpoint['accent-color'])
     try:
         record = json.loads(record_path.read_text())
     except (OSError, ValueError) as error:
         record = {'error': str(error)}
     h.record('record', record)
     keys = record.get('keys') or {}
+    h.check('record: GNOME accent is kept for restoration', 'org.gnome.desktop.interface accent-color' in keys)
     h.check('record: GNOME keys WinPoint wrote are kept', any(k.startswith('org.gnome.desktop.interface ') for k in keys),
             keys=sorted(keys))
     gtk_css = config / 'gtk-4.0' / 'gtk.css'
@@ -79,10 +105,10 @@ def run(h):
     app = h.hm.RUN / 'prefix' / 'bin' / 'win11-app'
     out = subprocess.run([str(app), '--gnome-look'], env=dict(os.environ), capture_output=True, text=True, timeout=30)
     h.record('restore.exit', {'code': out.returncode, 'stderr': out.stderr[-400:]})
-    after = {key: gsettings(h, 'get', 'org.gnome.desktop.interface', key) for key in ('color-scheme', 'icon-theme', 'gtk-theme')}
+    after = {key: gsettings(h, 'get', 'org.gnome.desktop.interface', key) for key in ('color-scheme', 'icon-theme', 'gtk-theme', 'accent-color')}
     h.record('interface.after', after)
     expected = {}
-    for key in ('color-scheme', 'icon-theme', 'gtk-theme'):
+    for key in ('color-scheme', 'icon-theme', 'gtk-theme', 'accent-color'):
         entry = keys.get(f'org.gnome.desktop.interface {key}')
         if entry and entry.get('winpoint') == winpoint[key]:
             expected[key] = entry.get('gnome')
@@ -90,9 +116,18 @@ def run(h):
                    for k, v in expected.items())
     h.check('restore: GNOME values back', out.returncode == 0 and bool(expected) and restored,
             expected=expected, after=after, winpoint=winpoint)
+    accent_entry = keys.get('org.gnome.desktop.interface accent-color', {})
+    accent_expected = accent_entry.get('gnome')
+    if accent_expected is None:
+        accent_expected = h.eval("new imports.gi.Gio.Settings({schema_id:'org.gnome.desktop.interface'}).get_default_value('accent-color').print(true)")
+    h.check('restore: accent-color returns to its recorded value or schema default',
+            out.returncode == 0 and after['accent-color'] == accent_expected, expected=accent_expected, after=after['accent-color'])
     text = gtk_css.read_text() if gtk_css.is_file() else ''
     h.check('restore: no caption-button block in gtk-4.0/gtk.css', 'win11shell caption-buttons' not in text,
             gtk4=text[:400])
+    protected_after = protected_settings(h)
+    h.check('isolation: dock, desktop icons, tiling, enabled extensions and mutter experiments stay unchanged',
+            protected_after == protected_before, before=protected_before, after=protected_after)
     data['theme']['mode'] = 'dark'
     settings.write_text(json.dumps(data, indent=2))
     h.sleep(2)

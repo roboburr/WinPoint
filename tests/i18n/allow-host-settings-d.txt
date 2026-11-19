@@ -1,0 +1,5 @@
+# tests/i18n/allow-host-settings-d.txt: settings-parity batch D's additions to tests/i18n/allow-host.txt (contracts C9), same
+# format (path<TAB>selector<TAB>reason). Only batch D edits this file (notes/claude/settings-parity.md §3).
+host/src/services/sound/client.rs	text:Peak detect	the media.name / stream name of a level meter on the PulseAudio server (GNOME Settings' own level bars use the same name); WinPoint shows none of it and GNOME's mixers skip the stream by its application.id
+host/src/services/sound/canberra.rs	text:Speaker test	media.name of libcanberra's speaker test stream on the PulseAudio server; never shown by WinPoint
+host/src/services/sound/canberra.rs	text:Alert sound	media.name of libcanberra's alert preview stream on the PulseAudio server; never shown by WinPoint

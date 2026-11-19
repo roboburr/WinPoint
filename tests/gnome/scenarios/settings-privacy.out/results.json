@@ -1,0 +1,4106 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 23:46:00",
+ "seconds": 156.7,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 139,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 758502,
+   "rss_kb": 1068196,
+   "processes": 21,
+   "t": 65.7
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 513124,
+   "rss_kb": 818136
+  },
+  "minMemAvailableKb": 4594144,
+  "abortedForMemory": false,
+  "peakByName": {
+   "python3": {
+    "count": 5,
+    "pss_kb": 326122,
+    "rss_kb": 403708
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 275911,
+    "rss_kb": 360224
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 52251,
+    "rss_kb": 90524
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 31963,
+    "rss_kb": 62252
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17368,
+    "rss_kb": 34912
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 16247,
+    "rss_kb": 25124
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 14503,
+    "rss_kb": 22092
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 14250,
+    "rss_kb": 22884
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4116,
+    "rss_kb": 11628
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2170,
+    "rss_kb": 4772
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1533,
+    "rss_kb": 10040
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 828,
+    "rss_kb": 8000
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 798,
+    "rss_kb": 7920
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 240,
+    "rss_kb": 1464
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 202,
+    "rss_kb": 2652
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 290762,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 178322,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 54623,
+    "first": 1.6
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 32046,
+    "first": 7.8
+   },
+   "glycin-svg": {
+    "pss_kb": 31580,
+    "first": 1.0
+   },
+   "ibus-extension-": {
+    "pss_kb": 17501,
+    "first": 1.0
+   },
+   "win11-panel": {
+    "pss_kb": 16317,
+    "first": 1.6
+   },
+   "win11-app": {
+    "pss_kb": 14251,
+    "first": 7.8
+   },
+   "glycin-image-rs": {
+    "pss_kb": 11997,
+    "first": 1.6
+   },
+   "ibus-daemon": {
+    "pss_kb": 4142,
+    "first": 1.0
+   },
+   "strace": {
+    "pss_kb": 2192,
+    "first": 0.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 966,
+    "first": 0.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 867,
+    "first": 1.0
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 858,
+    "first": 1.6
+   },
+   "bwrap": {
+    "pss_kb": 242,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 208,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/build/native-release",
+  "exit": 0,
+  "seconds": 61.8,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f"
+  }
+ },
+ "guardStubCalls": [
+  "23:47:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:18\tpw-dump\t--monitor --no-colors",
+  "23:47:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:20\tpw-dump\t--monitor --no-colors",
+  "23:47:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:24\tpw-dump\t--monitor --no-colors",
+  "23:47:24\tpw-dump\t--monitor --no-colors",
+  "23:47:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:26\tpw-dump\t--monitor --no-colors",
+  "23:47:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:30\tubuntu-insights\tconsent linux",
+  "23:47:30\tubuntu-insights\tconsent ubuntu_release_upgrader",
+  "23:47:30\tpw-dump\t--monitor --no-colors",
+  "23:47:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:32\tpw-dump\t--monitor --no-colors",
+  "23:47:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:38\tpw-dump\t--monitor --no-colors",
+  "23:47:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:48\tpw-dump\t--monitor --no-colors",
+  "23:47:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:55\tpw-dump\t--monitor --no-colors",
+  "23:47:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:47:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:18\tpw-dump\t--monitor --no-colors",
+  "23:48:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:20\tubuntu-insights\tconsent linux",
+  "23:48:20\tubuntu-insights\tconsent ubuntu_release_upgrader",
+  "23:48:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:25\tpw-dump\t--monitor --no-colors",
+  "23:48:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:26\tubuntu-insights\tconsent linux --state true",
+  "23:48:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:48:28\tubuntu-insights\tcollect --dry-run",
+  "23:48:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 36,
+  "maxScanSeconds": 0.056,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-privacy.out/strace.txt"
+  ],
+  "connects": 226,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 61
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 20
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 5
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 35
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 7
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 7
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 30
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   }
+  ]
+ },
+ "straceExec": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-privacy.out/strace.txt"
+  ],
+  "execs": 328,
+  "ok": true,
+  "violations": [],
+  "forbidden": [
+   "pkexec",
+   "check-new-release",
+   "apt-get",
+   "apt-cache",
+   "do-release-upgrade",
+   "loginctl",
+   "apt",
+   "pkcon"
+  ],
+  "byProgram": [],
+  "winpointPython": {
+   "execs": [],
+   "clicks": 0,
+   "perClick": {}
+  }
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-privacy.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "stubs mode before"
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.42,
+    "args": {
+     "spec": "settings:privacy"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "privacy",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1347,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 2.38,
+    "args": {
+     "name": "privacy.nl"
+    },
+    "result": {
+     "png": "privacy.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 879,
+      "meanLevel": 39.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 2.49,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Privacy en beveiliging – Instellingen",
+     "dutchWordHits": [
+      "afsluiten",
+      "alleen",
+      "altijd",
+      "apparaat",
+      "apparaten",
+      "beheerdersrechten",
+      "belangrijks",
+      "bestanden",
+      "beveiligd",
+      "beveiliging",
+      "bijhouden",
+      "blijven",
+      "daarna",
+      "dag",
+      "deze",
+      "doorzoeken",
+      "een",
+      "eerst",
+      "foutrapporten",
+      "gaat",
+      "gebeurt",
+      "gebruiken",
+      "geen",
+      "gegevens",
+      "gewist",
+      "hebben",
+      "herstel",
+      "het",
+      "houdt",
+      "iets",
+      "instelling",
+      "instellingen",
+      "je",
+      "jou",
+      "keer",
+      "kunt",
+      "leegmaakt",
+      "legt",
+      "locatie",
+      "lokaal",
+      "machtigingen",
+      "mappen",
+      "maximaliseren",
+      "meldingen",
+      "meteen",
+      "minimaliseren",
+      "mogen",
+      "naar",
+      "netwerk",
+      "nieuwste",
+      "nodig",
+      "nooit",
+      "om",
+      "opruimen",
+      "opstarten",
+      "opties",
+      "overzicht",
+      "persoonlijke",
+      "prullenbak",
+      "recente",
+      "sluiten",
+      "sommige",
+      "startpagina",
+      "stuurt",
+      "systeem",
+      "taal",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "tot",
+      "uit",
+      "van",
+      "veilig",
+      "versie",
+      "verwijderen",
+      "voor",
+      "voordat",
+      "vraagt",
+      "vragen",
+      "waarom",
+      "wachtwoord",
+      "weergeven",
+      "weet",
+      "welke",
+      "wissen",
+      "worden",
+      "ze",
+      "zeker",
+      "zet",
+      "ziet",
+      "zo",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zoekresultaten",
+      "één"
+     ],
+     "chars": 1590
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Privacy en beveiliging – Instellingen",
+     "titles": [
+      "Privacy en beveiliging – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nBeveiliging\nApparaatbeveiliging\nBeveiligingsniveau van het apparaat en Beveiligd opstarten\nMachtigingen\nDiagnostische gegevens en feedback\nFoutrapporten en systeemrapporten voor Canonical\nActiviteitengeschiedenis\nRecente bestanden bijhouden en wissen\nZoekmachtigingen\nZoekresultaten van apps in het overzicht\nDeze pc doorzoeken\nWelke mappen worden geïndexeerd voor zoeken\nApp-machtigingen\nLocatie\nLocatieservices en apps die je locatie gebruiken\nCamera\nCameratoegang voor apps\nMicrofoon\nMicrofoontoegang voor apps\nMeldingen\nWelke apps meldingen mogen weergeven\nZo houdt WinPoint je veilig\nVerwijderen gaat naar de Prullenbak\nBestanden worden nooit meteen gewist. Je kunt ze terugzetten tot je de Prullenbak leegmaakt.\nEerst vragen\nVoordat er iets belangrijks gebeurt, zoals afsluiten of opruimen, vraagt WinPoint of je het zeker weet.\nBeheerdersrechten\nSommige taken hebben je wachtwoord nodig. WinPoint legt altijd eerst uit waarom, daarna vraagt Ubuntu om je wachtwoord.\nJe gegevens blijven op deze computer\nWinPoint stuurt geen gegevens over jou of je bestanden naar internet. Alleen de updatecontrole vraagt GitHub één keer per dag naar de nieuwste versie van WinPoint (GitHub ziet dan je IP-adres en de versie van WinPoint). Je zet die uit in Update en herstel › Geavanceerde opties.",
+     "dutchWordHits": [
+      "afsluiten",
+      "alleen",
+      "altijd",
+      "apparaat",
+      "apparaten",
+      "beheerdersrechten",
+      "belangrijks",
+      "bestanden",
+      "beveiligd",
+      "beveiliging",
+      "bijhouden",
+      "blijven",
+      "daarna",
+      "dag",
+      "deze",
+      "doorzoeken",
+      "een",
+      "eerst",
+      "foutrapporten",
+      "gaat",
+      "gebeurt",
+      "gebruiken",
+      "geen",
+      "gegevens",
+      "gewist",
+      "hebben",
+      "herstel",
+      "het",
+      "houdt",
+      "iets",
+      "instelling",
+      "instellingen",
+      "je",
+      "jou",
+      "keer",
+      "kunt",
+      "leegmaakt",
+      "legt",
+      "locatie",
+      "lokaal",
+      "machtigingen",
+      "mappen",
+      "maximaliseren",
+      "meldingen",
+      "meteen",
+      "minimaliseren",
+      "mogen",
+      "naar",
+      "netwerk",
+      "nieuwste",
+      "nodig",
+      "nooit",
+      "om",
+      "opruimen",
+      "opstarten",
+      "opties",
+      "overzicht",
+      "persoonlijke",
+      "prullenbak",
+      "recente",
+      "sluiten",
+      "sommige",
+      "startpagina",
+      "stuurt",
+      "systeem",
+      "taal",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "tot",
+      "uit",
+      "van",
+      "veilig",
+      "versie",
+      "verwijderen",
+      "voor",
+      "voordat",
+      "vraagt",
+      "vragen",
+      "waarom",
+      "wachtwoord",
+      "weergeven",
+      "weet",
+      "welke",
+      "wissen",
+      "worden",
+      "ze",
+      "zeker",
+      "zet",
+      "ziet",
+      "zo",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zoekresultaten",
+      "één"
+     ]
+    }
+   },
+   {
+    "step": "backend",
+    "t": 2.53,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.53,
+    "args": {
+     "key": "caps"
+    }
+   },
+   {
+    "step": "open",
+    "t": 4.01,
+    "args": {
+     "spec": "settings:camera"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "camera",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.85,
+    "args": {
+     "name": "camera-without.nl"
+    },
+    "result": {
+     "png": "camera-without.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 888,
+      "meanLevel": 38.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 5.26,
+    "args": {
+     "spec": "settings:security"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "security",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 6.16,
+    "args": {
+     "name": "security-without.nl"
+    },
+    "result": {
+     "png": "security-without.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 853,
+      "meanLevel": 36.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 6.56,
+    "args": {
+     "spec": "settings:diagnostics"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "diagnostics",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.83,
+    "args": {
+     "key": "standin.permission-store"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.89,
+    "args": {
+     "key": "standin.whoopsie"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.96,
+    "args": {
+     "key": "standin.fwupd"
+    }
+   },
+   {
+    "step": "open",
+    "t": 7.53,
+    "args": {
+     "spec": "settings:activity"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "activity",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 8.51,
+    "args": {
+     "name": "activity.nl"
+    },
+    "result": {
+     "png": "activity.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 875,
+      "meanLevel": 38.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 8.65,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Activiteitengeschiedenis – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "alleen",
+      "altijd",
+      "andere",
+      "apparaat",
+      "apparaten",
+      "bestaan",
+      "bestanden",
+      "beveiliging",
+      "bewaren",
+      "bijhouden",
+      "blijft",
+      "blijven",
+      "deze",
+      "dit",
+      "een",
+      "geopende",
+      "geschiedenis",
+      "herstel",
+      "hij",
+      "instelling",
+      "instellingen",
+      "je",
+      "jij",
+      "kunnen",
+      "leegmaken",
+      "lijst",
+      "lokaal",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "netwerk",
+      "onlangs",
+      "opent",
+      "opslaan",
+      "persoonlijke",
+      "recente",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "verkenner",
+      "weergeven",
+      "welke",
+      "wissen",
+      "zelf",
+      "ziet",
+      "zodat",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 820
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Activiteitengeschiedenis – Instellingen",
+     "titles": [
+      "Activiteitengeschiedenis – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nActiviteitengeschiedenis\nMijn activiteitengeschiedenis op dit apparaat opslaan\nBijhouden welke bestanden je opent, zodat Start, Verkenner en andere apps je recente bestanden kunnen weergeven. Alleen jij ziet deze lijst en hij blijft op dit apparaat.\nAan\nGeschiedenis bewaren gedurende\nHoelang recente bestanden in de lijst blijven\nAltijd\nActiviteitengeschiedenis wissen\nDe lijst met onlangs geopende bestanden leegmaken. De bestanden zelf blijven bestaan.\nGeschiedenis wissen\nGeschiedenis wissen",
+     "dutchWordHits": [
+      "aan",
+      "alleen",
+      "altijd",
+      "andere",
+      "apparaat",
+      "apparaten",
+      "bestaan",
+      "bestanden",
+      "beveiliging",
+      "bewaren",
+      "bijhouden",
+      "blijft",
+      "blijven",
+      "deze",
+      "dit",
+      "een",
+      "geopende",
+      "geschiedenis",
+      "herstel",
+      "hij",
+      "instelling",
+      "instellingen",
+      "je",
+      "jij",
+      "kunnen",
+      "leegmaken",
+      "lijst",
+      "lokaal",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "netwerk",
+      "onlangs",
+      "opent",
+      "opslaan",
+      "persoonlijke",
+      "recente",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "verkenner",
+      "weergeven",
+      "welke",
+      "wissen",
+      "zelf",
+      "ziet",
+      "zodat",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 9.47,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remember-recent-files",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "backend",
+    "t": 9.47,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 9.55,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "remember-recent-files",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.85,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "recent-files-max-age",
+     "path": null
+    },
+    "result": "7"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.85,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "recent-files-max-age",
+     "path": null
+    },
+    "result": "7"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 10.85,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "recent-files-max-age",
+     "path": null,
+     "value": "30"
+    }
+   },
+   {
+    "step": "log",
+    "t": 16.41,
+    "args": {
+     "msg": "timeout: Wissen (pointer) (after 4 s; last error: None)"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 16.59,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "open",
+    "t": 17.29,
+    "args": {
+     "spec": "settings:searchpermissions"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "searchpermissions",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 18.25,
+    "args": {
+     "name": "searchpermissions.nl"
+    },
+    "result": {
+     "png": "searchpermissions.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 923,
+      "meanLevel": 40.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 18.43,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Zoekmachtigingen – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "doorzoeken",
+      "een",
+      "eigen",
+      "gebruikt",
+      "gelden",
+      "gerelateerde",
+      "gewist",
+      "herstel",
+      "het",
+      "instelling",
+      "instellingen",
+      "je",
+      "kunnen",
+      "lijst",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "omhoog",
+      "overzicht",
+      "persoonlijke",
+      "resultaten",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "tekens",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "volgorde",
+      "voor",
+      "wachtwoorden",
+      "wanneer",
+      "weergegeven",
+      "weergeven",
+      "welke",
+      "worden",
+      "zoek",
+      "zoeken",
+      "zoekresultaten",
+      "zoekt"
+     ],
+     "chars": 1057
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Zoekmachtigingen – Instellingen",
+     "titles": [
+      "Zoekmachtigingen – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nZoekmachtigingen\nDeze instellingen gelden voor het zoeken in het overzicht van GNOME (Activiteiten). Zoeken in Start gebruikt de eigen index van WinPoint (Deze pc doorzoeken).\nZoekresultaten van apps opnemen\nApps kunnen resultaten weergeven wanneer je in het overzicht zoekt\nAan\nZoekresultaten\nDe resultaten worden in de volgorde van deze lijst weergegeven.\nGNOME-instellingen\nAan\nOmhoog\nOmlaag\nBestanden\nAan\nOmhoog\nOmlaag\nRekenmachine\nAan\nOmhoog\nOmlaag\nAgenda\nAan\nOmhoog\nOmlaag\nTekens\nAan\nOmhoog\nOmlaag\nClaude\nAan\nOmhoog\nOmlaag\nKlokken\nAan\nOmhoog\nOmlaag\nWachtwoorden en sleutels\nAan\nOmhoog\nOmlaag\nGerelateerde instellingen\nDeze pc doorzoeken\nWelke mappen worden geïndexeerd voor zoeken\nDe activiteitengeschiedenis is gewist\nSluiten",
+     "dutchWordHits": [
+      "aan",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "doorzoeken",
+      "een",
+      "eigen",
+      "gebruikt",
+      "gelden",
+      "gerelateerde",
+      "gewist",
+      "herstel",
+      "het",
+      "instelling",
+      "instellingen",
+      "je",
+      "kunnen",
+      "lijst",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "omhoog",
+      "overzicht",
+      "persoonlijke",
+      "resultaten",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "tekens",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "volgorde",
+      "voor",
+      "wachtwoorden",
+      "wanneer",
+      "weergegeven",
+      "weergeven",
+      "welke",
+      "worden",
+      "zoek",
+      "zoeken",
+      "zoekresultaten",
+      "zoekt"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.12,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disabled",
+     "path": null
+    },
+    "result": "['org.gnome.Nautilus.desktop']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.13,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disabled",
+     "path": null
+    },
+    "result": "['org.gnome.Nautilus.desktop']"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 19.13,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disabled",
+     "path": null,
+     "value": "@as []"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.84,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "sort-order",
+     "path": null
+    },
+    "result": "['org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'com.anthropic.Claude.desktop', 'org.gnome.clocks.desktop', 'org.gnome.seahorse.Application.desktop']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 19.84,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "sort-order",
+     "path": null
+    },
+    "result": "['org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'com.anthropic.Claude.desktop', 'org.gnome.clocks.desktop', 'org.gnome.seahorse.Application.desktop']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "sort-order",
+     "path": null
+    },
+    "result": "['org.gnome.Settings.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'com.anthropic.Claude.desktop', 'org.gnome.clocks.desktop', 'org.gnome.seahorse.Application.desktop']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 20.62,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "sort-order",
+     "path": null
+    },
+    "result": "['org.gnome.Settings.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'com.anthropic.Claude.desktop', 'org.gnome.clocks.desktop', 'org.gnome.seahorse.Application.desktop']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.28,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disable-external",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "screenshot",
+    "t": 22.05,
+    "args": {
+     "name": "searchpermissions-off.nl"
+    },
+    "result": {
+     "png": "searchpermissions-off.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 897,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 22.05,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disable-external",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "open",
+    "t": 22.97,
+    "args": {
+     "spec": "settings:searching"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "searching",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 24.0,
+    "args": {
+     "name": "searching.nl"
+    },
+    "result": {
+     "png": "searching.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 902,
+      "meanLevel": 40.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 24.13,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Deze pc doorzoeken – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "aangepaste",
+      "aanpassen",
+      "afbeeldingen",
+      "alle",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "bureaublad",
+      "deze",
+      "documenten",
+      "doorzocht",
+      "doorzoeken",
+      "doorzoekt",
+      "een",
+      "gerelateerde",
+      "hele",
+      "herstel",
+      "het",
+      "hun",
+      "instelling",
+      "instellingen",
+      "je",
+      "kies",
+      "kiezen",
+      "locatie",
+      "locaties",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "muziek",
+      "naar",
+      "netwerk",
+      "niet",
+      "ook",
+      "opbouwen",
+      "opnieuw",
+      "overzicht",
+      "persoonlijke",
+      "schijven",
+      "sluiten",
+      "startpagina",
+      "submappen",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "toevoegen",
+      "uit",
+      "uitgesloten",
+      "uitsluiten",
+      "van",
+      "verborgen",
+      "waar",
+      "wordt",
+      "zoek",
+      "zoeken",
+      "zoekresultaten",
+      "zonder"
+     ],
+     "chars": 2441
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Deze pc doorzoeken – Instellingen",
+     "titles": [
+      "Deze pc doorzoeken – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nDeze pc doorzoeken\nMijn bestanden zoeken\nKies waar Start, Bestanden en het overzicht van GNOME naar je bestanden zoeken\nKlassiek\nUitgebreid\nJe hele pc doorzoeken, inclusief je bibliotheken en bureaublad. Start doorzoekt alle schijven en Bestanden en het overzicht van GNOME je hele persoonlijke map.\nZoeklocaties aanpassen\nDe mappen die Bestanden en het overzicht van GNOME doorzoeken; in Klassiek ook Start\nStandaardlocaties\nPersoonlijke map\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home (zonder submappen)\nAan\nBureaublad\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Desktop\nUit\nDocumenten\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Documents\nUit\nDownloads\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Downloads\nUit\nMuziek\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Music\nUit\nAfbeeldingen\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Pictures\nUit\nVideo's\n/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Videos\nUit\nAangepaste locaties\nLocatie toevoegen\nEen map toevoegen die met alle submappen wordt doorzocht\nMap kiezen\nMap kiezen\nMappen uitsluiten van uitgebreid zoeken\nStart doorzoekt deze mappen en hun submappen niet.\nEen uitgesloten map toevoegen\nBladeren\nBladeren\nGerelateerde instellingen\nZoekmachtigingen\nZoekresultaten van apps in het overzicht\nGeavanceerde indexeringsopties\nStations, verborgen bestanden en de index opnieuw opbouwen in Alles",
+     "dutchWordHits": [
+      "aan",
+      "aangepaste",
+      "aanpassen",
+      "afbeeldingen",
+      "alle",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "bureaublad",
+      "deze",
+      "documenten",
+      "doorzocht",
+      "doorzoeken",
+      "doorzoekt",
+      "een",
+      "gerelateerde",
+      "hele",
+      "herstel",
+      "het",
+      "hun",
+      "instelling",
+      "instellingen",
+      "je",
+      "kies",
+      "kiezen",
+      "locatie",
+      "locaties",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "muziek",
+      "naar",
+      "netwerk",
+      "niet",
+      "ook",
+      "opbouwen",
+      "opnieuw",
+      "overzicht",
+      "persoonlijke",
+      "schijven",
+      "sluiten",
+      "startpagina",
+      "submappen",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "toevoegen",
+      "uit",
+      "uitgesloten",
+      "uitsluiten",
+      "van",
+      "verborgen",
+      "waar",
+      "wordt",
+      "zoek",
+      "zoeken",
+      "zoekresultaten",
+      "zonder"
+     ]
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.53,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.26,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.26,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.26,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&MUSIC', '&PICTURES', '&VIDEOS']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.26,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&MUSIC', '&PICTURES', '&VIDEOS']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.26,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&MUSIC', '&PICTURES', '&VIDEOS']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.27,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-single-directories",
+     "path": null
+    },
+    "result": "['$HOME']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 27.52,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&PICTURES', '&VIDEOS']"
+   },
+   {
+    "step": "backend",
+    "t": 27.52,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.52,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 27.52,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&PICTURES', '&VIDEOS']"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 27.52,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null,
+     "value": "['&DOCUMENTS', '&MUSIC']"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 28.32,
+    "args": {
+     "name": "searching-classic.nl"
+    },
+    "result": {
+     "png": "searching-classic.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 920,
+      "meanLevel": 41.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.78,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 29.78,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 29.78,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['$HOME', '&DOCUMENTS', '&MUSIC']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 29.78,
+    "args": {
+     "schema": "org.freedesktop.Tracker3.Miner.Files",
+     "key": "index-recursive-directories",
+     "path": null
+    },
+    "result": "['$HOME', '&DOCUMENTS', '&MUSIC']"
+   },
+   {
+    "step": "open",
+    "t": 30.43,
+    "args": {
+     "spec": "settings:location"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "location",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 31.09,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Locatie – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "apparaat",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "dit",
+      "een",
+      "eerst",
+      "gebruiken",
+      "gebruikt",
+      "geopend",
+      "geven",
+      "herstel",
+      "het",
+      "hierboven",
+      "iedereen",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kan",
+      "kiezen",
+      "laatst",
+      "locatie",
+      "lokaal",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "mogen",
+      "netwerk",
+      "netwerken",
+      "niet",
+      "om",
+      "persoonlijke",
+      "rechtstreeks",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegang",
+      "toegankelijkheid",
+      "toestemming",
+      "tot",
+      "uit",
+      "vraagt",
+      "vragen",
+      "wanneer",
+      "welke",
+      "zijn",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zolang"
+     ],
+     "chars": 858
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Locatie – Instellingen",
+     "titles": [
+      "Locatie – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nLocatie\nLocatieservices\nWanneer dit is ingeschakeld, bepaalt het apparaat zijn locatie met bronnen zoals wifi, gps en mobiele netwerken, en kan iedereen die dit apparaat gebruikt kiezen welke apps de locatie mogen gebruiken\nUit\nApps toegang geven tot je locatie\nSchakel dit hierboven eerst in\nBestanden\nLaatst geopend op 16-11-2025 09:00\nAan\nDesktop-apps toegang geven tot je locatie\nApps die niet in een sandbox draaien, vragen de locatie rechtstreeks op zolang Locatieservices is ingeschakeld; GNOME vraagt je eerst om toestemming.",
+     "dutchWordHits": [
+      "aan",
+      "apparaat",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "dit",
+      "een",
+      "eerst",
+      "gebruiken",
+      "gebruikt",
+      "geopend",
+      "geven",
+      "herstel",
+      "het",
+      "hierboven",
+      "iedereen",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kan",
+      "kiezen",
+      "laatst",
+      "locatie",
+      "lokaal",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "mogen",
+      "netwerk",
+      "netwerken",
+      "niet",
+      "om",
+      "persoonlijke",
+      "rechtstreeks",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegang",
+      "toegankelijkheid",
+      "toestemming",
+      "tot",
+      "uit",
+      "vraagt",
+      "vragen",
+      "wanneer",
+      "welke",
+      "zijn",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zolang"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 31.92,
+    "args": {
+     "name": "location.nl"
+    },
+    "result": {
+     "png": "location.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 891,
+      "meanLevel": 38.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 32.27,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 34.69,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 34.69,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 35.04,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "open",
+    "t": 36.7,
+    "args": {
+     "spec": "settings:camera"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "camera",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 37.41,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Camera – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "apparaat",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "dit",
+      "een",
+      "gebruiken",
+      "gebruikt",
+      "gelden",
+      "geven",
+      "hebben",
+      "herstel",
+      "iedereen",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kan",
+      "kies",
+      "kiezen",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "persoonlijke",
+      "rechtstreeks",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegang",
+      "toegankelijkheid",
+      "tot",
+      "van",
+      "voor",
+      "vragen",
+      "wanneer",
+      "welke",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 770
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Camera – Instellingen",
+     "titles": [
+      "Camera – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nCamera\nCameratoegang\nWanneer dit is ingeschakeld, kan iedereen die dit apparaat gebruikt kiezen of zijn apps toegang hebben tot de camera\nAan\nApps toegang geven tot je camera\nKies welke apps toegang hebben tot je camera\nBestanden\nAan\nDesktop-apps toegang geven tot je camera\nApps die niet in een sandbox draaien, gebruiken de camera rechtstreeks. Deze instellingen gelden voor apps die de camera via de portal van GNOME vragen (Flatpak en Snap).",
+     "dutchWordHits": [
+      "aan",
+      "apparaat",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "dit",
+      "een",
+      "gebruiken",
+      "gebruikt",
+      "gelden",
+      "geven",
+      "hebben",
+      "herstel",
+      "iedereen",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kan",
+      "kies",
+      "kiezen",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "persoonlijke",
+      "rechtstreeks",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegang",
+      "toegankelijkheid",
+      "tot",
+      "van",
+      "voor",
+      "vragen",
+      "wanneer",
+      "welke",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 38.23,
+    "args": {
+     "name": "camera.nl"
+    },
+    "result": {
+     "png": "camera.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 890,
+      "meanLevel": 37.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.89,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "disable-camera",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.89,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "disable-camera",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 41.26,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "disable-camera",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "open",
+    "t": 42.38,
+    "args": {
+     "spec": "settings:microphone"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "microphone",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 43.14,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Microfoon – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "alleen",
+      "apparaat",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "dit",
+      "een",
+      "gebruiken",
+      "gebruikt",
+      "gelden",
+      "geven",
+      "hebben",
+      "herstel",
+      "iedereen",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kan",
+      "kies",
+      "kiezen",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "persoonlijke",
+      "rechtstreeks",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegang",
+      "toegankelijkheid",
+      "tot",
+      "uit",
+      "van",
+      "voor",
+      "vragen",
+      "wanneer",
+      "welke",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 801
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Microfoon – Instellingen",
+     "titles": [
+      "Microfoon – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nMicrofoon\nMicrofoontoegang\nWanneer dit is ingeschakeld, kan iedereen die dit apparaat gebruikt kiezen of zijn apps toegang hebben tot de microfoon\nAan\nApps toegang geven tot je microfoon\nKies welke apps toegang hebben tot je microfoon\nBestanden\nUit\nDesktop-apps toegang geven tot je microfoon\nApps die niet in een sandbox draaien, gebruiken de microfoon rechtstreeks. Deze instellingen gelden alleen voor apps die de microfoon via de portal van GNOME vragen (Flatpak en Snap).",
+     "dutchWordHits": [
+      "aan",
+      "alleen",
+      "apparaat",
+      "apparaten",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "dit",
+      "een",
+      "gebruiken",
+      "gebruikt",
+      "gelden",
+      "geven",
+      "hebben",
+      "herstel",
+      "iedereen",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kan",
+      "kies",
+      "kiezen",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "persoonlijke",
+      "rechtstreeks",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegang",
+      "toegankelijkheid",
+      "tot",
+      "uit",
+      "van",
+      "voor",
+      "vragen",
+      "wanneer",
+      "welke",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 44.0,
+    "args": {
+     "name": "microphone.nl"
+    },
+    "result": {
+     "png": "microphone.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 894,
+      "meanLevel": 37.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 47.0,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "disable-microphone",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 47.0,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "disable-microphone",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 47.49,
+    "args": {
+     "schema": "org.gnome.desktop.privacy",
+     "key": "disable-microphone",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "open",
+    "t": 48.75,
+    "args": {
+     "spec": "settings:security"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "security",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 49.72,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Apparaatbeveiliging – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "alle",
+      "als",
+      "apparaat",
+      "apparaten",
+      "beveiligd",
+      "beveiliging",
+      "dat",
+      "dit",
+      "een",
+      "gebruik",
+      "geladen",
+      "geslaagd",
+      "gevonden",
+      "gewijzigd",
+      "herstel",
+      "het",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "mislukt",
+      "netwerk",
+      "niet",
+      "niveau",
+      "opstart",
+      "opstarten",
+      "persoonlijke",
+      "problemen",
+      "sluiten",
+      "sommige",
+      "soorten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "tekst",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uitgeschakeld",
+      "van",
+      "versleuteling",
+      "voor",
+      "wanneer",
+      "wordt",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1385
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Apparaatbeveiliging – Instellingen",
+     "titles": [
+      "Apparaatbeveiliging – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nApparaatbeveiliging\nApparaatbeveiliging\nBeveiliging die in je apparaat is ingebouwd\nControles geslaagd\nDit apparaat voldoet aan de basisvereisten voor beveiliging. De hardware beschermt tegen sommige soorten beveiligingsrisico’s. Tijdens het gebruik zijn er problemen gevonden.\nNiveau 1\nBeveiligingsniveau 1\nUEFI Beveiligd opstarten\nGeslaagd (Ingeschakeld)\nTPM 2.0\nGeslaagd (Gevonden)\nBeveiligingsniveau 2\nIOMMU-beveiliging\nMislukt (Niet gevonden)\nBeveiligingsniveau 3\nVergrendeling van de Linux-kernel\nMislukt (Uitgeschakeld)\nTijdens het gebruik\nControle van de Linux-kernel\nMislukt (Gewijzigd)\nTechnisch rapport kopiëren\nAlle controles en gebeurtenissen als tekst, voor een supportvraag\nKopiëren\nKopiëren\nBeveiligd opstarten\nBeveiligd opstarten is ingeschakeld. Het voorkomt dat schadelijke software wordt geladen wanneer het apparaat opstart.\nBeveiligingsprocessor\nJe beveiligingsprocessor (TPM 2.0) is aanwezig en biedt extra versleuteling voor je apparaat.\nBeveiligingsgebeurtenissen\nUEFI Beveiligd opstarten: Uitgeschakeld → Ingeschakeld\n15-11-2025 10:46",
+     "dutchWordHits": [
+      "aan",
+      "alle",
+      "als",
+      "apparaat",
+      "apparaten",
+      "beveiligd",
+      "beveiliging",
+      "dat",
+      "dit",
+      "een",
+      "gebruik",
+      "geladen",
+      "geslaagd",
+      "gevonden",
+      "gewijzigd",
+      "herstel",
+      "het",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "mislukt",
+      "netwerk",
+      "niet",
+      "niveau",
+      "opstart",
+      "opstarten",
+      "persoonlijke",
+      "problemen",
+      "sluiten",
+      "sommige",
+      "soorten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "tekst",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uitgeschakeld",
+      "van",
+      "versleuteling",
+      "voor",
+      "wanneer",
+      "wordt",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 51.08,
+    "args": {
+     "name": "security.nl"
+    },
+    "result": {
+     "png": "security.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 892,
+      "meanLevel": 38.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 53.97,
+    "args": {
+     "name": "security-checks.nl"
+    },
+    "result": {
+     "png": "security-checks.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 887,
+      "meanLevel": 40.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 55.81,
+    "args": {
+     "key": "security report"
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 56.06,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Apparaatbeveiliging – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "alle",
+      "als",
+      "apparaat",
+      "apparaten",
+      "beveiligd",
+      "beveiliging",
+      "dat",
+      "dit",
+      "een",
+      "gebruik",
+      "gekopieerd",
+      "geladen",
+      "geslaagd",
+      "gevonden",
+      "gewijzigd",
+      "herstel",
+      "het",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "mislukt",
+      "netwerk",
+      "niet",
+      "niveau",
+      "opstart",
+      "opstarten",
+      "persoonlijke",
+      "problemen",
+      "sluiten",
+      "sommige",
+      "soorten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "technische",
+      "tekst",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uitgeschakeld",
+      "van",
+      "versleuteling",
+      "voor",
+      "wanneer",
+      "wordt",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1430
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Apparaatbeveiliging – Instellingen",
+     "titles": [
+      "Apparaatbeveiliging – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nApparaatbeveiliging\nApparaatbeveiliging\nBeveiliging die in je apparaat is ingebouwd\nControles geslaagd\nDit apparaat voldoet aan de basisvereisten voor beveiliging. De hardware beschermt tegen sommige soorten beveiligingsrisico’s. Tijdens het gebruik zijn er problemen gevonden.\nNiveau 1\nBeveiligingsniveau 1\nUEFI Beveiligd opstarten\nGeslaagd (Ingeschakeld)\nTPM 2.0\nGeslaagd (Gevonden)\nBeveiligingsniveau 2\nIOMMU-beveiliging\nMislukt (Niet gevonden)\nBeveiligingsniveau 3\nVergrendeling van de Linux-kernel\nMislukt (Uitgeschakeld)\nTijdens het gebruik\nControle van de Linux-kernel\nMislukt (Gewijzigd)\nTechnisch rapport kopiëren\nAlle controles en gebeurtenissen als tekst, voor een supportvraag\nKopiëren\nKopiëren\nBeveiligd opstarten\nBeveiligd opstarten is ingeschakeld. Het voorkomt dat schadelijke software wordt geladen wanneer het apparaat opstart.\nBeveiligingsprocessor\nJe beveiligingsprocessor (TPM 2.0) is aanwezig en biedt extra versleuteling voor je apparaat.\nBeveiligingsgebeurtenissen\nUEFI Beveiligd opstarten: Uitgeschakeld → Ingeschakeld\n15-11-2025 10:46\nHet technische rapport is gekopieerd\nSluiten",
+     "dutchWordHits": [
+      "aan",
+      "alle",
+      "als",
+      "apparaat",
+      "apparaten",
+      "beveiligd",
+      "beveiliging",
+      "dat",
+      "dit",
+      "een",
+      "gebruik",
+      "gekopieerd",
+      "geladen",
+      "geslaagd",
+      "gevonden",
+      "gewijzigd",
+      "herstel",
+      "het",
+      "ingeschakeld",
+      "instelling",
+      "instellingen",
+      "je",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "mislukt",
+      "netwerk",
+      "niet",
+      "niveau",
+      "opstart",
+      "opstarten",
+      "persoonlijke",
+      "problemen",
+      "sluiten",
+      "sommige",
+      "soorten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "technische",
+      "tekst",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uitgeschakeld",
+      "van",
+      "versleuteling",
+      "voor",
+      "wanneer",
+      "wordt",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "open",
+    "t": 57.54,
+    "args": {
+     "spec": "settings:diagnostics"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1347,
+     "page": "diagnostics",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 58.93,
+    "args": {
+     "name": "diagnostics.nl"
+    },
+    "result": {
+     "png": "diagnostics.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 896,
+      "meanLevel": 38.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 59.19,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Diagnostische gegevens en feedback – Instellingen",
+     "dutchWordHits": [
+      "apparaat",
+      "apparaten",
+      "bekijken",
+      "bevatten",
+      "beveiliging",
+      "bij",
+      "dat",
+      "dit",
+      "een",
+      "elke",
+      "foutrapporten",
+      "gegevens",
+      "handmatig",
+      "herstel",
+      "het",
+      "instelling",
+      "instellingen",
+      "je",
+      "lokaal",
+      "maand",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "mogelijk",
+      "naar",
+      "netwerk",
+      "nieuwe",
+      "om",
+      "persoonlijke",
+      "problemen",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "technische",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "versie",
+      "verzenden",
+      "vraagt",
+      "wachtwoord",
+      "wanneer",
+      "weergeven",
+      "wijzigen",
+      "zoek",
+      "zoeken",
+      "zonder",
+      "zou"
+     ],
+     "chars": 1006
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Diagnostische gegevens en feedback – Instellingen",
+     "titles": [
+      "Diagnostische gegevens en feedback – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPrivacy en beveiliging\nPrivacy en beveiliging\nDiagnostische gegevens en feedback\nDiagnostische gegevens\nHelp Canonical Ubuntu te verbeteren met anonieme systeemrapporten\nElke maand een systeemrapport verzenden\nAnonieme gegevens over de hardware en software van dit apparaat\nUit\nEen systeemrapport verzenden bij een upgrade naar een nieuwe Ubuntu-versie\nEenmalig, wanneer je Ubuntu naar een nieuwe versie bijwerkt\nUit\nDiagnostische gegevens weergeven\nHet systeemrapport bekijken dat dit apparaat zou verzenden\nRapport weergeven\nRapport weergeven\nFoutrapporten naar Canonical verzenden\nFoutrapporten bevatten technische details over problemen, zonder je persoonlijke gegevens. Wijzigen vraagt mogelijk om je wachtwoord.\nHandmatig",
+     "dutchWordHits": [
+      "apparaat",
+      "apparaten",
+      "bekijken",
+      "bevatten",
+      "beveiliging",
+      "bij",
+      "dat",
+      "dit",
+      "een",
+      "elke",
+      "foutrapporten",
+      "gegevens",
+      "handmatig",
+      "herstel",
+      "het",
+      "instelling",
+      "instellingen",
+      "je",
+      "lokaal",
+      "maand",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "mogelijk",
+      "naar",
+      "netwerk",
+      "nieuwe",
+      "om",
+      "persoonlijke",
+      "problemen",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "technische",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "versie",
+      "verzenden",
+      "vraagt",
+      "wachtwoord",
+      "wanneer",
+      "weergeven",
+      "wijzigen",
+      "zoek",
+      "zoeken",
+      "zonder",
+      "zou"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 64.99,
+    "args": {
+     "name": "diagnostics-report.nl"
+    },
+    "result": {
+     "png": "diagnostics-report.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 844,
+      "meanLevel": 34.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 65.27,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "record",
+    "t": 65.27,
+    "args": {
+     "key": "guard calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 65.28,
+    "args": {
+     "key": "clicks"
+    }
+   },
+   {
+    "step": "record",
+    "t": 65.28,
+    "args": {
+     "key": "dialog clicks"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "privacy: title and breadcrumb \"Privacy en beveiliging\"",
+    "ok": true,
+    "t": 1.68,
+    "want": [
+     "Privacy en beveiliging"
+    ],
+    "got": [
+     "Privacy en beveiliging"
+    ]
+   },
+   {
+    "check": "privacy: a link to security",
+    "ok": true,
+    "t": 2.58
+   },
+   {
+    "check": "privacy: a link to diagnostics",
+    "ok": true,
+    "t": 2.7
+   },
+   {
+    "check": "privacy: a link to activity",
+    "ok": true,
+    "t": 2.81
+   },
+   {
+    "check": "privacy: a link to searchpermissions",
+    "ok": true,
+    "t": 2.92
+   },
+   {
+    "check": "privacy: a link to location",
+    "ok": true,
+    "t": 3.04
+   },
+   {
+    "check": "privacy: a link to camera",
+    "ok": true,
+    "t": 3.1
+   },
+   {
+    "check": "privacy: a link to microphone",
+    "ok": true,
+    "t": 3.21
+   },
+   {
+    "check": "privacy: a link to notifications",
+    "ok": true,
+    "t": 3.33
+   },
+   {
+    "check": "privacy: Deze pc doorzoeken is shown exactly when caps.tracker (its registry needs)",
+    "ok": true,
+    "t": 3.4,
+    "tracker": true
+   },
+   {
+    "check": "privacy: the recent-files rows moved to Activiteitengeschiedenis",
+    "ok": true,
+    "t": 3.52
+   },
+   {
+    "check": "camera: without a PermissionStore the apps are \"not available\" and none is listed",
+    "ok": true,
+    "t": 4.2
+   },
+   {
+    "check": "security: without fwupd \"Controles niet beschikbaar\" and no security level",
+    "ok": true,
+    "t": 5.51
+   },
+   {
+    "check": "diagnostics: without whoopsie-preferences there is no Foutrapporten row",
+    "ok": true,
+    "t": 6.76
+   },
+   {
+    "check": "activity: title and breadcrumb \"Privacy en beveiliging › Activiteitengeschiedenis\"",
+    "ok": true,
+    "t": 7.86,
+    "want": [
+     "Privacy en beveiliging",
+     "Activiteitengeschiedenis"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Activiteitengeschiedenis"
+    ]
+   },
+   {
+    "check": "activity: Mijn activiteitengeschiedenis ... is bound to remember-recent-files",
+    "ok": true,
+    "t": 8.72
+   },
+   {
+    "check": "activity: st-activity-recent-files-max-age",
+    "ok": true,
+    "t": 8.85
+   },
+   {
+    "check": "activity: activity-clear",
+    "ok": true,
+    "t": 8.93
+   },
+   {
+    "check": "activity: the switch starts on",
+    "ok": true,
+    "t": 8.93
+   },
+   {
+    "check": "activity: a click writes remember-recent-files false",
+    "ok": true,
+    "t": 9.47
+   },
+   {
+    "check": "activity: the mirror sets privacy.recentFiles",
+    "ok": true,
+    "t": 9.47
+   },
+   {
+    "check": "activity: the duration is greyed while history is off",
+    "ok": true,
+    "t": 9.55
+   },
+   {
+    "check": "activity: the switch follows the key written from outside",
+    "ok": true,
+    "t": 9.62
+   },
+   {
+    "check": "activity: \"7 dagen\" writes recent-files-max-age 7",
+    "ok": true,
+    "t": 10.85,
+    "value": "7"
+   },
+   {
+    "check": "activity: the duration follows recent-files-max-age 30 written from outside",
+    "ok": true,
+    "t": 11.08,
+    "shown": [
+     "30 dagen"
+    ]
+   },
+   {
+    "check": "activity: Geschiedenis wissen asks first, then empties recently-used.xbel (a .bak kept)",
+    "ok": true,
+    "t": 16.77,
+    "asked": true
+   },
+   {
+    "check": "searchpermissions: title and breadcrumb \"Privacy en beveiliging › Zoekmachtigingen\"",
+    "ok": true,
+    "t": 17.56,
+    "want": [
+     "Privacy en beveiliging",
+     "Zoekmachtigingen"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Zoekmachtigingen"
+    ]
+   },
+   {
+    "check": "searchpermissions: Zoekresultaten van apps opnemen is bound to disable-external",
+    "ok": true,
+    "t": 18.52
+   },
+   {
+    "check": "searchpermissions: Bestanden (its search provider) is in the list",
+    "ok": true,
+    "t": 18.61
+   },
+   {
+    "check": "searchpermissions: Bestanden starts on",
+    "ok": true,
+    "t": 18.61
+   },
+   {
+    "check": "searchpermissions: a click writes org.gnome.Nautilus.desktop into disabled",
+    "ok": true,
+    "t": 19.13,
+    "value": "['org.gnome.Nautilus.desktop']"
+   },
+   {
+    "check": "searchpermissions: the switch follows the key written from outside",
+    "ok": true,
+    "t": 19.23
+   },
+   {
+    "check": "searchpermissions: Omhoog writes sort-order with Bestanden first",
+    "ok": true,
+    "t": 19.84,
+    "value": "['org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'com.anthropic.Claude.desktop', 'org.gnome.clocks.desktop', 'org.gnome.seahorse.Application.desktop']"
+   },
+   {
+    "check": "searchpermissions: the first row has no Omhoog",
+    "ok": true,
+    "t": 20.03
+   },
+   {
+    "check": "searchpermissions: Omlaag puts Bestanden second",
+    "ok": true,
+    "t": 20.63,
+    "value": "['org.gnome.Settings.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'com.anthropic.Claude.desktop', 'org.gnome.clocks.desktop', 'org.gnome.seahorse.Application.desktop']"
+   },
+   {
+    "check": "searchpermissions: App search off writes disable-external true",
+    "ok": true,
+    "t": 21.28
+   },
+   {
+    "check": "searchpermissions: the provider list is greyed while app search is off",
+    "ok": true,
+    "t": 21.4
+   },
+   {
+    "check": "searchpermissions: an outside disable-external false turns app search and the list back on",
+    "ok": true,
+    "t": 22.38
+   },
+   {
+    "check": "searching: title and breadcrumb \"Privacy en beveiliging › Deze pc doorzoeken\"",
+    "ok": true,
+    "t": 23.35,
+    "want": [
+     "Privacy en beveiliging",
+     "Deze pc doorzoeken"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Deze pc doorzoeken"
+    ]
+   },
+   {
+    "check": "searching: Mijn bestanden zoeken with Klassiek and Uitgebreid",
+    "ok": true,
+    "t": 24.39
+   },
+   {
+    "check": "searching: Uitgebreid while the index covers every drive (alles.roots auto)",
+    "ok": true,
+    "t": 24.53,
+    "roots": "auto"
+   },
+   {
+    "check": "searching: Zoeklocaties aanpassen is there",
+    "ok": true,
+    "t": 24.66
+   },
+   {
+    "check": "searching: Klassiek gives WinPoint's index the search locations (index.setRoots first)",
+    "ok": true,
+    "t": 25.26,
+    "roots": [
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Desktop",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Documents",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Downloads",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Music",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Pictures",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Videos"
+    ]
+   },
+   {
+    "check": "searching: and Tracker the same places, without $HOME recursive",
+    "ok": true,
+    "t": 25.27,
+    "recursive": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&MUSIC', '&PICTURES', '&VIDEOS']",
+    "single": "['$HOME']"
+   },
+   {
+    "check": "searching: the Muziek switch takes it out of Tracker and the index",
+    "ok": true,
+    "t": 27.52,
+    "roots": [
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Desktop",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Documents",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Downloads",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Pictures",
+     "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/home/Videos"
+    ],
+    "recursive": "['&DESKTOP', '&DOCUMENTS', '&DOWNLOAD', '&PICTURES', '&VIDEOS']"
+   },
+   {
+    "check": "searching: a Tracker write from outside shows",
+    "ok": true,
+    "t": 27.66
+   },
+   {
+    "check": "searching: Uitgebreid sets WinPoint's index to every drive",
+    "ok": true,
+    "t": 29.78,
+    "roots": "auto"
+   },
+   {
+    "check": "searching: and Tracker the whole home folder",
+    "ok": true,
+    "t": 29.78,
+    "recursive": "['$HOME', '&DOCUMENTS', '&MUSIC']"
+   },
+   {
+    "check": "location: title and breadcrumb \"Privacy en beveiliging › Locatie\"",
+    "ok": true,
+    "t": 30.92,
+    "want": [
+     "Privacy en beveiliging",
+     "Locatie"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Locatie"
+    ]
+   },
+   {
+    "check": "location: the device switch is bound to org.gnome.system.location enabled",
+    "ok": true,
+    "t": 32.09
+   },
+   {
+    "check": "location: the PermissionStore's Bestanden is listed by its name",
+    "ok": true,
+    "t": 32.25
+   },
+   {
+    "check": "location: the device switch and the apps follow enabled written from outside (on)",
+    "ok": true,
+    "t": 32.59
+   },
+   {
+    "check": "location: Bestanden shows the stored value (allowed)",
+    "ok": true,
+    "t": 32.91
+   },
+   {
+    "check": "location: the switch sends SetPermission(location, location, org.gnome.Nautilus, ['NONE', '1763280000'])",
+    "ok": true,
+    "t": 33.55,
+    "call": {
+     "path": "/org/freedesktop/impl/portal/PermissionStore",
+     "iface": "org.freedesktop.impl.portal.PermissionStore",
+     "method": "SetPermission",
+     "args": "('location', true, 'location', 'org.gnome.Nautilus', ['NONE', '1763280000'])",
+     "interactive": false
+    }
+   },
+   {
+    "check": "location: the PermissionStore needs no password",
+    "ok": true,
+    "t": 33.55
+   },
+   {
+    "check": "location: after the store's own Changed the switch keeps the clicked value",
+    "ok": true,
+    "t": 33.71
+   },
+   {
+    "check": "location: the switch follows a SetPermission made elsewhere (the store's Changed, privacy.changed)",
+    "ok": true,
+    "t": 34.04,
+    "active": true
+   },
+   {
+    "check": "location: the device switch off writes enabled false",
+    "ok": true,
+    "t": 34.69,
+    "value": "false"
+   },
+   {
+    "check": "location: the apps are greyed while the device is off",
+    "ok": true,
+    "t": 35.04
+   },
+   {
+    "check": "location: the switch and the apps follow the key written from outside",
+    "ok": true,
+    "t": 35.84
+   },
+   {
+    "check": "location: Bestanden shows \"Laatst geopend op\" from the stored time",
+    "ok": true,
+    "t": 36.01
+   },
+   {
+    "check": "camera: title and breadcrumb \"Privacy en beveiliging › Camera\"",
+    "ok": true,
+    "t": 37.24,
+    "want": [
+     "Privacy en beveiliging",
+     "Camera"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Camera"
+    ]
+   },
+   {
+    "check": "camera: the device switch is bound to org.gnome.desktop.privacy disable-camera",
+    "ok": true,
+    "t": 38.41
+   },
+   {
+    "check": "camera: the PermissionStore's Bestanden is listed by its name",
+    "ok": true,
+    "t": 38.59
+   },
+   {
+    "check": "camera: Bestanden shows the stored value (allowed)",
+    "ok": true,
+    "t": 38.95
+   },
+   {
+    "check": "camera: the switch sends SetPermission(devices, camera, org.gnome.Nautilus, ['no'])",
+    "ok": true,
+    "t": 39.63,
+    "call": {
+     "path": "/org/freedesktop/impl/portal/PermissionStore",
+     "iface": "org.freedesktop.impl.portal.PermissionStore",
+     "method": "SetPermission",
+     "args": "('devices', true, 'camera', 'org.gnome.Nautilus', ['no'])",
+     "interactive": false
+    }
+   },
+   {
+    "check": "camera: the PermissionStore needs no password",
+    "ok": true,
+    "t": 39.63
+   },
+   {
+    "check": "camera: after the store's own Changed the switch keeps the clicked value",
+    "ok": true,
+    "t": 39.82
+   },
+   {
+    "check": "camera: the switch follows a SetPermission made elsewhere (the store's Changed, privacy.changed)",
+    "ok": true,
+    "t": 40.2,
+    "active": true
+   },
+   {
+    "check": "camera: the device switch off writes disable-camera true",
+    "ok": true,
+    "t": 40.89,
+    "value": "true"
+   },
+   {
+    "check": "camera: the apps are greyed while the device is off",
+    "ok": true,
+    "t": 41.26
+   },
+   {
+    "check": "camera: the switch and the apps follow the key written from outside",
+    "ok": true,
+    "t": 41.65
+   },
+   {
+    "check": "microphone: title and breadcrumb \"Privacy en beveiliging › Microfoon\"",
+    "ok": true,
+    "t": 42.95,
+    "want": [
+     "Privacy en beveiliging",
+     "Microfoon"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Microfoon"
+    ]
+   },
+   {
+    "check": "microphone: the device switch is bound to org.gnome.desktop.privacy disable-microphone",
+    "ok": true,
+    "t": 44.2
+   },
+   {
+    "check": "microphone: the PermissionStore's Bestanden is listed by its name",
+    "ok": true,
+    "t": 44.41
+   },
+   {
+    "check": "microphone: Bestanden shows the stored value (not allowed)",
+    "ok": true,
+    "t": 44.83
+   },
+   {
+    "check": "microphone: the switch sends SetPermission(devices, microphone, org.gnome.Nautilus, ['yes'])",
+    "ok": true,
+    "t": 45.56,
+    "call": {
+     "path": "/org/freedesktop/impl/portal/PermissionStore",
+     "iface": "org.freedesktop.impl.portal.PermissionStore",
+     "method": "SetPermission",
+     "args": "('devices', true, 'microphone', 'org.gnome.Nautilus', ['yes'])",
+     "interactive": false
+    }
+   },
+   {
+    "check": "microphone: the PermissionStore needs no password",
+    "ok": true,
+    "t": 45.56
+   },
+   {
+    "check": "microphone: after the store's own Changed the switch keeps the clicked value",
+    "ok": true,
+    "t": 45.78
+   },
+   {
+    "check": "microphone: the switch follows a SetPermission made elsewhere (the store's Changed, privacy.changed)",
+    "ok": true,
+    "t": 46.24,
+    "active": false
+   },
+   {
+    "check": "microphone: the device switch off writes disable-microphone true",
+    "ok": true,
+    "t": 47.01,
+    "value": "true"
+   },
+   {
+    "check": "microphone: the apps are greyed while the device is off",
+    "ok": true,
+    "t": 47.49
+   },
+   {
+    "check": "microphone: the switch and the apps follow the key written from outside",
+    "ok": true,
+    "t": 47.95
+   },
+   {
+    "check": "security: title and breadcrumb \"Privacy en beveiliging › Apparaatbeveiliging\"",
+    "ok": true,
+    "t": 49.49,
+    "want": [
+     "Privacy en beveiliging",
+     "Apparaatbeveiliging"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Apparaatbeveiliging"
+    ]
+   },
+   {
+    "check": "security: with fwupd's stand-in the security level",
+    "ok": true,
+    "t": 49.94
+   },
+   {
+    "check": "security: HSI:1 is \"Controles geslaagd\" with \"Niveau 1\"",
+    "ok": true,
+    "t": 50.18
+   },
+   {
+    "check": "security: the runtime issue is named",
+    "ok": true,
+    "t": 50.18
+   },
+   {
+    "check": "security: Beveiligd opstarten is on (UEFI Secure Boot enabled)",
+    "ok": true,
+    "t": 50.43
+   },
+   {
+    "check": "security: the security processor (TPM 2.0 found)",
+    "ok": true,
+    "t": 50.43
+   },
+   {
+    "check": "security: Beveiligingsgebeurtenissen with the Secure Boot event",
+    "ok": true,
+    "t": 50.43
+   },
+   {
+    "check": "security: every check under its level, the running ones last",
+    "ok": true,
+    "t": 52.82
+   },
+   {
+    "check": "security: a check with its verdict and fwupd's result",
+    "ok": true,
+    "t": 53.31
+   },
+   {
+    "check": "security: Technisch rapport kopiëren puts GNOME's report on the clipboard",
+    "ok": true,
+    "t": 55.81
+   },
+   {
+    "check": "security: Beveiligingscentrum shown exactly when caps.securityCenter",
+    "ok": true,
+    "t": 56.31,
+    "securityCenter": false
+   },
+   {
+    "check": "security: the USB4 and Thunderbolt link shown exactly when caps.thunderbolt",
+    "ok": true,
+    "t": 56.58,
+    "thunderbolt": false
+   },
+   {
+    "check": "security: fwupd read (attributes and the last 10 events), no password",
+    "ok": true,
+    "t": 56.58,
+    "calls": [
+     {
+      "path": "/",
+      "iface": "org.freedesktop.fwupd",
+      "method": "GetHostSecurityAttrs",
+      "args": "()",
+      "interactive": false
+     },
+     {
+      "path": "/",
+      "iface": "org.freedesktop.fwupd",
+      "method": "GetHostSecurityEvents",
+      "args": "(uint32 10,)",
+      "interactive": false
+     }
+    ]
+   },
+   {
+    "check": "diagnostics: title and breadcrumb \"Privacy en beveiliging › Diagnostische gegevens en feedback\"",
+    "ok": true,
+    "t": 58.28,
+    "want": [
+     "Privacy en beveiliging",
+     "Diagnostische gegevens en feedback"
+    ],
+    "got": [
+     "Privacy en beveiliging",
+     "Diagnostische gegevens en feedback"
+    ]
+   },
+   {
+    "check": "diagnostics: with whoopsie-preferences' stand-in, Foutrapporten naar Canonical verzenden",
+    "ok": true,
+    "t": 59.44
+   },
+   {
+    "check": "diagnostics: it shows the daemon's mode (Handmatig)",
+    "ok": true,
+    "t": 59.93,
+    "shown": [
+     "Handmatig"
+    ]
+   },
+   {
+    "check": "diagnostics: the two system reports",
+    "ok": true,
+    "t": 60.45
+   },
+   {
+    "check": "diagnostics: Automatisch sends SetReportCrashes(true), SetAutomaticallyReportCrashes(true), each with interactive authorization",
+    "ok": true,
+    "t": 62.12,
+    "calls": [
+     [
+      "SetReportCrashes",
+      "(true,)",
+      true
+     ],
+     [
+      "SetAutomaticallyReportCrashes",
+      "(true,)",
+      true
+     ]
+    ]
+   },
+   {
+    "check": "diagnostics: the switch runs ubuntu-insights consent linux --state true (through system_tool)",
+    "ok": true,
+    "t": 62.96,
+    "calls": [
+     "consent linux",
+     "consent ubuntu_release_upgrader",
+     "consent linux",
+     "consent ubuntu_release_upgrader",
+     "consent linux --state true"
+    ]
+   },
+   {
+    "check": "diagnostics: the stub fails, so the switch goes back",
+    "ok": true,
+    "t": 63.24
+   },
+   {
+    "check": "diagnostics: Rapport weergeven runs ubuntu-insights collect --dry-run",
+    "ok": true,
+    "t": 64.36,
+    "calls": [
+     "consent linux",
+     "consent ubuntu_release_upgrader",
+     "consent linux",
+     "consent ubuntu_release_upgrader",
+     "consent linux --state true",
+     "collect --dry-run"
+    ]
+   },
+   {
+    "check": "diagnostics: no pkexec, systemctl or apt was called (only the daemon and the tool)",
+    "ok": true,
+    "t": 65.27,
+    "pkexec": []
+   },
+   {
+    "check": "every control click (24) was a real pointer click",
+    "ok": true,
+    "t": 65.28,
+    "dev": []
+   },
+   {
+    "check": "a pointer click reaches a kit dialog's button (1 pressed)",
+    "ok": false,
+    "t": 65.28,
+    "known": "settings-b note 9 (kit Dialog smoke layer)",
+    "dialogs": [
+     {
+      "button": "w11-dialog-primary",
+      "action": "Wissen",
+      "path": "dev",
+      "done": true,
+      "pointer": {
+       "input": "clutter",
+       "x": 602,
+       "y": 500,
+       "rect": [
+        318,
+        428,
+        228,
+        32
+       ]
+      }
+     }
+    ]
+   }
+  ],
+  "records": {
+   "stubs mode before": "0o775",
+   "caps": {
+    "tracker": true,
+    "geoclue": true,
+    "securityCenter": false,
+    "thunderbolt": false,
+    "whoopsie": true,
+    "insights": true,
+    "session": "gnome"
+   },
+   "standin.permission-store": {
+    "pid": 1494,
+    "bus": "session",
+    "name": "org.freedesktop.impl.portal.PermissionStore",
+    "objects": [
+     "/org/freedesktop/impl/portal/PermissionStore"
+    ]
+   },
+   "standin.whoopsie": {
+    "pid": 1498,
+    "bus": "system",
+    "name": "com.ubuntu.WhoopsiePreferences",
+    "objects": [
+     "/com/ubuntu/WhoopsiePreferences"
+    ]
+   },
+   "standin.fwupd": {
+    "pid": 1502,
+    "bus": "system",
+    "name": "org.freedesktop.fwupd",
+    "objects": [
+     "/"
+    ]
+   },
+   "security report": "Rapport over apparaatbeveiliging\n================================\n\nRapportgegevens\n  Gemaakt op: 16-11-2026 23:48\n  fwupd-versie: 2.0.13\n\nSysteemgegevens\n  Fabrikant: WinPoint test\n  Model: Harness PC\n  Beveiligingsniveau: HSI:1! (v2.0.13)\n\nBeveiligingsniveau 1\n  UEFI Beveiligd opstarten: Geslaagd (Ingeschakeld)\n  TPM 2.0: Geslaagd (Gevonden)\n\nBeveiligingsniveau 2\n  IOMMU-beveiliging: Mislukt (Niet gevonden)\n\nBeveiligingsniveau 3\n  Vergrendeling van de Linux-kernel: Mislukt (Uitgeschakeld)\n\nTijdens het gebruik\n  Controle van de Linux-kernel: Mislukt (Gewijzigd)\n\nBeveiligingsgebeurtenissen\n  15-11-2025 10:46  UEFI Beveiligd opstarten: Uitgeschakeld → Ingeschakeld\n\nMeer over de inhoud van dit rapport: https://fwupd.github.io/hsi.html\n",
+   "guard calls": {
+    "pkexec": [],
+    "systemctl": [],
+    "apt": [],
+    "ubuntu-insights": [
+     "consent linux",
+     "consent ubuntu_release_upgrader",
+     "consent linux",
+     "consent ubuntu_release_upgrader",
+     "consent linux --state true",
+     "collect --dry-run"
+    ]
+   },
+   "clicks": [
+    {
+     "name": "st-activity-remember-recent-files",
+     "input": "clutter"
+    },
+    {
+     "name": "st-activity-recent-files-max-age",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "activity-clear",
+     "input": "clutter"
+    },
+    {
+     "name": "st-searchpermissions-disabled-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "searchpermissions-up-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "searchpermissions-down-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "st-searchpermissions-disable-external",
+     "input": "clutter"
+    },
+    {
+     "name": "searching-classic",
+     "input": "clutter"
+    },
+    {
+     "name": "searching-locations",
+     "input": "clutter"
+    },
+    {
+     "name": "searching-place-tmp-claude-1000--home-robin-documents-codex-2026-11-01-chat-outputs-win11-gnome-b86efb11-6e95-47e6-8bcd-969df897e3ac-scratchpad-h-f-tests-gnome-run-home-music",
+     "input": "clutter"
+    },
+    {
+     "name": "searching-enhanced",
+     "input": "clutter"
+    },
+    {
+     "name": "location-app-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "st-location-enabled",
+     "input": "clutter"
+    },
+    {
+     "name": "camera-app-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "st-camera-disable-camera",
+     "input": "clutter"
+    },
+    {
+     "name": "microphone-app-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "st-microphone-disable-microphone",
+     "input": "clutter"
+    },
+    {
+     "name": "security-level",
+     "input": "clutter"
+    },
+    {
+     "name": "security-copy-report",
+     "input": "clutter"
+    },
+    {
+     "name": "st-diagnostics-reports",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "st-diagnostics-insights-linux",
+     "input": "clutter"
+    },
+    {
+     "name": "diagnostics-view",
+     "input": "clutter"
+    }
+   ],
+   "dialog clicks": [
+    {
+     "button": "w11-dialog-primary",
+     "action": "Wissen",
+     "path": "dev",
+     "done": true,
+     "pointer": {
+      "input": "clutter",
+      "x": 602,
+      "y": 500,
+      "rect": [
+       318,
+       428,
+       228,
+       32
+      ]
+     }
+    }
+   ]
+  },
+  "shots": [
+   "privacy.nl.png",
+   "camera-without.nl.png",
+   "security-without.nl.png",
+   "activity.nl.png",
+   "searchpermissions.nl.png",
+   "searchpermissions-off.nl.png",
+   "searching.nl.png",
+   "searching-classic.nl.png",
+   "location.nl.png",
+   "camera.nl.png",
+   "microphone.nl.png",
+   "security.nl.png",
+   "security-checks.nl.png",
+   "diagnostics.nl.png",
+   "diagnostics-report.nl.png"
+  ],
+  "error": null,
+  "seconds": 65.28,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 522,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 522,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 522,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "native-settings",
+    "pid": 1347,
+    "page": "diagnostics",
+    "alive": true
+   }
+  },
+  "failedChecks": [
+   "a pointer click reaches a kit dialog's button (1 pressed)"
+  ],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=945c2c556526cd0a6920f3326afb87f5",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 522,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 522
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "camera",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "security",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "diagnostics",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "activity",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "searchpermissions",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "searching",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "location",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "camera",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "microphone",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "security",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "diagnostics",
+     "exit": 0,
+     "seconds": 0.06
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "privacy.nl.png",
+    "group": "scenario",
+    "bytes": 453183,
+    "area": null
+   },
+   {
+    "file": "camera-without.nl.png",
+    "group": "scenario",
+    "bytes": 445574,
+    "area": null
+   },
+   {
+    "file": "security-without.nl.png",
+    "group": "scenario",
+    "bytes": 421182,
+    "area": null
+   },
+   {
+    "file": "activity.nl.png",
+    "group": "scenario",
+    "bytes": 444956,
+    "area": null
+   },
+   {
+    "file": "searchpermissions.nl.png",
+    "group": "scenario",
+    "bytes": 455700,
+    "area": null
+   },
+   {
+    "file": "searchpermissions-off.nl.png",
+    "group": "scenario",
+    "bytes": 454670,
+    "area": null
+   },
+   {
+    "file": "searching.nl.png",
+    "group": "scenario",
+    "bytes": 475312,
+    "area": null
+   },
+   {
+    "file": "searching-classic.nl.png",
+    "group": "scenario",
+    "bytes": 518861,
+    "area": null
+   },
+   {
+    "file": "location.nl.png",
+    "group": "scenario",
+    "bytes": 447763,
+    "area": null
+   },
+   {
+    "file": "camera.nl.png",
+    "group": "scenario",
+    "bytes": 443733,
+    "area": null
+   },
+   {
+    "file": "microphone.nl.png",
+    "group": "scenario",
+    "bytes": 444966,
+    "area": null
+   },
+   {
+    "file": "security.nl.png",
+    "group": "scenario",
+    "bytes": 459112,
+    "area": null
+   },
+   {
+    "file": "security-checks.nl.png",
+    "group": "scenario",
+    "bytes": 465421,
+    "area": null
+   },
+   {
+    "file": "diagnostics.nl.png",
+    "group": "scenario",
+    "bytes": 465681,
+    "area": null
+   },
+   {
+    "file": "diagnostics-report.nl.png",
+    "group": "scenario",
+    "bytes": 394660,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-privacy.out/privacy.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/camera-without.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/security-without.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/activity.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/searchpermissions.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/searchpermissions-off.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/searching.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/searching-classic.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/location.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/camera.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/microphone.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/security.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/security-checks.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/diagnostics.nl.png",
+  "tests/gnome/scenarios/settings-privacy.out/diagnostics-report.nl.png"
+ ]
+}

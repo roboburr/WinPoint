@@ -128,7 +128,7 @@ pub fn apply_theme(p: &Page, th: &'static Theme) {
     let pp = p.clone();
     let args = json!({ "patch": {
         "theme": { "mode": th.mode, "accent": th.accent, "accentFromWallpaper": false },
-        "wallpaper": { "type": "image", "path": th.wallpaper, "followTheme": true },
+        "wallpaper": { "type": "image", "path": th.wallpaper, "pathDark": "", "followTheme": true },
     } });
     p.spawn(async move {
         match pp.call("settings.patch", args).await {

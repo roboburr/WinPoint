@@ -670,6 +670,7 @@ impl Desk {
         }
         if touches(&["language"]) {
             self.window.set_title(Some(&self.t("Bureaublad", "Desktop")));
+            super::screens::retitle(self);
         }
         if !self.s.borrow().loaded {
             return;
@@ -690,6 +691,8 @@ impl Desk {
         if self.window.default_size() != (w, h) || (self.window.is_mapped() && shown != (w, h)) {
             self.window.set_default_size(w, h);
         }
+        // the other monitors (none with one monitor), and where each lies among them ("span")
+        super::screens::sync(self, data);
     }
 }
 

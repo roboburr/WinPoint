@@ -3077,11 +3077,24 @@ fn a_program_renamed_back_by_a_rollback_is_not_a_restart() {
     // a copy of bash that waits in its builtin `read` (the coreutils of 26.04 are one binary that goes by its name)
     let program = bin.join("win11-inode-test");
     std::fs::copy("/usr/bin/bash", &program).unwrap();
-    let mut child = std::process::Command::new(&program)
-        .args(["--norc", "-c", "read -t 30 x"])
-        .stdin(std::process::Stdio::piped())
-        .spawn()
-        .unwrap();
+    // another test thread's fork can still hold the copy's write descriptor for a moment (ETXTBSY): try again
+    let spawn = || {
+        std::process::Command::new(&program)
+            .args(["--norc", "-c", "read -t 30 x"])
+            .stdin(std::process::Stdio::piped())
+            .spawn()
+    };
+    let mut started = spawn();
+    for _ in 0..50 {
+        match &started {
+            Err(e) if e.raw_os_error() == Some(libc::ETXTBSY) => {
+                std::thread::sleep(Duration::from_millis(20));
+                started = spawn();
+            }
+            _ => break,
+        }
+    }
+    let mut child = started.unwrap();
     let setup = paths::resolve(&paths::Env::default()).unwrap();
     let uid = unsafe { libc::geteuid() };
     let deadline = Instant::now() + Duration::from_secs(5);

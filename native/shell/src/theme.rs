@@ -8,6 +8,13 @@
 //! (theme.transparency), and `w11-accent-surfaces` / `w11-high-contrast` / `w11-reduce-motion` when on;
 //! windows created later get them as they are added (gtk::Window::toplevels), and `style_window` does it on
 //! demand.
+//!
+//! GNOME's session settings are read as in the kit (native/kit/src/theme.rs `System`, settings parity amendments 46
+//! and 49): the text scale is GNOME's text-scaling-factor (GTK 4.22 applies it to point sizes only and the ramp is
+//! px, so the shell scales its ramp by exactly that factor, never by settings.json's textScale on top: that is only
+//! the fallback), read from GSettings itself because GTK's Wayland backend takes its settings from the portal only
+//! (GTK's gtk-xft-dpi is the next source); GNOME's high contrast joins accessibility.highContrast, and GNOME's On/Off
+//! Shapes show the I and O in the quick settings' switches.
 use crate::core::Shell;
 use gtk::prelude::*;
 use gtk::{gdk, gio};
@@ -32,7 +39,10 @@ pub struct Look {
     pub accent_surfaces: bool,
     pub high_contrast: bool,
     pub reduce_motion: bool,
+    /// The text scale in effect (module docs), 0.5 ..= 3.0.
     pub text_scale: f64,
+    /// GNOME's On/Off Shapes (show-status-shapes).
+    pub status_shapes: bool,
     pub palette: Palette,
 }
 
@@ -45,6 +55,7 @@ impl Default for Look {
             high_contrast: false,
             reduce_motion: false,
             text_scale: 1.0,
+            status_shapes: false,
             palette: accent_palette("#0078d4"),
         }
     }
@@ -89,6 +100,66 @@ pub fn install(shell: &Rc<Shell>) {
             refresh(&crate::core::shell());
         }
     });
+    // GNOME's session settings (module docs): their changes refresh the look
+    let again = || refresh(&crate::core::shell());
+    let interface = settings_with("org.gnome.desktop.interface", "text-scaling-factor");
+    let a11y = settings_with("org.gnome.desktop.a11y.interface", "show-status-shapes");
+    if let Some(i) = &interface {
+        i.connect_changed(Some("text-scaling-factor"), move |_, _| again());
+    }
+    if let Some(a) = &a11y {
+        for key in ["high-contrast", "show-status-shapes"] {
+            a.connect_changed(Some(key), move |_, _| again());
+        }
+    }
+    GNOME_KEYS.with(|g| *g.borrow_mut() = (interface, a11y));
+    if let Some(settings) = gtk::Settings::default() {
+        settings.connect_gtk_xft_dpi_notify(move |_| again());
+        settings.connect_gtk_interface_contrast_notify(move |_| again());
+        settings.connect_gtk_show_status_shapes_notify(move |_| again());
+    }
+}
+
+thread_local! {
+    /// org.gnome.desktop.interface and org.gnome.desktop.a11y.interface, where they are installed.
+    static GNOME_KEYS: RefCell<(Option<gio::Settings>, Option<gio::Settings>)> = const { RefCell::new((None, None)) };
+}
+
+fn settings_with(schema: &str, key: &str) -> Option<gio::Settings> {
+    let source = gio::SettingsSchemaSource::default()?;
+    let found = source.lookup(schema, true)?;
+    found.has_key(key).then(|| gio::Settings::new(schema))
+}
+
+/// GNOME's session settings (module docs).
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+struct System {
+    /// text-scaling-factor (else from gtk-xft-dpi, 96 x 1024 at 1.0); None without either.
+    text_scale: Option<f64>,
+    high_contrast: bool,
+    status_shapes: bool,
+}
+
+fn text_scale_of_dpi(dpi: i32) -> Option<f64> {
+    (dpi > 0).then(|| (f64::from(dpi) / (96.0 * 1024.0)).clamp(0.5, 3.0))
+}
+
+fn system() -> System {
+    let gtk_settings = gtk::Settings::default();
+    let (interface, a11y) = GNOME_KEYS.with(|g| g.borrow().clone());
+    let text_scale = interface
+        .as_ref()
+        .map(|i| i.double("text-scaling-factor"))
+        .filter(|v| v.is_finite() && *v > 0.0)
+        .map(|v| v.clamp(0.5, 3.0))
+        .or_else(|| gtk_settings.as_ref().and_then(|s| text_scale_of_dpi(s.gtk_xft_dpi())));
+    let (high_contrast, status_shapes) = match &a11y {
+        Some(a) => (a.boolean("high-contrast"), a.boolean("show-status-shapes")),
+        None => gtk_settings.as_ref().map_or((false, false), |s| {
+            (s.gtk_interface_contrast() == gtk::InterfaceContrast::More, s.is_gtk_show_status_shapes())
+        }),
+    };
+    System { text_scale, high_contrast, status_shapes }
 }
 
 /// The user's choices as CSS: the accent palette, the text scale and the accent surfaces as custom
@@ -103,6 +174,10 @@ pub fn refresh(shell: &Shell) {
         }
         if settings.is_gtk_enable_animations() == look.reduce_motion {
             settings.set_gtk_enable_animations(!look.reduce_motion);
+        }
+        // GtkSwitch shows its I and O images only while GTK's setting says so (GTK reads it from the portal alone)
+        if settings.is_gtk_show_status_shapes() != look.status_shapes {
+            settings.set_gtk_show_status_shapes(look.status_shapes);
         }
     }
     let css = dynamic_css(&look);
@@ -172,17 +247,21 @@ fn toggle(window: &gtk::Window, class: &str, on: bool) {
 }
 
 fn look_of(shell: &Shell) -> Look {
-    let s = shell.settings();
-    let dark = shell.dark();
+    look_from(&shell.settings(), shell.dark(), &system())
+}
+
+/// The look of the settings and what GTK carries (module docs): GTK's text scale replaces textScale.
+fn look_from(s: &serde_json::Value, dark: bool, sys: &System) -> Look {
     let accent = s["theme"]["accent"].as_str().unwrap_or("#0078d4");
     let ts = s["accessibility"]["textScale"].as_f64().filter(|v| v.is_finite() && *v > 0.0).unwrap_or(100.0);
     Look {
         dark,
         transparency: s["theme"]["transparency"] != false,
         accent_surfaces: s["theme"]["accentOnTaskbar"] == true && dark,
-        high_contrast: s["accessibility"]["highContrast"] == true,
+        high_contrast: s["accessibility"]["highContrast"] == true || sys.high_contrast,
         reduce_motion: s["accessibility"]["reduceMotion"] == true,
-        text_scale: ts.clamp(100.0, 225.0) / 100.0,
+        text_scale: sys.text_scale.unwrap_or(ts.clamp(50.0, 300.0) / 100.0),
+        status_shapes: sys.status_shapes,
         palette: accent_palette(accent),
     }
 }
@@ -235,6 +314,14 @@ fn dynamic_css(look: &Look) -> String {
         css.push_str(&format!("  --{name}: {}px;\n", round2(px * ts)));
     }
     css.push_str("}\n");
+    // GNOME's On/Off Shapes: GtkSwitch's own I and O images, which quick.css hides otherwise
+    if look.status_shapes {
+        css.push_str(
+            "switch.q-switch > image { color: var(--q-text-2); -gtk-icon-size: 10px; }\n\
+             switch.q-switch:checked > image { color: var(--q-accent-text); }\n\
+             switch.q-switch:disabled > image { color: var(--q-text-disabled); }\n",
+        );
+    }
 
     // Accent colour on Start and taskbar (shell.css :root[data-accent-surfaces], native-backdrop.css): a deep
     // accent-tinted taskbar (46 % of accent-dark-2) and Start / search / notification centre / calendar
@@ -448,4 +535,27 @@ fn text_on(fill: &str, prefer: &str) -> String {
         return prefer.to_owned();
     }
     if contrast(other, fill) > contrast(prefer, fill) { other.to_owned() } else { prefer.to_owned() }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn the_shell_scales_text_by_gtks_factor_once() {
+        assert_eq!(text_scale_of_dpi(96 * 1024), Some(1.0));
+        assert_eq!(text_scale_of_dpi(-1), None);
+        let s = json!({"accessibility": {"textScale": 125}});
+        let sys = System { text_scale: Some(1.5), high_contrast: true, status_shapes: true };
+        let look = look_from(&s, true, &sys);
+        assert_eq!(look.text_scale, 1.5, "GNOME's factor, not 1.25 x 1.5");
+        assert!(look.high_contrast && look.status_shapes);
+        let css = dynamic_css(&look);
+        assert!(css.contains("--fs-body: 21px;"), "14 px x 1.5");
+        assert!(css.contains("switch.q-switch > image { color: var(--q-text-2);"));
+        let look = look_from(&s, true, &System::default());
+        assert_eq!(look.text_scale, 1.25, "settings.json's textScale without GNOME's key");
+        assert!(!dynamic_css(&look).contains("switch.q-switch > image"));
+    }
 }

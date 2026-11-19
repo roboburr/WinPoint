@@ -1,0 +1,810 @@
+{
+ "summary": "I inventoried WinPoint's Settings app as it stands at checkout /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome (branch claude/gnome-english-update). This was read-only: I edited nothing and did not touch the live session.\n\nPAGE TREE (native/apps/settings/src/registry.rs PAGES, in navigation order; titles are nl/en)\n- home: Startpagina/Home\n- system: Systeem/System. Children: display (Beeldscherm/Display), sound (Geluid/Sound), notifications (Meldingen/Notifications), power (Energie en batterij/Power & battery), storage (Opslag/Storage), clipboard (Klembord/Clipboard), about (Info/About)\n- bluetooth: Bluetooth en apparaten/Bluetooth & devices. It has no sub-pages, so there is no Mouse, Touchpad, Keyboard, Printers, Pen, Camera, AutoPlay or USB page.\n- network: Netwerk en internet/Network & internet. Children: wifi (Wi-Fi), ethernet (Ethernet)\n- personalization: Persoonlijke instellingen/Personalisation. Children: background (Achtergrond/Background), colors (Kleuren/Colours), themes (Thema’s/Themes), start (Start), taskbar (Taakbalk/Taskbar), desktopicons (Bureaubladpictogrammen/Desktop icons)\n- apps: Apps. Children: installed (Geïnstalleerde apps/Installed apps), defaultapps (Standaard-apps/Default apps), startup (Opstarten/Startup)\n- accounts: Accounts. No sub-pages.\n- time: Tijd en taal/Time & language. Children: datetime (Datum en tijd/Date & time), language (Taal en regio/Language & region)\n- accessibility: Toegankelijkheid/Accessibility. Children: textsize (Tekstgrootte/Text size), visualeffects (Visuele effecten/Visual effects), contrast (Contrastthema’s/Contrast themes)\n- privacy: Privacy en beveiliging/Privacy & security. No sub-pages.\n- update: Update en herstel/Update & recovery. Children: update-history (Updategeschiedenis/Update history), update-advanced (Geavanceerde opties/Advanced options)\n\nOther registry facts:\n- The search page id is \"search\". ALIASES maps ms-settings-style names (for example windowsupdate-history and night-light) to page ids.\n- Compared with Windows 11 the nav lacks a Gaming entry, and there are no nested sub-pages under Bluetooth & devices, Accounts or Privacy & security.\n- Installed GNOME panels: about, applications, background, bluetooth, color, datetime, display, keyboard, mouse, multitasking, network, notifications, online-accounts, power, printers, privacy, region, search, sharing, sound, system, ubuntu, universal-access, users, wacom, wellbeing, wifi, wwan (gnome-control-center 1:50.3-0ubuntu0.2).\n- These panels have no WinPoint page or control at all: mouse, keyboard, printers, color, multitasking, online-accounts, search, sharing, wacom, wellbeing, wwan, ubuntu, users (except an info dialog), region (formats and input sources), the system sub-panels (remote desktop, secure shell, users), the universal-access content, and privacy (location, camera, microphone, screen lock, file history and trash, diagnostics, device security).\n\nWHAT REALLY CHANGES GNOME TODAY\n- Power: org.gnome.desktop.session idle-delay; org.gnome.settings-daemon.plugins.power idle-dim and sleep-inactive-{ac,battery}-{type,timeout}; the power-profiles-daemon ActiveProfile.\n- Background: org.gnome.desktop.background picture-uri, picture-uri-dark, picture-options, primary-color, secondary-color, color-shading-type and picture-opacity. Written by the panel host's wallpaper.rs and recorded in gnome_look.\n- Mode: org.gnome.desktop.interface color-scheme, gtk-theme and icon-theme, plus org.gnome.desktop.wm.preferences button-layout. Written by settings_effects.rs when theme.syncSystem is on (default true, no UI control) and recorded in gnome_look.\n- Caption buttons: CSS blocks in ~/.config/gtk-3.0/gtk.css and ~/.config/gtk-4.0/gtk.css.\n- Updates: com.ubuntu.update-notifier regular-auto-launch-interval.\n- Files: ~/.config/mimeapps.list and xdg-terminals.list, ~/.config/autostart, and ~/.local/share/recently-used.xbel.\n- System services:\n  - BlueZ D-Bus with WinPoint's own temporary agent.\n  - NetworkManager: reads over D-Bus, writes through nmcli.\n  - rfkill.\n  - wpctl (PipeWire).\n  - logind: SetBrightness, plus systemctl and loginctl for the power actions.\n  - PackageKit, and pkexec with WinPoint's own polkit policy for Ubuntu release prompts.\n\nREAD-ONLY, FAKE OR HYPRLAND-ONLY ON GNOME\n- Display: scale, resolution and refresh rate are greyed. display.list reads Mutter DisplayConfig.GetCurrentState, and display.set is Hyprland only. Arrangement, Identify and the 15 s keep dialog only appear on Hyprland.\n- Night light: system.nightLight.set uses hyprsunset (Hyprland only), so the page shows an unavailable card and the settings.json nightLight.* keys go unused.\n- Clipboard history: clipboard.list returns supported:false on GNOME, so the buttons are disabled.\n- Rename this PC, Your info and Sign-in options only open dialogs that point to Ubuntu's Settings app.\n- Date & time: the \"Set time automatically\" switch and the time zone dropdown are disabled and only show timedatectl's values.\n- Contrast themes is a notice saying it is not available yet. Nothing sets accessibility.highContrast.\n- taskbar.widgets has no consumer; only the mini preview reads it.\n- notifications.sounds has no consumer anywhere.\n\nWinPoint-only (they never touch GNOME's equivalent key): transparency, accent colour (GNOME accent-color is read but never written), text size (not text-scaling-factor), animations (not enable-animations), 24-hour clock (not clock-format), first day of week, display language (not the system locale), privacy.recentFiles (not remember-recent-files), and notifications showToasts and dnd (not show-banners).\n\nARCHITECTURE A NEW PAGE MUST FOLLOW\n1. Register the page:\n   - Add an entry to registry.rs PAGES: id, parent, an icon from kit glyph_data NAMES (mouse, keyboard, print, camera, mic, gamepad and so on all exist), title, description and keywords, each as an nl/en pair.\n   - Add any ALIASES.\n   - Add `pub const PAGES: &[(&str, Builder)]` and `pub const CSS` in a pages/*.rs module, then add the module to MODULES and MODULE_CSS in pages/mod.rs.\n   - A new top-level category needs its own drawing in navicons.rs (otherwise it gets System's) and a place in PAGES order.\n   - The parent page lists its sub-pages itself with common::link_card(&p, id), as in the system.rs id loop.\n2. Build the page:\n   - A builder is `fn(Page) -> PageFuture`: start every p.call() first, then await them, check p.alive(), and return a Vec<gtk::Widget>.\n   - p.get, p.run and p.run_with add the error toast and the dry-run toast. Also available: p.on(event prefix), p.on_settings, p.timeout, p.interval, p.on_cleanup, p.go, p.go_with, p.refresh, p.take_param.\n3. Controls:\n   - From kit::controls: SettingsGroup, SettingsCard (new or clickable with a Chevron), SettingsExpander, ToggleSwitch, Dropdown/DropdownOption, Slider (connect_changed for live updates, connect_committed for the final value, set_value_visible(false)), RadioGroup, checkbox and checkbox_desc, ColorSwatches, InfoBar, Dialog and confirm, Toast, MenuItem, SearchBox, ProgressBar/ProgressRing, Pivot/Segmented, number_box, text_box.\n   - From common.rs: setting_toggle, setting_dropdown, toggle_card and dropdown_card (bound to settings.json), link_card and link_card_with, notice and unavailable_card, sized, value_label, slot and set_slot, hero, hero_tile, UsageBar, kbd, card_extra.\n   - Also widgets::{Wrap, Clamp, AutoGrid}, background::FillGrid, preview::{DesktopPreview, DeviceArt} and colorpicker::pick_color.\n   - Texts are kit::t(nl, en) in Windows 11 nl-NL wording with no em-dashes. A language switch rebuilds the page.\n4. settings.json:\n   - Lives at ~/.config/win11-gnome/settings.json. Write with kit ctx settings.set {path, value} or settings.patch {patch}.\n   - host/src/settings.rs validates each value by type against host/src/settings-defaults.json. Unknown keys are kept, so add new keys to the defaults to get type checking.\n   - Changes reach every app as the settings.changed SSE event.\n   - Operating-system side effects only happen in settings_effects.rs (theme.*) and wallpaper.rs (wallpaper.*).\n5. Host calls:\n   - The kit starts a `win11-app --http-only` backend child and calls POST /api/call/<method> with a token. The SSE stream is /api/events.\n   - Every method must be listed in host/src/api-methods.json (otherwise unknown_method). Its \"dangerous\" flag adds the dryRun envelope, and the service itself must skip the write when ctx.dry_run.\n   - host/src/services/mod.rs Services::call dispatches by prefix (system., display., update., and so on) to the service's METHODS list and match.\n   - Errors are ApiError::tr(code, lang, key) with nl/en strings, for example services/system/strings.json.\n   - Events go out with ctx.emit(\"system.<domain>.changed\", value). System::publish only sends when the value changed, and a dirty-domain set is filled by GSettings or D-Bus signals.\n6. The existing pattern for GSettings is host/src/services/system/energy.rs:\n   - gio::SettingsSchemaSource::default().lookup(id, true). A missing schema means {available:false}.\n   - The snapshot is {available, writable via is_writable for lockdown, value}, with a type check on value_type.\n   - write() checks type, range_check and is_writable first, then does delay, set_value, apply and Settings::sync, and reads the value back.\n   - Patch::parse accepts exactly one key per call.\n   - watch() uses connect_changed and connect_writable_changed on the service's GLib context and emits system.power.settings.changed.\n   - A new system.input.get/set (mouse, touchpad, keyboard), system.nightLight on org.gnome.settings-daemon.plugins.color, or a whitelisted gsettings.get/set should copy this pattern.\n   - Preference keys are shared with GNOME exactly as GNOME Settings writes them, with no gnome_look. Only keys that are part of WinPoint's look go through gnome_look::note, so `win11-app --gnome-look` restores GNOME's values in non-WinPoint sessions. That is the existing guarantee that WinPoint does not break the normal GNOME/Ubuntu session.\n7. System writes go through polkit. Either use daemons that already check polkit (NetworkManager, BlueZ, logind, power-profiles-daemon, and also timedated, hostnamed, localed and AccountsService, which GNOME Settings uses but WinPoint does not yet call), or follow the services/update/admin.rs pattern: pkexec with a root-owned trusted helper and an own .policy in host/data, installed by scripts/install-system.py.\n8. Anything only gnome-shell can do goes over the extension bridge io.github.win11shell.GnomeBridge Call(method, json) (host/src/gnome.rs, extension/*Bridge.js).\n\nExisting services to extend:\n- system/audio.rs (wpctl): sources, balance.\n- system/energy.rs: power-button-action, ambient-enabled, show-battery-percentage, power-saver-profile-on-low-battery.\n- display.rs (Mutter DisplayConfig): add ApplyMonitorsConfig.\n- system/network.rs: VPN, proxy, hotspot.\n- system/bluetooth.rs: adapter alias and discoverable.\n- system/info.rs: hostnamed.\n- apps/defaults.rs: mime types, removable media.\n- sysmon/startup.rs.\n- update/options.rs: another GSettings writer.\n- notifications.rs and extension/notificationsBridge.js.",
+ "items": [
+  {
+   "area": "nav",
+   "function": "User card in the navigation pane (name, 'Lokaal account'/'Local account', picture)",
+   "control": "info",
+   "backing": "system.info -> user.realName/name; avatar /var/lib/AccountsService/icons/<user> (host/src/services/system/info.rs)",
+   "notes": "Read-only. app.rs."
+  },
+  {
+   "area": "nav",
+   "function": "Zoek een instelling / Find a setting (search results page)",
+   "control": "list",
+   "backing": "registry::search over PAGES titles, keywords and descriptions (nl+en weighted); page id 'search'",
+   "notes": "Only finds page-level entries, not individual controls; new controls need keywords in registry.rs."
+  },
+  {
+   "area": "home",
+   "function": "Device hero: PC name, model, monitor art with wallpaper",
+   "control": "info",
+   "backing": "system.info (hostname, /sys/class/dmi/id model); settings.json wallpaper/theme for DeviceArt",
+   "notes": "Shared system::device_hero."
+  },
+  {
+   "area": "home",
+   "function": "Naam wijzigen / Rename (hero link)",
+   "control": "dialog",
+   "backing": "none: system::rename_hint dialog says to use Ubuntu Settings › System › About › Device Name; 'Naam kopiëren' copies the name",
+   "notes": "FAKE/INFO: never changes the hostname. GNOME uses hostnamed SetStaticHostname/SetPrettyHostname (polkit org.freedesktop.hostname1.set-static-hostname)."
+  },
+  {
+   "area": "home",
+   "function": "Network tile (name, Verbonden) and Updates tile (count, last checked)",
+   "control": "button",
+   "backing": "system.network.get (NetworkManager D-Bus); system.updates + event system.updates.changed; click -> go('network') / go('update')",
+   "notes": "Real, read-only."
+  },
+  {
+   "area": "home",
+   "function": "Aanbevolen instellingen / Recommended settings",
+   "control": "list",
+   "backing": "default ids display, sound, taskbar, background + recently opened sub-pages (settings-app.json 'recent', max 6)",
+   "notes": "Links only."
+  },
+  {
+   "area": "home",
+   "function": "Bluetooth-apparaten card: power toggle, device rows, 'Alle apparaten weergeven', 'Apparaat toevoegen', reset when not responding",
+   "control": "toggle",
+   "backing": "system.bluetooth.get/setPowered {powered} (BlueZ Adapter1.Powered), system.bluetooth.reset; event system.bluetooth.changed",
+   "notes": "Real on GNOME."
+  },
+  {
+   "area": "home",
+   "function": "Persoonlijke instellingen card: theme grid + Kleurmodus Licht/Donker",
+   "control": "dropdown",
+   "backing": "themes::apply_theme -> settings.patch; theme.mode ('light'|'dark') -> host settings_effects sync_system_theme writes org.gnome.desktop.interface color-scheme (prefer-light/prefer-dark), gtk-theme, icon-theme (Win11/Win11-dark) when theme.syncSystem=true",
+   "notes": "Writes GNOME keys; recorded by gnome_look::note and restored in non-WinPoint sessions."
+  },
+  {
+   "area": "home",
+   "function": "Opslag card: system drive bar, Details, Ruimte vrijmaken",
+   "control": "button",
+   "backing": "storage.volumes; Details -> go('storage'); Ruimte vrijmaken -> shell.openApp {app:'taskmgr', params:{page:'storage'}}",
+   "notes": "Real, read-only."
+  },
+  {
+   "area": "system",
+   "function": "System overview: device hero + links to Beeldscherm, Geluid, Meldingen, Energie en batterij, Opslag, Klembord, Info",
+   "control": "list",
+   "backing": "system.info, system.network.get, system.updates; common::link_card",
+   "notes": "Windows 11 System also has Nearby sharing, Multitasking, Troubleshoot, Recovery, Projecting, Remote Desktop, Optional features; none exist here."
+  },
+  {
+   "area": "display",
+   "function": "Monitor arrangement (numbered tiles, select) and Identificeren / Identify",
+   "control": "button",
+   "backing": "display.list (supported:true only on Hyprland); Identify only flashes the tile and shows a toast",
+   "notes": "HYPRLAND-ONLY: hidden on GNOME (display.list -> {supported:false, monitors: Mutter org.gnome.Mutter.DisplayConfig.GetCurrentState})."
+  },
+  {
+   "area": "display",
+   "function": "Schaal / Scale (100-300%)",
+   "control": "dropdown",
+   "backing": "display.set {name, scale} (Hyprland IPC); GNOME: greyed fixed dropdown with the current scale from Mutter GetCurrentState",
+   "notes": "READ-ONLY on GNOME, with the notice 'Beeldscherminstellingen wijzigen kan hier niet. Gebruik daarvoor de app Instellingen van Ubuntu.' Mutter has ApplyMonitorsConfig (gnome-control-center uses it); the host does not call it."
+  },
+  {
+   "area": "display",
+   "function": "Beeldschermresolutie / Display resolution",
+   "control": "dropdown",
+   "backing": "display.set {name, mode:'WxH@Hz'}; GNOME: greyed current value",
+   "notes": "READ-ONLY on GNOME; Hyprland only."
+  },
+  {
+   "area": "display",
+   "function": "Vernieuwingsfrequentie / Refresh rate",
+   "control": "dropdown",
+   "backing": "display.set {name, mode}; GNOME: greyed current value",
+   "notes": "READ-ONLY on GNOME."
+  },
+  {
+   "area": "display",
+   "function": "'Deze beeldscherminstellingen behouden?' 15 s revert dialog",
+   "control": "dialog",
+   "backing": "keep_changes_dialog -> display.set with the previous value on Terugzetten or timeout",
+   "notes": "HYPRLAND-ONLY (never reached on GNOME)."
+  },
+  {
+   "area": "display",
+   "function": "Helderheid / Brightness",
+   "control": "slider",
+   "backing": "system.brightness.get/set {value 0-100} -> org.freedesktop.login1.Session.SetBrightness('backlight', dev, raw) on /sys/class/backlight; event system.brightness.changed",
+   "notes": "REAL on GNOME, but only for built-in panels; otherwise an unavailable card ('Alleen beschikbaar voor ingebouwde schermen'). No external-monitor DDC, no auto-brightness (gsd-power ambient-enabled)."
+  },
+  {
+   "area": "display",
+   "function": "Nachtlampje / Night light: toggle + Sterkte/Strength slider",
+   "control": "toggle",
+   "backing": "settings.json nightLight.enabled / nightLight.temperature + system.nightLight.set {enabled, temperature} -> hyprsunset",
+   "notes": "HYPRLAND-ONLY: on GNOME system.nightLight.get returns supported:false, so the page shows an unavailable card. GNOME keys org.gnome.settings-daemon.plugins.color night-light-enabled (b), night-light-temperature (u), night-light-schedule-automatic (b), night-light-schedule-from/to (d) are not used."
+  },
+  {
+   "area": "display",
+   "function": "Related: Tekstgrootte (textsize), Kleuren (colors)",
+   "control": "button",
+   "backing": "link_card",
+   "notes": "Missing from Windows Display: HDR, Graphics, Multiple displays options, orientation/rotation; GNOME Display also has orientation, primary display, join/mirror and fractional scaling, all absent."
+  },
+  {
+   "area": "sound",
+   "function": "Kies waar je geluid wilt afspelen / Choose where to play sound (output device)",
+   "control": "list",
+   "backing": "system.audio.get (wpctl status/inspect) -> sinks; system.audio.setSink {id} -> wpctl set-default",
+   "notes": "REAL (PipeWire). Radio list in an expander."
+  },
+  {
+   "area": "sound",
+   "function": "Volume slider + mute button",
+   "control": "slider",
+   "backing": "system.audio.set {volume 0-100} / {muted} -> wpctl set-volume/set-mute @DEFAULT_AUDIO_SINK@; event system.audio.changed (audio_monitor)",
+   "notes": "REAL. Missing: input/microphone device and level, balance, per-app volume mixer, alert sound and system sounds volume (org.gnome.desktop.sound event-sounds, theme-name), over-amplification (org.gnome.desktop.sound allow-volume-above-100-percent)."
+  },
+  {
+   "area": "sound",
+   "function": "Related: Geluiden bij meldingen -> notifications",
+   "control": "button",
+   "backing": "link_card_with('notifications')",
+   "notes": "Unavailable cards and a notice when wpctl is missing."
+  },
+  {
+   "area": "notifications",
+   "function": "Meldingen / Notifications master toggle",
+   "control": "toggle",
+   "backing": "settings.json notifications.showToasts (read by native/shell flyouts/notifications.rs)",
+   "notes": "WINPOINT-ONLY: only WinPoint's own toasts; GNOME org.gnome.desktop.notifications show-banners is not written."
+  },
+  {
+   "area": "notifications",
+   "function": "Meldingen mogen een geluid afspelen / Allow notifications to play sounds",
+   "control": "toggle",
+   "backing": "settings.json notifications.sounds",
+   "notes": "FAKE: no consumer anywhere in native/, host/ or extension/."
+  },
+  {
+   "area": "notifications",
+   "function": "Niet storen / Do not disturb (+ notice when on)",
+   "control": "toggle",
+   "backing": "settings.json notifications.dnd -> WinPoint panel (toasts, bell); passed to extension notificationsBridge consumerReady {dnd}",
+   "notes": "WINPOINT-ONLY: the bridge never changes GNOME's DND (show-banners). The quick settings flyout and Start search also toggle it."
+  },
+  {
+   "area": "notifications",
+   "function": "Testmelding versturen / Send a test notification",
+   "control": "button",
+   "backing": "notifications.test -> extension creates a MessageTray.Source/Notification in gnome-shell",
+   "notes": "Real. Missing: per-app notification settings (org.gnome.desktop.notifications.application: enable, show-banners, enable-sound-alerts, show-in-lock-screen, details-in-lock-screen), lock-screen notifications (show-in-lock-screen)."
+  },
+  {
+   "area": "power",
+   "function": "Energiestand / Power mode",
+   "control": "dropdown",
+   "backing": "system.power.settings.get/set {powerProfile} -> power-profiles-daemon ActiveProfile (org.freedesktop.UPower.PowerProfiles or net.hadess.PowerProfiles), read back; event system.power.settings.changed",
+   "notes": "REAL on GNOME (host/src/services/system/energy.rs)."
+  },
+  {
+   "area": "power",
+   "function": "Scherm uitschakelen na / Turn off my screen after",
+   "control": "dropdown",
+   "backing": "system.power.settings.set {idleDelay: s} -> org.gnome.desktop.session idle-delay (u); options 1,2,3,5,10,15,30,60 min, Nooit=0, '(aangepast)'",
+   "notes": "REAL GSettings; is_writable checked (lockdown)."
+  },
+  {
+   "area": "power",
+   "function": "Scherm dimmen bij inactiviteit / Dim the screen when inactive",
+   "control": "toggle",
+   "backing": "system.power.settings.set {idleDim} -> org.gnome.settings-daemon.plugins.power idle-dim (b)",
+   "notes": "REAL."
+  },
+  {
+   "area": "power",
+   "function": "Op netstroom in slaapstand na / When plugged in, sleep after",
+   "control": "dropdown",
+   "backing": "system.power.settings.set {sleepAC:{action:'nothing'|'suspend', timeout}} -> sleep-inactive-ac-type (s) + sleep-inactive-ac-timeout (i); 1 min to 2 h, Nooit",
+   "notes": "REAL; 'suspend' refused when logind CanSuspend is no."
+  },
+  {
+   "area": "power",
+   "function": "Op batterij in slaapstand na / On battery, sleep after",
+   "control": "dropdown",
+   "backing": "system.power.settings.set {sleepBattery:{action, timeout}} -> sleep-inactive-battery-type/-timeout",
+   "notes": "REAL; shown only with a battery."
+  },
+  {
+   "area": "power",
+   "function": "Battery hero and Batterijconditie, Laadcycli, Huidig stroomverbruik (or 'Netstroom' card without a battery)",
+   "control": "info",
+   "backing": "system.battery.get (UPower) + event system.battery.changed",
+   "notes": "Read-only. Missing GNOME Power: show-battery-percentage (org.gnome.desktop.interface), power-button-action (org.gnome.settings-daemon.plugins.power), automatic brightness (ambient-enabled), power-saver-profile-on-low-battery, Windows' Battery saver and Lid/power button actions."
+  },
+  {
+   "area": "power",
+   "function": "Aan/uit: Vergrendelen, Afmelden, Slaapstand, Opnieuw opstarten, Afsluiten",
+   "control": "button",
+   "backing": "system.power.action {action: lock|logout|suspend|reboot|shutdown} -> loginctl lock-session / gnome-session-quit --logout --no-prompt / systemctl suspend|reboot|poweroff",
+   "notes": "REAL; confirm dialogs; refused during an update commit (update/guard.rs)."
+  },
+  {
+   "area": "power",
+   "function": "Altijd eerst vragen / Always ask first",
+   "control": "toggle",
+   "backing": "settings.json power.confirm",
+   "notes": "WINPOINT-ONLY."
+  },
+  {
+   "area": "storage",
+   "function": "Your personal folder: stacked bar + category list (click opens Verkenner), 'Meer categorieën weergeven'",
+   "control": "list",
+   "backing": "storage.categories {refresh:false} + event storage.categoriesReady; shell.openApp {app:'explorer', params:{path}}",
+   "notes": "Read-only scan of the home folder."
+  },
+  {
+   "area": "storage",
+   "function": "Ruimte vrijmaken / Free up space",
+   "control": "button",
+   "backing": "shell.openApp {app:'taskmgr', params:{page:'storage'}}",
+   "notes": "Hands off to Taakbeheer. GNOME's 'File History & Trash' keys (org.gnome.desktop.privacy remove-old-trash-files, remove-old-temp-files, old-files-age) are not exposed (Windows Storage Sense equivalent)."
+  },
+  {
+   "area": "storage",
+   "function": "Stations / Drives (each volume with a usage bar, click opens it)",
+   "control": "list",
+   "backing": "storage.volumes; shell.openApp explorer at the mount point",
+   "notes": "Read-only."
+  },
+  {
+   "area": "clipboard",
+   "function": "Klembordgeschiedenis / Clipboard history count + Openen",
+   "control": "button",
+   "backing": "clipboard.list; shell.command {command:'clipboard'}",
+   "notes": "UNSUPPORTED on GNOME: clipboard.list returns {supported:false}, so the button is disabled, with a notice that GNOME doesn't let apps track copies."
+  },
+  {
+   "area": "clipboard",
+   "function": "Klembordgegevens wissen / Clear clipboard data",
+   "control": "button",
+   "backing": "clipboard.clear (confirm dialog); event clipboard.changed",
+   "notes": "Disabled on GNOME. The Tip card (Ctrl+C/X/V) is static."
+  },
+  {
+   "area": "about",
+   "function": "Header: PC name, model, 'Naam van deze pc wijzigen'",
+   "control": "dialog",
+   "backing": "system.info; rename_hint dialog only",
+   "notes": "FAKE/INFO (no hostname change)."
+  },
+  {
+   "area": "about",
+   "function": "Apparaatspecificaties / Device specifications (name, model, processor, RAM, GPU, storage) + Kopiëren",
+   "control": "info",
+   "backing": "system.info (DMI, /proc/cpuinfo, meminfo, GPUs, disks); copy to clipboard",
+   "notes": "Read-only."
+  },
+  {
+   "area": "about",
+   "function": "Besturingssysteem (edition, kernel, desktop, WinPoint version · mode, up time, user) + Kopiëren",
+   "control": "info",
+   "backing": "system.info (os-release, uname, /proc/uptime, XDG_CURRENT_DESKTOP) + shell.info",
+   "notes": "Read-only. Missing GNOME About/System Details: firmware version, windowing system, virtualization, Device Security (fwupd HSI)."
+  },
+  {
+   "area": "about",
+   "function": "Related: Opslag, Prestaties bekijken (Taakbeheer), Update en herstel",
+   "control": "button",
+   "backing": "link_card; shell.openApp {app:'taskmgr', params:{page:'performance'}}",
+   "notes": ""
+  },
+  {
+   "area": "bluetooth",
+   "function": "Bluetooth on/off",
+   "control": "toggle",
+   "backing": "system.bluetooth.setPowered {powered} -> org.bluez Adapter1.Powered (+ rfkill unblock)",
+   "notes": "REAL. Missing: adapter name/visibility ('Visible as'), Bluetooth devices discovery mode, receive files."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Device tiles (type glyph, status, battery %) with a '…' menu: Verbinden / Verbinding verbreken, Apparaat verwijderen",
+   "control": "list",
+   "backing": "system.bluetooth.get; system.bluetooth.connect|disconnect {address} -> Device1.Connect/Disconnect; system.bluetooth.remove -> Adapter1.RemoveDevice (confirm)",
+   "notes": "REAL; event system.bluetooth.changed."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Apparaat toevoegen -> 'Een apparaat toevoegen' dialog (search, pick, confirm code/passkey/PIN, done/failed)",
+   "control": "dialog",
+   "backing": "system.bluetooth.discover {on} (renewed every 20 s), system.bluetooth.pair {address} with WinPoint's temporary BlueZ agent (system/agent.rs, AgentManager1), events system.bluetooth.pairing, system.bluetooth.pairReply / cancelPair",
+   "notes": "REAL. Deep link {page:'bluetooth', add:1}."
+  },
+  {
+   "area": "bluetooth",
+   "function": "'Bluetooth reageert niet' banner + Bluetooth opnieuw starten / Restart Bluetooth",
+   "control": "button",
+   "backing": "system.bluetooth.reset (rfkill cycle when stuck, else Powered off/on)",
+   "notes": "Real. Related: sound link. No Windows sub-pages (Devices, Printers & scanners, Mouse, Touchpad, Pen, Camera, AutoPlay, USB) exist; GNOME mouse/touchpad keys (org.gnome.desktop.peripherals.mouse speed d -1..1, left-handed, natural-scroll, accel-profile, middle-click-emulation; .touchpad tap-to-click, two-finger-scrolling-enabled, natural-scroll, disable-while-typing, click-method, send-events) are unused."
+  },
+  {
+   "area": "network",
+   "function": "Hero: primary connection + Eigenschappen and Netwerkgebruik tiles",
+   "control": "info",
+   "backing": "system.network.get (NetworkManager D-Bus); Eigenschappen -> go('ethernet'|'wifi'); Netwerkgebruik -> shell.openApp taskmgr performance",
+   "notes": "Read-only."
+  },
+  {
+   "area": "network",
+   "function": "Wi-Fi card with toggle (opens wifi page)",
+   "control": "toggle",
+   "backing": "system.network.setWifi {enabled} -> nmcli radio wifi on|off",
+   "notes": "REAL."
+  },
+  {
+   "area": "network",
+   "function": "Ethernet card (opens ethernet page)",
+   "control": "button",
+   "backing": "go('ethernet'); shown when interfaces exist or ethernet is primary",
+   "notes": ""
+  },
+  {
+   "area": "network",
+   "function": "Vliegtuigmodus / Flight mode",
+   "control": "toggle",
+   "backing": "system.network.setAirplane {enabled} -> nmcli radio all off|on + rfkill block|unblock all; republishes bluetooth",
+   "notes": "REAL. Missing: VPN, Proxy (org.gnome.system.proxy), Mobile hotspot, Mobile network/wwan, Advanced network settings (IP/DNS editing), metered connection, data usage."
+  },
+  {
+   "area": "wifi",
+   "function": "Wi-Fi toggle",
+   "control": "toggle",
+   "backing": "system.network.setWifi",
+   "notes": "REAL."
+  },
+  {
+   "area": "wifi",
+   "function": "Beschikbare netwerken weergeven: list, refresh, Verbinden (password dialog) / Verbinding verbreken",
+   "control": "list",
+   "backing": "system.network.wifiList {rescan}; system.network.connect {ssid, password?} -> nmcli device wifi connect; system.network.disconnect {iface}; event system.network.changed",
+   "notes": "REAL. Missing: Manage known networks (forget), per-network properties (metered, random MAC, IP), hidden network, share network QR/hotspot."
+  },
+  {
+   "area": "ethernet",
+   "function": "Per adapter: Status, Netwerkadapter, IPv4-adres, IPv6-adres + Kopiëren",
+   "control": "info",
+   "backing": "sysmon.performance network interfaces + system.network.get",
+   "notes": "READ-ONLY. 'Geen netwerkkabel gevonden' empty state. No IP assignment or DNS edit, no metered toggle."
+  },
+  {
+   "area": "personalization",
+   "function": "Mini desktop preview + 'Selecteer een thema om toe te passen' theme grid + links to background, colors, themes, start, taskbar, desktopicons",
+   "control": "list",
+   "backing": "DesktopPreview from settings.json; themes::theme_grid -> settings.patch",
+   "notes": "Windows also has Lock screen, Text input, Fonts, Device usage; GNOME has Multitasking and the Ubuntu dock panel; none exist here."
+  },
+  {
+   "area": "background",
+   "function": "Je achtergrond aanpassen: Afbeelding / Effen kleur",
+   "control": "dropdown",
+   "backing": "settings.patch {wallpaper:{type}} -> host wallpaper.rs (panel host) -> org.gnome.desktop.background picture-uri, picture-uri-dark, picture-options, primary-color, secondary-color, color-shading-type='solid', picture-opacity=100",
+   "notes": "REAL GNOME write, recorded by gnome_look::note (restored in GNOME/Ubuntu sessions). No Slideshow, no Spotlight."
+  },
+  {
+   "area": "background",
+   "function": "Builtin picture grid + 'Foto’s zoeken' (file dialog)",
+   "control": "button",
+   "backing": "wallpaper.path ('builtin:lotus-dark' etc. or a file path) via settings.patch; gtk::FileDialog (portal)",
+   "notes": "REAL as above."
+  },
+  {
+   "area": "background",
+   "function": "Kies je achtergrondkleur swatches + Aangepaste kleuren (colour picker)",
+   "control": "button",
+   "backing": "wallpaper.color (#rrggbb) -> primary/secondary-color",
+   "notes": "REAL."
+  },
+  {
+   "area": "background",
+   "function": "Kies hoe de afbeelding het scherm vult (Opvullen, Passend maken, Uitrekken, Tegel, Centreren, Uitspreiden)",
+   "control": "dropdown",
+   "backing": "wallpaper.fit fill|fit|stretch|tile|center|span -> picture-options zoom|scaled|stretched|wallpaper|centered|spanned",
+   "notes": "REAL."
+  },
+  {
+   "area": "background",
+   "function": "Afbeelding aanpassen aan licht en donker",
+   "control": "toggle",
+   "backing": "wallpaper.followTheme (picks the light/dark twin for picture-uri/-uri-dark)",
+   "notes": "REAL. Related: colors, themes."
+  },
+  {
+   "area": "colors",
+   "function": "Kies je modus: Licht / Donker",
+   "control": "dropdown",
+   "backing": "theme.mode -> settings_effects sync_system_theme: org.gnome.desktop.interface color-scheme, gtk-theme (Fluent-round-* or Yaru/Adwaita twin), icon-theme Win11/Win11-dark; org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'",
+   "notes": "REAL only while theme.syncSystem=true (default, no UI); keys recorded by gnome_look. No Windows 'Aangepast' (separate Windows/app mode)."
+  },
+  {
+   "area": "colors",
+   "function": "Transparantie-effecten",
+   "control": "toggle",
+   "backing": "theme.transparency",
+   "notes": "WINPOINT-ONLY (kit/shell blur)."
+  },
+  {
+   "area": "colors",
+   "function": "Accentkleur: Handmatig/Automatisch, 48 swatches, recent colours, Aangepaste kleuren",
+   "control": "dropdown",
+   "backing": "theme.accentFromWallpaper, theme.accent (#hex) via set_setting/settings.patch",
+   "notes": "WINPOINT-ONLY: org.gnome.desktop.interface accent-color (enum blue|teal|green|yellow|orange|red|pink|purple|slate) is only read to pick the Yaru variant, never written."
+  },
+  {
+   "area": "colors",
+   "function": "Accentkleur weergeven op Start en taakbalk",
+   "control": "toggle",
+   "backing": "theme.accentOnTaskbar",
+   "notes": "WINPOINT-ONLY, dark mode only."
+  },
+  {
+   "area": "colors",
+   "function": "Thema voor apps: Windows 11 (Fluent) / Ubuntu-standaard (Yaru)",
+   "control": "dropdown",
+   "backing": "theme.gtkFamily fluent|system -> gtk-theme + Fluent import block in ~/.config/gtk-4.0/gtk.css",
+   "notes": "REAL GNOME/GTK write (gnome_look restores it)."
+  },
+  {
+   "area": "colors",
+   "function": "Windows 11-vensterknoppen in apps",
+   "control": "toggle",
+   "backing": "theme.captionButtons -> settings_effects apply_captions: CSS blocks in ~/.config/gtk-3.0/gtk.css and gtk-4.0/gtk.css (panel host)",
+   "notes": "REAL, removed by --gnome-look in other sessions. Related: contrast, themes."
+  },
+  {
+   "area": "themes",
+   "function": "Current theme hero + 'Een thema toepassen' grid (Lotus licht/donker, Stroming, Gloed, Zonsopgang, Noorderlicht)",
+   "control": "list",
+   "backing": "one settings.patch {wallpaper.path, theme.mode, theme.accent}",
+   "notes": "Mode and wallpaper reach GNOME as above; accent stays WinPoint-only. Related: desktopicons, contrast."
+  },
+  {
+   "area": "start",
+   "function": "Indeling / Layout: Meer vastgemaakte items, Standaard, Meer aanbevelingen",
+   "control": "button",
+   "backing": "start.layout morePins|default|moreRecommendations",
+   "notes": "WINPOINT-ONLY (native/shell Start)."
+  },
+  {
+   "area": "start",
+   "function": "Onlangs toegevoegde apps weergeven; Aanbevolen bestanden weergeven in Start",
+   "control": "toggle",
+   "backing": "start.showRecentApps; start.showRecommended (notice when privacy.recentFiles=false)",
+   "notes": "WINPOINT-ONLY."
+  },
+  {
+   "area": "start",
+   "function": "Mappen / Folders next to power (Instellingen, Verkenner, Documenten, Downloads, Muziek, Afbeeldingen, Video’s, Persoonlijke map)",
+   "control": "toggle",
+   "backing": "start.folders (ordered array)",
+   "notes": "WINPOINT-ONLY. Link: privacy."
+  },
+  {
+   "area": "taskbar",
+   "function": "Taakbalkitems: Zoeken (Verbergen, Alleen pictogram, Pictogram en label, Zoekvak)",
+   "control": "dropdown",
+   "backing": "taskbar.search hidden|icon|iconLabel|box",
+   "notes": "WINPOINT-ONLY panel."
+  },
+  {
+   "area": "taskbar",
+   "function": "Taakweergave / Task view",
+   "control": "toggle",
+   "backing": "taskbar.taskView",
+   "notes": "WINPOINT-ONLY."
+  },
+  {
+   "area": "taskbar",
+   "function": "Widgets",
+   "control": "toggle",
+   "backing": "taskbar.widgets",
+   "notes": "FAKE: only the page's mini preview reads it; no widgets board exists."
+  },
+  {
+   "area": "taskbar",
+   "function": "Andere systeemvakpictogrammen: Menu met verborgen pictogrammen + per tray app toggle and order",
+   "control": "toggle",
+   "backing": "taskbar.tray.hiddenMenu, taskbar.tray.shown, taskbar.tray.order, taskbar.tray.known; tray.list / tray.status (StatusNotifierItem host), event tray.changed",
+   "notes": "WINPOINT-ONLY. Deep link {section:'tray'}."
+  },
+  {
+   "area": "taskbar",
+   "function": "Gedrag: Uitlijning (Links/Gecentreerd), automatisch verbergen, seconden in de klok",
+   "control": "toggle",
+   "backing": "taskbar.alignment left|center; taskbar.autoHide; settings.patch {taskbar.showSeconds, time.showSeconds}",
+   "notes": "WINPOINT-ONLY. Missing Windows: multiple displays, badges, flashing, 'select the far corner'."
+  },
+  {
+   "area": "desktopicons",
+   "function": "Bureaubladpictogrammen weergeven; Deze pc, Prullenbak, Persoonlijke map",
+   "control": "toggle",
+   "backing": "desktop.showIcons, desktop.showThisPC, desktop.showTrash, desktop.showHome",
+   "notes": "WINPOINT-ONLY (native/shell desktop); Ubuntu DING keys untouched."
+  },
+  {
+   "area": "desktopicons",
+   "function": "Indeling: Pictogramgrootte (Klein/Normaal/Groot), uitlijnen op raster, automatisch schikken",
+   "control": "dropdown",
+   "backing": "desktop.iconSize small|medium|large, desktop.alignToGrid, desktop.autoArrange",
+   "notes": "WINPOINT-ONLY."
+  },
+  {
+   "area": "apps",
+   "function": "Overview links: Geïnstalleerde apps, Standaard-apps, Opstarten",
+   "control": "list",
+   "backing": "link_card",
+   "notes": "Windows also has Advanced app settings, Offline maps, Apps for websites, Video playback; GNOME Applications panel (per-app permissions) is missing."
+  },
+  {
+   "area": "installed",
+   "function": "Search 'Apps zoeken', sort and filter, list with count",
+   "control": "list",
+   "backing": "apps.list (desktop entries); event apps.changed",
+   "notes": "Real."
+  },
+  {
+   "area": "installed",
+   "function": "Per-app '…' menu: Openen, Vastmaken aan Start/taakbalk, Verwijderen",
+   "control": "button",
+   "backing": "apps.launch {id}; settings start.pinned / taskbar.pinned; software.uninstallInfo -> software.prepare -> confirm -> software.execute -> software.status (events software.changed; PackageKit/snapd with polkit)",
+   "notes": "REAL. Missing GNOME Apps panel: permissions (notifications, background, autostart, search, camera, microphone, location), default handlers per app, storage/clear cache, sandbox info."
+  },
+  {
+   "area": "defaultapps",
+   "function": "Standaard-apps: Webbrowser, E-mail, Bestandsbeheer, Muziekspeler, Videospeler, Fotoviewer, Teksteditor, Terminal",
+   "control": "dropdown",
+   "backing": "apps.defaults {candidates:true}, apps.list; apps.setDefault {kind, id} -> Gio AppInfo.set_as_default_for_type into ~/.config/mimeapps.list (desktop-specific overrides dropped); terminal -> ~/.config/xdg-terminals.list",
+   "notes": "REAL, shared with GNOME. Toast when another mimeapps.list wins. Missing: per file type / link type, calendar, removable media (org.gnome.desktop.media-handling automount, autorun-never, autorun-x-content-*)."
+  },
+  {
+   "area": "startup",
+   "function": "Opstart-apps: one toggle per app, 'Sorteren op' Naam/Status, 'Ingesteld voor iedereen' / 'Alleen voor jou'",
+   "control": "toggle",
+   "backing": "sysmon.startup (~/.config/autostart + /etc/xdg/autostart); sysmon.setStartup {id, enabled} -> user copy with Hidden / X-GNOME-Autostart-enabled",
+   "notes": "REAL, shared with GNOME. Link: 'Meer details in Taakbeheer' (shell.openApp taskmgr startup)."
+  },
+  {
+   "area": "accounts",
+   "function": "Hero: avatar, real name, 'Lokaal account', Gebruikersnaam",
+   "control": "info",
+   "backing": "system.info user (AccountsService icon file)",
+   "notes": "Read-only."
+  },
+  {
+   "area": "accounts",
+   "function": "Je gegevens / Your info (change name and picture)",
+   "control": "dialog",
+   "backing": "none: info dialog says to use Ubuntu Settings › System › Users",
+   "notes": "FAKE/INFO. GNOME uses org.freedesktop.Accounts.User SetRealName/SetIconFile (polkit org.freedesktop.accounts.change-own-user-data)."
+  },
+  {
+   "area": "accounts",
+   "function": "Aanmeldingsopties / Sign-in options (password, automatic sign-in)",
+   "control": "dialog",
+   "backing": "none: info dialog only",
+   "notes": "FAKE/INFO. Missing: change password, automatic login, fingerprint (fprintd), other users (add/remove, account type), Online accounts (GOA), Family."
+  },
+  {
+   "area": "accounts",
+   "function": "Vergrendelen / Lock: 'Nu vergrendelen'",
+   "control": "button",
+   "backing": "system.power.action {action:'lock'} -> loginctl lock-session",
+   "notes": "REAL. Plus a static privacy statement card."
+  },
+  {
+   "area": "time",
+   "function": "Overview: live clock, Tijdzone, Taal + links to datetime and language",
+   "control": "info",
+   "backing": "system.time (timedatectl show); settings time.showSeconds, time.h24, language",
+   "notes": "Read-only."
+  },
+  {
+   "area": "datetime",
+   "function": "Tijd automatisch instellen / Set time automatically",
+   "control": "toggle",
+   "backing": "system.time ntp (timedatectl NTP); switch set_sensitive(false)",
+   "notes": "READ-ONLY. GNOME: timedated SetNTP (polkit org.freedesktop.timedate1.set-ntp). Missing: set time manually (SetTime), automatic time zone (org.gnome.desktop.datetime automatic-timezone + geoclue)."
+  },
+  {
+   "area": "datetime",
+   "function": "Tijdzone / Time zone",
+   "control": "dropdown",
+   "backing": "system.time timezone; disabled single-option dropdown",
+   "notes": "READ-ONLY. GNOME: timedated SetTimezone (polkit org.freedesktop.timedate1.set-timezone)."
+  },
+  {
+   "area": "datetime",
+   "function": "24-uursnotatie / 24-hour clock",
+   "control": "toggle",
+   "backing": "settings.json time.h24",
+   "notes": "WINPOINT-ONLY (taskbar clock); org.gnome.desktop.interface clock-format untouched."
+  },
+  {
+   "area": "datetime",
+   "function": "Seconden weergeven; Datum weergeven op de taakbalk",
+   "control": "toggle",
+   "backing": "settings.patch {time.showSeconds, taskbar.showSeconds}; time.showDate",
+   "notes": "WINPOINT-ONLY."
+  },
+  {
+   "area": "datetime",
+   "function": "Eerste dag van de week (Maandag/Zondag/Zaterdag)",
+   "control": "dropdown",
+   "backing": "time.firstDayOfWeek 1|0|6",
+   "notes": "WINPOINT-ONLY (calendar flyout)."
+  },
+  {
+   "area": "language",
+   "function": "Weergavetaal van WinPoint: Nederlands / English (United Kingdom)",
+   "control": "dropdown",
+   "backing": "settings.json language nl|en",
+   "notes": "WINPOINT-ONLY; notice 'Apps van Ubuntu gebruiken hun eigen taalinstelling.' Missing: system language (AccountsService SetLanguage), formats (org.gnome.system.locale region), login-screen language (localed, polkit), keyboard input sources (org.gnome.desktop.input-sources sources, xkb-options)."
+  },
+  {
+   "area": "language",
+   "function": "Notaties / Formats samples (short/long date, time, number, file size)",
+   "control": "info",
+   "backing": "kit::format",
+   "notes": "Read-only."
+  },
+  {
+   "area": "accessibility",
+   "function": "Zicht links + Snel aanpassen: Animatie-effecten",
+   "control": "toggle",
+   "backing": "accessibility.reduceMotion (inverted)",
+   "notes": "WINPOINT-ONLY; org.gnome.desktop.interface enable-animations untouched. Missing (GNOME universal-access): high contrast, large text, cursor size, screen reader, magnifier, visual alerts, on-screen keyboard, repeat keys, cursor blinking, sticky/slow/bounce keys, mouse keys, locate pointer, click assist, double-click delay, overlay scrollbars."
+  },
+  {
+   "area": "textsize",
+   "function": "Tekstgrootte: sample, slider 100-225% (step 5), Toepassen",
+   "control": "slider",
+   "backing": "accessibility.textScale (kit theme + shell)",
+   "notes": "WINPOINT-ONLY: org.gnome.desktop.interface text-scaling-factor (d) is not written."
+  },
+  {
+   "area": "visualeffects",
+   "function": "Transparantie-effecten; Animatie-effecten",
+   "control": "toggle",
+   "backing": "theme.transparency; accessibility.reduceMotion",
+   "notes": "WINPOINT-ONLY. Missing Windows: always show scrollbars (overlay-scrolling), dismiss notifications after."
+  },
+  {
+   "area": "contrast",
+   "function": "Notice 'Speciale contrastthema’s zijn nog niet beschikbaar' + tips: Licht of donker, Transparantie uitzetten, Tekstgrootte link",
+   "control": "dropdown",
+   "backing": "theme.mode (GNOME color-scheme via sync); theme.transparency (inverted)",
+   "notes": "FAKE page: no contrast themes. Nothing sets accessibility.highContrast, which the shell reads; org.gnome.desktop.a11y.interface high-contrast is only read by extension/panelBridge.js."
+  },
+  {
+   "area": "privacy",
+   "function": "Recente bestanden bijhouden / Keep track of recent files",
+   "control": "toggle",
+   "backing": "settings.json privacy.recentFiles (Start Recommended, Explorer)",
+   "notes": "WINPOINT-ONLY; org.gnome.desktop.privacy remember-recent-files untouched."
+  },
+  {
+   "area": "privacy",
+   "function": "Geschiedenis van recente bestanden wissen",
+   "control": "button",
+   "backing": "apps.clearRecent (confirm) -> empties ~/.local/share/recently-used.xbel, keeps a .bak",
+   "notes": "REAL, shared with GNOME apps."
+  },
+  {
+   "area": "privacy",
+   "function": "'Zo houdt WinPoint je veilig' cards",
+   "control": "info",
+   "backing": "static text",
+   "notes": "Missing GNOME Privacy & Security: screen lock (org.gnome.desktop.screensaver lock-enabled, lock-delay; usb-protection), location (org.gnome.system.location enabled + portal permission store), camera/microphone (org.gnome.desktop.privacy disable-camera, disable-microphone), file history & trash (recent-files-max-age, remove-old-trash-files, remove-old-temp-files, old-files-age), diagnostics, device security, thunderbolt."
+  },
+  {
+   "area": "update",
+   "function": "WinPoint update card: check, Download and install, Cancel, Restart WinPoint / Sign out, Retry",
+   "control": "button",
+   "backing": "winpoint.status, winpoint.check, winpoint.install {version, metered?}, winpoint.cancel {jobId}; shell.restartAll {reason:'update'}; events winpoint.changed, winpoint.progress",
+   "notes": "WinPoint's own updater (GitHub digest)."
+  },
+  {
+   "area": "update",
+   "function": "Updates for Ubuntu: hero (Check / Install / Cancel / Repair / Restart), info bars, update rows with 'Wat is er nieuw', metered/removals confirmation",
+   "control": "button",
+   "backing": "update.status, update.check, update.install {rows}, update.cancel, update.repair, update.confirm, update.details (PackageKit, polkit); restart -> system.power.action reboot; events update.changed, update.progress; fallback system.updates",
+   "notes": "REAL. Not a gnome-control-center panel (gnome-software / update-manager territory)."
+  },
+  {
+   "area": "update",
+   "function": "New Ubuntu release card + 'Nieuwe Ubuntu-versies' (LTS / normal / never)",
+   "control": "dropdown",
+   "backing": "update.release.check/compat/start/attach/ubuntuHold; update.release.setPrompt {prompt} -> pkexec /usr/libexec/win11-gnome/release-upgrades-helper (polkit io.github.win11shell.gnome.release-upgrades) writes Prompt= in /etc/update-manager/release-upgrades",
+   "notes": "REAL system write through WinPoint's own polkit action (the pattern for system writes)."
+  },
+  {
+   "area": "update",
+   "function": "Back-up van instellingen: Exporteren, Importeren (Bestand kiezen), Alles terugzetten; Meer opties links; Over WinPoint",
+   "control": "button",
+   "backing": "settings.export / settings.backupFile, settings.import {json}, settings.reset (confirm); go('update-history'), go('update-advanced'); shell.info",
+   "notes": "WinPoint settings.json only."
+  },
+  {
+   "area": "update-history",
+   "function": "Update history list (Updates, Ubuntu-versies, Software) + Meer laden + related 'Herstel'",
+   "control": "list",
+   "backing": "update.history {before, limit}; go_with('update', {section:'recovery'})",
+   "notes": "Read-only."
+  },
+  {
+   "area": "update-advanced",
+   "function": "Automatisch controleren op nieuwe versies van WinPoint; downloaden via datalimiet; melden bij opnieuw opstarten",
+   "control": "toggle",
+   "backing": "update.winpointAutoCheck; update.metered; update.notifyRestart (read by the host update/winpoint services)",
+   "notes": "WINPOINT settings."
+  },
+  {
+   "area": "update-advanced",
+   "function": "Software-updater van Ubuntu automatisch openen voor gewone updates",
+   "control": "toggle",
+   "backing": "update.setAutoOpen {on} -> com.ubuntu.update-notifier regular-auto-launch-interval (GSettings); update.options",
+   "notes": "REAL shared GSettings write: the precedent for writing an Ubuntu/GNOME key."
+  },
+  {
+   "area": "update-advanced",
+   "function": "Automatische beveiligingsupdates; Apps uit de Snap Store; Software-updater van Ubuntu 'Openen'",
+   "control": "info",
+   "backing": "update.options (apt-config APT::Periodic::Unattended-Upgrade, snap refresh last/next/held); system.openUpdater -> update-manager / gnome-software --mode=updates",
+   "notes": "Security and snaps rows are read-only."
+  },
+  {
+   "area": "_architecture",
+   "function": "Adding a page",
+   "control": "info",
+   "backing": "registry.rs PAGES entry (id, parent, kit glyph, nl/en title, description, keywords) + optional ALIASES; pages/<x>.rs with `pub const PAGES: &[(&str, Builder)]` and `pub const CSS`; add the module to pages/mod.rs MODULES and MODULE_CSS; parent page adds common::link_card(&p, id); a new top-level category needs a drawing in navicons.rs",
+   "notes": "A page id belongs to exactly one module; the registry drives nav, breadcrumb and search."
+  },
+  {
+   "area": "_architecture",
+   "function": "Page builder contract",
+   "control": "info",
+   "backing": "fn(Page) -> PageFuture; start p.call()s first then await (parallel); `if !p.alive() { return vec![] }`; return Vec<gtk::Widget> of SettingsGroups/cards; p.run/run_with show the error and dry-run toasts; p.on(prefix), p.on_settings, p.timeout/interval/on_cleanup stop with the page",
+   "notes": "Documented in native/apps/settings/src/pages/mod.rs module doc."
+  },
+  {
+   "area": "_architecture",
+   "function": "settings.json controls",
+   "control": "info",
+   "backing": "common::toggle_card / dropdown_card / setting_toggle / setting_dropdown -> kit ctx settings.set {path, value} (optimistic, reverted on error); settings.patch {patch}; host/src/settings.rs validates by type against host/src/settings-defaults.json (unknown keys kept); event settings.changed to all apps",
+   "notes": "OS side effects only via host/src/settings_effects.rs (theme.*) and wallpaper.rs (wallpaper.*)."
+  },
+  {
+   "area": "_architecture",
+   "function": "New host method",
+   "control": "info",
+   "backing": "Add to host/src/api-methods.json {name, dangerous, doc} (unknown_method otherwise; dangerous adds the dryRun envelope); route by prefix in host/src/services/mod.rs Services::call; the service's METHODS list + match; skip writes when ctx.dry_run; ApiError::tr(code, lang, key) with nl/en strings (services/system/strings.json); emit ctx.emit('system.<domain>.changed', v)",
+   "notes": "Transport: kit/src/backend.rs HTTP POST /api/call/<method> + SSE /api/events to a win11-app --http-only child."
+  },
+  {
+   "area": "_architecture",
+   "function": "Exposing GSettings keys (template)",
+   "control": "info",
+   "backing": "host/src/services/system/energy.rs: SettingsSchemaSource::default().lookup(id, true) (missing -> available:false); snapshot {available, writable: is_writable, value} with a value_type check; write(): type + range_check + is_writable, then delay/set_value/apply/Settings::sync and read back; Patch::parse one key per call; watch(): connect_changed + connect_writable_changed marks the domain dirty, then System::publish emits only on change",
+   "notes": "Use for mouse/touchpad/keyboard (org.gnome.desktop.peripherals.*), night light (org.gnome.settings-daemon.plugins.color), a11y, privacy, interface keys. Preference keys are shared with GNOME and written as GNOME Settings writes them (no gnome_look::note). Only WinPoint-look keys go through gnome_look::note, so --gnome-look restores them in GNOME/Ubuntu sessions."
+  },
+  {
+   "area": "_architecture",
+   "function": "System writes through polkit",
+   "control": "info",
+   "backing": "Prefer system daemons that check polkit themselves (NetworkManager/nmcli, BlueZ, logind, power-profiles-daemon; also hostnamed, timedated, localed, AccountsService, which WinPoint does not call yet). Otherwise follow host/src/services/update/admin.rs: pkexec + root-owned trusted helper in /usr/libexec/win11-gnome + own .policy in host/data, installed by scripts/install-system.py; map exit 126/127",
+   "notes": "GNOME Shell's polkit agent shows the password dialog."
+  },
+  {
+   "area": "_architecture",
+   "function": "GNOME Shell bridge",
+   "control": "info",
+   "backing": "io.github.win11shell.GnomeBridge Call(method, json) / Event signal (host/src/gnome.rs, kit/src/gnome.rs, extension/*Bridge.js); extension schema org.gnome.shell.extensions.win11-gnome (task-manager, task-view, *-restore keybindings)",
+   "notes": "For things only gnome-shell can do (notification banners, windows, blur)."
+  }
+ ]
+}

@@ -257,11 +257,7 @@ impl Files {
         let home = glib::home_dir();
         let desktop = desktop_dir(&home);
         let mut context = if let Some(settings) = self.external_settings() {
-            let language = match settings["language"].as_str() {
-                Some("en") => "en",
-                _ => "nl",
-            }
-            .to_owned();
+            let language = context_language(&settings);
             Context::new(home, desktop, language, show_hidden_of(&settings))
         } else {
             // C1 and round2-gate §2: one stat of settings.json per call; the file is parsed only after it
@@ -575,6 +571,12 @@ fn backend_call(backend: &Backend, method: &str) -> Option<Value> {
     } else {
         None
     }
+}
+
+/// The `Context` language of a reference instance's settings: `"system"` is the session's language
+/// ([`Lang::of`]), as everywhere else.
+fn context_language(settings: &Value) -> String {
+    Lang::of(&settings["language"]).code().to_owned()
 }
 
 fn socket_root(runtime: &Path) -> PathBuf {
@@ -897,6 +899,26 @@ pub(crate) fn storage_trash_dirs() -> Vec<PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn a_reference_instances_language_system_is_the_sessions_language() {
+        assert_eq!(context_language(&json!({"language": "en"})), "en");
+        assert_eq!(context_language(&json!({"language": "nl"})), "nl");
+        assert_eq!(
+            context_language(&json!({})),
+            "nl",
+            "C1: anything else is Dutch"
+        );
+        // "system" was Dutch here before: it is the session's messages language, as Lang::system reads it
+        assert_eq!(
+            context_language(&json!({"language": "system"})),
+            crate::i18n::system_code(|k| std::env::var(k).ok())
+        );
+        let session = |lang: &'static str| {
+            crate::i18n::system_code(move |k| (k == "LANG").then(|| lang.to_owned()))
+        };
+        assert_eq!(session("en_GB.UTF-8"), "en");
+        assert_eq!(session("nl_NL.UTF-8"), "nl");
+    }
     #[test]
     fn absolute_icons_require_image_content_and_do_not_block_on_special_files() {
         let root =

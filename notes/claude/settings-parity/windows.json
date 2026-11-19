@@ -1,0 +1,1818 @@
+{
+ "summary": "Windows 11 25H2 Settings, page by page, for the places where gnome-control-center 50.3 functions will land. This is from memory, not checked on a running Windows machine. Each item gives the Windows control in order with EN and NL wording, and in 'backing' the exact GNOME counterpart, checked against the files installed here: the schemas in /usr/share/glib-2.0/schemas with Ubuntu overrides, the polkit actions in /usr/share/polkit-1/actions, the D-Bus interfaces and service files, and the GTK UI strings built into /usr/bin/gnome-control-center. 'Windows-only (omit)' means GNOME has no such function. 'WinPoint shell' means WinPoint must keep the setting itself (settings.get/set).\n\nEnglish wording: en-GB, because WinPoint already uses Personalisation, Colours and Flight mode; en-US is noted where it differs. Dutch strings marked '(nl unverified)' should be checked on a real nl-NL 25H2 machine before they are frozen in kit::t.\n\nMouse, the example Robin gave: the Windows page is Primary mouse button, Mouse pointer speed, Enhance pointer precision, the Scrolling section and two Related settings links. All core rows map 1:1 to org.gnome.desktop.peripherals.mouse:\n- Primary mouse button → left-handed\n- Pointer speed (1–20) → speed, (n−10)/10\n- Enhance pointer precision → accel-profile, default or flat\n- Scrolling direction → natural-scroll\nAdditional mouse settings should be a native GTK version of the classic 'Eigenschappen voor Muis' dialog. Its Double-click speed slider → double-click. 'Show location of pointer when I press Ctrl' → locate-pointer. Scheme → cursor-theme. The dialog is also the place for GNOME's middle-click emulation and Test Settings.\n\nGNOME functions that Windows has nowhere, and the Windows-style home proposed for each:\n- Wellbeing (screen time, daily limit, greyscale, break reminders): extra section on System › Focus.\n- Workspaces dynamic/fixed/number, workspaces only on primary, hot corner: Multitasking › Desktops.\n- Over-amplification: Accessibility › Audio.\n- Visual alerts: Audio, 'Flash my screen'.\n- Activate windows on hover, simulated secondary click, hover click: Accessibility › Mouse.\n- Crosshairs and colour effects: Magnifier.\n- Status shapes: Visual effects.\n- Cursor blinking: Text cursor.\n- Compose and AltGr key, keyboard shortcuts editor, repeat delay/rate: Advanced keyboard settings, plus a native 'Keyboard Properties' dialog.\n- Week numbers, weekday, world clocks: Date & time.\n- Login-screen language/formats/keyboard: Administrative language settings.\n- Media sharing (rygel) and connectivity checking: Advanced network settings.\n- Thunderbolt: Bluetooth & devices › USB.\n- Device security (fwupd HSI) and Ubuntu Security Center: Privacy & security › Windows Security.\n- Ubuntu error/system reporting: Diagnostics & feedback.\n- Search providers: Search permissions.\n- Search locations: Searching Windows.\n- Trash and temp auto-delete: System › Storage › Storage Sense.\n- Restore windows after login: Sign-in options.\n- Automatic login, fingerprint, password: Sign-in options.\n- Privacy screen, Adjust for TV, legacy-app scaling: Display.\n- Remote Login (headless) and Secure Shell: Remote Desktop and System › Advanced.\n- WWAN: a Mobile page.\n- Wacom: Pen & Windows Ink.\n- Removable-media types: AutoPlay.\n- Online accounts: Email & accounts.\n- Per-app portal permissions: Apps › Advanced options.\n\nThings that are absent on this install and should be hidden: gnome-user-share (File Sharing, password-protected sharing), openssh-server (offer an install through PackageKit instead), malcontent (Family / Parental Controls), usbguard (Forbid new USB devices). The per-monitor app-switcher key that g-c-c's strings mention is also missing from the installed org.gnome.shell schema.\n\nSome keys are risky or unclear:\n- Lid-close behaviour is mostly logind's job (root config); the gsd lid-close-* keys need checking before they are wired.\n- Writing GNOME proxy credentials stores them in plain text in dconf.\n- Colour filters have no GNOME 50 key at all.\n- Windows splits several things that GNOME keeps as one value: screen-off timeout per power source (GNOME has one idle-delay), power-button action, and the Custom mode split between Windows mode and app mode.\n\nSystem writes go through polkit, exactly as GNOME does (ids listed per item):\n- hostname1, timedate1 and locale1\n- AccountsService and fprintd\n- NetworkManager, CupsPkHelper, colord and bolt\n- UPower charge limit and power-profiles\n- the gnome-remote-desktop system daemon\n- WhoopsiePreferences, PackageKit, and the Ubuntu LanguageSelector D-Bus service\n\nSome GNOME helpers are Python or GTK3 and must not run inside WinPoint: gnome-language-selector and check-language-support, and Orca's preferences dialog. Talk to their D-Bus backends instead, or write the schema keys natively.\n\nI read the existing WinPoint host methods; matching ones are named in backing (system.brightness, system.nightLight, system.audio, system.network, system.bluetooth, display.set, apps.setDefault, index.*, storage.cleanup.*, clipboard.*, sysmon.*). No files were changed and nothing was run against the live session.",
+ "items": [
+  {
+   "area": "Navigation pane",
+   "function": "Search box EN “Find a setting” / NL “Zoek een instelling” (Win11 nl may read “Een instelling zoeken”); left-pane order: Home/Startpagina, System/Systeem, Bluetooth & devices/Bluetooth en apparaten, Network & internet/Netwerk en internet, Personalisation/Persoonlijke instellingen, Apps/Apps, Accounts/Accounts, Time & language/Tijd en taal, Gaming/Gamen, Accessibility/Toegankelijkheid, Privacy & security/Privacy en beveiliging, Windows Update/Windows Update; account header above it (avatar, name, “Local account”/“Lokaal account”)",
+   "control": "list",
+   "backing": "native/apps/settings/src/registry.rs PAGES; header from org.freedesktop.Accounts.User RealName/IconFile/AccountType",
+   "notes": "en-US: Personalization. Gaming has no GNOME function: leave out. Windows Update = WinPoint update pages (also GNOME System › Software Updates)."
+  },
+  {
+   "area": "System",
+   "function": "Page EN “System” / NL “Systeem”. Device card on top (PC name, model, “Rename”/“Naam wijzigen”). Rows with subtitles: Display “Monitors, brightness, night light, display profile”/“Beeldschermen, helderheid, nachtlampje, weergaveprofiel”; Sound “Volume levels, output, input, sound devices”/“Volumeniveaus, uitvoer, invoer, geluidsapparaten”; Notifications “Alerts from apps and system, do not disturb”/“Waarschuwingen van apps en systeem, niet storen”; Focus “Reduce distractions”/“Afleiding verminderen”; Power & battery (Power on desktops) “Sleep, battery usage, energy saver”/“Slaapstand, batterijgebruik, energiebesparing”; Storage/Opslag; Nearby sharing/Delen in de buurt; Multitasking/Multitasking “Snap windows, desktops, task switching”/“Vensters uitlijnen, bureaubladen, schakelen tussen taken”; Advanced/Geavanceerd (25H2 name of For developers/Voor ontwikkelaars); Activation/Activering; Troubleshoot/Probleemoplossing; Recovery/Herstel; Projecting to this PC/Projecteren naar deze pc; Remote Desktop/Extern bureaublad; Clipboard/Klembord; Optional features/Optionele onderdelen; System components/Systeemonderdelen; About/Info",
+   "control": "info",
+   "backing": "registry.rs; rename via org.freedesktop.hostname1 SetStaticHostname + SetPrettyHostname (polkit org.freedesktop.hostname1.set-static-hostname, set-machine-info)",
+   "notes": "Activation, Troubleshoot, Recovery, Projecting, System components: Windows-only (omit). Optional features could hold ‘OpenSSH-server’ (see System › Advanced). Several nl subtitles are unverified."
+  },
+  {
+   "area": "System › Display",
+   "function": "Monitor layout canvas (drag to arrange) with “Identify”/“Identificeren” button and presentation dropdown beside it (multi-monitor only)",
+   "control": "dialog",
+   "backing": "org.gnome.Mutter.DisplayConfig GetCurrentState / ApplyMonitorsConfig(serial, method 1=verify 2=persistent, logical_monitors[x,y,scale,transform,primary,monitors]); stored in ~/.config/monitors.xml; WinPoint host display.list/display.set",
+   "notes": "GNOME Displays arrangement. After any change Windows shows “Keep these display settings?”/“Deze beeldscherminstellingen behouden?” with “Keep changes”/“Wijzigingen behouden” and “Revert”/“Terugzetten”, 15 s countdown: do the same with method 1 then 2 (g-c-c Apply/Cancel)."
+  },
+  {
+   "area": "System › Display",
+   "function": "Section EN “Brightness & colour” / NL “Helderheid en kleur”: slider “Brightness”/“Helderheid” (expander)",
+   "control": "slider",
+   "backing": "WinPoint host system.brightness.get/set; Mutter DisplayConfig backlight (SetBacklight, Backlight property, mutter 47+) with polkit org.gnome.mutter.backlight-helper; org.gnome.Shell.Brightness (SetDimming, SetAutoBrightnessTarget, HasBrightnessControl)",
+   "notes": "en-US Brightness & color. Hide when there is no backlight (HasBrightnessControl false)."
+  },
+  {
+   "area": "System › Display",
+   "function": "Inside the Brightness expander: checkbox EN “Change brightness automatically when lighting changes” / NL “Helderheid automatisch wijzigen wanneer de verlichting verandert”",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.power ambient-enabled (b, default true)",
+   "notes": "GNOME shows this in Power as ‘Automatic Screen Brightness’. Show only when net.hadess.SensorProxy HasAmbientLight is true (iio-sensor-proxy is installed)."
+  },
+  {
+   "area": "System › Display",
+   "function": "Inside the Brightness expander: EN “Change brightness based on content” / NL “Helderheid wijzigen op basis van inhoud”, dropdown Off/Always/On battery only (Uit/Altijd/Alleen op batterij)",
+   "control": "dropdown",
+   "backing": "none: Windows-only (omit)",
+   "notes": "This is CABC; GNOME has nothing like it."
+  },
+  {
+   "area": "System › Display",
+   "function": "Row EN “Night light” / NL “Nachtlampje”, toggle plus chevron to sub-page, subtitle “Use warmer colours to help block blue light” / “Warmere kleuren gebruiken om blauw licht te blokkeren”",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.color night-light-enabled (b, false); WinPoint host system.nightLight.get/set",
+   "notes": "GNOME Displays › Night Light."
+  },
+  {
+   "area": "System › Display › Night light",
+   "function": "Button EN “Turn on now” / “Turn off now”, NL “Nu inschakelen” / “Nu uitschakelen”",
+   "control": "button",
+   "backing": "Turning off inside the schedule: org.gnome.SettingsDaemon.Color property DisabledUntilTomorrow (session bus /org/gnome/SettingsDaemon/Color). Turning on outside the schedule: night-light-enabled true with a manual schedule that covers now",
+   "notes": "GNOME has ‘Temporarily Disabled Until Tomorrow’ / ‘Restart Filter’ but no force-on. Check gsd night-light’s handling of from==to (always on?) before relying on it."
+  },
+  {
+   "area": "System › Display › Night light",
+   "function": "Slider EN “Strength” / NL “Sterkte” (0–100)",
+   "control": "slider",
+   "backing": "org.gnome.settings-daemon.plugins.color night-light-temperature (u Kelvin, default 2700)",
+   "notes": "GNOME ‘Color Temperature’ slider spans about 1700 (warm) to 4700 K. Map 100% to 1700 K and 0% to 4700 K."
+  },
+  {
+   "area": "System › Display › Night light",
+   "function": "Toggle EN “Schedule night light” / NL “Nachtlampje plannen”; radios “Sunset to sunrise (hh:mm; hh:mm)” / “Zonsondergang tot zonsopkomst” and “Set hours” / “Uren instellen” with time pickers “Turn on” / “Inschakelen” and “Turn off” / “Uitschakelen”",
+   "control": "radio",
+   "backing": "night-light-schedule-automatic (b, true), night-light-schedule-from (d hours, 20.0), night-light-schedule-to (d, 6.0); sunset times from night-light-last-coordinates ((dd)) via geoclue",
+   "notes": "GNOME ‘Schedule: Sunset to Sunrise / Manual Schedule’, ‘Times: From/To’. Like Windows, show a ‘turn on location services’ hint when org.gnome.system.location enabled is false."
+  },
+  {
+   "area": "System › Display",
+   "function": "Row EN “HDR” / NL “HDR”, chevron to sub-page with toggle “Use HDR” / “HDR gebruiken” and slider “SDR content brightness” / “Helderheid van SDR-inhoud” (nl unverified)",
+   "control": "toggle",
+   "backing": "Mutter DisplayConfig ApplyMonitorsConfig monitor property color-mode (default/bt2100); SDR brightness via org.gnome.mutter output-luminance (a(ssssud))",
+   "notes": "GNOME 48+ ‘HDR (High Dynamic Range)’ in display settings. Show only when the monitor reports supported color modes."
+  },
+  {
+   "area": "System › Display",
+   "function": "Row EN “Colour profile” / NL “Kleurprofiel” (24H2+): dropdown of ICC profiles; sub-page with “Add profile” / “Profiel toevoegen”, per-profile “Remove” / “Verwijderen”, and toggle “Automatically manage colour for apps” / “Kleur voor apps automatisch beheren” (nl unverified)",
+   "control": "dropdown",
+   "backing": "colord org.freedesktop.ColorManager: Device.MakeProfileDefault, Device.AddProfile, Manager.CreateProfile / import, DeleteProfile (polkit org.freedesktop.color-manager.modify-device, create-profile, delete-profile, install-system-wide)",
+   "notes": "This is the GNOME Color panel (gnome-color-panel), which also has ‘Calibrate…’ (colord sensor, org.freedesktop.ColorHelper) for printers and scanners. The auto-manage toggle is Windows-only (omit)."
+  },
+  {
+   "area": "System › Display",
+   "function": "Section EN “Scale & layout” / NL “Schaal en indeling”: dropdown “Scale” / “Schaal”, subtitle “Change the size of text, apps and other items” / “De grootte van tekst, apps en andere items wijzigen”, values 100% (Recommended)/125%/150%/175%… with chevron to “Custom scaling” / “Aangepaste schaal” (100–500)",
+   "control": "dropdown",
+   "backing": "Mutter DisplayConfig logical monitor scale (allowed scales from GetCurrentState; fractional needs org.gnome.mutter experimental-features 'scale-monitor-framebuffer'); legacy X11 org.gnome.desktop.interface scaling-factor (u, 0=auto)",
+   "notes": "GNOME ‘Scale’. Offer only the scales mutter reports for the current mode. For Custom scaling, round to the nearest supported scale."
+  },
+  {
+   "area": "System › Display › Custom scaling",
+   "function": "EN “Fix scaling for apps” / NL “Schaal voor apps herstellen”: toggle “Let Windows try to fix apps so they’re not blurry” / “Windows proberen apps te laten herstellen zodat ze niet wazig zijn” (nl unverified)",
+   "control": "toggle",
+   "backing": "org.gnome.mutter experimental-features contains 'xwayland-native-scaling'",
+   "notes": "Maps to GNOME ‘Built-in Scaling for Legacy Apps: Legacy apps that support scaling will look crisp, but some might not scale at all’."
+  },
+  {
+   "area": "System › Display",
+   "function": "Dropdown EN “Display resolution” / NL “Beeldschermresolutie”, subtitle “Adjust the resolution to fit your connected display” / “De resolutie aanpassen aan het aangesloten beeldscherm”, entry suffix “(Recommended)” / “(Aanbevolen)”",
+   "control": "dropdown",
+   "backing": "Mutter DisplayConfig monitor mode id (modes from GetCurrentState, is-preferred flag)",
+   "notes": "GNOME ‘Resolution’."
+  },
+  {
+   "area": "System › Display",
+   "function": "Dropdown EN “Display orientation” / NL “Afdrukstand van beeldscherm” (nl unverified; Win10 used ‘Afdrukstand’): Landscape/Portrait/Landscape (flipped)/Portrait (flipped) = Liggend/Staand/Liggend (gespiegeld)/Staand (gespiegeld)",
+   "control": "dropdown",
+   "backing": "Mutter DisplayConfig logical monitor transform (0 normal, 1 = 90°, 2 = 180°, 3 = 270°)",
+   "notes": "GNOME ‘Orientation’."
+  },
+  {
+   "area": "System › Display",
+   "function": "Toggle EN “Rotation lock” / NL “Draaivergrendeling” (convertibles and tablets only)",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.peripherals.touchscreen orientation-lock (b, false); accelerometer via net.hadess.SensorProxy HasAccelerometer",
+   "notes": "GNOME has this only in Quick Settings."
+  },
+  {
+   "area": "System › Display",
+   "function": "Expander EN “Multiple displays” / NL “Meerdere beeldschermen”, subtitle “Choose the presentation mode for your displays” / “Kies de presentatiemodus voor je beeldschermen”; mode dropdown “Duplicate these displays” / “Deze beeldschermen dupliceren”, “Extend these displays” / “Deze beeldschermen uitbreiden”, “Show only on 1” / “Alleen weergeven op 1”, “Show only on 2”",
+   "control": "dropdown",
+   "backing": "Mutter DisplayConfig: duplicate = one logical monitor holding all monitors (mirror); extend = one logical monitor each (join); show only = leave the other monitors out; Super+P = org.gnome.mutter.keybindings switch-monitor",
+   "notes": "GNOME ‘Multiple Displays: Join / Mirror’ plus a per-monitor on/off switch."
+  },
+  {
+   "area": "System › Display",
+   "function": "Inside Multiple displays: checkbox EN “Make this my main display” / NL “Dit mijn hoofdbeeldscherm maken” (nl unverified)",
+   "control": "toggle",
+   "backing": "Mutter DisplayConfig logical monitor primary = true",
+   "notes": "GNOME ‘Primary Display’. The WinPoint taskbar should follow it."
+  },
+  {
+   "area": "System › Display",
+   "function": "Inside Multiple displays: “Remember window locations based on monitor connection” / “Vensterlocaties onthouden op basis van monitorverbinding”, “Minimise windows when a monitor is disconnected” / “Vensters minimaliseren wanneer een monitor wordt losgekoppeld”, “Ease cursor movement between displays” / “Cursorbeweging tussen beeldschermen vereenvoudigen”",
+   "control": "toggle",
+   "backing": "none: Windows-only (omit)",
+   "notes": "en-US: Minimize."
+  },
+  {
+   "area": "System › Display",
+   "function": "Inside Multiple displays: EN “Detect other display” with button “Detect” / NL “Ander beeldscherm detecteren” with “Detecteren”; EN “Connect to a wireless display” with “Connect” / NL “Verbinding maken met een draadloos beeldscherm” with “Verbinden”",
+   "control": "button",
+   "backing": "Detect: re-read DisplayConfig GetCurrentState (hotplug already does this). Wireless display: none (GNOME Network Displays is not installed)",
+   "notes": "Keep Detect as a harmless refresh. Omit wireless display."
+  },
+  {
+   "area": "System › Display › Advanced display",
+   "function": "EN “Advanced display” / NL “Geavanceerd beeldscherm” (nl unverified): dropdown “Select a display to view or change its settings”; card “Display information” / “Beeldscherminformatie” (connected to, desktop mode, active signal mode, bit depth, colour format, colour space); dropdown “Choose a refresh rate” / “Een vernieuwingsfrequentie kiezen”; toggle “Dynamic refresh rate” / “Dynamische vernieuwingsfrequentie”",
+   "control": "dropdown",
+   "backing": "Mutter DisplayConfig: monitor vendor/product/serial/display-name, mode refresh-rate; VRR through the mode’s refresh-rate-mode 'variable'",
+   "notes": "GNOME ‘Refresh Rate’ and ‘Variable Refresh Rate’. Windows’ own VRR switch lives under Graphics; using the Dynamic refresh rate row for GNOME VRR is the closest fit."
+  },
+  {
+   "area": "System › Display › Advanced display",
+   "function": "WinPoint addition styled like Windows: toggle “Aanpassen voor tv” / “Adjust for TV” (underscan)",
+   "control": "toggle",
+   "backing": "Mutter DisplayConfig monitor property 'underscanning' (only when supported)",
+   "notes": "GNOME ‘Adjust for TV’. Windows only has this in the GPU vendor panel."
+  },
+  {
+   "area": "System › Display",
+   "function": "WinPoint addition in Brightness & colour: toggle “Privacyscherm” / “Privacy screen”, subtitle “Kijkhoek beperken” / “Restrict viewing angle”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy privacy-screen (b, false); hardware state from Mutter DisplayConfig monitor property privacy-screen-state",
+   "notes": "GNOME puts this in Privacy › Screen Lock › Screen Privacy. Show only when the panel has a privacy screen."
+  },
+  {
+   "area": "System › Sound",
+   "function": "Section EN “Output” / NL “Uitvoer”: expander “Choose where to play sound” / “Kies waar geluid moet worden afgespeeld”, radio list of outputs with chevron to device properties; row “Pair a new output device” / “Een nieuw uitvoerapparaat koppelen” with button “Add device” / “Apparaat toevoegen”",
+   "control": "list",
+   "backing": "PipeWire-pulse via libpulse default sink (no D-Bus); WinPoint host system.audio.get/setSink",
+   "notes": "GNOME Sound › Output Device. ‘Add device’ opens the Bluetooth add dialog."
+  },
+  {
+   "area": "System › Sound",
+   "function": "Slider EN “Volume” / NL “Volume” with mute (speaker) button",
+   "control": "slider",
+   "backing": "Default sink volume and mute via libpulse; host system.audio.set",
+   "notes": "GNOME volume slider. Above 100% only when org.gnome.desktop.sound allow-volume-above-100-percent is true (see Accessibility › Audio)."
+  },
+  {
+   "area": "System › Sound",
+   "function": "Toggle EN “Mono audio” / NL “Mono-audio”, subtitle “Combine left and right audio channels into one” / “Linker- en rechteraudiokanaal combineren tot één kanaal”",
+   "control": "toggle",
+   "backing": "none: no GNOME key",
+   "notes": "Omit, or build later as a WirePlumber remix. A PipeWire filter could disturb the normal session, so not now."
+  },
+  {
+   "area": "System › Sound",
+   "function": "Section EN “Input” / NL “Invoer”: “Choose a device for speaking or recording” / “Kies een apparaat om te spreken of op te nemen”; “Pair a new input device” / “Een nieuw invoerapparaat koppelen”; slider “Volume” with live level meter",
+   "control": "list",
+   "backing": "libpulse default source, source volume and mute; level meter from a peak-detect record stream",
+   "notes": "GNOME Sound › Input Device, Volume and level bar."
+  },
+  {
+   "area": "System › Sound",
+   "function": "Section EN “Advanced” / NL “Geavanceerd”: “Troubleshoot common sound problems” / “Veelvoorkomende geluidsproblemen oplossen” (buttons Output devices/Input devices), “All sound devices” / “Alle geluidsapparaten” (“Turn devices on/off, troubleshoot, other options” / “Apparaten in-/uitschakelen, problemen oplossen, andere opties”), “Volume mixer” / “Volumemixer” (“App volume mix, app input & output devices” / “App-volumemix, invoer- en uitvoerapparaten van apps”), link “More sound settings” / “Meer geluidsinstellingen”",
+   "control": "link",
+   "backing": "Troubleshoot: Windows-only (omit); the other rows open the sub-pages below",
+   "notes": ""
+  },
+  {
+   "area": "System › Sound › Properties (output device)",
+   "function": "Output device properties: name with “Rename” / “Naam wijzigen”; “Audio” with “Allow” / “Don’t allow” (“Toestaan” / “Niet toestaan”); “Set as default sound device” / “Instellen als standaardgeluidsapparaat”; “Output settings” / “Uitvoerinstellingen”: “Format” / “Indeling” with “Test” / “Testen”, “Audio enhancements” / “Audioverbeteringen”, “Spatial sound” / “Ruimtelijk geluid”, “Volume”, “Left channel” / “Linkerkanaal”, “Right channel” / “Rechterkanaal”",
+   "control": "dialog",
+   "backing": "Allow/Don’t allow: card profile 'off'. Left/right: channel volumes (GNOME Balance slider; Fade and Subwoofer sliders when surround). Test: GNOME ‘Test Speakers’ window, per-channel test sounds. Format: card profile list (GNOME ‘Configuration’, e.g. Analogue Stereo Output / HDMI)",
+   "notes": "Rename, Audio enhancements and Spatial sound: omit. Use ‘Format’ for GNOME’s profile (‘Configuration’) chooser."
+  },
+  {
+   "area": "System › Sound › Properties (input device)",
+   "function": "Input device properties: “Format” / “Indeling”, “Input volume” / “Invoervolume”, “Test your microphone” / “Je microfoon testen” with “Start test” / “Test starten”, “Audio enhancements”",
+   "control": "dialog",
+   "backing": "libpulse source volume, source port/profile; test = peak meter",
+   "notes": "Audio enhancements: omit."
+  },
+  {
+   "area": "System › Sound › Volume mixer",
+   "function": "EN “Volume mixer” / NL “Volumemixer”. Section “System” / “Systeem”: dropdowns “Output device” / “Uitvoerapparaat” and “Input device” / “Invoerapparaat”, master “Volume”. Section “Apps” / “Apps”: “System sounds” / “Systeemgeluiden” slider, then one slider per app; each expands to its own Output device and Input device dropdowns. Bottom: “Reset sound devices and volumes for all apps to the recommended defaults” / “Geluidsapparaten en volumes voor alle apps opnieuw instellen op de aanbevolen standaardwaarden” with “Reset” / “Opnieuw instellen”",
+   "control": "list",
+   "backing": "libpulse sink-input and source-output volume and mute; per-app device = move-sink-input / move-source-output; System sounds = media.role=event stream (GNOME ‘System Volume’ / alert volume); Reset = clear the WirePlumber stream-restore state",
+   "notes": "GNOME ‘Volume Levels’ page (Outputs/Inputs per stream). GNOME has no per-app device picker, but pulse supports it. Treat Reset carefully: it is a session-wide reset."
+  },
+  {
+   "area": "System › Sound › More sound settings",
+   "function": "Classic dialog “Sound” / “Geluid”, tab “Sounds” / “Geluiden”: “Sound scheme” / “Geluidsschema” (incl. “No Sounds” / “Geen geluiden”), list of program events with “Test” / “Testen” and “Browse…” / “Bladeren…”",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.sound theme-name (s, Ubuntu override 'Yaru'), event-sounds (b, true), input-feedback-sounds (b; Ubuntu true); custom alert = g-c-c style '__custom' theme in ~/.local/share/sounds/__custom",
+   "notes": "GNOME ‘Alert Sound’ chooser (None, Default, Click, String, Swing, Hum). Build as a native GTK dialog; skip the Playback/Recording/Communications tabs."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Toggle EN “Notifications” / NL “Meldingen”, subtitle “Get notifications from apps and other senders” / “Meldingen ontvangen van apps en andere afzenders” (expander)",
+   "control": "toggle",
+   "backing": "WinPoint shell (master off: no toasts and no list); GNOME has no master switch",
+   "notes": "GNOME’s closest key is show-banners (that is Do not disturb)."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Inside the expander: checkbox “Show notifications on the lock screen” / “Meldingen weergeven op het vergrendelingsscherm”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications show-in-lock-screen (b, true)",
+   "notes": "GNOME ‘Lock Screen Notifications’ (also on Privacy › Screen Lock)."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Inside the expander: “Show reminders and incoming VoIP calls on the lock screen” / “Herinneringen en binnenkomende VoIP-oproepen weergeven op het vergrendelingsscherm”; “Allow notifications to play sounds” / “Toestaan dat meldingen geluiden afspelen”",
+   "control": "toggle",
+   "backing": "Reminders/VoIP: none (omit). Sounds: no global key; per app org.gnome.desktop.notifications.application enable-sound-alerts",
+   "notes": "Global sound off could set enable-sound-alerts=false for every application-children entry (remember the old values), or stay a WinPoint shell setting."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Toggle EN “Do not disturb” / NL “Niet storen”, subtitle “Notifications will go directly to notification centre” / “Meldingen worden rechtstreeks naar het meldingencentrum gestuurd”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications show-banners (b, true) = NOT do-not-disturb",
+   "notes": "GNOME ‘Do Not Disturb’. en-US: center."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Expander EN “Turn on do not disturb automatically” / NL “Niet storen automatisch inschakelen”: “During these times” / “Tijdens deze tijden” (From/To/Repeats), “When duplicating your display” / “Bij het dupliceren van je beeldscherm”, “When playing a game” / “Tijdens het spelen van een game”, “When using an app in full-screen mode” / “Bij gebruik van een app in de modus volledig scherm”, “For the first hour after a Windows feature update”",
+   "control": "toggle",
+   "backing": "WinPoint shell schedule toggling show-banners; full-screen suppression is built into GNOME Shell",
+   "notes": "No GNOME keys. Optional; the feature-update row: omit."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Row EN “Set priority notifications” / NL “Prioriteitsmeldingen instellen”",
+   "control": "link",
+   "backing": "none: Windows-only (omit)",
+   "notes": ""
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Section EN “Notifications from apps and other senders” / NL “Meldingen van apps en andere afzenders”, “Sort by” / “Sorteren op” Most recent/Name (Meest recent/Naam); one toggle per app",
+   "control": "list",
+   "backing": "org.gnome.desktop.notifications application-children (as) and per app the relocatable org.gnome.desktop.notifications.application at /org/gnome/desktop/notifications/application/<id>/ key enable (b)",
+   "notes": "GNOME ‘App Notifications’ list."
+  },
+  {
+   "area": "System › Notifications › (app)",
+   "function": "Per-app page: toggle “Notifications” / “Meldingen”; image checkboxes “Show notification banners” / “Meldingsbanners weergeven” and “Show notifications in notification centre” / “Meldingen weergeven in het meldingencentrum”; “Hide content when notifications are on lock screen” / “Inhoud verbergen wanneer meldingen op het vergrendelingsscherm staan”; “Play a sound when a notification arrives” / “Een geluid afspelen wanneer er een melding binnenkomt”; “Priority of notifications in notification centre” / “Prioriteit van meldingen in het meldingencentrum” Top/High/Normal (Boven/Hoog/Normaal)",
+   "control": "toggle",
+   "backing": "Same relocatable schema: enable, show-banners, enable-sound-alerts, show-in-lock-screen, details-in-lock-screen (inverse of Hide content), force-expanded (GNOME ‘Show Content in banners’)",
+   "notes": "GNOME app page: Notifications, Sound, Banners (Show Banners, Show Content), Lock Screen (Show Banners, Show Content). Priority: omit. force-expanded can be an extra checkbox “Inhoud weergeven in banners”."
+  },
+  {
+   "area": "System › Notifications",
+   "function": "Section “Additional settings” / “Aanvullende instellingen”: welcome experience after updates, “Suggest ways to get the most out of Windows…”, “Get tips and suggestions when using Windows” / “Tips en suggesties ontvangen wanneer ik Windows gebruik”",
+   "control": "toggle",
+   "backing": "none: Windows-only (WinPoint tips only, if any)",
+   "notes": "Omit."
+  },
+  {
+   "area": "System › Focus",
+   "function": "EN “Focus” / NL “Focus”: session card with minute stepper and button “Start focus session” / “Focussessie starten”; options “Show the timer in the Clock app” / “De timer weergeven in de Klok-app”, “Show badges on taskbar apps” / “Badges weergeven in apps op de taakbalk”, “Show flashing on taskbar apps” / “Knipperen weergeven in apps op de taakbalk”, “Turn on do not disturb” / “Niet storen inschakelen”",
+   "control": "button",
+   "backing": "WinPoint shell timer; during a session set org.gnome.desktop.notifications show-banners=false",
+   "notes": "Windows-only concept, cheap to build. Use this page to host GNOME Wellbeing (next items)."
+  },
+  {
+   "area": "System › Focus",
+   "function": "WinPoint addition (GNOME Wellbeing) in Windows card style: section “Schermtijd” / “Screen time” with usage chart (“Gemiddelde week”, “Vorige week”) and toggle “Schermtijd vastleggen”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.screen-time-limits history-enabled (b, true); state from org.gnome.Shell.ScreenTime (State, LastBreakEndTime); history file written by gnome-shell",
+   "notes": "GNOME ‘Screen Time’, ‘Disable Screen Time’, ‘Average Week / Previous Week’. Data never leaves the device (GNOME text)."
+  },
+  {
+   "area": "System › Focus",
+   "function": "WinPoint addition: toggle “Limiet voor schermtijd” / “Screen time limit”, dropdown “Dagelijkse limiet” / “Daily limit”, toggle “Grijswaarden” / “Greyscale” (“Zwart-wit scherm bij het bereiken van de limiet”)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.screen-time-limits daily-limit-enabled (b, false), daily-limit-seconds (u, 28800), grayscale (b, true)",
+   "notes": "GNOME ‘Screen Limits’. Warn when Parental Controls manages it (malcontent is not installed here, but the MalcontentTimer1 services exist)."
+  },
+  {
+   "area": "System › Focus",
+   "function": "WinPoint addition: section “Pauzeherinneringen” / “Break reminders” with toggles “Herinneringen voor je ogen” / “Eyesight reminders” and “Herinneringen om te bewegen” / “Movement reminders”, dropdown “Schema voor bewegingspauzes”, toggle “Geluiden” (“Een geluid afspelen wanneer een pauze eindigt”)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.break-reminders selected-breaks (as: 'eyesight','movement'); .movement interval-seconds (u 1800), duration-seconds (u 300), play-sound (b); .eyesight interval-seconds (u 1200), duration-seconds (u 20), play-sound",
+   "notes": "GNOME ‘Break Reminders’. Other keys (fade-screen, lock-screen, notify*, countdown) are not exposed in GNOME either."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Page EN “Power & battery” / NL “Energie en batterij” (EN “Power” / NL “Energie” without a battery): top battery card with percentage, “estimated time remaining”, chart “Battery levels” / “Batterijniveaus” (Last 24 hours / Last 7 days = Afgelopen 24 uur / Afgelopen 7 dagen)",
+   "control": "info",
+   "backing": "org.freedesktop.UPower display device: Percentage, State, TimeToEmpty/TimeToFull; history via org.freedesktop.UPower.Device GetHistory('charge', seconds, points); host system.battery.get",
+   "notes": "GNOME shows only the battery level bar; the chart is a WinPoint extra from UPower history."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Expander EN “Screen, sleep & hibernate timeouts” / NL “Time-outs voor scherm, slaapstand en sluimerstand” (24H2+; older “Screen and sleep” / “Scherm en slaapstand”), columns “Plugged in” / “Aangesloten” and “On battery” / “Op batterij”. Row “Turn my screen off after” / “Mijn scherm uitschakelen na”: 1, 2, 3, 5, 10, 15, 20, 25, 30, 45 minutes, 1–5 hours, Never (minuut/minuten, uur, Nooit)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.session idle-delay (u seconds, 300; 0 = Never)",
+   "notes": "GNOME has a single value (‘Automatic Screen Blank’ / Privacy ‘Blank Screen Delay’), not one per power source: show one combined dropdown, or keep both columns identical. GNOME offers 1, 2, 3, 4, 5, 8, 10, 12, 15 min."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Row EN “Make my device sleep after” / NL “Mijn apparaat in slaapstand zetten na” (Plugged in / On battery)",
+   "control": "dropdown",
+   "backing": "org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout / sleep-inactive-battery-timeout (i seconds, 900; Ubuntu override ac=0) with sleep-inactive-ac-type / sleep-inactive-battery-type (enum GsdPowerActionType; 'suspend', or 'nothing' for Never)",
+   "notes": "GNOME ‘Automatic Suspend: On Battery Power / When Plugged In, Delay’."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Row EN “Make my device hibernate after” / NL “Mijn apparaat in sluimerstand zetten na”",
+   "control": "dropdown",
+   "backing": "sleep-inactive-*-type 'hibernate' (one action per power source, so it cannot be combined with sleep); availability from org.freedesktop.login1.Manager CanHibernate",
+   "notes": "Show only when CanHibernate is 'yes' (usually not on Ubuntu). Suspend-then-hibernate needs root logind/sleep.conf: omit."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Expander EN “Lid & power button controls” / NL “Deksel- en aan/uit-knopbediening” (nl unverified), Plugged in / On battery: “Closing the lid will make my PC” / “Als ik het deksel sluit, gaat mijn pc naar”; options Do nothing / Sleep / Hibernate / Shut down / Turn off the display (Niets doen / Slaapstand / Sluimerstand / Afsluiten / Het beeldscherm uitschakelen)",
+   "control": "dropdown",
+   "backing": "org.gnome.settings-daemon.plugins.power lid-close-ac-action / lid-close-battery-action (enum blank|suspend|shutdown|hibernate|interactive|nothing|logout), lid-close-suspend-with-external-monitor (b)",
+   "notes": "Not in GNOME’s UI. logind HandleLidSwitch* (root) decides unless gsd holds the lid inhibitor, so verify gsd-power’s behaviour on 26.04 before wiring this."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Row EN “Pressing the power button will make my PC” / NL “Als ik op de aan/uit-knop druk, gaat mijn pc naar”",
+   "control": "dropdown",
+   "backing": "org.gnome.settings-daemon.plugins.power power-button-action (enum nothing|suspend|hibernate|interactive; Ubuntu override 'interactive')",
+   "notes": "GNOME ‘Power Button Behavior’ has one value, not one per power source. Map Shut down → 'interactive' (GNOME shows the power-off dialog with a countdown). Turn off the display has no GNOME value."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Row EN “Pressing the sleep button will make my PC”",
+   "control": "dropdown",
+   "backing": "none (logind HandleSuspendKey, root)",
+   "notes": "Omit."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Dropdown EN “Power mode” / NL “Energiestand”, subtitle “Optimise your device based on power use and performance” / “Je apparaat optimaliseren op basis van energieverbruik en prestaties”: “Best power efficiency” / “Beste energie-efficiëntie”, “Balanced” / “Gebalanceerd”, “Best performance” / “Beste prestaties” (24H2+ per Plugged in / On battery)",
+   "control": "dropdown",
+   "backing": "power-profiles-daemon org.freedesktop.UPower.PowerProfiles (also net.hadess.PowerProfiles) ActiveProfile 'power-saver'|'balanced'|'performance'; Profiles, PerformanceDegraded; polkit org.freedesktop.UPower.PowerProfiles.switch-profile; battery-aware option: polkit configure-battery-aware",
+   "notes": "GNOME ‘Power Mode’. en-US: Optimize. Offer only the profiles listed in Profiles."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Expander EN “Energy saver” / NL “Energiebesparing” (24H2+; formerly “Battery saver” / “Batterijbesparing”): toggle “Always use energy saver” / “Altijd energiebesparing gebruiken”; dropdown “Turn energy saver on automatically at” / “Energiebesparing automatisch inschakelen bij” (Never/10%/20%/…/Always); “Lower screen brightness when using energy saver” / “Schermhelderheid verlagen bij gebruik van energiebesparing”",
+   "control": "toggle",
+   "backing": "Always = ActiveProfile 'power-saver'; automatic = org.gnome.settings-daemon.plugins.power power-saver-profile-on-low-battery (b, true)",
+   "notes": "GNOME ‘Automatic Power Saver: Turn on power saver mode when battery power is low’ has a fixed threshold, so the dropdown can only be Never / ‘Bij laag batterijniveau’. Lower brightness: omit."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Toggle EN “Battery percentage” / NL “Batterijpercentage”, subtitle “Show battery percentage next to battery icon in the system tray” (2025 addition; nl unverified)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface show-battery-percentage (b, false)",
+   "notes": "GNOME ‘Show Battery Percentage’. The WinPoint tray must read the key."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "Expander EN “Battery usage” / NL “Batterijgebruik” (per-app usage)",
+   "control": "list",
+   "backing": "none in GNOME",
+   "notes": "Omit, or build later from sysmon."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "WinPoint addition near the timeouts: toggle “Scherm dimmen bij inactiviteit” / “Dim screen when inactive”",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.power idle-dim (b, true), idle-brightness (i %, 30)",
+   "notes": "GNOME ‘Dim Screen: Reduce screen brightness when the device is inactive’. Windows only has ‘Dim display after’ in classic Power Options."
+  },
+  {
+   "area": "System › Power & battery",
+   "function": "WinPoint addition: expander “Batterij opladen” / “Battery charging” with radios “Maximale lading” / “Maximise charge” and “Batterijgezondheid behouden” / “Preserve battery health” (Windows OEM name: “Smart charging” / “Slim opladen”)",
+   "control": "radio",
+   "backing": "org.freedesktop.UPower.Device EnableChargeThreshold(b); ChargeThresholdSupported/ChargeThresholdEnabled/ChargeStart/EndThreshold; polkit org.freedesktop.UPower.enable-charging-limit",
+   "notes": "GNOME ‘Battery Charging’. Show only when ChargeThresholdSupported is true."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "Toggle EN “Snap windows” / NL “Vensters uitlijnen” (expander)",
+   "control": "toggle",
+   "backing": "org.gnome.mutter edge-tiling (b; Ubuntu override true); WinPoint host windows.snap for its own layouts",
+   "notes": "GNOME ‘Window Resize: Drag windows against the top, left, and right screen edges to resize them’."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "Snap options: “Show snap layouts when I drag a window to the top of my screen” / “Uitlijningsindelingen weergeven wanneer ik een venster naar de bovenkant van mijn scherm sleep”; “Show snap layouts when I hover over a window’s maximise button” / “Uitlijningsindelingen weergeven wanneer ik de muisaanwijzer op de knop Maximaliseren van een venster plaats”; “When I drag a window, let me snap it without dragging all the way to the screen edge” / “Wanneer ik een venster sleep, toestaan dat ik het uitlijn zonder het helemaal naar de schermrand te slepen”",
+   "control": "toggle",
+   "backing": "WinPoint shell (snap layouts are WinPoint’s own)",
+   "notes": "No GNOME keys. en-US: maximize."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "Snap options: “When I snap a window, suggest what I can snap next to it” / “Wanneer ik een venster uitlijn, voorstellen wat ik ernaast kan uitlijnen”; “Show my snapped windows when I hover over taskbar apps, in Task View and when I press Alt+Tab” / “Mijn uitgelijnde vensters weergeven wanneer ik de muisaanwijzer op taakbalk-apps plaats, in Taakweergave en wanneer ik op Alt+Tab druk”; “When I snap a window, automatically size it to fill available space”",
+   "control": "toggle",
+   "backing": "Ubuntu tiling-assistant: org.gnome.shell.extensions.tiling-assistant enable-tiling-popup (b) ↔ suggest; enable-raise-tile-group (b) ↔ snapped windows / snap groups",
+   "notes": "GNOME Ubuntu Desktop panel ‘Enhanced Tiling: Tiling Popup, Tile Groups’. These keys matter only while the tiling-assistant extension is enabled; check WinPoint’s extension policy."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "Toggle EN “Title bar window shake” / NL “Venster schudden via titelbalk” (nl unverified), subtitle “When I grab a window’s title bar and shake it, minimise all other windows”",
+   "control": "toggle",
+   "backing": "none: Windows-only (omit)",
+   "notes": ""
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "Expander EN “Desktops” / NL “Bureaubladen”: “On the taskbar, show all the open windows” / “Op de taakbalk alle geopende vensters weergeven” and “Show all open windows when I press Alt+Tab” / “Alle geopende vensters weergeven wanneer ik op Alt+Tab druk”; options “Only on the desktop I’m using” / “Alleen op het bureaublad dat ik gebruik” and “On all desktops” / “Op alle bureaubladen”",
+   "control": "dropdown",
+   "backing": "Taskbar: WinPoint shell. Alt+Tab: org.gnome.shell.app-switcher current-workspace-only (b, false) and org.gnome.shell.window-switcher current-workspace-only (b, true)",
+   "notes": "GNOME ‘App Switching: Include apps from all workspaces / from the current workspace only’. The g-c-c string ‘Include apps from all monitors / each monitor only’ has no key in the installed shell schema: skip."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "WinPoint additions inside Desktops: radios “Lege bureaubladen automatisch verwijderen” / “Dynamic desktops” and “Vast aantal bureaubladen” / “Fixed number of desktops” with spinner “Aantal bureaubladen”; radios “Bureaubladen alleen op het hoofdbeeldscherm” / “Bureaubladen op alle beeldschermen”",
+   "control": "radio",
+   "backing": "org.gnome.mutter dynamic-workspaces (b; Ubuntu true); org.gnome.desktop.wm.preferences num-workspaces (i 1..36, 4); org.gnome.mutter workspaces-only-on-primary (b; Ubuntu true)",
+   "notes": "GNOME ‘Workspaces: Dynamic / Fixed Number’ and ‘Multi-Monitor: Workspaces on primary display only / on all displays’. Windows virtual desktops are always dynamic and span every display."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "WinPoint addition: toggle “Actieve hoek” / “Hot corner” (“Raak de linkerbovenhoek aan om Taakweergave te openen”)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface enable-hot-corners (b; Ubuntu override false)",
+   "notes": "GNOME ‘Hot Corner’. Under WinPoint the overview is Task view, so decide whether to expose it at all."
+  },
+  {
+   "area": "System › Multitasking",
+   "function": "Dropdown EN “Alt + Tab” / NL “Alt+Tab”: “Pressing Alt+Tab shows” / “Als je op Alt+Tab drukt, wordt het volgende weergegeven”: “Open windows only” / “Alleen geopende vensters”, “Open windows and 3/5/20 most recent tabs” (Edge tabs)",
+   "control": "dropdown",
+   "backing": "none (browser tabs are Windows-only)",
+   "notes": "Omit, or keep only ‘Open windows only’."
+  },
+  {
+   "area": "System › Nearby sharing",
+   "function": "EN “Nearby sharing” / NL “Delen in de buurt”: radios Off / My devices only / Everyone nearby (Uit / Alleen mijn apparaten / Iedereen in de buurt); “Save files I receive to” / “Bestanden die ik ontvang opslaan in” with “Change” / “Wijzigen”; “Rename your device”",
+   "control": "radio",
+   "backing": "none in GNOME (Bluetooth OBEX receive needs gnome-user-share, which is not installed)",
+   "notes": "Omit for now. Bluetooth Send Files lives under Bluetooth & devices › Devices; Rename links to About."
+  },
+  {
+   "area": "System › Remote Desktop",
+   "function": "Toggle EN “Remote Desktop” / NL “Extern bureaublad”, subtitle “Use the Remote Desktop app to connect to and use this PC from another device” / “Gebruik de app Extern bureaublad om verbinding te maken met deze pc en deze vanaf een ander apparaat te gebruiken”; confirmation “Enable Remote Desktop?” / “Extern bureaublad inschakelen?” with “Confirm” / “Bevestigen”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.remote-desktop.rdp enable (b, false) plus the user unit gnome-remote-desktop.service enabled and started via org.freedesktop.systemd1 (user manager) EnableUnitFiles/StartUnit",
+   "notes": "GNOME System › Remote Desktop › ‘Desktop Sharing’ (gnome-remote-desktop 50.2 installed)."
+  },
+  {
+   "area": "System › Remote Desktop",
+   "function": "Expander under the toggle: checkbox “Require devices to use Network Level Authentication to connect (recommended)” / “Apparaten verplichten verificatie op netwerkniveau te gebruiken om verbinding te maken (aanbevolen)”; info “Remote Desktop port” / “Poort van Extern bureaublad” 3389",
+   "control": "info",
+   "backing": "NLA: gnome-remote-desktop always uses credentials (rdp auth-methods ['credentials']), so show it fixed on. Port: org.gnome.desktop.remote-desktop.rdp port (q, 3389), negotiate-port (b, true)",
+   "notes": "GNOME shows the port under ‘How to connect’."
+  },
+  {
+   "area": "System › Remote Desktop",
+   "function": "WinPoint addition in the expander: toggle “Externe besturing” / “Remote control” (“Toestaan dat externe apparaten muis en toetsenbord bedienen”)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.remote-desktop.rdp view-only (b, true), inverted",
+   "notes": "GNOME ‘Remote Control’. On Windows, control is always allowed."
+  },
+  {
+   "area": "System › Remote Desktop",
+   "function": "Row EN “Remote Desktop users” / NL “Gebruikers van Extern bureaublad”, reworked as GNOME’s login details: “Gebruikersnaam”, “Wachtwoord” and button “Versleuteling controleren” / “Verify encryption” (certificate fingerprint)",
+   "control": "dialog",
+   "backing": "RDP credentials stored by gnome-remote-desktop in the user keyring (libsecret, as grdctl does); TLS cert/key in rdp tls-cert / tls-key",
+   "notes": "GNOME ‘Login Details’ and ‘Encryption Fingerprint’ dialog."
+  },
+  {
+   "area": "System › Remote Desktop",
+   "function": "Info EN “PC name” / NL “Pc-naam”: “Use this PC name to connect to this PC from your other device” / “Gebruik deze pc-naam om vanaf je andere apparaat verbinding te maken met deze pc”, with Copy",
+   "control": "info",
+   "backing": "org.freedesktop.hostname1 Hostname (+ IP addresses from NetworkManager)",
+   "notes": "GNOME ‘How to Connect’ shows hostname and port."
+  },
+  {
+   "area": "System › Remote Desktop",
+   "function": "WinPoint addition, second card: toggle “Extern aanmelden” / “Remote login” (“Aanmelden op deze pc wanneer niemand is aangemeld”), with its own username/password",
+   "control": "toggle",
+   "backing": "System gnome-remote-desktop daemon via system D-Bus org.gnome.RemoteDesktop.Configuration (service file present); polkit org.gnome.remotedesktop.configure-system-daemon and enable-system-daemon; headless settings org.gnome.desktop.remote-desktop.rdp.headless",
+   "notes": "GNOME ‘Remote Login’. This is closest to what Windows Remote Desktop actually does."
+  },
+  {
+   "area": "System › Advanced",
+   "function": "Page EN “Advanced” / NL “Geavanceerd” (25H2 name of “For developers” / “Voor ontwikkelaars”): “Developer Mode” / “Ontwikkelaarsmodus”, “End task” / “Taak beëindigen” (“Enable end task in taskbar by right click”), “Enable sudo” / “Sudo inschakelen”, “Terminal” dropdown, “File Explorer” expander (show file extensions, hidden files, full path…)",
+   "control": "toggle",
+   "backing": "End task: WinPoint taskbar + host sysmon.endTask. File Explorer options: WinPoint explorer settings; GTK file chooser show-hidden is in org.gtk.gtk4.Settings.FileChooser. Developer Mode ≈ org.gnome.shell development-tools (b, true)",
+   "notes": "Sudo and Terminal: omit (Ubuntu always has them)."
+  },
+  {
+   "area": "System › Advanced",
+   "function": "WinPoint addition (GNOME Secure Shell) as a Windows card: toggle “OpenSSH-server” / “OpenSSH Server” (“Toegang tot dit apparaat via Secure Shell (SSH)”) and row “SSH-aanmeldingsopdracht” with Copy",
+   "control": "toggle",
+   "backing": "systemd ssh.service enable/start through g-c-c’s remote-login helper pattern (polkit org.gnome.controlcenter.remote-login-helper) or org.freedesktop.systemd1 EnableUnitFiles/StartUnit (polkit org.freedesktop.systemd1.manage-units)",
+   "notes": "GNOME ‘Secure Shell’ page. openssh-server is NOT installed here. Windows installs it under System › Optional features (“Add an optional feature” / “Een optionele functie toevoegen”), so offer install via PackageKit InstallPackages (polkit org.freedesktop.packagekit.package-install)."
+  },
+  {
+   "area": "System › Clipboard",
+   "function": "EN “Clipboard” / NL “Klembord”: toggle “Clipboard history” / “Klembordgeschiedenis” (“Save multiple items to the clipboard to use later. Press the Windows logo key + V…”); “Suggested actions” / “Voorgestelde acties”; “Clipboard history across your devices”; “Clear clipboard data” / “Klembordgegevens wissen” with “Clear” / “Wissen”",
+   "control": "toggle",
+   "backing": "WinPoint shell + host clipboard.list/clear/pin/remove",
+   "notes": "No GNOME panel. Super+V is taken by org.gnome.shell.keybindings toggle-message-tray (['<Super>v','<Super>m']), so WinPoint must rebind that. Suggested actions and cross-device: omit."
+  },
+  {
+   "area": "System › Storage",
+   "function": "Toggle EN “Storage Sense” / NL “Opslagzin” (nl unverified), subtitle “Automatically free up space, delete temporary files and manage locally available cloud content” / “Automatisch ruimte vrijmaken, tijdelijke bestanden verwijderen en lokaal beschikbare cloudinhoud beheren”",
+   "control": "toggle",
+   "backing": "Combined: org.gnome.desktop.privacy remove-old-trash-files (b, false) + remove-old-temp-files (b, false); gsd housekeeping does the work",
+   "notes": "GNOME Privacy › File History & Trash."
+  },
+  {
+   "area": "System › Storage › Storage Sense",
+   "function": "Config page: toggle “Cleanup of temporary files” / “Tijdelijke bestanden opschonen” (“Keep Windows running smoothly by automatically cleaning up temporary system and app files”); toggle “Automatic User content cleanup” / “Automatisch opschonen van gebruikersinhoud”; dropdown “Delete files in my recycle bin if they have been there for over” / “Bestanden in mijn Prullenbak verwijderen als ze er langer in staan dan” Never/1 day/14 days/30 days/60 days (Nooit/1 dag/14 dagen/30 dagen/60 dagen); “Run Storage Sense now” / “Opslagzin nu uitvoeren”",
+   "control": "dropdown",
+   "backing": "remove-old-temp-files; remove-old-trash-files + old-files-age (u days, 30); Run now = host storage.cleanup.run / files.emptyTrash",
+   "notes": "GNOME ‘Automatically Delete Trash Content’, ‘Automatically Delete Temporary Files’, ‘Automatically Delete Period’, ‘Empty Trash…’, ‘Delete Temporary Files…’. GNOME uses one age for trash and temp files. Downloads cleanup and ‘Run Storage Sense’ cadence: omit."
+  },
+  {
+   "area": "System › About",
+   "function": "Top card: device name + model with button “Rename this PC” / “Naam van deze pc wijzigen”; dialog “Rename your PC” / “De naam van je pc wijzigen” (letters, hyphens, numbers) with “Next” / “Volgende”",
+   "control": "dialog",
+   "backing": "org.freedesktop.hostname1 SetPrettyHostname + SetStaticHostname(interactive) (polkit org.freedesktop.hostname1.set-static-hostname, set-machine-info)",
+   "notes": "GNOME ‘Device Name’. Linux needs no restart, so skip Windows’ ‘Restart now/later’ step. Bluetooth alias and avahi name follow."
+  },
+  {
+   "area": "System › About",
+   "function": "Section EN “Device specifications” / NL “Apparaatspecificaties” with “Copy” / “Kopiëren”: Device name / Apparaatnaam, Processor / Processor, Installed RAM / Geïnstalleerd RAM, Device ID / Apparaat-id, Product ID / Product-id, System type / Systeemtype (“64-bit operating system, x64-based processor” / “64-bits besturingssysteem, x64-processor”), Pen and touch / Pen en aanraken; 25H2 also has top cards for Processor, Installed RAM, Storage / Opslag, Graphics card / Grafische kaart",
+   "control": "info",
+   "backing": "hostname1 HardwareVendor/HardwareModel/FirmwareVersion; /proc/cpuinfo; /proc/meminfo; GPUs from net.hadess.SwitcherooControl GPUs; disk capacity from org.freedesktop.UDisks2; host system.info",
+   "notes": "GNOME ‘System Details’: Model, Memory, Processor, Graphics, Disk Capacity, Firmware Version. Device ID: use /etc/machine-id only if wanted (privacy). Product ID: omit."
+  },
+  {
+   "area": "System › About",
+   "function": "Section EN “Windows specifications” / NL “Windows-specificaties” with Copy: Edition / Editie, Version / Versie, Installed on / Geïnstalleerd op, OS build / Build van besturingssysteem, Experience / Ervaring; links Microsoft Services Agreement / Licence Terms",
+   "control": "info",
+   "backing": "/etc/os-release (PRETTY_NAME, VERSION_ID, BUILD_ID) or hostname1 OperatingSystemPrettyName, KernelRelease; GNOME version from org.gnome.Shell ShellVersion; windowing system Wayland; virtualization from org.freedesktop.systemd1 Virtualization",
+   "notes": "GNOME ‘Software Information’: OS Name, OS Build, OS Type, GNOME Version, Windowing System, Virtualization, Kernel Version. Put the WinPoint version under ‘Ervaring’. Licence links: omit or point at Ubuntu. en-US: License."
+  },
+  {
+   "area": "Bluetooth & devices",
+   "function": "Page EN “Bluetooth & devices” / NL “Bluetooth en apparaten”: device cards on top (name, battery %, “Connected” / “Verbonden”, “Paired” / “Gekoppeld”, ⋯ menu); toggle “Bluetooth” with subtitle “Discoverable as “NAME”” / “Detecteerbaar als ‘NAAM’”; button “Add device” / “Apparaat toevoegen”",
+   "control": "toggle",
+   "backing": "BlueZ org.bluez.Adapter1 Powered, Discoverable, Alias; rfkill via org.gnome.SettingsDaemon.Rfkill BluetoothAirplaneMode; battery via org.bluez.Battery1 Percentage and UPower devices; host system.bluetooth.get/setPowered",
+   "notes": "GNOME Bluetooth panel (‘Visible as …’ while the panel is open). Also host GNOME Power ‘Connected Devices’ batteries in these cards."
+  },
+  {
+   "area": "Bluetooth & devices",
+   "function": "Rows with subtitles: Devices / Apparaten (“Mouse, keyboard, pen, audio, displays and docks, other devices” / “Muis, toetsenbord, pen, audio, beeldschermen en docks, overige apparaten”); Printers & scanners / Printers en scanners; Mobile devices / Mobiele apparaten; Cameras / Camera’s (“Connected cameras, default image settings”); Mouse / Muis (“Buttons, mouse pointer speed, scrolling” / “Knoppen, snelheid van muisaanwijzer, schuiven”); Touchpad / Touchpad (“Taps, gestures, scrolling, zooming” / “Tikken, bewegingen, schuiven, zoomen”); Pen & Windows Ink / Pen en Windows Ink; AutoPlay / Automatisch afspelen (“Defaults for removable drives and memory cards” / “Standaardinstellingen voor verwisselbare stations en geheugenkaarten”); USB / USB",
+   "control": "link",
+   "backing": "registry.rs",
+   "notes": "Windows 11 has no Keyboard page here: typing is under Time & language. Show Touchpad and Pen only when such a device exists (GNOME hides them too). Mobile devices: omit."
+  },
+  {
+   "area": "Bluetooth & devices",
+   "function": "Dialog EN “Add a device” / NL “Een apparaat toevoegen”: “Bluetooth” (“Mice, keyboards, pens, audio, controllers and more” / “Muizen, toetsenborden, pennen, audio, controllers en meer”), “Wireless display or dock” / “Draadloos beeldscherm of dock”, “Everything else” / “Al het andere”; then a device list with PIN confirmation and “Connect” / “Verbinden”, “Done” / “Gereed”",
+   "control": "dialog",
+   "backing": "BlueZ Adapter1 StartDiscovery/StopDiscovery, Device1 Pair, an Agent1 (RequestConfirmation, RequestPinCode, DisplayPasskey); host system.bluetooth.discover/pair/pairReply/cancelPair",
+   "notes": "Keep only the Bluetooth choice. Wireless display and Everything else: omit."
+  },
+  {
+   "area": "Bluetooth & devices › Devices",
+   "function": "EN “Devices” / NL “Apparaten”: groups “Input” / “Invoer”, “Audio” / “Audio”, “Other devices” / “Overige apparaten”; per device ⋯ menu: “Connect” / “Verbinding maken”, “Disconnect” / “Verbinding verbreken”, “Remove device” / “Apparaat verwijderen”",
+   "control": "list",
+   "backing": "BlueZ Device1 Connect/Disconnect, Adapter1 RemoveDevice; device class/icon from Device1 Icon; host system.bluetooth.connect/disconnect/remove",
+   "notes": "GNOME device dialog: Connection switch, Paired, Type, Address, ‘Forget Device’. Show the address in an expander."
+  },
+  {
+   "area": "Bluetooth & devices › Devices",
+   "function": "Related settings / Verwante instellingen: “Send or receive files via Bluetooth” / “Bestanden verzenden of ontvangen via Bluetooth”, “More Bluetooth settings” / “Meer Bluetooth-instellingen”, “Devices and printers”; also “Show notifications to connect using Swift Pair”, “Download over metered connections”, “Bluetooth devices discovery” Default/Advanced",
+   "control": "link",
+   "backing": "Send: org.bluez.obex Client1.CreateSession + ObjectPush1.SendFile, or launch bluetooth-sendto (gnome-bluetooth-sendto, GTK 4). Receive: none (gnome-user-share not installed)",
+   "notes": "GNOME ‘Send Files…’. Swift Pair, metered download, discovery mode: omit."
+  },
+  {
+   "area": "Bluetooth & devices › Printers & scanners",
+   "function": "EN “Printers & scanners” / NL “Printers en scanners”: “Add a printer or scanner” / “Een printer of scanner toevoegen” with “Add device” / “Apparaat toevoegen”; then “The printer that I want isn’t listed” / “De printer die ik wil gebruiken, staat niet in de lijst” with “Add manually” / “Handmatig toevoegen” (dialog “Find a printer by other options”, incl. “Add a printer using an IP address or hostname” / “Een printer toevoegen met behulp van een IP-adres of hostnaam”)",
+   "control": "dialog",
+   "backing": "CUPS + org.opensuse.CupsPkHelper.Mechanism DevicesGet, PrinterAdd, PrinterAddWithPpdFile (polkit org.opensuse.cupspkhelper.mechanism.devices-get, printeraddremove); network discovery via Avahi DNS-SD (driverless IPP Everywhere)",
+   "notes": "GNOME ‘Add Printer’ (‘Enter a network address or search for a printer’, authentication for print servers) and ‘Select Printer Driver’ dialog."
+  },
+  {
+   "area": "Bluetooth & devices › Printers & scanners › (printer)",
+   "function": "Per-printer page: status header; “Open print queue” / “Afdrukwachtrij openen”, “Print test page” / “Testpagina afdrukken”, “Run the troubleshooter”, “Printer properties” / “Printereigenschappen”, “Printing preferences” / “Voorkeursinstellingen voor afdrukken”, “Hardware properties”; buttons “Set as default” / “Als standaard instellen”, “Remove” / “Verwijderen”",
+   "control": "list",
+   "backing": "Queue: CUPS jobs, CancelJob / move to top (polkit job-edit, job-not-owned-edit). Test page: CUPS test page. Properties: name/location/URI/driver (printer-local-edit). Preferences: IPP/PPD options. Default: PrinterSetDefault (printer-set-default). Remove: PrinterDelete (printeraddremove). Resume: printer-enable",
+   "notes": "GNOME printer row: Printing Options, Printer Details, Use Printer by Default, Clean Print Heads, Remove Printer, Jobs dialog (Clear All), Model/Location/Status/Ink Level. Put ‘Clean Print Heads’ under ⋯. Troubleshooter and hardware properties: omit."
+  },
+  {
+   "area": "Bluetooth & devices › Printers & scanners",
+   "function": "Section “Printer preferences” / “Printervoorkeuren”: “Let Windows manage my default printer” / “Windows mijn standaardprinter laten beheren”, “Download drivers and device software over metered connections”; related “Print server properties” / “Eigenschappen van afdrukserver”; scanners: “Open scanner”",
+   "control": "toggle",
+   "backing": "none for the toggles (omit); print server = CupsPkHelper ServerSettings (polkit server-settings); scanners: launch the Document Scanner app (org.gnome.SimpleScan, installed)",
+   "notes": "GNOME has no scanner management."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Page EN “Mouse” / NL “Muis”: dropdown “Primary mouse button” / “Primaire muisknop”: Left/Right (Links/Rechts)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.peripherals.mouse left-handed (b, false); Right = true",
+   "notes": "GNOME ‘General › Primary Button: Order of physical buttons on mice and touchpads’ (touchpad left-handed='mouse' follows it)."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Slider EN “Mouse pointer speed” / NL “Snelheid van muisaanwijzer” (1–20, default 10)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.mouse speed (d −1..1, default 0); speed = (n−10)/10",
+   "notes": "GNOME ‘Pointer Speed’ Slow–Fast."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Toggle EN “Enhance pointer precision” / NL “Nauwkeurigheid van aanwijzer verbeteren” (on the Mouse page since the 2025 builds; also in Additional mouse settings)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.mouse accel-profile (enum default|flat|adaptive): on = 'default' (adaptive), off = 'flat'",
+   "notes": "GNOME ‘Mouse Acceleration: Recommended for most users and applications’."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Section EN “Scrolling” / NL “Schuiven”: dropdown “Roll the mouse wheel to scroll” / “Draai aan het muiswiel om te schuiven” (Multiple lines at a time / One screen at a time = Meerdere regels tegelijk / Eén scherm tegelijk); slider “Lines to scroll at a time” (1–100, default 3) (nl unverified)",
+   "control": "slider",
+   "backing": "none: libinput/GTK have no wheel-lines setting",
+   "notes": "Omit both rather than show controls that do nothing."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Toggle EN “Scroll inactive windows when hovering over them” / NL “Inactieve vensters schuiven wanneer ik de muisaanwijzer erop plaats”",
+   "control": "toggle",
+   "backing": "none: GNOME/Wayland always scrolls the window under the pointer",
+   "notes": "Show as on and disabled, or omit."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Dropdown EN “Scrolling direction” / NL “Schuifrichting”: “Down motion scrolls down” / “Neerwaartse beweging schuift omlaag” and “Down motion scrolls up” / “Neerwaartse beweging schuift omhoog” (2025 addition; exact strings unverified)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.peripherals.mouse natural-scroll (b, false): scrolls up = true",
+   "notes": "GNOME ‘Scroll Direction: Traditional (Scrolling moves the view) / Natural (Scrolling moves the content)’."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse",
+   "function": "Related settings / Verwante instellingen: “Additional mouse settings” / “Aanvullende muisinstellingen” (“Pointer icons and visibility” / “Aanwijzerpictogrammen en zichtbaarheid”); “Mouse pointer” / “Muisaanwijzer” (“Pointer size and colour” / “Grootte en kleur van aanwijzer”) → Accessibility › Mouse pointer and touch",
+   "control": "link",
+   "backing": "Opens the native GTK ‘Mouse Properties’ dialog (next items)",
+   "notes": "en-US: color."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse › Additional mouse settings",
+   "function": "Dialog EN “Mouse Properties” / NL “Eigenschappen voor Muis”, tab “Buttons” / “Knoppen”: checkbox “Switch primary and secondary buttons” / “Primaire en secundaire knop omwisselen”; slider “Double-click speed” / “Dubbelkliksnelheid” (Slow–Fast / Langzaam–Snel) with test folder (“Double-click the folder to test your setting”)",
+   "control": "dialog",
+   "backing": "left-handed; org.gnome.desktop.peripherals.mouse double-click (i ms, 400)",
+   "notes": "GNOME ‘Double-Click Delay’ is in Accessibility › Pointing & Clicking. Windows range about 200–900 ms, default 500. Add a ‘Test settings’ button for GNOME’s Test Mouse & Touchpad (Primary/Secondary/Double click, Scrolling)."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse › Additional mouse settings",
+   "function": "Buttons tab: “ClickLock” / “KlikVergrendeling”, “Turn on ClickLock” / “KlikVergrendeling inschakelen” + “Settings…”",
+   "control": "toggle",
+   "backing": "none",
+   "notes": "Omit."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse › Additional mouse settings",
+   "function": "WinPoint additions on the Buttons tab: checkbox “Middelste klik nabootsen (links en rechts tegelijk)” / “Emulate middle click”; checkbox “Plakken met de middelste muisknop” / “Middle-click paste”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.mouse middle-click-emulation (b, false) (touchpad and trackball have their own copies); org.gnome.desktop.interface gtk-enable-primary-paste (b, false)",
+   "notes": "No Windows equivalents. GNOME 50 Settings shows neither (Tweaks has them), so they are optional."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse › Additional mouse settings",
+   "function": "Tab “Pointers” / “Aanwijzers”: dropdown “Scheme” / “Schema”, list “Customise” / “Aanpassen”, “Enable pointer shadow” / “Aanwijzerschaduw inschakelen”, “Allow themes to change mouse pointers”, “Use Default” / “Standaard gebruiken”, “Browse…”",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.interface cursor-theme (s, Adwaita; Ubuntu Yaru); themes from /usr/share/icons/*/cursors and ~/.local/share/icons/*/cursors",
+   "notes": "Shadow and per-cursor customise: omit."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse › Additional mouse settings",
+   "function": "Tab “Pointer Options” / “Opties voor aanwijzer”: Motion / Beweging (speed slider, “Enhance pointer precision”); Snap To / Uitlijnen op; Visibility / Zichtbaarheid: “Display pointer trails” / “Aanwijzerspoor weergeven”, “Hide pointer while typing” / “Aanwijzer verbergen tijdens typen”, “Show location of pointer when I press the CTRL key” / “Locatie van aanwijzer weergeven wanneer ik op de Ctrl-toets druk”",
+   "control": "dialog",
+   "backing": "speed, accel-profile; Ctrl location = org.gnome.desktop.interface locate-pointer (b, false) with org.gnome.mutter locate-pointer-key (s, 'Control_L')",
+   "notes": "GNOME ‘Locate Pointer: Reveal pointer location by pressing Left Ctrl’. Snap To and pointer trails: omit. Hide-while-typing has no key: omit."
+  },
+  {
+   "area": "Bluetooth & devices › Mouse › Additional mouse settings",
+   "function": "Tab “Wheel” / “Wiel” (Vertical Scrolling / Verticaal schuiven, Horizontal Scrolling / Horizontaal schuiven) and tab “Hardware” / “Hardware”",
+   "control": "dialog",
+   "backing": "Wheel: none (omit). Hardware: libinput/udev device names (info only)",
+   "notes": "For a trackball, the Hardware tab can hold org.gnome.desktop.peripherals.trackball scroll-wheel-emulation-button (i 0..24), accel-profile, middle-click-emulation (GNOME has no UI)."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Page EN “Touchpad” / NL “Touchpad”: toggle “Touchpad” (expander) with checkbox “Leave touchpad on when a mouse is connected” / “Touchpad ingeschakeld laten wanneer er een muis is aangesloten”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.touchpad send-events (enum enabled|disabled|disabled-on-external-mouse): off = 'disabled'; checkbox unticked = 'disabled-on-external-mouse'",
+   "notes": "GNOME ‘Touchpad’ switch."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Slider EN “Cursor speed” / NL “Cursorsnelheid” (1–10, default 5)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.touchpad speed (d −1..1, 0); speed = (n−5)/5, clamped",
+   "notes": "GNOME touchpad ‘Pointer Speed’."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Expander EN “Taps” / NL “Tikken”: dropdown “Touchpad sensitivity” / “Gevoeligheid van touchpad”: Most sensitive / High sensitivity / Medium sensitivity / Low sensitivity (Meest gevoelig / Hoge gevoeligheid / Gemiddelde gevoeligheid / Lage gevoeligheid)",
+   "control": "dropdown",
+   "backing": "disable-while-typing (b, true) + disable-while-typing-timeout (u ms 100..5000, 500). Proposed: Most = false; High = true/250; Medium = true/500; Low = true/1000",
+   "notes": "GNOME ‘Disable Touchpad While Typing’ is just a switch; the timeout key is new in GNOME 50’s schema. Check that mutter honours the timeout before mapping the levels."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Taps: “Tap with a single finger to single-click” / “Met één vinger tikken om één keer te klikken”; “Tap with two fingers to right-click” / “Met twee vingers tikken om met de rechtermuisknop te klikken”; “Tap twice and drag to multi-select” / “Twee keer tikken en slepen om meerdere items te selecteren”; “Press the lower right corner of the touchpad to right-click” / “Op de rechterbenedenhoek van het touchpad drukken om met de rechtermuisknop te klikken”",
+   "control": "toggle",
+   "backing": "tap-to-click (b; Ubuntu override true); two-finger tap is part of tapping (tap-button-map enum default|lrm|lmr); tap-and-drag (b, true), tap-and-drag-lock (b, false); corner = click-method (enum default|none|areas|fingers): ticked = 'areas', unticked = 'fingers' (Ubuntu override 'default')",
+   "notes": "GNOME ‘Tap to Click’ and ‘Secondary Click: Two Finger Push / Corner Push’. libinput cannot turn off two-finger tap on its own, so show that box checked and disabled whenever tap-to-click is on."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Expander EN “Scroll & zoom” / NL “Schuiven en zoomen”: “Drag two fingers to scroll” / “Met twee vingers slepen om te schuiven”; dropdown “Scrolling direction” / “Schuifrichting”: “Down motion scrolls up” / “Neerwaartse beweging schuift omhoog”, “Down motion scrolls down” / “Neerwaartse beweging schuift omlaag”; “Pinch to zoom” / “Knijpen om te zoomen”",
+   "control": "toggle",
+   "backing": "two-finger-scrolling-enabled (b, true) (edge-scrolling-enabled is the alternative); natural-scroll (b, true): scrolls up = true; pinch: none (apps handle it)",
+   "notes": "GNOME ‘Scroll Method: Two Finger / Edge’ and ‘Scroll Direction’. Add ‘Schuiven langs de rand’ only when the hardware supports it. Pinch: show fixed on, or omit."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Expanders EN “Three-finger gestures” / NL “Bewegingen met drie vingers” and “Four-finger gestures” / “Bewegingen met vier vingers”: “Swipes” / “Vegen” (Nothing / Switch apps and show desktop / Switch desktops and show desktop / Change audio and volume); “Taps” / “Tikken” (Nothing / Open search / Notification centre / Play/pause / Middle mouse button)",
+   "control": "dropdown",
+   "backing": "Swipes: none (GNOME Shell gestures are fixed). Three-finger tap = middle button through tap-button-map 'lrm' (vs 'lmr')",
+   "notes": "Show only what can be honoured; most gesture choices are Windows-only."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "Related: “More touchpad settings” / “Meer touchpadinstellingen”, “Advanced gestures” / “Geavanceerde bewegingen”; “Reset” / “Opnieuw instellen”: “Reset touchpad settings and gestures to default” / “Instellingen en bewegingen van touchpad terugzetten op de standaardwaarden”",
+   "control": "button",
+   "backing": "Reset = g_settings_reset on every key of org.gnome.desktop.peripherals.touchpad (respects the Ubuntu overrides)",
+   "notes": "Advanced gestures: omit. More settings opens the Mouse Properties dialog."
+  },
+  {
+   "area": "Bluetooth & devices › Touchpad",
+   "function": "WinPoint addition when present: section “Aanwijsstick” / “Pointing stick”: “Snelheid” slider, toggle “Versnelling”",
+   "control": "slider",
+   "backing": "org.gnome.desktop.peripherals.pointingstick speed (d −1..1), accel-profile, scroll-method (enum default|none|on-button-down)",
+   "notes": "GNOME ‘Pointing Stick: Pointer Speed, Pointing Stick Acceleration’."
+  },
+  {
+   "area": "Bluetooth & devices › Pen & Windows Ink",
+   "function": "Page EN “Pen & Windows Ink” / NL “Pen en Windows Ink”: “Choose which hand you write with” / “Kies met welke hand je schrijft” Right hand / Left hand (Rechterhand / Linkerhand)",
+   "control": "dropdown",
+   "backing": "Relocatable org.gnome.desktop.peripherals.tablet at /org/gnome/desktop/peripherals/tablets/<vid>:<pid>/ key left-handed (b, false)",
+   "notes": "GNOME Wacom ‘Button Location: Left/Right’. Show the page only when a tablet or stylus exists (GNOME: ‘No tablet detected’)."
+  },
+  {
+   "area": "Bluetooth & devices › Pen & Windows Ink",
+   "function": "“Show visual effects” / “Visuele effecten weergeven”, “Show cursor” / “Cursor weergeven”, “Ignore touch input when I’m using my pen” / “Aanraakinvoer negeren wanneer ik mijn pen gebruik”, “Pen menu”, “Shell handwriting”",
+   "control": "toggle",
+   "backing": "none (libinput does pen/touch arbitration itself)",
+   "notes": "Omit, or show ‘ignore touch’ fixed on."
+  },
+  {
+   "area": "Bluetooth & devices › Pen & Windows Ink",
+   "function": "Section “Pen buttons” / “Penknoppen”: “Use your pen button as a right-click equivalent” / “Je penknop gebruiken als equivalent van een rechtermuisknopklik”; “Use the top button of my pen to erase ink where available” / “De bovenste knop van mijn pen gebruiken om inkt te wissen (indien beschikbaar)”; “Pen button shortcuts” / “Sneltoetsen voor penknoppen”",
+   "control": "dropdown",
+   "backing": "Relocatable org.gnome.desktop.peripherals.tablet.stylus at /org/gnome/desktop/peripherals/stylus/<serial>/: button-action (enum default|middle|right|back|forward|switch-monitor|keybinding; 'right'), secondary-button-action ('middle'), tertiary-button-action, *-keybinding (s); eraser-button-mode, eraser-button-action, eraser-button-keybinding",
+   "notes": "GNOME stylus ‘Button 1/2/3’ and ‘Assign Keystroke’ dialog."
+  },
+  {
+   "area": "Bluetooth & devices › Pen & Windows Ink",
+   "function": "WinPoint additions for the Wacom panel: “Gevoel van pendruk” / “Tip pressure feel” and “Gevoel van gumdruk” (Soft–Firm / Zacht–Stevig); “Tabletmodus” (absolute/relative); “Toewijzen aan beeldscherm” / “Map to monitor”; “Hoogte-breedteverhouding behouden”; “Kalibreren”; “Knoppen toewijzen” / “Map buttons” (pad); “Instellingen testen”",
+   "control": "slider",
+   "backing": "stylus pressure-curve (ai 4 points), eraser-pressure-curve; tablet mapping (enum absolute|relative), output (as, connector or vendor/product/serial), keep-aspect (b), area (ad, calibration); pad org.gnome.desktop.peripherals.tablet.pad-button action (enum none|help|switch-monitor|keybinding), keybinding; touchscreen org.gnome.desktop.peripherals.touchscreen output",
+   "notes": "Windows’ equivalent is ‘Tablet PC settings’ / ‘Tablet-pc-instellingen’ (Calibrate… / Kalibreren…, Setup…); the rest is in vendor drivers."
+  },
+  {
+   "area": "Bluetooth & devices › AutoPlay",
+   "function": "Page EN “AutoPlay” / NL “Automatisch afspelen”: toggle “Use AutoPlay for all media and devices” / “Automatisch afspelen gebruiken voor alle media en apparaten”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.media-handling autorun-never (b, default TRUE here), inverted",
+   "notes": "GNOME Apps › Default Apps › Removable Media (‘Never prompt or start programs on media insertion’). Off by default on this system."
+  },
+  {
+   "area": "Bluetooth & devices › AutoPlay",
+   "function": "Section “Choose AutoPlay defaults” / “Standaardinstellingen voor Automatisch afspelen kiezen”: “Removable drive” / “Verwisselbaar station” and “Memory card” / “Geheugenkaart” dropdowns: “Take no action” / “Geen actie ondernemen”, “Open folder to view files (File Explorer)” / “Map openen om bestanden weer te geven (Verkenner)”, “Ask me every time” / “Altijd vragen”, app actions",
+   "control": "dropdown",
+   "backing": "Per x-content type in org.gnome.desktop.media-handling: autorun-x-content-start-app / autorun-x-content-ignore / autorun-x-content-open-folder (as), and default app via GIO default for x-content/<type>. Removable drive ≈ automount-open (b, true). Memory card ≈ x-content/image-dcf",
+   "notes": "GNOME rows CD Audio, DVD Video, Music Player, Photos, Software, Other Media Types (Type + Action: Ask what to do / Do Nothing / Open Folder / app). Add them as extra rows “Audio-cd”, “Dvd-video”, “Muziekspeler”, “Foto’s”, “Software”. Ask me every time = the type is in none of the lists."
+  },
+  {
+   "area": "Bluetooth & devices › Cameras",
+   "function": "Page EN “Cameras” / NL “Camera’s”: “Connected cameras” / “Verbonden camera’s” list; “Add a network camera” / “Een netwerkcamera toevoegen”; per camera: “Default image settings” (Brightness / Helderheid, Contrast, Video rotation), “Disable” / “Uitschakelen”, Troubleshoot",
+   "control": "list",
+   "backing": "List only: PipeWire camera nodes or /dev/video* (read-only); no GNOME settings",
+   "notes": "GNOME has only Privacy › Cameras. Show the list read-only with a link to Privacy & security › Camera; omit the image controls and network cameras."
+  },
+  {
+   "area": "Bluetooth & devices › USB",
+   "function": "Page EN “USB” / NL “USB”: “USB notifications” / “USB-meldingen” (“Notify me if there are issues connecting to USB devices”); “USB battery saver” / “USB-batterijbesparing”; “USB4 hubs and devices” / “USB4-hubs en -apparaten”",
+   "control": "toggle",
+   "backing": "Notifications and battery saver: none (omit). USB4 holds Thunderbolt (next item)",
+   "notes": ""
+  },
+  {
+   "area": "Bluetooth & devices › USB › USB4 hubs and devices",
+   "function": "WinPoint mapping of GNOME Thunderbolt: toggle “Directe toegang” / “Direct access” (“Directe toegang tot apparaten zoals docks en externe GPU’s toestaan”); device list with “Autoriseren en verbinden” / “Authorise and connect” and “Apparaat vergeten” / “Forget device”",
+   "control": "list",
+   "backing": "bolt org.freedesktop.bolt Manager AuthMode, EnrollDevice, ForgetDevice; Device Authorize, Status, UUID (polkit org.freedesktop.bolt.enroll, authorize, manage)",
+   "notes": "GNOME Privacy › Thunderbolt (bolt 0.9.10 installed). Hide when there is no Thunderbolt domain."
+  },
+  {
+   "area": "Network & internet",
+   "function": "Page EN “Network & internet” / NL “Netwerk en internet”: status card (“Connected” / “Verbonden”, “Not connected” / “Niet verbonden”, “Properties” / “Eigenschappen”, “Data usage” / “Gegevensgebruik”); rows: Wi-Fi (toggle) “Connect, manage known networks, metered network”; Ethernet “Authentication, IP and DNS settings, metered network” / “Verificatie, IP- en DNS-instellingen, verbinding met datalimiet”; VPN “Add, connect, manage” / “Toevoegen, verbinden, beheren”; Mobile hotspot / Mobiele hotspot (toggle); Flight mode / Vliegtuigmodus (toggle) “Stop all wireless communication” / “Alle draadloze communicatie stoppen”; Proxy “Proxy server for Wi-Fi and Ethernet connections”; Dial-up / Inbellen; Advanced network settings / Geavanceerde netwerkinstellingen “View all network adapters, network reset”",
+   "control": "info",
+   "backing": "NetworkManager org.freedesktop.NetworkManager PrimaryConnection, Connectivity, State; host system.network.get",
+   "notes": "en-US: Airplane mode. Dial-up: omit. Show a ‘Mobile’ / ‘Mobiel netwerk’ row (en-US Cellular) when a modem exists."
+  },
+  {
+   "area": "Network & internet › Wi-Fi",
+   "function": "Toggle EN “Wi-Fi” / NL “Wi-Fi”; expander “Show available networks” / “Beschikbare netwerken weergeven” (network list; clicking one shows checkbox “Connect automatically” / “Automatisch verbinding maken” and “Connect” / “Verbinden”, then “Enter the network security key” / “Voer de netwerkbeveiligingssleutel in” with “Next” / “Volgende” and “Cancel” / “Annuleren”); “Hidden network” / “Verborgen netwerk” entry",
+   "control": "toggle",
+   "backing": "NM WirelessEnabled (polkit org.freedesktop.NetworkManager.enable-disable-wifi); Device.Wireless GetAllAccessPoints/RequestScan (wifi.scan); AddAndActivateConnection (connection.autoconnect, 802-11-wireless-security.psk; 802-11-wireless.hidden); host system.network.setWifi/wifiList/connect",
+   "notes": "GNOME Wi-Fi panel, visible networks list and ‘Connect to Hidden Networks…’."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "EN “<SSID> properties” / NL “Eigenschappen van <SSID>”: “Connect automatically when in range” / “Automatisch verbinding maken als ik binnen bereik ben”; “Network profile type” / “Type netwerkprofiel” (Public network (Recommended) / Private network = Openbaar netwerk (aanbevolen) / Particulier netwerk)",
+   "control": "toggle",
+   "backing": "connection.autoconnect via NM Settings.Connection Update (polkit settings.modify.own or settings.modify.system); profile type: none",
+   "notes": "GNOME ‘Connect automatically’. Network profile type: omit (no firewall zones). Add GNOME’s ‘Make available to other users’ as “Beschikbaar maken voor andere gebruikers” → connection.permissions."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "Dropdown EN “Random hardware addresses” / NL “Willekeurige hardwareadressen”: Off / On / Change daily (Uit / Aan / Dagelijks wijzigen)",
+   "control": "dropdown",
+   "backing": "802-11-wireless.cloned-mac-address: Off = 'permanent' (or 'preserve'), On = 'stable', Change daily = 'random'",
+   "notes": "GNOME Identity tab ‘Cloned Address’ (also shows SSID, BSSID, MAC). ‘Daily’ has no exact NM match."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "Toggle EN “Metered connection” / NL “Verbinding met een datalimiet”; row “Set a data limit to help control data usage on this network” / “Een datalimiet instellen om het gegevensgebruik op dit netwerk te helpen beheren”",
+   "control": "toggle",
+   "backing": "connection.metered (NM_METERED yes=1 / no=2 / unknown=0); data limit: none",
+   "notes": "GNOME ‘Metered connection: has data limits or can incur charges’. Data limit: omit."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "Row EN “IP assignment” / NL “IP-toewijzing” “Automatic (DHCP)” / “Automatisch (DHCP)” with “Edit” / “Bewerken”; dialog “Edit IP settings” / “IP-instellingen bewerken”: Automatic (DHCP) / Manual (Handmatig), IPv4 and IPv6 switches, “IP address” / “IP-adres”, “Subnet mask” / “Subnetmasker”, “Gateway”, “Preferred DNS” / “Voorkeurs-DNS”, “Alternate DNS” / “Alternatieve DNS”, “DNS over HTTPS” / “DNS via HTTPS”",
+   "control": "dialog",
+   "backing": "ipv4.method auto|manual (+ link-local|disabled|shared), ipv4.addresses, ipv4.gateway, ipv4.dns, ipv4.ignore-auto-dns; ipv6.* (auto|dhcp|manual|link-local|disabled|shared); routes, ipv4.route-metric, ipv4.never-default; encrypted DNS ≈ connection.dns-over-tls (systemd-resolved)",
+   "notes": "GNOME IPv4/IPv6 tabs: Automatic (DHCP), Link-Local Only, Manual, Disable, Shared to other computers, Automatic DNS, Routes, ‘Use this connection only for resources on its network’. Put those extras in an ‘Geavanceerd’ expander. Windows DoH ≠ resolved DoT: note it in the UI."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "Row EN “DNS server assignment” / NL “DNS-servertoewijzing” with “Edit” / “Bewerken”",
+   "control": "dialog",
+   "backing": "ipv4.ignore-auto-dns + ipv4.dns / ipv6.dns",
+   "notes": "GNOME ‘Automatic DNS’ switch + ‘DNS server address(es)’."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "Properties list with “Copy” / “Kopiëren”: SSID, Protocol, Security type / Beveiligingstype, Manufacturer / Fabrikant, Description / Beschrijving, Driver version / Versie van stuurprogramma, Network band / Netwerkband, Network channel / Netwerkkanaal, Link speed (Receive/Transmit) / Verbindingssnelheid (ontvangen/verzenden), IPv6 address, Link-local IPv6 address, IPv6 DNS servers, IPv4 address / IPv4-adres, IPv4 DNS servers / IPv4-DNS-servers, Physical address (MAC) / Fysiek adres (MAC)",
+   "control": "info",
+   "backing": "NM Device (Driver, DriverVersion, HwAddress), AccessPoint (Frequency, Strength, Flags), Device.Wireless Bitrate, Ip4Config/Ip6Config Addresses/Nameservers",
+   "notes": "GNOME Details tab: Signal Strength, Link speed, Security, IPv4/IPv6 Address, Hardware Address, Supported Frequencies, Default Route, DNS, Last Used."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › (network) properties",
+   "function": "Row EN “View Wi-Fi security key” / NL “Wi-Fi-beveiligingssleutel weergeven” with “View” / “Weergeven”; 24H2 “Share” with a QR code; “Forget” / “Vergeten”",
+   "control": "button",
+   "backing": "NM Settings.Connection GetSecrets('802-11-wireless-security'); QR from SSID + psk; Settings.Connection Delete",
+   "notes": "GNOME ‘Share Network’ QR dialog (Network Name, Password) and ‘Forget Network’."
+  },
+  {
+   "area": "Network & internet › Wi-Fi › Manage known networks",
+   "function": "EN “Manage known networks” / NL “Bekende netwerken beheren”: list with “Forget” / “Vergeten”; button “Add network” / “Netwerk toevoegen” → dialog: “Network name” / “Netwerknaam”, “Security type” / “Beveiligingstype” (Open / WEP / WPA2-Personal AES / WPA3-Personal AES / WPA2-Enterprise / WPA3-Enterprise…), “Security key” / “Beveiligingssleutel”, “Connect automatically”, “Connect even if this network is not broadcasting” / “Verbinding maken, zelfs als dit netwerk niet uitzendt”, “Save” / “Opslaan”",
+   "control": "list",
+   "backing": "NM Settings ListConnections (type 802-11-wireless), AddConnection, Settings.Connection Delete",
+   "notes": "GNOME ‘Known Wi-Fi Networks’ dialog. 802.1X enterprise fields: GNOME 802.1x Security page."
+  },
+  {
+   "area": "Network & internet › Wi-Fi",
+   "function": "Rows EN “Hardware properties” / NL “Hardware-eigenschappen”; global toggle “Random hardware addresses” / “Willekeurige hardwareadressen” (“Help protect your privacy by making it harder for people to track your device location when you connect to different Wi-Fi networks”)",
+   "control": "toggle",
+   "backing": "Hardware: NM Device properties. Global random MAC: only NetworkManager.conf (root), so set it per new connection instead",
+   "notes": "The global toggle has no per-user backing: omit it or apply to new connections only."
+  },
+  {
+   "area": "Network & internet › Ethernet",
+   "function": "EN “Ethernet” / NL “Ethernet” per adapter: “Authentication settings” / “Verificatie-instellingen” with “Edit”; “Metered connection”; “IP assignment”; “DNS server assignment”; properties (Link speed, IPv6/IPv4, Manufacturer, Description, Driver version, Physical address) with Copy; “Network profile type”",
+   "control": "list",
+   "backing": "NM wired device + its connection: 802-1x.* (GNOME Security tab ‘802.1x Security’), connection.metered, ipv4/ipv6.*; device enable/disable via Device.Disconnect / ActivateConnection",
+   "notes": "GNOME Wired: on/off per device, ‘+’ Add Ethernet Connection (several profiles per device: Windows has none, so add a ‘Profielen’ expander), Identity tab (MAC, MTU, Cloned Address) under Geavanceerd."
+  },
+  {
+   "area": "Network & internet › VPN",
+   "function": "EN “VPN” / NL “VPN”: “VPN connections” / “VPN-verbindingen” with “Add VPN” / “VPN toevoegen” → dialog “Add a VPN connection” / “Een VPN-verbinding toevoegen”: “VPN provider” / “VPN-provider”, “Connection name” / “Verbindingsnaam”, “Server name or address” / “Servernaam of -adres”, “VPN type” / “VPN-type”, “Type of sign-in info” / “Type aanmeldingsgegevens”, “User name (optional)” / “Gebruikersnaam (optioneel)”, “Password (optional)” / “Wachtwoord (optioneel)”, “Remember my sign-in info” / “Mijn aanmeldingsgegevens onthouden”, “Save” / “Opslaan”",
+   "control": "dialog",
+   "backing": "NM AddConnection type vpn (vpn.service-type org.freedesktop.NetworkManager.openvpn; plugin network-manager-openvpn-gnome installed) or native type wireguard (private key, listen port, fwmark, MTU, peers); plugins from /usr/lib/NetworkManager/VPN/*.name",
+   "notes": "GNOME VPN ‘+’ list and ‘Import from file…’ (needs the NM plugin editor/import .so; the GTK 4 variants work from Rust over FFI). Map ‘VPN provider’ to the installed plugins plus WireGuard."
+  },
+  {
+   "area": "Network & internet › VPN",
+   "function": "Per VPN expander: “Connect” / “Verbinding maken”, “Advanced options” / “Geavanceerde opties” (connection properties “Edit”, proxy), “Remove” / “Verwijderen”; section “Advanced settings for all VPN connections”: “Allow VPN over metered networks” / “VPN toestaan via netwerken met een datalimiet”, “Allow VPN while roaming” / “VPN toestaan tijdens roaming”",
+   "control": "list",
+   "backing": "NM ActivateConnection / DeactivateConnection, Settings.Connection Update / Delete; the two global toggles: none",
+   "notes": "GNOME ‘VPN Options’. Omit the metered/roaming toggles."
+  },
+  {
+   "area": "Network & internet › Mobile hotspot",
+   "function": "EN “Mobile hotspot” / NL “Mobiele hotspot”: toggle; “Share my internet connection from” / “Mijn internetverbinding delen vanaf”; “Share over” / “Delen via” Wi-Fi / Bluetooth; “Properties” / “Eigenschappen”: Name / Naam, Password / Wachtwoord, Band / Band (Any available / 5 GHz / 2.4 GHz), “Edit” / “Bewerken”; “Devices connected: 0 of 8”; “Power saving” / “Energiebesparing” (“When no devices are connected, automatically turn off mobile hotspot”)",
+   "control": "toggle",
+   "backing": "NM AddAndActivateConnection with 802-11-wireless.mode 'ap', ipv4.method 'shared', ssid, band a|bg, 802-11-wireless-security wpa-psk (polkit org.freedesktop.NetworkManager.wifi.share.protected / share.open)",
+   "notes": "GNOME ‘Turn On Wi-Fi Hotspot?’: Network Name, Password, Generate Random Password. It disconnects the current Wi-Fi on single-radio cards, so warn as GNOME does. Only Wi-Fi sharing; ‘Share from’ is informational. Power saving and Bluetooth: omit."
+  },
+  {
+   "area": "Network & internet › Flight mode",
+   "function": "EN “Flight mode” / NL “Vliegtuigmodus”: toggle “Stop all wireless communication” / “Alle draadloze communicatie stoppen”; section “Wireless devices” / “Draadloze apparaten”: Wi-Fi toggle, Bluetooth toggle, Mobile / Mobiel toggle",
+   "control": "toggle",
+   "backing": "org.gnome.SettingsDaemon.Rfkill (session bus /org/gnome/SettingsDaemon/Rfkill) AirplaneMode (rw), HardwareAirplaneMode (ro), BluetoothAirplaneMode; NM WirelessEnabled / WwanEnabled (enable-disable-wwan); host system.network.setAirplane",
+   "notes": "en-US: Airplane mode. GNOME shows ‘Airplane Mode is On’ banners and ‘Hardware Airplane Mode is On’."
+  },
+  {
+   "area": "Network & internet › Proxy",
+   "function": "Section EN “Automatic proxy setup” / NL “Automatische proxyinstellingen”: toggle “Automatically detect settings” / “Instellingen automatisch detecteren”; row “Use setup script” / “Installatiescript gebruiken” with “Set up” / “Instellen” → dialog: toggle, “Script address” / “Scriptadres”, “Save” / “Opslaan”",
+   "control": "dialog",
+   "backing": "org.gnome.system.proxy mode (enum none|manual|auto); auto + autoconfig-url (s) '' = WPAD auto-detect, or the PAC URL",
+   "notes": "GNOME ‘Network Proxy’ Automatic + ‘Configuration URL’. GNOME’s mode is exclusive, so the UI must let only one of auto-detect / script / manual be active (Windows allows a mix)."
+  },
+  {
+   "area": "Network & internet › Proxy",
+   "function": "Section EN “Manual proxy setup” / NL “Handmatige proxyinstellingen”: “Use a proxy server” / “Een proxyserver gebruiken” with “Set up” → dialog: toggle, “Proxy IP address” / “IP-adres van proxy”, “Port” / “Poort”, “Use the proxy server except for addresses that start with the following entries. Use semicolons (;) to separate entries.” / “Gebruik de proxyserver behalve voor adressen die beginnen met de volgende vermeldingen. Gebruik puntkomma’s (;) om vermeldingen te scheiden.”, checkbox “Don’t use the proxy server for local (intranet) addresses” / “De proxyserver niet gebruiken voor lokale (intranet)adressen”, “Save”",
+   "control": "dialog",
+   "backing": "mode 'manual'; org.gnome.system.proxy.http host/port (i 8080); .https, .ftp, .socks host/port; use-same-proxy (b, true); ignore-hosts (as, default localhost, 127.0.0.0/8, ::1); local addresses = add '*.local' and bare hostnames",
+   "notes": "GNOME Manual: HTTP, HTTPS, FTP, SOCKS, Ignored Hosts. Windows has one server for all, so put per-protocol fields in an ‘Geavanceerd’ expander. Never write http authentication-password: dconf stores it in plain text."
+  },
+  {
+   "area": "Network & internet › Advanced network settings",
+   "function": "EN “Advanced network settings” / NL “Geavanceerde netwerkinstellingen”: section “Network adapters” / “Netwerkadapters” with “Disable” / “Uitschakelen” or “Enable” / “Inschakelen” per adapter and expander “View additional properties” / “Aanvullende eigenschappen weergeven”, “Rename”",
+   "control": "list",
+   "backing": "NM Devices: Device.Disconnect / Autoconnect=false to disable, ActivateConnection to enable; details from Device properties",
+   "notes": "Rename: omit."
+  },
+  {
+   "area": "Network & internet › Advanced network settings",
+   "function": "Section “More settings” / “Meer instellingen”: “Hardware and connection properties” / “Hardware- en verbindingseigenschappen”, “Network reset” / “Netwerk opnieuw instellen” with “Reset now” / “Nu opnieuw instellen”, “Data usage” / “Gegevensgebruik”",
+   "control": "link",
+   "backing": "Properties: NM Device info. Data usage: Device.Statistics RxBytes/TxBytes (polkit enable-disable-statistics). Reset: none safe",
+   "notes": "Omit Network reset (deleting every NM profile would be destructive). Data usage only as session counters."
+  },
+  {
+   "area": "Network & internet › Advanced network settings › Advanced sharing settings",
+   "function": "EN “Advanced sharing settings” / NL “Geavanceerde instellingen voor delen”: Private / Public networks: “Network discovery” / “Netwerkdetectie”, “File and printer sharing” / “Bestands- en printerdeling”; All networks: “Public folder sharing” / “Delen van openbare mappen”, “Password protected sharing” / “Met wachtwoord beveiligd delen”",
+   "control": "toggle",
+   "backing": "Network discovery: Avahi (system, always on) as info. Public folder / password: gnome-user-share (org.gnome.desktop.file-sharing), NOT installed, so hide",
+   "notes": "Maps to the GNOME Sharing panel (‘File Sharing’ hidden without gnome-user-share)."
+  },
+  {
+   "area": "Network & internet › Advanced network settings › Advanced sharing settings",
+   "function": "WinPoint mapping of GNOME Media Sharing, worded like Windows’ “Media streaming options” / “Opties voor mediastreaming”: toggle “Mediastreaming”, folder list (“Mappen”), per-network switches (“Netwerken”)",
+   "control": "toggle",
+   "backing": "rygel (installed): relocatable org.gnome.settings-daemon.plugins.sharing.service at /org/gnome/settings-daemon/plugins/sharing/rygel/ key enabled-connections (as of NM connection UUIDs); folders in ~/.config/rygel.conf [MediaExport] uris",
+   "notes": "GNOME ‘Media Sharing’ and the ‘Networks’ dialog."
+  },
+  {
+   "area": "Network & internet › Advanced network settings",
+   "function": "WinPoint addition: toggle “Controle op internetverbinding” / “Connectivity checking” (“Verbindingsproblemen detecteren”)",
+   "control": "toggle",
+   "backing": "NM ConnectivityCheckEnabled property (polkit org.freedesktop.NetworkManager.enable-disable-connectivity-check); ConnectivityCheckAvailable",
+   "notes": "GNOME Privacy › Connectivity. Windows NCSI has no Settings toggle."
+  },
+  {
+   "area": "Network & internet › Mobile",
+   "function": "EN “Mobile” (en-US Cellular) / NL “Mobiel netwerk” (nl unverified): toggle; “Let Windows keep me connected” / “Windows mag me verbonden houden”; “Use this SIM for mobile data”; “Roaming” (“Don’t roam” / “Roam”); “Mobile operator settings” / “Instellingen van mobiele provider”: “Access point” / “Toegangspunt” with “Add APN” / “APN toevoegen”, “Use SIM PIN” / “Pincode van simkaart gebruiken”, “Change SIM PIN”, preferred network type, properties (IMEI, manufacturer, model, firmware, operator, phone number)",
+   "control": "toggle",
+   "backing": "NM WwanEnabled; gsm connection autoconnect; gsm.home-only (inverse of roaming); ModemManager Modem.SetCurrentModes, Modem3gpp.Register, Sim.EnablePin/ChangePin, Modem.SetPrimarySimSlot (polkit org.freedesktop.ModemManager1.*); org.gnome.settings-daemon.plugins.wwan unlock-sim (b)",
+   "notes": "GNOME WWAN panel: Mobile Data, Data Roaming, Network Mode, Network (Automatic/Choose), Access Point Names, SIM Lock, Modem Details, Primary SIM Slot, Data Connection. Show only when a modem exists."
+  },
+  {
+   "area": "Personalisation",
+   "function": "Page EN “Personalisation” / NL “Persoonlijke instellingen”: theme preview + “Select a theme to apply” / “Selecteer een thema om toe te passen”; rows: Background / Achtergrond (“Background image, colour, slideshow” / “Achtergrondafbeelding, kleur, diavoorstelling”), Colours / Kleuren (“Accent colour, transparency effects, colour theme” / “Accentkleur, transparantie-effecten, kleurthema”), Themes / Thema’s (“Install, create, manage” / “Installeren, maken, beheren”), Dynamic Lighting / Dynamische verlichting, Lock screen / Vergrendelingsscherm (“Lock screen images, apps, animations”), Text input / Tekstinvoer, Start / Start (“Recent apps and items, folders” / “Recente apps en items, mappen”), Taskbar / Taakbalk (“Taskbar behaviours, system pins”), Fonts / Lettertypen (“Install, manage” / “Installeren, beheren”), Device usage / Apparaatgebruik",
+   "control": "info",
+   "backing": "registry.rs",
+   "notes": "Dynamic Lighting and Device usage: omit. en-US: Personalization, Colors, behaviors."
+  },
+  {
+   "area": "Personalisation › Background",
+   "function": "Dropdown EN “Personalise your background” / NL “Je achtergrond aanpassen”: Picture / Afbeelding, Solid colour / Effen kleur, Slideshow / Diavoorstelling, Windows spotlight / Windows-spotlight",
+   "control": "dropdown",
+   "backing": "Picture: org.gnome.desktop.background picture-uri + picture-uri-dark (set both). Solid: picture-options 'none' + primary-color (s) + color-shading-type 'solid'. Slideshow: picture-uri pointing at a GNOME XML slideshow written by WinPoint in ~/.local/share/backgrounds",
+   "notes": "GNOME Appearance background grid. Spotlight: omit."
+  },
+  {
+   "area": "Personalisation › Background",
+   "function": "“Recent images” / “Recente afbeeldingen” (5 thumbnails); “Choose a photo” / “Een foto kiezen” with “Browse photos” / “Door foto’s bladeren”",
+   "control": "button",
+   "backing": "GtkFileDialog; copy into ~/.local/share/backgrounds (as g-c-c does), then set picture-uri / picture-uri-dark; built-in list from /usr/share/gnome-background-properties/*.xml",
+   "notes": "GNOME ‘Add Picture…’. GNOME pairs light/dark wallpapers; Windows does not."
+  },
+  {
+   "area": "Personalisation › Background",
+   "function": "Dropdown EN “Choose a fit for your desktop image” / NL “Kies een passende weergave voor je bureaubladafbeelding”: Fill / Opvullen, Fit / Passend maken, Stretch / Uitrekken, Tile / Naast elkaar, Centre / Centreren, Span / Spreiden",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.background picture-options (enum none|wallpaper|centered|scaled|stretched|zoom|spanned): Fill = zoom, Fit = scaled, Stretch = stretched, Tile = wallpaper, Centre = centered, Span = spanned",
+   "notes": "Not in GNOME’s UI, but the key is honoured. en-US: Center."
+  },
+  {
+   "area": "Personalisation › Background",
+   "function": "Solid colour: “Choose your background colour” / “Je achtergrondkleur kiezen” swatches + “Custom colours” / “Aangepaste kleuren” with “View colours” / “Kleuren weergeven”. Slideshow: “Choose a picture album for a slideshow” with “Browse” / “Bladeren”, “Change picture every” / “Afbeelding wijzigen elke” (1 min … 1 day), “Shuffle the picture order” / “Afbeeldingen in willekeurige volgorde weergeven”, “Let slideshow run even if I’m on battery power”",
+   "control": "dropdown",
+   "backing": "primary-color; slideshow XML durations; shuffle = random order in the XML",
+   "notes": "Battery option: omit."
+  },
+  {
+   "area": "Personalisation › Colours",
+   "function": "Dropdown EN “Choose your mode” / NL “Je modus kiezen”: Light / Licht, Dark / Donker, Custom / Aangepast; Custom shows “Choose your default Windows mode” / “Je standaardmodus voor Windows kiezen” and “Choose your default app mode” / “Je standaardmodus voor apps kiezen”",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.interface color-scheme (enum default|prefer-dark|prefer-light): Light = 'default' (as g-c-c writes it), Dark = 'prefer-dark'. App mode = color-scheme; Windows mode = WinPoint shell setting",
+   "notes": "GNOME Appearance ‘Style: Default / Dark’. For old GTK 3 apps Ubuntu also switches gtk-theme Yaru / Yaru-dark (and the accent variant), so mirror what the Ubuntu panel does."
+  },
+  {
+   "area": "Personalisation › Colours",
+   "function": "Toggle EN “Transparency effects” / NL “Transparantie-effecten”, subtitle “Windows and surfaces appear translucent” / “Vensters en oppervlakken worden doorschijnend weergegeven”",
+   "control": "toggle",
+   "backing": "WinPoint shell setting",
+   "notes": "No GNOME key."
+  },
+  {
+   "area": "Personalisation › Colours",
+   "function": "EN “Accent colour” / NL “Accentkleur”: Manual / Automatic (Handmatig / Automatisch); swatches “Recent colours” / “Recente kleuren”, “Windows colours” / “Windows-kleuren” (48), “Custom colours” with “View colours”; toggles “Show accent colour on Start and taskbar” / “Accentkleur weergeven in Start en op de taakbalk” and “Show accent colour on title bars and window borders” / “Accentkleur weergeven op titelbalken en vensterranden”",
+   "control": "list",
+   "backing": "org.gnome.desktop.interface accent-color (enum blue|teal|green|yellow|orange|red|pink|purple|slate|brown; Ubuntu override 'orange'): snap the Windows colour to the nearest one; keep the exact hex in WinPoint settings for the shell. Automatic = dominant wallpaper colour",
+   "notes": "GNOME and Ubuntu ‘Accent Color’. Start/taskbar is a WinPoint shell setting. Title bars: libadwaita apps use CSD, so omit."
+  },
+  {
+   "area": "Personalisation › Themes",
+   "function": "EN “Themes” / NL “Thema’s”: “Current theme” / “Huidig thema” card with Background, Colour / Kleur, Sounds / Geluiden (“Windows Default” / “Windows-standaard”), Mouse cursor / Muiscursor; “Save” / “Opslaan”; “Change theme” / “Thema wijzigen” grid + “Browse themes”; related “Desktop icon settings” / “Instellingen voor bureaubladpictogrammen”, “Contrast themes” / “Contrastthema’s”",
+   "control": "list",
+   "backing": "Theme = WinPoint bundle of picture-uri(-dark), accent-color, color-scheme, org.gnome.desktop.interface cursor-theme, org.gnome.desktop.sound theme-name (Ubuntu 'Yaru') + event-sounds",
+   "notes": "Add an icon-theme row (org.gnome.desktop.interface icon-theme, Yaru) as “Pictogrammen” if wanted."
+  },
+  {
+   "area": "Personalisation › Themes › Desktop icon settings",
+   "function": "Dialog EN “Desktop Icon Settings” / NL “Instellingen voor bureaubladpictogrammen”: checkboxes Computer, Recycle Bin / Prullenbak, User’s Files / Bestanden van gebruiker, Network / Netwerk, Control Panel; “Allow themes to change desktop icons”",
+   "control": "dialog",
+   "backing": "WinPoint desktop (desktopicons.rs). If Ubuntu’s DING is still active: org.gnome.shell.extensions.ding show-home, show-trash, show-volumes, show-network-volumes, icon-size, start-corner",
+   "notes": "GNOME Ubuntu Desktop panel ‘Desktop Icons: Size, Position of New Icons, Show Home Folder’. Size belongs in the desktop right-click View menu."
+  },
+  {
+   "area": "Personalisation › Lock screen",
+   "function": "EN “Lock screen” / NL “Vergrendelingsscherm”: “Personalise your lock screen” / “Je vergrendelingsscherm aanpassen” (Windows spotlight / Picture / Slideshow); “Get fun facts, tips, tricks and more on your lock screen”; “Lock screen status” / “Status van vergrendelingsscherm”; “Show the lock screen background picture on the sign-in screen” / “De achtergrondafbeelding van het vergrendelingsscherm weergeven op het aanmeldingsscherm”; related “Screen timeout” / “Time-out voor scherm”, “Screen saver” / “Schermbeveiliging”",
+   "control": "dropdown",
+   "backing": "GNOME Shell 50’s lock screen uses the blurred desktop background (org.gnome.desktop.screensaver picture-uri is legacy and unused); the sign-in screen is GDM (root)",
+   "notes": "Show the picture as info (‘volgt de bureaubladachtergrond’) or omit. Screen timeout links to Power. The lock options themselves are on Accounts › Sign-in options."
+  },
+  {
+   "area": "Personalisation › Text input",
+   "function": "EN “Text input” / NL “Tekstinvoer”: “Touch keyboard” / “Aanraaktoetsenbord” (size slider, “Keyboard theme” / “Toetsenbordthema”), voice typing, emoji panel, “Input method editor”",
+   "control": "slider",
+   "backing": "none for size and theme; IME = ibus engines in org.gnome.desktop.input-sources",
+   "notes": "Omit, except a link to Time & language › Typing."
+  },
+  {
+   "area": "Personalisation › Start",
+   "function": "EN “Start” / NL “Start” (new 25H2 Start): toggles “Show all pins by default” / “Alle vastgemaakte items standaard weergeven”, “Show recently added apps” / “Onlangs toegevoegde apps weergeven”, “Show most used apps” / “Meestgebruikte apps weergeven”, “Show recommended files in Start, recent files in File Explorer and items in Jump Lists” / “Aanbevolen bestanden weergeven in Start, recente bestanden in Verkenner en items in jumplists”, “Show recommendations for tips, shortcuts, new apps and more”, “Show account-related notifications”; row “Folders” / “Mappen” (“These folders appear on Start next to the Power button” / “Deze mappen worden weergegeven in Start naast de aan/uit-knop”)",
+   "control": "toggle",
+   "backing": "Most used = org.gnome.desktop.privacy remember-app-usage (b, true); Recommended/recent files = org.gnome.desktop.privacy remember-recent-files (b, true) (GTK recent history for everything); the rest = WinPoint shell (start.rs)",
+   "notes": "Turning off recent files also clears GTK recents everywhere, which matches Windows. Tips and account notifications: omit."
+  },
+  {
+   "area": "Personalisation › Taskbar",
+   "function": "EN “Taskbar” / NL “Taakbalk”: “Taskbar items” / “Taakbalkitems”: Search / Zoeken (Hide / Search icon only / Search icon and label / Search box = Verbergen / Alleen zoekpictogram / Zoekpictogram en label / Zoekvak), Task view / Taakweergave, Widgets; “System tray icons” / “Systeemvakpictogrammen”: Touch keyboard (Never / Always / When no keyboard attached), Virtual touchpad, Pen menu; “Other system tray icons” / “Overige systeemvakpictogrammen”",
+   "control": "dropdown",
+   "backing": "WinPoint shell (taskbar.rs); tray items via host tray.list (StatusNotifier)",
+   "notes": "Touch keyboard ‘Always’ can set org.gnome.desktop.a11y.applications screen-keyboard-enabled. If the Ubuntu Dock stays active, its keys (dash-to-dock dock-fixed, autohide, intellihide, dash-max-icon-size, dock-position, multi-monitor, show-trash, show-mounts) clash with this page, so WinPoint should keep the dock disabled."
+  },
+  {
+   "area": "Personalisation › Taskbar",
+   "function": "Expander “Taskbar behaviours” / “Taakbalkgedrag” (nl unverified): “Taskbar alignment” / “Uitlijning van taakbalk” Centre / Left (Centreren / Links); “Automatically hide the taskbar” / “De taakbalk automatisch verbergen”; “Show badges on taskbar apps”; “Show flashing on taskbar apps”; “Show my taskbar on all displays” / “Mijn taakbalk op alle beeldschermen weergeven”; “When using multiple displays, show my taskbar apps on”; “Share any window from my taskbar”; “Select the far corner of the taskbar to show the desktop” / “Selecteer de uiterste hoek van de taakbalk om het bureaublad weer te geven”; “Combine taskbar buttons and hide labels” / “Taakbalkknoppen combineren en labels verbergen” (Always / When taskbar is full / Never); “Show smaller taskbar buttons” / “Kleinere taakbalkknoppen weergeven”",
+   "control": "dropdown",
+   "backing": "WinPoint shell settings",
+   "notes": "No GNOME counterparts beyond the dock keys."
+  },
+  {
+   "area": "Personalisation › Fonts",
+   "function": "EN “Fonts” / NL “Lettertypen”: “Add fonts” / “Lettertypen toevoegen” drop zone (“Drag and drop to install” / “Slepen en neerzetten om te installeren”); “Available fonts” / “Beschikbare lettertypen” with search “Search fonts” / “Lettertypen zoeken” and “Filter by: All languages” / “Filteren op: Alle talen”; per-font page with metadata and “Uninstall” / “Verwijderen”",
+   "control": "list",
+   "backing": "Copy to ~/.local/share/fonts and let fontconfig rescan (no polkit); list via fontconfig; uninstall only user fonts",
+   "notes": "GNOME Settings has no Fonts panel (Tweaks does)."
+  },
+  {
+   "area": "Personalisation › Fonts",
+   "function": "Related “Adjust ClearType text” / “ClearType-tekst aanpassen” (wizard); WinPoint addition “Lettertypen voor de interface” (interface, document, monospace font)",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.interface font-antialiasing (enum none|grayscale|rgba; Ubuntu 'rgba'), font-hinting (none|slight|medium|full), font-rgba-order (rgba|rgb|bgr|vrgb|vbgr), font-rendering (automatic|manual); font-name, document-font-name, monospace-font-name",
+   "notes": "ClearType on = rgba + slight. Interface fonts are optional extras."
+  },
+  {
+   "area": "Apps",
+   "function": "Page EN “Apps” / NL “Apps”: Installed apps / Geïnstalleerde apps (“Uninstall, properties” / “Verwijderen, eigenschappen”), Advanced app settings / Geavanceerde app-instellingen, Default apps / Standaard-apps (“Defaults for file and link types, other defaults”), Offline maps / Offlinekaarten, Apps for websites / Apps voor websites, Video playback / Video afspelen, Startup / Opstarten (“Apps that start automatically when you sign in” / “Apps die automatisch worden gestart wanneer je je aanmeldt”)",
+   "control": "info",
+   "backing": "registry.rs",
+   "notes": "Offline maps and Video playback: omit. Advanced app settings (app source, execution aliases, archiving): omit."
+  },
+  {
+   "area": "Apps › Installed apps",
+   "function": "EN “Installed apps” / NL “Geïnstalleerde apps”: search “Search apps” / “Apps zoeken”, “Sort by” / “Sorteren op” (Name A to Z / Name Z to A / Size / Install date), “Filter by”; per app ⋯: “Advanced options” / “Geavanceerde opties”, “Modify” / “Wijzigen”, “Move” / “Verplaatsen”, “Uninstall” / “Verwijderen”",
+   "control": "list",
+   "backing": "host apps.list, software.uninstallInfo/execute (PackageKit / snapd / flatpak)",
+   "notes": "GNOME Apps panel list (opens per-app page; ‘Open in Software’)."
+  },
+  {
+   "area": "Apps › Installed apps › Advanced options",
+   "function": "Per-app page: “Specifications” / “Specificaties” (Version / Versie, size); “App permissions” / “App-machtigingen” toggles: Location / Locatie, Camera, Microphone / Microfoon, Notifications / Meldingen; “Background apps permissions” / “Machtigingen voor apps op de achtergrond” (Always / Power optimised (recommended) / Never); “Runs at log-in” / “Wordt uitgevoerd bij aanmelden”",
+   "control": "toggle",
+   "backing": "xdg-desktop-portal PermissionStore (org.freedesktop.impl.portal.PermissionStore Lookup/SetPermission/DeletePermission): table 'location' id 'location'; 'devices'/'camera'; 'devices'/'microphone'; 'background'/'background'; 'screenshot'/'screenshot'; 'gnome'/'shortcuts-inhibitor'. Notifications = org.gnome.desktop.notifications.application enable. Search = org.gnome.desktop.search-providers disabled. Runs at log-in = ~/.config/autostart/<id>.desktop",
+   "notes": "GNOME per-app Integration: Search, Notifications, Background Apps, Location, Camera, Microphone, Screenshots, Inhibit system shortcuts, Global Shortcuts (org.gnome.settings-daemon.global-shortcuts). Sandboxed apps only, as GNOME does."
+  },
+  {
+   "area": "Apps › Installed apps › Advanced options",
+   "function": "“Terminate” / “Beëindigen” (“Immediately terminate this app and its related processes” / “Deze app en de bijbehorende processen onmiddellijk beëindigen”); “Reset” / “Opnieuw instellen” with “Repair” / “Herstellen” and “Reset”; “Uninstall” / “Verwijderen”",
+   "control": "button",
+   "backing": "Terminate: host sysmon.endTask. Reset for flatpak: clear ~/.var/app/<id> data or cache (GNOME ‘Clear Cache…’). Uninstall: software.execute",
+   "notes": "GNOME Usage ‘Storage: Installed Size, Data, Cache, Clear Cache’. Repair: omit."
+  },
+  {
+   "area": "Apps › Installed apps › Advanced options",
+   "function": "WinPoint additions from GNOME: “Standaardkoppelingen” / “Default handlers” (links and file types the app opens, with “Standaardwaarden wissen”); “Machtigingen” for flatpak (Netwerk, Apparaten, Thuismap, Bestandssysteem, Instellingen, Geluid) and snap interfaces",
+   "control": "list",
+   "backing": "GIO mimeapps.list; flatpak overrides (~/.local/share/flatpak/overrides/<id>); snapd interfaces connect/disconnect (polkit io.snapcraft.snapd.manage-interfaces)",
+   "notes": "GNOME ‘Default Handlers: Links / File Types, Reset’ and ‘Permissions & Access’."
+  },
+  {
+   "area": "Apps › Default apps",
+   "function": "EN “Default apps” / NL “Standaard-apps”: search “Set a default for a file type or link type” / “Een standaardwaarde instellen voor een bestandstype of koppelingstype”; list “Set defaults for applications” / “Standaardwaarden instellen voor toepassingen” (per-app page of types); related “Choose defaults by file type” / “by link type”; “Reset all default apps” / “Alle standaard-apps opnieuw instellen” with “Reset”",
+   "control": "list",
+   "backing": "GIO default handlers in ~/.config/mimeapps.list; host apps.defaults, apps.setDefault, apps.setDefaultForType, apps.forType, apps.mimeTypes",
+   "notes": "GNOME ‘Default Apps’ shows a common-defaults card: Web (x-scheme-handler/http, https, text/html), Mail (mailto), Calendar (text/calendar), Music, Video, Photos, Calls (x-scheme-handler/tel), SMS (sms). Add that card at the top, styled like Windows 10’s old list."
+  },
+  {
+   "area": "Apps › Startup",
+   "function": "EN “Startup” / NL “Opstarten”: “Startup apps” / “Opstart-apps” (“Configure apps to start automatically when you sign in. In most cases, apps start minimised or may only start a background task.”); “Sort by” Name / Status / Startup impact; per-app toggle with impact (“Not measured” / “Niet gemeten”, Low / Medium / High impact)",
+   "control": "list",
+   "backing": "~/.config/autostart/*.desktop overrides of /etc/xdg/autostart (X-GNOME-Autostart-enabled=false or Hidden=true); host sysmon.startup / sysmon.setStartup",
+   "notes": "Hide session-critical entries (gnome-keyring, ibus, gsd-*) or mark them system, so the GNOME session cannot be broken."
+  },
+  {
+   "area": "Apps › Apps for websites",
+   "function": "EN “Apps for websites” / NL “Apps voor websites”: per app, which website links it may open",
+   "control": "toggle",
+   "backing": "Per-app x-scheme-handler / URL handler defaults in mimeapps.list",
+   "notes": "Maps to GNOME’s per-app ‘Default Handlers: Links’."
+  },
+  {
+   "area": "Accounts",
+   "function": "Page EN “Accounts” / NL “Accounts”: header (avatar, name, “Local account” / “Lokaal account”, “Administrator” / “Administrator”); rows Your info / Je info (“Profile photo” / “Profielfoto”), Email & accounts / E-mail en accounts (“Accounts used by email, calendar and contacts”), Sign-in options / Aanmeldingsopties (“Windows Hello, security key, password, dynamic lock”), Family / Familie, Windows backup, Other users / Andere gebruikers (“Device access, work or school users, kiosk assigned access”), Access work or school / Toegang tot werk of school",
+   "control": "info",
+   "backing": "org.freedesktop.Accounts FindUserById(getuid) → User RealName, IconFile, AccountType",
+   "notes": "Family = GNOME Parental Controls (malcontent not installed), so hide. Windows backup: omit. Access work or school = GNOME ‘Add Enterprise Login’ (realmd), only if realmd is present."
+  },
+  {
+   "area": "Accounts › Your info",
+   "function": "EN “Your info” / NL “Je info”: large avatar, name, account type; section “Adjust your photo” / “Je foto aanpassen”: “Take a photo” / “Een foto maken” with “Open camera” / “Camera openen”; “Choose a file” / “Een bestand kiezen” with “Browse files” / “Bladeren door bestanden”",
+   "control": "button",
+   "backing": "org.freedesktop.Accounts.User SetIconFile(path) (polkit org.freedesktop.accounts.change-own-user-data); camera via the camera portal / PipeWire",
+   "notes": "GNOME avatar chooser (gallery /usr/share/pixmaps/faces, ‘Take a Picture…’, ‘Select a File…’). Also offer the gallery."
+  },
+  {
+   "area": "Accounts › Your info",
+   "function": "WinPoint addition (Windows keeps this in Control Panel ‘Change your account name’): row “Naam wijzigen” / “Change name”",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts.User SetRealName (polkit change-own-user-data)",
+   "notes": "GNOME user page ‘Name’."
+  },
+  {
+   "area": "Accounts › Email & accounts",
+   "function": "EN “Email & accounts” / NL “E-mail en accounts”: “Accounts used by email, calendar and contacts” / “Accounts die worden gebruikt door e-mail, agenda en contactpersonen” with “Add account” / “Account toevoegen” (providers); per account expander “Manage” / “Beheren” and “Remove” / “Verwijderen”; “Accounts used by other apps”",
+   "control": "list",
+   "backing": "GNOME Online Accounts on the session bus org.gnome.OnlineAccounts /org/gnome/OnlineAccounts: Account Remove(); MailDisabled, CalendarDisabled, ContactsDisabled, FilesDisabled (rw); providers Google, Microsoft 365, Microsoft, Nextcloud, WebDAV, Email (IMAP/SMTP), Kerberos, Fedora",
+   "notes": "Map ‘Manage’ to per-service switches (Mail/Agenda/Contacten/Bestanden). Adding an account needs goa-backend’s provider flows (OAuth via the system browser); its UI is libadwaita, so a native Rust IMAP/SMTP form and browser OAuth is the clean route. ‘Other apps’: omit."
+  },
+  {
+   "area": "Accounts › Sign-in options",
+   "function": "Section EN “Ways to sign in” / NL “Manieren om je aan te melden”: “Fingerprint recognition (Windows Hello)” / “Vingerafdrukherkenning (Windows Hello)” with “Set up” / “Instellen”, “Remove” / “Verwijderen”",
+   "control": "dialog",
+   "backing": "fprintd net.reactivated.Fprint.Manager GetDefaultDevice; Device Claim, EnrollStart(finger), EnrollStatus signal, ListEnrolledFingers, DeleteEnrolledFingers2, Release (polkit net.reactivated.fprint.device.enroll)",
+   "notes": "GNOME ‘Fingerprint Login’ dialog (‘Delete Fingerprints’). Using it at login also needs pam-auth-update (root) and org.gnome.login-screen enable-fingerprint-authentication (true by default). Face, PIN, security key: omit."
+  },
+  {
+   "area": "Accounts › Sign-in options",
+   "function": "Row EN “Password” / NL “Wachtwoord” with “Change” / “Wijzigen” → dialog “Current password” / “Huidig wachtwoord”, “New password” / “Nieuw wachtwoord”, “Confirm password” / “Wachtwoord bevestigen”, “Password hint” / “Wachtwoordhint”",
+   "control": "dialog",
+   "backing": "Own password: run /usr/bin/passwd in a PTY, as g-c-c does (needs the current password). As admin for others: org.freedesktop.Accounts.User SetPassword(crypted, hint) (polkit org.freedesktop.accounts.user-administration)",
+   "notes": "GNOME ‘Change Password’ dialog. The hint goes to AccountsService PasswordHint."
+  },
+  {
+   "area": "Accounts › Sign-in options",
+   "function": "Section “Additional settings” / “Aanvullende instellingen”: dropdown “If you’ve been away, when should Windows require you to sign in again?” / “Wanneer moet Windows je vragen je opnieuw aan te melden als je weg bent geweest?”: “When PC wakes up from sleep” / “Wanneer de pc uit de slaapstand komt”, “Never” / “Nooit”, plus timed values",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.screensaver lock-enabled (b, true), lock-delay (u seconds, 0 = when the screen turns off), ubuntu-lock-on-suspend (b, true)",
+   "notes": "GNOME Privacy › Screen Lock: ‘Automatic Screen Lock’, ‘Automatic Screen Lock Delay’ (Screen Turns Off, 30 s, 1/2/3/5/30 min, 1 h), ‘Lock Screen on Suspend’. Wake-from-sleep = lock-on-suspend; Never = both off; timed = lock-delay."
+  },
+  {
+   "area": "Accounts › Sign-in options",
+   "function": "Toggle EN “Automatically save my restartable apps and restart them when I sign back in” / NL “Mijn opnieuw opstartbare apps automatisch opslaan en opnieuw starten wanneer ik me opnieuw aanmeld”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.session save-restore (b, true)",
+   "notes": "GNOME Multitasking ‘Reopen Windows After Login: Restore windows that were open when you last used the computer’."
+  },
+  {
+   "area": "Accounts › Sign-in options",
+   "function": "Toggles EN “Show account details such as my email address on the sign-in screen” / NL “Accountgegevens, zoals mijn e-mailadres, weergeven op het aanmeldingsscherm”; “Dynamic lock” / “Dynamische vergrendeling”; “Use my sign-in info to automatically finish setting up after an update”",
+   "control": "toggle",
+   "backing": "Account details ≈ org.gnome.desktop.screensaver show-full-name-in-top-bar / org.gnome.desktop.privacy show-full-name-in-top-bar, hide-identity (check which one the 50 lock screen reads); others none",
+   "notes": "Dynamic lock and the update item: omit."
+  },
+  {
+   "area": "Accounts › Sign-in options",
+   "function": "WinPoint addition: toggle “Automatisch aanmelden” / “Automatic sign-in” (“Aanmelden zonder wachtwoord bij het opstarten”)",
+   "control": "toggle",
+   "backing": "org.freedesktop.Accounts.User SetAutomaticLogin(b) (polkit org.freedesktop.accounts.user-administration / set-login-option)",
+   "notes": "GNOME user page ‘Automatic Login’. Windows only has this in netplwiz."
+  },
+  {
+   "area": "Accounts › Other users",
+   "function": "EN “Other users” / NL “Andere gebruikers”: “Add other user” / “Een andere gebruiker toevoegen” with “Add account” / “Account toevoegen” → local flow “Create a user for this PC” / “Een gebruiker voor deze pc maken”: “User name” / “Gebruikersnaam”, “Enter password” / “Wachtwoord invoeren”, “Re-enter password” / “Wachtwoord opnieuw invoeren”, then security questions",
+   "control": "dialog",
+   "backing": "org.freedesktop.Accounts CreateUser(name, realname, accountType) then User.SetPassword or SetPasswordMode(2 = set at next login) (polkit org.freedesktop.accounts.user-administration)",
+   "notes": "GNOME ‘Add User’: Full Name, Username (lower case, digits, - and _), Administrator switch, ‘User sets password on first login’ / ‘Set password now’. Replace the security questions with the password hint."
+  },
+  {
+   "area": "Accounts › Other users",
+   "function": "Per-user expander: “Account options” / “Accountopties” with “Change account type” / “Accounttype wijzigen” → dialog Administrator / Standard User (Administrator / Standaardgebruiker), “OK”; “Account and data” / “Account en gegevens” with “Remove” / “Verwijderen” → “Delete account and data?” / “Account en gegevens verwijderen?” with “Delete account and data” / “Account en gegevens verwijderen”",
+   "control": "dialog",
+   "backing": "User.SetAccountType(0 standard | 1 admin); Accounts.DeleteUser(uid, removeFiles) (polkit user-administration)",
+   "notes": "GNOME offers ‘Delete Files’ / ‘Keep Files’; Windows always deletes, so use removeFiles=true with a clear irreversible warning. GNOME also lets an admin reset passwords, set automatic login per user and see Account Activity (login history)."
+  },
+  {
+   "area": "Accounts › Other users",
+   "function": "“Set up a kiosk” / “Een kiosk instellen” with “Get started”",
+   "control": "button",
+   "backing": "none",
+   "notes": "Omit."
+  },
+  {
+   "area": "Time & language",
+   "function": "Page EN “Time & language” / NL “Tijd en taal”: Date & time / Datum en tijd (“Time zones, automatic clock settings, calendar display” / “Tijdzones, automatische klokinstellingen, agendaweergave”), Language & region / Taal en regio (“Windows and some apps format dates and time based on your region”), Typing / Typen (“Spell check, autocorrect, text suggestions” / “Spellingcontrole, automatisch corrigeren, tekstsuggesties”), Speech / Spraak (“Speech language, speech recognition microphone setup, voices”)",
+   "control": "info",
+   "backing": "registry.rs",
+   "notes": "GNOME 50 groups these under System (Region & Language, Date & Time) and Keyboard."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Clock header (time, date, region); toggle EN “Set time automatically” / NL “Tijd automatisch instellen”",
+   "control": "toggle",
+   "backing": "org.freedesktop.timedate1 SetNTP(b, interactive) (polkit org.freedesktop.timedate1.set-ntp); properties NTP, NTPSynchronized; host system.time",
+   "notes": "GNOME ‘Automatic Date & Time: Requires internet access’."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Toggle EN “Set time zone automatically” / NL “Tijdzone automatisch instellen”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.datetime automatic-timezone (b, false) (gsd-datetime uses geoclue, then timedate1 SetTimezone)",
+   "notes": "GNOME ‘Automatic Time Zone: Requires location services enabled and internet access’. Disable it, with that hint, when org.gnome.system.location enabled is false."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Row EN “Set the date and time manually” / NL “De datum en tijd handmatig instellen” with “Change” / “Wijzigen” → dialog “Change date and time” / “Datum en tijd wijzigen” (Date / Datum, Time / Tijd, “Change” / “Wijzigen”, “Cancel” / “Annuleren”)",
+   "control": "dialog",
+   "backing": "timedate1 SetTime(usec_utc, relative=false, interactive) (polkit org.freedesktop.timedate1.set-time); only while NTP is off",
+   "notes": "GNOME ‘Date & Time’ dialog (Year/Month/Day, Hour/Minute)."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Dropdown EN “Time zone” / NL “Tijdzone”, e.g. “(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna” / “(UTC+01:00) Amsterdam, Berlijn, Bern, Rome, Stockholm, Wenen”",
+   "control": "dropdown",
+   "backing": "timedate1 SetTimezone(IANA id, interactive) (polkit org.freedesktop.timedate1.set-timezone); ListTimezones() or tzdata",
+   "notes": "GNOME ‘Time Zone’ dialog (‘Search cities’). Windows-style grouped labels need a Windows↔IANA mapping table (CLDR windowsZones) shipped as WinPoint data; a city search is a fine fallback."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Toggle EN “Adjust for daylight saving time automatically” / NL “Automatisch aanpassen aan zomertijd”",
+   "control": "toggle",
+   "backing": "none (tzdata always applies DST)",
+   "notes": "Show on and disabled, or omit. A hidden extra could expose timedate1 SetLocalRTC (polkit set-local-rtc) for Windows dual-boot."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Toggles EN “Show time and date in the system tray” / NL “Tijd en datum weergeven in het systeemvak” and “Show seconds in system tray clock” / “Seconden weergeven in de klok in het systeemvak” (24H2+; nl unverified)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-date (b, true), clock-show-seconds (b, false); WinPoint tray clock reads them",
+   "notes": "GNOME ‘Clock & Calendar: Date, Seconds’. Add “Weekdag weergeven” → clock-show-weekday (b, false) and “Weeknummers weergeven in de agenda” → org.gnome.desktop.calendar show-weekdate (b, false), both GNOME extras."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Section “Additional settings” / “Aanvullende instellingen”: “Sync now” / “Nu synchroniseren” (“Last successful time synchronisation: …”, “Time server: …”); “Show additional calendars in the taskbar” / “Aanvullende agenda’s weergeven op de taakbalk”",
+   "control": "button",
+   "backing": "Server info: org.freedesktop.timesync1 ServerName / NTPMessage. Sync now: SetNTP false then true, or systemd1 RestartUnit systemd-timesyncd (polkit org.freedesktop.systemd1.manage-units)",
+   "notes": "Changing the server needs root config: omit. Additional calendars: omit. en-US: synchronization."
+  },
+  {
+   "area": "Time & language › Date & time",
+   "function": "Related “Additional clocks” / “Extra klokken” → dialog (two clocks: “Show this clock” / “Deze klok weergeven”, time zone, “Enter display name” / “Weergavenaam invoeren”)",
+   "control": "dialog",
+   "backing": "org.gnome.shell.world-clocks locations (av of serialised GWeather locations; libgweather4 is GLib-only)",
+   "notes": "GNOME manages these via the Clocks app; the Shell calendar shows them."
+  },
+  {
+   "area": "Time & language › Language & region",
+   "function": "Section EN “Language” / NL “Taal”: dropdown “Windows display language” / “Weergavetaal van Windows” (“Windows features like Settings and File Explorer will appear in this language”); after a change “Windows needs to sign you out to apply your new display language” with “Sign out” / “Afmelden”",
+   "control": "dropdown",
+   "backing": "org.freedesktop.Accounts.User SetLanguage(locale) (polkit change-own-user-data); applies at next sign-in",
+   "notes": "GNOME Region ‘Your Account: Language’ plus the restart banner. kit::t picks nl/en from the session locale."
+  },
+  {
+   "area": "Time & language › Language & region",
+   "function": "“Preferred languages” / “Voorkeurstalen” with “Add a language” / “Een taal toevoegen” (‘Choose a language to install’); per language ⋯: “Move up” / “Omhoog”, “Move down” / “Omlaag”, “Language options” / “Taalopties”, “Remove” / “Verwijderen”",
+   "control": "list",
+   "backing": "Language packs: Ubuntu com.ubuntu.LanguageSelector system D-Bus service (polkit com.ubuntu.languageselector.setsystemdefaultlanguage) or PackageKit InstallPackages (polkit org.freedesktop.packagekit.package-install) driven by /usr/share/language-selector data",
+   "notes": "g-c-c launches gnome-language-selector (GTK 3/Python), and check-language-support is Python too, so neither may run inside WinPoint. AccountsService keeps a single language, not a priority list."
+  },
+  {
+   "area": "Time & language › Language & region › Language options",
+   "function": "EN “Language options” / NL “Taalopties”: “Keyboards” / “Toetsenborden”: “Installed keyboards” / “Geïnstalleerde toetsenborden” with “Add a keyboard” / “Een toetsenbord toevoegen” (e.g. “United States-International” / “Verenigde Staten (internationaal)”); per keyboard ⋯ “Remove” / “Verwijderen”",
+   "control": "list",
+   "backing": "org.gnome.desktop.input-sources sources (a(ss), e.g. [('xkb','us+intl'), ('ibus','<engine>')]); layouts from xkeyboard-config evdev.xml or libxkbregistry; ibus engines via IBus ListEngines",
+   "notes": "GNOME Keyboard ‘Input Sources’, ‘Add Input Source’ (search languages and countries), row menu Move Up/Down, Preferences (ibus setup), View Keyboard Layout, Remove. Add ‘Indeling weergeven’ (layout preview) to ⋯."
+  },
+  {
+   "area": "Time & language › Language & region",
+   "function": "Section EN “Region” / NL “Regio”: dropdown “Country or region” / “Land of regio”; dropdown “Regional format” / “Regionale notatie” (“Recommended [Dutch (Netherlands)]”), expanding to Calendar / Agenda, First day of week / Eerste dag van de week, Short date / Korte datum, Long date / Lange datum, Short time / Korte tijd, Long time / Lange tijd, with “Change formats” / “Notaties wijzigen”",
+   "control": "dropdown",
+   "backing": "Regional format: org.gnome.system.locale region (s, '' = follow language, e.g. 'nl_NL.UTF-8'); applies after sign-out. Country: none",
+   "notes": "GNOME ‘Formats’ chooser with preview (Dates, Times, Numbers, Measurement, Paper). Country: omit or keep in WinPoint only."
+  },
+  {
+   "area": "Time & language › Language & region › Change formats",
+   "function": "EN “Change formats” / NL “Notaties wijzigen”: dropdowns “Calendar” / “Agenda”, “First day of week” / “Eerste dag van de week”, “Short date”, “Long date”, “Short time” / “Korte tijd”, “Long time” / “Lange tijd” (HH:mm / H:mm / hh:mm tt / h:mm tt)",
+   "control": "dropdown",
+   "backing": "First day: org.gnome.desktop.calendar week-start-day (enum default|monday…sunday). Time: org.gnome.desktop.interface clock-format (enum 24h|12h). Dates: locale-defined (read-only)",
+   "notes": "GNOME ‘First Day of the Week’ and ‘Time Format: 24-hour / AM/PM’. Linux has no per-field date patterns, so date dropdowns are info only."
+  },
+  {
+   "area": "Time & language › Language & region",
+   "function": "Related “Administrative language settings” / “Beheerinstellingen voor taal” → Region dialog, Administrative tab: “Welcome screen and new user accounts” with “Copy settings…” / “Instellingen kopiëren…” (checkboxes “Welcome screen and system accounts” / “Welkomstscherm en systeemaccounts”, “New user accounts” / “Nieuwe gebruikersaccounts”); “Change system locale…” / “Landinstelling van systeem wijzigen…”",
+   "control": "dialog",
+   "backing": "org.freedesktop.locale1 SetLocale(['LANG=…','LC_TIME=…'], interactive) (polkit org.freedesktop.locale1.set-locale); SetX11Keyboard / SetVConsoleKeyboard (polkit org.freedesktop.locale1.set-keyboard; g-c-c uses org.gnome.controlcenter.set-keyboard)",
+   "notes": "GNOME Region ‘Login Screen’ section (Language, Formats, keyboard) behind unlock."
+  },
+  {
+   "area": "Time & language › Typing",
+   "function": "EN “Typing” / NL “Typen”: “Spelling”: “Autocorrect misspelled words” / “Verkeerd gespelde woorden automatisch corrigeren”, “Highlight misspelled words” / “Verkeerd gespelde woorden markeren”; “Show text suggestions when typing on the physical keyboard”, “Multilingual text suggestions”; “Typing insights” / “Typinzichten”",
+   "control": "toggle",
+   "backing": "none (GTK 4 has no global spell check)",
+   "notes": "Omit."
+  },
+  {
+   "area": "Time & language › Typing",
+   "function": "Expander EN “Touch keyboard” / NL “Aanraaktoetsenbord”: “Show the touch keyboard” / “Het aanraaktoetsenbord weergeven”: Never / When no keyboard attached / Always (Nooit / Als er geen toetsenbord is aangesloten / Altijd)",
+   "control": "dropdown",
+   "backing": "Always = org.gnome.desktop.a11y.applications screen-keyboard-enabled (b) true; When no keyboard = false (GNOME Shell auto-shows on touch input)",
+   "notes": "‘Never’ is not possible in GNOME, so offer only two values."
+  },
+  {
+   "area": "Time & language › Typing › Advanced keyboard settings",
+   "function": "EN “Advanced keyboard settings” / NL “Geavanceerde toetsenbordinstellingen”: dropdown “Override for default input method” / “Standaardinvoermethode overschrijven” (“Use language list (recommended)” / “Taallijst gebruiken (aanbevolen)”); “Switching input methods” / “Schakelen tussen invoermethoden”: “Let me use a different input method for each app window” / “Voor elk app-venster een andere invoermethode gebruiken”; “Use the desktop language bar when it’s available”; “Language bar options”; link “Input language hot keys” / “Sneltoetsen voor invoertaal”",
+   "control": "toggle",
+   "backing": "Default = first entry of org.gnome.desktop.input-sources sources; per-window (b, false)",
+   "notes": "GNOME ‘Input Source Switching: Use the same source for all windows / Switch input sources individually for each window’. Language bar items: omit (the WinPoint tray shows the input indicator)."
+  },
+  {
+   "area": "Time & language › Typing › Advanced keyboard settings",
+   "function": "Dialog “Text Services and Input Languages”, tab “Advanced Key Settings” / “Geavanceerde toetsinstellingen”: “Between input languages” / “Tussen invoertalen” with “Change Key Sequence…” / “Toetsenreeks wijzigen…” (Ctrl+Shift / Left Alt+Shift / Grave accent / Not assigned); “To turn off Caps Lock”: Press the CAPS LOCK key / Press the SHIFT key",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.wm.keybindings switch-input-source / switch-input-source-backward (as, default ['<Super>space','XF86Keyboard']); Caps behaviour via org.gnome.desktop.input-sources xkb-options ('caps:…', 'shift:breaks_caps')",
+   "notes": "Prefer wm.keybindings over xkb 'grp:' options, which bypass GNOME’s input-source handling."
+  },
+  {
+   "area": "Time & language › Typing › Advanced keyboard settings",
+   "function": "WinPoint addition from GNOME: section “Speciale tekens invoeren” / “Special character entry”: dropdowns “Toets voor alternatieve tekens” / “Alternate characters key” (AltGr) and “Samenstellingstoets” / “Compose key”",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.input-sources xkb-options (as): 'lv3:ralt_switch', 'lv3:lalt_switch', 'lv3:menu_switch', 'lv3:rwin_switch'…; 'compose:ralt', 'compose:rctrl', 'compose:caps', 'compose:menu', 'compose:prsc', 'compose:rwin'…",
+   "notes": "GNOME Keyboard ‘Special Character Entry’. Windows has nothing similar (only US-International dead keys)."
+  },
+  {
+   "area": "Time & language › Typing › Advanced keyboard settings",
+   "function": "WinPoint addition from GNOME: sub-page “Sneltoetsen” / “Keyboard shortcuts” (categories Toegankelijkheid, Starters, Navigatie, Schermafbeeldingen, Geluid en media, Systeem, Typen, Vensters, Aangepaste sneltoetsen; per row “Sneltoets opnieuw instellen”)",
+   "control": "list",
+   "backing": "org.gnome.desktop.wm.keybindings, org.gnome.mutter.keybindings, org.gnome.mutter.wayland.keybindings, org.gnome.shell.keybindings, org.gnome.settings-daemon.plugins.media-keys; custom = custom-keybindings (as) + relocatable org.gnome.settings-daemon.plugins.media-keys.custom-keybinding at /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/customN/ (name, binding, command)",
+   "notes": "GNOME ‘View and Customize Shortcuts’. Windows has no editor. Show WinPoint’s own Win-key shortcuts as read-only and flag conflicts."
+  },
+  {
+   "area": "Time & language › Typing › Advanced keyboard settings",
+   "function": "WinPoint native version of the classic dialog “Keyboard Properties” / “Eigenschappen van Toetsenbord”: “Character repeat” / “Tekenherhaling”: slider “Repeat delay” / “Vertraging voor herhalen” (Long–Short), slider “Repeat rate” / “Herhalingssnelheid” (Slow–Fast), test box “Click here and hold down a key to test repeat rate”; slider “Cursor blink rate” / “Knippersnelheid van cursor” (None–Fast)",
+   "control": "dialog",
+   "backing": "org.gnome.desktop.peripherals.keyboard repeat (b, true), delay (u ms, 500), repeat-interval (u ms, 30); org.gnome.desktop.interface cursor-blink (b), cursor-blink-time (i 100..2500, 1200)",
+   "notes": "GNOME Accessibility › Typing ‘Repeat Keys’ (Speed, Delay) and ‘Cursor Blinking’ (Blink Speed, Test Entry). Windows 11 has these only in main.cpl."
+  },
+  {
+   "area": "Time & language › Speech",
+   "function": "EN “Speech” / NL “Spraak”: “Speech language” / “Spraaktaal”; “Recognise non-native accents for this language”; “Microphone” with “Get started” / “Aan de slag”; “Voices” / “Stemmen”: “Choose a voice” / “Een stem kiezen”, “Voice speed” / “Spraaksnelheid”, “Listen to voice sample” / “Naar een stemvoorbeeld luisteren”, “Add voices” / “Stemmen toevoegen”",
+   "control": "dropdown",
+   "backing": "speech-dispatcher (installed): voices via libspeechd; user defaults in ~/.config/speech-dispatcher/speechd.conf (DefaultVoiceType, DefaultLanguage, DefaultRate, DefaultModule)",
+   "notes": "No GNOME panel. Speech recognition: omit. Low priority: put the voice controls under Narrator."
+  },
+  {
+   "area": "Accessibility",
+   "function": "Page EN “Accessibility” / NL “Toegankelijkheid”. Vision / Zicht: Text size / Tekstgrootte, Visual effects / Visuele effecten (“Scroll bars, transparency, animations, notification timeout”), Mouse pointer and touch / Muisaanwijzer en aanraken, Text cursor / Tekstcursor, Magnifier / Vergrootglas, Colour filters / Kleurfilters, Contrast themes / Contrastthema’s, Narrator / Verteller. Hearing / Gehoor: Audio / Audio, Captions / Ondertiteling. Interaction / Interactie: Speech / Spraak, Keyboard / Toetsenbord, Mouse / Muis, Eye control / Oogbesturing",
+   "control": "info",
+   "backing": "registry.rs",
+   "notes": "Captions, Speech (voice access) and Eye control: omit. nl ‘Kleurfilters’ vs ‘Kleurenfilters’ unverified."
+  },
+  {
+   "area": "Accessibility",
+   "function": "WinPoint addition at the bottom of the page: toggle “Toegankelijkheidsmenu altijd weergeven” / “Always show accessibility menu”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y always-show-universal-access-status (b, false)",
+   "notes": "GNOME ‘Always Show Accessibility Menu: Display the accessibility menu in the top bar’. Only useful if the WinPoint tray or Quick settings honour it."
+  },
+  {
+   "area": "Accessibility › Text size",
+   "function": "EN “Text size” / NL “Tekstgrootte”: preview “Text size preview” / “Voorbeeld van tekstgrootte”, slider “Text size” (100%–225%) with “Apply” / “Toepassen”",
+   "control": "slider",
+   "backing": "org.gnome.desktop.interface text-scaling-factor (d 0.5..3.0, 1.0) = percent/100",
+   "notes": "GNOME ‘Text Size’ dialog with slider and Apply (same pattern)."
+  },
+  {
+   "area": "Accessibility › Visual effects",
+   "function": "EN “Visual effects” / NL “Visuele effecten”: toggle “Always show scrollbars” / “Schuifbalken altijd weergeven”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface overlay-scrolling (b, true), inverted",
+   "notes": "GNOME ‘Always Show Scrollbars’."
+  },
+  {
+   "area": "Accessibility › Visual effects",
+   "function": "Toggle EN “Transparency effects” / NL “Transparantie-effecten”",
+   "control": "toggle",
+   "backing": "WinPoint shell (same setting as Colours)",
+   "notes": ""
+  },
+  {
+   "area": "Accessibility › Visual effects",
+   "function": "Toggle EN “Animation effects” / NL “Animatie-effecten”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.interface reduced-motion (enum no-preference|reduce): off = 'reduce'; optionally also org.gnome.desktop.interface enable-animations (b, true)",
+   "notes": "GNOME 50 ‘Reduced Motion’. Pick one mapping and write both consistently."
+  },
+  {
+   "area": "Accessibility › Visual effects",
+   "function": "Dropdown EN “Dismiss notifications after this amount of time” / NL “Meldingen sluiten na deze tijd”: 5 s / 7 s / 15 s / 30 s / 1 min / 5 min",
+   "control": "dropdown",
+   "backing": "WinPoint shell toast timeout",
+   "notes": "GNOME Shell’s timeout is fixed."
+  },
+  {
+   "area": "Accessibility › Visual effects",
+   "function": "WinPoint addition: toggle “Vormen voor aan/uit-status” / “On/off shapes” (“Vormen gebruiken om de status aan te geven, naast of in plaats van kleur”)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.interface show-status-shapes (b, false)",
+   "notes": "GNOME ‘On/Off Shapes’."
+  },
+  {
+   "area": "Accessibility › Mouse pointer and touch",
+   "function": "EN “Mouse pointer and touch” / NL “Muisaanwijzer en aanraken”: “Mouse pointer style” / “Stijl van muisaanwijzer”: White / Black / Inverted / Custom (Wit / Zwart / Omgekeerd / Aangepast) + “Recommended colours” / “Aanbevolen kleuren” + “Choose another colour” / “Een andere kleur kiezen”",
+   "control": "list",
+   "backing": "org.gnome.desktop.interface cursor-theme (s)",
+   "notes": "Needs cursor themes per style: WinPoint could install them in ~/.local/share/icons, which does not break GNOME. Inverted is not possible on Wayland."
+  },
+  {
+   "area": "Accessibility › Mouse pointer and touch",
+   "function": "Slider EN “Size” / NL “Grootte” (1–15)",
+   "control": "slider",
+   "backing": "org.gnome.desktop.interface cursor-size (i, 24)",
+   "notes": "GNOME ‘Cursor Size’ offers 24/32/48/64/96. Windows size 1 ≈ 32 px, +16 px per step; clamp to the sizes the theme provides."
+  },
+  {
+   "area": "Accessibility › Mouse pointer and touch",
+   "function": "Toggle EN “Mouse indicator” / NL “Muisaanwijzerindicator” (2025, press Ctrl to show the pointer; exact strings unverified)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface locate-pointer (b, false); org.gnome.mutter locate-pointer-key (s, 'Control_L')",
+   "notes": "GNOME ‘Locate Pointer’. Same key as the Mouse Properties checkbox."
+  },
+  {
+   "area": "Accessibility › Mouse pointer and touch",
+   "function": "Section “Touch” / “Aanraken”: “Touch indicator” / “Aanraakindicator” (“Show a circle on the screen where I touch it”), “Make the circle darker and larger” / “De cirkel donkerder en groter maken”",
+   "control": "toggle",
+   "backing": "none",
+   "notes": "Omit."
+  },
+  {
+   "area": "Accessibility › Text cursor",
+   "function": "EN “Text cursor” / NL “Tekstcursor”: toggle “Text cursor indicator” / “Indicator voor tekstcursor” (size, colours); slider “Text cursor thickness” / “Dikte van tekstcursor” (1–20) with “abc” preview",
+   "control": "slider",
+   "backing": "none (GTK’s cursor aspect ratio exists only as an X11 xsettings override)",
+   "notes": "Omit both. Use the page for the cursor-blink addition below."
+  },
+  {
+   "area": "Accessibility › Text cursor",
+   "function": "WinPoint addition: toggle “Knipperende cursor” / “Cursor blinking” and slider “Knippersnelheid” / “Blink speed”",
+   "control": "slider",
+   "backing": "org.gnome.desktop.interface cursor-blink (b, true), cursor-blink-time (i ms 100..2500, 1200)",
+   "notes": "GNOME Typing ‘Cursor Blinking’ and ‘Blink Speed’ (shared with the Keyboard Properties dialog)."
+  },
+  {
+   "area": "Accessibility › Magnifier",
+   "function": "EN “Magnifier” / NL “Vergrootglas”: toggle (“Windows logo key + Plus (+) to turn on, Windows logo key + Esc to turn off”); “Start Magnifier after sign-in” / “Vergrootglas starten na aanmelden”; “Start Magnifier before sign-in for everyone”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.applications screen-magnifier-enabled (b, false) (it persists, so after sign-in is implicit); shortcut org.gnome.settings-daemon.plugins.media-keys magnifier (['<Alt><Super>8'])",
+   "notes": "GNOME Zoom ‘Desktop Zoom’. Before sign-in = GDM (root): omit."
+  },
+  {
+   "area": "Accessibility › Magnifier",
+   "function": "“Zoom level” / “Zoomniveau” with − / + buttons; dropdown “Zoom increment” / “Zoomtoename” (25% / 50% / 100% / 150% / 200% / 400%)",
+   "control": "button",
+   "backing": "org.gnome.desktop.a11y.magnifier mag-factor (d, 2.0); zoom keys media-keys magnifier-zoom-in / magnifier-zoom-out; increment: WinPoint only",
+   "notes": "GNOME ‘Magnification Factor’. The shell’s own zoom keys use their own step."
+  },
+  {
+   "area": "Accessibility › Magnifier",
+   "function": "Toggles “Smooth edges of images and text” / “Randen van afbeeldingen en tekst afvlakken”; “Invert colours” / “Kleuren omkeren” (Ctrl+Alt+I)",
+   "control": "toggle",
+   "backing": "Smooth: none (omit). Invert: org.gnome.desktop.a11y.magnifier invert-lightness (b)",
+   "notes": "GNOME ‘Color Filters: Inverted’ (applies only inside the magnifier)."
+  },
+  {
+   "area": "Accessibility › Magnifier",
+   "function": "Dropdown EN “View” / NL “Weergave”: Docked / Full screen / Lens (Vastgemaakt / Volledig scherm / Lens; nl unverified)",
+   "control": "dropdown",
+   "backing": "screen-position (enum none|full-screen|top-half|bottom-half|left-half|right-half) + lens-mode (b): Docked = top-half, Full screen = full-screen, Lens = lens-mode true",
+   "notes": "GNOME ‘Magnifier View: Follow Mouse Cursor / Screen Area’ and ‘Screen Area: Full Screen / Top / Bottom / Left / Right Half’. Add ‘Buiten de schermranden doorgaan’ → scroll-at-edges (b)."
+  },
+  {
+   "area": "Accessibility › Magnifier",
+   "function": "Expander: “Keep the mouse pointer” / “De muisaanwijzer houden”: “Centred on the screen” / “Gecentreerd op het scherm”, “Within the edges of the screen” / “Binnen de randen van het scherm”; checkboxes “Have Magnifier follow” / “Vergrootglas laten volgen”: Mouse pointer / Muisaanwijzer, Keyboard focus / Toetsenbordfocus, Text cursor / Tekstcursor, Narrator cursor",
+   "control": "radio",
+   "backing": "mouse-tracking (enum none|centered|proportional|push): centred = 'centered', within edges = 'push' (GNOME default 'proportional'); focus-tracking and caret-tracking (same enum; 'none' when unticked)",
+   "notes": "GNOME ‘Follow Behavior: Moves with Contents / Pushes Contents Around / Remains Centered’. Narrator cursor: omit."
+  },
+  {
+   "area": "Accessibility › Magnifier",
+   "function": "WinPoint additions from GNOME: expander “Dradenkruis” / “Crosshairs” (toggle, “Over muisaanwijzer heen”, Dikte, Lengte, Kleur) and expander “Kleuraanpassing” / “Colour adjustment” (Helderheid, Contrast, Kleur)",
+   "control": "slider",
+   "backing": "show-cross-hairs (b), cross-hairs-clip (b), cross-hairs-thickness (i), cross-hairs-length (i 20..4096), cross-hairs-color (s), cross-hairs-opacity (d); brightness-red/green/blue and contrast-red/green/blue (d −1..1), color-saturation (d 0..1)",
+   "notes": "GNOME Zoom ‘Crosshairs’ and ‘Color Filters’."
+  },
+  {
+   "area": "Accessibility › Colour filters",
+   "function": "EN “Colour filters” / NL “Kleurfilters”: toggle; radios Red-green (green weak, deuteranopia) / Rood-groen (groen zwak, deuteranopie), Red-green (red weak, protanopia) / Rood-groen (rood zwak, protanopie), Blue-yellow (tritanopia) / Blauw-geel (tritanopie), Greyscale / Grijswaarden, Greyscale inverted / Omgekeerde grijswaarden, Inverted / Omgekeerd; “Keyboard shortcut for colour filters” (Windows logo key + Ctrl + C)",
+   "control": "radio",
+   "backing": "No GNOME 50 key (org.gnome.desktop.a11y.interface has none). The only route is magnifier colour effects at mag-factor 1.0 (invert-lightness, color-saturation 0) while the magnifier is on",
+   "notes": "There is no clean backing. Either omit the page or offer only Greyscale / Inverted through the magnifier route, clearly flagged. The colour-blindness filters cannot be built."
+  },
+  {
+   "area": "Accessibility › Contrast themes",
+   "function": "EN “Contrast themes” / NL “Contrastthema’s”: dropdown None / Aquatic / Desert / Dusk / Night sky (Geen / Aquatisch / Woestijn / Schemering / Nachtelijke hemel), “Apply” / “Toepassen”, “Edit” / “Bewerken”; shortcut Left Alt + Left Shift + Print Screen",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.a11y.interface high-contrast (b, false): any theme other than None = true; toggle shortcut media-keys toggle-contrast",
+   "notes": "GNOME ‘High Contrast’. GTK and libadwaita apps have one HC style; the four palettes can only colour the WinPoint shell."
+  },
+  {
+   "area": "Accessibility › Narrator",
+   "function": "EN “Narrator” / NL “Verteller”: toggle (“Windows logo key + Ctrl + Enter”); “Keyboard shortcut for Narrator” / “Sneltoets voor Verteller”; “Start Narrator after sign-in” / “Verteller starten na aanmelden”; “Start Narrator before sign-in for everyone”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.applications screen-reader-enabled (b, false) (GNOME Shell starts Orca 50.3); shortcut org.gnome.settings-daemon.plugins.media-keys screenreader (['<Alt><Super>s'])",
+   "notes": "GNOME Seeing ‘Screen Reader’. Before sign-in: omit."
+  },
+  {
+   "area": "Accessibility › Narrator",
+   "function": "Section “Narrator’s voice” / “Stem van Verteller”: “Voice” / “Stem”, “Speed” / “Snelheid”, “Pitch” / “Toonhoogte”, “Volume” / “Volume”; “Lower the volume of other apps when Narrator is speaking” / “Volume van andere apps verlagen wanneer Verteller spreekt”; “Add natural voices”",
+   "control": "slider",
+   "backing": "Orca 50 relocatable org.gnome.Orca.Voice keys family-name, family-lang, rate, pitch, volume (path per Orca profile); voices from speech-dispatcher",
+   "notes": "GNOME’s ‘Configure’ button opens Orca Preferences (Python/GTK 3), which is fine as an external app but must not run inside WinPoint. Check Orca’s settings path before writing. Lower volume and natural voices: omit."
+  },
+  {
+   "area": "Accessibility › Narrator",
+   "function": "Sections “Verbosity” / “Uitgebreidheid” (verbosity level, punctuation; “Have Narrator announce characters as I type”, “…words as I type”), “Mouse and keyboard” (“Narrator key” / “Vertellertoets”: Caps Lock / Insert), “Braille” / “Braille”",
+   "control": "dropdown",
+   "backing": "org.gnome.Orca.Speech verbosity-level, punctuation-level; org.gnome.Orca.TypingEcho key-echo, character-echo, word-echo; org.gnome.Orca.Keybindings keyboard-layout, desktop-modifier-keys / laptop-modifier-keys; org.gnome.Orca.Braille enabled",
+   "notes": "Optional subset. Everything else stays in Orca’s own preferences."
+  },
+  {
+   "area": "Accessibility › Audio",
+   "function": "EN “Audio” / NL “Audio”: toggle “Mono audio” / “Mono-audio”",
+   "control": "toggle",
+   "backing": "none",
+   "notes": "Omit (same reasons as on the Sound page)."
+  },
+  {
+   "area": "Accessibility › Audio",
+   "function": "Dropdown EN “Flash my screen during audio notifications” / NL “Mijn scherm laten knipperen tijdens audiomeldingen”: Off / Flash the title bar of the active window / Flash the active window / Flash the entire screen (Uit / De titelbalk van het actieve venster laten knipperen / Het actieve venster laten knipperen / Het hele scherm laten knipperen)",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.wm.preferences visual-bell (b, false) + visual-bell-type (enum fullscreen-flash|frame-flash): Off = false; title bar or window = frame-flash; entire screen = fullscreen-flash",
+   "notes": "GNOME Hearing ‘Visual Alerts’ and ‘Flash Area: Entire Screen / Entire Window’. Add GNOME’s ‘Test Flash’ as “Testen”. audible-bell (b, true) remains."
+  },
+  {
+   "area": "Accessibility › Audio",
+   "function": "WinPoint addition: toggle “Overversterking” / “Over-amplification” (“Volume boven 100% toestaan, met verminderde geluidskwaliteit”)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.sound allow-volume-above-100-percent (b, false)",
+   "notes": "GNOME Hearing ‘Overamplification’. The Sound page volume slider respects it."
+  },
+  {
+   "area": "Accessibility › Captions",
+   "function": "EN “Captions” / NL “Ondertiteling”: “Live captions” / “Live-ondertiteling”, “Caption style” / “Ondertitelingsstijl”",
+   "control": "toggle",
+   "backing": "none",
+   "notes": "Omit."
+  },
+  {
+   "area": "Accessibility › Keyboard",
+   "function": "EN “Keyboard” / NL “Toetsenbord”: toggle “Sticky keys” / “Plaktoetsen” (“Press one key at a time for keyboard shortcuts” / “Eén toets per keer indrukken voor sneltoetsen”); expander: “Keyboard shortcut for Sticky keys” / “Sneltoets voor Plaktoetsen” (“Press the Shift key five times…”), “Show the Sticky keys icon on the taskbar”, “Lock shortcut keys when pressed twice in a row”, “Turn off Sticky keys when two keys are pressed at the same time” / “Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt”, “Play a sound when shortcut keys are pressed and released” / “Een geluid afspelen wanneer sneltoetsen worden ingedrukt en losgelaten”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard stickykeys-enable (b), stickykeys-two-key-off (b), stickykeys-modifier-beep (b); shortcut = enable (b) ‘Enable by Keyboard’, shared by all AccessX features",
+   "notes": "GNOME Typing ‘Sticky Keys’ (‘Disable if two keys are pressed together’, ‘Beep when modifier key is pressed’). The tray icon is a WinPoint shell matter. Lock-on-twice: omit. One shared shortcut key: mirror it in the Filter and Toggle rows."
+  },
+  {
+   "area": "Accessibility › Keyboard",
+   "function": "Toggle EN “Filter keys” / NL “Filtertoetsen” (“Ignore brief or repeated keystrokes and change keyboard repeat rates”); expander: “Keyboard shortcut for Filter keys”, “Show the Filter keys icon on the taskbar”, “Beep when keys are pressed or accepted” / “Een pieptoon laten horen wanneer toetsen worden ingedrukt of geaccepteerd”, “Ignore quick keystrokes (Slow keys)” + timer, “Ignore unintended keystrokes (Bounce keys)” + timer, “Repeat keys” (delay/rate) (sub-labels and nl unverified)",
+   "control": "toggle",
+   "backing": "Slow keys: slowkeys-enable (b), slowkeys-delay (i ms 300), slowkeys-beep-press / -accept / -reject (b). Bounce keys: bouncekeys-enable (b), bouncekeys-delay (i ms 300), bouncekeys-beep-reject (b). Repeat: org.gnome.desktop.peripherals.keyboard repeat / delay / repeat-interval",
+   "notes": "GNOME splits these into ‘Slow Keys’ (Acceptance Delay, beep options) and ‘Bounce Keys’ (‘Ignore fast duplicate keypresses’). The Filter keys master = either one enabled."
+  },
+  {
+   "area": "Accessibility › Keyboard",
+   "function": "Toggle EN “Toggle keys” / NL “Wisseltoetsen” (“Play a sound whenever you press Caps lock, Num lock or Scroll lock” / “Een geluid afspelen wanneer je op Caps Lock, Num Lock of Scroll Lock drukt”) + shortcut (hold Num Lock 5 s)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard togglekeys-enable (b)",
+   "notes": "GNOME Seeing ‘Sound Keys: Beep when Num Lock or Caps Lock are turned on or off’."
+  },
+  {
+   "area": "Accessibility › Keyboard",
+   "function": "Section “On-screen keyboard, access keys and Print screen” / “Schermtoetsenbord, toegangstoetsen en Print Screen”: toggle “On-screen keyboard” / “Schermtoetsenbord” (Windows logo key + Ctrl + O); “Underline access keys” / “Toegangstoetsen onderstrepen”; “Use the Print screen key to open screen capture” / “De Print Screen-toets gebruiken om schermopname te openen”",
+   "control": "toggle",
+   "backing": "On-screen keyboard: org.gnome.desktop.a11y.applications screen-keyboard-enabled (b). Access keys: none (GTK 4 shows mnemonics on Alt). Print screen: org.gnome.shell.keybindings show-screenshot-ui (as ['Print'] / [])",
+   "notes": "GNOME Typing ‘Screen Keyboard’. Skip the Print toggle if WinPoint has its own snipping tool."
+  },
+  {
+   "area": "Accessibility › Keyboard",
+   "function": "Section “Notification preferences” / “Meldingsvoorkeuren”: “Notify me when I turn on Sticky, Filter or Toggle keys from the keyboard”; “Play a sound when I turn Sticky, Filter or Toggle keys on or off from the keyboard” / “Een geluid afspelen wanneer ik Plaktoetsen, Filtertoetsen of Wisseltoetsen via het toetsenbord in- of uitschakel”",
+   "control": "toggle",
+   "backing": "Sound: org.gnome.desktop.a11y.keyboard feature-state-change-beep (b, false); notify: none",
+   "notes": "GNOME’s AccessX timeout (timeout-enable, disable-timeout) has no Windows home: omit."
+  },
+  {
+   "area": "Accessibility › Mouse",
+   "function": "EN “Mouse” / NL “Muis”: toggle “Mouse keys” / “Muistoetsen” (“Use the numeric keypad to move the mouse pointer” / “Het numerieke toetsenblok gebruiken om de muisaanwijzer te verplaatsen”); expander: shortcut (Left Alt + Left Shift + Num Lock), “Only use mouse keys when Num lock is on”, “Show the mouse keys icon on the taskbar”, “Hold the Ctrl key to speed up and the Shift key to slow down”, sliders “Mouse keys speed” / “Snelheid van muistoetsen” and “Mouse keys acceleration” / “Versnelling van muistoetsen”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.keyboard mousekeys-enable (b), mousekeys-max-speed (i, 10), mousekeys-accel-time (i ms, 300), mousekeys-init-delay (i ms, 300); shortcut = enable",
+   "notes": "GNOME Pointing & Clicking ‘Mouse Keys’ (switch only; the sliders are extras). Num-lock-only and the Ctrl/Shift modifiers: omit."
+  },
+  {
+   "area": "Accessibility › Mouse",
+   "function": "WinPoint addition with Windows Control Panel wording: toggle “Een venster activeren door de muisaanwijzer erop te plaatsen” / “Activate a window by hovering over it with the mouse”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.wm.preferences focus-mode (enum click|sloppy|mouse): on = 'sloppy'; related org.gnome.mutter focus-change-on-pointer-rest (b; Ubuntu true), auto-raise (b), auto-raise-delay",
+   "notes": "GNOME ‘Activate Windows on Hover: Place the pointer over a window to activate it’."
+  },
+  {
+   "area": "Accessibility › Mouse",
+   "function": "WinPoint additions from GNOME Click Assist: toggle “Gesimuleerde secundaire klik” / “Simulated secondary click” (“Ingedrukt houden voor secundaire klik”) with “Acceptatievertraging”; toggle “Klikken door te zweven” / “Hover click” with “Vertraging” and “Bewegingsdrempel”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.a11y.mouse secondary-click-enabled (b), secondary-click-time (d s, 1.2); dwell-click-enabled (b), dwell-time (d s, 1.2), dwell-threshold (i px, 10), dwell-mode (enum window|gesture), click-type-window-visible (b)",
+   "notes": "GNOME ‘Simulated Secondary Click’ and ‘Hover Click’. Windows only has dwell in Eye control."
+  },
+  {
+   "area": "Privacy & security",
+   "function": "Page EN “Privacy & security” / NL “Privacy en beveiliging”. Security / Beveiliging: Windows Security / Windows-beveiliging, Find my device / Mijn apparaat zoeken, Device encryption / Apparaatversleuteling. Windows permissions / Windows-machtigingen: General / Algemeen, Speech / Spraak, Inking & typing personalisation, Diagnostics & feedback / Diagnostische gegevens en feedback, Activity history / Activiteitengeschiedenis, Search permissions / Zoekmachtigingen, Searching Windows / Windows doorzoeken. App permissions / App-machtigingen: Location / Locatie, Camera / Camera, Microphone / Microfoon, Notifications / Meldingen, Account info, Contacts, Calendar, Phone calls, Call history, Email, Tasks, Messaging, Radios, Other devices, App diagnostics, Automatic file downloads, Documents, Downloads folder, Music library, Pictures, Videos, File system, Screenshot borders, Generative AI, Presence sensing",
+   "control": "info",
+   "backing": "registry.rs",
+   "notes": "Keep Location, Camera, Microphone and Notifications. The other app permissions have no portal or GNOME equivalent: omit. Find my device, Device encryption (LUKS is chosen at install), Speech and Inking: omit."
+  },
+  {
+   "area": "Privacy & security › Windows Security",
+   "function": "Windows links to the Windows Security app (protection areas); WinPoint version: native page “Windows-beveiliging” / “Windows Security” with card “Apparaatbeveiliging” / “Device security” (HSI level, Secure Boot, TPM, security events, “Technisch rapport kopiëren”) and a link to the Ubuntu Security Center",
+   "control": "info",
+   "backing": "fwupd org.freedesktop.fwupd HostSecurityId property, GetHostSecurityAttrs, GetHostSecurityEvents (fix/undo attrs: polkit org.freedesktop.fwupd.fix-host-security-attr); Security Center = launch the desktop-security-center app if installed",
+   "notes": "GNOME Privacy ‘Device Security’ (‘Device Security is only available on physical hardware’) and ‘Security Center: Configure more security settings’."
+  },
+  {
+   "area": "Privacy & security › General",
+   "function": "EN “General” / NL “Algemeen”: toggle “Let Windows improve Start and search results by tracking app launches” / “Toestaan dat Windows Start en zoekresultaten verbetert door het starten van apps bij te houden”; others (advertising ID, language list for websites, suggested content)",
+   "control": "toggle",
+   "backing": "App launches: org.gnome.desktop.privacy remember-app-usage (b, true); others: none",
+   "notes": "Same key as Start’s ‘Show most used apps’, so keep both rows in sync. Omit the other rows."
+  },
+  {
+   "area": "Privacy & security › Diagnostics & feedback",
+   "function": "EN “Diagnostics & feedback” / NL “Diagnostische gegevens en feedback”: expander “Diagnostic data” / “Diagnostische gegevens” with toggle “Send optional diagnostic data” / “Optionele diagnostische gegevens verzenden”; “View diagnostic data” / “Diagnostische gegevens weergeven”; “Delete diagnostic data” / “Diagnostische gegevens verwijderen”; “Tailored experiences”, “Improve inking and typing”, “Feedback frequency” / “Feedbackfrequentie”",
+   "control": "toggle",
+   "backing": "Optional data ≈ Ubuntu ‘System Reporting: Send a system report every month / when upgrading’ (ubuntu-insights consent; check its storage). View ≈ ‘Show Report’",
+   "notes": "GNOME Ubuntu ‘Telemetry’ page. Tailored, inking and feedback: omit."
+  },
+  {
+   "area": "Privacy & security › Diagnostics & feedback",
+   "function": "WinPoint addition: toggle “Foutrapporten automatisch naar Canonical verzenden” / “Send error reports to Canonical automatically”",
+   "control": "toggle",
+   "backing": "System D-Bus com.ubuntu.WhoopsiePreferences (service file present) SetReportCrashes / SetAutomaticallyReport (polkit com.ubuntu.whoopsiepreferences.change); also org.gnome.desktop.privacy report-technical-problems (b, false)",
+   "notes": "GNOME Ubuntu Telemetry ‘Automatic Error Reporting’ (whoopsie and apport installed)."
+  },
+  {
+   "area": "Privacy & security › Activity history",
+   "function": "EN “Activity history” / NL “Activiteitengeschiedenis”: toggle “Store my activity history on this device” / “Mijn activiteitengeschiedenis op dit apparaat opslaan”; “Clear activity history” / “Activiteitengeschiedenis wissen” with “Clear history” / “Geschiedenis wissen”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy remember-recent-files (b, true); clear = purge GtkRecentManager (~/.local/share/recently-used.xbel); host apps.clearRecent",
+   "notes": "GNOME ‘File History & Trash: File History, Clear History…’. Add “Geschiedenis bewaren gedurende” → recent-files-max-age (i days; −1 = forever; GNOME offers 1 day, 7 days, 30 days, Forever)."
+  },
+  {
+   "area": "Privacy & security › Search permissions",
+   "function": "EN “Search permissions” / NL “Zoekmachtigingen”: “SafeSearch”; “Cloud content search” / “Zoeken naar cloudinhoud”; “History” / “Geschiedenis”: toggle “Search history on this device” / “Zoekgeschiedenis op dit apparaat” and “Clear device search history” / “Zoekgeschiedenis van apparaat wissen”; “Show search highlights” / “Zoekmarkeringen weergeven”",
+   "control": "toggle",
+   "backing": "History: WinPoint Start search (own); others: none",
+   "notes": "SafeSearch, cloud and highlights: omit."
+  },
+  {
+   "area": "Privacy & security › Search permissions",
+   "function": "WinPoint addition from GNOME Search: toggle “Zoekresultaten van apps” / “App search” (“Resultaten van apps opnemen”) and list “Zoekresultaten” (per-app switch, Omhoog/Omlaag ordering)",
+   "control": "list",
+   "backing": "org.gnome.desktop.search-providers disable-external (b, false), inverted; disabled (as), enabled (as), sort-order (as of desktop ids); providers from /usr/share/gnome-shell/search-providers/*.ini",
+   "notes": "GNOME ‘App Search’ and ‘Search Results: Results are displayed according to the list order’. This only matters if WinPoint Start queries ShellSearchProvider2; otherwise it affects only the GNOME overview."
+  },
+  {
+   "area": "Privacy & security › Searching Windows",
+   "function": "EN “Searching Windows” / NL “Windows doorzoeken”: “Find my files” / “Mijn bestanden zoeken” radios Classic / Klassiek (“Only search your libraries and desktop”) and Enhanced / Uitgebreid (“Search your entire PC, including your libraries and desktop…”); link “Customise search locations here” / “Zoeklocaties hier aanpassen”",
+   "control": "radio",
+   "backing": "Tracker: org.freedesktop.Tracker3.Miner.Files index-recursive-directories (as, &DESKTOP &DOCUMENTS &MUSIC &PICTURES &VIDEOS &DOWNLOAD…), index-single-directories (as ['$HOME']); Enhanced = add '$HOME' to the recursive list. WinPoint index: host index.locations / index.setRoots",
+   "notes": "GNOME ‘Search Locations: Default / Bookmarked / Custom Locations, Add Location’. Decide whether Start uses Tracker or WinPoint’s own index, then wire the page to that one."
+  },
+  {
+   "area": "Privacy & security › Searching Windows",
+   "function": "“Exclude folders from enhanced search” / “Mappen uitsluiten van uitgebreid zoeken” with “Add an excluded folder” / “Een uitgesloten map toevoegen”; info “Indexing status” / “Indexeringsstatus” (indexed N items, pending)",
+   "control": "list",
+   "backing": "Tracker ignored-directories (as) / ignored-directories-with-content; status via org.freedesktop.Tracker3.Miner (Progress, Status) or host index.status",
+   "notes": ""
+  },
+  {
+   "area": "Privacy & security › Searching Windows",
+   "function": "Toggle EN “Respect power settings when indexing” / NL “Energie-instellingen respecteren tijdens indexeren”; link “Advanced indexing options” / “Geavanceerde indexeringsopties” (dialog with “Rebuild” / “Opnieuw opbouwen”)",
+   "control": "toggle",
+   "backing": "Tracker index-on-battery (b), inverted (and index-on-battery-first-time); rebuild = host index.rebuild; extra checkbox “Verwisselbare apparaten indexeren” → index-removable-devices (b)",
+   "notes": "GNOME has no UI for these Tracker keys."
+  },
+  {
+   "area": "Privacy & security › Location",
+   "function": "EN “Location” / NL “Locatie”: toggle “Location services” / “Locatieservices” (nl unverified)",
+   "control": "toggle",
+   "backing": "org.gnome.system.location enabled (b, false)",
+   "notes": "GNOME ‘Automatic Device Location: Use sources like GPS and cellular to determine device location’ (geoclue 2.7)."
+  },
+  {
+   "area": "Privacy & security › Location",
+   "function": "Toggle EN “Let apps access your location” / NL “Apps toegang geven tot je locatie” with per-app list; “Let desktop apps access your location” / “Desktop-apps toegang geven tot je locatie”",
+   "control": "list",
+   "backing": "PermissionStore table 'location' id 'location' (per app: [accuracy, timestamp]) via org.freedesktop.impl.portal.PermissionStore; desktop apps: none (they talk to geoclue directly)",
+   "notes": "GNOME ‘Permitted Apps’ (‘No sandboxed apps have asked for location access’). Show the desktop-apps row as info only."
+  },
+  {
+   "area": "Privacy & security › Location",
+   "function": "“Notify when apps request location” / “Melden wanneer apps locatie aanvragen”; “Default location” / “Standaardlocatie” with “Set default” / “Standaard instellen”; “Location history” / “Locatiegeschiedenis” with “Clear” / “Wissen”; “Recent activity” / “Recente activiteit”",
+   "control": "button",
+   "backing": "none",
+   "notes": "Omit (GNOME Shell shows its own location indicator). max-accuracy-level (enum country…exact) is not in GNOME’s UI either."
+  },
+  {
+   "area": "Privacy & security › Camera",
+   "function": "EN “Camera” / NL “Camera”: toggle “Camera access” / “Cameratoegang” (“Anyone using this device can choose if their apps have camera access when this is on”); “Let apps access your camera” / “Apps toegang geven tot je camera” with per-app list; “Let desktop apps access your camera” / “Desktop-apps toegang geven tot je camera”; “Recent activity”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy disable-camera (b, false), inverted; PermissionStore table 'devices' id 'camera' per app ['yes'/'no']; desktop apps: none (info)",
+   "notes": "GNOME Privacy › Cameras: ‘Camera Access: Allow permitted apps to use cameras’, ‘Permitted Apps’. Recent activity: omit."
+  },
+  {
+   "area": "Privacy & security › Microphone",
+   "function": "EN “Microphone” / NL “Microfoon”: toggle “Microphone access” / “Microfoontoegang”; “Let apps access your microphone” / “Apps toegang geven tot je microfoon” with list; “Let desktop apps access your microphone” / “Desktop-apps toegang geven tot je microfoon”",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.privacy disable-microphone (b, false), inverted; per app PermissionStore 'devices' 'microphone' (portal Device, sandboxed apps only)",
+   "notes": "GNOME 50 shows no Microphone page and enforcement is weak (only portal-using sandboxed apps). Label it honestly, or omit."
+  },
+  {
+   "area": "Privacy & security › Notifications",
+   "function": "EN “Notifications” / NL “Meldingen”: “Notification access” / “Toegang tot meldingen”, “Let apps access your notifications”",
+   "control": "toggle",
+   "backing": "none (Linux has no notification-listener API)",
+   "notes": "Omit, or link to System › Notifications."
+  }
+ ]
+}

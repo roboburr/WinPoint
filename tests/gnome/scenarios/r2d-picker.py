@@ -9,7 +9,7 @@ taskbar button of its own. Those pickers were windows of the caller's own proces
 --picker-stdio`, native/apps/explorer/src/picker.rs), a child process of the file portal (win11-file-portal,
 host/src/portal.rs and picker.rs show_native), and shell.pickFile is gone. A caller reaches it as every app does:
 GTK's file dialog asks xdg-desktop-portal's FileChooser, which the installed portal configuration
-(run/config/xdg-desktop-portal/gnome-portals.conf, scripts/file_portal.py) gives to Win11's backend. The private
+(run/config/xdg-desktop-portal/winpoint-portals.conf, scripts/file_portal.py) gives to Win11's backend. The private
 session bus activates nothing, so this starts the two portal processes itself. An unsandboxed GTK 4 app shows its
 own GtkFileChooserDialog unless GDK_DEBUG=portals (a first run of this port saw exactly that, a dialog of the
 Settings process), while a Flatpak app always asks the portal: since 14-11 the native apps set it for themselves
@@ -39,10 +39,11 @@ Settings process), while a Flatpak app always asks the portal: since 14-11 the n
 
 Run (from G), in nl and in en:
     tools/heavy.sh --min-mb 2560 --tag r2d-picker -- python3 -B tests/gnome/harness.py launch run --lang nl \\
-        --build-dir tests/build/native-release --source worktree --scenario tests/gnome/scenarios/r2d-picker.py \\
+        --build-dir tests/build/native-release --source worktree --session-mode winpoint --scenario tests/gnome/scenarios/r2d-picker.py \\
         --out tests/gnome/scenarios/r2d-picker.out/nl
 """
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -121,6 +122,8 @@ def wallpaper(h):
 
 def run(h):
     lang = h.lang
+    h.require('the WinPoint session selects its own FileChooser configuration',
+              'WinPoint' in os.environ.get('XDG_CURRENT_DESKTOP', '').split(':'))
     windows = lambda: h.eval(WINDOWS_JS) or []                                  # noqa: E731
     taskbar = lambda label: (lambda rows: {'label': label, 'rows': rows, 'buttons': buttons(rows)})(  # noqa: E731
         h.eval(BRIDGE_WINDOWS_JS % h.hm.UUID))

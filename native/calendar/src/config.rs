@@ -1,6 +1,7 @@
 //! The user's choices from ~/.config/win11-gnome/settings.json (XDG_CONFIG_HOME respected), the same file the
 //! shell and the other apps read: theme.mode (dark / light, otherwise GNOME's colour scheme), theme.accent,
-//! language ("nl" default, "en"), time.h24 and accessibility.textScale. Also the text helper `t(nl, en)` and
+//! language ("nl" default, "en"), time.h24, time.firstDayOfWeek (-1: the region's), time.weekNumbers and
+//! accessibility.textScale. Also the text helper `t(nl, en)` and
 //! the data folder (~/.local/share/win11-gnome-calendar, XDG_DATA_HOME respected).
 use gtk::{gio, glib};
 use gtk::prelude::*;
@@ -18,11 +19,27 @@ pub struct Config {
     /// theme.transparency (default on) and accessibility.highContrast: the extension's blur (backdrop.rs).
     pub transparency: bool,
     pub high_contrast: bool,
+    /// time.firstDayOfWeek 0 (Sunday) … 6; None for -1, "Standaard (regio)" (GNOME's week-start-day 'default').
+    pub first_dow: Option<u32>,
+    /// time.weekNumbers (GNOME's calendar show-weekdate, through the settings mirror); the taskbar's calendar
+    /// flyout shows them, the app's month view will.
+    #[allow(dead_code)]
+    pub week_numbers: bool,
 }
 
 impl Default for Config {
     fn default() -> Config {
-        Config { en: false, dark: true, accent: "#0078d4".into(), h24: true, text_scale: 1.0, transparency: true, high_contrast: false }
+        Config {
+            en: false,
+            dark: true,
+            accent: "#0078d4".into(),
+            h24: true,
+            text_scale: 1.0,
+            transparency: true,
+            high_contrast: false,
+            first_dow: None,
+            week_numbers: false,
+        }
     }
 }
 
@@ -73,7 +90,7 @@ pub fn load() -> Config {
         .ok()
         .and_then(|b| serde_json::from_slice(&b).ok())
         .unwrap_or(Value::Null);
-    let en = s["language"].as_str() == Some("en");
+    let en = match s["language"].as_str() { Some("en") => true, Some("system") => system_is_english(), _ => false };
     let dark = match s["theme"]["mode"].as_str() {
         Some("light") => false,
         Some("dark") => true,
@@ -84,8 +101,44 @@ pub fn load() -> Config {
     let ts = s["accessibility"]["textScale"].as_f64().filter(|v| v.is_finite() && *v > 0.0).unwrap_or(100.0);
     let transparency = s["theme"]["transparency"] != false;
     let high_contrast = s["accessibility"]["highContrast"] == true;
+    let first_dow = s["time"]["firstDayOfWeek"].as_i64().filter(|n| (0..=6).contains(n)).map(|n| n as u32);
+    let week_numbers = s["time"]["weekNumbers"] == true;
     EN.with(|e| e.set(en));
-    Config { en, dark, accent, h24, text_scale: ts.clamp(100.0, 225.0) / 100.0, transparency, high_contrast }
+    Config { en, dark, accent, h24, text_scale: ts.clamp(100.0, 225.0) / 100.0, transparency, high_contrast, first_dow, week_numbers }
+}
+
+/// settings.language "system" (settings parity, amendment 18): the session's messages language as gettext picks it
+/// (LC_ALL, LC_MESSAGES or LANG, LANGUAGE's first entry unless that is C) is anything but Dutch. As the kit's
+/// `kit::i18n::system_language` (Calendar does not link the kit).
+fn system_is_english() -> bool {
+    let var = |k: &str| std::env::var(k).ok().filter(|v| !v.is_empty());
+    let locale = ["LC_ALL", "LC_MESSAGES", "LANG"].iter().find_map(|k| var(k)).unwrap_or_default();
+    let c = locale.is_empty() || locale == "C" || locale == "POSIX" || locale.starts_with("C.");
+    let first = if c { None } else { var("LANGUAGE").and_then(|l| l.split(':').find(|s| !s.is_empty()).map(str::to_owned)) };
+    first.unwrap_or(locale).split(['_', '.', '@']).next() != Some("nl")
+}
+
+/// The region's first weekday (0 = Sunday) for "Standaard (regio)": the territory of LC_ALL, LC_TIME or LANG, as
+/// glibc's locale data has it (the shell's calendar flyout does the same, native/shell/src/flyouts/calendar.rs).
+pub fn region_first_day() -> u32 {
+    let locale = ["LC_ALL", "LC_TIME", "LANG"]
+        .iter()
+        .find_map(|v| std::env::var(v).ok().filter(|s| !s.is_empty() && s != "C" && s != "POSIX"))
+        .unwrap_or_default();
+    let territory = locale.split(['.', '@']).next().and_then(|l| l.split('_').nth(1)).unwrap_or("");
+    const SUNDAY: &[&str] = &[
+        "US", "CA", "MX", "BR", "JP", "KR", "TW", "HK", "MO", "PH", "IL", "IN", "ZA", "SA", "PE", "CO", "VE", "GT",
+        "HN", "NI", "PA", "PR", "DO", "SV", "PY", "BO", "EC", "ZW", "KE", "ET", "TH", "KH", "LA", "BS", "BZ", "JM",
+        "TT", "BD", "PK", "NP", "YE", "UM", "VI", "GU", "AS", "MH",
+    ];
+    const SATURDAY: &[&str] = &["AE", "AF", "BH", "DJ", "DZ", "EG", "IQ", "IR", "JO", "KW", "LY", "OM", "QA", "SD", "SY"];
+    if SUNDAY.contains(&territory) {
+        0
+    } else if SATURDAY.contains(&territory) {
+        6
+    } else {
+        1
+    }
 }
 
 /// GNOME's own light/dark choice (org.gnome.desktop.interface color-scheme), dark when unknown.

@@ -1,0 +1,173 @@
+# tests/i18n/windows-glossary/b0.tsv: the Windows 11 UI strings settings-parity batch B0 uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch B0
+# edits this file.
+Advanced display	Geavanceerd beeldscherm	windows	no
+Night light	Nachtlampje	glossary	yes
+Colour profile	Kleurprofiel	windows	no
+Properties	Eigenschappen	glossary	yes
+All sound devices	Alle geluidsapparaten	windows	no
+Volume mixer	Volumemixer	windows	no
+# app-notifications: Windows has “(the app name)” / “(de naam van de app)”
+App notifications	Meldingen van app	rename	yes
+# screentime: Windows has “(Microsoft Family) Screen time” / “Schermtijd”
+Screen time	Schermtijd	rename	yes
+Storage Sense	Opslaginzicht	glossary	yes
+Multitasking	Multitasking	windows	no
+Advanced	Geavanceerd	windows	no
+Remote Desktop	Extern bureaublad	windows	no
+Devices	Apparaten	windows	no
+Printers & scanners	Printers en scanners	windows	no
+Printer	Printer	windows	no
+Mouse	Muis	windows	no
+Touchpad	Touchpad	windows	no
+# pen: Windows has “Pen & Windows Ink” / “Pen en Windows Ink”
+Pen & tablet	Pen en tablet	rename	yes
+AutoPlay	Automatisch afspelen	windows	no
+USB	USB	windows	no
+Wi-Fi properties	Wi-Fi-eigenschappen	windows	no
+Manage known networks	Bekende netwerken beheren	windows	no
+Mobile network	Mobiel netwerk	windows	no
+VPN	VPN	windows	no
+Mobile hotspot	Mobiele hotspot	windows	no
+Flight mode	Vliegtuigmodus	glossary	yes
+Proxy	Proxy	windows	no
+Advanced network settings	Geavanceerde netwerkinstellingen	windows	no
+Advanced sharing settings	Geavanceerde instellingen voor delen	windows	no
+Advanced options	Geavanceerde opties	glossary	yes
+Your info	Je info	windows	no
+Email & accounts	E-mail en accounts	windows	no
+Sign-in options	Aanmeldingsopties	windows	no
+Other users	Andere gebruikers	windows	no
+Language options	Taalopties	windows	no
+Regional format	Regionale notatie	glossary	yes
+Administrative language settings	Beheerinstellingen voor taal	windows	no
+Typing	Typen	windows	no
+Advanced keyboard settings	Geavanceerde toetsenbordinstellingen	windows	no
+Keyboard shortcuts	Sneltoetsen	windows	no
+Mouse pointer and touch	Muisaanwijzer en aanraken	windows	no
+Text cursor	Tekstcursor	windows	no
+Magnifier	Vergrootglas	windows	no
+Narrator	Verteller	windows	no
+Audio	Audio	windows	no
+Keyboard	Toetsenbord	windows	no
+Mouse	Muis	windows	no
+# security: Windows has “Windows Security” / “Windows-beveiliging”
+Device security	Apparaatbeveiliging	rename	yes
+Diagnostics & feedback	Diagnostische gegevens en feedback	windows	no
+Activity history	Activiteitengeschiedenis	windows	no
+Search permissions	Zoekmachtigingen	windows	no
+# searching: Windows has “Searching Windows” / “Windows doorzoeken”
+Searching this PC	Deze pc doorzoeken	rename	yes
+Location	Locatie	windows	no
+Camera	Camera	windows	no
+Microphone	Microfoon	windows	no
+# B0 UI strings (native/apps/settings/src/gs.rs, pickers.rs, common.rs placeholder)
+Some of these settings are managed by your organisation.	Sommige van deze instellingen worden beheerd door je organisatie.	windows	no
+Save	Opslaan	glossary	yes
+Cancel	Annuleren	glossary	yes
+Press the key combination you want.	Druk op de gewenste toetsencombinatie.	winpoint	no
+This page is coming soon	Deze pagina komt binnenkort	winpoint	no
+Vision	Zicht	windows	no
+Hearing	Gehoor	windows	no
+Interaction	Interactie	windows	no
+App permissions	App-machtigingen	windows	no
+Security	Beveiliging	windows	no
+# Every other UI string B0 added (review of B0, finding 19), by file
+# extension/{display,input}Bridge.js (the stubs), launchBridge.js
+This function doesn’t exist yet: {method}	Deze functie bestaat nog niet: {method}	winpoint	no
+This program can’t be started here.	Dit programma kan hier niet worden gestart.	winpoint	no
+This program isn’t installed.	Dit programma is niet geïnstalleerd.	winpoint	no
+Unknown launch function: {method}	Onbekende startfunctie: {method}	winpoint	no
+# native/apps/settings/src/common.rs
+The settings of this page are being added right now.	De instellingen van deze pagina worden op dit moment toegevoegd.	winpoint	no
+# native/apps/settings/src/gs.rs
+WinPoint manages this setting itself.	WinPoint regelt deze instelling zelf.	winpoint	no
+# native/apps/settings/src/pages/desktopicons.rs
+Ubuntu’s desktop icons aren’t used in WinPoint. These settings apply to WinPoint’s desktop.	De bureaubladpictogrammen van Ubuntu worden in WinPoint niet gebruikt. Deze instellingen gelden voor het bureaublad van WinPoint.	winpoint	no
+# native/apps/settings/src/pages/privacy.rs
+# privacy: Windows has “Windows permissions” / “Windows-machtigingen” (as with Apparaatbeveiliging, a WinPoint group name leaves Windows out)
+Permissions	Machtigingen	rename	yes
+# native/apps/settings/src/pages/time.rs
+Default (region)	Standaard (regio)	winpoint	no
+Friday	Vrijdag	windows	no
+Thursday	Donderdag	windows	no
+Tuesday	Dinsdag	windows	no
+Wednesday	Woensdag	windows	no
+# native/apps/settings/src/pickers.rs
+Press Esc to cancel or Backspace to turn off the shortcut.	Druk op Esc om te annuleren of op Backspace om de sneltoets uit te schakelen.	winpoint	no
+This needs an administrator password.	Hiervoor is een beheerderswachtwoord nodig.	winpoint	no
+# native/apps/settings/src/registry.rs: the descriptions of the new pages (WinPoint’s own, as on the overview cards)
+A proxy server for the internet, automatic or manual	Een proxyserver voor internet, automatisch of handmatig	winpoint	no
+Accounts of other users on this PC	Accounts van andere gebruikers op deze pc	winpoint	no
+Add and connect VPN connections	VPN-verbindingen toevoegen en verbinden	winpoint	no
+Add printers and scanners, the print queue	Printers en scanners toevoegen, de afdrukwachtrij	winpoint	no
+All input and output devices, also turned-off ones	Alle invoer- en uitvoerapparaten, ook uitgeschakelde	winpoint	no
+Blinking and speed of the text cursor	Knipperen en snelheid van de tekstcursor	winpoint	no
+Camera access for apps	Cameratoegang voor apps	winpoint	no
+Clean up temporary files and the Recycle Bin automatically	Tijdelijke bestanden en de Prullenbak automatisch opruimen	winpoint	no
+Colour profiles of displays and printers, calibrate	Kleurprofielen van beeldschermen en printers, kalibreren	winpoint	no
+Connection, IP assignment and security of a network	Verbinding, IP-toewijzing en beveiliging van een netwerk	winpoint	no
+Control this PC remotely	Deze pc op afstand bedienen	winpoint	no
+Dates, times, numbers and the first day of the week	Datums, tijden, getallen en de eerste dag van de week	winpoint	no
+Display information and refresh rate	Beeldscherminformatie en vernieuwingsfrequentie	winpoint	no
+Drawing tablet, pen buttons and pen pressure	Tekentablet, penknoppen en pendruk	winpoint	no
+Error reports and system reports for Canonical	Foutrapporten en systeemrapporten voor Canonical	winpoint	no
+Flash the screen for sounds, volume	Het scherm laten knipperen bij geluiden, volume	winpoint	no
+For developers: OpenSSH server and optional features	Voor ontwikkelaars: OpenSSH-server en optionele functies	winpoint	no
+Forget or add saved Wi-Fi networks	Opgeslagen Wi-Fi-netwerken vergeten of toevoegen	winpoint	no
+Format, port, balance and test of a sound device	Indeling, poort, balans en testen van een geluidsapparaat	winpoint	no
+How long you use this PC, limits and breaks	Hoe lang je deze pc gebruikt, limieten en pauzes	winpoint	no
+Input method, character repeat, Windows key	Invoermethode, tekenherhaling, Windows-toets	winpoint	no
+Keep track of recent files and clear them	Recente bestanden bijhouden en wissen	winpoint	no
+Keyboards and input methods	Toetsenborden en invoermethoden	winpoint	no
+Language and formats of the sign-in screen	Taal en notaties van het aanmeldingsscherm	winpoint	no
+Location services and apps that use your location	Locatieservices en apps die je locatie gebruiken	winpoint	no
+Media streaming and sharing on the network	Mediastreaming en delen op het netwerk	winpoint	no
+Microphone access for apps	Microfoontoegang voor apps	winpoint	no
+Mouse keys, double-click, hover click	Muistoetsen, dubbelklikken, klikken door te zweven	winpoint	no
+Network adapters and connectivity checking	Netwerkadapters en controle op internetverbinding	winpoint	no
+Notifications, banners and sound of one app	Meldingen, banners en geluid van één app	winpoint	no
+Online accounts for email, calendar and contacts	Online accounts voor e-mail, agenda en contactpersonen	winpoint	no
+Paired devices, connect and remove	Gekoppelde apparaten, verbinden en verwijderen	winpoint	no
+Password, fingerprint, automatic sign-in, lock	Wachtwoord, vingerafdruk, automatisch aanmelden, vergrendelen	winpoint	no
+Permissions, storage and default links of an app	Machtigingen, opslag en standaardkoppelingen van een app	winpoint	no
+Primary mouse button, pointer speed, scrolling	Primaire muisknop, aanwijzersnelheid, schuiven	winpoint	no
+Queue, preferences and properties of a printer	Wachtrij, voorkeuren en eigenschappen van een printer	winpoint	no
+SIM card, mobile data, roaming and APN	Simkaart, mobiele gegevens, roaming en APN	winpoint	no
+Screen reader that reads out what’s on the screen	Schermlezer die voorleest wat er op het scherm staat	winpoint	no
+Search results from apps in the overview	Zoekresultaten van apps in het overzicht	winpoint	no
+Security level of the device and Secure Boot	Beveiligingsniveau van het apparaat en Beveiligd opstarten	winpoint	no
+Share your internet connection with other devices	Je internetverbinding delen met andere apparaten	winpoint	no
+Size and visibility of the mouse pointer	Grootte en zichtbaarheid van de muisaanwijzer	winpoint	no
+Snap windows, virtual desktops, Alt+Tab	Vensters uitlijnen, virtuele bureaubladen, Alt+Tab	winpoint	no
+Sticky keys, filter keys, toggle keys	Plaktoetsen, filtertoetsen, wisseltoetsen	winpoint	no
+Stop all wireless communication	Alle draadloze communicatie stoppen	winpoint	no
+Taps, scroll and zoom, cursor speed	Tikken, schuiven en zoomen, cursorsnelheid	winpoint	no
+Touch keyboard, keyboard settings and keyboard shortcuts	Aanraaktoetsenbord, toetsenbordinstellingen en sneltoetsen	winpoint	no
+USB4 and Thunderbolt devices	USB4- en Thunderbolt-apparaten	winpoint	no
+View and change keyboard shortcuts, custom shortcuts	Sneltoetsen bekijken en wijzigen, aangepaste sneltoetsen	winpoint	no
+Volume per app and system sounds	Volume per app en systeemgeluiden	winpoint	no
+Warmer colours in the evening, schedule and strength	Warmere kleuren in de avond, planning en sterkte	winpoint	no
+What happens when you insert a USB drive or CD	Wat er gebeurt als je een usb-stick of cd plaatst	winpoint	no
+Which folders are indexed for search	Welke mappen worden geïndexeerd voor zoeken	winpoint	no
+Your picture and your name	Je foto en je naam	winpoint	no
+Zoom in on parts of the screen	Delen van het scherm vergroten	winpoint	no
+# host/i18n/core.tsv (system/common.rs call_interactive) and host/i18n/gsettings.tsv: the host’s messages of B0
+You don’t have permission to change this.	Je hebt geen toestemming om dit te wijzigen.	winpoint	no
+No password was entered. Nothing was changed.	Er is geen wachtwoord ingevoerd. Er is niets gewijzigd.	winpoint	no
+That didn’t work: {error}	Dat lukte niet: {error}	winpoint	no
+WinPoint can’t change this setting.	Deze instelling kan WinPoint niet wijzigen.	winpoint	no
+This setting can only be viewed here.	Deze instelling kan hier alleen worden bekeken.	winpoint	no
+This setting is changed somewhere else.	Deze instelling wordt op een andere plek gewijzigd.	winpoint	no
+WinPoint already uses this shortcut.	Deze sneltoets wordt al door WinPoint gebruikt.	winpoint	no
+This setting is managed by your organisation.	Deze instelling wordt beheerd door je organisatie.	winpoint	no
+This value isn’t valid for this setting.	Deze waarde is niet geldig voor deze instelling.	winpoint	no
+Invalid input.	Ongeldige invoer.	winpoint	no
+This setting isn’t available on this computer.	Deze instelling is op deze computer niet beschikbaar.	winpoint	no
+The setting couldn’t be saved.	De instelling kon niet worden opgeslagen.	winpoint	no
+The setting wasn’t applied.	De instelling is niet overgenomen.	winpoint	no

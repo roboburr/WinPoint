@@ -119,6 +119,16 @@ fn valid_color(spec: &str) -> bool {
         })
 }
 
+/// The file of `path` in dark mode: `wallpaper.pathDark` when it is set, the picture follows the mode and `path` is
+/// no built-in (Instellingen › Achtergrond writes both files of a GNOME pair, and clears pathDark for any other
+/// choice), else `path` itself.
+fn dark_file<'a>(wallpaper: &'a Value, path: &'a str, follow: bool) -> &'a str {
+    match wallpaper["pathDark"].as_str() {
+        Some(dark) if follow && !dark.is_empty() && !path.starts_with("builtin:") => dark,
+        _ => path,
+    }
+}
+
 fn target(settings: &Value, ui: &Path) -> Result<Background, String> {
     let wallpaper = &settings["wallpaper"];
     let color = wallpaper["color"].as_str().unwrap_or("#0b2a4a");
@@ -140,16 +150,23 @@ fn target(settings: &Value, ui: &Path) -> Result<Background, String> {
         .unwrap_or("builtin:lotus-dark");
     let follow = wallpaper["followTheme"] != false;
     let mode = settings["theme"]["mode"].as_str().unwrap_or("dark");
+    // A light and dark pair (GNOME's catalogue): `path` is the light file, `pathDark` the dark one; only while the
+    // picture follows the mode, and never for a built-in, whose twin is its own (an empty pathDark: today's rule)
+    let dark_path = dark_file(wallpaper, path, follow);
     // Explicit Win11 choices work even with system-theme sync off. Automatic mode
     // uses both URI keys so GNOME follows its own light/dark mode immediately.
     let (light, dark) = match mode {
-        "light" | "dark" => {
+        "light" => {
             let uri = image(path, mode, follow, ui)?;
+            (uri.clone(), uri)
+        }
+        "dark" => {
+            let uri = image(dark_path, mode, follow, ui)?;
             (uri.clone(), uri)
         }
         _ => (
             image(path, "light", follow, ui)?,
-            image(path, "dark", follow, ui)?,
+            image(dark_path, "dark", follow, ui)?,
         ),
     };
     let fit = match wallpaper["fit"].as_str().unwrap_or("fill") {
@@ -256,6 +273,53 @@ mod tests {
         .unwrap();
         assert!(auto.light.ends_with("flow-light.svg"));
         assert!(auto.dark.ends_with("flow-dark.svg"));
+        fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn a_light_and_dark_pair_gives_gnome_its_dark_file() {
+        let root = fixture();
+        let (light, dark) = (root.join("pair-l.png"), root.join("pair-d.png"));
+        fs::write(&light, b"l").unwrap();
+        fs::write(&dark, b"d").unwrap();
+        let uri = |p: &Path| gio::File::for_path(p).uri().to_string();
+        let pair = |mode: &str, follow: bool| {
+            json!({"theme": {"mode": mode}, "wallpaper": {"path": light.to_str().unwrap(),
+                "pathDark": dark.to_str().unwrap(), "followTheme": follow}})
+        };
+        // GNOME's picture-uri-dark is the dark file, picture-uri the light one (the mode set: both keys that file)
+        let auto = target(&pair("system", true), &root).unwrap();
+        assert_eq!(
+            (auto.light.clone(), auto.dark.clone()),
+            (uri(&light), uri(&dark))
+        );
+        let night = target(&pair("dark", true), &root).unwrap();
+        assert_eq!((night.light, night.dark), (uri(&dark), uri(&dark)));
+        let day = target(&pair("light", true), &root).unwrap();
+        assert_eq!((day.light, day.dark), (uri(&light), uri(&light)));
+        // not following the mode: the light file in both
+        let fixed = target(&pair("system", false), &root).unwrap();
+        assert_eq!((fixed.light, fixed.dark), (uri(&light), uri(&light)));
+        // an empty pathDark, an old settings file without the key, a built-in: today's twin rule
+        for wallpaper in [
+            json!({"path": light.to_str().unwrap(), "pathDark": ""}),
+            json!({"path": light.to_str().unwrap()}),
+        ] {
+            let old = target(
+                &json!({"theme": {"mode": "system"}, "wallpaper": wallpaper}),
+                &root,
+            )
+            .unwrap();
+            assert_eq!((old.light, old.dark), (uri(&light), uri(&light)));
+        }
+        let builtin = target(
+            &json!({"theme": {"mode": "system"}, "wallpaper": {"path": "builtin:lotus-light", "pathDark": dark.to_str().unwrap()}}),
+            &root,
+        )
+        .unwrap();
+        assert!(builtin.dark.ends_with("lotus-dark.svg"), "{}", builtin.dark);
+        // a dark file that is gone is refused, as a missing light file is
+        fs::remove_file(&dark).unwrap();
+        assert!(target(&pair("system", true), &root).is_err());
         fs::remove_dir_all(root).unwrap();
     }
     #[test]

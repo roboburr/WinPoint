@@ -35,3 +35,32 @@ display.failed	Het beeldscherm kon niet worden aangepast.	Couldn’t change the 
 # set(): ApiError "unsupported": monitors can only be changed through Hyprland's IPC, which the GNOME version never has; GNOME's displays are set in Ubuntu's Settings app. Same text as the UI's Display page note (display.js displaysNA), D-G2
 #@ new
 display.unsupported	Beeldscherminstellingen wijzigen kan hier niet. Gebruik daarvoor de app Instellingen van Ubuntu.	Display settings can’t be changed here. Use Ubuntu’s Settings app instead.
+
+# --- host/src/services/display.rs, display/mutter.rs: GNOME's displays through Mutter's DisplayConfig (settings parity, notes/claude/settings-parity.md §5.5; batch D)
+# display.apply: a layout that is not {serial, method, logical: [{x, y, scale, transform, primary, monitors}]} as mutter takes it
+#@ new
+display.badConfig	Ongeldige beeldschermindeling.	Invalid display layout.
+# display.apply: mutter refused the serial: a monitor was plugged in or another program changed the layout meanwhile
+#@ new
+display.stale	De beeldschermen zijn intussen gewijzigd. Probeer het opnieuw.	Your displays changed in the meantime. Try again.
+# display.apply: ApplyMonitorsConfigAllowed is false (GNOME Settings' "Display Settings Disabled"; Windows: Beeldscherminstellingen kunnen nu niet worden gewijzigd)
+#@ new
+display.notAllowed	Beeldscherminstellingen kunnen nu niet worden gewijzigd.	Display settings can’t be changed right now.
+# display.apply: mutter's own message in {error} (e.g. "Logical monitors not adjacent")
+#@ new
+display.applyFailed	De beeldscherminstellingen konden niet worden toegepast: {error}	Couldn’t apply the display settings: {error}
+# display.apply/identify: no Mutter DisplayConfig on the session bus
+#@ new
+display.unavailable	Beeldscherminstellingen zijn hier niet beschikbaar.	Display settings aren’t available here.
+# display.identify: extension/displayBridge.js did not answer (the extension is off or not routed yet); the page then marks its own tiles
+#@ new
+display.identifyUnavailable	Beeldschermen identificeren is nu niet beschikbaar.	Identifying displays isn’t available right now.
+# display.confirm: the answer to "Deze beeldscherminstellingen behouden?" did not reach GNOME Shell (mutter reverts by itself after 20 s)
+#@ new
+display.confirmFailed	Je antwoord kon niet worden doorgegeven. De vorige beeldscherminstellingen worden zo teruggezet.	Your answer couldn’t be passed on. The previous display settings will be restored shortly.
+# display.nightLight.disableUntilTomorrow: gsd-color is not running
+#@ new
+display.nightLightUnavailable	Nachtlampje is niet beschikbaar.	Night light isn’t available.
+# display.nightLight.disableUntilTomorrow: gsd-color refused the change
+#@ new
+display.nightLightFailed	Nachtlampje kon niet worden gewijzigd.	Couldn’t change night light.

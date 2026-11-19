@@ -1,11 +1,13 @@
 //! The helpers every page uses (6ebf169f:vendor/ui/js/apps/settings/common.js), on the kit's controls: shared texts,
 //! error and dry-run toasts, controls bound to a settings path, link cards, notices, "not available" cards,
 //! colour names and maths, the wallpaper (path, twin, texture), the hero row and its tiles, the usage bar,
-//! the accent colour from the wallpaper, recently opened pages, and small layout helpers.
+//! the accent colour from the wallpaper, recently opened pages, and small layout helpers. A page with rows that depend
+//! on a caps key that hides no page reads the caps with [`caps_now`].
 use crate::pages::Page;
 use crate::widgets::Wrap;
 use kit::CallError;
-use kit::controls::{self as c, Dropdown, DropdownOption, InfoBar, SettingsCard, Severity, Toast, ToggleSwitch};
+use kit::controls::{self as c, Dropdown, DropdownOption, InfoBar, SettingsCard, SettingsGroup, Severity, Toast, ToggleSwitch};
+use kit::t;
 use gtk::gdk_pixbuf;
 use kit::prelude::*;
 use std::cell::{Cell, RefCell};
@@ -244,6 +246,117 @@ pub fn link_card_with(p: &Page, id: &str, title: Option<&str>, description: Opti
     card
 }
 
+// ------------------------------------------------------------------------------------- caps and child links
+
+thread_local! {
+    static CAPS: RefCell<Value> = const { RefCell::new(Value::Null) };
+}
+
+/// caps.get as the host reported it (notes/claude/settings-parity.md §6.2); Null until loaded.
+pub fn caps() -> Value {
+    CAPS.with(|c| c.borrow().clone())
+}
+
+/// caps.get as the host has it: Settings' cached answer, or (on a cold start, before main.rs's first caps.get has
+/// answered: contract §6.2) one of this page's own. main.rs rebuilds only overview pages when caps arrive late, so a
+/// page with a row that depends on a caps key that hides no page (usbguard, geoclue, fingerprint) asks with this,
+/// and the row is right on the page's first build.
+pub async fn caps_now(p: &Page) -> Value {
+    let cached = caps();
+    if cached.is_object() {
+        return cached;
+    }
+    p.get("caps.get", json!({})).await.filter(Value::is_object).unwrap_or(Value::Null)
+}
+
+/// Load caps.get once (main.rs at start) and follow caps.changed. `changed()` runs when the caps that arrive hide
+/// another set of pages than before: also when the first answer comes after the first page was built (caps.get
+/// probes the system bus on a cold start), whose links and search still showed every page.
+pub fn load_caps(changed: impl Fn() + 'static) {
+    let changed: Rc<dyn Fn()> = Rc::new(changed);
+    let take = move |v: Value| {
+        let before = CAPS.with(|c| caps_hidden(&c.borrow()));
+        CAPS.with(|c| *c.borrow_mut() = v);
+        if CAPS.with(|c| caps_hidden(&c.borrow())) != before {
+            changed();
+        }
+    };
+    let take = Rc::new(take);
+    let first = take.clone();
+    kit::ctx().call("caps.get", json!({}), move |r| {
+        if let Ok(v) = r
+            && v.is_object()
+        {
+            first(v);
+        }
+    });
+    kit::ctx().on("caps.changed", move |_, data| {
+        if data["caps"].is_object() {
+            take(data["caps"].clone());
+        }
+    });
+}
+
+/// The pages a caps object hides (their `needs` key is false), in registry order; none while caps are unknown.
+pub fn caps_hidden(caps: &Value) -> Vec<&'static str> {
+    if !caps.is_object() {
+        return Vec::new();
+    }
+    crate::registry::PAGES
+        .iter()
+        .filter(|p| crate::registry::needs(p.id).is_some_and(|key| caps[key] == false))
+        .map(|p| p.id)
+        .collect()
+}
+
+/// Whether a page shows caps-filtered links: an overview page (registry children), Home's recent list, the search.
+pub fn shows_caps_links(id: &str) -> bool {
+    id == "home" || id == "search" || !crate::registry::children(id).is_empty()
+}
+
+/// Whether a `needs` caps key is met. Until caps are known (or when the host has no caps.get) nothing is hidden.
+pub fn caps_ok(needs: Option<&str>) -> bool {
+    let Some(key) = needs else { return true };
+    CAPS.with(|c| {
+        let c = c.borrow();
+        !c.is_object() || c[key] != false
+    })
+}
+
+/// Whether a page is offered in navigation, child links, the search and the recent list: not a data page, and its
+/// caps key is met.
+pub fn page_visible(page: &crate::registry::PageInfo) -> bool {
+    !crate::registry::is_data(page.id) && caps_ok(crate::registry::needs(page.id))
+}
+
+/// The visible sub-pages of a page, in navigation order.
+pub fn child_ids(parent: &str) -> Vec<&'static str> {
+    crate::registry::children(parent).into_iter().filter(|p| page_visible(p)).map(|p| p.id).collect()
+}
+
+/// The link cards of a page's visible sub-pages from the registry (the overview pages' lists).
+pub fn child_links(p: &Page, parent: &str) -> SettingsGroup {
+    let group = SettingsGroup::new("", "");
+    for id in child_ids(parent) {
+        group.add(link_card(p, id).widget());
+    }
+    group
+}
+
+/// A titled group of the visible pages among `ids` (Toegankelijkheid's Zicht, Gehoor, Interactie); None when none is
+/// visible.
+pub fn links_group(p: &Page, title: &str, ids: &[&str]) -> Option<SettingsGroup> {
+    let visible: Vec<&str> = ids.iter().copied().filter(|id| crate::registry::page(id).is_some_and(page_visible)).collect();
+    if visible.is_empty() {
+        return None;
+    }
+    let group = SettingsGroup::new(title, "");
+    for id in visible {
+        group.add(link_card(p, id).widget());
+    }
+    Some(group)
+}
+
 /// A non-closable info bar explaining why something is not available (common.js notice).
 pub fn notice(message: &str) -> InfoBar {
     notice_full(Severity::Info, "", message)
@@ -286,7 +399,8 @@ pub fn value_label(text: &str) -> gtk::Label {
 /// The box with a card's title and description; extra content (a usage bar) can go below them.
 pub fn card_text_box(card: &SettingsCard) -> Option<gtk::Box> {
     let root = card.widget();
-    let inner = match root.downcast_ref::<gtk::Button>() {
+    // A clickable card may have an overlay root; its public button still owns the content row.
+    let inner = match card.button() {
         Some(b) => b.child(),
         None => root.first_child(),
     }?;
@@ -604,14 +718,24 @@ pub fn twin_for(path: &str, dark: bool, follow: bool) -> String {
     path
 }
 
-/// theme.js resolveWallpaperPath: the wallpaper path of these settings in a mode ("" for a solid colour).
+/// theme.js resolveWallpaperPath: the wallpaper path of these settings in a mode ("" for a solid colour). A light and
+/// dark pair (GNOME's catalogue) keeps its dark file in `wallpaper.pathDark`, taken in dark mode while the picture
+/// follows the mode (host/src/wallpaper.rs `dark_file`, the same rule); a built-in has its own twin ([`twin_for`]).
 pub fn resolve_wallpaper_path(s: &Value, dark: bool) -> String {
     let w = &s["wallpaper"];
     if w["type"] == "color" {
         return String::new();
     }
     let path = w["path"].as_str().filter(|p| !p.is_empty()).unwrap_or("builtin:lotus-dark");
-    twin_for(path, dark, w["followTheme"] != false)
+    let follow = w["followTheme"] != false;
+    if dark
+        && follow
+        && !path.starts_with("builtin:")
+        && let Some(dark_path) = w["pathDark"].as_str().filter(|d| !d.is_empty())
+    {
+        return dark_path.to_owned();
+    }
+    twin_for(path, dark, follow)
 }
 
 /// Where the UI's own files live (built-in wallpapers), as the shell's wallpaper.rs.
@@ -1048,14 +1172,15 @@ pub fn recent_pages() -> Vec<&'static str> {
             })
             .clone()
     });
-    list.iter().filter_map(|id| crate::registry::page(id).map(|p| p.id)).collect()
+    list.iter().filter_map(|id| crate::registry::page(id).filter(|p| page_visible(p)).map(|p| p.id)).collect()
 }
 
 /// Remember that a sub-page was opened (common.js recordVisit); kept in settings-app.json next to the
 /// settings, six at most.
 pub fn record_visit(id: &str) {
     let Some(p) = crate::registry::page(id) else { return };
-    if p.parent.is_none() {
+    // top-level pages and data pages (they need their item) are never recent (amendment 26)
+    if p.parent.is_none() || crate::registry::is_data(id) {
         return;
     }
     let mut list: Vec<String> = recent_pages().into_iter().filter(|x| *x != id).map(str::to_owned).collect();
@@ -1098,4 +1223,45 @@ pub fn load_shell_info() {
             SHELL_INFO.with(|s| *s.borrow_mut() = v);
         }
     });
+}
+
+#[cfg(test)]
+mod caps_tests {
+    use super::*;
+
+    #[test]
+    fn caps_that_arrive_late_hide_pages_and_say_where_to_rebuild() {
+        // review of B0, finding 13: the first page is built before caps.get answers (everything shown)
+        assert!(caps_hidden(&Value::Null).is_empty(), "unknown caps hide nothing");
+        let desktop = json!({"gnome": false, "touchpad": false, "tablet": false, "thunderbolt": false, "mouse": true});
+        let hidden = caps_hidden(&desktop);
+        for id in ["touchpad", "pen", "usb", "screentime", "multitasking", "remotedesktop"] {
+            assert!(hidden.contains(&id), "{id}: {hidden:?}");
+        }
+        assert!(!hidden.contains(&"mouse"));
+        let laptop = json!({"gnome": true, "touchpad": true, "tablet": false, "thunderbolt": false});
+        assert_ne!(caps_hidden(&laptop), hidden, "a change that matters");
+        assert_eq!(caps_hidden(&laptop), caps_hidden(&json!({"gnome": true, "touchpad": true, "tablet": false, "thunderbolt": false, "battery": true})), "one that does not");
+        for id in ["system", "bluetooth", "home", "search", "accessibility"] {
+            assert!(shows_caps_links(id), "{id}");
+        }
+        assert!(!shows_caps_links("touchpad") && !shows_caps_links("wifi-network"));
+    }
+}
+
+
+#[cfg(test)]
+mod card_content_tests {
+    use super::*;
+
+    #[test]
+    fn extra_content_reaches_the_text_box_of_plain_and_clickable_cards() {
+        if gtk::init().is_err() { return; }
+        for card in [SettingsCard::new("", "Storage", ""), SettingsCard::clickable("", "Storage", "", c::Chevron::Right)] {
+            let extra = gtk::Label::new(Some("Space available"));
+            card_extra(&card, &extra);
+            let text = card_text_box(&card).expect("the card's text box");
+            assert_eq!(extra.parent().as_ref(), Some(text.upcast_ref()));
+        }
+    }
 }

@@ -1,6 +1,11 @@
 //! Instellingen › Persoonlijke instellingen › Achtergrond (6ebf169f:vendor/ui/js/apps/settings/pages/background.js):
-//! a picture or a solid colour, the built-in wallpaper grid with "Foto’s zoeken", the fit, and the picture that
-//! follows light and dark.
+//! a picture or a solid colour, the fit, and the picture that follows light and dark, with GNOME Settings 50's
+//! background chooser (settings parity, batch F): "Recente afbeeldingen" are the user's own pictures, copied into
+//! `~/.local/share/backgrounds` by "Door foto's bladeren" as GNOME's Add Picture does (`background.add`) and
+//! removable there (`background.remove`, to the trash); "Afbeeldingen" are WinPoint's own; "Afbeeldingen van Ubuntu
+//! en GNOME" is GNOME's catalogue (`background.catalog`: gnome-background-properties, light and dark pairs, timed
+//! slideshows). Choosing a picture sets settings.json `wallpaper.*` (WinPoint's look, which wallpaper.rs writes to
+//! GNOME); of a light and dark pair the one of the current mode.
 //!
 //! Also the pieces the personalisation and Bluetooth pages share: `FillGrid` (CSS `repeat(auto-fill,
 //! minmax(<min>, 1fr))`), `Thumb` (a wallpaper picture, cover-scaled in rounded corners) and the per-viewer
@@ -41,6 +46,16 @@ button.st-wp:focus-visible { outline: 2px solid var(--focus-outer); outline-offs
 }
 button.st-wp.w11-selected .st-wp-check { opacity: 1; }
 .st-color-block-title { margin-bottom: 12px; }
+button.st-wp-remove {
+  min-height: 22px; min-width: 22px; margin: 4px; padding: 0; border-radius: 999px;
+  background-color: var(--bg-solid-base); background-image: none; color: var(--text-1); opacity: 0.85;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+button.st-wp-remove:hover, button.st-wp-remove:focus-visible { opacity: 1; }
+.st-wp-badge {
+  margin: 0 0 5px 5px; padding: 1px 6px; border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.55); color: #ffffff; font-size: var(--fs-caption);
+}
 "#;
 
 // --------------------------------------------------------------------------------------------- FillGrid
@@ -423,29 +438,12 @@ fn strip_mode(name: &str) -> String {
     name.to_owned()
 }
 
-/// The tiles of the picture grid: the current own photo and recent photos, then the built-ins (one per
-/// light / dark pair while the picture follows the mode).
+/// The tiles of WinPoint's own pictures: one per light / dark pair while the picture follows the mode.
 fn tiles() -> Vec<(String, String)> {
     let s = kit::ctx().settings();
     let follow = s["wallpaper"]["followTheme"] != false;
     let dark = kit::theme::dark();
-    let cur = s["wallpaper"]["path"].as_str().unwrap_or("").to_owned();
-    let mut customs: Vec<String> = Vec::new();
-    if !cur.is_empty() && !cur.starts_with("builtin:") {
-        customs.push(cur);
-    }
-    for p in recent_photos() {
-        if !customs.contains(&p) {
-            customs.push(p);
-        }
-    }
-    let mut list: Vec<(String, String)> = customs
-        .into_iter()
-        .map(|p| {
-            let name = p.rsplit('/').next().filter(|n| !n.is_empty()).unwrap_or(t("Eigen foto", "Own photo")).to_owned();
-            (p, name)
-        })
-        .collect();
+    let mut list: Vec<(String, String)> = Vec::new();
     let mut seen: Vec<String> = Vec::new();
     for w in WALLPAPERS {
         let path = common::twin_for(&format!("builtin:{}", w.id), dark, follow);
@@ -475,6 +473,31 @@ fn check_mark(size: i32, class: &str) -> gtk::Box {
     check
 }
 
+/// One picture of a grid: the thumbnail (`thumb`), the selection check, an optional badge ("Diavoorstelling").
+fn tile_button(thumb_path: &str, name: &str, on: bool, widget: &str, badge: Option<&str>) -> gtk::Button {
+    let thumb = Thumb::new(1.6, 0, 104, 6.0);
+    thumb.set_path(thumb_path, 320);
+    let ov = gtk::Overlay::new();
+    ov.set_child(Some(&thumb));
+    ov.add_overlay(&check_mark(18, "st-wp-check"));
+    if let Some(text) = badge {
+        let l = c::label(text, "st-wp-badge", false);
+        l.set_halign(gtk::Align::Start);
+        l.set_valign(gtk::Align::End);
+        l.set_can_target(false);
+        ov.add_overlay(&l);
+    }
+    let b = gtk::Button::new();
+    b.add_css_class("st-wp");
+    if on {
+        b.add_css_class("w11-selected");
+    }
+    b.set_tooltip_text(Some(name));
+    b.set_child(Some(&ov));
+    b.set_widget_name(widget);
+    b
+}
+
 fn paint_grid(p: &Page, grid: &FillGrid) {
     grid.remove_all();
     let s = kit::ctx().settings();
@@ -483,25 +506,150 @@ fn paint_grid(p: &Page, grid: &FillGrid) {
     let cur = (s["wallpaper"]["type"] == "image").then(|| common::resolve_wallpaper_path(&s, dark));
     for (i, (path, name)) in tiles().into_iter().enumerate() {
         let on = cur.as_deref() == Some(common::twin_for(&path, dark, follow).as_str());
-        let thumb = Thumb::new(1.6, 0, 104, 6.0);
-        thumb.set_path(&path, 320);
-        let ov = gtk::Overlay::new();
-        ov.set_child(Some(&thumb));
-        ov.add_overlay(&check_mark(18, "st-wp-check"));
-        let b = gtk::Button::new();
-        b.add_css_class("st-wp");
-        if on {
-            b.add_css_class("w11-selected");
-        }
-        b.set_tooltip_text(Some(&name));
-        b.set_child(Some(&ov));
-        b.set_widget_name(&match path.strip_prefix("builtin:") {
+        let widget = match path.strip_prefix("builtin:") {
             Some(id) => format!("wp-{id}"),
             None => format!("wp-photo-{i}"),
-        });
+        };
+        let b = tile_button(&path, &name, on, &widget, None);
         let pp = p.clone();
-        b.connect_clicked(move |_| patch(&pp, json!({ "wallpaper": { "type": "image", "path": path } })));
+        b.connect_clicked(move |_| patch(&pp, json!({ "wallpaper": { "type": "image", "path": path, "pathDark": "" } })));
         grid.append(&b);
+    }
+}
+
+// --------------------------------------------------------------------------- GNOME's catalogue and own pictures
+
+/// GNOME's picture-options as WinPoint's `wallpaper.fit` (None: keep the fit).
+pub(super) fn fit_of(options: &str) -> Option<&'static str> {
+    Some(match options {
+        "zoom" => "fill",
+        "scaled" => "fit",
+        "stretched" => "stretch",
+        "wallpaper" => "tile",
+        "centered" => "center",
+        "spanned" => "span",
+        _ => return None,
+    })
+}
+
+/// The file of a catalogue item for a mode: the dark twin in dark mode when there is one.
+pub(super) fn item_path(item: &Value, dark: bool) -> String {
+    match item["dark"].as_str().filter(|d| dark && !d.is_empty()) {
+        Some(d) => d.to_owned(),
+        None => common::s(&item["path"]).to_owned(),
+    }
+}
+
+/// The wallpaper keys a catalogue item writes (see [`choose_item`]); every other choice clears `pathDark`.
+pub(super) fn choice_of(item: &Value, follow: bool, dark: bool) -> Value {
+    let pair = item["dark"].as_str().filter(|d| !d.is_empty());
+    match pair {
+        Some(dark_file) if follow => json!({ "type": "image", "path": common::s(&item["path"]), "pathDark": dark_file }),
+        _ => json!({ "type": "image", "path": item_path(item, dark), "pathDark": "" }),
+    }
+}
+
+/// Whether a catalogue item is the current wallpaper (either file of a pair).
+pub(super) fn item_is(item: &Value, current: &str) -> bool {
+    !current.is_empty() && (item["path"] == current || item["dark"] == current)
+}
+
+/// "Recente afbeeldingen": the user's own copies (newest first), then the current picture and the photos chosen
+/// before the copies existed (settings-app.json), at most five; (path, name, own copy).
+pub(super) fn recent_tiles(own: &[Value], current: Option<&str>, legacy: &[String], catalog: &[Value]) -> Vec<(String, String, bool)> {
+    let mut out: Vec<(String, String, bool)> = Vec::new();
+    let name_of = |p: &str| p.rsplit('/').next().filter(|n| !n.is_empty()).unwrap_or(p).to_owned();
+    for o in own {
+        let path = common::s(&o["path"]);
+        if !path.is_empty() {
+            out.push((path.to_owned(), name_of(path), true));
+        }
+    }
+    let known = |p: &str, out: &[(String, String, bool)]| p.starts_with("builtin:") || out.iter().any(|(x, _, _)| x == p) || catalog.iter().any(|i| item_is(i, p));
+    for p in current.into_iter().map(str::to_owned).chain(legacy.iter().cloned()) {
+        if !p.is_empty() && !known(&p, &out) {
+            let name = name_of(&p);
+            out.push((p, name, false));
+        }
+    }
+    out.truncate(5);
+    out
+}
+
+/// Choose a picture of GNOME's catalogue, with its fit: a light and dark pair as both files (`path` the light one,
+/// `pathDark` the dark one), so the wallpaper follows the mode as in GNOME; while the picture does not follow the
+/// mode, the file of the current mode.
+fn choose_item(p: &Page, item: &Value) {
+    let follow = kit::ctx().settings()["wallpaper"]["followTheme"] != false;
+    let mut wallpaper = choice_of(item, follow, kit::theme::dark());
+    if let Some(fit) = item["options"].as_str().and_then(fit_of) {
+        wallpaper["fit"] = json!(fit);
+    }
+    patch(p, json!({ "wallpaper": wallpaper }));
+}
+
+fn paint_catalog(p: &Page, grid: &FillGrid, items: &[Value]) {
+    grid.remove_all();
+    let s = kit::ctx().settings();
+    let cur = if s["wallpaper"]["type"] == "image" { s["wallpaper"]["path"].as_str().unwrap_or("").to_owned() } else { String::new() };
+    let dark = kit::theme::dark();
+    for (i, item) in items.iter().enumerate() {
+        let slideshow = item["slideshow"] == true;
+        let thumb = if slideshow { common::s(&item["preview"]).to_owned() } else { item_path(item, dark) };
+        let badge = slideshow.then(|| t("Diavoorstelling", "Slideshow"));
+        let b = tile_button(&thumb, common::s(&item["name"]), item_is(item, &cur), &format!("wp-gnome-{i}"), badge);
+        let (pp, item) = (p.clone(), item.clone());
+        b.connect_clicked(move |_| choose_item(&pp, &item));
+        grid.append(&b);
+    }
+}
+
+fn paint_recent(p: &Page, grid: &FillGrid, catalog: &Value, reload: Rc<dyn Fn()>) {
+    grid.remove_all();
+    let s = kit::ctx().settings();
+    let image = s["wallpaper"]["type"] == "image";
+    let cur = s["wallpaper"]["path"].as_str().filter(|_| image).unwrap_or("").to_owned();
+    let own: Vec<Value> = catalog["own"].as_array().cloned().unwrap_or_default();
+    let items: Vec<Value> = catalog["items"].as_array().cloned().unwrap_or_default();
+    for (i, (path, name, mine)) in recent_tiles(&own, Some(cur.as_str()), &recent_photos(), &items).into_iter().enumerate() {
+        let b = tile_button(&path, &name, path == cur, &format!("wp-own-{i}"), None);
+        {
+            let (pp, path) = (p.clone(), path.clone());
+            b.connect_clicked(move |_| patch(&pp, json!({ "wallpaper": { "type": "image", "path": path, "pathDark": "" } })));
+        }
+        if !mine {
+            grid.append(&b);
+            continue;
+        }
+        // GNOME's remove button on an own picture (it goes to the trash)
+        let tile = gtk::Overlay::new();
+        tile.add_css_class("st-wp-tile");
+        tile.set_child(Some(&b));
+        let remove = gtk::Button::new();
+        remove.add_css_class("st-wp-remove");
+        remove.set_child(Some(&kit::icons::glyph("close", 10)));
+        remove.set_halign(gtk::Align::End);
+        remove.set_valign(gtk::Align::Start);
+        remove.set_tooltip_text(Some(t("Verwijderen", "Remove")));
+        remove.set_widget_name(&format!("background-remove-{i}"));
+        let (pp, path2, reload2, current) = (p.clone(), path.clone(), reload.clone(), path == cur);
+        remove.connect_clicked(move |_| {
+            let fut = pp.run("background.remove", json!({ "path": path2 }));
+            let (p2, reload3) = (pp.clone(), reload2.clone());
+            pp.spawn(async move {
+                if let Some(r) = fut.await
+                    && r["dryRun"] != true
+                {
+                    // the wallpaper was this picture: WinPoint's own default again
+                    if current {
+                        patch(&p2, json!({ "wallpaper": { "type": "image", "path": "builtin:lotus-dark", "pathDark": "" } }));
+                    }
+                    reload3();
+                }
+            });
+        });
+        tile.add_overlay(&remove);
+        grid.append(&tile);
     }
 }
 
@@ -516,6 +664,11 @@ pub fn color_block(title: &str, content: &impl IsA<gtk::Widget>) -> gtk::Box {
 
 fn background(p: Page) -> PageFuture {
     Box::pin(async move {
+        let catalog = p.get("background.catalog", json!({})).await.unwrap_or_else(|| json!({}));
+        if !p.alive() {
+            return Vec::new();
+        }
+        let catalog = Rc::new(RefCell::new(catalog));
         let prev = DesktopPreview::new(&PreviewOpts::default(), true);
         let s0 = kit::ctx().settings();
         let is_color = |s: &Value| s["wallpaper"]["type"] == "color";
@@ -534,10 +687,37 @@ fn background(p: Page) -> PageFuture {
         let grid = FillGrid::new(104, 8, 8, 760);
         grid.add_css_class("st-wp-grid");
         grid.set_widget_name("background-pictures");
-        let browse = c::button(t("Foto’s zoeken", "Browse photos"), Variant::Standard);
+        let recent_grid = FillGrid::new(104, 8, 8, 760);
+        recent_grid.add_css_class("st-wp-grid");
+        recent_grid.set_widget_name("background-recent");
+        let gnome_grid = FillGrid::new(104, 8, 8, 760);
+        gnome_grid.add_css_class("st-wp-grid");
+        gnome_grid.set_widget_name("background-gnome");
+        // the catalogue again (an own picture added or removed, here or by GNOME Settings) and the grids with it
+        let repaint: Rc<RefCell<Option<Rc<dyn Fn()>>>> = Rc::new(RefCell::new(None));
+        let reload: Rc<dyn Fn()> = {
+            let (pp, catalog, repaint) = (p.clone(), catalog.clone(), repaint.clone());
+            Rc::new(move || {
+                let fut = pp.get("background.catalog", json!({}));
+                let (catalog, repaint) = (catalog.clone(), repaint.clone());
+                pp.spawn(async move {
+                    if let Some(v) = fut.await {
+                        *catalog.borrow_mut() = v;
+                        if let Some(f) = repaint.borrow().clone() {
+                            f();
+                        }
+                    }
+                });
+            })
+        };
+        {
+            let reload = reload.clone();
+            p.on("background.changed", move |_| reload());
+        }
+        let browse = c::button(t("Door foto’s bladeren", "Browse photos"), Variant::Standard);
         browse.set_widget_name("background-browse");
         {
-            let pp = p.clone();
+            let (pp, reload) = (p.clone(), reload.clone());
             // GTK's file dialog (the desktop's FileChooser portal: Win11's picker when it is chosen).
             browse.connect_clicked(move |_| {
                 let filter = gtk::FileFilter::new();
@@ -553,12 +733,29 @@ fn background(p: Page) -> PageFuture {
                 dialog.set_modal(true);
                 dialog.set_filters(Some(&filters));
                 dialog.set_default_filter(Some(&filter));
-                let p2 = pp.clone();
+                let (p2, reload) = (pp.clone(), reload.clone());
                 dialog.open(Some(pp.window().window()), gio::Cancellable::NONE, move |result| match result {
                     Ok(file) => {
                         if let Some(path) = file.path().and_then(|p| p.to_str().map(str::to_owned)) {
-                            push_photo(&path);
-                            patch(&p2, json!({ "wallpaper": { "type": "image", "path": path } }));
+                            // GNOME's Add Picture: a copy in ~/.local/share/backgrounds becomes the wallpaper
+                            let fut = p2.call("background.add", json!({ "path": path }));
+                            let (p3, reload) = (p2.clone(), reload.clone());
+                            p2.spawn(async move {
+                                match fut.await {
+                                    Ok(r) if r["dryRun"] == true => common::note_dry_run(&p3.anchor(), &r),
+                                    Ok(r) => {
+                                        let copy = r["path"].as_str().unwrap_or(&path).to_owned();
+                                        patch(&p3, json!({ "wallpaper": { "type": "image", "path": copy, "pathDark": "" } }));
+                                        reload();
+                                    }
+                                    // an older host without background.*: the photo itself, as before
+                                    Err(e) if e.code == "unknown_method" => {
+                                        push_photo(&path);
+                                        patch(&p3, json!({ "wallpaper": { "type": "image", "path": path, "pathDark": "" } }));
+                                    }
+                                    Err(e) => p3.error(&e, None),
+                                }
+                            });
                         }
                     }
                     Err(e) if e.matches(gtk::DialogError::Dismissed) || e.matches(gtk::DialogError::Cancelled) => {}
@@ -592,24 +789,15 @@ fn background(p: Page) -> PageFuture {
             });
         }
 
+        // Windows' own en-GB wording: "Recent images" (tools/i18n/glossary-context.tsv)
+        let recent_block = color_block(t("Recente afbeeldingen", "Recent images"), &recent_grid);
         let pictures_block = color_block(t("Afbeeldingen", "Pictures"), &grid);
+        let gnome_block = color_block(t("Afbeeldingen van Ubuntu en GNOME", "Ubuntu and GNOME pictures"), &gnome_grid);
         let choose_card = SettingsCard::new("", t("Een foto kiezen", "Choose a photo"), "");
         choose_card.set_control(&browse);
         let colors_block = color_block(t("Kies je achtergrondkleur", "Choose your background colour"), colors.widget());
         let custom_card = SettingsCard::new("", t("Aangepaste kleuren", "Custom colours"), "");
         custom_card.set_control(&custom);
-        let exp = SettingsExpander::new(
-            "image",
-            t("Je achtergrond aanpassen", "Personalise your background"),
-            t("Een afbeelding of een effen kleur op je bureaublad", "A picture or a solid colour on your desktop"),
-        );
-        exp.header().set_control(&common::sized(type_dd.widget(), 180));
-        exp.set_expanded(true);
-        exp.add(&pictures_block);
-        exp.add(choose_card.widget());
-        exp.add(&colors_block);
-        exp.add(custom_card.widget());
-
         let fit_dd = common::setting_dropdown(
             &p,
             "wallpaper.fit",
@@ -624,8 +812,24 @@ fn background(p: Page) -> PageFuture {
             None,
         );
         fit_dd.widget().set_widget_name("background-fit");
-        let fit_card = SettingsCard::new("view", t("Kies hoe de afbeelding het scherm vult", "Choose a fit for your desktop image"), "");
+        // Windows 11: the fit is a row of "Je achtergrond aanpassen", after Een foto kiezen
+        let fit_card = SettingsCard::new("", t("Kies hoe de afbeelding het scherm vult", "Choose a fit for your desktop image"), "");
         fit_card.set_control(&common::sized(fit_dd.widget(), 180));
+        let exp = SettingsExpander::new(
+            "image",
+            t("Je achtergrond aanpassen", "Personalise your background"),
+            t("Een afbeelding of een effen kleur op je bureaublad", "A picture or a solid colour on your desktop"),
+        );
+        exp.header().set_control(&common::sized(type_dd.widget(), 180));
+        exp.set_expanded(true);
+        exp.add(&recent_block);
+        exp.add(choose_card.widget());
+        exp.add(fit_card.widget());
+        exp.add(&pictures_block);
+        exp.add(&gnome_block);
+        exp.add(&colors_block);
+        exp.add(custom_card.widget());
+
         let (follow_card, follow_sw) = common::toggle_card(
             &p,
             "theme",
@@ -641,6 +845,8 @@ fn background(p: Page) -> PageFuture {
 
         let sync = {
             let (pp, grid, prev, type_dd, colors) = (p.clone(), grid.clone(), prev.clone(), type_dd.clone(), colors.clone());
+            let (recent_grid, gnome_grid, catalog, reload) = (recent_grid.clone(), gnome_grid.clone(), catalog.clone(), reload.clone());
+            let (recent_w, gnome_w): (gtk::Widget, gtk::Widget) = (recent_block.clone().upcast(), gnome_block.clone().upcast());
             let image_parts: Vec<gtk::Widget> = vec![pictures_block.upcast(), choose_card.widget().clone()];
             let color_parts: Vec<gtk::Widget> = vec![colors_block.upcast(), custom_card.widget().clone()];
             let (fit_w, follow_w) = (fit_card.widget().clone(), follow_card.widget().clone());
@@ -659,18 +865,83 @@ fn background(p: Page) -> PageFuture {
                 colors.set_selected(s["wallpaper"]["color"].as_str().unwrap_or(""));
                 prev.update(&PreviewOpts::default());
                 paint_grid(&pp, &grid);
+                let cat = catalog.borrow().clone();
+                paint_recent(&pp, &recent_grid, &cat, reload.clone());
+                recent_w.set_visible(!color && recent_grid.first_child().is_some());
+                let items: Vec<Value> = cat["items"].as_array().cloned().unwrap_or_default();
+                paint_catalog(&pp, &gnome_grid, &items);
+                gnome_w.set_visible(!color && !items.is_empty());
             }
         };
+        let sync: Rc<dyn Fn()> = Rc::new(sync);
+        *repaint.borrow_mut() = Some(sync.clone());
         sync();
         p.on_settings(move |_, _| sync());
 
         let main = SettingsGroup::new("", "");
         main.add(exp.widget());
-        main.add(fit_card.widget());
         main.add(follow_card.widget());
         let related = SettingsGroup::new(common::ct::related(), "");
         related.add(common::link_card(&p, "colors").widget());
         related.add(common::link_card(&p, "themes").widget());
         vec![Clamp::new(&prev, 384).upcast(), main.widget().clone().upcast(), related.widget().clone().upcast()]
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gnome_pictures_choose_as_gnome_settings() {
+        for (options, fit) in [("zoom", Some("fill")), ("scaled", Some("fit")), ("wallpaper", Some("tile")), ("spanned", Some("span")), ("none", None), ("", None)] {
+            assert_eq!(fit_of(options), fit, "{options}");
+        }
+        let pair = json!({"path": "/usr/share/backgrounds/l.png", "dark": "/usr/share/backgrounds/d.png"});
+        assert_eq!(item_path(&pair, false), "/usr/share/backgrounds/l.png");
+        assert_eq!(item_path(&pair, true), "/usr/share/backgrounds/d.png", "the dark twin in dark mode");
+        let single = json!({"path": "/usr/share/backgrounds/x.jpg", "dark": null});
+        assert_eq!(item_path(&single, true), "/usr/share/backgrounds/x.jpg");
+        assert!(item_is(&pair, "/usr/share/backgrounds/d.png") && item_is(&pair, "/usr/share/backgrounds/l.png"));
+        assert!(!item_is(&pair, "") && !item_is(&single, "/usr/share/backgrounds/l.png"));
+        // a pair writes both files; a single picture, or a pair while the picture does not follow the mode, clears
+        // pathDark
+        assert_eq!(
+            choice_of(&pair, true, false),
+            json!({"type": "image", "path": "/usr/share/backgrounds/l.png", "pathDark": "/usr/share/backgrounds/d.png"})
+        );
+        assert_eq!(choice_of(&pair, true, true), choice_of(&pair, true, false), "the same in either mode");
+        assert_eq!(choice_of(&pair, false, true), json!({"type": "image", "path": "/usr/share/backgrounds/d.png", "pathDark": ""}));
+        assert_eq!(choice_of(&single, true, true), json!({"type": "image", "path": "/usr/share/backgrounds/x.jpg", "pathDark": ""}));
+        // the page's own resolver takes the dark file in dark mode (host/src/wallpaper.rs dark_file)
+        let s = json!({"wallpaper": {"type": "image", "path": "/l.png", "pathDark": "/d.png"}});
+        assert_eq!(common::resolve_wallpaper_path(&s, true), "/d.png");
+        assert_eq!(common::resolve_wallpaper_path(&s, false), "/l.png");
+        let fixed = json!({"wallpaper": {"type": "image", "path": "/l.png", "pathDark": "/d.png", "followTheme": false}});
+        assert_eq!(common::resolve_wallpaper_path(&fixed, true), "/l.png");
+        let builtin = json!({"wallpaper": {"type": "image", "path": "builtin:lotus-light", "pathDark": "/d.png"}});
+        assert_eq!(common::resolve_wallpaper_path(&builtin, true), "builtin:lotus-dark");
+        let old = json!({"wallpaper": {"type": "image", "path": "/l.png"}});
+        assert_eq!(common::resolve_wallpaper_path(&old, true), "/l.png");
+    }
+
+    #[test]
+    fn recent_images_are_the_own_copies_first() {
+        let own = vec![json!({"path": "/h/.local/share/backgrounds/2026-11-16-10-00-00-b.png"}), json!({"path": "/h/.local/share/backgrounds/2026-11-15-10-00-00-a.png"})];
+        let catalog = vec![json!({"path": "/usr/share/backgrounds/l.png", "dark": "/usr/share/backgrounds/d.png"})];
+        let legacy = vec!["/h/Pictures/old.jpg".to_owned(), "/h/.local/share/backgrounds/2026-11-15-10-00-00-a.png".to_owned()];
+        let tiles = recent_tiles(&own, Some("/h/Pictures/now.jpg"), &legacy, &catalog);
+        let paths: Vec<&str> = tiles.iter().map(|(p, _, _)| p.as_str()).collect();
+        assert_eq!(
+            paths,
+            ["/h/.local/share/backgrounds/2026-11-16-10-00-00-b.png", "/h/.local/share/backgrounds/2026-11-15-10-00-00-a.png", "/h/Pictures/now.jpg", "/h/Pictures/old.jpg"]
+        );
+        assert_eq!(tiles.iter().map(|t| t.2).collect::<Vec<_>>(), [true, true, false, false], "only the copies can be removed");
+        assert_eq!(tiles[2].1, "now.jpg");
+        // a built-in or a catalogue picture is no recent image; at most five
+        assert!(recent_tiles(&[], Some("builtin:lotus-dark"), &[], &catalog).is_empty());
+        assert!(recent_tiles(&[], Some("/usr/share/backgrounds/d.png"), &[], &catalog).is_empty());
+        let many: Vec<Value> = (0..9).map(|i| json!({"path": format!("/b/{i}.png")})).collect();
+        assert_eq!(recent_tiles(&many, None, &[], &[]).len(), 5);
+    }
 }

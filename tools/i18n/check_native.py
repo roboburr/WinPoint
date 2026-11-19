@@ -1082,19 +1082,22 @@ def read_pairs(root: Path | str = ROOT, rep: check.Report | None = None) -> tupl
 # ------------------------------------------------------------------------------------------------------------------
 
 def load_allow(root: Path, rep: check.Report) -> list[tuple[str, str]]:
-    """tests/i18n/allow-native.txt: (file glob, en phrase) rows."""
-    p = Path(root) / ALLOW
+    """tests/i18n/allow-native.txt plus the settings-parity batches' tests/i18n/allow-native-*.txt (one file per batch,
+    notes/claude/settings-parity.md §3): (file glob, en phrase) rows."""
+    main = Path(root) / ALLOW
     out = []
-    if not p.is_file():
-        return out
-    for no, line in enumerate(p.read_text(encoding="utf-8").split("\n"), 1):
-        if not line.strip() or line.startswith("#"):
+    for p in [main, *sorted(main.parent.glob("allow-native-*.txt"))]:
+        if not p.is_file():
             continue
-        parts = line.split("\t")
-        if len(parts) != 3 or not parts[1].startswith("en:") or not parts[1][3:] or not parts[2].strip():
-            rep.add("native-allow", ALLOW, no, "expected <file glob><TAB>en:<phrase><TAB>why")
-            continue
-        out.append((parts[0], parts[1][3:]))
+        rel = p.relative_to(root).as_posix() if p.is_absolute() else str(p)
+        for no, line in enumerate(p.read_text(encoding="utf-8").split("\n"), 1):
+            if not line.strip() or line.startswith("#"):
+                continue
+            parts = line.split("\t")
+            if len(parts) != 3 or not parts[1].startswith("en:") or not parts[1][3:] or not parts[2].strip():
+                rep.add("native-allow", rel, no, "expected <file glob><TAB>en:<phrase><TAB>why")
+                continue
+            out.append((parts[0], parts[1][3:]))
     return out
 
 
@@ -1121,7 +1124,7 @@ def check_pairs(root: Path, rep: check.Report, gloss: check.Glossary, pairs: lis
         counts[p.kind] = counts.get(p.kind, 0) + 1
         where = f"{p.key}" if p.kind != "json" else p.key
         if p.keywords:
-            if not p.nl or not p.en:
+            if bool(p.nl) != bool(p.en):
                 rep.add("native-pair", p.file, p.line, f"{where}: a keyword list in one language only")
             continue
         if not p.nl and not p.en:

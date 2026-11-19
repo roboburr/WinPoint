@@ -11,6 +11,23 @@ pub(crate) mod system;
 pub(crate) mod tray;
 pub(crate) mod update;
 pub(crate) mod winpoint;
+// Settings parity (notes/claude/settings-parity.md §5): B0's foundation and one module per batch prefix. B0 created
+// every prefix here; a batch fills its own files and never edits this one.
+pub(crate) mod background;
+pub(crate) mod battery;
+pub(crate) mod caps;
+pub(crate) mod devices;
+pub(crate) mod goa;
+pub(crate) mod gsettings;
+pub(crate) mod input;
+pub(crate) mod machine;
+pub(crate) mod net;
+pub(crate) mod printers;
+pub(crate) mod privacy;
+pub(crate) mod sharing;
+pub(crate) mod sound;
+pub(crate) mod users;
+pub(crate) mod wellbeing;
 // Remaining native services. Public wire contracts retain the original UI API.
 use crate::{
     events::Events,
@@ -176,6 +193,23 @@ pub(crate) struct NativeServices {
     // D-G74a: WinPoint's own update check (services/winpoint.rs)
     winpoint: LazyService<winpoint::WinPoint>,
     notifications: Arc<notifications::Notifications>,
+    // Settings parity (§5): B0 foundation, then A (input), B (devices, printers), C (net, sharing),
+    // D (sound, battery, wellbeing), E (users, goa, machine), F (privacy, background)
+    gsettings: LazyService<gsettings::GSettings>,
+    caps: LazyService<caps::Caps>,
+    input: LazyService<input::Input>,
+    devices: LazyService<devices::Devices>,
+    printers: LazyService<printers::Printers>,
+    net: LazyService<net::Net>,
+    sharing: LazyService<sharing::Sharing>,
+    sound: LazyService<sound::Sound>,
+    battery: LazyService<battery::Battery>,
+    wellbeing: LazyService<wellbeing::Wellbeing>,
+    users: LazyService<users::Users>,
+    goa: LazyService<goa::Goa>,
+    machine: LazyService<machine::Machine>,
+    privacy: LazyService<privacy::Privacy>,
+    background: LazyService<background::Background>,
 }
 impl NativeServices {
     pub fn new(
@@ -196,6 +230,21 @@ impl NativeServices {
             update: LazyService::default(),
             winpoint: LazyService::default(),
             notifications,
+            gsettings: LazyService::default(),
+            caps: LazyService::default(),
+            input: LazyService::default(),
+            devices: LazyService::default(),
+            printers: LazyService::default(),
+            net: LazyService::default(),
+            sharing: LazyService::default(),
+            sound: LazyService::default(),
+            battery: LazyService::default(),
+            wellbeing: LazyService::default(),
+            users: LazyService::default(),
+            goa: LazyService::default(),
+            machine: LazyService::default(),
+            privacy: LazyService::default(),
+            background: LazyService::default(),
         });
         // Explicit fixture switch for measured A/B comparison with the prior runtime.
         if std::env::var("WIN11_NATIVE_EAGER_SERVICES").as_deref() == Ok("1") {
@@ -293,7 +342,29 @@ impl NativeServices {
                 s.call(method, args)
             });
         }
-        None
+        self.call_settings_parity(method, args)
+    }
+    /// The Settings parity prefixes (notes/claude/settings-parity.md §5); a stub answers None (unknown_method).
+    fn call_settings_parity(&self, method: &str, args: &Value) -> Option<ApiResult> {
+        let prefix = method.split('.').next().unwrap_or("");
+        match prefix {
+            "gsettings" => invoke(&self.gsettings, &self.ctx, gsettings::GSettings::new, |s| s.call(method, args)),
+            "caps" => invoke(&self.caps, &self.ctx, caps::Caps::new, |s| s.call(method, args)),
+            "input" => invoke(&self.input, &self.ctx, input::Input::new, |s| s.call(method, args)),
+            "devices" => invoke(&self.devices, &self.ctx, devices::Devices::new, |s| s.call(method, args)),
+            "printers" => invoke(&self.printers, &self.ctx, printers::Printers::new, |s| s.call(method, args)),
+            "net" => invoke(&self.net, &self.ctx, net::Net::new, |s| s.call(method, args)),
+            "sharing" => invoke(&self.sharing, &self.ctx, sharing::Sharing::new, |s| s.call(method, args)),
+            "sound" => invoke(&self.sound, &self.ctx, sound::Sound::new, |s| s.call(method, args)),
+            "battery" => invoke(&self.battery, &self.ctx, battery::Battery::new, |s| s.call(method, args)),
+            "wellbeing" => invoke(&self.wellbeing, &self.ctx, wellbeing::Wellbeing::new, |s| s.call(method, args)),
+            "users" => invoke(&self.users, &self.ctx, users::Users::new, |s| s.call(method, args)),
+            "goa" => invoke(&self.goa, &self.ctx, goa::Goa::new, |s| s.call(method, args)),
+            "machine" => invoke(&self.machine, &self.ctx, machine::Machine::new, |s| s.call(method, args)),
+            "privacy" => invoke(&self.privacy, &self.ctx, privacy::Privacy::new, |s| s.call(method, args)),
+            "background" => invoke(&self.background, &self.ctx, background::Background::new, |s| s.call(method, args)),
+            _ => None,
+        }
     }
     /// D-G74a: this host (win11-shell's backend, lib.rs run_http_only) owns WinPoint's update check: the service
     /// starts now, not on the first call, so its owner lock and daily schedule run from the start.
@@ -303,6 +374,15 @@ impl NativeServices {
         }
     }
     pub fn shutdown(&self) {
+        macro_rules! stop {
+            ($($slot:ident),*) => {$(
+                if let Some(s) = self.$slot.value.get() {
+                    s.shutdown();
+                }
+            )*};
+        }
+        stop!(background, privacy, machine, goa, users, wellbeing, battery, sound, sharing, net, printers, devices,
+            input, caps, gsettings);
         if let Some(s) = self.winpoint.value.get() {
             s.shutdown();
         }
@@ -338,6 +418,37 @@ impl NativeServices {
         }
         self.notifications.shutdown();
     }
+}
+/// Every service's method table (name, dangerous): the api-methods fragments must list each name with the same
+/// flag (runtime.rs `methods_tests`). Tables of plain names (system.rs, disks.rs) give None for the flag.
+#[cfg(test)]
+pub(crate) fn method_tables() -> Vec<(&'static str, Vec<(&'static str, Option<bool>)>)> {
+    let flagged = |table: &'static [(&'static str, bool)]| table.iter().map(|(n, d)| (*n, Some(*d))).collect();
+    vec![
+        ("gsettings", flagged(gsettings::METHODS)),
+        ("caps", flagged(caps::METHODS)),
+        ("input", flagged(input::METHODS)),
+        ("devices", flagged(devices::METHODS)),
+        ("printers", flagged(printers::METHODS)),
+        ("net", flagged(net::METHODS)),
+        ("sharing", flagged(sharing::METHODS)),
+        ("sound", flagged(sound::METHODS)),
+        ("battery", flagged(battery::METHODS)),
+        ("wellbeing", flagged(wellbeing::METHODS)),
+        ("users", flagged(users::METHODS)),
+        ("goa", flagged(goa::METHODS)),
+        ("machine", flagged(machine::METHODS)),
+        ("privacy", flagged(privacy::METHODS)),
+        ("background", flagged(background::METHODS)),
+        ("display", flagged(display::METHODS)),
+        ("storage", flagged(storage::METHODS)),
+        ("notifications", flagged(notifications::METHODS)),
+        ("apps", flagged(crate::apps::METHODS)),
+        ("system", system::method_names().iter().map(|n| (*n, None)).collect()),
+        ("disks", disks::method_names().iter().map(|n| (*n, None)).collect()),
+        ("update", update::method_flags()),
+        ("winpoint", winpoint::method_flags()),
+    ]
 }
 #[cfg(test)]
 mod lazy_service_tests {

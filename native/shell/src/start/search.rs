@@ -2,6 +2,8 @@
 //! place. Results: best match, Apps (fuzzy, prefix and word-start boosted, Dutch and English keywords and
 //! synonyms), Instellingen (the Settings app's page registry), Acties, Bestanden (index.search, falling back to
 //! recent files), Zoeken op internet and "Meer resultaten in Alles"; the right pane shows the selected result.
+//! As in Windows, Instellingen leaves out a page this machine cannot use: one whose `needs` (the registry's caps key,
+//! settings_pages.json) caps.get reports false (Touchpad on a desktop); until caps.get answers, every page counts.
 use super::data::{self, App, FileItem};
 use super::menu::{Anchor, Item as MItem};
 use crate::core::Shell;
@@ -204,6 +206,8 @@ pub struct SettingPage {
     pub id: String,
     pub parent: Option<String>,
     pub icon: String,
+    /// The caps.get key the page needs (registry.rs NEEDS), when it needs one.
+    needs: Option<String>,
     title: [String; 2],
     desc: [String; 2],
     kw: [Vec<String>; 2],
@@ -219,7 +223,16 @@ impl SettingPage {
 }
 
 fn load_pages() -> Vec<SettingPage> {
-    let v: Value = serde_json::from_str(include_str!("settings_pages.json")).unwrap_or(Value::Null);
+    pages_from(&serde_json::from_str(include_str!("settings_pages.json")).unwrap_or(Value::Null))
+}
+
+/// Whether Start offers a page that needs caps key `needs` with the caps `caps` (caps.get's answer; Null while there
+/// is none): not when that key is false here, else yes (no key, or no answer yet).
+fn offered(needs: Option<&str>, caps: &Value) -> bool {
+    needs.is_none_or(|k| caps[k] != false)
+}
+
+fn pages_from(v: &Value) -> Vec<SettingPage> {
     let pair = |x: &Value| [data::text(x, "nl"), data::text(x, "en")];
     v.as_array()
         .map(|a| {
@@ -229,6 +242,7 @@ fn load_pages() -> Vec<SettingPage> {
                         id: p["id"].as_str()?.to_owned(),
                         parent: p["parent"].as_str().map(str::to_owned),
                         icon: data::text(p, "icon"),
+                        needs: p["needs"].as_str().filter(|k| !k.is_empty()).map(str::to_owned),
                         title: pair(&p["title"]),
                         desc: pair(&p["description"]),
                         kw: [data::str_list(&p["keywords"]["nl"]), data::str_list(&p["keywords"]["en"])],
@@ -504,6 +518,8 @@ pub struct Search {
     index: RefCell<Vec<AppEntry>>,
     pub default_ids: RefCell<HashSet<String>>,
     pages: Vec<SettingPage>,
+    /// caps.get's answer (Null until it came; asked only when a page has `needs`), followed through caps.changed.
+    caps: RefCell<Value>,
     recent: RefCell<Option<Vec<FileItem>>>,
 }
 
@@ -553,10 +569,43 @@ impl Search {
             index: RefCell::new(Vec::new()),
             default_ids: RefCell::new(HashSet::new()),
             pages: load_pages(),
+            caps: RefCell::new(Value::Null),
             recent: RefCell::new(None),
         });
         search.render_tabs();
+        search.follow_caps();
         search
+    }
+
+    /// The caps for the pages that need one: caps.get once, then caps.changed. Nothing while no page has `needs`.
+    fn follow_caps(self: &Rc<Self>) {
+        if self.pages.iter().all(|p| p.needs.is_none()) {
+            return;
+        }
+        let weak = Rc::downgrade(self);
+        self.shell.call("caps.get", json!({}), move |result| {
+            if let (Some(me), Ok(caps)) = (weak.upgrade(), result)
+                && caps.is_object()
+            {
+                me.set_caps(caps);
+            }
+        });
+        let weak = Rc::downgrade(self);
+        self.shell.on("caps.changed", move |_, data| {
+            if let Some(me) = weak.upgrade()
+                && data["caps"].is_object()
+            {
+                me.set_caps(data["caps"].clone());
+            }
+        });
+    }
+
+    fn set_caps(self: &Rc<Self>, caps: Value) {
+        if *self.caps.borrow() == caps {
+            return;
+        }
+        *self.caps.borrow_mut() = caps;
+        self.refresh();
     }
 
     pub fn set_apps(&self, apps: &[App]) {
@@ -809,7 +858,11 @@ impl Search {
         let lang = usize::from(self.shell.lang() == "en");
         let other = 1 - lang;
         let mut scored: Vec<(usize, f64)> = Vec::new();
+        let caps = self.caps.borrow();
         for (i, page) in self.pages.iter().enumerate() {
+            if !offered(page.needs.as_deref(), &caps) {
+                continue;
+            }
             let title = data::normalize(&page.title[lang]);
             let mut total = 0.0;
             for w in &ws {
@@ -1595,4 +1648,50 @@ pub fn file_icon(f: &FileItem, size: i32) -> gtk::Widget {
     let image = gtk::Image::from_gicon(&gio::content_type_get_icon(&mime));
     image.set_pixel_size(size);
     image.upcast()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn offered_ids(pages: &[SettingPage], caps: &Value) -> Vec<String> {
+        pages.iter().filter(|p| offered(p.needs.as_deref(), caps)).map(|p| p.id.clone()).collect()
+    }
+
+    #[test]
+    fn start_leaves_out_a_settings_page_this_machine_cannot_use() {
+        let pages = pages_from(&json!([
+            {"id": "devices", "parent": null, "icon": "devices", "title": {"nl": "Bluetooth en apparaten", "en": "Bluetooth & devices"}},
+            {"id": "mouse", "parent": "devices", "icon": "mouse", "title": {"nl": "Muis", "en": "Mouse"}, "needs": "mouse"},
+            {"id": "touchpad", "parent": "devices", "icon": "touchpad", "title": {"nl": "Touchpad", "en": "Touchpad"}, "needs": "touchpad"},
+            {"id": "pen", "parent": "devices", "icon": "pen", "title": {"nl": "Pen en Windows Ink", "en": "Pen & Windows Ink"}, "needs": ""}
+        ]));
+        assert_eq!(pages.len(), 4);
+        assert_eq!(pages[2].needs.as_deref(), Some("touchpad"));
+        assert_eq!(pages[3].needs, None, "an empty needs is none");
+        // a desktop: touchpad false drops Touchpad
+        let desktop = json!({"session": "gnome", "mouse": true, "touchpad": false});
+        assert_eq!(offered_ids(&pages, &desktop), ["devices", "mouse", "pen"]);
+        // a laptop: everything
+        assert_eq!(offered_ids(&pages, &json!({"mouse": true, "touchpad": true})), ["devices", "mouse", "touchpad", "pen"]);
+        // no caps (caps.get has not answered, or failed), or a key it does not know: every page stays
+        assert_eq!(offered_ids(&pages, &Value::Null), ["devices", "mouse", "touchpad", "pen"]);
+        assert_eq!(offered_ids(&pages, &json!({"mouse": false})), ["devices", "touchpad", "pen"]);
+    }
+
+    #[test]
+    fn the_shipped_pages_load_and_only_pages_with_needs_can_go() {
+        // settings_pages.json: a page without `needs` stays whatever the caps say (all of them, until
+        // tools/settings-pages.py writes the field)
+        let pages = load_pages();
+        assert!(pages.len() > 50, "{} pages", pages.len());
+        assert!(pages.iter().any(|p| p.id == "touchpad"));
+        let mut none = json!({"touchpad": false, "mouse": false, "battery": false});
+        for key in pages.iter().filter_map(|p| p.needs.clone()) {
+            none[key] = json!(false);
+        }
+        let without_needs = pages.iter().filter(|p| p.needs.is_none()).count();
+        assert_eq!(offered_ids(&pages, &none).len(), without_needs);
+        assert_eq!(offered_ids(&pages, &Value::Null).len(), pages.len());
+    }
 }

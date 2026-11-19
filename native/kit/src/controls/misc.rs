@@ -150,6 +150,10 @@ pub fn list_box() -> gtk::ListBox {
     l
 }
 
+/// The characters a breadcrumb's current page keeps at least (its whole title when shorter), and an earlier item.
+const CURRENT_CHARS: usize = 24;
+const ITEM_CHARS: usize = 3;
+
 struct CrumbInner {
     title_size: bool,
     handlers: RefCell<Vec<Rc<dyn Fn(&str, usize)>>>,
@@ -178,7 +182,9 @@ impl Breadcrumb {
         &self.root
     }
 
-    /// (id, label) items, the last one current.
+    /// (id, label) items, the last one current. When they do not fit, the earlier items give way first (each down
+    /// to about three characters and "…"), and the current page keeps its whole title up to about 24 characters, as
+    /// Windows' BreadcrumbBar keeps the current page.
     pub fn set_items(&self, items: &[(&str, &str)]) {
         clear(&self.root);
         let n = items.len();
@@ -191,11 +197,20 @@ impl Breadcrumb {
             if i == n - 1 {
                 let l = gtk::Label::new(Some(label));
                 l.add_css_class("w11-breadcrumb-current");
-                l.set_ellipsize(gtk::pango::EllipsizeMode::End);
+                // a title up to 24 characters is never shortened; a longer one keeps 24 and ends in "…" when it must
+                if label.chars().count() > CURRENT_CHARS {
+                    l.set_ellipsize(gtk::pango::EllipsizeMode::End);
+                    l.set_width_chars(CURRENT_CHARS as i32);
+                }
                 l.set_xalign(0.0);
                 self.root.append(&l);
             } else {
+                // the button keeps its label (the dev channel reads it); its label child may shrink to "Ab…"
                 let b = gtk::Button::with_label(label);
+                if let Some(l) = b.child().and_downcast::<gtk::Label>() {
+                    l.set_ellipsize(gtk::pango::EllipsizeMode::End);
+                    l.set_width_chars(label.chars().count().min(ITEM_CHARS) as i32);
+                }
                 b.add_css_class("w11-breadcrumb-item");
                 b.set_widget_name(&format!("crumb-{id}"));
                 let id = id.to_string();

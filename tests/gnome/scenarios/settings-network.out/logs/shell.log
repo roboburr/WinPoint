@@ -1,0 +1,57 @@
+libmutter-Message: 01:15:09.474: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:164): libmutter-WARNING **: 01:15:09.477: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:164): libmutter-WARNING **: 01:15:09.477: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 01:15:10.354: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 01:15:10.372: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 01:15:10.372: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 01:15:10.381: Obtained a high priority EGL context
+libmutter-Message: 01:15:10.449: Added virtual monitor Meta-0
+libmutter-Message: 01:15:10.456: Using Wayland display name 'w11-wl'
+GNOME Shell-Message: 01:15:10.925: Registering session with GDM
+
+(gnome-shell:164): libmutter-WARNING **: 01:15:10.950: There is no colord server available
+GNOME Shell-Message: 01:15:10.953: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+
+(gnome-shell:164): GNOME Shell-CRITICAL **: 01:15:11.047: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+
+(gnome-shell:164): GNOME Shell-CRITICAL **: 01:15:11.062: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+GNOME Shell-Message: 01:15:11.062: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 01:15:11.091: Failed to register AuthenticationAgent
+WARNING: Glycin running without sandbox.
+portal is not running: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.portal.IBus was not provided by any .service files
+
+(gnome-shell:164): GnomeDesktop-WARNING **: 01:15:11.326: Could not create transient scope for PID 518: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+GNOME Shell-Message: 01:15:11.326: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 01:15:11.326: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+** Message: 01:15:11.340: Failed to start camera monitor
+GNOME Shell-Message: 01:15:11.368: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+
+(gnome-shell:164): accountsservice-WARNING **: 01:15:11.428: ActUserManager: user (null) has no username (uid: -1)
+GNOME Shell-Message: 01:15:11.429: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 01:15:12.196: GNOME Shell started at Tue Nov 17 2026 01:15:10 GMT+0100 (Central European Standard Time)
+GNOME Shell-Message: 01:15:12.197: Registering display with GDM
+GNOME Shell-Message: 01:15:12.204: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+WARNING: Glycin running without sandbox.
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:164): libmutter-WARNING **: 01:17:22.209: Tried to ping window W2 (Mobiele hotspot – Instellingen) with a bad serial! Not allowed.
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:164): libmutter-WARNING **: 01:17:32.311: (../src/wayland/meta-wayland-text-input.c:621):translate_purpose: code should not be reached
+** Message: 01:17:46.819: Shutting down GNOME Shell
+libmutter-Message: 01:17:46.902: Removed virtual monitor Meta-0

@@ -1,6 +1,8 @@
 //! The calendar card of the notifications flyout (`git show 418ea594:vendor/ui/js/shell/notifcenter.js` buildCalendar):
 //! a "woensdag 12 november" header that folds the card, the month grid with previous and next month, the first
-//! weekday from settings.time.firstDayOfWeek, today in an accent circle, a selected day with a ring, and
+//! weekday from settings.time.firstDayOfWeek (-1: the region's, GNOME's week-start-day 'default'), ISO week numbers
+//! in a first column when settings.time.weekNumbers (GNOME's calendar show-weekdate, shared through the settings
+//! mirror, notes/claude/settings-parity.md §6.4), today in an accent circle, a selected day with a ring, and
 //! keyboard moves (arrows, PageUp/PageDown, Home). `Calendar::new()` builds it; notifications.rs places it under
 //! the notification card. The folded state is kept per user (the HTML kept it in localStorage).
 //!
@@ -165,13 +167,52 @@ fn write_collapsed(v: bool) {
     let _ = std::fs::write(path, if v { "1" } else { "0" });
 }
 
+/// The region's first weekday (0 = Sunday) for "Standaard (regio)" (time.firstDayOfWeek -1, GNOME's week-start-day
+/// 'default'): GNOME takes it from LC_TIME's locale data; this reads the territory of LC_ALL, LC_TIME or LANG.
+pub fn region_first_day() -> u32 {
+    let locale = ["LC_ALL", "LC_TIME", "LANG"]
+        .iter()
+        .find_map(|v| std::env::var(v).ok().filter(|s| !s.is_empty() && s != "C" && s != "POSIX"))
+        .unwrap_or_default();
+    first_day_of_territory(locale.split(['.', '@']).next().and_then(|l| l.split('_').nth(1)).unwrap_or(""))
+}
+
+/// glibc's first_weekday by territory: Sunday in the Americas, East Asia and a few others, Saturday in parts of the
+/// Middle East and North Africa, Monday elsewhere (ISO 8601).
+pub fn first_day_of_territory(territory: &str) -> u32 {
+    const SUNDAY: &[&str] = &[
+        "US", "CA", "MX", "BR", "JP", "KR", "TW", "HK", "MO", "PH", "IL", "IN", "ZA", "SA", "PE", "CO", "VE", "GT",
+        "HN", "NI", "PA", "PR", "DO", "SV", "PY", "BO", "EC", "ZW", "KE", "ET", "TH", "KH", "LA", "BS", "BZ", "JM",
+        "TT", "BD", "PK", "NP", "YE", "UM", "VI", "GU", "AS", "MH",
+    ];
+    const SATURDAY: &[&str] = &["AE", "AF", "BH", "DJ", "DZ", "EG", "IQ", "IR", "JO", "KW", "LY", "OM", "QA", "SD", "SY"];
+    if SUNDAY.contains(&territory) {
+        0
+    } else if SATURDAY.contains(&territory) {
+        6
+    } else {
+        1
+    }
+}
+
 fn first_day(shell: &Shell) -> u32 {
     let v = shell.setting("time.firstDayOfWeek");
     let n = v
         .as_i64()
         .or_else(|| v.as_f64().map(|f| f as i64))
         .or_else(|| v.as_str().and_then(|s| s.trim().parse().ok()));
-    n.map(|n| n.rem_euclid(7) as u32).unwrap_or(1)
+    match n {
+        Some(n) if (0..=6).contains(&n) => n as u32,
+        Some(n) if n >= 0 => n.rem_euclid(7) as u32,
+        _ => region_first_day(),
+    }
+}
+
+/// The ISO 8601 week number of the week holding `d`.
+pub fn iso_week(d: Ymd) -> u32 {
+    glib::DateTime::from_local(d.0, d.1 as i32, d.2 as i32, 12, 0, 0.0)
+        .map(|dt| dt.week_of_year() as u32)
+        .unwrap_or(0)
 }
 
 pub struct Calendar {
@@ -492,10 +533,16 @@ impl Calendar {
         self.next.set_tooltip_text(Some(&next));
         set_label(&self.next, &next);
 
-        // weekday header: ma di wo do vr za zo / Mo Tu We ...
+        // weekday header: ma di wo do vr za zo / Mo Tu We ... (after an empty cell above the week numbers)
         let fd = first_day(&shell);
+        let weeks = shell.setting("time.weekNumbers") == true;
         while let Some(child) = self.weekdays.first_child() {
             self.weekdays.remove(&child);
+        }
+        if weeks {
+            let blank = gtk::Label::new(None);
+            blank.add_css_class("nc-body");
+            self.weekdays.append(&blank);
         }
         for i in 0..7 {
             let short: String = day_short((fd + i) % 7, en).chars().take(2).collect();
@@ -517,7 +564,17 @@ impl Calendar {
         let selected = self.selected.get();
         let today_text = shell.t("vandaag", "today");
         let mut days = Vec::with_capacity(42);
+        let col0 = i32::from(weeks);
         for r in 0..6i32 {
+            if weeks {
+                // the row's Thursday names its ISO week
+                let thursday = (0..7).map(|c| add_days(start, (r * 7 + c) as i64)).find(|d| weekday(*d) == 4).unwrap_or(start);
+                let week = gtk::Label::new(Some(&iso_week(thursday).to_string()));
+                week.add_css_class("nc-body");
+                week.add_css_class("fo-cal-week");
+                week.set_opacity(0.6);
+                grid.attach(&week, 0, r, 1, 1);
+            }
             for c in 0..7i32 {
                 let d = add_days(start, (r * 7 + c) as i64);
                 let button = gtk::Button::new();
@@ -553,7 +610,7 @@ impl Calendar {
                     }
                     open_in_app(d);
                 });
-                grid.attach(&button, c, r, 1, 1);
+                grid.attach(&button, c + col0, r, 1, 1);
                 days.push((d, button));
             }
         }
@@ -587,5 +644,24 @@ impl Calendar {
         if had_focus {
             self.focus_current();
         }
+    }
+}
+
+#[cfg(test)]
+mod week_tests {
+    use super::*;
+
+    #[test]
+    fn the_regions_first_day_and_iso_weeks() {
+        assert_eq!(first_day_of_territory("NL"), 1);
+        assert_eq!(first_day_of_territory("GB"), 1);
+        assert_eq!(first_day_of_territory("US"), 0);
+        assert_eq!(first_day_of_territory("EG"), 6);
+        assert_eq!(first_day_of_territory(""), 1);
+        // ISO 8601: 1 January 2026 is a Thursday, so it is week 1; 28 December 2026 starts week 53
+        assert_eq!(iso_week((2026, 1, 1)), 1);
+        assert_eq!(iso_week((2026, 12, 31)), 53);
+        assert_eq!(iso_week((2027, 1, 3)), 53);
+        assert_eq!(iso_week((2027, 1, 4)), 1);
     }
 }

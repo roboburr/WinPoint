@@ -13,6 +13,7 @@ use std::{
 mod app_params;
 mod apps;
 mod desktop_entries;
+mod dlib;
 mod events;
 mod files;
 mod gnome;
@@ -26,7 +27,9 @@ mod portal;
 mod process_scope;
 mod services;
 mod settings;
+mod settings_mirror;
 mod settings_runtime;
+mod tools;
 mod transfers;
 mod wallpaper;
 
@@ -664,6 +667,8 @@ fn http_only_shutdown(
 /// owner retry, the release hand-over watch) and `MainContext::default().invoke` run there, and a 500 ms timer
 /// beats the runtime, so `shell.info` reports `mainLoopLagMs`.
 ///
+/// A SIGTERM (the GUI's PR_SET_PDEATHSIG) ends the loop as a quit does, so the services' shutdown runs.
+///
 /// Restarts: a native program's backend never re-execs itself (a new port and token would leave its GUI offline,
 /// and the GUI itself would keep the old build). It writes `<instance>.restart` and exits with [`RESTART_EXIT`];
 /// the GUI does the rest. Without WIN11_NATIVE_INSTANCE (diagnostics) the host re-execs itself ([`reexec`]).
@@ -720,6 +725,17 @@ fn run_http_only(kind: &'static str) -> Result<(), String> {
         }
         None => glib::ControlFlow::Break,
     });
+    // SIGTERM (PR_SET_PDEATHSIG when the app ends, a crashed app, kill): end as a quit does, so runtime.shutdown()
+    // runs the services' shutdown (devices: the discoverable lease, the calibration; printers: the subscription).
+    // One-shot: GLib restores the default action when the source goes, so a second SIGTERM during a hanging
+    // shutdown kills as before.
+    {
+        let main_loop = main_loop.clone();
+        glib::unix_signal_add_local(libc::SIGTERM, move || {
+            main_loop.quit();
+            glib::ControlFlow::Break
+        });
+    }
     main_loop.run();
     stop.store(true, Ordering::Relaxed);
     runtime.shutdown();

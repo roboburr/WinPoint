@@ -35,11 +35,22 @@ apps are GTK 4 too, native/APPS.md). Read `notes/claude/gtk-native.md`.
   `6ebf169f:vendor/ui/<path>` (the tag of D-G72; `git show 6ebf169f:<path>` prints one); the shell's own
   modules were removed before that tag, so their citations need 418ea594 instead.
 - Extension methods (gnome.call): windows.list, windows.focus/minimize/close/restore {id}, windows.showDesktop,
-  windows.setIconRects {layer, hidden, rects} (where a minimised window shrinks to), panel.geometry,
-  panel.keyboard {exclusive}, panel.inputChanged (repick after a new input region), panel.toggleStart,
-  panel.openTaskView, apps.activationToken,
+  windows.setIconRects {layer, hidden, rects, monitor?} (where a minimised window shrinks to; `monitor` for a
+  taskbar of another monitor), panel.geometry, panel.monitors (every monitor, the primary, whether the panel is up;
+  also an event), panel.keyboard {exclusive}, panel.inputChanged (repick after a new input region),
+  panel.toggleStart, panel.openTaskView, apps.activationToken,
   nativeBackdrop.configure {pid, kind, transparency, highContrast, autoHide}, nativeBackdrop.start {pid, phase},
-  desktop.ready {pid}, desktop.geometry (extension/panelBridge.js `_call`).
+  desktop.ready {pid}, desktop.geometry (the primary monitor, `areas`: every monitor) (extension/panelBridge.js
+  `_call`).
+- More than one monitor (16-11): the main taskbar and the desktop with its icons stay on the primary monitor; every
+  other monitor gets a taskbar with only app buttons (panel/strips.rs, app ID
+  io.github.win11shell.SecondaryTaskbar.Monitor<N>) and a wallpaper window (desktop/screens.rs,
+  io.github.win11shell.SecondaryDesktop.Monitor<N>), which the extension adopts by those app IDs. Mutter keeps a
+  desktop window in one monitor's work area, so one window cannot span them; the wallpaper fit "span" (Uitspreiden)
+  covers the monitors' bounding box with one picture and each window shows its own part (desktop/wallpaper.rs
+  `spans`). The extension keeps each taskbar's setIconRects as sent (in that taskbar's window) and places them on
+  the stage again when a monitor or the primary changes (a taskbar that moves without changing size sends nothing
+  new); every taskbar sends them again when the extension adopts the panel anew (after the lock screen).
 
 ## Look
 

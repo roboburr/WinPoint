@@ -13,24 +13,36 @@ WebKit Start and desktop (win11-start, win11-desktop and their entries), the nat
 native apps came with D-G63/D-G68 and 13-11 (win11-shell, win11-calendar, win11-gtk-<kind>, the Calendar entry and its
 URI scheme default), D-G65 the payload's config/ folder, and since the HTML apps went (commit 6ebf169f) the payload
 has no host/ (vendor/host left the tree with D-G73; the test trees give 3b898e6's installer a placeholder,
-sandbox.old_installer_host) and only ui/assets of ui/; and the done2 line of the closing text follows install.py.
+sandbox.old_installer_host) and only ui/assets of ui/; the done2 line of the closing text follows install.py; and since
+0.9.1 the payload carries scripts/ and the prefix bin/winpoint-uninstall (UNINSTALLER_PATHS), and uninstall.py's
+closing line names WinPoint (REMOVED_NL).
 The Updater cases (D-G74) run the bundle's own installer as WinPoint's updater does (UPDATER, frozen_env): --check,
 the exit codes and the status and log files, a failure after each step and a SIGTERM (everything back, byte for
 byte, the binaries' inodes too), a SIGKILL and a rerun (roll forward), a second installer (busy), and the GNOME and
-ldd checks.
+ldd checks. The Terminal cases (0.9.1) run the terminal install on a pty: its one password (the pkexec stub runs the
+root script into the case's system root), the AccountsService choice (the busctl stub), the two extension lists,
+the refusals, a failure after the root step, and winpoint-uninstall (also after 0.9.0's uninstall); and that the
+updater's path is still 0.9.0's (v0.9.0's own scripts, git show).
+Every case without a tty runs with WIN11_NO_SESSION=1 (sandbox.Case.env): 0.9.0's path, which they were written for.
 Environment: W11_INSTALLER_REAL=0 skips the two REAL cases.
 """
 from __future__ import annotations
+import configparser
 import contextlib
+import hashlib
 import importlib
+import importlib.util
 import io
 import json
 import os
 from pathlib import Path
 import pwd
 import re
+import shlex
 import shutil
 import signal
+import stat
+import struct
 import subprocess
 import sys
 import time
@@ -86,6 +98,12 @@ def entry_names(lang: str) -> dict[str, str]:
 BASELINE_ENTRIES = ("Desktop", "Panel", "Start", "Settings", "DefaultApps", "Installer", "Search", "Disks",
                     "TaskManager", "Explorer")
 BASELINE_DONE2_NL = "Start en Verkenner zijn los te openen via het applicatieoverzicht."
+# uninstall.py's closing line: 3b898e6's (up to 0.9.0), and since 0.9.1 with WinPoint's name
+BASELINE_REMOVED_NL = "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n"
+REMOVED_NL = "WinPoint is verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n"
+REMOVED_EN = "WinPoint removed. Your settings and the original Win11Shell were kept.\n"
+# 0.9.1: the uninstaller in the prefix (install.UNINSTALLER); the payload's scripts/ is left out with its top folder
+UNINSTALLER_PATHS = {f"prefix/bin/{install.UNINSTALLER}"}
 
 
 def shell_split() -> set[str]:
@@ -104,17 +122,25 @@ SHELL_SPLIT = shell_split()
 
 
 PAYLOAD = "prefix/share/win11-gnome/"
+# Extension modules that 3b898e6 did not have: the settings-parity bridges (notes/claude/settings-parity.md §6.6). The
+# installer copies every file of extension/ (contracts C7), so they are new in the case tree by design.
+NEW_EXTENSION_FILES = {"launchBridge.js", "displayBridge.js", "inputBridge.js"}
 
 
 def same_as_baseline(tree: dict[str, str]) -> dict[str, str]:
     """A case tree without SHELL_SPLIT, the payload's config/ folder (D-G65) and host/ (3b898e6 installed vendor/host,
-    the Python reference; the current installer does not), and without what the payload's ui/ holds besides assets/
-    (3b898e6 copied all of vendor/ui, the HTML apps included; the current installer copies vendor/ui/assets)."""
+    the Python reference; the current installer does not), without what the payload's ui/ holds besides assets/
+    (3b898e6 copied all of vendor/ui, the HTML apps included; the current installer copies vendor/ui/assets), and
+    without 0.9.1's payload scripts/ and UNINSTALLER_PATHS."""
     def by_design(key: str) -> bool:
+        if key in UNINSTALLER_PATHS:
+            return True
+        if key.startswith("data/gnome-shell/extensions/") and key.rsplit("/", 1)[-1] in NEW_EXTENSION_FILES:
+            return True
         if not key.startswith(PAYLOAD):
             return False
         top, _, rest = key[len(PAYLOAD):].partition("/")
-        return top in ("config", "host") or (top == "ui" and rest != "" and rest.split("/", 1)[0] != "assets")
+        return top in ("config", "host", "scripts") or (top == "ui" and rest != "" and rest.split("/", 1)[0] != "assets")
     return {k: v for k, v in tree.items() if k not in SHELL_SPLIT and not by_design(k)}
 
 
@@ -407,10 +433,12 @@ class Installer(unittest.TestCase):
         self.assertEqual(bad.returncode, 2)
         self.assertEqual(bad.stderr, "Onbekende taal ‘fr’: kies nl of en.\nUnknown language ‘fr’: choose nl or en.\n")
         self.assertEqual(self.install(case, ["--lang"]).returncode, 2)
+        # 0.9.1: --no-session is no advice any more (the updater's flag, still accepted)
         help_nl = self.install(case, ["--help"])
-        self.assertEqual((help_nl.returncode, help_nl.stdout.splitlines()[0]), (0, "Gebruik: scripts/install.sh [--lang nl|en] [--no-session]"))
-        help_en = self.install(case, ["--help", "--lang", "en"])
-        self.assertEqual((help_en.returncode, help_en.stdout.splitlines()[0]), (0, "Usage: scripts/install.sh [--lang nl|en] [--no-session]"))
+        self.assertEqual((help_nl.returncode, help_nl.stdout.splitlines()[0]), (0, "Gebruik: scripts/install.sh [--lang nl|en]"))
+        help_en = self.install(case, ["--help", "--lang", "en", "--no-session"])
+        self.assertEqual((help_en.returncode, help_en.stdout.splitlines()[0]), (0, "Usage: scripts/install.sh [--lang nl|en]"))
+        self.assertNotIn("--no-session", help_nl.stdout + help_en.stdout)
         self.assertEqual(dutch_words(help_en.stdout), [])
         unknown = self.install(case, ["--prefix", "/x"])
         self.assertEqual(unknown.returncode, 2)
@@ -418,8 +446,15 @@ class Installer(unittest.TestCase):
         self.assertEqual(case.tree(), before)
 
     def test_install_sh_passes_arguments(self):
+        """0.9.1: install.sh and uninstall.sh run Ubuntu's own python3 as the updater does (-E -s -B), not PATH's, and
+        their comments give no --no-session or --lang advice."""
         text = (SCRIPTS/"install.sh").read_text()
-        self.assertIn('exec python3 "$ROOT/scripts/install.py" "$ROOT" "$@"', text)
+        self.assertIn('exec /usr/bin/python3 -E -s -B "$ROOT/scripts/install.py" "$ROOT" "$@"', text)
+        uninstall = (SCRIPTS/"uninstall.sh").read_text()
+        self.assertIn('exec /usr/bin/python3 -E -s -B "$ROOT/scripts/uninstall.py" "$@"', uninstall)
+        for script in (text, uninstall):
+            self.assertNotIn("--no-session", script)
+            self.assertNotIn("--lang", script)
         self.assertIn('"$ROOT/scripts/package.py" "$ROOT" "$@"', (SCRIPTS/"package.sh").read_text())
 
     def test_config_folder_must_be_own(self):
@@ -525,13 +560,15 @@ class Installer(unittest.TestCase):
         settings = (case.config/"win11-gnome/settings.json").read_bytes()
         env = case.env(Shared.stubs, NL_LOCALE)
         usage = case.run(SCRIPTS/"uninstall.py", None, ["--bogus"], env)
-        self.assertEqual((usage.returncode, usage.stderr), (1, "Usage: scripts/uninstall.sh [--files-only] [--lang nl|en]\n"))
+        # 0.9.1: --keep-session is new, and the usage names winpoint-uninstall first
+        self.assertEqual((usage.returncode, usage.stderr),
+                         (1, "Usage: winpoint-uninstall or scripts/uninstall.sh [--files-only] [--keep-session] [--lang nl|en]\n"))
         extension = case.data/"gnome-shell/extensions"/install.UUID
         (extension/"ge1c-unknown.js").write_text("// nobody shipped this\n")    # ge1c-review m3: named, not silent
         proc = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], env, strace=True)
         self.assertOk(proc)
         self.assertEqual(proc.stdout, f"Removed from the extension folder (not a file of this version): {extension}/ge1c-unknown.js\n"
-                                      "Win11 for GNOME removed. Your settings and the original Win11Shell were kept.\n")
+                         + REMOVED_EN)
         self.assertNoOutsideWrites(case, proc)
         self.assertEqual(case.stub_calls(), [])
         self.assertFalse((case.prefix/"share/win11-gnome").exists())
@@ -661,8 +698,7 @@ class Installer(unittest.TestCase):
                 seed(case)
                 proc = case.run(SCRIPTS/"uninstall.py", None, args, case.env(Shared.stubs, NL_LOCALE))
                 self.assertOk(proc)
-                self.assertEqual(proc.stdout, removed_lines(case)
-                                 + "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n")
+                self.assertEqual(proc.stdout, removed_lines(case) + REMOVED_NL)
                 check(case, f"uninstall {args}")
 
     def test_sandbox_negative_control(self):
@@ -699,9 +735,14 @@ class Installer(unittest.TestCase):
             nothing = empty.run(script, None, [], empty.env(Shared.stubs, NL_LOCALE))
             results.append((proc, same_as_baseline(case.tree()), nothing, case.stub_calls()))
         (old, old_tree, old_nothing, _), (new, new_tree, new_nothing, calls) = results
+        # 3b898e6's uninstaller removes only the files it shipped, so the settings-parity bridges (NEW_EXTENSION_FILES,
+        # filtered out above) keep its extension folder; the current one removes every file of it
+        ext_dir = f"data/gnome-shell/extensions/{install.UUID}"
+        if ext_dir in old_tree and ext_dir not in new_tree and not any(k.startswith(ext_dir + "/") for k in old_tree):
+            del old_tree[ext_dir]
         self.assertOk(new)
-        self.assertEqual((new.stdout, new.stderr), (old.stdout, old.stderr))
-        self.assertEqual(new.stdout, "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n")
+        self.assertEqual((new.stdout, new.stderr), (old.stdout.replace(BASELINE_REMOVED_NL, REMOVED_NL), old.stderr))
+        self.assertEqual(new.stdout, REMOVED_NL)
         self.assertEqual(new_tree, old_tree)
         self.assertEqual((new_nothing.returncode, new_nothing.stderr), (old_nothing.returncode, old_nothing.stderr))
         self.assertEqual(calls, [])
@@ -732,7 +773,7 @@ class Installer(unittest.TestCase):
         (cache/"update/snapshot.json").write_text("{}\n")
         proc = case.run(SCRIPTS/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE))
         self.assertOk(proc)
-        self.assertEqual(proc.stdout, "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n")
+        self.assertEqual(proc.stdout, REMOVED_NL)
         self.assertFalse((cache/"winpoint").exists())
         self.assertTrue((cache/"update/snapshot.json").is_file(), "only the update check's folder")
         # a link in its place is left alone, and so is what it points at
@@ -792,11 +833,15 @@ UPDATER = ["/usr/bin/python3", "-E", "-s", "-B"]                 # never -I: it 
 
 
 def make_bundle(name: str, version: str, extension_extra: dict[str, str] | None = None,
-                shell: list[str] | None = None) -> Path:
+                shell: list[str] | None = None, scripts_at: str | None = None) -> Path:
     """A small release bundle as scripts/package.py lays one out: the fixture tree with a root Cargo.toml of `version`
-    (and that version-name in metadata.json, `shell` as its shell-version), a settings icon of its own, the current
-    scripts/ (the updater runs the bundle's own installer) and bin/ with placeholder binaries of this version."""
+    (and that version-name in metadata.json, `shell` as its shell-version), a settings icon of its own, host/data's
+    four system files, the current scripts/ (the updater runs the bundle's own installer; scripts_at: those of that
+    git revision instead) and bin/ with placeholder binaries of this version."""
     root = sandbox.fixture_root(RUN/name, extension_extra)
+    (root/"host/data").mkdir()
+    for rel in install.SYSTEM_FILES:
+        shutil.copy2(G/"host/data"/Path(rel).name, root/"host/data"/Path(rel).name)
     (root/"Cargo.toml").write_text(f'[workspace]\nmembers = ["host"]\n\n[workspace.package]\nversion = "{version}"\n')
     metadata = json.loads((root/"extension/metadata.json").read_text())
     metadata["version-name"] = version
@@ -805,13 +850,28 @@ def make_bundle(name: str, version: str, extension_extra: dict[str, str] | None 
     (root/"extension/metadata.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n")
     (root/"vendor/ui/assets/icons/settings.svg").write_text(f"<svg xmlns='http://www.w3.org/2000/svg'><!-- {version} --></svg>\n")
     (root/"scripts").mkdir()
-    for script in SCRIPTS.glob("*.py"):
-        shutil.copy2(script, root/"scripts"/script.name)
+    if scripts_at:
+        sandbox.old_scripts(root/"scripts", scripts_at, ("install.py", "install-session.py", "install-system.py",
+                                                         "uninstall.py", "icon_bundle.py", "file_portal.py"))
+    else:
+        for script in [*SCRIPTS.glob("*.py"), *SCRIPTS.glob("*.sh")]:
+            shutil.copy2(script, root/"scripts"/script.name)
     (root/"bin").mkdir()
     for binary in install.BINS:
         (root/"bin"/binary).write_text(f"#!/bin/sh\n# GE1c placeholder for {binary} {version}; installer tests never run it\nexit 97\n")
         (root/"bin"/binary).chmod(0o755)
     return root
+
+
+def script_at(revision: str, name: str, directory: Path):
+    """scripts/<name> of a git revision (git show), loaded as a module from `directory` (its main() does not run)."""
+    directory.mkdir(parents=True, exist_ok=True)
+    sandbox.old_scripts(directory, revision, (name,))
+    spec = importlib.util.spec_from_file_location(f"{name.replace('-', '_')[:-3]}_{revision.replace('.', '_')}",
+                                                  directory/name)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def frozen_env(case: Case, bundle: Path) -> dict[str, str]:
@@ -1155,7 +1215,7 @@ shutil.rmtree = rmtree
         the marker (which every installer and uninstall.py itself refuse to touch). The next install takes the
         Transaction folders it left, and so does uninstall.sh run again (its repair puts a lone own old copy back
         first, which it then removes like any payload)."""
-        removed = "Win11 voor GNOME verwijderd. Je instellingen en oorspronkelijke Win11Shell zijn behouden.\n"
+        removed = REMOVED_NL
         for stop in (1, 2):
             for then in ("install", "uninstall"):
                 case = self.base(f"uninstall-cut-{stop}-{then}")
@@ -1246,6 +1306,810 @@ shutil.rmtree = rmtree
         self.assertEqual((proc.returncode, proc.stderr), (1, answer["message"] + "\n"))
         self.assertEqual(case.tree(), before)
 
+    # ---- 0.9.1: the updater's path is 0.9.0's -------------------------------------------------------------
+    def test_the_updaters_path_is_still_090s(self):
+        """0.9.1 changes nothing on the updater's path (WIN11_NO_SESSION=1, --no-session, no tty) but the payload's
+        additions: v0.9.0's own installer (git show v0.9.0) and this one, each over an install of v0.9.0's, give the
+        same --check answer, exit code, status and log, and the same tree but UNINSTALLER_PATHS and the payload's
+        scripts/; neither runs pkexec or busctl. With the root files a 0.9.0 terminal install left (v0.9.0's
+        contents(), host/data), systemFiles stays empty and the session counts, still without either."""
+        extra = {"ge1cNew.js": "export const GE1C_NEW = 1;\n"}
+        base = make_bundle("bundle-0.9.0-as-released", "0.9.0", scripts_at="v0.9.0")
+        old = make_bundle("bundle-0.9.1-v0.9.0-scripts", "0.9.1", extra, scripts_at="v0.9.0")
+
+        def without_additions(tree: dict[str, str]) -> dict[str, str]:
+            return {k: v for k, v in tree.items() if k not in UNINSTALLER_PATHS and not k.startswith(PAYLOAD + "scripts")}
+        results = []
+        for bundle in (old, self.new):
+            case = self.base("updater-090", first=True)
+            self.assertOk(self.terminal(case, base))
+            answer = self.answer(self.updater(case, bundle, ["--check"]))
+            proc = self.updater(case, bundle, self.files(case))
+            results.append((answer, proc.returncode, self.status(case), self.log(case),
+                            without_additions(case.tree()), case.stub_calls()))
+        self.assertEqual(results[1], results[0])
+        answer, code, status, log, _tree, calls = results[1]
+        self.assertEqual((answer, code, status, log, calls),
+                         ({"ok": True, "version": "0.9.1", "extensionChanged": True, "systemFiles": []}, 0, "0\n",
+                          nl_done(case.prefix), []))
+        self.assertTrue(install.own_uninstaller(case.prefix/"bin"/install.UNINSTALLER))
+        # the root files of a 0.9.0 install, on the case's system root (WIN11_SYSTEM_ROOT, a test seam: never in the
+        # updater's environment)
+        session = script_at("v0.9.0", "install-session.py", RUN/"v0.9.0-scripts")
+        system = case.system
+        (system/"usr/share/gnome-shell/modes").mkdir(parents=True)
+        (system/"usr/share/gnome-shell/modes/ubuntu.json").write_text('{"stylesheetName": "Yaru/gnome-shell.css"}\n')
+        contents = session.contents(system)
+        for name, directory in session.FILES:
+            (system/directory.lstrip("/")).mkdir(parents=True, exist_ok=True)
+            (system/directory.lstrip("/")/name).write_bytes(contents[name])
+        for rel in install.SYSTEM_FILES:
+            (system/rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(G/"host/data"/Path(rel).name, system/rel)
+        seam = {"WIN11_SYSTEM_ROOT": str(system)}
+        self.assertEqual(self.answer(self.updater(case, self.new, ["--check"], extra=seam)),
+                         {"ok": True, "version": "0.9.1", "extensionChanged": False, "systemFiles": []})
+        proc = self.updater(case, self.new, self.files(case), extra=seam)
+        self.assertEqual((proc.returncode, self.status(case)), (0, "0\n"), self.log(case))
+        self.assertEqual(self.log(case), session_done(case.prefix, preselected=False))
+        self.assertTrue((case.config/"autostart"/install.GNOME_LOOK).is_file())
+        self.assertEqual(case.stub_calls(), [])
+        # a stale helper is still "system", as in 0.9.0: WinPoint's updater sends the user to the terminal
+        (system/install.SYSTEM_FILES[0]).write_text("an older helper\n")
+        self.assertEqual(self.answer(self.updater(case, self.new, ["--check"], extra=seam))["systemFiles"], ["system"])
+
+
+# ---- 0.9.1: the terminal install's one password, the login choice, winpoint-uninstall ---------------------------------
+
+TERMINAL = ["/usr/bin/python3", "-E", "-s", "-B"]               # what scripts/install.sh runs
+SESSION = install.session_script()
+MODE = "/usr/share/gnome-shell/modes/winpoint.json"
+USER_PATH = f"/org/freedesktop/Accounts/User{os.getuid()}"
+# every busctl call: the system bus, never a second password dialog, its own short timeout (install.BUSCTL_OPTIONS)
+BUSCTL = "busctl\t--system --allow-interactive-authorization=no --timeout=5"
+FIND_USER = (f"{BUSCTL} call org.freedesktop.Accounts /org/freedesktop/Accounts org.freedesktop.Accounts "
+             f"FindUserById x {os.getuid()}")
+GET_SESSION = f"{BUSCTL} get-property org.freedesktop.Accounts {USER_PATH} org.freedesktop.Accounts.User Session"
+
+
+def accounts_call(method: str, value: str) -> str:
+    return f"{BUSCTL} call org.freedesktop.Accounts {USER_PATH} org.freedesktop.Accounts.User {method} s {value}"
+
+
+def install_order(rels) -> list[str]:
+    """`rels` (installed paths) in the order the root script installs them: GDM's list entry winpoint.desktop last of
+    the session's four, install-system.py's after them."""
+    rank = {"winpoint.session": 0, "winpoint.session.conf": 0, "winpoint.json": 0, "winpoint.desktop": 1}
+    return sorted(rels, key=lambda rel: rank.get(rel.rsplit("/", 1)[-1], 2))
+
+
+def root_files(system: Path) -> dict[str, bytes]:
+    """The eight root files as a terminal install of this tree leaves them on `system` (install-session.py's
+    contents() for that system, then host/data), by installed path, in the root script's order."""
+    contents = SESSION.contents(system)
+    files = {f"{directory}/{name}": contents[name] for name, directory in SESSION.FILES}
+    files.update({f"{directory}/{name}": (G/"host/data"/name).read_bytes() for name, directory, _mode in SESSION.SYSTEM_FILES})
+    return files
+
+
+def seed_system(case: Case, files: dict[str, bytes] | None = None) -> None:
+    for rel, data in (root_files(case.system) if files is None else files).items():
+        (case.system/rel.lstrip("/")).parent.mkdir(parents=True, exist_ok=True)
+        (case.system/rel.lstrip("/")).write_bytes(data)
+
+
+def present(case: Case) -> list[str]:
+    return [rel for rel in root_files(case.system) if os.path.lexists(case.system/rel.lstrip("/"))]
+
+
+def session_done(prefix: Path, lang: str = "nl", preselected: bool = True, moved: bool = False) -> str:
+    """The closing lines of an install with the login session (install.py apply); moved: the UUID was in
+    enabled-extensions (sessionMoved)."""
+    return "".join(line + "\n" for line in (
+        install.t("done1", lang, prefix=prefix), install.t("done2", lang), install.t("session1", lang),
+        *([install.t("sessionMoved", lang)] if moved else []),
+        install.t("sessionNext" if preselected else "session2", lang), install.t("done6", lang)))
+
+
+def session_text(key: str, lang: str = "nl", **params) -> str:
+    return SESSION.T[key][lang].format_map(params)
+
+
+def uninstall_texts() -> dict:
+    """scripts/uninstall.py's T, read with ast (the script does its work as it is imported)."""
+    import ast
+    tree = ast.parse((SCRIPTS/"uninstall.py").read_text())
+    node = next(node for node in tree.body if isinstance(node, ast.Assign)
+                and any(isinstance(target, ast.Name) and target.id == "T" for target in node.targets))
+    return ast.literal_eval(node.value)
+
+
+UNINSTALL_TEXTS = uninstall_texts()
+
+
+def uninstall_text(key: str, lang: str = "nl", **params) -> str:
+    return UNINSTALL_TEXTS[key][lang].format_map(params)
+
+
+def keyfile(case: Case) -> dict[str, dict[str, str]]:
+    """The sandbox's keyfile GSettings, by group and key (the values as GVariant text)."""
+    parser = configparser.ConfigParser(interpolation=None, delimiters=("=",))
+    parser.optionxform = str
+    parser.read(case.config/"glib-2.0/settings/keyfile")
+    return {group: dict(parser[group]) for group in parser.sections()}
+
+
+def write_keyfile(case: Case, groups: dict[str, dict[str, str]]) -> None:
+    (case.config/"glib-2.0/settings").mkdir(parents=True, exist_ok=True)
+    (case.config/"glib-2.0/settings/keyfile").write_text(
+        "".join(f"[{group}]\n" + "".join(f"{key}={value}\n" for key, value in keys.items()) + "\n"
+                for group, keys in groups.items()))
+
+
+SHELL_KEYS = {"org/gnome/shell": {"disabled-extensions": f"['other@ge1c', '{install.UUID}']",
+                                  "enabled-extensions": "['ubuntu-dock@ubuntu.com']",
+                                  "favorite-apps": "['firefox_firefox.desktop']"},
+              "org/gnome/desktop/interface": {"color-scheme": "'prefer-dark'"}}
+
+
+class Terminal(unittest.TestCase):
+    """0.9.1 (Robin, 16-11): the terminal install (scripts/install.py's module docstring) on a pty, as scripts/install.sh
+    runs it (TERMINAL): one pkexec for the eight root files (the stub runs the real root script into the case's system
+    root), WinPoint preselected in AccountsService (the busctl stub), WinPoint's UUID out of the two extension lists
+    only; its refusals (no tty, a cancelled password, root, another architecture) change nothing, a failure after the
+    root step says its files stay; and winpoint-uninstall removes it all with one password."""
+    maxDiff = None
+
+    @classmethod
+    def setUpClass(cls):
+        Shared.build()
+        cls.bundle = make_bundle("bundle-terminal", "0.9.1")
+        # the one program uninstall.py runs (win11-app --gnome-look): it notes each run with enabled-extensions as
+        # GSettings has it then (app_runs)
+        (cls.bundle/"bin/win11-app").write_text(
+            "#!/bin/sh\n# GE1c stand-in for win11-app 0.9.1: logs its arguments, changes nothing\n"
+            "printf '%s %s\\n' \"$*\" \"$(grep '^enabled-extensions=' \"$XDG_CONFIG_HOME/glib-2.0/settings/keyfile\")\" "
+            ">> \"$XDG_CONFIG_HOME/../logs/win11-app.log\"\n")
+
+    def assertOk(self, proc):
+        self.assertEqual(proc.returncode, 0, f"exit {proc.returncode}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}")
+
+    def case(self, name: str, pkexec: str | None = "ok", busctl: str | None = "ok") -> Case:
+        case = Case(name)
+        case.pkexec(pkexec)
+        case.busctl(busctl)
+        # the sandbox's keyfile GSettings folder, which GLib makes when the checks read the icon theme of a first
+        # install (icon_bundle.preflight_aliases); here before the "nothing changed" comparisons
+        (case.config/"glib-2.0/settings").mkdir(parents=True)
+        return case
+
+    def terminal(self, case: Case, args=(), locale=NL_LOCALE, extra=None, bundle=None, tty=True, root_uid=False):
+        bundle = bundle or self.bundle
+        env = case.env(bundle/"bin", locale, {"WIN11_NO_SESSION": None, **(extra or {})})
+        return case.run(bundle/"scripts/install.py", bundle, list(args), env, tty=tty, interpreter=TERMINAL,
+                        root_uid=root_uid)
+
+    def check(self, case: Case, bundle=None) -> dict:
+        """The updater's --check on the case's system root (frozen_env and WIN11_SYSTEM_ROOT)."""
+        bundle = bundle or self.bundle
+        proc = case.run(bundle/"scripts/install.py", bundle, ["--lang", "nl", "--no-session", "--check"],
+                        {**frozen_env(case, bundle), "WIN11_SYSTEM_ROOT": str(case.system)}, interpreter=UPDATER)
+        self.assertEqual(proc.stdout.count("\n"), 1, proc.stdout + proc.stderr)
+        return json.loads(proc.stdout)
+
+    def uninstall(self, case: Case, args=(), extra=None, tty=False):
+        """<prefix>/bin/winpoint-uninstall of the case, as a person runs it: without WIN11_INSTALL_PREFIX (the case's
+        prefix is not ~/.local: the wrapper's payload argument names it)."""
+        return case.run(case.prefix/"bin"/install.UNINSTALLER, None, list(args),
+                        case.env(Shared.stubs, NL_LOCALE, {"WIN11_INSTALL_PREFIX": None, **(extra or {})}),
+                        interpreter=["/bin/sh"], tty=tty)
+
+    @staticmethod
+    def app_runs(case: Case) -> list[str]:
+        """The runs of the bundle's win11-app stand-in: its arguments and enabled-extensions at that moment."""
+        log = case.dir/"logs/win11-app.log"
+        return log.read_text().splitlines() if log.exists() else []
+
+    # ---- the install ---------------------------------------------------------------------------------------
+    def test_a_first_terminal_install_asks_one_password_for_eight_files_and_preselects(self):
+        case = self.case("terminal-first")
+        proc = self.terminal(case)
+        self.assertOk(proc)
+        self.assertEqual(proc.stderr, "")
+        wanted = root_files(case.system)
+        calls = case.stub_calls()
+        script = hashlib.sha256(SESSION.INSTALL_SCRIPT.encode()).hexdigest()[:16]
+        sums = " ".join(hashlib.sha256(data).hexdigest() for data in wanted.values())
+        self.assertEqual(len(calls), 4, calls)
+        self.assertRegex(calls[0], rf"^pkexec\t/bin/sh -c <script {script}> win11-gnome-session-install "
+                                   rf"{re.escape(str(case.dir/'tmp'))}/win11-gnome-session-[^/ ]+ {sums}$")
+        self.assertEqual(calls[1:], [FIND_USER, accounts_call("SetSession", "winpoint"),
+                                     accounts_call("SetSessionType", "wayland")])
+        self.assertEqual((case.accounts(), case.accounts("SessionType")), ("winpoint", "wayland"))
+        for rel, data in wanted.items():
+            path = case.system/rel.lstrip("/")
+            self.assertEqual(path.read_bytes(), data, rel)
+            self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o755 if rel.startswith("/usr/libexec/") else 0o644, rel)
+        self.assertEqual([p.name for p in (case.dir/"tmp").iterdir() if p.name.startswith("win11-gnome-session-")], [])
+        # what it does first (install-session.py's lines only: each statement once, the /bin/sh and administrator
+        # sentence in its password line), what the root step did (GDM's list entry last of the session's four), then
+        # the language and the closing lines (no systemHint)
+        lines = proc.stdout.splitlines()
+        self.assertEqual(lines[0], session_text("intro"))
+        self.assertEqual([line for line in lines if line.startswith("Geïnstalleerd: ")],
+                         [session_text("installed", path=f"{case.system}{rel}") for rel in install_order(wanted)])
+        self.assertEqual(lines.count(session_text("password")), 1)
+        self.assertIn("/bin/sh", session_text("password"))
+        self.assertEqual([line for line in lines if "/bin/sh" in line or "één keer" in line], [session_text("password")])
+        self.assertEqual([line for line in lines if "naast Ubuntu" in line], [session_text("intro")])
+        self.assertTrue(proc.stdout.endswith(install.t("langChosen", "nl") + "\n" + session_done(case.prefix)), proc.stdout)
+        # the user side of the session: GNOME's look back elsewhere, the portal choice in winpoint-portals.conf
+        self.assertTrue((case.config/"autostart"/install.GNOME_LOOK).is_file())
+        self.assertTrue((case.config/"xdg-desktop-portal/winpoint-portals.conf").is_file())
+        self.assertFalse((case.config/"xdg-desktop-portal/gnome-portals.conf").exists())
+        # again: nothing differs, so no password; WinPoint is preselected again
+        again = self.terminal(case)
+        self.assertOk(again)
+        self.assertEqual((again.stdout, again.stderr), (session_done(case.prefix), ""))
+        self.assertEqual(case.stub_calls()[4:], [FIND_USER, accounts_call("SetSession", "winpoint"),
+                                                 accounts_call("SetSessionType", "wayland")])
+
+    def test_a_cancelled_or_wrong_password_refuses_and_changes_nothing(self):
+        for mode, key in (("cancel", "noPassword"), ("wrong", "wrongPassword")):
+            with self.subTest(mode=mode):
+                case = self.case(f"terminal-{mode}", pkexec=mode)
+                before = case.tree()
+                proc = self.terminal(case)
+                self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+                self.assertEqual(proc.stderr, session_text(key) + "\n" + install.t("sessionNeeded", "nl") + "\n")
+                self.assertEqual(case.tree(), before)
+                self.assertEqual([call.split("\t")[0] for call in case.stub_calls()], ["pkexec"])
+                self.assertIsNone(case.accounts())
+                self.assertNotIn(install.t("done1", "nl", prefix=case.prefix), proc.stdout)
+        # the password given after all: the same case installs, from scratch
+        case.pkexec("ok")
+        self.assertOk(self.terminal(case))
+        self.assertEqual(present(case), list(root_files(case.system)))
+
+    def test_without_a_terminal_it_refuses_and_changes_nothing(self):
+        case = self.case("terminal-none")
+        before = case.tree()
+        proc = self.terminal(case, tty=False)
+        self.assertEqual((proc.returncode, proc.stdout, proc.stderr), (1, "", install.t("sessionTerminal", "nl") + "\n"))
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(case.stub_calls(), [])
+        en = self.terminal(case, ["--lang", "en"], tty=False)
+        self.assertEqual((en.returncode, en.stderr), (1, install.t("sessionTerminal", "en") + "\n"))
+        # --check never takes the terminal path: it answers
+        checked = self.terminal(case, ["--check"], tty=False)
+        self.assertEqual((checked.returncode, json.loads(checked.stdout)["ok"]), (0, True), checked.stderr)
+        self.assertEqual(case.tree(), before)
+        # --no-session is 0.9.0's path, on a terminal too: no password, nothing preselected, the old hint line
+        proc = self.terminal(case, ["--no-session"])
+        self.assertOk(proc)
+        hint = install.t("systemHint", "nl", command="python3 " + shlex.quote(str(self.bundle/"scripts/install-system.py")))
+        self.assertEqual(proc.stdout, install.t("langChosen", "nl") + "\n" + nl_done(case.prefix) + hint + "\n")
+        self.assertEqual(case.stub_calls(), [])
+
+    def test_lang_en_speaks_english_also_in_the_root_step(self):
+        """A first install has no settings.json yet: install.py passes its language to install-session.py."""
+        case = self.case("terminal-en")
+        proc = self.terminal(case, ["--lang", "en"])
+        self.assertOk(proc)
+        self.assertEqual(dutch_words(proc.stdout + proc.stderr), [])
+        self.assertIn(session_text("password", "en") + "\n", proc.stdout)
+        self.assertIn(session_text("installed", "en", path=f"{case.system}{MODE}") + "\n", proc.stdout)
+        self.assertTrue(proc.stdout.endswith(session_done(case.prefix, "en")), proc.stdout)
+
+    def test_winpoint_json_differing_only_in_ubuntus_keys_is_no_difference(self):
+        """install-session.py stale(): winpoint.json by meaning, without the keys it copies from ubuntu.json; the other
+        files byte for byte. Neither --check (systemFiles) nor the terminal install sees such a difference."""
+        case = self.case("terminal-meaning")
+        modes = case.system/MODE.lstrip("/")
+        modes.parent.mkdir(parents=True)
+        (modes.parent/"ubuntu.json").write_text(json.dumps({
+            "parentMode": "user", "stylesheetName": "Yaru/gnome-shell.css",
+            "themeResourceName": "theme/Yaru/gnome-shell-theme.gresource",
+            "iconsResourceName": "theme/Yaru/gnome-shell-icons.gresource", "enabledExtensions": ["ubuntu-dock@ubuntu.com"]}))
+        files = root_files(case.system)
+        self.assertIn(b"Yaru/gnome-shell.css", files[MODE])
+        older = json.loads(files[MODE])
+        older["stylesheetName"] = "Yaru-2025/gnome-shell.css"
+        del older["iconsResourceName"]
+        files[MODE] = (json.dumps(older, indent=4) + "\n").encode()
+        seed_system(case, files)
+        self.assertEqual(self.check(case)["systemFiles"], [])
+        proc = self.terminal(case)
+        self.assertOk(proc)
+        self.assertEqual([call for call in case.stub_calls() if call.startswith("pkexec")], [])
+        self.assertEqual(modes.read_bytes(), files[MODE])
+        # a difference in meaning (another extension) is one: --check reports it, the terminal install replaces it
+        older["enabledExtensions"].append("other@ge1c")
+        modes.write_text(json.dumps(older, indent=4) + "\n")
+        self.assertEqual(self.check(case)["systemFiles"], ["session"])
+        self.assertOk(self.terminal(case))
+        self.assertEqual(len([call for call in case.stub_calls() if call.startswith("pkexec")]), 1)
+        self.assertEqual(modes.read_bytes(), root_files(case.system)[MODE])
+
+    def test_the_two_lists_lose_only_winpoints_uuid(self):
+        """GNOME's mode skips an extension listed in disabled-extensions, and one in enabled-extensions (an in-GNOME
+        install of 0.9.0) also runs in the normal session: the terminal install takes WinPoint's UUID out of both
+        values, enabled-extensions first, and changes no other key; one closing line says the taskbar left the normal
+        session when it was in enabled-extensions."""
+        for both in (False, True):
+            with self.subTest(both=both):
+                case = self.case(f"terminal-disabled-{int(both)}")
+                groups = json.loads(json.dumps(SHELL_KEYS))
+                if both:
+                    groups["org/gnome/shell"]["enabled-extensions"] = f"['ubuntu-dock@ubuntu.com', '{install.UUID}']"
+                write_keyfile(case, groups)
+                seed_system(case)
+                proc = self.terminal(case)
+                self.assertOk(proc)
+                self.assertEqual([call for call in case.stub_calls() if call.startswith("pkexec")], [])
+                groups["org/gnome/shell"].update({"enabled-extensions": "['ubuntu-dock@ubuntu.com']",
+                                                  "disabled-extensions": "['other@ge1c']"})
+                self.assertEqual(keyfile(case), groups)
+                self.assertTrue(proc.stdout.endswith(install.t("langChosen", "nl") + "\n"
+                                                     + session_done(case.prefix, moved=both)), proc.stdout)
+                # the next install: nothing left to move, so no such line
+                again = self.terminal(case)
+                self.assertEqual((again.stdout, keyfile(case)), (session_done(case.prefix), groups))
+        # --no-session (and the updater's path) leave GSettings alone
+        case = self.case("terminal-disabled-no-session")
+        write_keyfile(case, SHELL_KEYS)
+        self.assertOk(self.terminal(case, ["--no-session"]))
+        self.assertEqual(keyfile(case), SHELL_KEYS)
+
+    def test_only_the_system_files_failing_is_one_warning(self):
+        case = self.case("terminal-system-fails")
+        (case.system/"usr/libexec").mkdir(parents=True)
+        (case.system/"usr/libexec/win11-gnome").write_text("not a folder\n")
+        proc = self.terminal(case)
+        self.assertOk(proc)
+        # install's own complaint (the root script's stderr goes to the terminal), then the two lines
+        self.assertEqual(proc.stderr.splitlines()[-2:], [session_text("failedPartly", code="mkdir"), install.t("rootPartly", "nl")])
+        self.assertEqual(present(case), list(root_files(case.system))[:4])
+        self.assertTrue(proc.stdout.endswith(session_done(case.prefix)), proc.stdout)
+        self.assertEqual(case.accounts(), "winpoint")
+
+    def test_the_gear_instruction_when_accountsservice_says_no(self):
+        case = self.case("terminal-no-accounts", busctl="fail")
+        proc = self.terminal(case, ["--lang", "en"])
+        self.assertOk(proc)
+        self.assertTrue(proc.stdout.endswith(session_done(case.prefix, "en", preselected=False)), proc.stdout)
+        self.assertEqual(case.stub_calls()[1:], [FIND_USER])
+
+    def test_root_is_refused_before_anything(self):
+        case = self.case("terminal-root")
+        before = case.tree()
+        for args, tty in (([], True), (["--no-session"], False)):
+            with self.subTest(args=args):
+                proc = self.terminal(case, args, tty=tty, root_uid=True)
+                self.assertEqual((proc.returncode, proc.stderr), (1, install.t("noRoot", "nl") + "\n"))
+        # README's line under sudo on an English system: the locale guess speaks, as prepare() would (no --lang)
+        proc = self.terminal(case, locale=EN_LOCALE, root_uid=True)
+        self.assertEqual((proc.returncode, proc.stderr), (1, install.t("noRoot", "en") + "\n"))
+        checked = self.terminal(case, ["--check", "--lang", "en"], tty=False, root_uid=True)
+        self.assertEqual(checked.returncode, 1)
+        self.assertEqual(json.loads(checked.stdout), {"ok": False, "code": "noRoot", "params": {},
+                                                      "message": install.t("noRoot", "en")})
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(case.stub_calls(), [])
+
+    def test_a_bundle_of_another_architecture_is_refused(self):
+        """The ELF e_machine of each binary against this python3's (an aarch64 build here): abi, as ldd's refusals."""
+        program = Path("/usr/bin/true").read_bytes()
+        own = install.elf_machine(Path(os.path.realpath(sys.executable)))
+        if program[:4] != b"\x7fELF" or own is None:
+            self.skipTest("no ELF /usr/bin/true or python3")
+        other = 183 if own != 183 else 62
+        bundle = make_bundle("bundle-arch", "0.9.1")
+        (bundle/"bin/win11-launch").write_bytes(program[:18] + struct.pack("<H" if program[5] == 1 else ">H", other) + program[20:])
+        case = self.case("terminal-arch")
+        before = case.tree()
+        answer = self.check(case, bundle)
+        detail = install.t("abiMachine", "nl", needs=install.MACHINES[other],
+                           running=install.MACHINES.get(own, f"e_machine {own}"))
+        self.assertEqual(dutch_words(install.t("abiMachine", "en", needs="x", running="y")), [])
+        self.assertEqual(answer, {"ok": False, "code": "abi", "params": {"binary": "win11-launch", "detail": detail},
+                                  "message": install.t("abi", "nl", binary="win11-launch", detail=detail)})
+        proc = self.terminal(case, bundle=bundle)
+        self.assertEqual((proc.returncode, proc.stderr), (1, answer["message"] + "\n"))
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(case.stub_calls(), [])
+
+    def test_a_failure_after_the_root_step_says_its_files_stay(self):
+        """apply()'s Transaction cannot take back what root_step installed: a first install that fails after it (here
+        right after the binaries and the wrapper) puts the home folder back (exit 3) and ends with rolledBackRoot,
+        naming install-session.py --remove, never rolledBack. uninstall.sh then finds no install of this prefix
+        (nothingRemoved) and, on a terminal, names that removal too; the next install finishes the first."""
+        case = self.case("terminal-rollback")
+        before = case.tree()
+        proc = self.terminal(case, extra={"WIN11_INSTALL_TEST_FAIL": "binaries"})
+        self.assertEqual(proc.returncode, 3, proc.stdout + proc.stderr)
+        command = "python3 " + shlex.quote(str(self.bundle/"scripts/install-session.py")) + " --remove"
+        self.assertEqual(proc.stderr.splitlines()[-1], install.t("rolledBackRoot", "nl", command=command))
+        self.assertNotIn(install.t("rolledBack", "nl"), proc.stderr)
+        self.assertEqual(present(case), list(root_files(case.system)))
+        after = {rel: value for rel, value in case.tree().items() if rel.split(os.sep)[0] != "system"}
+        self.assertEqual(sorted(rel for rel in after if rel not in before),
+                         ["config/win11-gnome", "config/win11-gnome/.settings.lock", "config/win11-gnome/settings.json"])
+        self.assertEqual({rel: after[rel] for rel in before}, before)
+        self.assertFalse((case.prefix/"bin"/install.UNINSTALLER).exists())
+        # in English (--lang en) the same line in English
+        english = self.case("terminal-rollback-en")
+        proc = self.terminal(english, ["--lang", "en"], extra={"WIN11_INSTALL_TEST_FAIL": "binaries"})
+        self.assertEqual(proc.returncode, 3, proc.stdout + proc.stderr)
+        self.assertEqual(proc.stderr.splitlines()[-1], install.t("rolledBackRoot", "en", command=command))
+        # the updater's path (no root step) keeps rolledBack: test_a_failure_after_each_step_puts_every_byte_back
+        removal = case.run(self.bundle/"scripts/uninstall.sh", None, [], case.env(Shared.stubs, NL_LOCALE), tty=True)
+        payload = case.prefix/"share/win11-gnome"
+        self.assertEqual((removal.returncode, removal.stderr), (1, uninstall_text("nothingRemoved", payload=payload) + "\n"))
+        self.assertEqual(removal.stdout, uninstall_text(
+            "sessionHint", command=f"python3 {self.bundle}/scripts/install-session.py --remove") + "\n")
+        self.assertEqual(present(case), list(root_files(case.system)))
+        calls = len(case.stub_calls())
+        again = self.terminal(case)
+        self.assertOk(again)
+        self.assertEqual((again.stdout, again.stderr), (session_done(case.prefix), ""))
+        self.assertEqual([call for call in case.stub_calls()[calls:] if call.startswith("pkexec")], [])
+
+    def test_after_0_9_0s_uninstall_the_wrapper_names_a_release_whose_uninstall_takes_the_rest(self):
+        """0.9.0's uninstall.sh (an old release folder, or its README) removes the payload and leaves what it does not
+        know: winpoint-uninstall, the eight root files and Session=winpoint. The wrapper then says so in nl and en
+        (exit 1, nothing changed, no password); a release's uninstall.sh takes that rest with one password, without a
+        payload; after that there is nothing left (nothingRemoved)."""
+        case = self.case("terminal-after-090")
+        self.assertOk(self.terminal(case))
+        old = sandbox.old_scripts(case.dir/"v0.9.0", "v0.9.0", ("install.py", "uninstall.py", "icon_bundle.py",
+                                                               "file_portal.py", "install-session.py"))
+        self.assertOk(case.run(old/"uninstall.py", None, [], case.env(Shared.stubs, NL_LOCALE)))
+        wrapper, payload = case.prefix/"bin"/install.UNINSTALLER, case.prefix/"share/win11-gnome"
+        self.assertFalse(payload.exists())
+        self.assertTrue(install.own_uninstaller(wrapper))
+        self.assertEqual(present(case), list(root_files(case.system)))
+        self.assertEqual(case.accounts(), "winpoint")
+        before, calls = case.tree(), len(case.stub_calls())
+        gone = self.uninstall(case)
+        self.assertEqual((gone.returncode, gone.stdout, gone.stderr),
+                         (1, "", install.t("uninstallerGone", "nl", script=payload/"scripts/uninstall.py") + "\n"
+                          + install.t("uninstallerGone", "en", script=payload/"scripts/uninstall.py") + "\n"))
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(case.stub_calls()[calls:], [])
+        proc = case.run(self.bundle/"scripts/uninstall.sh", None, [], case.env(Shared.stubs, NL_LOCALE))
+        self.assertOk(proc)
+        script = hashlib.sha256(SESSION.REMOVE_SCRIPT.encode()).hexdigest()[:16]
+        self.assertEqual(case.stub_calls()[calls:],
+                         [f"pkexec\t/bin/sh -c <script {script}> win11-gnome-session-remove", FIND_USER, GET_SESSION,
+                          accounts_call("SetSession", "")])
+        self.assertEqual(present(case), [])
+        self.assertEqual(case.accounts(), "")
+        self.assertFalse(wrapper.exists())
+        self.assertEqual(proc.stdout.splitlines()[-1] + "\n", REMOVED_NL)
+        self.assertEqual(proc.stderr, "")
+        again = case.run(self.bundle/"scripts/uninstall.sh", None, [], case.env(Shared.stubs, NL_LOCALE), tty=True)
+        self.assertEqual((again.returncode, again.stdout, again.stderr),
+                         (1, "", uninstall_text("nothingRemoved", payload=payload) + "\n"))
+
+    # ---- the root scripts ----------------------------------------------------------------------------------
+    PROBE = """import hashlib, importlib.util, json, os, shutil, subprocess, sys
+from pathlib import Path
+spec = importlib.util.spec_from_file_location("install_session", sys.argv[1])
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+here = Path(sys.argv[2])
+names = [name for name, _d in m.FILES] + [name for name, _d, _m in m.SYSTEM_FILES]
+data = {**m.contents(here/"none"), **{name: (m.DATA/name).read_bytes() for name, _d, _m in m.SYSTEM_FILES}}
+def stage(name, files):
+    folder = here/name
+    folder.mkdir()
+    for file in files:
+        (folder/file).write_bytes(data[file])
+    return folder
+def run(script, name, root, *args):
+    proc = subprocess.run(["/bin/sh", "-c", script, name, *map(str, args)], capture_output=True, text=True,
+                          env={"PATH": "/usr/bin:/bin", "WIN11_SYSTEM_ROOT": str(here/root)})
+    return [proc.returncode, proc.stdout.replace(str(here/root), "R").splitlines()]
+def sums(files):
+    return [hashlib.sha256(data[file]).hexdigest() for file in files]
+def listing(root):
+    base = here/root
+    return sorted(f"{oct(p.stat().st_mode & 0o777)} {p.relative_to(base)}" for p in base.rglob("*") if p.is_file())
+out = {}
+eight = stage("eight", names)
+out["eight"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r1", eight, *sums(names))
+out["eightFiles"] = listing("r1")
+out["again"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r1", eight, *sums(names))
+out["four"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r2", stage("four", names[:4]), *sums(names[:4]))
+out["fourFiles"] = listing("r2")
+out["systemWithoutSums"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", eight, *sums(names[:4]))
+extra = stage("extra", names)
+(extra/"evil.sh").write_text("x")
+out["extra"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", extra, *sums(names))
+linked = stage("linked", names[:3])
+(linked/names[3]).symlink_to(eight/names[3])
+out["link"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", linked, *sums(names[:4]))
+(here/"stage-link").symlink_to(eight)
+out["stageLink"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", here/"stage-link", *sums(names))
+bad = sums(names)
+bad[6] = "0" * 64
+out["checksum"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", eight, *bad)
+out["relative"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", "eight", *sums(names))
+out["count"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r3", eight, *sums(names)[:6])
+out["r3"] = listing("r3") if (here/"r3").exists() else []
+out["remove"] = run(m.REMOVE_SCRIPT, m.REMOVE_NAME, "r1")
+out["removed"] = sorted(str(p.relative_to(here/"r1")) for p in (here/"r1").rglob("*"))
+out["removeAgain"] = run(m.REMOVE_SCRIPT, m.REMOVE_NAME, "r1")
+(here/"r2/usr/libexec/win11-gnome").mkdir(parents=True)
+(here/"r2/usr/libexec/win11-gnome/not-ours").write_text("x")
+out["removeFour"] = run(m.REMOVE_SCRIPT, m.REMOVE_NAME, "r2")
+out["removeArgs"] = run(m.REMOVE_SCRIPT, m.REMOVE_NAME, "r2", "x")
+# a run that stops at the mode file (a folder it may not write): GDM's list entry is not there yet
+modes = here/"r4/usr/share/gnome-shell/modes"
+modes.mkdir(parents=True)
+modes.chmod(0o555)
+out["modeFails"] = run(m.INSTALL_SCRIPT, m.INSTALL_NAME, "r4", eight, *sums(names))
+modes.chmod(0o755)
+out["modeFailsFiles"] = listing("r4")
+print(json.dumps(out))
+"""
+
+    def test_the_root_scripts_take_only_their_own_files(self):
+        """install-session.py's root scripts as the user on temporary roots (WIN11_SYSTEM_ROOT, the scripts' own rule):
+        the four session files alone (5 arguments) or all eight (9), GDM's list entry last of the four, so a run that
+        stops halfway lists no WinPoint without its mode; only the known names, plain files in a real stage, each
+        checksum; removal of exactly the eight that are there and the two folders once empty."""
+        case = Case("root-scripts")
+        probe = case.dir/"probe.py"
+        probe.write_text(self.PROBE)
+        (case.dir/"probe").mkdir()
+        proc = case.run(probe, None, [str(SCRIPTS/"install-session.py"), str(case.dir/"probe")], case.env(Shared.stubs))
+        self.assertOk(proc)
+        out = json.loads(proc.stdout)
+        paths = [f"R{rel}" for rel in root_files(Path("/none"))]
+        self.assertEqual(out["eight"], [0, [f"@@ok {path}" for path in install_order(paths)] + ["@@done"]])
+        self.assertEqual(out["eightFiles"], sorted(f"{'0o755' if '/libexec/' in rel else '0o644'} {rel[1:]}"
+                                                   for rel in root_files(Path("/none"))))
+        self.assertEqual(out["again"], out["eight"])
+        self.assertEqual(out["four"], [0, [f"@@ok {path}" for path in install_order(paths[:4])] + ["@@done"]])
+        self.assertEqual(len(out["fourFiles"]), 4)
+        for name, code in (("systemWithoutSums", "unknown"), ("extra", "unknown"), ("link", "missing"),
+                           ("stageLink", "stage"), ("checksum", "checksum"), ("relative", "stage"), ("count", "usage")):
+            self.assertEqual(out[name], [2, [f"@@fail {code}"]], name)
+        self.assertEqual(out["r3"], [], "a refused run installs nothing")
+        self.assertEqual(out["remove"], [0, [f"@@ok {path}" for path in paths]
+                                         + ["@@ok R/usr/lib/systemd/user/gnome-session@winpoint.target.d",
+                                            "@@ok R/usr/libexec/win11-gnome", "@@done"]])
+        self.assertNotIn("usr/libexec/win11-gnome", out["removed"])
+        self.assertIn("usr/share/polkit-1/actions", out["removed"])
+        self.assertEqual(out["removeAgain"], [0, ["@@done"]])
+        self.assertEqual(out["removeFour"], [0, [f"@@ok {path}" for path in paths[:4]]
+                                             + ["@@ok R/usr/lib/systemd/user/gnome-session@winpoint.target.d", "@@done"]])
+        self.assertEqual(out["removeArgs"], [2, ["@@fail usage"]])
+        # stopped at winpoint.json: the .session and the drop-in are there, the login screen lists nothing yet
+        self.assertEqual(out["modeFails"], [1, [f"@@ok {path}" for path in paths[1:3]] + ["@@fail install"]])
+        self.assertEqual(out["modeFailsFiles"], sorted(f"0o644 {rel[2:]}" for rel in paths[1:3]))
+
+    def test_install_session_dry_run_and_its_own_options(self):
+        case = Case("session-dry-run")
+        env = case.env(Shared.stubs)
+        script = SCRIPTS/"install-session.py"
+        proc = case.run(script, None, ["--dry-run", "--system", "--lang", "en"], env)
+        self.assertOk(proc)
+        lines = proc.stdout.splitlines()
+        wanted = root_files(case.system)
+        self.assertEqual(lines[0], session_text("intro", "en"))
+        self.assertEqual([line.strip() for line in lines if line.startswith("  /")], list(wanted))
+        self.assertIn(session_text("introSystem", "en"), lines)
+        self.assertEqual(lines[-9:], [session_text("checksums", "en")]
+                         + [f"{hashlib.sha256(data).hexdigest()}  {rel}" for rel, data in wanted.items()])
+        self.assertRegex(lines[-10], r"^/\S+/pkexec /bin/sh -c '<script>' win11-gnome-session-install \S+( [0-9a-f]{64}){8}$")
+        self.assertEqual(case.stub_calls(), [])
+        # --remove with nothing there: no password at all
+        nothing = case.run(script, None, ["--remove", "--lang=en"], env)
+        self.assertEqual((nothing.returncode, nothing.stdout), (0, session_text("nothingRemoved", "en") + "\n"))
+        self.assertEqual(case.stub_calls(), [])
+        for bad in (["--lang", "fr"], ["--system", "--system"], ["--bogus"]):
+            refused = case.run(script, None, bad, env)
+            self.assertEqual((refused.returncode, refused.stderr), (2, session_text("usage") + "\n"), bad)
+
+    # ---- winpoint-uninstall ----------------------------------------------------------------------------------
+    def test_winpoint_uninstall_removes_everything_with_one_password(self):
+        case = self.case("terminal-uninstall")
+        self.assertOk(self.terminal(case, ["--lang", "en"]))
+        wrapper = case.prefix/"bin"/install.UNINSTALLER
+        payload = case.prefix/"share/win11-gnome"
+        self.assertEqual(wrapper.read_text(), install.uninstaller_text(payload))
+        self.assertEqual(stat.S_IMODE(wrapper.stat().st_mode), 0o755)
+        self.assertEqual(sorted(p.name for p in (payload/"scripts").iterdir()), sorted(install.UNINSTALL_SCRIPTS))
+        groups = json.loads(json.dumps(SHELL_KEYS))
+        groups["org/gnome/shell"]["enabled-extensions"] = f"['ubuntu-dock@ubuntu.com', '{install.UUID}']"
+        write_keyfile(case, groups)
+        calls = len(case.stub_calls())
+        # in the WinPoint session itself: refused, nothing changed, no password asked
+        before = case.tree()
+        inside = self.uninstall(case, extra={"XDG_CURRENT_DESKTOP": "WinPoint:GNOME"})
+        self.assertEqual((inside.returncode, inside.stdout, inside.stderr),
+                         (1, "", "You’re signed in to WinPoint now. Sign out, choose Ubuntu at the login screen (the gear "
+                                 "at the bottom right, after your name) and remove WinPoint there. Nothing was removed.\n"))
+        self.assertEqual(case.tree(), before)
+        # a cancelled password: exit 1 and everything stays
+        case.pkexec("cancel")
+        cancelled = self.uninstall(case)
+        self.assertEqual(cancelled.returncode, 1, cancelled.stdout + cancelled.stderr)
+        self.assertEqual(cancelled.stderr, session_text("noPassword", "en") + "\n"
+                         + "WinPoint was not removed. Run the uninstall again and enter the password, or keep "
+                           "WinPoint’s system files with --keep-session.\n")
+        self.assertEqual(case.tree(), before)
+        self.assertEqual(case.accounts(), "winpoint")
+        self.assertEqual([call.split("\t")[0] for call in case.stub_calls()[calls:]], ["pkexec"])
+        # the password: one pkexec for the eight files, AccountsService back to GDM's default, the UUID out of both
+        # lists, every file gone, the wrapper and the payload's scripts last; one closing line, nothing named stale
+        case.pkexec("ok")
+        calls = len(case.stub_calls())
+        proc = self.uninstall(case)
+        self.assertOk(proc)
+        script = hashlib.sha256(SESSION.REMOVE_SCRIPT.encode()).hexdigest()[:16]
+        self.assertEqual(case.stub_calls()[calls:],
+                         [f"pkexec\t/bin/sh -c <script {script}> win11-gnome-session-remove", FIND_USER, GET_SESSION,
+                          accounts_call("SetSession", "")])
+        self.assertEqual(present(case), [])
+        self.assertFalse((case.system/"usr/libexec/win11-gnome").exists())
+        self.assertFalse((case.system/"usr/lib/systemd/user/gnome-session@winpoint.target.d").exists())
+        self.assertEqual(case.accounts(), "")
+        groups["org/gnome/shell"].update({"enabled-extensions": "['ubuntu-dock@ubuntu.com']",
+                                          "disabled-extensions": "['other@ge1c']"})
+        self.assertEqual(keyfile(case), groups)
+        self.assertFalse(payload.exists())
+        self.assertFalse(wrapper.exists())
+        self.assertEqual(sorted(p.name for p in (case.prefix/"bin").iterdir()), [])
+        self.assertFalse((case.data/"gnome-shell/extensions"/install.UUID).exists())
+        self.assertEqual(proc.stdout.splitlines()[-1] + "\n", REMOVED_EN)
+        self.assertNotIn("Removed from the extension folder", proc.stdout)
+        self.assertEqual(proc.stdout.splitlines()[0], session_text("introRemove", "en"))
+        self.assertIn(session_text("passwordRemove", "en") + "\n" , proc.stdout)
+        self.assertIn(session_text("doneRemove", "en") + "\n", proc.stdout)
+        self.assertEqual(proc.stderr, "")
+        # GNOME's own look back, once the extension was out of enabled-extensions
+        self.assertEqual(self.app_runs(case), ["--gnome-look enabled-extensions=['ubuntu-dock@ubuntu.com']"])
+
+    def test_winpoint_uninstall_keeps_the_session_on_request_and_old_ways_still_work(self):
+        """--keep-session leaves the eight root files (no password); --files-only also works inside WinPoint; the
+        uninstall.sh of a release folder or checkout (README's old instructions) still works on 0.9.1's install, and
+        a 0.9.0 uninstaller's leftover wrapper is no conflict for the next install."""
+        case = self.case("terminal-keep")
+        self.assertOk(self.terminal(case))
+        calls = len(case.stub_calls())
+        proc = self.uninstall(case, ["--keep-session"])
+        self.assertOk(proc)
+        self.assertEqual(proc.stdout, REMOVED_NL)
+        self.assertEqual(present(case), list(root_files(case.system)))
+        self.assertEqual([call.split("\t")[0] for call in case.stub_calls()[calls:]], ["busctl"] * 3)
+        self.assertEqual(case.accounts(), "")
+        # on a terminal one hint line first: the payload's install-session.py is gone, so it names a release's
+        self.assertOk(self.terminal(case))
+        proc = self.uninstall(case, ["--keep-session"], tty=True)
+        self.assertOk(proc)
+        release = uninstall_text("releaseCommand")
+        self.assertEqual(proc.stdout, uninstall_text("sessionHint", command=release) + "\n" + REMOVED_NL)
+        self.assertEqual(present(case), list(root_files(case.system)))
+        # inside WinPoint with --files-only: only the user's files, no AccountsService, no pkexec
+        self.assertOk(self.terminal(case))
+        calls = len(case.stub_calls())
+        proc = self.uninstall(case, ["--files-only"], extra={"XDG_CURRENT_DESKTOP": "WinPoint:GNOME"})
+        self.assertOk(proc)
+        self.assertEqual(case.stub_calls()[calls:], [])
+        self.assertFalse((case.prefix/"share/win11-gnome").exists())
+        # uninstall.sh of the tree (here the bundle's), as README told: the same removal with one password
+        self.assertOk(self.terminal(case))
+        proc = case.run(self.bundle/"scripts/uninstall.sh", None, [], case.env(Shared.stubs, NL_LOCALE))
+        self.assertOk(proc)
+        self.assertEqual(present(case), [])
+        self.assertFalse((case.prefix/"bin"/install.UNINSTALLER).exists())
+        # 0.9.0's uninstall.py leaves the wrapper (it does not know it): the next first install takes it over; another
+        # file at its path blocks a first install and is left alone by an update
+        self.assertOk(self.terminal(case))
+        old = sandbox.old_scripts(case.dir/"v0.9.0", "v0.9.0", ("install.py", "uninstall.py", "icon_bundle.py",
+                                                               "file_portal.py", "install-session.py"))
+        self.assertOk(case.run(old/"uninstall.py", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE)))
+        self.assertTrue(install.own_uninstaller(case.prefix/"bin"/install.UNINSTALLER))
+        self.assertOk(self.terminal(case))
+        foreign = case.prefix/"bin"/install.UNINSTALLER
+        foreign.write_text("#!/bin/sh\necho mine\n")
+        update = self.terminal(case)
+        self.assertOk(update)
+        self.assertEqual(foreign.read_text(), "#!/bin/sh\necho mine\n")
+        fresh = self.case("terminal-foreign-wrapper")
+        (fresh.prefix/"bin").mkdir()
+        (fresh.prefix/"bin"/install.UNINSTALLER).write_text("#!/bin/sh\necho mine\n")
+        before = fresh.tree()
+        refused = self.terminal(fresh)
+        self.assertEqual((refused.returncode, refused.stderr),
+                         (1, install.t("conflicts", "nl") + "\n" + str(fresh.prefix/"bin"/install.UNINSTALLER) + "\n"))
+        self.assertEqual(fresh.tree(), before)
+
+
+    def test_the_wrapper_of_another_prefix_finds_its_own_install(self):
+        """winpoint-uninstall passes only its payload: uninstall.py takes the prefix from it, so the wrapper of an
+        install in another prefix (by hand, or the updater's, which passes WIN11_INSTALL_PREFIX only for such a prefix)
+        works in a shell without that variable; uninstall.py of a tree without it still means ~/.local."""
+        case = self.case("terminal-prefix")
+        self.assertOk(self.terminal(case))
+        self.assertNotEqual(case.prefix, case.dir/"home/.local")
+        plain = case.run(self.bundle/"scripts/uninstall.sh", None, [],
+                         case.env(Shared.stubs, NL_LOCALE, {"WIN11_INSTALL_PREFIX": None}))
+        self.assertEqual((plain.returncode, plain.stderr),
+                         (1, f"Niets verwijderd: {case.dir}/home/.local/share/win11-gnome bevat geen installatiemarker "
+                             "van dit project.\n"))
+        self.assertEqual(present(case), list(root_files(case.system)))
+        proc = self.uninstall(case)
+        self.assertOk(proc)
+        self.assertEqual(present(case), [])
+        self.assertFalse((case.prefix/"share/win11-gnome").exists())
+        self.assertEqual(sorted(p.name for p in (case.prefix/"bin").iterdir()), [])
+
+    def test_a_half_written_wrapper_is_rewritten_and_never_blocks(self):
+        """apply() writes winpoint-uninstall as the binaries (a temporary copy, then one rename; repair() removes a
+        leftover copy), and an empty file of this user at its path (what a power cut can leave of a new one) counts as
+        its own: the updater's rerun of the same bundle rewrites it, uninstall.py removes it, a first install takes it
+        over instead of refusing it."""
+        case = self.case("terminal-wrapper-empty")
+        self.assertOk(self.terminal(case))
+        wrapper, temporary = case.prefix/"bin"/install.UNINSTALLER, case.prefix/"bin"/install.UNINSTALLER_NEW
+        payload = case.prefix/"share/win11-gnome"
+        wrapper.write_text("")
+        temporary.write_text("#!/bin/sh\n")
+        update = case.run(self.bundle/"scripts/install.py", self.bundle, ["--lang", "nl", "--no-session"],
+                          {**frozen_env(case, self.bundle), "WIN11_SYSTEM_ROOT": str(case.system)}, interpreter=UPDATER)
+        self.assertOk(update)
+        self.assertEqual(wrapper.read_text(), install.uninstaller_text(payload))
+        self.assertEqual(stat.S_IMODE(wrapper.stat().st_mode), 0o755)
+        self.assertFalse(temporary.exists())
+        wrapper.write_text("")
+        self.assertOk(case.run(self.bundle/"scripts/uninstall.sh", None, ["--files-only"], case.env(Shared.stubs, NL_LOCALE)))
+        self.assertFalse(wrapper.exists())
+        wrapper.write_text("")
+        self.assertOk(self.terminal(case))
+        self.assertEqual(wrapper.read_text(), install.uninstaller_text(payload))
+
+    def test_an_install_inside_gnome_gets_gnomes_look_back_and_its_system_files_named_as_such(self):
+        """An install inside the normal GNOME session (--no-session, 0.9.0's mode, which 0.9.1 still updates) has no
+        GnomeLook entry: winpoint-uninstall runs win11-app --gnome-look all the same, after the UUID left
+        enabled-extensions, and never with --files-only. With install-system.py's files only (no login session),
+        its removal and its hint speak of system files, not of the login screen."""
+        case = self.case("terminal-inside-gnome")
+        self.assertOk(self.terminal(case, ["--no-session"]))
+        self.assertFalse((case.config/"autostart"/install.GNOME_LOOK).exists())
+        groups = json.loads(json.dumps(SHELL_KEYS))
+        groups["org/gnome/shell"]["enabled-extensions"] = f"['ubuntu-dock@ubuntu.com', '{install.UUID}']"
+        write_keyfile(case, groups)
+        system = {rel: data for rel, data in root_files(case.system).items() if "/win11-gnome/" in rel or "/polkit-1/" in rel}
+        self.assertEqual(len(system), 4)
+        seed_system(case, system)
+        # from a release folder with --keep-session, on a terminal: the hint names that folder's install-session.py
+        proc = case.run(self.bundle/"scripts/uninstall.sh", None, ["--keep-session"], case.env(Shared.stubs, NL_LOCALE),
+                        tty=True)
+        self.assertOk(proc)
+        command = f"python3 {self.bundle}/scripts/install-session.py --remove"
+        self.assertEqual(proc.stdout, uninstall_text("systemHint", command=command) + "\n" + REMOVED_NL)
+        self.assertEqual(self.app_runs(case), ["--gnome-look enabled-extensions=['ubuntu-dock@ubuntu.com']"])
+        # again with the payload's wrapper: one password for the four, texts without the login screen
+        self.assertOk(self.terminal(case, ["--no-session"]))
+        write_keyfile(case, groups)
+        proc = self.uninstall(case)
+        self.assertOk(proc)
+        lines = proc.stdout.splitlines()
+        self.assertEqual(lines[:5], [session_text("introRemoveSystem")] + [f"  {rel}" for rel in system])
+        self.assertIn(session_text("doneRemoveSystem"), lines)
+        self.assertNotIn("inloggen", proc.stdout)
+        self.assertEqual(present(case), [])
+        self.assertEqual(self.app_runs(case)[1:], ["--gnome-look enabled-extensions=['ubuntu-dock@ubuntu.com']"])
+        # --files-only never runs it
+        self.assertOk(self.terminal(case, ["--no-session"]))
+        self.assertOk(self.uninstall(case, ["--files-only"]))
+        self.assertEqual(len(self.app_runs(case)), 2)
+
 
 class Autostart(unittest.TestCase):
     """GW7 (design §6.6): install.py writes $XDG_CONFIG_HOME/autostart/io.github.win11shell.PostUpgradeCheck.desktop
@@ -1328,9 +2192,11 @@ class Autostart(unittest.TestCase):
             self.assertOk(proc)
             self.assertFalse(self.entry(case).exists(), args)
             self.assertTrue(other.is_file(), "another autostart entry stays")
-            # gnome-extensions is a stub here: without --files-only it is called (and fails) as before
-            self.assertEqual(case.stub_calls()[:1] if args == [] else case.stub_calls(),
-                             [f"gnome-extensions\tdisable {install.UUID}"] if args == [] else [])
+            # 0.9.1: no gnome-extensions any more (GSettings); without --files-only only AccountsService is asked (a
+            # blocked stub here, so nothing is reset) and, with no root file in the case's system, no pkexec
+            self.assertEqual(case.stub_calls(), [] if args else [
+                "busctl\t--system --allow-interactive-authorization=no --timeout=5 call org.freedesktop.Accounts "
+                f"/org/freedesktop/Accounts org.freedesktop.Accounts FindUserById x {os.getuid()}"])
         # 3b898e6's uninstall.py leaves it (the old installer never wrote it): only the new one removes it
         case = Case("autostart-uninstall-old")
         self.assertOk(self.install(case, (), NL_LOCALE))
@@ -1581,6 +2447,158 @@ GTK3_LIBS = re.compile(r"lib(gtk|gdk)-3\.")
 
 class Units(unittest.TestCase):
     """In-process checks of install.py's helpers (nothing is installed)."""
+
+    def test_session_files_are_byte_for_byte_090s(self):
+        """D-G74's frozen bytes: install-session.py's contents() for a system equals v0.9.0's (git show v0.9.0), with
+        and without Ubuntu's ubuntu.json (also one whose keys are not all text); stale() finds nothing in the files a
+        0.9.0 install left, so --check reports no "session" for them."""
+        here = RUN/"units/session-090"
+        shutil.rmtree(here, ignore_errors=True)
+        old = script_at("v0.9.0", "install-session.py", here/"scripts")
+        new = install.session_script()
+        self.assertEqual(new.FILES, old.FILES)
+        live = Path("/usr/share/gnome-shell/modes/ubuntu.json")
+        ubuntu = live.read_text() if live.is_file() else json.dumps({
+            "parentMode": "user", "stylesheetName": "Yaru/gnome-shell.css",
+            "themeResourceName": "theme/Yaru/gnome-shell-theme.gresource",
+            "iconsResourceName": "theme/Yaru/gnome-shell-icons.gresource", "enabledExtensions": ["ubuntu-dock@ubuntu.com"]})
+        for name, text in (("without", None), ("ubuntu", ubuntu), ("odd", '{"stylesheetName": 3, "themeResourceName": "x"}'),
+                           ("broken", "{")):
+            with self.subTest(ubuntu=name):
+                root = here/name
+                if text is not None:
+                    (root/"usr/share/gnome-shell/modes").mkdir(parents=True)
+                    (root/"usr/share/gnome-shell/modes/ubuntu.json").write_text(text)
+                root.mkdir(parents=True, exist_ok=True)
+                self.assertEqual(new.contents(root), old.contents(root))
+                self.assertEqual(new.stale(root), [file for file, _directory in new.FILES])
+                for file, directory in old.FILES:
+                    (root/directory.lstrip("/")).mkdir(parents=True, exist_ok=True)
+                    (root/directory.lstrip("/")/file).write_bytes(old.contents(root)[file])
+                self.assertEqual(new.stale(root), [])
+                self.assertTrue(new.installed(root))
+                self.assertEqual(install.system_files(G, root), [])
+
+    def test_the_system_file_tables_agree(self):
+        """install-session.py's SYSTEM_FILES are install-system.py's FILES and install.py's SYSTEM_FILES, from the same
+        host/data; UNINSTALL_SCRIPTS holds every module of scripts/ that uninstall.py imports or runs."""
+        spec = importlib.util.spec_from_file_location("install_system", SCRIPTS/"install-system.py")
+        system = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(system)
+        self.assertEqual(SESSION.SYSTEM_FILES, system.FILES)
+        self.assertEqual(SESSION.DATA, system.DATA)
+        self.assertEqual([f"{directory}/{name}"[1:] for name, directory, _mode in SESSION.SYSTEM_FILES],
+                         list(install.SYSTEM_FILES))
+        self.assertTrue(SESSION.system_sources())
+        import ast
+        used = set()
+        for name in ("uninstall.py", "install.py", "install-session.py"):
+            tree = ast.parse((SCRIPTS/name).read_text())
+            used |= {f"{alias.name}.py" for node in ast.walk(tree) if isinstance(node, ast.Import) for alias in node.names}
+            used |= {f"{node.module}.py" for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+        used = {name for name in used if (SCRIPTS/name).is_file()} | {"install-session.py"}
+        self.assertLessEqual(used, set(install.UNINSTALL_SCRIPTS))
+        self.assertTrue(all((SCRIPTS/name).is_file() for name in install.UNINSTALL_SCRIPTS))
+
+    def test_abi_problems_and_elf_machines(self):
+        """check_abi: ldd's three problem lines (a foreign or static binary gives "not a dynamic executable"); the
+        e_machine of an ELF file, None for anything else."""
+        for line in ("\tlibfoo.so.1 => not found", "undefined symbol: g_x\t(./win11-panel)", "\tnot a dynamic executable"):
+            self.assertRegex(line, install.ABI_PROBLEM)
+        self.assertNotRegex("\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000)", install.ABI_PROBLEM)
+        self.assertIsNone(install.elf_machine(SCRIPTS/"install.sh"))
+        self.assertIsNone(install.elf_machine(RUN/"units/absent"))
+        self.assertIn(install.elf_machine(Path(os.path.realpath(sys.executable))), install.MACHINES)
+
+    def test_the_terminal_path_and_its_refusals(self):
+        """terminal_install(): --check, --no-session and WIN11_NO_SESSION=1 are 0.9.0's path (False); then no tty is
+        sessionTerminal, a missing gnome-session or pkexec missingParts with its package."""
+        class Tty(io.StringIO):
+            def isatty(self):
+                return True
+        is_file, which = Path.is_file, shutil.which
+        without_session = lambda path: str(path) != "/usr/bin/gnome-session" and is_file(path)     # noqa: E731
+        without_pkexec = lambda name, *args, **kwargs: None if name == "pkexec" else which(name, *args, **kwargs)  # noqa: E731
+        with mock.patch.dict(os.environ, {"WIN11_NO_SESSION": ""}), mock.patch.object(install, "NO_SESSION", False):
+            with mock.patch("sys.stdin", Tty()):
+                self.assertFalse(install.terminal_install(check=True))
+                with mock.patch.object(install, "NO_SESSION", True):
+                    self.assertFalse(install.terminal_install())
+                with mock.patch.dict(os.environ, {"WIN11_NO_SESSION": "1"}):
+                    self.assertFalse(install.terminal_install())
+                with mock.patch("shutil.which", lambda name, *a, **k: f"/usr/bin/{name}"):
+                    self.assertTrue(install.terminal_install())
+                for patch, missing, packages in ((mock.patch.object(Path, "is_file", without_session), "gnome-session",
+                                                  "gnome-session-bin"),
+                                                 (mock.patch("shutil.which", without_pkexec), "pkexec", "pkexec")):
+                    with self.subTest(missing=missing), patch, self.assertRaises(install.Refusal) as raised:
+                        install.terminal_install()
+                    self.assertEqual((raised.exception.key, raised.exception.params),
+                                     ("missingParts", {"missing": missing, "packages": packages}))
+                    self.assertEqual(raised.exception.code, install.t("missingParts", missing=missing) + "\n"
+                                     + install.t("installParts", packages=packages))
+            with mock.patch("sys.stdin", io.StringIO()), self.assertRaises(install.Refusal) as raised:
+                install.terminal_install()
+            self.assertEqual(raised.exception.key, "sessionTerminal")
+
+    def test_messages_before_prepare_speak_the_language_it_picks(self):
+        """Without --lang, locate() sets the message language prepare() will pick, read only, so busy and the path
+        checks follow it: settings.json, an update without one (nl), the locale guess; as root the guess (noRoot),
+        never a home folder. --lang leaves it alone."""
+        here = RUN/"units/early-language"
+        shutil.rmtree(here, ignore_errors=True)
+        (here/"config/win11-gnome").mkdir(parents=True)
+        env = {"HOME": str(here/"home"), "XDG_CONFIG_HOME": str(here/"config"), "XDG_DATA_HOME": str(here/"data"),
+               "WIN11_INSTALL_PREFIX": str(here/"prefix"), "LANG": "en_GB.UTF-8", "TZ": "Europe/London"}
+        self.addCleanup(install.set_language, "nl")
+        with mock.patch.dict(os.environ, env, clear=True):
+            install.set_language("nl")
+            install.locate(here, install.Options())
+            self.assertEqual(install.LANGUAGE, "en")
+            (here/"config/win11-gnome/settings.json").write_text('{"language": "nl"}\n')
+            install.locate(here, install.Options())
+            self.assertEqual(install.LANGUAGE, "nl")
+            (here/"config/win11-gnome/settings.json").unlink()
+            (here/"prefix/share/win11-gnome").mkdir(parents=True)
+            install.set_language("en")
+            install.locate(here, install.Options())
+            self.assertEqual(install.LANGUAGE, "nl")
+            (here/"config/win11-gnome/settings.json").write_text('{"language": "nl"}\n')
+            with mock.patch("os.geteuid", return_value=0), self.assertRaises(install.Refusal) as raised:
+                install.locate(here, install.Options())
+            self.assertEqual((raised.exception.key, raised.exception.code), ("noRoot", install.t("noRoot", "en")))
+            install.set_language("en")                      # what parse_arguments set for --lang en
+            install.locate(here, install.Options(explicit="en"))
+            self.assertEqual(install.LANGUAGE, "en")
+        self.assertEqual(sorted(str(p.relative_to(here)) for p in here.rglob("*")),
+                         ["config", "config/win11-gnome", "config/win11-gnome/settings.json", "prefix", "prefix/share",
+                          "prefix/share/win11-gnome"], "nothing written")
+
+    def test_the_uninstaller_wrapper_quotes_its_paths(self):
+        """<prefix>/bin/winpoint-uninstall runs the payload's uninstall.py with the payload, whatever the prefix holds;
+        own_uninstaller() knows it by its second line."""
+        here = RUN/f"units/wrapper {NASTY}"
+        shutil.rmtree(here, ignore_errors=True)
+        (here/"bin").mkdir(parents=True)
+        payload = here/"share/win11-gnome"
+        text = install.uninstaller_text(payload)
+        self.assertEqual(shlex.split(text.splitlines()[3]),
+                         ["exec", "/usr/bin/python3", "-E", "-s", "-B", str(payload/"scripts/uninstall.py"), str(payload), "$@"])
+        wrapper = here/"bin"/install.UNINSTALLER
+        wrapper.write_text(text, encoding="utf-8")
+        self.assertTrue(install.own_uninstaller(wrapper))
+        # without the payload's uninstall.py (0.9.0's uninstall.sh): both languages, exit 1, before any exec
+        case = Case("units-wrapper")
+        gone = case.run(wrapper, None, [], case.env(case.dir/"stubs"), interpreter=["/bin/sh"])
+        self.assertEqual((gone.returncode, gone.stdout, gone.stderr),
+                         (1, "", install.t("uninstallerGone", "nl", script=payload/"scripts/uninstall.py") + "\n"
+                          + install.t("uninstallerGone", "en", script=payload/"scripts/uninstall.py") + "\n"))
+        wrapper.write_text("#!/bin/sh\nexec true\n")
+        self.assertFalse(install.own_uninstaller(wrapper))
+        wrapper.unlink()
+        (here/"elsewhere").write_text(text)
+        wrapper.symlink_to(here/"elsewhere")
+        self.assertFalse(install.own_uninstaller(wrapper))
 
     def test_bundled_entry_icons_are_files_of_the_win11_theme(self):
         """O2: each BUNDLED_ICONS path is an SVG of vendor/icons/Win11 (a link inside the theme is fine), named

@@ -8,10 +8,12 @@
 //! DESKTOP, below every window, on all workspaces) and hides Ubuntu's DING icons once we report `desktop.ready`
 //! after the first frame (again only while it has not taken the window: report_ready). The bus name
 //! io.github.win11shell.Desktop carries the action group the extension activates on disable (`desktop-quit`).
+//! The desktop covers the primary monitor; each other monitor has a wallpaper window of its own (screens.rs).
 mod actions;
 mod dialogs;
 mod grid;
 mod menus;
+mod screens;
 mod wallpaper;
 
 use crate::core::Shell;
@@ -91,6 +93,10 @@ fn show(shell: &Rc<Shell>) {
     crate::theme::refresh(shell);
     desk.window.present();
     desk.start();
+    // the other monitors' desktop windows (screens.rs)
+    if let Ok(geo) = shell.gnome.call("desktop.geometry", &json!({})) {
+        screens::sync(&desk, &geo);
+    }
 }
 
 /// The extension's desktop-quit (its disable): the window goes, the bus name stays ours, so the extension's next
@@ -99,6 +105,7 @@ fn quit() {
     QUIT.with(|q| q.set(true));
     READY.with(|r| r.set(Ready::Unpainted));
     cancel_retry();
+    screens::clear();
     if let Some(desk) = DESK.with(|d| d.borrow_mut().take()) {
         desk.destroy();
     }
@@ -231,7 +238,38 @@ fn cancel_retry() {
     }
 }
 
-/// The extension's view of the monitors (desktop.geometry): logical size of the whole desktop.
+/// One monitor of desktop.geometry's `areas`: its index, whether it is the primary, its logical size.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Area {
+    pub index: i64,
+    pub primary: bool,
+    pub w: i32,
+    pub h: i32,
+}
+
+/// The monitors that get a desktop window of their own besides the desktop (screens.rs): every one but the primary,
+/// when there are two or more. A desktop window stays on one monitor (Mutter keeps it in that monitor's work area),
+/// so the desktop itself covers the primary monitor and each other monitor has its own wallpaper window.
+pub fn others(geo: &Value) -> Vec<Area> {
+    let areas: Vec<Area> = geo["areas"]
+        .as_array()
+        .map(|list| {
+            list.iter()
+                .filter_map(|a| {
+                    let (w, h) = (a["w"].as_i64()? as i32, a["h"].as_i64()? as i32);
+                    let index = a["index"].as_i64()?;
+                    (w > 0 && h > 0).then_some(Area { index, primary: a["primary"] == true, w, h })
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    if areas.len() < 2 || !areas.iter().any(|a| a.primary) {
+        return Vec::new();
+    }
+    areas.into_iter().filter(|a| !a.primary).collect()
+}
+
+/// The extension's view of the monitors (desktop.geometry): logical size of the desktop (the primary monitor).
 pub fn geometry(shell: &Shell) -> (i32, i32) {
     let geo = shell.gnome.call("desktop.geometry", &json!({})).unwrap_or(Value::Null);
     size_of(&geo).unwrap_or_else(|| {
@@ -269,6 +307,11 @@ pub fn enc(s: &str) -> String {
 /// and whether it covers (else fits) that box; vector images render at exactly that size, raster images only
 /// shrink to it. None keeps the natural size.
 pub fn decode(bytes: &[u8], target: Option<((i32, i32), bool)>) -> Option<gdk::Texture> {
+    decode_pixbuf(bytes, target).map(|pixbuf| texture_of(&pixbuf))
+}
+
+/// `decode`, as the pixbuf (the wallpaper's "span" takes a part of it).
+pub fn decode_pixbuf(bytes: &[u8], target: Option<((i32, i32), bool)>) -> Option<gtk::gdk_pixbuf::Pixbuf> {
     use gtk::gdk_pixbuf::PixbufLoader;
     let head = String::from_utf8_lossy(&bytes[..bytes.len().min(1024)]).to_ascii_lowercase();
     let vector = head.contains("<svg");
@@ -293,18 +336,14 @@ pub fn decode(bytes: &[u8], target: Option<((i32, i32), bool)>) -> Option<gdk::T
     if !written || !closed {
         return None;
     }
-    let pixbuf = loader.pixbuf()?;
+    loader.pixbuf()
+}
+
+/// A decoded picture as a texture.
+pub fn texture_of(pixbuf: &gtk::gdk_pixbuf::Pixbuf) -> gdk::Texture {
     let format = if pixbuf.has_alpha() { gdk::MemoryFormat::R8g8b8a8 } else { gdk::MemoryFormat::R8g8b8 };
-    Some(
-        gdk::MemoryTexture::new(
-            pixbuf.width(),
-            pixbuf.height(),
-            format,
-            &pixbuf.read_pixel_bytes(),
-            pixbuf.rowstride() as usize,
-        )
-        .upcast(),
-    )
+    gdk::MemoryTexture::new(pixbuf.width(), pixbuf.height(), format, &pixbuf.read_pixel_bytes(), pixbuf.rowstride() as usize)
+        .upcast()
 }
 
 /// A backend call as a future (the answer on the main thread).
@@ -314,4 +353,34 @@ pub async fn call(shell: &Shell, method: &str, args: Value) -> Result<Value, Str
     gio::spawn_blocking(move || backend.call(&method, &args))
         .await
         .unwrap_or_else(|_| Err("backend thread panicked".into()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_monitor_has_no_other_desktop_window() {
+        let one = json!({"available": true, "w": 1440, "h": 900, "logical": {"w": 1440, "h": 900},
+            "areas": [{"index": 0, "primary": true, "x": 0, "y": 0, "w": 1440, "h": 900}]});
+        assert!(others(&one).is_empty());
+        // an older extension without areas
+        assert!(others(&json!({"w": 1440, "h": 900})).is_empty());
+    }
+
+    #[test]
+    fn every_monitor_but_the_primary_gets_one() {
+        let two = json!({"available": true, "x": 0, "y": 0, "w": 1440, "h": 900, "monitor": 0, "areas": [
+            {"index": 0, "primary": true, "x": 0, "y": 0, "w": 1440, "h": 900},
+            {"index": 1, "primary": false, "x": 1440, "y": 0, "w": 1280, "h": 960}]});
+        assert_eq!(others(&two), vec![Area { index: 1, primary: false, w: 1280, h: 960 }]);
+        // the primary on the right, a third monitor; a monitor without a size is left out
+        let three = json!({"areas": [
+            {"index": 0, "primary": false, "x": 0, "y": 0, "w": 1280, "h": 1024},
+            {"index": 1, "primary": true, "x": 1280, "y": 0, "w": 1440, "h": 900},
+            {"index": 2, "primary": false, "x": 2720, "y": 0, "w": 0, "h": 900}]});
+        assert_eq!(others(&three), vec![Area { index: 0, primary: false, w: 1280, h: 1024 }]);
+        // no primary known yet: none
+        assert!(others(&json!({"areas": [{"index": 0, "w": 10, "h": 10}, {"index": 1, "w": 10, "h": 10}]})).is_empty());
+    }
 }

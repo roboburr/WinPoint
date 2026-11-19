@@ -1,0 +1,154 @@
+18:55:38 GE0c run lang=en switch=False seed=defaults MemAvailable=9351436 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-b/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-b/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-b/tests/gnome/scenarios/settings-devices.py
+18:56:54 private install: exit 0 in 61.0 s, 87327 mutated paths, 0 outside the run dir, ok=True
+18:56:57 GNOME Shell 50.1 up (mode user, unsafe True)
+18:57:02 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-b/tests/gnome/scenarios/settings-devices.py
+18:57:02   check FAIL (known B-stubs-umask): run/stubs is private (tools::system_tool takes no group- or world-writable directory)
+18:57:02   check PASS: Bluetooth en apparaten shows link-autoplay
+18:57:03   check PASS: bluetooth: title and breadcrumb Bluetooth & devices
+18:57:03   check PASS: bluetooth: Settings is in en
+18:57:03   check PASS: bluetooth: no Dutch words in en
+18:57:04   check PASS: without Bluetooth the page still lists its sub-pages
+18:57:04   check PASS: without BlueZ the page has no Bluetooth switch
+18:57:04   check PASS: USB is listed exactly when caps report Thunderbolt
+18:57:04   check PASS: the search for "usb" finds the USB page exactly when caps report Thunderbolt
+18:57:05   check PASS: Automatisch afspelen shows st-autoplay-autorun-never
+18:57:06   check PASS: autoplay: title and breadcrumb Bluetooth & devices › AutoPlay
+18:57:06   check PASS: autoplay: the current crumb is shown in full, not as "…"
+18:57:06   check PASS: autoplay: Settings is in en
+18:57:06   check PASS: autoplay: no Dutch words in en
+18:57:06   check PASS: the switch shows the inverse of autorun-never
+18:57:07   check PASS: a click on the switch writes autorun-never
+18:57:07   check PASS: with AutoPlay on the media rows are sensitive
+18:57:07   check PASS: outside writes of autorun-never move the switch
+18:57:07   check PASS: Verwisselbaar station shows GNOME's fixed choice, Altijd vragen
+18:57:07   check PASS: no control is bound to automount-open
+18:57:07   check PASS: gsettings.set refuses automount-open (in no writing mode of allow/devices.rs)
+18:57:08   check PASS: an outside write moves the Geheugenkaart drop-down to Geen actie ondernemen
+18:57:09   check PASS: image-dcf › Open folder to view files writes GNOME's three lists
+18:57:09   check PASS: audio-cdda › Take no action writes GNOME's three lists
+18:57:10   check PASS: video-dvd › Take no action writes GNOME's three lists
+18:57:11   check PASS: audio-player › Open folder to view files writes GNOME's three lists
+18:57:12   check PASS: unix-software › Take no action writes GNOME's three lists
+18:57:13   check PASS: Andere mediatypen opens the dialog with Type and Actie
+18:57:15   check PASS: with AutoPlay off the media rows are insensitive (as GNOME greys them)
+18:57:15   check PASS: with AutoPlay off Verwisselbaar station is insensitive too (as Windows greys it)
+18:57:15   check PASS: the switch off writes autorun-never true
+18:57:15   check PASS: Bluetooth en apparaten with BlueZ shows bt-toggle
+18:57:15   check PASS: with BlueZ the switch shows the adapter powered
+18:57:15   check PASS: wait_text settings: 'Discoverable as “WinPoint-pc”'
+18:57:15   check PASS: the PC is discoverable while the page shows (Set Discoverable true)
+18:57:16   check PASS: the paired devices are tiles
+18:57:16   check PASS: the mouse's tile shows BlueZ's battery
+18:57:16   check PASS: bluetooth: title and breadcrumb Bluetooth & devices
+18:57:16   check PASS: bluetooth: Settings is in en
+18:57:16   check PASS: bluetooth: no Dutch words in en
+18:57:17   check PASS: the switch off goes through gsd's Rfkill: BluetoothAirplaneMode true (amendment 57)
+18:57:21   check PASS: the adapter did not follow gsd: the host sets BlueZ's Powered false
+18:57:22   check PASS: wait_text settings: 'Bluetooth is off'
+18:57:22   check PASS: the page shows Bluetooth off
+18:57:23   check PASS: the switch on: BluetoothAirplaneMode false, then the adapter powered
+18:57:23   check PASS: the page shows Bluetooth on again
+18:57:24   check PASS: Bluetooth en apparaten in flight mode shows bt-airplane
+18:57:24   check PASS: flight mode on shows GNOME's notice
+18:57:25   check PASS: Apparaten shows btd-dev-F1:22:33:44:55:01
+18:57:25   check PASS: Windows' groups: mice under Muis, toetsenbord en pen, headphones under Audio, the phone under Overige
+18:57:26   check PASS: the Bluetooth mouse shows BlueZ's battery, the receiver mouse UPower's
+18:57:26   check PASS: the computer's own battery is not listed
+18:57:26   check PASS: with BlueZ there is no no-Bluetooth notice
+18:57:26   check PASS: bluetooth-devices: title and breadcrumb Bluetooth & devices › Devices
+18:57:26   check PASS: bluetooth-devices: the current crumb is shown in full, not as "…"
+18:57:26   check PASS: bluetooth-devices: Settings is in en
+18:57:26   check PASS: bluetooth-devices: no Dutch words in en
+18:57:28   check PASS: ⋯ › Verbinding verbreken sends Device1.Disconnect to the headphones
+18:57:29   check PASS: ⋯ › Eigenschappen opens GNOME's device dialog with the address
+18:57:34   check PASS: Bestanden verzenden runs bluetooth-sendto --device=<address> --name=<name>
+18:57:35   check PASS: Apparaat verwijderen asks first
+18:57:41   check PASS: Ja sends Adapter1.RemoveDevice with the phone
+18:57:41   check PASS: the removed phone leaves the list
+18:57:41   check PASS: the lease ends when the page goes: Discoverable false
+18:57:42   check PASS: Bluetooth en apparaten before the window closes shows bt-toggle
+18:57:42   check PASS: closing the window on the Bluetooth page ends the lease: Discoverable false
+18:57:43   check PASS: USB shows usb-direct-access
+18:57:43   check PASS: Directe toegang shows AuthMode enabled
+18:57:43   check PASS: the pending dock is listed
+18:57:43   check PASS: the pending dock shows Autoriseren en verbinden
+18:57:44   check PASS: usb: title and breadcrumb Bluetooth & devices › USB
+18:57:44   check PASS: usb: the current crumb is shown in full, not as "…"
+18:57:44   check PASS: usb: Settings is in en
+18:57:44   check PASS: usb: no Dutch words in en
+18:57:45   check PASS: Autoriseren en verbinden enrolls the dock with the default policy
+18:57:45   check PASS: the enrolment allows the password dialog
+18:57:45   check PASS: the switch off writes AuthMode disabled
+18:57:46   check PASS: fake_ipp.py listens on the loopback
+18:57:47   check PASS: Printers en scanners shows printer-HP_LaserJet_M404
+18:57:47   check PASS: both queues of the scheduler are listed
+18:57:47   check PASS: the stopped printer shows GNOME's reason
+18:57:47   check PASS: printers: title and breadcrumb Bluetooth & devices › Printers & scanners
+18:57:47   check PASS: printers: the current crumb is shown in full, not as "…"
+18:57:47   check PASS: printers: Settings is in en
+18:57:47   check PASS: printers: no Dutch words in en
+18:58:08   check FAIL (known B-sun-len): Scanner openen starts Documentscanner (simple-scan)
+18:58:09   check PASS: Apparaat toevoegen lists the devices the scheduler found
+18:58:09   check PASS: DevicesGet allows the password dialog
+18:58:10   check PASS: the driverless printer is added with IPP Everywhere, enabled, accepting jobs and A4
+18:58:10   check PASS: every printer write allows the password dialog
+18:58:12   check PASS: wait_text settings: 'HP LaserJet M404'
+18:58:12   check PASS: the printer's page shows its settings
+18:58:12   check PASS: printer: title and breadcrumb Bluetooth & devices › Printers & scanners › HP LaserJet M404
+18:58:12   check FAIL (known B-crumb-ellipsis): printer: the current crumb is shown in full, not as "…"
+18:58:13   check PASS: printer: Settings is in en
+18:58:13   check PASS: printer: no Dutch words in en
+18:58:14   check PASS: Testpagina afdrukken prints GNOME's test page as the user's job
+18:58:14   check PASS: the queue lists the scheduler's jobs
+18:58:20   check PASS: pausing a job sends JobSetHoldUntil(id, indefinite) with the password dialog allowed
+18:58:27   check PASS: the preferences show the PPD's PageSize with the queue's default
+18:58:27   check PASS: and the other PPD options
+18:58:30   check PASS: wait_text settings: 'Epson ET-2850'
+18:58:31   check PASS: the stopped printer offers Hervatten
+18:58:31   check PASS: printer: title and breadcrumb Bluetooth & devices › Printers & scanners › Epson ET-2850
+18:58:31   check PASS: printer: the current crumb is shown in full, not as "…"
+18:58:32   check PASS: Hervatten is GNOME's restart: enabled and accepting jobs
+18:58:33   check PASS: Als standaard instellen sends PrinterSetDefault
+18:58:34   check PASS: Kleurprofiel shows colorprofile-0-enabled
+18:58:34   check PASS: the display is listed open, colour management on
+18:58:34   check PASS: its default profile is the EDID profile
+18:58:34   check PASS: without a colour sensor Kalibreren… is not offered, a notice says why
+18:58:34   check PASS: colorprofile: title and breadcrumb System › Display › Colour profile
+18:58:34   check PASS: colorprofile: the current crumb is shown in full, not as "…"
+18:58:35   check PASS: colorprofile: Settings is in en
+18:58:35   check PASS: colorprofile: no Dutch words in en
+18:58:36   check PASS: the Kleurprofiel drop-down sends Device.MakeProfileDefault with the password dialog allowed
+18:58:38   check PASS: switching colour management off sends Device.SetEnabled(false) with the password dialog allowed
+18:58:40   check PASS: Kleurprofiel with a colour sensor shows colorprofile-0-calibrate
+18:58:40   check PASS: with a colour sensor the display offers Kalibreren… and no notice
+18:58:40   check PASS: Mutter's CalibrateMonitor takes a connector and gives a session path, as the host calls it
+18:58:40   check FAIL (known B-mutter-virtual): CalibrateMonitor gives the harness's monitor a session
+18:58:40   check FAIL (known B-dialog-click): real pointer clicks reach the buttons of kit dialogs
+18:58:41 shutdown app: signalled own descendants 2044:python3
+18:58:41 shutdown shell clients: signalled own descendants 190:ibus-daemon, 522:win11-shell, 1432:glycin-image-rs, 634:win11-panel, 207:ibus-memconf, 208:ibus-extension-, 367:ibus-engine-sim
+18:58:41 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+18:58:41 shutdown system bus: signalled own descendants 163:dbus-daemon
+18:58:41 inner sweep: signalled own descendants 1443:glycin-image-rs
+18:58:41 inner done: 0 surfaces, 0 failed []
+18:58:44 strace connect:    110 x AF_INET 127.0.0.1 -> EINPROGRESS
+18:58:44 strace connect:     56 x AF_INET 127.0.0.1 -> UNFINISHED
+18:58:44 strace connect:      4 x AF_INET 127.0.0.1 -> ok
+18:58:44 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+18:58:44 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+18:58:44 strace connect:      4 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+18:58:44 strace connect:      1 x AF_UNIX /tmp/w11-rt/bus -> UNFINISHED
+18:58:44 strace connect:     44 x AF_UNIX /tmp/w11-rt/bus -> ok
+18:58:44 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+18:58:44 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+18:58:44 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+18:58:44 strace connect:     12 x AF_UNIX /tmp/w11-rt/sbus -> ok
+18:58:44 strace connect:      1 x AF_UNIX /tmp/w11-rt/w11-wl -> UNFINISHED
+18:58:44 strace connect:      3 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+18:58:44 strace connect:     10 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+18:58:44 strace connect:      1 x AF_UNIX /var/lib/sss/pipes/nss -> UNFINISHED
+18:58:44 strace connect:     41 x AF_UNIX /var/run/nscd/socket -> ENOENT
+18:58:44 strace connect:      2 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+18:58:44 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+18:58:44 strace connect check: 368 connect() calls, OK
+18:58:48 strace exec:      2 x /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-b/tests/gnome/run/stubs/apt (stub) -> ran
+18:58:48 strace exec check: 436 execve() calls, OK

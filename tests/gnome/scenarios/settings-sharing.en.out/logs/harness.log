@@ -1,0 +1,124 @@
+01:38:06 GE0c run lang=en switch=False seed=defaults MemAvailable=7802244 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/scenarios/settings-sharing.py
+01:39:22 private install: exit 0 in 61.3 s, 87327 mutated paths, 0 outside the run dir, ok=True
+01:39:25 GNOME Shell 50.1 up (mode user, unsafe True)
+01:39:30 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/scenarios/settings-sharing.py
+01:39:30   check FAIL (known B-stubs-umask): run/stubs is private (tools::system_tool takes no group- or world-writable directory)
+01:39:30   check PASS: allow/network.rs has no Owned key (nothing here points to a WinPoint page)
+01:39:31   check PASS: network-advanced shows network-unavailable
+01:39:31   check PASS: network-advanced: title and breadcrumb Network & internet › Advanced network settings
+01:39:31   check PASS: network-advanced: the current crumb is shown in full, not as "…"
+01:39:32   check PASS: network-advanced nonm: Settings is in en
+01:39:32   check PASS: network-advanced nonm: no placeholder
+01:39:32   check PASS: network-advanced nonm: no Dutch words in en
+01:39:33   check PASS: network-advanced without NetworkManager: GNOME's "Netwerk niet beschikbaar"
+01:39:33   check PASS: sharing-advanced shows sharing-advanced-discovery
+01:39:33   check PASS: sharing-advanced: title and breadcrumb Network & internet › Advanced network settings › Advanced sharing settings
+01:39:33   check FAIL (known B-crumb-ellipsis): sharing-advanced: the current crumb is shown in full, not as "…"
+01:39:34   check PASS: sharing-advanced nogsd: Settings is in en
+01:39:34   check PASS: sharing-advanced nogsd: no placeholder
+01:39:34   check PASS: sharing-advanced nogsd: no Dutch words in en
+01:39:35   check PASS: sharing-advanced without gsd: "gnome-settings-daemon wordt niet uitgevoerd"
+01:39:35   check PASS: sharing-advanced without gsd: the Mediastreaming switch is insensitive
+01:39:36   check PASS: network-advanced shows network-advanced-adapter-0
+01:39:36   check PASS: network-advanced: title and breadcrumb Network & internet › Advanced network settings
+01:39:36   check PASS: network-advanced: the current crumb is shown in full, not as "…"
+01:39:37   check PASS: network-advanced: Settings is in en
+01:39:37   check PASS: network-advanced: no placeholder
+01:39:37   check PASS: network-advanced: no Dutch words in en
+01:39:38   check PASS: network-advanced: network-advanced-adapter-0
+01:39:38   check PASS: network-advanced: network-advanced-adapter-1
+01:39:38   check PASS: network-advanced: network-advanced-hardware
+01:39:38   check PASS: network-advanced: network-advanced-connectivity
+01:39:38   check PASS: network-advanced: link-sharing-advanced
+01:39:38   check PASS: network-advanced: no "Netwerk niet beschikbaar" with NetworkManager
+01:39:39   check PASS: network-advanced: the connectivity check on (NetworkManager's)
+01:39:39   check PASS: network-advanced: the connectivity check off sets ConnectivityCheckEnabled
+01:39:39   check PASS: network-advanced: ConnectivityCheckEnabled false with the password dialog allowed
+01:39:39   check PASS: network-advanced: the connectivity check on sets ConnectivityCheckEnabled
+01:39:39   check PASS: network-advanced: ConnectivityCheckEnabled true with the password dialog allowed
+01:39:40   check PASS: network-advanced: Uitschakelen sends Device.Disconnect of wlan0
+01:39:40   check PASS: network-advanced: with the password dialog allowed
+01:39:41   check PASS: sharing-advanced shows sharing-advanced-media
+01:39:41   check PASS: sharing-advanced: title and breadcrumb Network & internet › Advanced network settings › Advanced sharing settings
+01:39:41   check FAIL (known B-crumb-ellipsis): sharing-advanced: the current crumb is shown in full, not as "…"
+01:39:42   check PASS: sharing-advanced: Settings is in en
+01:39:42   check PASS: sharing-advanced: no placeholder
+01:39:42   check PASS: sharing-advanced: no Dutch words in en
+01:39:43   check PASS: sharing-advanced: sharing-advanced-discovery
+01:39:43   check PASS: sharing-advanced: sharing-advanced-media
+01:39:43   check PASS: sharing-advanced: sharing-advanced-networks
+01:39:43   check PASS: sharing-advanced: sharing-advanced-folder-add
+01:39:43   check PASS: sharing-advanced: sharing-advanced-folder-remove-0
+01:39:43   check PASS: sharing-advanced: no status notice while gsd Sharing says "available"
+01:39:44   check PASS: sharing-advanced: Mediastreaming sends EnableService('rygel')
+01:39:48   check PASS: sharing-advanced: Verwijderen of Kantoor sends DisableService(rygel, Kantoor)
+01:39:49   check PASS: sharing-advanced: rygel.conf without the first folder (GNOME's writer)
+01:39:49   check PASS: remotedesktop shows st-remotedesktop-enable
+01:39:49   check PASS: remotedesktop: title and breadcrumb System › Remote Desktop
+01:39:49   check PASS: remotedesktop: the current crumb is shown in full, not as "…"
+01:39:51   check PASS: remotedesktop: Settings is in en
+01:39:51   check PASS: remotedesktop: no placeholder
+01:39:51   check PASS: remotedesktop: no Dutch words in en
+01:39:51   check PASS: remotedesktop: st-remotedesktop-enable
+01:39:52   check PASS: remotedesktop: remotedesktop-nla
+01:39:52   check PASS: remotedesktop: remotedesktop-credentials
+01:39:52   check PASS: remotedesktop: remotedesktop-copy-name
+01:39:52   check PASS: remotedesktop: remotedesktop-login-switch
+01:39:52   check PASS: remotedesktop: off at first (enable is GNOME's default)
+01:39:53   check PASS: remotedesktop: "Extern bureaublad inschakelen?" first
+01:39:58   check PASS: remotedesktop: the user unit started and enabled, no password dialog (a user unit)
+01:39:58   check PASS: remotedesktop: enable true in the keyfile
+01:39:58   check PASS: remotedesktop: tls-cert names GNOME's new certificate
+01:39:58   check PASS: remotedesktop: the key file is private (0600)
+01:39:58   check PASS: remotedesktop: grdctl is the run/stubs one (status --show-credentials)
+01:39:58   check PASS: remotedesktop: no password on grdctl's command line
+01:40:01   check PASS: remotedesktop: Externe besturing off (view-only is GNOME's default true)
+01:40:02   check PASS: remotedesktop: Externe besturing writes view-only false
+01:40:02   check PASS: remotedesktop: an outside write of view-only true turns Externe besturing off
+01:40:02   check PASS: remotedesktop: an outside write of enable false turns the switch off
+01:40:02   check PASS: remotedesktop: Externe besturing insensitive while Desktop Sharing is off (GNOME's)
+01:40:03   check PASS: remotedesktop: Extern aanmelden asks for the sign-in details first
+01:40:08   check PASS: remotedesktop: remote login through the configuration daemon, each call interactive
+01:40:08   check PASS: system-advanced shows system-advanced-ssh-install
+01:40:08   check PASS: system-advanced: title and breadcrumb System › Advanced
+01:40:08   check PASS: system-advanced: the current crumb is shown in full, not as "…"
+01:40:10   check PASS: system-advanced: Settings is in en
+01:40:10   check PASS: system-advanced: no placeholder
+01:40:10   check PASS: system-advanced: no Dutch words in en
+01:40:10   check PASS: system-advanced: Windows' "Een optionele functie toevoegen" without openssh-server
+01:40:11   check PASS: system-advanced: no switch before the install
+01:40:11   check PASS: system-advanced: PackageKit resolves openssh-server
+01:40:11   check PASS: system-advanced: InstallPackages with the password dialog allowed
+01:40:13   check PASS: system-advanced: the install leaves the server off (remote-login-helper, DisableUnitFiles, StopUnit)
+01:40:14   check PASS: system-advanced: the switch shows Uit after the install
+01:40:14   check PASS: system-advanced: ssh.socket started and enabled (amendment 35), with the password dialog allowed
+01:40:14   check PASS: system-advanced: GNOME's remote-login action first, so systemd asks no password of its own
+01:40:14   check PASS: system-advanced: the switch stays on
+01:40:15   check PASS: system-advanced: the login command
+01:40:15   check FAIL (known C-dialog-click): the buttons inside kit dialogs take real pointer clicks
+01:40:15   check PASS: every dialog action was done (real or dev click)
+01:40:15 shutdown app: signalled own descendants 1347:win11-gtk-setti, 1356:win11-app
+01:40:15 shutdown shell clients: signalled own descendants 191:ibus-daemon, 511:win11-shell, 1426:glycin-image-rs, 635:win11-panel, 208:ibus-memconf, 209:ibus-extension-, 527:ibus-engine-sim
+01:40:15 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+01:40:15 shutdown system bus: signalled own descendants 163:dbus-daemon
+01:40:15 inner sweep: signalled own descendants 1437:glycin-image-rs
+01:40:15 inner done: 0 surfaces, 0 failed []
+01:40:17 strace connect:     50 x AF_INET 127.0.0.1 -> EINPROGRESS
+01:40:17 strace connect:     20 x AF_INET 127.0.0.1 -> UNFINISHED
+01:40:17 strace connect:      3 x AF_INET 127.0.0.1 -> ok
+01:40:17 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+01:40:17 strace connect:      1 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> UNFINISHED
+01:40:17 strace connect:      3 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+01:40:17 strace connect:     24 x AF_UNIX /tmp/w11-rt/bus -> ok
+01:40:17 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+01:40:17 strace connect:      1 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+01:40:17 strace connect:      1 x AF_UNIX /tmp/w11-rt/pulse/native -> UNFINISHED
+01:40:17 strace connect:      2 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+01:40:17 strace connect:      6 x AF_UNIX /tmp/w11-rt/sbus -> ok
+01:40:17 strace connect:      3 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+01:40:17 strace connect:      7 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+01:40:17 strace connect:     29 x AF_UNIX /var/run/nscd/socket -> ENOENT
+01:40:17 strace connect:      2 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+01:40:17 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+01:40:17 strace connect check: 198 connect() calls, OK
+01:40:22 strace exec check: 276 execve() calls, OK

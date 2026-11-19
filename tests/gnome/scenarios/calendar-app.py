@@ -38,8 +38,6 @@ DESKTOP_ID = f'{APP}.desktop'
 SCHEME = 'x-scheme-handler/win11-calendar'
 FIRST, SECOND = '2026-12-24', '2027-01-15'
 BRIDGE = "Main.extensionManager.lookup('win11-gnome@win11shell.local').stateObj._panelBridge"
-TOKEN_JS = ("(()=>{try{return JSON.parse(" + BRIDGE + ".Call('apps.activationToken',JSON.stringify({desktopId:'"
-            + DESKTOP_ID + "'}))).token||null;}catch(e){return null;}})()")
 KNOWN_JS = f"Boolean(imports.gi.Shell.AppSystem.get_default().lookup_app('{DESKTOP_ID}'))"
 SCHEME_JS = "imports.gi.Gio.AppInfo.get_default_for_uri_scheme('win11-calendar')?.get_id()??null"
 WINDOWS_JS = ("(()=>{const Meta=imports.gi.Meta;const f=global.display.focus_window;"
@@ -113,7 +111,8 @@ def run(h):
 
     started = []
     # A. The first launch, on 24 December 2026.
-    token = h.eval(TOKEN_JS)
+    token = (h.bridge('apps.activationToken', {'desktopId': DESKTOP_ID}) or {}).get('token')
+    h.check('async bridge supplies Calendar an activation token', isinstance(token, str) and bool(token))
     first = spawn(h, binary, ['--date', FIRST], token)
     started.append(first)
     try:
@@ -133,7 +132,7 @@ def run(h):
     how = h.eval(GNOME_LAUNCH_JS.replace('{date}', SECOND))
     second = None
     if how is not True:
-        second = spawn(h, binary, [f'win11-calendar:{SECOND}'], h.eval(TOKEN_JS))
+        second = spawn(h, binary, [f'win11-calendar:{SECOND}'], (h.bridge('apps.activationToken', {'desktopId': DESKTOP_ID}) or {}).get('token'))
         started.append(second)
     h.record('B.launch', {'gnome': how, 'spawned': bool(second)})
     if second:
@@ -158,7 +157,7 @@ def run(h):
             isinstance(frosted, list) and any(w.get('blur') and w.get('focused') for w in frosted), frosted=frosted)
 
     # C. The week view through a third launch (forwarded to the running window).
-    third = spawn(h, binary, ['--date', '2026-12-22', '--view', 'week'], h.eval(TOKEN_JS))
+    third = spawn(h, binary, ['--date', '2026-12-22', '--view', 'week'], (h.bridge('apps.activationToken', {'desktopId': DESKTOP_ID}) or {}).get('token'))
     started.append(third)
     try:
         code = third.wait(15)
@@ -171,7 +170,7 @@ def run(h):
     h.screenshot('c-calendar-week-2026-12-22')
 
     # D. The day view with a new event's editor over it.
-    fourth = spawn(h, binary, ['--date', FIRST, '--view', 'day', '--new'], h.eval(TOKEN_JS))
+    fourth = spawn(h, binary, ['--date', FIRST, '--view', 'day', '--new'], (h.bridge('apps.activationToken', {'desktopId': DESKTOP_ID}) or {}).get('token'))
     started.append(fourth)
     try:
         code = fourth.wait(15)

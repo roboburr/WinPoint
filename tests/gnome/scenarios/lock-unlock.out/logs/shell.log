@@ -1,0 +1,235 @@
+libmutter-Message: 03:33:36.774: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:160): libmutter-WARNING **: 03:33:36.774: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:160): libmutter-WARNING **: 03:33:36.774: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 03:33:36.928: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 03:33:36.929: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 03:33:36.929: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 03:33:36.930: Obtained a high priority EGL context
+libmutter-Message: 03:33:36.948: Added virtual monitor Meta-0
+libmutter-Message: 03:33:36.950: Using Wayland display name 'w11-wl'
+
+(gnome-shell:160): libmutter-WARNING **: 03:33:36.991: There is no colord server available
+GNOME Shell-Message: 03:33:37.352: Registering session with GDM
+GNOME Shell-Message: 03:33:37.364: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+
+(gnome-shell:160): GNOME Shell-CRITICAL **: 03:33:37.423: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+
+(gnome-shell:160): GNOME Shell-CRITICAL **: 03:33:37.436: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+GNOME Shell-Message: 03:33:37.436: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 03:33:37.457: Failed to register AuthenticationAgent
+WARNING: Glycin running without sandbox.
+portal is not running: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.portal.IBus was not provided by any .service files
+
+(gnome-shell:160): GnomeDesktop-WARNING **: 03:33:38.190: Could not create transient scope for PID 516: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+GNOME Shell-Message: 03:33:38.190: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+GNOME Shell-Message: 03:33:38.190: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+** Message: 03:33:38.201: Failed to start camera monitor
+GNOME Shell-Message: 03:33:38.224: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 03:33:38.225: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+
+(gnome-shell:160): accountsservice-WARNING **: 03:33:38.277: ActUserManager: user (null) has no username (uid: -1)
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 03:33:38.742: GNOME Shell started at Mon Nov 16 2026 03:33:37 GMT+0100 (Central European Standard Time)
+GNOME Shell-Message: 03:33:38.742: Registering display with GDM
+GNOME Shell-Message: 03:33:38.751: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+WARNING: Glycin running without sandbox.
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.012: Object Clutter.Actor (0x595286e31aa0), has been already disposed — impossible to get any property from it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x595284466510 ==
+#0   595284568570 i   resource:///org/gnome/shell/ui/workspace.js:1364 (2367436a9b50 @ 246)
+#1   5952845684b8 i   resource:///org/gnome/shell/ui/workspace.js:1232 (2367436a95b0 @ 468)
+#2   595284568430 i   resource:///org/gnome/shell/ui/workspace.js:1213 (2367436a9650 @ 68)
+#3   595284568348 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:256 (d28a961ab0 @ 1279)
+#4   595284568270 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1289 (d28a95cab0 @ 278)
+#5   5952845681a8 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732 (d28a944e20 @ 103)
+#6   5952845680d8 i   resource:///org/gnome/shell/ui/extensionSystem.js:217 (1e73ab95f1f0 @ 523)
+#7   7ffe9e147c90 b   resource:///org/gnome/shell/ui/extensionSystem.js:588 (1e73ab95f9c0 @ 429)
+#8   595284567f80 i   resource:///org/gnome/shell/ui/extensionSystem.js:793 (1e73ab960100 @ 25)
+#9   595284567ef8 i   resource:///org/gnome/shell/ui/extensionSystem.js:49 (1e73ab958d30 @ 13)
+#10   7ffe9e148520 b   resource:///org/gnome/gjs/modules/core/_signals.js:130 (27eb01ac35b0 @ 126)
+#11   7ffe9e148c90 b   resource:///org/gnome/gjs/modules/core/_signals.js:119 (27eb01ac34c0 @ 289)
+#12   7ffe9e149430 b   resource:///org/gnome/shell/ui/sessionMode.js:212 (1e73ab9f9dd0 @ 338)
+#13   595284567d98 i   resource:///org/gnome/shell/ui/sessionMode.js:174 (1e73ab9f9c90 @ 66)
+#14   595284567d10 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee550ce0 @ 27)
+#15   595284567c80 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee556650 @ 131)
+#16   595284567be8 i   self-hosted:1432 (18b7ee576920 @ 30)
+#17   7ffe9e149c20 b   self-hosted:800 (18b7ee576bf0 @ 15)
+#18   595284567b58 i   resource:///org/gnome/shell/ui/init.js:20 (27eb01a8d8d0 @ 48)
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.012: JS ERROR: TypeError: can't access property "addWindow", this._container.layout_manager is null
+_addWindowClone@resource:///org/gnome/shell/ui/workspace.js:1364:9
+_doAddWindow@resource:///org/gnome/shell/ui/workspace.js:1232:28
+_doAddWindow/<@resource:///org/gnome/shell/ui/workspace.js:1213:26
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:256:46
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1289:37
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732:35
+_callExtensionDisable@resource:///org/gnome/shell/ui/extensionSystem.js:217:32
+_onEnabledExtensionsChanged@resource:///org/gnome/shell/ui/extensionSystem.js:588:24
+_sessionUpdated@resource:///org/gnome/shell/ui/extensionSystem.js:793:20
+ExtensionManager/<@resource:///org/gnome/shell/ui/extensionSystem.js:49:18
+_callHandlers@resource:///org/gnome/gjs/modules/core/_signals.js:130:42
+_emit@resource:///org/gnome/gjs/modules/core/_signals.js:119:10
+_sync@resource:///org/gnome/shell/ui/sessionMode.js:212:14
+pushMode@resource:///org/gnome/shell/ui/sessionMode.js:174:14
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:155
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:219
+async*@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:224
+EvalAsync@resource:///org/gnome/shell/ui/shellDBus.js:81:48
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.013: Object Clutter.Actor (0x595286e31aa0), has been already disposed — impossible to get any property from it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x595284466510 ==
+#0   595284568570 i   resource:///org/gnome/shell/ui/workspace.js:1364 (2367436a9b50 @ 246)
+#1   5952845684b8 i   resource:///org/gnome/shell/ui/workspace.js:1232 (2367436a95b0 @ 468)
+#2   595284568430 i   resource:///org/gnome/shell/ui/workspace.js:1213 (2367436a9650 @ 68)
+#3   595284568348 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:256 (d28a961ab0 @ 1279)
+#4   595284568270 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1289 (d28a95cab0 @ 278)
+#5   5952845681a8 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732 (d28a944e20 @ 103)
+#6   5952845680d8 i   resource:///org/gnome/shell/ui/extensionSystem.js:217 (1e73ab95f1f0 @ 523)
+#7   7ffe9e147c90 b   resource:///org/gnome/shell/ui/extensionSystem.js:588 (1e73ab95f9c0 @ 429)
+#8   595284567f80 i   resource:///org/gnome/shell/ui/extensionSystem.js:793 (1e73ab960100 @ 25)
+#9   595284567ef8 i   resource:///org/gnome/shell/ui/extensionSystem.js:49 (1e73ab958d30 @ 13)
+#10   7ffe9e148520 b   resource:///org/gnome/gjs/modules/core/_signals.js:130 (27eb01ac35b0 @ 126)
+#11   7ffe9e148c90 b   resource:///org/gnome/gjs/modules/core/_signals.js:119 (27eb01ac34c0 @ 289)
+#12   7ffe9e149430 b   resource:///org/gnome/shell/ui/sessionMode.js:212 (1e73ab9f9dd0 @ 338)
+#13   595284567d98 i   resource:///org/gnome/shell/ui/sessionMode.js:174 (1e73ab9f9c90 @ 66)
+#14   595284567d10 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee550ce0 @ 27)
+#15   595284567c80 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee556650 @ 131)
+#16   595284567be8 i   self-hosted:1432 (18b7ee576920 @ 30)
+#17   7ffe9e149c20 b   self-hosted:800 (18b7ee576bf0 @ 15)
+#18   595284567b58 i   resource:///org/gnome/shell/ui/init.js:20 (27eb01a8d8d0 @ 48)
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.013: JS ERROR: TypeError: can't access property "addWindow", this._container.layout_manager is null
+_addWindowClone@resource:///org/gnome/shell/ui/workspace.js:1364:9
+_doAddWindow@resource:///org/gnome/shell/ui/workspace.js:1232:28
+_doAddWindow/<@resource:///org/gnome/shell/ui/workspace.js:1213:26
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/desktopBridge.js:256:46
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1289:37
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732:35
+_callExtensionDisable@resource:///org/gnome/shell/ui/extensionSystem.js:217:32
+_onEnabledExtensionsChanged@resource:///org/gnome/shell/ui/extensionSystem.js:588:24
+_sessionUpdated@resource:///org/gnome/shell/ui/extensionSystem.js:793:20
+ExtensionManager/<@resource:///org/gnome/shell/ui/extensionSystem.js:49:18
+_callHandlers@resource:///org/gnome/gjs/modules/core/_signals.js:130:42
+_emit@resource:///org/gnome/gjs/modules/core/_signals.js:119:10
+_sync@resource:///org/gnome/shell/ui/sessionMode.js:212:14
+pushMode@resource:///org/gnome/shell/ui/sessionMode.js:174:14
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:155
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:219
+async*@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:224
+EvalAsync@resource:///org/gnome/shell/ui/shellDBus.js:81:48
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.014: Object Clutter.Actor (0x595286e31aa0), has been already disposed — impossible to get any property from it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x595284466510 ==
+#0   595284568488 i   resource:///org/gnome/shell/ui/workspace.js:1364 (2367436a9b50 @ 246)
+#1   5952845683d0 i   resource:///org/gnome/shell/ui/workspace.js:1232 (2367436a95b0 @ 468)
+#2   595284568348 i   resource:///org/gnome/shell/ui/workspace.js:1213 (2367436a9650 @ 68)
+#3   7ffe9e147280 b   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1325 (d28a95cab0 @ 1699)
+#4   5952845681a8 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732 (d28a944e20 @ 103)
+#5   5952845680d8 i   resource:///org/gnome/shell/ui/extensionSystem.js:217 (1e73ab95f1f0 @ 523)
+#6   7ffe9e147c90 b   resource:///org/gnome/shell/ui/extensionSystem.js:588 (1e73ab95f9c0 @ 429)
+#7   595284567f80 i   resource:///org/gnome/shell/ui/extensionSystem.js:793 (1e73ab960100 @ 25)
+#8   595284567ef8 i   resource:///org/gnome/shell/ui/extensionSystem.js:49 (1e73ab958d30 @ 13)
+#9   7ffe9e148520 b   resource:///org/gnome/gjs/modules/core/_signals.js:130 (27eb01ac35b0 @ 126)
+#10   7ffe9e148c90 b   resource:///org/gnome/gjs/modules/core/_signals.js:119 (27eb01ac34c0 @ 289)
+#11   7ffe9e149430 b   resource:///org/gnome/shell/ui/sessionMode.js:212 (1e73ab9f9dd0 @ 338)
+#12   595284567d98 i   resource:///org/gnome/shell/ui/sessionMode.js:174 (1e73ab9f9c90 @ 66)
+#13   595284567d10 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee550ce0 @ 27)
+#14   595284567c80 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee556650 @ 131)
+#15   595284567be8 i   self-hosted:1432 (18b7ee576920 @ 30)
+#16   7ffe9e149c20 b   self-hosted:800 (18b7ee576bf0 @ 15)
+#17   595284567b58 i   resource:///org/gnome/shell/ui/init.js:20 (27eb01a8d8d0 @ 48)
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.015: JS ERROR: TypeError: can't access property "addWindow", this._container.layout_manager is null
+_addWindowClone@resource:///org/gnome/shell/ui/workspace.js:1364:9
+_doAddWindow@resource:///org/gnome/shell/ui/workspace.js:1232:28
+_doAddWindow/<@resource:///org/gnome/shell/ui/workspace.js:1213:26
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1325:27
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732:35
+_callExtensionDisable@resource:///org/gnome/shell/ui/extensionSystem.js:217:32
+_onEnabledExtensionsChanged@resource:///org/gnome/shell/ui/extensionSystem.js:588:24
+_sessionUpdated@resource:///org/gnome/shell/ui/extensionSystem.js:793:20
+ExtensionManager/<@resource:///org/gnome/shell/ui/extensionSystem.js:49:18
+_callHandlers@resource:///org/gnome/gjs/modules/core/_signals.js:130:42
+_emit@resource:///org/gnome/gjs/modules/core/_signals.js:119:10
+_sync@resource:///org/gnome/shell/ui/sessionMode.js:212:14
+pushMode@resource:///org/gnome/shell/ui/sessionMode.js:174:14
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:155
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:219
+async*@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:224
+EvalAsync@resource:///org/gnome/shell/ui/shellDBus.js:81:48
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.015: Object Clutter.Actor (0x595286e31aa0), has been already disposed — impossible to get any property from it. This might be caused by the object having been destroyed from C code using something such as destroy(), dispose(), or remove() vfuncs.
+== Stack trace for context 0x595284466510 ==
+#0   595284568488 i   resource:///org/gnome/shell/ui/workspace.js:1364 (2367436a9b50 @ 246)
+#1   5952845683d0 i   resource:///org/gnome/shell/ui/workspace.js:1232 (2367436a95b0 @ 468)
+#2   595284568348 i   resource:///org/gnome/shell/ui/workspace.js:1213 (2367436a9650 @ 68)
+#3   7ffe9e147280 b   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1325 (d28a95cab0 @ 1699)
+#4   5952845681a8 i   file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732 (d28a944e20 @ 103)
+#5   5952845680d8 i   resource:///org/gnome/shell/ui/extensionSystem.js:217 (1e73ab95f1f0 @ 523)
+#6   7ffe9e147c90 b   resource:///org/gnome/shell/ui/extensionSystem.js:588 (1e73ab95f9c0 @ 429)
+#7   595284567f80 i   resource:///org/gnome/shell/ui/extensionSystem.js:793 (1e73ab960100 @ 25)
+#8   595284567ef8 i   resource:///org/gnome/shell/ui/extensionSystem.js:49 (1e73ab958d30 @ 13)
+#9   7ffe9e148520 b   resource:///org/gnome/gjs/modules/core/_signals.js:130 (27eb01ac35b0 @ 126)
+#10   7ffe9e148c90 b   resource:///org/gnome/gjs/modules/core/_signals.js:119 (27eb01ac34c0 @ 289)
+#11   7ffe9e149430 b   resource:///org/gnome/shell/ui/sessionMode.js:212 (1e73ab9f9dd0 @ 338)
+#12   595284567d98 i   resource:///org/gnome/shell/ui/sessionMode.js:174 (1e73ab9f9c90 @ 66)
+#13   595284567d10 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee550ce0 @ 27)
+#14   595284567c80 i   resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1 (18b7ee556650 @ 131)
+#15   595284567be8 i   self-hosted:1432 (18b7ee576920 @ 30)
+#16   7ffe9e149c20 b   self-hosted:800 (18b7ee576bf0 @ 15)
+#17   595284567b58 i   resource:///org/gnome/shell/ui/init.js:20 (27eb01a8d8d0 @ 48)
+
+(gnome-shell:160): Gjs-CRITICAL **: 03:33:50.015: JS ERROR: TypeError: can't access property "addWindow", this._container.layout_manager is null
+_addWindowClone@resource:///org/gnome/shell/ui/workspace.js:1364:9
+_doAddWindow@resource:///org/gnome/shell/ui/workspace.js:1232:28
+_doAddWindow/<@resource:///org/gnome/shell/ui/workspace.js:1213:26
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/panelBridge.js:1325:27
+disable@file:///home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local/extension.js:732:35
+_callExtensionDisable@resource:///org/gnome/shell/ui/extensionSystem.js:217:32
+_onEnabledExtensionsChanged@resource:///org/gnome/shell/ui/extensionSystem.js:588:24
+_sessionUpdated@resource:///org/gnome/shell/ui/extensionSystem.js:793:20
+ExtensionManager/<@resource:///org/gnome/shell/ui/extensionSystem.js:49:18
+_callHandlers@resource:///org/gnome/gjs/modules/core/_signals.js:130:42
+_emit@resource:///org/gnome/gjs/modules/core/_signals.js:119:10
+_sync@resource:///org/gnome/shell/ui/sessionMode.js:212:14
+pushMode@resource:///org/gnome/shell/ui/sessionMode.js:174:14
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:155
+@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:219
+async*@resource:///org/gnome/shell/ui/shellDBus.js line 81 > eval:1:224
+EvalAsync@resource:///org/gnome/shell/ui/shellDBus.js:81:48
+
+(gnome-shell:160): libmutter-WARNING **: 03:33:50.015: Tried to ping window W0 (Taakbalk) with a bad serial! Not allowed.
+win11-shell: desktop.ready: GNOME desktop.ready: GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “io.github.win11shell.GnomeBridge” on object at path /io/github/win11shell/GnomeBridge
+
+(gnome-shell:160): GnomeDesktop-WARNING **: 03:33:55.167: Could not create transient scope for PID 1502: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+
+(gnome-shell:160): GNOME Shell-CRITICAL **: 03:33:55.167: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+
+(gnome-shell:160): GNOME Shell-CRITICAL **: 03:33:55.168: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+WARNING: Glycin running without sandbox.
+** Message: 03:34:06.087: Shutting down GNOME Shell
+libmutter-Message: 03:34:06.195: Removed virtual monitor Meta-0

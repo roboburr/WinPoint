@@ -1,8 +1,10 @@
 //! Instellingen › Systeem › Opslag (6ebf169f:vendor/ui/js/apps/settings/pages/storage.js): the drive with the home
-//! folder, what fills the personal folder (a coloured stacked bar and a category list, like Windows 11) and
-//! every drive.
+//! folder, what fills the personal folder (a coloured stacked bar and a category list, like Windows 11), Opslagbeheer
+//! (Opslaginzicht: GNOME's automatic purge of the Prullenbak and temporary files, with its switch and a chevron to
+//! its page, settings parity amendment 21; Ruimte vrijmaken) and every drive.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, UsageBar};
+use crate::gs::Gs;
 use crate::widgets::{Clamp, Wrap};
 use kit::chart::{Segment, StackedBar};
 use kit::controls::{self as c, ProgressRing, SettingsCard, SettingsGroup};
@@ -251,6 +253,7 @@ fn render_cats(p: &Page, st: &Rc<Cats>) {
 fn storage(p: Page) -> PageFuture {
     Box::pin(async move {
         let (vols, cats) = (p.call("storage.volumes", json!({})), p.call("storage.categories", json!({ "refresh": false })));
+        let gs = Gs::load(&p, &[super::storagesense::TRASH, super::storagesense::TEMP]).await;
         let (vols, cats) = (vols.await, cats.await);
         if !p.alive() {
             return Content::new();
@@ -339,7 +342,26 @@ fn storage(p: Page) -> PageFuture {
             });
         });
         clean.set_control(&btn);
-        let g = SettingsGroup::new("", "");
+        let g = SettingsGroup::new(t("Opslagbeheer", "Storage management"), "");
+        if gs.available(&super::storagesense::TRASH) && gs.available(&super::storagesense::TEMP) {
+            // a plain card: a switch inside a clickable card's button never gets the pointer's click (the button
+            // takes it), so the chevron is a button of its own
+            let sense = SettingsCard::new(
+                "storage",
+                t("Opslaginzicht", "Storage Sense"),
+                t(
+                    "Automatisch ruimte vrijmaken door tijdelijke bestanden en oude items in de Prullenbak te verwijderen",
+                    "Automatically free up space by deleting temporary files and old items in the Recycle Bin",
+                ),
+            );
+            sense.set_control(super::storagesense::master_switch(&p, &gs).widget());
+            let open = c::icon_button("chevron-right", t("Opslaginzicht openen", "Open Storage Sense"), 12);
+            open.set_widget_name("link-storagesense");
+            let pp = p.clone();
+            open.connect_clicked(move |_| pp.go("storagesense"));
+            sense.add_control(&open);
+            g.add(sense.widget());
+        }
         g.add(clean.widget());
         out.push(g.widget().clone().upcast());
 

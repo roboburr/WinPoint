@@ -70,6 +70,11 @@ const METHODS: &[&str] = &[
     "system.openUpdater",
     "system.time",
 ];
+/// The method table, for services/mod.rs `method_tables` (the api-methods fragments must list every name).
+#[cfg(test)]
+pub(crate) fn method_names() -> &'static [&'static str] {
+    METHODS
+}
 impl System {
     pub(crate) fn new(ctx: Arc<ServiceContext>) -> Result<Arc<Self>, String> {
         let audio = Arc::new(audio::Audio::new());

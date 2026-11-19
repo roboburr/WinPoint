@@ -1,0 +1,69 @@
+06:37:36 GE0c run lang=nl switch=False seed=defaults MemAvailable=3884556 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/ge1c-extension.py
+06:38:55 private install: exit 0 in 64.3 s, 87318 mutated paths, 0 outside the run dir, ok=True
+06:38:58 GNOME Shell 50.1 up (mode user, unsafe True)
+06:39:02 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/ge1c-extension.py
+06:39:02   check PASS: session starts in Dutch
+06:39:02   check PASS: nl: accessible names nl
+06:39:02   check PASS: nl: Ctrl+Alt+Tab group nl (exactly one entry for the bar)
+06:39:02   check PASS: nl: clock date format nl
+06:39:02   check PASS: nl: search label nl
+06:39:02   check PASS: nl: bridge failure text nl (in-process Call)
+06:39:02   check PASS: nl: "app missing" notification nl
+06:39:04   check PASS: nl: GNOME names of the own entries (install.py, C6)
+06:39:05   check PASS: dropdown: Settings wrote language=en by rename
+06:39:05   check PASS: en-dropdown: accessible names en
+06:39:05   check PASS: en-dropdown: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+06:39:05   check PASS: en-dropdown: clock date format en
+06:39:05   check PASS: en-dropdown: search label en
+06:39:05   check PASS: en-dropdown: no Dutch word in the extension's own texts
+06:39:05   check PASS: en-dropdown: bridge failure text en (in-process Call)
+06:39:05   check PASS: en-dropdown: "app missing" notification en
+06:39:11   check PASS: en-dropdown: pinned File Explorer button follows the .desktop Name= rewritten by win11-panel (C6)
+06:39:12   check PASS: c6-en: pinned File Explorer button shows 'Win11 File Explorer' after the Name= rewrite (installed-changed)
+06:39:17   check PASS: c6-nl: pinned File Explorer button shows 'Win11 Verkenner' after the Name= rewrite (installed-changed)
+06:39:17   check PASS: nl-rename: accessible names nl
+06:39:17   check PASS: nl-rename: Ctrl+Alt+Tab group nl (exactly one entry for the bar)
+06:39:17   check PASS: nl-rename: clock date format nl
+06:39:17   check PASS: nl-rename: search label nl
+06:39:17   check PASS: nl-rename: bridge failure text nl (in-process Call)
+06:39:17   check PASS: nl-rename: "app missing" notification nl
+06:39:18   check PASS: en-rewrite: accessible names en
+06:39:18   check PASS: en-rewrite: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+06:39:18   check PASS: en-rewrite: clock date format en
+06:39:18   check PASS: en-rewrite: search label en
+06:39:18   check PASS: en-rewrite: no Dutch word in the extension's own texts
+06:39:18   check PASS: en-rewrite: bridge failure text en (in-process Call)
+06:39:18   check PASS: en-rewrite: "app missing" notification en
+06:39:19   check PASS: c1-EN: language "EN" means nl in the extension (C1)
+06:39:20   check PASS: c1-object: language {"custom": "ge1c"} means nl in the extension (C1)
+06:39:20   check PASS: c1-missing: settings.json moved away means nl (C1)
+06:39:20   check PASS: c1-back: settings.json moved back gives en again
+06:39:20 kill_panel: signalled own descendants 514:win11-shell, 627:win11-panel, 709:glycin-svg
+06:39:21   check PASS: fallback bar shown after the panel stopped
+06:39:21   check PASS: fallback bar labels English (the language at kill time)
+06:39:21   check PASS: en-fallback: accessible names en
+06:39:21   check PASS: en-fallback: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+06:39:21   check PASS: en-fallback: clock date format en
+06:39:21   check PASS: en-fallback: search label en
+06:39:21   check PASS: en-fallback: no Dutch word in the extension's own texts
+06:39:21   check PASS: en-fallback: bridge failure text en (in-process Call)
+06:39:21   check PASS: en-fallback: "app missing" notification en
+06:39:22   check PASS: nl-fallback: accessible names nl
+06:39:22   check PASS: nl-fallback: Ctrl+Alt+Tab group nl (exactly one entry for the bar)
+06:39:22   check PASS: nl-fallback: clock date format nl
+06:39:22   check PASS: nl-fallback: search label nl
+06:39:22   check PASS: nl-fallback: bridge failure text nl (in-process Call)
+06:39:22   check PASS: nl-fallback: "app missing" notification nl
+06:39:22   check PASS: en-fallback-2: accessible names en
+06:39:22   check PASS: en-fallback-2: Ctrl+Alt+Tab group en (exactly one entry for the bar)
+06:39:22   check PASS: en-fallback-2: clock date format en
+06:39:22   check PASS: en-fallback-2: search label en
+06:39:22   check PASS: en-fallback-2: no Dutch word in the extension's own texts
+06:39:22   check PASS: en-fallback-2: bridge failure text en (in-process Call)
+06:39:22   check PASS: en-fallback-2: "app missing" notification en
+06:39:22   scenario: ge1c review scenario done
+06:39:23 shutdown shell clients: signalled own descendants 181:ibus-daemon, 197:glycin-svg, 255:glycin-image-rs, 1490:glycin-image-rs, 349:ibus-memconf, 351:ibus-extension-, 519:ibus-engine-sim
+06:39:23 shutdown gnome-shell: signalled own descendants 160:gnome-shell
+06:39:23 shutdown system bus: signalled own descendants 159:dbus-daemon
+06:39:23 inner sweep: signalled own descendants 1500:glycin-image-rs
+06:39:23 inner done: 0 surfaces, 0 failed []

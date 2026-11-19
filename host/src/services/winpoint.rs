@@ -77,6 +77,14 @@ const METHODS: &[(&str, &[&str], bool)] = &[
     ("winpoint.install", &["version", "metered"], true),
     ("winpoint.cancel", &["jobId"], true),
 ];
+/// The method table as (name, dangerous), for services/mod.rs `method_tables`.
+#[cfg(test)]
+pub(crate) fn method_flags() -> Vec<(&'static str, Option<bool>)> {
+    METHODS
+        .iter()
+        .map(|(name, _, write)| (*name, Some(*write)))
+        .collect()
+}
 /// How long a reader waits for the owner's answer to a forwarded call.
 const FORWARD_WAIT: Duration = Duration::from_secs(3);
 const OWNER_RETRY_S: u32 = 30;

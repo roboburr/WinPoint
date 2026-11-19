@@ -1,0 +1,66 @@
+# host/i18n/net.tsv: host texts of services/net.rs.
+# Owner: batch C (settings parity, §5.4).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/net.rs, net/connections.rs, net/wifi.rs (notes/claude/settings-parity.md §5.4)
+# NetworkManager does not answer on the system bus (not running, or no system bus)
+#@ new
+net.unavailable	NetworkManager is niet beschikbaar.	NetworkManager isn’t available.
+# the call's arguments are malformed (a bad uuid, interface name or settings shape)
+#@ new
+net.badArgs	Ongeldige invoer.	Invalid input.
+# a changed network setting has the wrong type or form; data.group, data.key name it
+#@ new
+net.badValue	Een netwerkinstelling heeft een ongeldige waarde.	A network setting has a value that isn’t valid.
+# no profile has this uuid (forgotten meanwhile)
+#@ new
+net.notFound	Deze verbinding bestaat niet meer.	This connection no longer exists.
+# no network adapter has this interface name
+#@ new
+net.noDevice	Deze netwerkadapter is niet gevonden.	This network adapter wasn’t found.
+# net.wifi.hidden on a computer without a Wi-Fi adapter
+#@ new
+net.noWifi	Er is geen Wi-Fi-adapter gevonden op deze computer.	No Wi-Fi adapter was found on this computer.
+# net.connection.deactivate for a profile that is not connected
+#@ new
+net.notActive	Deze verbinding is niet actief.	This connection isn’t active.
+# net.wifi.secrets for a profile that is no Wi-Fi network
+#@ new
+net.notWifi	Deze verbinding is geen Wi-Fi-netwerk.	This connection isn’t a Wi-Fi network.
+
+# --- host/src/services/net/hotspot.rs, vpn.rs, modem.rs (settings parity C, slice 2)
+# net.hotspot.start: a key that fits neither WPA (8-63 characters, 64 hex digits) nor WEP
+#@ new
+net.badPassword	Het netwerkwachtwoord is niet geldig. Gebruik 8 tot 63 tekens.	The network password isn’t valid. Use 8 to 63 characters.
+# net.hotspot.start: an SSID of 0 or more than 32 bytes
+#@ new
+net.badSsid	De netwerknaam moet uit 1 tot 32 tekens bestaan.	The network name must be 1 to 32 characters.
+# net.vpn.import: the file is missing, too big, or no OpenVPN, WireGuard or vpnc configuration
+#@ new
+net.badImport	Dit bestand is geen VPN-configuratie die kan worden geïmporteerd.	This file isn’t a VPN configuration that can be imported.
+# net.vpn.import: NetworkManager names a WireGuard connection after its file, which must be an interface name
+#@ new
+net.badImportName	De naam van een WireGuard-bestand moet een geldige interfacenaam zijn, zoals wg0.conf.	The name of a WireGuard file must be a valid interface name, such as wg0.conf.
+# net.vpn.import: nmcli refused the file; {error} is nmcli's own (English) message
+#@ new
+net.importFailed	De VPN-verbinding kan niet worden geïmporteerd: {error}	The VPN connection can’t be imported: {error}
+# net.vpn.import: the NetworkManager plugin of the file's VPN type is not installed
+#@ new
+net.noPlugin	De VPN-plug-in voor dit bestand is niet geïnstalleerd.	The VPN plug-in for this file isn’t installed.
+# net.modem.*: no modem at this path, or ModemManager does not run
+#@ new
+net.noModem	Deze mobiele breedbandadapter is niet gevonden.	This mobile broadband adapter wasn’t found.
+# net.modem.unlock / setPin / changePin: the modem has no SIM card
+#@ new
+net.noSim	Er is geen simkaart gevonden.	No SIM card was found.
+# net.modem.*: a PIN that is not 4-8 digits, a PUK that is not 8 digits
+#@ new
+net.badPin	Een pincode bestaat uit 4 tot 8 cijfers, een PUK-code uit 8 cijfers.	A PIN has 4 to 8 digits, a PUK has 8 digits.

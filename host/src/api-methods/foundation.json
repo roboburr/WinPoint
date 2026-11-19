@@ -1,0 +1,6 @@
+[
+  {"name": "caps.get", "dangerous": false, "doc": "What this computer has (input devices, sensors, Thunderbolt, modem, installed tools, the session kind), so Settings hides what GNOME Settings hides; event caps.changed."},
+  {"name": "gsettings.get", "dangerous": false, "doc": "Items for {keys: [{schema, key, path?}]}: value, default, writable, the allowlist mode and the key's type and range (notes/claude/settings-parity.md 6.1); event gsettings.changed."},
+  {"name": "gsettings.reset", "dangerous": true, "doc": "Reset {schema, path?, keys} of one schema to GNOME's defaults; allowlisted keys in a writing mode only."},
+  {"name": "gsettings.set", "dangerous": true, "doc": "Write {schema, path?, values} or {writes: [{schema, path?, values}]}: every key checked first (allowlist, type, range, lockdown, the extension's accelerators), then written in order and read back."}
+]

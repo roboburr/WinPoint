@@ -1,0 +1,907 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 08:04:20",
+ "seconds": 107.9,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 58,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 733607,
+   "rss_kb": 935656,
+   "processes": 18,
+   "t": 29.1
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 539273,
+   "rss_kb": 710048
+  },
+  "minMemAvailableKb": 5280420,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 331957,
+    "rss_kb": 379676
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 193860,
+    "rss_kb": 221732
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 103657,
+    "rss_kb": 137184
+   },
+   "glycin-svg": {
+    "count": 2,
+    "pss_kb": 44012,
+    "rss_kb": 67996
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 19622,
+    "rss_kb": 34584
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 18274,
+    "rss_kb": 32004
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 14144,
+    "rss_kb": 22340
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4219,
+    "rss_kb": 11272
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1557,
+    "rss_kb": 9584
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 949,
+    "rss_kb": 7740
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 882,
+    "rss_kb": 7668
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 249,
+    "rss_kb": 1364
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 225,
+    "rss_kb": 2512
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 331957,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 157833,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 104157,
+    "first": 1.0
+   },
+   "glycin-svg": {
+    "pss_kb": 27178,
+    "first": 1.0
+   },
+   "ibus-extension-": {
+    "pss_kb": 19622,
+    "first": 1.0
+   },
+   "win11-panel": {
+    "pss_kb": 14144,
+    "first": 1.0
+   },
+   "glycin-image-rs": {
+    "pss_kb": 11988,
+    "first": 1.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4228,
+    "first": 1.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 1131,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 960,
+    "first": 1.0
+   },
+   "ibus-memconf": {
+    "pss_kb": 897,
+    "first": 1.0
+   },
+   "bwrap": {
+    "pss_kb": 260,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 250,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+  "exit": 0,
+  "seconds": 62.6,
+  "mutatingSyscallPaths": 87318,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+  }
+ },
+ "guardStubCalls": [
+  "08:05:39\tpw-dump\t--monitor --no-colors",
+  "08:05:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:41\tpw-dump\t--monitor --no-colors",
+  "08:05:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:45\tpw-dump\t--monitor --no-colors",
+  "08:05:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:53\tpw-dump\t--monitor --no-colors",
+  "08:05:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:05:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:06:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:06:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:06:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 15,
+  "maxScanSeconds": 0.054,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/lock-unlock.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "native",
+    "t": 5.9,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 5.9,
+    "args": {
+     "key": "before"
+    }
+   },
+   {
+    "step": "record",
+    "t": 5.91,
+    "args": {
+     "key": "bridge before"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 6.76,
+    "args": {
+     "name": "before-lock"
+    },
+    "result": {
+     "png": "before-lock.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2148,
+      "meanLevel": 61.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.8,
+    "args": {
+     "key": "lock"
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.8,
+    "args": {
+     "key": "locked state"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.35,
+    "args": {
+     "name": "locked"
+    },
+    "result": {
+     "png": "locked.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 3,
+      "meanLevel": 0.1,
+      "looksBlank": true
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 11.37,
+    "args": {
+     "key": "unlock"
+    }
+   },
+   {
+    "step": "record",
+    "t": 19.37,
+    "args": {
+     "key": "unlocked state"
+    }
+   },
+   {
+    "step": "native",
+    "t": 19.42,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 19.42,
+    "args": {
+     "key": "after"
+    }
+   },
+   {
+    "step": "record",
+    "t": 19.42,
+    "args": {
+     "key": "bridge after"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 20.25,
+    "args": {
+     "name": "after-unlock"
+    },
+    "result": {
+     "png": "after-unlock.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2147,
+      "meanLevel": 61.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 20.46,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "native",
+     "pid": 473,
+     "page": null,
+     "alive": true,
+     "shell": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "native",
+    "t": 22.01,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 22.01,
+    "args": {
+     "key": "start open after unlock"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 22.75,
+    "args": {
+     "name": "start-after-unlock"
+    },
+    "result": {
+     "png": "start-after-unlock.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1612,
+      "meanLevel": 41.9,
+      "looksBlank": false
+     }
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the taskbar is shown before the lock",
+    "ok": true,
+    "t": 5.91,
+    "toplevels": {
+     "Bureaublad": {
+      "visible": true,
+      "glass": false,
+      "size": [
+       1440,
+       852
+      ]
+     },
+     "Start": {
+      "visible": false,
+      "glass": false,
+      "size": [
+       0,
+       0
+      ]
+     },
+     "Taakbalk": {
+      "visible": true,
+      "glass": true,
+      "size": [
+       1440,
+       900
+      ]
+     }
+    }
+   },
+   {
+    "check": "the taskbar is shown after unlock",
+    "ok": true,
+    "t": 19.42,
+    "toplevels": {
+     "Bureaublad": {
+      "visible": true,
+      "glass": false,
+      "size": [
+       1440,
+       852
+      ]
+     },
+     "Start": {
+      "visible": false,
+      "glass": false,
+      "size": [
+       0,
+       0
+      ]
+     },
+     "Taakbalk": {
+      "visible": true,
+      "glass": true,
+      "size": [
+       1440,
+       900
+      ]
+     }
+    }
+   },
+   {
+    "check": "the taskbar covers the whole monitor again (the extension took it, not the desktop)",
+    "ok": true,
+    "t": 19.42,
+    "bar": {
+     "visible": true,
+     "glass": true,
+     "size": [
+      1440,
+      900
+     ]
+    }
+   },
+   {
+    "check": "the taskbar strip is frosted after unlock",
+    "ok": true,
+    "t": 19.42,
+    "bar": {
+     "visible": true,
+     "glass": true,
+     "size": [
+      1440,
+      900
+     ]
+    }
+   },
+   {
+    "check": "Start is frosted after unlock",
+    "ok": true,
+    "t": 22.01,
+    "toplevels": {
+     "Bureaublad": {
+      "visible": true,
+      "glass": false,
+      "size": [
+       1440,
+       852
+      ]
+     },
+     "Start": {
+      "visible": true,
+      "glass": true,
+      "size": [
+       642,
+       726
+      ]
+     },
+     "Taakbalk": {
+      "visible": true,
+      "glass": true,
+      "size": [
+       1440,
+       900
+      ]
+     }
+    }
+   }
+  ],
+  "records": {
+   "before": {
+    "Bureaublad": {
+     "visible": true,
+     "glass": false,
+     "size": [
+      1440,
+      852
+     ]
+    },
+    "Start": {
+     "visible": false,
+     "glass": false,
+     "size": [
+      0,
+      0
+     ]
+    },
+    "Taakbalk": {
+     "visible": true,
+     "glass": true,
+     "size": [
+      1440,
+      900
+     ]
+    }
+   },
+   "bridge before": {
+    "bridge": true,
+    "panel": {
+     "title": "Taakbalk",
+     "type": 2,
+     "rect": [
+      0,
+      0,
+      1440,
+      900
+     ]
+    },
+    "present": true,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "app": null,
+      "title": "Bureaublad",
+      "type": 1,
+      "rect": [
+       0,
+       0,
+       1440,
+       852
+      ],
+      "mapped": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "app": "io.github.win11shell.Panel",
+      "title": "Taakbalk",
+      "type": 2,
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "mapped": true
+     }
+    ]
+   },
+   "lock": "unlock-dialog",
+   "locked state": {
+    "state": 2,
+    "mode": "unlock-dialog",
+    "locked": true
+   },
+   "unlock": "user",
+   "unlocked state": {
+    "state": 1,
+    "mode": "user",
+    "locked": false
+   },
+   "after": {
+    "Bureaublad": {
+     "visible": true,
+     "glass": false,
+     "size": [
+      1440,
+      852
+     ]
+    },
+    "Start": {
+     "visible": false,
+     "glass": false,
+     "size": [
+      0,
+      0
+     ]
+    },
+    "Taakbalk": {
+     "visible": true,
+     "glass": true,
+     "size": [
+      1440,
+      900
+     ]
+    }
+   },
+   "bridge after": {
+    "bridge": true,
+    "panel": {
+     "title": "Taakbalk",
+     "type": 2,
+     "rect": [
+      0,
+      0,
+      1440,
+      900
+     ]
+    },
+    "present": true,
+    "windows": [
+     {
+      "wm": "io.github.win11shell.Desktop",
+      "app": null,
+      "title": "Bureaublad",
+      "type": 1,
+      "rect": [
+       0,
+       0,
+       1440,
+       852
+      ],
+      "mapped": true
+     },
+     {
+      "wm": "io.github.win11shell.Panel",
+      "app": "io.github.win11shell.Panel",
+      "title": "Taakbalk",
+      "type": 2,
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "mapped": true
+     }
+    ]
+   },
+   "start open after unlock": {
+    "Bureaublad": {
+     "visible": true,
+     "glass": false,
+     "size": [
+      1440,
+      852
+     ]
+    },
+    "Start": {
+     "visible": true,
+     "glass": true,
+     "size": [
+      642,
+      726
+     ]
+    },
+    "Taakbalk": {
+     "visible": true,
+     "glass": true,
+     "size": [
+      1440,
+      900
+     ]
+    }
+   }
+  },
+  "shots": [
+   "before-lock.png",
+   "locked.png",
+   "after-unlock.png",
+   "start-after-unlock.png"
+  ],
+  "error": null,
+  "seconds": 22.75,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 473,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 473,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 473,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=7729660648ba7e3b7350d75b6afaab42",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 473,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 473
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "before-lock.png",
+    "group": "scenario",
+    "bytes": 1109276,
+    "area": null
+   },
+   {
+    "file": "locked.png",
+    "group": "scenario",
+    "bytes": 7919,
+    "area": null
+   },
+   {
+    "file": "after-unlock.png",
+    "group": "scenario",
+    "bytes": 1109347,
+    "area": null
+   },
+   {
+    "file": "start-after-unlock.png",
+    "group": "scenario",
+    "bytes": 766974,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/lock-unlock.mm/before-lock.png",
+  "tests/gnome/scenarios/lock-unlock.mm/locked.png",
+  "tests/gnome/scenarios/lock-unlock.mm/after-unlock.png",
+  "tests/gnome/scenarios/lock-unlock.mm/start-after-unlock.png"
+ ]
+}

@@ -49,7 +49,7 @@ KINDS = tuple(WM)
 RESIDENT = ('panel', 'desktop', 'start')
 # The option label prefixes of Settings > Tijd en taal > Taal en regio's display language drop-down
 # (native/apps/settings/src/pages/time.rs language(): "Nederlands", "English (United Kingdom)")
-LANG_OPTION = {'nl': 'Nederlands', 'en': 'English'}
+LANG_OPTION = {'nl': 'Nederlands', 'en': 'English (United Kingdom)'}
 VIAS = ('dropdown', 'rename', 'rewrite')
 
 # Shell side (org.gnome.Shell.Eval; harness.Session.ev provides Main and Meta).
@@ -107,9 +107,57 @@ EXTENSION_LABELS_JS = (
     "labels:nodes.filter(n=>n.text||n.label).map(n=>n.text||n.label),nodes,"
     "ctrlAltTab:cat.filter(i=>i.root===bar).map(i=>i.name),ctrlAltTabAll:cat.map(i=>i.name)}};}})()")
 
+# More than one monitor (--second-monitor): the monitors as GNOME has them, the taskbar windows of the other monitors
+# (win11-shell, app id io.github.win11shell.SecondaryTaskbar.Monitor<N>) and a monitor's work area.
+MONITORS_JS = ("Main.layoutManager.monitors.map(m=>({index:m.index,x:m.x,y:m.y,w:m.width,h:m.height,"
+               "primary:m.index===Main.layoutManager.primaryIndex,"
+               "fullscreen:global.display.get_monitor_in_fullscreen(m.index)}))")
+STRIP_WINDOWS_JS = ("(()=>{const type=t=>Object.keys(Meta.WindowType).find(k=>Meta.WindowType[k]===t)||String(t);"
+                    "return global.get_window_actors().map(a=>a.meta_window).filter(w=>/^io\\.github\\.win11shell\\."
+                    "SecondaryTaskbar\\.Monitor\\d+$/.test(w.get_wm_class()||'')).map(w=>{const r=w.get_frame_rect();"
+                    "const a=w.get_compositor_private();return {wm:w.get_wm_class(),title:w.get_title(),pid:w.get_pid(),"
+                    "type:type(w.get_window_type()),x:r.x,y:r.y,w:r.width,h:r.height,monitor:w.get_monitor(),"
+                    "mapped:!!(a&&a.mapped),visible:!!(a&&a.visible),above:w.is_above(),sticky:w.is_on_all_workspaces(),"
+                    "skipTaskbar:w.skip_taskbar};});})()")
+WORK_AREA_JS = ("(()=>{const r=global.workspace_manager.get_active_workspace().get_work_area_for_monitor(%d);"
+                "return {x:r.x,y:r.y,w:r.width,h:r.height};})()")
+
 PANEL_OPEN_JS = ("(async()=>{const Shell=(await import('gi://Shell')).default;"
                  "const app=Shell.AppSystem.get_default().lookup_app('io.github.win11shell.Panel.desktop');"
                  "if(!app)return false;app.open_new_window(-1);return true;})()")
+
+
+def secret_methods(root: Path) -> frozenset[str]:
+    """Use the host's is_secret manifests, so new secret methods stay private automatically."""
+    source = root / 'host' / 'src'
+    files = [source / 'api-methods.json', *sorted((source / 'api-methods').glob('*.json'))]
+    return frozenset(row['name'] for path in files for row in json.loads(path.read_text())
+                     if row.get('secret') is True)
+
+
+def redact_api(value, secrets: frozenset[str]):
+    """Redact recorded API payloads without changing the values the scenario itself checks."""
+    if isinstance(value, list):
+        return [redact_api(item, secrets) for item in value]
+    if not isinstance(value, dict):
+        return value
+    out = {key: redact_api(item, secrets) for key, item in value.items()}
+    args = value.get('args')
+    method = value.get('method') or (args.get('method') if isinstance(args, dict) else None)
+    if isinstance(method, str) and method in secrets:
+        for key in ('args', 'result', 'value', 'error', 'data'):
+            if key not in out:
+                continue
+            if key == 'args' and isinstance(args, dict) and args.get('method') == method:
+                out[key] = {k: v for k, v in args.items() if k in ('method', 'surface')}
+            elif key == 'result' and isinstance(out[key], dict) and set(out[key]) == {'ok'}:
+                pass
+            else:
+                out[key] = '[redacted]'
+    return out
+
+
+SCROLL_JS = "(async()=>{{const Clutter=(await import('gi://Clutter')).default;const GLib=(await import('gi://GLib')).default;const wait=ms=>new Promise(r=>GLib.timeout_add(GLib.PRIORITY_DEFAULT,ms,()=>{{r();return GLib.SOURCE_REMOVE;}}));const seat=Clutter.get_default_backend().get_default_seat();globalThis.__ge1hPointer??=seat.create_virtual_device(Clutter.InputDeviceType.POINTER_DEVICE);const d=globalThis.__ge1hPointer,us=()=>GLib.get_monotonic_time();d.notify_absolute_motion(us(),{x},{y});await wait(60);for(let i=0;i<{n};i++){{d.notify_discrete_scroll(us(),Clutter.ScrollDirection.{dir},Clutter.ScrollSource.WHEEL);await wait(35);}}await wait(200);return true;}})()"
 
 
 class Surface:
@@ -157,6 +205,10 @@ class Helper:
                 native_state(), native_pid
     GNOME       window_titles(), app_names(ids=None), extension_labels(), notifications(), kill_panel(),
                 restart_panel()
+    GSettings   gsettings_get(schema, key, path=None), gsettings_set(schema, key, value, path=None) on the run's private
+                keyfile (run/config/glib-2.0/settings/keyfile; GVariant text, as GNOME's keyfile backend stores it);
+                settings_data_page(parent, item, title=None) (settings parity: a data page is reached by clicking
+                through its parent, notes/claude/settings-parity.md §7)
     Recording   record(key, value), check(name, ok, known=None, **detail), require(name, ok, **detail), log(msg)
     Low level   eval(js) (Shell Eval), until(fn, label, timeout), sleep(seconds), session (the harness Session),
                 hm (the harness module)
@@ -165,6 +217,7 @@ class Helper:
     def __init__(self, session, hm, scenario: Path):
         self.session, self.s, self.hm = session, session, hm
         self.scenario = scenario
+        self._secret_methods = secret_methods(hm.SRC)
         self.t0 = time.monotonic()
         self.surfaces: dict[str, Surface] = {}
         self._start_rect = None
@@ -201,7 +254,7 @@ class Helper:
         self.results['seconds'] = self._t()
         self.results['surfaces'] = {n: s.describe() for n, s in self.surfaces.items()}
         try:
-            self._results_file.write_text(json.dumps(self.results, indent=1, ensure_ascii=False) + '\n')
+            self._results_file.write_text(json.dumps(redact_api(self.results, self._secret_methods), indent=1, ensure_ascii=False) + '\n')
         except OSError:
             pass
 
@@ -318,6 +371,53 @@ class Helper:
         sized = [w for w in titled if (w['w'], w['h']) == (top.get('width'), top.get('height'))] or titled
         return sized[0] if sized else None
 
+    def _reveal_click_target(self, surface: str, name: str, node: dict, tops: list[dict]):
+        """Scroll the target into its nearest viewport, including a list inside a modal dialog."""
+        sf = self.surface(surface)
+        sign, previous, wanted_down = 1, None, True
+        for attempt in range(24):
+            top = tops[node.get('top', 0)] if tops else None
+            frame = self._frame(sf, top) if top else None
+            rect = node.get('rect')
+            if not frame or not rect:
+                break
+
+            def ancestors(candidate, parents):
+                if candidate.get('name') == name and candidate.get('rect') == rect:
+                    return parents
+                for child in candidate.get('children', []):
+                    found = ancestors(child, parents + [candidate])
+                    if found is not None:
+                        return found
+                return None
+
+            chain = ancestors(top.get('tree', {}), []) or []
+            scrollers = [p['rect'] for p in chain if p.get('type') == 'GtkScrolledWindow'
+                         and p.get('rect') and p['rect'][2] > 0 and p['rect'][3] > 0]
+            clip = scrollers[-1] if scrollers else [0, 0, frame['w'], frame['h']]
+            _, y, _, height = rect
+            centre = y + height / 2
+            low, high = max(0, clip[1]) + 4, min(frame['h'], clip[1] + clip[3]) - 4
+            if low <= centre < high:
+                break
+            # A private desktop may have natural scrolling enabled by an earlier control test.
+            if previous is not None and (centre - previous) * (1 if wanted_down else -1) > 1:
+                sign = -sign
+            wanted_down = centre >= high
+            distance = centre - (low + high) / 2
+            steps = max(1, min(10, int(abs(distance) / 60)))
+            down = wanted_down if sign > 0 else not wanted_down
+            previous = centre
+            self.s.ev(SCROLL_JS.format(x=frame['x'] + clip[0] + min(12, clip[2] // 2),
+                                      y=frame['y'] + int((low + high) / 2), n=steps,
+                                      dir='DOWN' if down else 'UP'))
+            tops = self.state(surface)
+            found = self.find(surface, name, state=tops)
+            if not found:
+                break
+            node = found[0]
+        return node, tops
+
     def click(self, surface: str, name: str | None = None, *, node: dict | None = None, real: bool = True) -> dict:
         """Click a widget: by ``name`` (its set_widget_name) or a ``node`` from find(). real=True moves a Clutter
         virtual pointer to the widget's centre (its window's frame rectangle plus its rect in the window) and presses
@@ -331,6 +431,8 @@ class Helper:
                 raise LookupError(f'{surface}: no visible widget {name!r}')
             node = found[0]
         name = name or (node.get('name') if not str(node.get('name') or '').startswith('Gtk') else None)
+        if real and name:
+            node, tops = self._reveal_click_target(surface, name, node, tops)
         frame = self._frame(sf, tops[node.get('top', 0)]) if real and node.get('rect') and tops else None
         x, y, w, hh = node.get('rect') or (0, 0, 0, 0)
         # a widget scrolled out of its window has a rect outside it: the pointer would land on another window
@@ -338,6 +440,9 @@ class Helper:
         if not frame or outside:
             if not name:
                 raise LookupError(f'{surface}: the widget has no name for a dev click and no place for the pointer')
+            if real:
+                self._step('click_fallback', {'surface': surface, 'name': name,
+                                              'reason': 'outside-window' if outside else 'no-pointer-target'})
             answer = self.dev(surface, {'native': 'click', 'name': name})
             if isinstance(answer, dict) and answer.get('error'):
                 raise LookupError(f'{surface}: {answer["error"]}')
@@ -359,6 +464,19 @@ class Helper:
     def key(self, surface: str, key: str, name: str | None = None) -> dict:
         """A key for an app ("Return", "Escape", "<Control>f", "Down", "Tab"; native/kit/src/dev.rs)."""
         return self.dev(surface, {'native': 'key', 'key': key, **({'name': name} if name else {})})
+
+    def bridge(self, method: str, args: dict | None = None):
+        """The public asynchronous Shell bridge, inside this harness's private GNOME only."""
+        payload = json.dumps(args or {})
+        code = """(async()=>{
+const b=Main.extensionManager.lookup('win11-gnome@win11shell.local').stateObj._panelBridge;
+const method=METHOD, text=PAYLOAD;
+if(typeof b.CallAsync!=='function')return JSON.parse(b.Call(method,text));
+return await new Promise(resolve=>b.CallAsync([method,text],{
+return_value:value=>resolve(JSON.parse(value.deep_unpack()[0]))}));})()"""
+        value = self.eval(code.replace('METHOD', json.dumps(method)).replace('PAYLOAD', json.dumps(payload)))
+        self._step('bridge', {'method': method}, {'ok': not (isinstance(value, dict) and value.get('error'))})
+        return value
 
     def backend(self, surface: str, method: str, args: dict | None = None, timeout: float = 15):
         """A call to the app's own backend (`win11-app --app <kind> --http-only`) as the app makes it, through the
@@ -416,7 +534,7 @@ class Helper:
             return sf
         sf = self.surfaces.get(name)
         if sf and sf.alive():
-            if kind == 'settings' and page and page != sf.page:
+            if kind == 'settings' and page:
                 self.s.settings_page(page)
                 sf.page = page
             self.s.focus(sf.pid, name)
@@ -571,6 +689,86 @@ class Helper:
         except TimeoutError:
             return None
 
+    # ---- GSettings (settings parity) ----------------------------------------------------------------------
+    def _keyfile(self) -> Path:
+        return self.hm.RUN / 'config' / 'glib-2.0' / 'settings' / 'keyfile'
+
+    def _group(self, schema: str, path: str | None) -> str:
+        """The keyfile group of a schema's settings: its path without the outer slashes (a relocatable schema needs
+        ``path``)."""
+        if path is None:
+            path = schema_path(schema)
+            if path is None:
+                raise ValueError(f'{schema} is relocatable or not installed: give its path')
+        return path.strip('/')
+
+    def gsettings_get(self, schema: str, key: str, path: str | None = None) -> str | None:
+        """The GVariant text the private keyfile holds for the key, None for GNOME's default (never dconf)."""
+        group = self._group(schema, path)
+        value = None
+        current = None
+        try:
+            lines = self._keyfile().read_text(encoding='utf-8').splitlines()
+        except OSError:
+            lines = []
+        for line in lines:
+            if line.startswith('[') and line.rstrip().endswith(']'):
+                current = line.strip()[1:-1]
+            elif current == group and '=' in line and line.split('=', 1)[0].strip() == key:
+                value = line.split('=', 1)[1].strip()
+        self._step('gsettings_get', {'schema': schema, 'key': key, 'path': path}, value)
+        return value
+
+    def gsettings_set(self, schema: str, key: str, value: str, path: str | None = None) -> None:
+        """Write the key into the private keyfile the way another program would (GVariant text, e.g. 'true',
+        "'flat'", '0.5'); GNOME's keyfile backend notices the change and every client hears it (gsettings.changed).
+        The file is rewritten in place, so the backend's file monitor sees one change."""
+        group = self._group(schema, path)
+        kf = self._keyfile()
+        try:
+            lines = kf.read_text(encoding='utf-8').splitlines()
+        except OSError:
+            lines = []
+        out, current, done, seen_group = [], None, False, False
+        for line in lines:
+            if line.startswith('[') and line.rstrip().endswith(']'):
+                if current == group and not done:
+                    blanks = 0
+                    while out and not out[-1].strip():
+                        out.pop()
+                        blanks += 1
+                    out.append(f'{key}={value}')
+                    out += [''] * blanks
+                    done = True
+                current = line.strip()[1:-1]
+                seen_group |= current == group
+            elif current == group and '=' in line and line.split('=', 1)[0].strip() == key:
+                if not done:
+                    out.append(f'{key}={value}')
+                    done = True
+                continue
+            out.append(line)
+        if not done:
+            if not seen_group:
+                out += ['', f'[{group}]']
+            out.append(f'{key}={value}')
+        with open(kf, 'r+' if kf.exists() else 'w', encoding='utf-8') as fh:
+            fh.seek(0)
+            fh.write('\n'.join(out) + '\n')
+            fh.truncate()
+        self._step('gsettings_set', {'schema': schema, 'key': key, 'path': path, 'value': value})
+
+    def settings_data_page(self, parent: str, item: str, title: str | None = None, timeout: float = 20) -> dict:
+        """Open a data page (registry.rs DATA_PAGES: a network, printer, app or device) by clicking ``item`` (a widget
+        name) on its parent page, as a user does: its title is the item's name. Waits for ``title`` when given."""
+        self.open(f'settings:{parent}')
+        self.until(lambda: bool(self.find('settings', item)), f'settings: {item} on {parent}', timeout, 0.3)
+        result = self.click('settings', item)
+        if title:
+            self.wait_text('settings', title, timeout=timeout)
+        self._step('settings_data_page', {'parent': parent, 'item': item, 'title': title}, result)
+        return result
+
     # ---- language ----------------------------------------------------------------------------------------
     def settings_file(self) -> dict:
         path = self.hm.RUN / 'config' / 'win11-gnome' / 'settings.json'
@@ -696,6 +894,87 @@ class Helper:
         self._step('notifications', None, value)
         return value
 
+    # ---- more than one monitor (--second-monitor) ---------------------------------------------------------
+    def monitors(self) -> list[dict]:
+        """Main.layoutManager.monitors: index, stage rectangle, primary, in fullscreen."""
+        value = self.s.ev(MONITORS_JS) or []
+        self._step('monitors', None, value)
+        return value
+
+    def strip_windows(self) -> list[dict]:
+        """The taskbar windows of the other monitors as Mutter has them: app id, type, frame, monitor, mapped."""
+        value = self.s.ev(STRIP_WINDOWS_JS) or []
+        self._step('strip_windows', None, value)
+        return value
+
+    def work_area(self, index: int) -> dict:
+        """The active workspace's work area of monitor `index` (the monitor minus the struts on it)."""
+        value = self.s.ev(WORK_AREA_JS % int(index))
+        self._step('work_area', {'monitor': index}, value)
+        return value
+
+    def pixel(self, file: str, x: int, y: int) -> tuple[int, int, int] | None:
+        """The colour at (x, y) of a screenshot this run took (a file name from screenshot())."""
+        pix = self.s.GdkPixbuf.Pixbuf.new_from_file(str(self.hm.RUN / 'shots' / file))
+        if not (0 <= x < pix.get_width() and 0 <= y < pix.get_height()):
+            return None
+        data, stride, channels = pix.get_pixels(), pix.get_rowstride(), pix.get_n_channels()
+        i = y * stride + x * channels
+        return (data[i], data[i + 1], data[i + 2])
+
+    def display_config(self, primary: int | None = None, disable: int | None = None, enable_all: bool = False,
+                       order: list[int] | None = None) -> dict:
+        """Best effort: a temporary monitor configuration through org.gnome.Mutter.DisplayConfig on the private bus
+        (GetCurrentState, then ApplyMonitorsConfig with method 1, temporary): `primary` makes that monitor (a
+        Main.layoutManager index) the primary one, `disable` turns that monitor off, `enable_all` turns every monitor
+        Mutter knows on again, left to right, `order` places the monitors (Main.layoutManager indices) left to right
+        in that order. Mutter may refuse it for headless virtual monitors: the answer then has `error`."""
+        GLib, Gio = self.s.GLib, self.s.Gio
+        args = {'primary': primary, 'disable': disable, 'enableAll': enable_all, **({'order': order} if order else {})}
+        try:
+            reply = self.s.bus.call_sync('org.gnome.Mutter.DisplayConfig', '/org/gnome/Mutter/DisplayConfig',
+                                         'org.gnome.Mutter.DisplayConfig', 'GetCurrentState', None, None,
+                                         Gio.DBusCallFlags.NONE, 10000, None)
+            serial, monitors, logical, _props = reply.unpack()
+            shell = self.s.ev(MONITORS_JS) or []
+            # a layout index -> the connectors of the logical monitor at its place
+            by_place = {(int(lm[0]), int(lm[1])): [spec[0] for spec in lm[5]] for lm in logical}
+            index_conn = {m['index']: (by_place.get((m['x'], m['y'])) or [None])[0] for m in shell}
+            scale = {spec[0]: float(lm[2]) for lm in logical for spec in lm[5]}
+            current_primary = next((spec[0] for lm in logical if lm[4] for spec in lm[5]), None)
+            modes = {}
+            for spec, mode_list, _mprops in monitors:
+                mode = next((m for m in mode_list if m[6].get('is-current')), None) or \
+                    next((m for m in mode_list if m[6].get('is-preferred')), None) or (mode_list[0] if mode_list else None)
+                if mode:
+                    modes[spec[0]] = mode
+            enabled = [spec[0] for lm in logical for spec in lm[5]]
+            if enable_all:
+                enabled = [spec[0] for spec, _modes, _p in monitors if spec[0] in modes]
+            if disable is not None:
+                enabled = [c for c in enabled if c != index_conn.get(disable)]
+            if order:
+                rank = {index_conn.get(index): n for n, index in enumerate(order)}
+                enabled.sort(key=lambda c: rank.get(c, len(rank)))
+            want_primary = index_conn.get(primary) if primary is not None else current_primary
+            if want_primary not in enabled:
+                want_primary = enabled[0] if enabled else None
+            config, x = [], 0
+            for connector in enabled:
+                mode = modes[connector]
+                s = scale.get(connector, 1.0)
+                config.append((x, 0, s, 0, connector == want_primary, [(connector, mode[0], {})]))
+                x += int(round(mode[1] / s))
+            variant = GLib.Variant('(uua(iiduba(ssa{sv}))a{sv})', (serial, 1, config, {}))
+            self.s.bus.call_sync('org.gnome.Mutter.DisplayConfig', '/org/gnome/Mutter/DisplayConfig',
+                                 'org.gnome.Mutter.DisplayConfig', 'ApplyMonitorsConfig', variant, None,
+                                 Gio.DBusCallFlags.NONE, 10000, None)
+            value = {'ok': True, 'config': [[c[0], c[1], c[4], c[5][0][0], c[5][0][1]] for c in config]}
+        except Exception as error:   # noqa: BLE001 - recorded; the scenario marks the step known
+            value = {'ok': False, 'error': str(error)}
+        self._step('display_config', args, value)
+        return value
+
     def kill_panel(self) -> dict:
         """Stop the private win11-shell (the native taskbar, Start and desktop; its backend, win11-panel --http-only,
         dies with it through PR_SET_PDEATHSIG) so the extension shows its fallback St taskbar; returns the bar's
@@ -745,6 +1024,29 @@ class Helper:
         return result
 
 
+_SCHEMA_PATHS: dict[str, str | None] = {}
+
+
+def schema_path(schema: str) -> str | None:
+    """A schema's own path from the installed schema files (None: relocatable or missing); read-only, no gsettings."""
+    if schema in _SCHEMA_PATHS:
+        return _SCHEMA_PATHS[schema]
+    import xml.etree.ElementTree as ET  # noqa: PLC0415
+    found = None
+    for xml in sorted(Path('/usr/share/glib-2.0/schemas').glob('*.gschema.xml')):
+        try:
+            for node in ET.parse(xml).getroot().iter('schema'):
+                if node.get('id') == schema:
+                    found = node.get('path')
+                    break
+        except ET.ParseError:
+            continue
+        if found is not None:
+            break
+    _SCHEMA_PATHS[schema] = found
+    return found
+
+
 def load_module(path: Path, name: str):
     """Import a Python file by path under a unique module name (the harness runs with python -I)."""
     import importlib.util
@@ -778,4 +1080,4 @@ def run_scenario(session, hm, path: Path) -> dict:
     h.results['failedChecks'] = [c['check'] for c in h.results['checks'] if not c['ok']]
     h.results['failedChecksUnknown'] = [c['check'] for c in h.results['checks'] if not c['ok'] and not c.get('known')]
     h._flush()
-    return h.results
+    return redact_api(h.results, h._secret_methods)

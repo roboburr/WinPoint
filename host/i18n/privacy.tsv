@@ -1,0 +1,70 @@
+# host/i18n/privacy.tsv: host texts of services/privacy.rs.
+# Owner: batch F (settings parity, §5.7).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/privacy.rs (notes/claude/settings-parity.md §5.7)
+# privacy.*: an argument is missing or not valid (a table, an app id, a value)
+#@ new
+privacy.badArgs	Ongeldige invoer.	Invalid input.
+# privacy.app*: no installed app has this desktop id
+#@ new
+privacy.appNotFound	Deze app is niet gevonden.	This app wasn’t found.
+# privacy.permissions/setPermission: the session has no xdg-desktop-portal PermissionStore
+#@ new
+privacy.storeUnavailable	De machtigingen van apps zijn nu niet beschikbaar.	App permissions aren’t available right now.
+# privacy.setPermission/deletePermission: the PermissionStore refused the change
+#@ new
+privacy.permissionFailed	De machtiging is niet gewijzigd.	The permission wasn’t changed.
+# privacy.app.clearCache: the app is no Flatpak app, or it has no ~/.var/app/<id>/cache
+#@ new
+privacy.noCache	Deze app heeft geen cache die hier kan worden gewist.	This app has no cache that can be cleared here.
+# privacy.app.clearCache: removing the cache's files failed
+#@ new
+privacy.cacheFailed	De cache is niet helemaal gewist.	The cache wasn’t completely cleared.
+# privacy.app.removeHandler: GIO could not change mimeapps.list
+#@ new
+privacy.handlerFailed	De standaardkoppeling is niet gewijzigd.	The default handler wasn’t changed.
+# privacy.app.snapConnect: snapd is not running or its socket is missing
+#@ new
+privacy.snapUnavailable	De snap-interfaces zijn nu niet beschikbaar.	Snap interfaces aren’t available right now.
+# privacy.app.snapConnect: snapd refused or failed the change; {error} is snapd's own message
+#@ new
+privacy.snapFailed	De snap-interface is niet gewijzigd: {error}	The snap interface wasn’t changed: {error}
+# privacy.app.globalShortcuts.set: the app registered no global shortcuts, or GNOME 50's schema is missing
+#@ new
+privacy.shortcutsUnavailable	De algemene sneltoetsen van deze app kunnen nu niet worden gewijzigd.	This app’s global shortcuts can’t be changed right now.
+# privacy.app.globalShortcuts.set: xdg-desktop-portal-gnome refused the rebind (the app may not be running)
+#@ new
+privacy.shortcutsFailed	De sneltoetsen zijn niet gewijzigd. Open de app en probeer het opnieuw.	The shortcuts weren’t changed. Open the app and try again.
+# privacy.app.setAutostart: ~/.config/autostart/<id> could not be written
+#@ new
+privacy.autostartFailed	Starten bij aanmelden is niet gewijzigd.	Starting at sign-in wasn’t changed.
+# privacy.reports.set: whoopsie-preferences is not on the system bus (not installed, or it did not answer)
+#@ new
+privacy.reportsUnavailable	Foutrapporten zijn op dit apparaat niet beschikbaar.	Error reports aren’t available on this device.
+# privacy.insights.*: /usr/bin/ubuntu-insights is not installed
+#@ new
+privacy.insightsUnavailable	Systeemrapporten zijn op dit apparaat niet beschikbaar.	System reports aren’t available on this device.
+# privacy.insights.set: ubuntu-insights could not save the consent
+#@ new
+privacy.consentFailed	Je keuze voor systeemrapporten is niet opgeslagen.	Your choice for system reports wasn’t saved.
+# privacy.insights.report: ubuntu-insights collect --dry-run failed or gave no report
+#@ new
+privacy.insightsFailed	Het systeemrapport kan niet worden gemaakt.	The system report can’t be created.
+# privacy.insights.report: a second report while one is being made
+#@ new
+privacy.reportBusy	Er wordt al een rapport gemaakt.	A report is already being created.
+# privacy.insights.report: the dialog stopped the report (GNOME's Cancel Report Generation)
+#@ new
+privacy.reportCancelled	Het maken van het rapport is geannuleerd.	Creating the report was cancelled.
+# privacy.securityCenter.open: Ubuntu's Security Center (the desktop-security-center snap) is not installed
+#@ new
+privacy.securityCenterMissing	Het Beveiligingscentrum is niet geïnstalleerd.	Security Centre isn’t installed.

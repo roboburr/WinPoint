@@ -11,24 +11,27 @@ unsafe extern "C" {
     fn gdk_wayland_toplevel_set_application_id(toplevel: *mut gtk::gdk::ffi::GdkToplevel, id: *const libc::c_char);
 }
 
-/// Give the window's toplevel surface this application ID whenever it is realized or mapped (Wayland only).
-pub fn set_app_id(window: &impl IsA<gtk::Window>, id: &'static str) {
+/// Give the window's toplevel surface this application ID whenever it is realized or mapped (Wayland only). The ID
+/// may be made at run time (a taskbar of another monitor names its monitor, panel/strips.rs).
+pub fn set_app_id(window: &impl IsA<gtk::Window>, id: &str) {
+    let Ok(id) = std::ffi::CString::new(id) else { return };
+    let id = std::rc::Rc::new(id);
     let apply = move |w: &gtk::Window| {
         let Some(surface) = w.surface() else { return };
         if !surface.display().type_().name().contains("Wayland") {
             return;
         }
-        if let Ok(toplevel) = surface.downcast::<gtk::gdk::Toplevel>()
-            && let Ok(id) = std::ffi::CString::new(id)
-        {
+        if let Ok(toplevel) = surface.downcast::<gtk::gdk::Toplevel>() {
             unsafe { gdk_wayland_toplevel_set_application_id(toplevel.to_glib_none().0, id.as_ptr()) };
         }
     };
+    let apply = std::rc::Rc::new(apply);
     let w = window.upcast_ref::<gtk::Window>();
     if w.is_realized() {
         apply(w);
     }
-    w.connect_realize(move |w| apply(w));
+    let on_realize = apply.clone();
+    w.connect_realize(move |w| on_realize(w));
     w.connect_map(move |w| {
         let w: &gtk::Window = w.upcast_ref();
         apply(w);

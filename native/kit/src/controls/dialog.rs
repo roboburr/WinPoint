@@ -192,39 +192,8 @@ impl Dialog {
         let footer = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         footer.add_css_class("w11-dialog-footer");
         footer.set_homogeneous(true);
-        let primary = self.inner.primary.borrow().clone();
-        let secondary = self.inner.secondary.borrow().clone();
-        let close = match self.inner.close.borrow().clone() {
-            Some(c) => c,
-            None => Some(if primary.is_some() || secondary.is_some() { t("Annuleren", "Cancel") } else { t("Sluiten", "Close") }.to_owned()),
-        };
-        let mut buttons = Vec::new();
-        let danger = self.inner.danger.get();
-        if let Some(p) = &primary {
-            let b = super::buttons::button(p, if danger { super::Variant::Danger } else { super::Variant::Accent });
-            b.set_widget_name("w11-dialog-primary");
-            buttons.push((DialogResult::Primary, b));
-        }
-        if let Some(s) = &secondary {
-            let b = super::buttons::button(s, super::Variant::Standard);
-            b.set_widget_name("w11-dialog-secondary");
-            buttons.push((DialogResult::Secondary, b));
-        }
-        if let Some(c) = &close {
-            let only = primary.is_none() && secondary.is_none();
-            let b = super::buttons::button(c, if only { super::Variant::Accent } else { super::Variant::Standard });
-            b.set_widget_name("w11-dialog-close");
-            buttons.push((DialogResult::Close, b));
-        }
-        for (r, b) in &buttons {
-            b.set_hexpand(true);
-            let r = *r;
-            let weak = Rc::downgrade(&self.inner);
-            b.connect_clicked(move |_| {
-                if let Some(inner) = weak.upgrade() {
-                    Dialog { inner }.finish(r, false);
-                }
-            });
+        let buttons = self.footer_buttons();
+        for (_, b) in &buttons {
             footer.append(b);
         }
         dialog.append(&body);
@@ -261,8 +230,12 @@ impl Dialog {
             }
         });
         smoke.add_controller(keys);
-        // Clicks on the smoke stay there (modal).
+        // Clicks on the smoke stay there (modal). Only a press on the smoke itself (the dimmed area): a claim in the
+        // bubble phase would also take the presses on the dialog's own buttons, switches and drop-downs, and cancel
+        // their gestures before the release. The page below is not in the dialog's propagation chain (the smoke is
+        // an overlay of the window's layer), so a press on the dialog's background reaches nothing behind it either.
         let block = gtk::GestureClick::new();
+        block.set_propagation_phase(gtk::PropagationPhase::Target);
         block.connect_pressed(|g, _, _, _| {
             g.set_state(gtk::EventSequenceState::Claimed);
         });
@@ -286,6 +259,54 @@ impl Dialog {
                 b.grab_focus();
             }
         });
+    }
+
+    /// The footer's buttons (primary, secondary, close; equal width), each closing the dialog with its result.
+    fn footer_buttons(&self) -> Vec<(DialogResult, gtk::Button)> {
+        let primary = self.inner.primary.borrow().clone();
+        let secondary = self.inner.secondary.borrow().clone();
+        let close = match self.inner.close.borrow().clone() {
+            Some(c) => c,
+            None => Some(if primary.is_some() || secondary.is_some() { t("Annuleren", "Cancel") } else { t("Sluiten", "Close") }.to_owned()),
+        };
+        let mut buttons = Vec::new();
+        let danger = self.inner.danger.get();
+        if let Some(p) = &primary {
+            let b = super::buttons::button(p, if danger { super::Variant::Danger } else { super::Variant::Accent });
+            b.set_widget_name("w11-dialog-primary");
+            buttons.push((DialogResult::Primary, b));
+        }
+        if let Some(s) = &secondary {
+            let b = super::buttons::button(s, super::Variant::Standard);
+            b.set_widget_name("w11-dialog-secondary");
+            buttons.push((DialogResult::Secondary, b));
+        }
+        if let Some(c) = &close {
+            let only = primary.is_none() && secondary.is_none();
+            let b = super::buttons::button(c, if only { super::Variant::Accent } else { super::Variant::Standard });
+            b.set_widget_name("w11-dialog-close");
+            buttons.push((DialogResult::Close, b));
+        }
+        for (r, b) in &buttons {
+            b.set_hexpand(true);
+            let r = *r;
+            let weak = Rc::downgrade(&self.inner);
+            b.connect_clicked(move |_| {
+                if let Some(inner) = weak.upgrade() {
+                    Dialog { inner }.finish(r, false);
+                }
+            });
+        }
+        buttons
+    }
+
+    /// The footer's buttons as `show` makes them, without a window (the kit's GTK unit test).
+    #[cfg(test)]
+    pub(crate) fn build_buttons_for_test(&self) -> Vec<gtk::Button> {
+        let buttons = self.footer_buttons();
+        let out = buttons.iter().map(|(_, b)| b.clone()).collect();
+        *self.inner.buttons.borrow_mut() = buttons;
+        out
     }
 
     fn default_result(&self) -> DialogResult {
@@ -348,6 +369,15 @@ impl Dialog {
         for (r, b) in self.inner.buttons.borrow().iter() {
             if *r == DialogResult::Primary {
                 b.set_sensitive(enabled);
+            }
+        }
+    }
+
+    /// A new text for the primary button while it shows (e.g. "Opnieuw proberen" after a failed attempt).
+    pub fn set_primary_label(&self, label: &str) {
+        for (r, b) in self.inner.buttons.borrow().iter() {
+            if *r == DialogResult::Primary {
+                b.set_label(label);
             }
         }
     }

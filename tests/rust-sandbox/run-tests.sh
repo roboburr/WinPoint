@@ -10,7 +10,9 @@
 #   connection fails instead of reaching the real system bus
 # * GSETTINGS_BACKEND=keyfile, NO_AT_BRIDGE=1, GTK_A11Y=none
 # * guard-bin/ stubs (pkexec, systemctl, gsettings, gnome-extensions, ...) first on PATH; every call is
-#   logged to logs/guard-calls.log and fails
+#   logged to logs/guard-calls.log and fails. WIN11_SYSTEM_TOOL_DIR names guard-bin too, so host/src/tools.rs
+#   system_tool() resolves every tool the Settings services spawn (pkexec, grdctl, passwd, nmcli, localedef, ...)
+#   to its stub (notes/claude/settings-parity.md §6.6)
 # * TMPDIR is a short private directory (/tmp/w11-ge0b-<pid>): Events::new binds Unix sockets below
 #   std::env::temp_dir(), and sockaddr_un is limited to 107 bytes, which the repo path would exceed.
 #   It is created 0700 and removed after the run.
@@ -54,6 +56,8 @@ for name in pkexec systemctl systemd-run loginctl gsettings dconf gnome-extensio
             gnome-session-quit apt apt-get pkcon do-release-upgrade update-manager gnome-software \
             notify-send xdg-open gio gtk-launch gdbus busctl dbus-send nmcli bluetoothctl \
             wpctl pactl udisksctl pkill killall update-desktop-database xdg-mime \
+            grdctl tecla bluetooth-sendto passwd localedef ubuntu-insights simple-scan orca ibus ibus-setup \
+            snap-store gnome-remote-desktop-enable-service gnome-control-center-set-debian-keyboard \
             win11-shell win11-explorer win11-panel win11-app win11-calendar win11-launch \
             win11-index-worker win11-image-worker win11-default-apps win11-file-portal \
             win11-installer win11-software-worker win11-gtk-explorer win11-gtk-settings win11-gtk-taskmgr \
@@ -101,6 +105,7 @@ fail() { echo "sandbox guard: $*" >&2; exit 4; }
 [[ "$DBUS_SESSION_BUS_ADDRESS" != *"/run/user/"* ]] || fail "live session bus"
 [[ "$DBUS_SYSTEM_BUS_ADDRESS" == "unix:path=$SANDBOX/run/no-system-bus" ]] || fail "system bus"
 [[ ! -e "$SANDBOX/run/no-system-bus" ]] || fail "system bus placeholder exists"
+[[ "${WIN11_SYSTEM_TOOL_DIR:-}" == "$SANDBOX/guard-bin" ]] || fail "WIN11_SYSTEM_TOOL_DIR=${WIN11_SYSTEM_TOOL_DIR:-}"
 env | sort > "$SANDBOX/logs/test-env.txt"
 cd "$G"
 cargo_args=()
@@ -124,6 +129,7 @@ set +e
   TMPDIR="$TMP_PRIVATE" \
   GSETTINGS_BACKEND=keyfile NO_AT_BRIDGE=1 GTK_A11Y=none GIO_USE_VFS=local \
   DBUS_SYSTEM_BUS_ADDRESS="unix:path=$SANDBOX/run/no-system-bus" \
+  WIN11_SYSTEM_TOOL_DIR="$SANDBOX/guard-bin" \
   SANDBOX="$SANDBOX" G="$G" WIN11_TEST_TIMEOUT="${WIN11_TEST_TIMEOUT:-900}" \
   dbus-run-session --config-file="$SANDBOX/session-bus.conf" -- "$SANDBOX/inner.sh" "$@" \
   > "$SANDBOX/logs/test.log" 2>&1

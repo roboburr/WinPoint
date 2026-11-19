@@ -1,0 +1,547 @@
+# tests/i18n/windows-glossary/a.tsv: the Windows 11 UI strings settings-parity batch A uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch A
+# edits this file.
+# --- slice 1: pages/mouse.rs
+Down motion scrolls down	Neerwaartse beweging schuift omlaag	windows	no
+Down motion scrolls up	Neerwaartse beweging schuift omhoog	windows	no
+Slow	Langzaam	windows	no
+Fast	Snel	windows	no
+Click, double-click and scroll in the boxes below. A tick shows what works.	Klik, dubbelklik en schuif in de vakken hieronder. Een vinkje laat zien wat werkt.	winpoint	no
+Primary click	Primaire klik	winpoint	no
+Secondary click	Secundaire klik	winpoint	no
+Middle click	Middelste klik	winpoint	no
+Double-click	Dubbelklik	winpoint	no
+Scrolling	Schuiven	windows	no
+Click or double-click here	Klik of dubbelklik hier	winpoint	no
+Scroll through this list: line {n}	Schuif door deze lijst: regel {n}	winpoint	no
+Test settings	Instellingen testen	windows	no
+Close	Sluiten	winpoint	no
+Button configuration	Knopconfiguratie	windows	no
+Switch primary and secondary buttons	Primaire en secundaire knop omwisselen	windows	no
+Select this check box to make the button on the right the one you use for primary functions such as selecting and dragging.	Schakel dit selectievakje in als je de rechterknop wilt gebruiken voor primaire functies, zoals selecteren en slepen.	windows	no
+Double-click speed	Dubbelkliksnelheid	windows	no
+Double-click the folder to test your setting. If the folder doesn’t open or close, try using a slower setting.	Dubbelklik op de map om de instelling te testen. Als de map niet wordt geopend of gesloten, kies je een lagere snelheid.	windows	no
+Middle button	Middelste knop	winpoint	no
+Emulate middle click (left and right together)	Middelste klik nabootsen (links en rechts tegelijk)	winpoint	no
+Motion	Beweging	windows	no
+Select a pointer speed:	Selecteer een snelheid voor de aanwijzer:	windows	no
+Enhance pointer precision	Nauwkeurigheid van aanwijzer verbeteren	windows	no
+Visibility	Zichtbaarheid	windows	no
+Show location of pointer when I press the Ctrl key	Locatie van aanwijzer weergeven wanneer ik op de Ctrl-toets druk	windows	no
+Buttons	Knoppen	windows	no
+Pointer Options	Opties voor aanwijzer	windows	no
+Mouse Properties	Eigenschappen voor Muis	windows	no
+Left	Links	windows	no
+Right	Rechts	windows	no
+Primary mouse button	Primaire muisknop	windows	no
+Mouse pointer speed	Snelheid van muisaanwijzer	windows	no
+Middle-click paste	Plakken met de middelste muisknop	winpoint	no
+Paste selected text by clicking the middle mouse button	Geselecteerde tekst plakken door op de middelste muisknop te klikken	winpoint	no
+Scroll inactive windows when hovering over them	Inactieve vensters schuiven wanneer ik de muisaanwijzer erop plaats	windows	no
+GNOME always scrolls the window under the pointer	GNOME schuift altijd in het venster onder de muisaanwijzer	winpoint	no
+Scrolling direction	Schuifrichting	windows	no
+Pointing stick	Aanwijsstick	winpoint	no
+Pointing stick speed	Snelheid van aanwijsstick	winpoint	no
+Pointing stick acceleration	Versnelling van aanwijsstick	winpoint	no
+Try clicking, double-clicking and scrolling	Klikken, dubbelklikken en schuiven uitproberen	winpoint	no
+Test	Testen	winpoint	no
+Additional mouse settings	Aanvullende muisinstellingen	windows	no
+Buttons, double-click speed and pointer visibility	Knoppen, dubbelkliksnelheid en zichtbaarheid van aanwijzer	winpoint	no
+Mouse pointer	Muisaanwijzer	windows	no
+Pointer size and colour	Grootte en kleur van aanwijzer	windows	no
+# --- slice 1: pages/pen.rs
+Pen display	Penbeeldscherm	winpoint	no
+Built-in screen with pen	Ingebouwd scherm met pen	winpoint	no
+Drawing tablet	Tekentablet	winpoint	no
+Automatic	Automatisch	winpoint	no
+Another display (not connected)	Ander beeldscherm (niet aangesloten)	winpoint	no
+Left mouse button	Linkermuisknop	winpoint	no
+Middle mouse button	Middelste muisknop	winpoint	no
+Right mouse button	Rechtermuisknop	winpoint	no
+Back	Terug	winpoint	no
+Forward	Vooruit	winpoint	no
+Switch display	Naar ander beeldscherm	winpoint	no
+Send keystroke	Toetsaanslag verzenden	winpoint	no
+Pen without a serial number	Pen zonder serienummer	winpoint	no
+Pen with serial number {serial}	Pen met serienummer {serial}	winpoint	no
+Calibrate	Kalibreren	windows	no
+Tap the centre of each target with the pen as it appears. Press Esc to cancel.	Tik met de pen op het midden van elk doel zodra het verschijnt. Druk op Esc om te annuleren.	winpoint	no
+The pen has been calibrated	De pen is gekalibreerd	winpoint	no
+Calibration was cancelled	Kalibreren is geannuleerd	winpoint	no
+Clear	Wissen	winpoint	no
+Draw with the pen. The harder you press, the thicker the line.	Teken met de pen. Hoe harder je drukt, hoe dikker de lijn.	winpoint	no
+Soft	Zacht	winpoint	no
+Firm	Stevig	winpoint	no
+Assign keystroke	Toetsaanslag toewijzen	winpoint	no
+No keystroke assigned yet	Nog geen toetsaanslag toegewezen	winpoint	no
+Sends {keys}	Verzendt {keys}	winpoint	no
+Button 1	Knop 1	winpoint	no
+The lower button on the pen	De onderste knop op de pen	winpoint	no
+Button 2	Knop 2	winpoint	no
+The upper button on the pen	De bovenste knop op de pen	winpoint	no
+Button 3	Knop 3	winpoint	no
+Only on pens with three buttons	Alleen op pennen met drie knoppen	winpoint	no
+No tablet found	Geen tablet gevonden	winpoint	no
+Connect a drawing tablet or pen to see its settings.	Sluit een tekentablet of pen aan om de instellingen ervan te zien.	winpoint	no
+Choose which hand you write with	Kies met welke hand je schrijft	windows	no
+Right hand	Rechterhand	windows	no
+Left hand	Linkerhand	windows	no
+Tablet	Tablet	winpoint	no
+Tablet mode	Tabletmodus	windows	no
+The pen points at a fixed place on the screen; off, it moves the pointer like a mouse	De pen wijst een vaste plek op het scherm aan; uit beweegt hij de aanwijzer zoals een muis	winpoint	no
+Map to display	Toewijzen aan beeldscherm	winpoint	no
+The display the pen works on	Het beeldscherm waarop de pen werkt	winpoint	no
+Keep aspect ratio	Hoogte-breedteverhouding behouden	winpoint	no
+The drawing area takes on the proportions of the display	Het tekengebied krijgt de verhouding van het beeldscherm	winpoint	no
+Tap the targets to fine-tune the pen	Tik op de doelen om de pen precies af te stellen	winpoint	no
+What the button on the tablet does	Wat de knop op de tablet doet	winpoint	no
+What the {n} buttons on the tablet do	Wat de {n} knoppen op de tablet doen	winpoint	no
+What the buttons, rings and strips on the tablet do	Wat de knoppen, ringen en strips op de tablet doen	winpoint	no
+Map buttons	Knoppen toewijzen	winpoint	no
+Pen buttons	Penknoppen	windows	no
+Pen	Pen	windows	no
+Use the top button of my pen to erase ink (where available)	De bovenste knop van mijn pen gebruiken om inkt te wissen (indien beschikbaar)	windows	no
+Pen pressure	Pendruk	winpoint	no
+Tip pressure feel	Gevoel van pendruk	winpoint	no
+Eraser pressure feel	Gevoel van gumdruk	winpoint	no
+Draw with the pen and try the pressure	Tekenen met de pen en de druk uitproberen	winpoint	no
+Touchscreen	Aanraakscherm	windows	no
+Map touchscreen to display	Aanraakscherm toewijzen aan beeldscherm	winpoint	no
+# --- slice 1: pages/touchpad.rs
+Tap with three fingers: right mouse button	Met drie vingers tikken: rechtermuisknop	winpoint	no
+Tap with three fingers: middle mouse button	Met drie vingers tikken: middelste muisknop	winpoint	no
+Touchpad	Touchpad	windows	no
+Leave touchpad on when a mouse is connected	Touchpad ingeschakeld laten wanneer er een muis is aangesloten	windows	no
+Cursor speed	Cursorsnelheid	windows	no
+Reset touchpad settings and gestures to default	Instellingen en bewegingen van touchpad terugzetten op de standaardwaarden	windows	no
+Reset	Opnieuw instellen	windows	no
+Taps	Tikken	windows	no
+Turn off touchpad while typing	Touchpad uitschakelen tijdens het typen	winpoint	no
+Tap with a single finger to single-click	Met één vinger tikken om één keer te klikken	windows	no
+Tap with two fingers to right-click	Met twee vingers tikken om met de rechtermuisknop te klikken	windows	no
+This is part of tapping and is on while tapping is on.	Dit hoort bij tikken en staat aan zolang tikken aan staat.	winpoint	no
+Tap twice and drag to multi-select	Twee keer tikken en slepen om meerdere items te selecteren	windows	no
+Press the lower right corner of the touchpad to right-click	Op de rechterbenedenhoek van het touchpad drukken om met de rechtermuisknop te klikken	windows	no
+Scroll & zoom	Schuiven en zoomen	windows	no
+Drag two fingers to scroll	Met twee vingers slepen om te schuiven	windows	no
+Scroll along the edge	Schuiven langs de rand	winpoint	no
+Pinch to zoom	Knijpen om te zoomen	windows	no
+Apps that support zooming always do this.	Apps die zoomen ondersteunen, doen dit altijd.	winpoint	no
+GNOME Shell handles multi-finger swipes itself; this can’t be changed here.	GNOME Shell regelt vegen met meerdere vingers zelf; dit kan hier niet worden gewijzigd.	winpoint	no
+No touchpad was found. These settings apply once one is connected.	Er is geen touchpad gevonden. Deze instellingen gelden zodra er een is aangesloten.	winpoint	no
+Gestures & interaction	Bewegingen en interactie	windows	no
+Three-finger gestures	Bewegingen met drie vingers	windows	no
+Four-finger gestures	Bewegingen met vier vingers	windows	no
+# --- slice 1: host input
+This tablet isn’t valid.	Deze tablet is niet geldig.	winpoint	no
+This tablet isn’t connected.	Deze tablet is niet aangesloten.	winpoint	no
+This tablet has no buttons to assign.	Deze tablet heeft geen knoppen om toe te wijzen.	winpoint	no
+This needs GNOME Shell with the WinPoint extension running.	Hiervoor moet GNOME Shell met de WinPoint-extensie actief zijn.	winpoint	no
+# --- slice 1: inputBridge.js
+The buttons of this tablet weren’t found.	De knoppen van deze tablet zijn niet gevonden.	winpoint	no
+# --- slice 2: pages/typing.rs
+When no keyboard attached	Als er geen toetsenbord is aangesloten	windows	no
+Always	Altijd	windows	no
+Touch keyboard	Aanraaktoetsenbord	windows	no
+When the touch keyboard is shown	Wanneer het aanraaktoetsenbord wordt weergegeven	winpoint	no
+Show the touch keyboard	Het aanraaktoetsenbord weergeven	windows	no
+Without Always, the touch keyboard appears when you use the touchscreen to type in a text box.	Zonder Altijd verschijnt het aanraaktoetsenbord wanneer je het aanraakscherm gebruikt en er in een tekstvak wordt getypt.	winpoint	no
+# --- slice 2: pages/keyboards.rs
+Input method	Invoermethode	winpoint	no
+Search by language or country	Zoeken op taal of land	winpoint	no
+Add a keyboard	Een toetsenbord toevoegen	windows	no
+Add	Toevoegen	windows	no
+No keyboards found	Geen toetsenborden gevonden	winpoint	no
+Show more	Meer weergeven	winpoint	no
+Keyboard layout	Toetsenbordindeling	winpoint	no
+More options	Meer opties	winpoint	no
+Move up	Omhoog	windows	no
+Move down	Omlaag	windows	no
+Show layout	Indeling weergeven	windows	no
+Options	Opties	windows	no
+Remove	Verwijderen	windows	no
+Keyboards	Toetsenborden	windows	no
+Installed keyboards	Geïnstalleerde toetsenborden	windows	no
+No keyboards set: the system layout is used.	Geen toetsenborden ingesteld: de indeling van het systeem wordt gebruikt.	winpoint	no
+Switch between keyboards with {keys}.	Schakel tussen toetsenborden met {keys}.	winpoint	no
+Layout default	Standaard van de indeling	winpoint	no
+None	Geen	winpoint	no
+Left Alt	Linker Alt	winpoint	no
+Right Alt	Rechter Alt	winpoint	no
+Left Windows key	Linker Windows-toets	winpoint	no
+Right Windows key	Rechter Windows-toets	winpoint	no
+Menu key	Menutoets	winpoint	no
+Right Ctrl	Rechter Ctrl	winpoint	no
+Off	Uit	windows	no
+Left Ctrl	Linker Ctrl	winpoint	no
+Caps Lock	Caps Lock	windows	no
+Scroll Lock	Scroll Lock	windows	no
+Print Screen	Print Screen	windows	no
+Insert	Insert	windows	no
+Override for default input method	Standaardinvoermethode overschrijven	windows	no
+If you want to use an input method that’s different from the first one in your list of keyboards, choose it here	Als je een andere invoermethode wilt gebruiken dan de eerste in je lijst met toetsenborden, kies je die hier	winpoint	no
+The system layout	De indeling van het systeem	winpoint	no
+Switching input methods	Schakelen tussen invoermethoden	windows	no
+Let me use a different input method for each app window	Voor elk app-venster een andere invoermethode gebruiken	windows	no
+Input language hot keys	Sneltoetsen voor invoertaal	windows	no
+Now: {keys}	Nu: {keys}	winpoint	no
+Special character entry	Speciale tekens invoeren	windows	no
+Alternate characters key	Toets voor alternatieve tekens	windows	no
+Type the extra characters sometimes printed as a third one on a key	Typ de extra tekens die soms als derde teken op een toets staan	winpoint	no
+Compose key	Samenstellingstoets	windows	no
+Press the compose key and then a sequence of characters, for example o and c for ©	Druk op de samenstellingstoets en daarna op een reeks tekens, bijvoorbeeld o en c voor ©	winpoint	no
+Character repeat	Tekenherhaling	windows	no
+Repeat keys	Toetsen herhalen	winpoint	no
+A key that’s held down types its character again and again	Een toets die ingedrukt blijft, typt zijn teken steeds opnieuw	winpoint	no
+Repeat delay	Vertraging voor herhalen	windows	no
+Long	Lang	windows	no
+Short	Kort	windows	no
+Repeat rate	Herhalingssnelheid	windows	no
+Click here and hold down a key to test repeat rate	Klik hier en houd een toets ingedrukt om de herhalingssnelheid te testen	windows	no
+Windows key	Windows-toets	winpoint	no
+Windows key opens Start	Windows-toets opent Start	winpoint	no
+With Sticky Keys on, the Windows key doesn’t open Start	Met Plaktoetsen aan opent de Windows-toets Start niet	winpoint	no
+Windows key opens the Activities overview	Windows-toets opent het activiteitenoverzicht	winpoint	no
+GNOME session only. When this is off, the Windows key opens nothing in WinPoint either	Alleen GNOME-sessie. Als dit uit staat, opent de Windows-toets ook in WinPoint niets	winpoint	no
+Keyboard accessibility	Toegankelijkheid van toetsenbord	winpoint	no
+Sticky keys, filter keys, on-screen keyboard	Plaktoetsen, filtertoetsen, schermtoetsenbord	winpoint	no
+# --- slice 2: pages/shortcuts.rs
+WinPoint	WinPoint	winpoint	no
+Accessibility	Toegankelijkheid	windows	no
+Launchers	Starters	winpoint	no
+Navigation	Navigatie	winpoint	no
+Screenshots	Schermafbeeldingen	winpoint	no
+Sound & media	Geluid en media	winpoint	no
+System	Systeem	windows	no
+Windows	Vensters	winpoint	no
+Open Task View	Taakweergave openen	windows	no
+Open Task Manager	Taakbeheer openen	windows	no
+Turn Magnifier on or off	Vergrootglas in- of uitschakelen	winpoint	no
+Zoom in	Inzoomen	windows	no
+Zoom out	Uitzoomen	windows	no
+Turn Narrator on or off	Verteller in- of uitschakelen	winpoint	no
+Turn on-screen keyboard on or off	Schermtoetsenbord in- of uitschakelen	winpoint	no
+Make text bigger	Tekst groter maken	winpoint	no
+Make text smaller	Tekst kleiner maken	winpoint	no
+Turn contrast theme on or off	Contrastthema in- of uitschakelen	winpoint	no
+Launch help browser	Help-browser starten	winpoint	no
+Settings	Instellingen	windows	no
+Launch calculator	Rekenmachine starten	winpoint	no
+Launch email app	E-mailprogramma starten	winpoint	no
+Launch terminal	Terminal starten	winpoint	no
+Launch web browser	Webbrowser starten	winpoint	no
+Home folder	Persoonlijke map	winpoint	no
+Search	Zoeken	windows	no
+Move window to desktop 1	Venster naar bureaublad 1 verplaatsen	winpoint	no
+Move window to desktop 2	Venster naar bureaublad 2 verplaatsen	winpoint	no
+Move window to desktop 3	Venster naar bureaublad 3 verplaatsen	winpoint	no
+Move window to desktop 4	Venster naar bureaublad 4 verplaatsen	winpoint	no
+Move window to the last desktop	Venster naar het laatste bureaublad verplaatsen	winpoint	no
+Move window one desktop to the left	Venster één bureaublad naar links verplaatsen	winpoint	no
+Move window one desktop to the right	Venster één bureaublad naar rechts verplaatsen	winpoint	no
+Move window one display to the left	Venster één beeldscherm naar links verplaatsen	winpoint	no
+Move window one display to the right	Venster één beeldscherm naar rechts verplaatsen	winpoint	no
+Move window one display up	Venster één beeldscherm omhoog verplaatsen	winpoint	no
+Move window one display down	Venster één beeldscherm omlaag verplaatsen	winpoint	no
+Switch apps	Schakelen tussen apps	winpoint	no
+Switch windows	Schakelen tussen vensters	winpoint	no
+Switch windows of an app	Schakelen tussen vensters van een app	winpoint	no
+Switch system controls	Schakelen tussen systeembesturingselementen	winpoint	no
+Switch windows directly	Direct schakelen tussen vensters	winpoint	no
+Switch windows of an app directly	Direct schakelen tussen vensters van een app	winpoint	no
+Switch system controls directly	Direct schakelen tussen systeembesturingselementen	winpoint	no
+Hide all windows	Alle vensters verbergen	winpoint	no
+Switch to desktop 1	Naar bureaublad 1 schakelen	winpoint	no
+Switch to desktop 2	Naar bureaublad 2 schakelen	winpoint	no
+Switch to desktop 3	Naar bureaublad 3 schakelen	winpoint	no
+Switch to desktop 4	Naar bureaublad 4 schakelen	winpoint	no
+Switch to the last desktop	Naar het laatste bureaublad schakelen	winpoint	no
+Switch to the desktop on the left	Naar het bureaublad links schakelen	winpoint	no
+Switch to the desktop on the right	Naar het bureaublad rechts schakelen	winpoint	no
+Take a screenshot interactively	Interactief een schermafbeelding maken	winpoint	no
+Take a screenshot	Een schermafbeelding maken	winpoint	no
+Take a screenshot of a window	Een schermafbeelding van een venster maken	winpoint	no
+Record the screen interactively	Interactief een schermopname maken	winpoint	no
+Mute or unmute volume	Geluid dempen of dempen opheffen	winpoint	no
+Volume down	Volume omlaag	windows	no
+Volume up	Volume omhoog	windows	no
+Mute or unmute microphone	Microfoon dempen of dempen opheffen	winpoint	no
+Launch media player	Mediaspeler starten	winpoint	no
+Play (or play/pause)	Afspelen (of afspelen/onderbreken)	winpoint	no
+Pause playback	Afspelen onderbreken	winpoint	no
+Stop playback	Afspelen stoppen	winpoint	no
+Previous track	Vorig nummer	winpoint	no
+Next track	Volgend nummer	winpoint	no
+Eject	Uitwerpen	winpoint	no
+Sign out	Afmelden	windows	no
+Restart	Opnieuw opstarten	windows	no
+Shut down	Afsluiten	windows	no
+Lock screen	Scherm vergrendelen	winpoint	no
+Show the notification list	De meldingenlijst weergeven	winpoint	no
+Open quick settings	Snelle instellingen openen	winpoint	no
+Select the active notification	De actieve melding selecteren	winpoint	no
+Show the Activities overview	Het activiteitenoverzicht weergeven	winpoint	no
+Show all apps	Alle apps weergeven	winpoint	no
+Show the Run box	Het venster Uitvoeren weergeven	winpoint	no
+Restore the keyboard shortcuts	De sneltoetsen terugzetten	winpoint	no
+Switch to the next input method	Naar de volgende invoermethode schakelen	winpoint	no
+Switch to the previous input method	Naar de vorige invoermethode schakelen	winpoint	no
+Open the window menu	Het venstermenu openen	winpoint	no
+Turn full screen on or off	Volledig scherm in- of uitschakelen	winpoint	no
+Maximise or restore window	Venster maximaliseren of herstellen	winpoint	no
+Maximise window	Venster maximaliseren	winpoint	no
+Restore window	Venster herstellen	winpoint	no
+Close window	Venster sluiten	winpoint	no
+Minimise window	Venster minimaliseren	winpoint	no
+Move window	Venster verplaatsen	winpoint	no
+Resize window	Formaat van venster wijzigen	winpoint	no
+Show window on all desktops or on one	Venster op alle bureaubladen of op één weergeven	winpoint	no
+Raise window if covered, otherwise lower it	Venster naar voren halen als het bedekt is, anders naar achteren	winpoint	no
+Raise window above other windows	Venster boven andere vensters plaatsen	winpoint	no
+Lower window below other windows	Venster onder andere vensters plaatsen	winpoint	no
+Maximise window vertically	Venster verticaal maximaliseren	winpoint	no
+Maximise window horizontally	Venster horizontaal maximaliseren	winpoint	no
+Snap window to the left	Venster links uitlijnen	windows	no
+Snap window to the right	Venster rechts uitlijnen	windows	no
+Windows	Windows	winpoint	no
+Ctrl	Ctrl	windows	no
+Alt	Alt	windows	no
+Shift	Shift	windows	no
+Space	Spatiebalk	winpoint	no
+Enter	Enter	windows	no
+Esc	Esc	windows	no
+Backspace	Backspace	windows	no
+Delete	Delete	windows	no
+Tab	Tab	windows	no
+Page Up	Page Up	windows	no
+Page Down	Page Down	windows	no
+Home	Home	windows	no
+End	End	windows	no
+Left arrow	Pijl-links	winpoint	no
+Right arrow	Pijl-rechts	winpoint	no
+Up arrow	Pijl-omhoog	winpoint	no
+Down arrow	Pijl-omlaag	winpoint	no
+Key above Tab	Toets boven Tab	winpoint	no
+In use by Task Manager	In gebruik door Taakbeheer	winpoint	no
+In use by Task View	In gebruik door Taakweergave	winpoint	no
+Disabled	Uitgeschakeld	winpoint	no
+{keys} is used by WinPoint for {other}. If you replace it, {other} no longer works with this shortcut.	{keys} wordt door WinPoint gebruikt voor {other}. Als je deze vervangt, werkt {other} niet meer met deze sneltoets.	winpoint	no
+{keys} is already used for {other}. If you replace it, {other} no longer works with this shortcut.	{keys} wordt al gebruikt voor {other}. Als je deze vervangt, werkt {other} niet meer met deze sneltoets.	winpoint	no
+Replace shortcut?	Sneltoets vervangen?	winpoint	no
+Replace	Vervangen	windows	no
+Set shortcut for {name}	Sneltoets instellen voor {name}	winpoint	no
+Click to set a shortcut	Klik om een sneltoets in te stellen	winpoint	no
+Set shortcut…	Sneltoets instellen…	winpoint	no
+Reset shortcut	Sneltoets opnieuw instellen	winpoint	no
+Turn off	Uitschakelen	winpoint	no
+For example: gnome-terminal	Bijvoorbeeld: gnome-terminal	winpoint	no
+Set shortcut	Sneltoets instellen	winpoint	no
+Name	Naam	windows	no
+Command	Opdracht	winpoint	no
+Shortcut	Sneltoets	winpoint	no
+Custom shortcut	Aangepaste sneltoets	winpoint	no
+Add custom shortcut	Aangepaste sneltoets toevoegen	winpoint	no
+Enter a name.	Geef een naam op.	winpoint	no
+Enter a command.	Geef een opdracht op.	winpoint	no
+Edit	Bewerken	windows	no
+{n} shortcut	{n} sneltoets	winpoint	no
+{n} shortcuts	{n} sneltoetsen	winpoint	no
+Keyboard shortcuts aren’t available	Sneltoetsen zijn niet beschikbaar	winpoint	no
+Search shortcuts	Sneltoetsen zoeken	winpoint	no
+Open Start	Start openen	winpoint	no
+Windows key. Turn it on or off in Advanced keyboard settings	Windows-toets. In- of uitschakelen bij Geavanceerde toetsenbordinstellingen	winpoint	no
+Custom shortcuts	Aangepaste sneltoetsen	winpoint	no
+Add a custom shortcut	Een aangepaste sneltoets toevoegen	winpoint	no
+Run a command with a key combination of your own	Een opdracht starten met een eigen toetsencombinatie	winpoint	no
+Add shortcut	Sneltoets toevoegen	winpoint	no
+Reset all shortcuts	Alle sneltoetsen opnieuw instellen	winpoint	no
+Set GNOME’s shortcuts to their defaults	De sneltoetsen van GNOME op hun standaardwaarden zetten	winpoint	no
+Reset all…	Alles opnieuw instellen…	winpoint	no
+Reset all shortcuts?	Alle sneltoetsen opnieuw instellen?	winpoint	no
+GNOME’s shortcuts get their defaults back. Custom shortcuts and WinPoint’s shortcuts stay as they are. This can’t be undone.	De sneltoetsen van GNOME krijgen weer hun standaardwaarden. Aangepaste sneltoetsen en de sneltoetsen van WinPoint blijven zoals ze zijn. Dit kan niet ongedaan worden gemaakt.	winpoint	no
+Reset all	Alles opnieuw instellen	winpoint	no
+# --- slice 2: host input (host/i18n/input.tsv)
+This list of keyboards isn’t valid.	Deze lijst met toetsenborden is niet geldig.	winpoint	no
+This key can’t be chosen here.	Deze toets is hier niet te kiezen.	winpoint	no
+This keyboard layout isn’t valid.	Deze toetsenbordindeling is niet geldig.	winpoint	no
+The program that shows keyboard layouts isn’t installed.	Het programma om toetsenbordindelingen weer te geven is niet geïnstalleerd.	winpoint	no
+The keyboard layout can’t be shown.	De toetsenbordindeling kan niet worden weergegeven.	winpoint	no
+This input method isn’t valid.	Deze invoermethode is niet geldig.	winpoint	no
+This shortcut isn’t valid.	Deze sneltoets is niet geldig.	winpoint	no
+This shortcut doesn’t exist.	Deze sneltoets bestaat niet.	winpoint	no
+# --- slice 2: inputBridge.js
+The keyboard can’t be read right now.	Het toetsenbord kan nu niet worden gelezen.	winpoint	no
+This keyboard isn’t set up.	Dit toetsenbord is niet ingesteld.	winpoint	no
+# --- slice 3: pages/accessibility.rs
+Animation effects	Animatie-effecten	windows	no
+Windows, menus and switches move smoothly. Turn this off for a calmer screen.	Vensters, menu’s en schakelaars bewegen vloeiend. Zet dit uit voor een rustiger beeld.	winpoint	no
+Always show accessibility menu	Toegankelijkheidsmenu altijd weergeven	windows	no
+Show the Accessibility tile in Quick settings	De tegel Toegankelijkheid weergeven in Snelle instellingen	winpoint	no
+Quick adjustments	Snel aanpassen	winpoint	no
+Hearing	Gehoor	windows	no
+Interaction	Interactie	windows	no
+Text size	Tekstgrootte	windows	no
+Text size preview	Voorbeeld van tekstgrootte	windows	no
+Drag the slider until you can read this text comfortably. Then select Apply.	Sleep de schuifregelaar tot je deze tekst goed kunt lezen. Klik daarna op Toepassen.	winpoint	no
+Make text bigger in WinPoint and in apps	Tekst in WinPoint en in apps groter maken	winpoint	no
+Apply	Toepassen	glossary	yes
+Text size set to {v}%	Tekstgrootte ingesteld op {v}%	winpoint	no
+Always show scrollbars	Schuifbalken altijd weergeven	windows	no
+Transparency effects	Transparantie-effecten	windows	no
+Windows and surfaces appear slightly translucent	Vensters en oppervlakken zijn een beetje doorschijnend	winpoint	no
+On/off shapes	Vormen voor aan/uit-status	windows	no
+Use shapes to indicate state in addition to or instead of colour	Vormen gebruiken om de status aan te geven, naast of in plaats van kleur	windows	no
+Contrast themes	Contrastthema’s	windows	no
+Contrast themes use distinct colours for text and apps to make them easier to see.	Contrastthema’s gebruiken eigen kleuren voor tekst en apps, zodat ze beter te zien zijn.	windows	no
+High contrast	Hoog contrast	winpoint	no
+Keyboard shortcut for contrast themes	Sneltoets voor contrastthema’s	winpoint	no
+Change it in Keyboard shortcuts	Wijzigen in Sneltoetsen	winpoint	no
+GNOME and GTK apps have one high contrast style. WinPoint uses its own contrast colours.	GNOME- en GTK-apps hebben één stijl voor hoog contrast. WinPoint gebruikt zijn eigen contrastkleuren.	winpoint	no
+Tips for easier reading	Tips voor beter leesbare tekst	winpoint	no
+Light or dark	Licht of donker	winpoint	no
+Light	Licht	windows	no
+Dark	Donker	windows	no
+Choose the mode that reads best for you	Kies de modus die voor jou het prettigst leest	winpoint	no
+Turn off transparency	Transparantie uitzetten	winpoint	no
+Solid backgrounds give more contrast	Effen achtergronden geven meer contrast	winpoint	no
+# --- slice 3: pages/a11y_vision.rs
+Size	Grootte	windows	no
+Make the mouse pointer bigger	De muisaanwijzer groter maken	winpoint	no
+Small	Klein	winpoint	no
+Large	Groot	winpoint	no
+default	standaard	winpoint	no
+Mouse indicator	Muisaanwijzerindicator	windows	no
+Mouse pointer speed, primary button, scrolling	Snelheid van muisaanwijzer, primaire knop, schuiven	windows	no
+Blinking	Knipperen	winpoint	no
+Blinking text cursor	Knipperende tekstcursor	winpoint	no
+The cursor blinks in text boxes	De cursor knippert in tekstvakken	winpoint	no
+Cursor blink rate	Knippersnelheid van cursor	windows	no
+How fast the text cursor blinks	Hoe snel de tekstcursor knippert	winpoint	no
+Test box	Testvak	winpoint	no
+Type here to see the cursor	Typ hier om de cursor te zien	winpoint	no
+Select the box to see the cursor blink	Klik in het vak om de cursor te zien knipperen	winpoint	no
+# --- slice 3: native/shell/src/flyouts/quick.rs (the Toegankelijkheid tile)
+Show accessibility features	Toegankelijkheidsfuncties weergeven	winpoint	no
+More accessibility settings	Meer toegankelijkheidsinstellingen	windows	no
+Sticky keys	Plaktoetsen	windows	no
+Filter keys	Filtertoetsen	windows	no
+Mouse keys	Muistoetsen	windows	no
+On-screen keyboard	Schermtoetsenbord	windows	no
+# --- slice 4: pages/a11y_vision.rs (Vergrootglas, Verteller)
+Full screen	Volledig scherm	windows	no
+Docked	Vastgezet	windows	no
+Lens	Lens	windows	no
+Top half	Bovenste helft	winpoint	no
+Bottom half	Onderste helft	winpoint	no
+Left half	Linkerhelft	winpoint	no
+Right half	Rechterhelft	winpoint	no
+Centred on the screen	Gecentreerd op het scherm	windows	no
+Within the edges of the screen	Binnen de randen van het scherm	windows	no
+Moving with the contents	Met de inhoud meebewegen	winpoint	no
+Text cursor	Tekstcursor	windows	no
+Zoom level	Zoomniveau	windows	no
+How far Magnifier zooms in	Hoe sterk het vergrootglas vergroot	winpoint	no
+View	Weergave	windows	no
+Where the magnified view appears	Waar het vergrote beeld wordt weergegeven	winpoint	no
+Screen area	Schermgebied	winpoint	no
+The half of the screen for the docked view or the lens	De helft van het scherm voor de vastgezette weergave of de lens	winpoint	no
+Keep the mouse pointer	De muisaanwijzer houden	windows	no
+Keyboard focus	Toetsenbordfocus	windows	no
+Have Magnifier follow	Vergrootglas laten volgen	windows	no
+Colour adjustment	Kleuraanpassing	winpoint	no
+Brightness, contrast and colour in the magnified area	Helderheid, contrast en kleur in het vergrote gebied	winpoint	no
+Brightness	Helderheid	winpoint	no
+Contrast	Contrast	winpoint	no
+Low	Laag	winpoint	no
+High	Hoog	winpoint	no
+Colour	Kleur	winpoint	no
+Greyscale	Grijswaarden	windows	no
+Full colour	Volledige kleur	winpoint	no
+Crosshair colour	Kleur van dradenkruis	winpoint	no
+Crosshairs	Dradenkruis	winpoint	no
+Mark the pointer’s location in the magnified area with lines	De plaats van de muisaanwijzer in het vergrote gebied met lijnen aangeven	winpoint	no
+Over the mouse pointer	Over muisaanwijzer heen	winpoint	no
+Thickness	Dikte	winpoint	no
+Thin	Dun	winpoint	no
+Thick	Dik	winpoint	no
+Length	Lengte	winpoint	no
+Opacity	Dekking	winpoint	no
+Clear	Doorzichtig	winpoint	no
+Solid	Ondoorzichtig	winpoint	no
+Magnifier	Vergrootglas	windows	no
+Zoom in on parts of the screen	Delen van het scherm vergroten	winpoint	no
+Invert colours	Kleuren omkeren	windows	no
+Invert the colours in the magnified area	De kleuren in het vergrote gebied omkeren	winpoint	no
+Extend outside screen edges	Buiten de schermranden doorgaan	winpoint	no
+The magnified view can move past the edge of the screen	Het vergrote beeld kan voorbij de rand van het scherm schuiven	winpoint	no
+Colour and crosshairs	Kleur en dradenkruis	winpoint	no
+Open Narrator settings	Instellingen voor Verteller openen	windows	no
+Voice, speed, verbosity, braille and keyboard commands in Orca’s preferences	Stem, snelheid, uitgebreidheid, braille en sneltoetsen in de voorkeuren van Orca	winpoint	no
+Orca, GNOME’s screen reader, isn’t installed	Orca, de schermlezer van GNOME, is niet geïnstalleerd	winpoint	no
+Open	Openen	windows	no
+Turn on Narrator to open its settings	Schakel Verteller in om de instellingen te openen	winpoint	no
+Narrator	Verteller	windows	no
+A screen reader that describes what’s on your screen	Een schermlezer die beschrijft wat er op het scherm staat	windows	no
+Keyboard shortcut for Narrator	Sneltoets voor Verteller	windows	no
+Narrator is Orca, GNOME’s screen reader. GNOME Shell starts Orca as soon as Narrator is turned on.	Verteller is Orca, de schermlezer van GNOME. GNOME Shell start Orca zodra Verteller wordt ingeschakeld.	winpoint	no
+Voice, verbosity and braille	Stem, uitgebreidheid en braille	winpoint	no
+# --- slice 4: pages/a11y_interaction.rs (Audio, Toetsenbord, Muis)
+Flash the active window	Het actieve venster laten knipperen	windows	no
+Flash the entire screen	Het hele scherm laten knipperen	windows	no
+This shortcut setting applies to Sticky keys, Filter keys and Toggle keys together.	Deze sneltoetsinstelling geldt voor Plaktoetsen, Filtertoetsen en Wisseltoetsen samen.	winpoint	no
+Audio	Audio	windows	no
+Flash my screen during audio notifications	Mijn scherm laten knipperen tijdens audiomeldingen	windows	no
+Over-amplification	Overversterking	winpoint	no
+Allow volume to exceed 100%, with reduced sound quality	Volume boven 100% toestaan, met verminderde geluidskwaliteit	winpoint	no
+Volume, output and input devices, system sounds	Volume, uitvoer- en invoerapparaten, systeemgeluiden	winpoint	no
+Press one key at a time for keyboard shortcuts	Eén toets per keer indrukken voor sneltoetsen	windows	no
+Keyboard shortcut for Sticky keys	Sneltoets voor Plaktoetsen	windows	no
+Press the Shift key five times to turn Sticky keys on or off	Druk vijf keer op Shift om Plaktoetsen in of uit te schakelen	windows	no
+Turn off Sticky keys when two keys are pressed at the same time	Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt	windows	no
+Play a sound when shortcut keys are pressed and released	Een geluid afspelen wanneer sneltoetsen worden ingedrukt en losgelaten	windows	no
+Ignore brief or repeated keystrokes and change keyboard repeat rates	Korte of herhaalde toetsaanslagen negeren en de herhalingsfrequentie van het toetsenbord wijzigen	windows	no
+Keyboard shortcut for Filter keys	Sneltoets voor Filtertoetsen	windows	no
+Hold the Shift key for eight seconds to turn Filter keys on or off	Houd Shift acht seconden ingedrukt om Filtertoetsen in of uit te schakelen	winpoint	no
+Ignore quick keystrokes (Slow keys)	Korte toetsaanslagen negeren (Trage toetsen)	windows	no
+Acceptance delay	Acceptatievertraging	winpoint	no
+Beep when a key is pressed	Een pieptoon laten horen wanneer een toets wordt ingedrukt	winpoint	no
+Beep when a key is accepted	Een pieptoon laten horen wanneer een toets wordt geaccepteerd	winpoint	no
+Beep when a key is rejected	Een pieptoon laten horen wanneer een toets wordt geweigerd	winpoint	no
+Ignore unintended keystrokes (Bounce keys)	Onbedoelde toetsaanslagen negeren (Stuitertoetsen)	windows	no
+Repeat delay and rate	Vertraging en snelheid van herhalen	winpoint	no
+Toggle keys	Wisseltoetsen	windows	no
+Play a sound whenever you press Caps lock, Num lock or Scroll lock	Een geluid afspelen wanneer je op Caps Lock, Num Lock of Scroll Lock drukt	windows	no
+Keyboard shortcut for Toggle keys	Sneltoets voor Wisseltoetsen	windows	no
+The same setting as for Sticky keys and Filter keys	Dezelfde instelling als bij Plaktoetsen en Filtertoetsen	winpoint	no
+Print screen is already used by {name}.	Print Screen wordt al gebruikt door {name}.	winpoint	no
+Shortcut in use	Sneltoets in gebruik	winpoint	no
+Use the Print screen key to open screen capture	De Print Screen-toets gebruiken om schermopname te openen	windows	no
+Sticky, Filter and Toggle keys	Plaktoetsen, Filtertoetsen en Wisseltoetsen	windows	no
+On-screen keyboard and Print screen	Schermtoetsenbord en Print Screen	winpoint	no
+Use the on-screen keyboard to type in input fields	Het schermtoetsenbord gebruiken om in invoervelden te typen	winpoint	no
+Notification preferences	Meldingsvoorkeuren	windows	no
+Play a sound when I turn Sticky, Filter or Toggle keys on or off from the keyboard	Een geluid afspelen wanneer ik Plaktoetsen, Filtertoetsen of Wisseltoetsen via het toetsenbord in- of uitschakel	windows	no
+Keyboard	Toetsenbord	windows	no
+Use the numeric keypad to move the mouse pointer	Het numerieke toetsenblok gebruiken om de muisaanwijzer te verplaatsen	windows	no
+Mouse keys speed	Snelheid van muistoetsen	windows	no
+Mouse keys acceleration	Versnelling van muistoetsen	windows	no
+Activate a window by hovering over it with the mouse	Een venster activeren door de muisaanwijzer erop te plaatsen	windows	no
+The window under the pointer becomes active without a click	Het venster onder de muisaanwijzer wordt actief zonder te klikken	winpoint	no
+The time between the two clicks of a double-click	De tijd tussen de twee klikken van een dubbelklik	winpoint	no
+Click assist	Klikhulp	winpoint	no
+Simulated secondary click	Gesimuleerde secundaire klik	winpoint	no
+Secondary click by holding down the primary button	Een secundaire klik geven door de primaire knop ingedrukt te houden	winpoint	no
+Hover click	Klikken door te zweven	winpoint	no
+Click when the pointer stops moving	Een klik geven wanneer de muisaanwijzer stilstaat	winpoint	no
+Delay	Vertraging	winpoint	no
+Motion threshold	Bewegingsdrempel	winpoint	no
+Mouse	Muis	windows	no
+Mouse settings	Muisinstellingen	windows	no
+Primary button, mouse pointer speed, scrolling	Primaire knop, snelheid van muisaanwijzer, schuiven	winpoint	no
+
+Switch with Windows key + Space	Wisselen met Windows-toets + spatiebalk	winpoint	no

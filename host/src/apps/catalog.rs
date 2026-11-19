@@ -1341,6 +1341,16 @@ mod tests {
             launcher_names()["SAME_NAME_AS_OURS"]["org.gnome.DiskUtility.desktop"],
             json!({"nl": "Schijven (GNOME)", "en": "Disks (GNOME)"})
         );
+        // GNOME Calendar shares its name with WinPoint's own Calendar (io.github.win11shell.Calendar.desktop, Agenda):
+        // NL_NAMES still names it Agenda, the twin rule makes it Agenda (GNOME)
+        assert_eq!(
+            launcher_names()["SAME_NAME_AS_OURS"]["org.gnome.Calendar.desktop"],
+            json!({"nl": "Agenda (GNOME)", "en": "Calendar (GNOME)"})
+        );
+        assert_eq!(
+            launcher_names()["NL_NAMES"]["org.gnome.Calendar.desktop"],
+            "Agenda"
+        );
         assert!(data().get("nlNames").is_none() && data().get("twins").is_none());
         let fixture = Fixture::new();
         let mut tr = Translator::new("nl", vec![]);
@@ -1352,5 +1362,43 @@ mod tests {
             1,
         );
         assert_eq!(item(&apps, "org.gnome.Calculator.desktop")["name"], "Rekenmachine");
+    }
+
+    #[test]
+    fn gnome_calendar_is_named_apart_from_winpoints_calendar_in_both_languages() {
+        // Start's All apps and Settings > Apps listed "Agenda" twice: WinPoint's Calendar and GNOME Calendar
+        let fixture = Fixture::new();
+        let mut tr = Translator::new("nl", vec![]);
+        let (apps, index) = build(
+            &fixture.0,
+            "nl",
+            vec![
+                record("io.github.win11shell.Calendar.desktop", "Agenda"),
+                record("org.gnome.Calendar.desktop", "Calendar"),
+            ],
+            Some(&mut tr),
+            7,
+        );
+        let gnome = item(&apps, "org.gnome.Calendar.desktop");
+        assert_eq!(gnome["name"], "Agenda (GNOME)");
+        let keywords = gnome["keywords"].as_array().unwrap();
+        assert!(
+            keywords.contains(&json!("Agenda")) && keywords.contains(&json!("Calendar")),
+            "a search for agenda or calendar still finds it: {keywords:?}"
+        );
+        assert_eq!(item(&apps, "io.github.win11shell.Calendar.desktop")["name"], "Agenda");
+        assert_eq!(index["org.gnome.Calendar.desktop"]["name"], "Agenda (GNOME)");
+        let names: Vec<&str> = apps.iter().filter_map(|app| app["name"].as_str()).collect();
+        assert_eq!(names.iter().filter(|name| **name == "Agenda").count(), 1, "{names:?}");
+        let (english, _) = build(
+            &fixture.0,
+            "en",
+            vec![record("org.gnome.Calendar.desktop", "Calendar")],
+            None,
+            8,
+        );
+        let gnome = item(&english, "org.gnome.Calendar.desktop");
+        assert_eq!(gnome["name"], "Calendar (GNOME)");
+        assert!(gnome["keywords"].as_array().unwrap().contains(&json!("Calendar")));
     }
 }

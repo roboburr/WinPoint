@@ -1,6 +1,10 @@
+//! system.audio.* (the taskbar's and Snelle instellingen' volume and output): on the Sound service's PulseAudio
+//! client while it is connected (services/sound.rs, amendment 39: one source of truth for the taskbar, Snelle
+//! instellingen and Settings), with wpctl as the fallback (no libpulse, no pulse server).
 use super::{bool_arg_exact, common::*, number_arg, pct_arg};
 use crate::files::{ApiError, ApiResult};
 use crate::i18n::Lang;
+use crate::services::sound;
 use serde_json::{Value, json};
 use std::{sync::Mutex, thread, time::Duration};
 pub(super) struct Audio {
@@ -13,6 +17,9 @@ impl Audio {
         }
     }
     pub fn get(&self, fresh: bool) -> Value {
+        if let Some(state) = sound::audio_state() {
+            return state;
+        }
         let none = || json!({"available":false,"volume":0,"muted":false,"sinks":[]});
         if !available("wpctl") {
             return none();
@@ -33,6 +40,9 @@ impl Audio {
         json!({"available":true,"volume":volume,"muted":muted,"sinks":sinks})
     }
     pub fn sinks(&self) -> Vec<Value> {
+        if let Some(state) = sound::audio_state() {
+            return state["sinks"].as_array().cloned().unwrap_or_default();
+        }
         let r = run(&["wpctl", "status"], 3, false);
         if !r.ok {
             return vec![];
@@ -97,6 +107,29 @@ impl Audio {
         } else if !muted.is_null() {
             muted = json!(bool_arg_exact(&muted, lang)?)
         }
+        if cur["available"] == true && sound::audio_ready() {
+            let v = if volume.is_null() {
+                None
+            } else if delta.is_null() {
+                Some(pct_arg(&volume, lang)?)
+            } else {
+                Some(round(number_arg(&volume, lang)?, 0).clamp(0., 100.) as i64)
+            };
+            if muted.is_null() && truth(&cur["muted"]) && v.is_some_and(|v| v > 0) {
+                muted = json!(false)
+            }
+            let mute = (!muted.is_null()).then(|| truth(&muted));
+            if let Some(result) = sound::audio_apply(v, mute) {
+                return result.map_err(|_| {
+                    let key = if v.is_some() {
+                        "system.audio.volumeFailed"
+                    } else {
+                        "system.audio.muteFailed"
+                    };
+                    ApiError::tr("failed", lang, key, crate::i18n::NO_PARAMS)
+                });
+            }
+        }
         if !volume.is_null() {
             let v = if delta.is_null() {
                 pct_arg(&volume, lang)?
@@ -160,6 +193,25 @@ impl Audio {
                 crate::i18n::NO_PARAMS,
             )
         })?;
+        if let Some(result) = sound::audio_set_sink(id) {
+            return result.map_err(|f| {
+                if f == sound::client::Fail::Gone {
+                    ApiError::tr(
+                        "not_found",
+                        lang,
+                        "system.audio.deviceGone",
+                        crate::i18n::NO_PARAMS,
+                    )
+                } else {
+                    ApiError::tr(
+                        "failed",
+                        lang,
+                        "system.audio.switchFailed",
+                        crate::i18n::NO_PARAMS,
+                    )
+                }
+            });
+        }
         if !self.sinks().iter().any(|s| s["id"] == id) {
             return Err(ApiError::tr(
                 "not_found",

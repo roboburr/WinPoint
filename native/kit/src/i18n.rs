@@ -13,6 +13,28 @@ thread_local! {
     static BOUND: RefCell<Vec<(glib::WeakRef<gtk::Widget>, Rc<dyn Fn(&gtk::Widget)>)>> = const { RefCell::new(Vec::new()) };
 }
 
+/// The UI language ("nl" or "en") of a settings.json `language` value: contracts C1, exactly "en" is English,
+/// "system" the session's own language ([`system_language`], settings parity amendment 18) and anything else Dutch.
+/// Every kit reader of settings.language goes through this one place.
+pub fn resolve(language: &serde_json::Value) -> &'static str {
+    match language.as_str() {
+        Some("en") => "en",
+        Some("system") => system_language(|k| std::env::var(k).ok()),
+        _ => "nl",
+    }
+}
+
+/// The session's messages language as gettext picks it, from `var` (the environment): LC_ALL, LC_MESSAGES or LANG,
+/// and LANGUAGE's first entry before them unless that locale is C/POSIX. "nl" when that is Dutch, else "en" (no
+/// locale at all is C, whose messages are English). The host reads it the same way (host/src/i18n.rs system_code).
+pub fn system_language(var: impl Fn(&str) -> Option<String>) -> &'static str {
+    let locale = ["LC_ALL", "LC_MESSAGES", "LANG"].iter().find_map(|k| var(k).filter(|v| !v.is_empty())).unwrap_or_default();
+    let c = locale.is_empty() || locale == "C" || locale == "POSIX" || locale.starts_with("C.");
+    let first = if c { None } else { var("LANGUAGE").and_then(|l| l.split(':').find(|s| !s.is_empty()).map(str::to_owned)) };
+    let pick = first.unwrap_or(locale);
+    if pick.split(['_', '.', '@']).next() == Some("nl") { "nl" } else { "en" }
+}
+
 /// "nl" or "en".
 pub fn lang() -> &'static str {
     if en() { "en" } else { "nl" }
@@ -55,7 +77,7 @@ pub(crate) fn set_lang(lang: &str) {
 /// None follows the settings again. WIN11_LANG=nl|en does this at startup.
 pub fn set_forced_lang(lang: Option<&str>) {
     FORCED.with(|f| f.set(lang.map(|l| l == "en")));
-    let current = crate::ctx::try_ctx().map(|c| c.setting("language").as_str() == Some("en")).unwrap_or(en());
+    let current = crate::ctx::try_ctx().map(|c| resolve(&c.setting("language")) == "en").unwrap_or(en());
     set_lang(if current { "en" } else { "nl" });
     if let Some(ctx) = crate::ctx::try_ctx() {
         ctx.apply_look();
@@ -111,5 +133,34 @@ pub fn list(items: &[&str]) -> String {
         0 => String::new(),
         1 => items[0].to_owned(),
         n => format!("{} {} {}", items[..n - 1].join(", "), t("en", "and"), items[n - 1]),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn exactly_en_is_english() {
+        // contracts C1; the one place batch E extends with "system" (settings parity, amendment 18)
+        assert_eq!(resolve(&serde_json::json!("en")), "en");
+        for other in [serde_json::json!("nl"), serde_json::json!("EN"), serde_json::json!("System"), serde_json::json!(null), serde_json::json!(1)] {
+            assert_eq!(resolve(&other), "nl", "{other}");
+        }
+        assert_eq!(resolve(&serde_json::json!("system")), system_language(|k| std::env::var(k).ok()));
+    }
+
+    #[test]
+    fn system_is_the_sessions_language() {
+        let env = |pairs: &'static [(&'static str, &'static str)]| move |k: &str| pairs.iter().find(|(n, _)| *n == k).map(|(_, v)| (*v).to_owned());
+        assert_eq!(system_language(env(&[("LANG", "nl_NL.UTF-8")])), "nl");
+        assert_eq!(system_language(env(&[("LANG", "nl_BE.UTF-8")])), "nl");
+        assert_eq!(system_language(env(&[("LANG", "en_GB.UTF-8")])), "en");
+        assert_eq!(system_language(env(&[("LANG", "de_DE.UTF-8")])), "en", "WinPoint has nl and en");
+        assert_eq!(system_language(env(&[])), "en");
+        assert_eq!(system_language(env(&[("LANG", "en_US.UTF-8"), ("LC_MESSAGES", "nl_NL.UTF-8")])), "nl");
+        assert_eq!(system_language(env(&[("LC_MESSAGES", "nl_NL.UTF-8"), ("LC_ALL", "en_US.UTF-8")])), "en");
+        assert_eq!(system_language(env(&[("LANG", "en_US.UTF-8"), ("LANGUAGE", "nl:en")])), "nl");
+        assert_eq!(system_language(env(&[("LANG", "C"), ("LANGUAGE", "nl")])), "en", "gettext ignores LANGUAGE under C");
     }
 }

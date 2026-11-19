@@ -17,6 +17,9 @@ pub struct System {
     net: util::GlyphSlot,
     vol: util::GlyphSlot,
     bat: gtk::DrawingArea,
+    /// The battery glyph and its percentage beside it (taskbar.batteryPercent).
+    bat_box: gtk::Box,
+    bat_pct: gtk::Label,
     net_state: RefCell<Option<Value>>,
     audio_state: RefCell<Option<Value>>,
     battery_state: RefCell<Option<Value>>,
@@ -88,10 +91,19 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> Rc<System> {
     bat.set_content_width(16);
     bat.set_content_height(16);
     bat.set_valign(gtk::Align::Center);
-    bat.set_visible(false);
+    let bat_pct = gtk::Label::new(None);
+    bat_pct.add_css_class("w11-battery-percent");
+    bat_pct.set_widget_name("tb-battery-percent");
+    bat_pct.set_valign(gtk::Align::Center);
+    bat_pct.set_visible(false);
+    let bat_box = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    bat_box.set_valign(gtk::Align::Center);
+    bat_box.append(&bat);
+    bat_box.append(&bat_pct);
+    bat_box.set_visible(false);
     row.append(&net.holder);
     row.append(&vol.holder);
-    row.append(&bat);
+    row.append(&bat_box);
     sys_btn.set_child(Some(&row));
 
     // clock: time over date, then the bell
@@ -150,6 +162,8 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> Rc<System> {
         net,
         vol,
         bat: bat.clone(),
+        bat_box,
+        bat_pct,
         net_state: RefCell::new(None),
         audio_state: RefCell::new(None),
         battery_state: RefCell::new(None),
@@ -291,12 +305,15 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> Rc<System> {
 }
 
 /// Settings (`data`, core::touches) or the language changed: the texts and tooltips by the language, the clock by
-/// time.* and taskbar.showSeconds, the bell by notifications.dnd, the battery's bolt by the theme.
+/// time.* (time.showWeekday too) and taskbar.showSeconds, the bell by notifications.dnd, the battery's percentage by
+/// taskbar.batteryPercent, the battery's bolt by the theme.
 pub fn settings_changed(data: &Value, lang_changed: bool) {
     let touches = |keys: &[&str]| lang_changed || crate::core::touches(data, keys);
     with(|s| {
-        if lang_changed {
-            s.update_texts();
+        if lang_changed || crate::core::touches(data, &["taskbar.batteryPercent"]) {
+            if lang_changed {
+                s.update_texts();
+            }
             s.render_tray();
         }
         if touches(&["time", "taskbar.showSeconds"]) {
@@ -369,9 +386,12 @@ impl System {
         };
         self.vol.holder.set_tooltip_text(Some(&vtip));
 
-        // battery
+        // battery, with its percentage beside it while taskbar.batteryPercent (GNOME's show-battery-percentage)
         let b = self.battery_state.borrow().clone().filter(|b| b["present"] == true);
-        self.bat.set_visible(b.is_some());
+        self.bat_box.set_visible(b.is_some());
+        let percent = b.as_ref().and_then(percent_text).filter(|_| self.shell.setting("taskbar.batteryPercent") == true);
+        self.bat_pct.set_text(percent.as_deref().unwrap_or(""));
+        self.bat_pct.set_visible(percent.is_some());
         if let Some(b) = b {
             let p = b["percent"].as_f64().unwrap_or(0.0).round();
             let on_ac = b["onAC"] == true;
@@ -386,6 +406,7 @@ impl System {
                 t(&format!("Batterij: {p}%"), &format!("Battery: {p}%"))
             };
             self.bat.set_tooltip_text(Some(&tip));
+            self.bat_pct.set_tooltip_text(Some(&tip));
         }
     }
 
@@ -446,7 +467,9 @@ impl System {
             .unwrap_or(0)
     }
 
-    /// The clock: HH:MM (seconds when asked), the short date, the long date and time as tooltip.
+    /// The clock: HH:MM (seconds when asked), the short date (with the weekday when time.showWeekday: "di
+    /// 17-11-2026"; without the date the weekday goes before the time, as GNOME's clock), the long date and time as
+    /// tooltip.
     fn tick(&self) {
         if let Some(id) = self.clock_timer.borrow_mut().take() {
             id.remove();
@@ -457,8 +480,15 @@ impl System {
         let h24 = settings["time"]["h24"] != false;
         let seconds = settings["time"]["showSeconds"] == true || settings["taskbar"]["showSeconds"] == true;
         let show_date = settings["time"]["showDate"] != false;
-        self.time.set_text(&util::fmt_time(&now, lang, seconds, h24));
-        self.date.set_text(&if show_date { util::fmt_date_short(&now, lang) } else { String::new() });
+        let weekday = settings["time"]["showWeekday"] == true;
+        let time = util::fmt_time(&now, lang, seconds, h24);
+        let time = if weekday && !show_date { format!("{} {time}", util::fmt_weekday_short(&now, lang)) } else { time };
+        self.time.set_text(&time);
+        self.date.set_text(&match (show_date, weekday) {
+            (false, _) => String::new(),
+            (true, false) => util::fmt_date_short(&now, lang),
+            (true, true) => util::fmt_date_short_weekday(&now, lang),
+        });
         self.date.set_visible(show_date);
         util::set_class(&self.clock_btn, "is-single", !show_date);
         let tip = format!("{}\n{}", util::fmt_date_long(&now, lang), util::fmt_time(&now, lang, true, h24));
@@ -506,6 +536,15 @@ impl System {
         };
         self.bell.set_tooltip_text(Some(&state));
     }
+}
+
+/// The text beside the battery glyph: "76%" (Windows' battery percentage), None without a battery.
+fn percent_text(b: &Value) -> Option<String> {
+    if b["present"] != true {
+        return None;
+    }
+    let p = b["percent"].as_f64().unwrap_or(0.0).clamp(0.0, 100.0).round();
+    Some(format!("{p}%"))
 }
 
 /// Battery glyph with the charge level drawn in (Win11 style), 20 x 20 design units scaled to the area.
@@ -559,5 +598,21 @@ fn draw_battery(da: &gtk::DrawingArea, cr: &gtk::cairo::Context, w: i32, h: i32,
         cr.set_line_width(0.8);
         cr.set_line_join(gtk::cairo::LineJoin::Round);
         let _ = cr.stroke();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_battery_percentage_is_the_rounded_charge() {
+        assert_eq!(percent_text(&json!({"present": true, "percent": 76.0})).as_deref(), Some("76%"));
+        assert_eq!(percent_text(&json!({"present": true, "percent": 75.6})).as_deref(), Some("76%"));
+        assert_eq!(percent_text(&json!({"present": true, "percent": 100.0})).as_deref(), Some("100%"));
+        assert_eq!(percent_text(&json!({"present": true})).as_deref(), Some("0%"));
+        // no battery (a desktop), or no answer yet: nothing beside the glyph
+        assert_eq!(percent_text(&json!({"present": false, "percent": 76.0})), None);
+        assert_eq!(percent_text(&Value::Null), None);
     }
 }

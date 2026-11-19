@@ -55,3 +55,14 @@ core.starting	De dienst wordt gestart.	The service is starting.
 # win11-gtk-explorer. {path} is the full path of the missing binary
 #@ new
 core.nativeAppMissing	Win11 voor GNOME: {path} ontbreekt; installeer WinPoint opnieuw.	Win11 for GNOME: {path} is missing; reinstall WinPoint.
+
+# --- host/src/services/system/common.rs: call_interactive (notes/claude/settings-parity.md §5.8)
+# a system daemon refused the change: polkit said no (NotAuthorized, AccessDenied, PermissionDenied)
+#@ new
+core.notAuthorized	Je hebt geen toestemming om dit te wijzigen.	You don’t have permission to change this.
+# the user closed GNOME's password dialog
+#@ new
+core.authCancelled	Er is geen wachtwoord ingevoerd. Er is niets gewijzigd.	No password was entered. Nothing was changed.
+# any other error of the daemon; {error} is its own message
+#@ new
+core.callFailed	Dat lukte niet: {error}	That didn’t work: {error}

@@ -169,8 +169,8 @@ impl SettingsStore {
             ));
         }
         let value = check_value(&segments, value, lang)?;
-        // D-G24: the language is exactly "nl" or "en" (the mock's ENUMS), also not an object under it; a value of
-        // the wrong type was refused as bad_value just above. Reading stays C1 (anything else is nl).
+        // D-G24: the language is exactly "nl", "en" or "system" (amendment 18), also not an object under it; a value
+        // of the wrong type was refused as bad_value just above. Reading stays C1 (anything else is nl).
         if segments[0] == "language" && (segments.len() > 1 || !valid_language(&value)) {
             return Err(with_data(
                 ApiError::tr("invalid_value", lang, "settings.badValue", NO_PARAMS),
@@ -520,9 +520,10 @@ fn with_data(mut error: ApiError, data: Value) -> ApiError {
     error.data = Some(data);
     error
 }
-/// D-G24: `settings.language` may be set to exactly "nl" or "en" (contracts C1 for reading).
+/// D-G24: `settings.language` may be set to exactly "nl" or "en" (contracts C1 for reading), or "system": the
+/// session's own language (settings parity, amendment 18; `i18n::Lang::of` resolves it).
 fn valid_language(value: &Value) -> bool {
-    matches!(value.as_str(), Some("nl" | "en"))
+    matches!(value.as_str(), Some("nl" | "en" | "system"))
 }
 fn pretty(value: &Value, lang: Lang) -> Result<String> {
     serde_json::to_string_pretty(value)
@@ -539,12 +540,28 @@ fn truthy(value: &Value) -> bool {
     }
 }
 
+/// Known string settings that take one of a few values: taskbar.multiDisplayApps is Windows 11's
+/// "When using multiple displays, show my taskbar apps on" (MMTaskbarMode 0, 1, 2). A write of anything else is
+/// refused as bad_value; a stored one reads as the default, like a value of the wrong type.
+const CHOICES: &[(&str, &[&str])] = &[(
+    "taskbar.multiDisplayApps",
+    &["all", "mainAndWindow", "window"],
+)];
+fn choice_ok(path: &str, value: &Value) -> bool {
+    CHOICES
+        .iter()
+        .find(|(known, _)| *known == path)
+        .is_none_or(|(_, values)| value.as_str().is_some_and(|value| values.contains(&value)))
+}
 fn type_ok(default: &Value, value: &Value, path: &str) -> bool {
     match default {
         Value::Null => true,
         Value::Bool(_) => value.is_boolean(),
         Value::Number(_) => value.is_number(),
-        Value::String(_) => value.is_string() || (path == "alles.roots" && value.is_array()),
+        Value::String(_) => {
+            (value.is_string() && choice_ok(path, value))
+                || (path == "alles.roots" && value.is_array())
+        }
         Value::Array(_) => {
             value.is_array()
                 && (!matches!(path, "taskbar.tray.shown" | "taskbar.tray.order")
@@ -1553,5 +1570,147 @@ mod tests {
             &json!(9007199254740993_u64),
             &json!(9007199254740992_f64)
         ));
+    }
+    #[test]
+    fn multi_display_taskbar_settings_have_windows_defaults_and_only_its_three_modes() {
+        let fixture = Fixture::new();
+        let store = fixture.store();
+        let data = store.snapshot().unwrap();
+        assert_eq!(data["taskbar"]["allDisplays"], true);
+        assert_eq!(data["taskbar"]["multiDisplayApps"], "window");
+        for mode in ["all", "mainAndWindow", "window"] {
+            call(
+                &store,
+                "settings.set",
+                json!({"path":"taskbar.multiDisplayApps","value":mode}),
+            );
+            assert_eq!(
+                store.snapshot().unwrap()["taskbar"]["multiDisplayApps"],
+                mode
+            );
+        }
+        for bad in [json!("main"), json!(""), json!(1), json!(null)] {
+            let error = store
+                .call(
+                    "settings.set",
+                    &json!({"path":"taskbar.multiDisplayApps","value":bad}),
+                )
+                .unwrap()
+                .unwrap_err();
+            assert_eq!(error.code, "bad_value");
+            assert_eq!(error.data, Some(json!({"path":"taskbar.multiDisplayApps"})));
+        }
+        // under a whole taskbar object or in a patch too
+        let error = store
+            .call(
+                "settings.set",
+                &json!({"path":"taskbar","value":{"multiDisplayApps":"every"}}),
+            )
+            .unwrap()
+            .unwrap_err();
+        assert_eq!(
+            error.data,
+            Some(json!({"paths":["taskbar.multiDisplayApps"]}))
+        );
+        let error = store
+            .call(
+                "settings.patch",
+                &json!({"patch":{"taskbar":{"multiDisplayApps":"every"}}}),
+            )
+            .unwrap()
+            .unwrap_err();
+        assert_eq!(
+            error.data,
+            Some(json!({"paths":["taskbar.multiDisplayApps"]}))
+        );
+        call(
+            &store,
+            "settings.set",
+            json!({"path":"taskbar.allDisplays","value":false}),
+        );
+        assert_eq!(store.snapshot().unwrap()["taskbar"]["allDisplays"], false);
+        assert_eq!(
+            store
+                .call(
+                    "settings.set",
+                    &json!({"path":"taskbar.allDisplays","value":"no"}),
+                )
+                .unwrap()
+                .unwrap_err()
+                .code,
+            "bad_value"
+        );
+        // a value written by hand reads as the default
+        let path = fixture.0.join("settings.json");
+        fs::write(&path, "{\"taskbar\":{\"multiDisplayApps\":\"every\"}}").unwrap();
+        assert_eq!(
+            store.snapshot().unwrap()["taskbar"]["multiDisplayApps"],
+            "window"
+        );
+    }
+}
+
+/// Settings parity, amendment 18 (batch E): `settings.language` takes "system", the session's language, besides
+/// "nl" and "en". A module of its own, so the multi-monitor branch's tests at the end of `mod tests` merge cleanly.
+#[cfg(test)]
+mod language_tests {
+    use super::*;
+
+    struct Dir(PathBuf);
+    impl Drop for Dir {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn store() -> (Dir, SettingsStore) {
+        let path = std::env::temp_dir().join(format!("win11-language-{}", nonce()));
+        fs::create_dir(&path).unwrap();
+        let store = SettingsStore::new(path.clone()).unwrap();
+        (Dir(path), store)
+    }
+
+    #[test]
+    fn system_is_a_language_setting_and_reads_as_the_sessions_language() {
+        let (dir, store) = store();
+        for value in ["system", "en", "nl"] {
+            store
+                .call("settings.set", &json!({"path": "language", "value": value}))
+                .unwrap()
+                .unwrap();
+            assert_eq!(store.snapshot().unwrap()["language"], value);
+        }
+        store
+            .call("settings.patch", &json!({"patch": {"language": "system"}}))
+            .unwrap()
+            .unwrap();
+        assert_eq!(store.snapshot().unwrap()["language"], "system");
+        // read as the session's language (C1 extended): whatever this process's environment says
+        assert_eq!(crate::i18n::language_in(&dir.0), Lang::system());
+        for refused in ["System", "SYSTEM", "system ", "auto", "default"] {
+            let error = store
+                .call(
+                    "settings.set",
+                    &json!({"path": "language", "value": refused}),
+                )
+                .unwrap()
+                .unwrap_err();
+            assert_eq!(error.code, "invalid_value", "{refused:?}");
+        }
+        assert!(valid_language(&json!("system")) && !valid_language(&json!({"system": true})));
+    }
+
+    #[test]
+    fn an_imported_file_keeps_its_system_language() {
+        let (_dir, store) = store();
+        let (data, _) = store
+            .call(
+                "settings.import",
+                &json!({"json": {"language": "system", "theme": {"mode": "light"}}}),
+            )
+            .unwrap()
+            .unwrap();
+        assert_eq!(data["language"], "system");
+        assert_eq!(store.snapshot().unwrap()["language"], "system");
     }
 }

@@ -32,7 +32,6 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 APP = 'org.example.AttentionTest'
 BRIDGE = "Main.extensionManager.lookup('win11-gnome@win11shell.local').stateObj._panelBridge"
-TOKEN_JS = f"JSON.parse({BRIDGE}.Call('apps.activationToken', JSON.stringify({{desktopId:'{APP}.desktop'}}))).token"
 STATE_JS = ("(()=>{const Shell=imports.gi.Shell;"
             "const w=global.get_window_actors().map(a=>a.meta_window).find(w=>w.get_wm_class()==='" + APP + "'"
             "||w.get_gtk_application_id()==='" + APP + "');const f=global.display.focus_window;"
@@ -58,7 +57,8 @@ def wait(h, label, test, timeout=6.0):
 
 def launch(h, run_dir):
     """What the host does for a launch: a token from the extension, then the app with it (GIO's environment)."""
-    token = h.eval(TOKEN_JS)
+    token = (h.bridge('apps.activationToken', {'desktopId': f'{APP}.desktop'}) or {}).get('token')
+    h.require('async bridge supplies an activation token', isinstance(token, str) and bool(token))
     env = dict(os.environ, WAYLAND_DISPLAY=h.hm.WL, GDK_BACKEND='wayland', XDG_ACTIVATION_TOKEN=token,
                DESKTOP_STARTUP_ID=token)
     log = open(h.hm.RUN / 'logs' / 'app-attention-helper.log', 'a')

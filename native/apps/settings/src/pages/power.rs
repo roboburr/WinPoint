@@ -1,12 +1,35 @@
 //! Instellingen › Systeem › Energie en batterij (6ebf169f:vendor/ui/js/apps/settings/pages/power.js): GNOME's own
-//! power settings (power mode, screen off, dimming, automatic sleep), the battery and the confirmed power actions.
+//! power settings (power mode, screen off, dimming, automatic sleep), the battery and the confirmed power actions,
+//! in Windows 11's layout (settings parity, batch D, amendment 20):
+//!
+//! * Energie: the expander Scherm en slaapstand (GNOME's screen blank, dim and automatic suspend through
+//!   system.power.settings.*, with GNOME's warning when automatic suspend is Nooit), the expander
+//!   Besturingselementen voor deksel en aan/uit-knop with GNOME's one Power Button Behavior (power-button-action;
+//!   Sluimerstand only where logind can hibernate; no lid rows, GNOME has none), Energiestand, and on a pc without a
+//!   battery the Energiebesparing expander.
+//! * Batterij (a battery): Energiebesparing (Altijd energiebesparing gebruiken = the power-saver profile, and
+//!   power-saver-profile-on-low-battery), Batterijpercentage (show-battery-percentage, mirrored to
+//!   taskbar.batteryPercent for the tray), Batterij opladen (GNOME's Maximise Charge / Preserve Battery Health:
+//!   battery.charging.*, only when UPower supports a charge limit), Batterijniveaus (battery.history: the last 24
+//!   hours or 7 days), then the health, cycles and power use.
+//! * Aan/uit: the confirmed power actions.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common::{self, UsageBar};
-use kit::controls::{self as c, Dropdown, DropdownOption, SettingsCard, SettingsGroup, ToggleSwitch};
+use crate::gs::{self, GKey, Gs};
+use kit::chart::{LineChart, LineOptions, Series};
+use kit::controls::{self as c, Dropdown, DropdownOption, SettingsCard, SettingsExpander, SettingsGroup, ToggleSwitch};
 use kit::prelude::*;
 use kit::t;
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
+
+const GSD_POWER: &str = "org.gnome.settings-daemon.plugins.power";
+const BUTTON: GKey = gs::key(GSD_POWER, "power-button-action");
+const LOW_BATTERY: GKey = gs::key(GSD_POWER, "power-saver-profile-on-low-battery");
+const PERCENT: GKey = gs::key("org.gnome.desktop.interface", "show-battery-percentage");
+fn keys() -> Vec<GKey> {
+    vec![BUTTON, LOW_BATTERY, PERCENT]
+}
 
 pub const PAGES: &[(&str, Builder)] = &[("power", power)];
 pub const CSS: &str = "";
@@ -207,10 +230,39 @@ struct Energy {
     dim_card: SettingsCard,
     sleep_ac_card: SettingsCard,
     sleep_battery_card: SettingsCard,
+    /// Energiebesparing's "Altijd energiebesparing gebruiken": the power-saver profile.
+    saver: ToggleSwitch,
+    saver_card: SettingsCard,
+    /// GNOME's notice while automatic suspend is off.
+    suspend_notice: gtk::Widget,
+}
+
+/// Whether "Altijd energiebesparing gebruiken" can be offered: power-profiles-daemon with a power-saver profile.
+pub(crate) fn saver_offered(profiles: &Value) -> bool {
+    profiles["available"] == true && profiles["choices"].as_array().is_some_and(|a| a.iter().any(|c| c["id"] == "power-saver" && c["disabled"] != true))
+}
+
+/// The profile "Altijd energiebesparing gebruiken" sets: power-saver, or back to balanced (GNOME's default) when it is
+/// turned off (performance when only that and power-saver exist).
+pub(crate) fn saver_profile(on: bool, profiles: &Value) -> &'static str {
+    if on {
+        return "power-saver";
+    }
+    let has = |id: &str| profiles["choices"].as_array().is_some_and(|a| a.iter().any(|c| c["id"] == id && c["disabled"] != true));
+    if has("balanced") || !has("performance") { "balanced" } else { "performance" }
+}
+
+/// GNOME's warning: automatic suspend is off (Nooit) for the power source that counts (the battery's on a laptop).
+/// Only where the computer can sleep at all: GNOME Settings hides its automatic suspend row (and so the warning)
+/// when logind cannot suspend, and this page then says so on the sleep rows.
+pub(crate) fn suspend_off(state: &Value, battery: bool) -> bool {
+    let s = &state[if battery { "sleepBattery" } else { "sleepAC" }];
+    state["canSuspend"] == true && s["available"] == true && sleep_value(s) == "0"
 }
 
 impl Energy {
     fn set_all_sensitive(&self, on: bool) {
+        self.saver.set_sensitive(on);
         self.profile.widget().set_sensitive(on);
         self.screen.widget().set_sensitive(on);
         self.dim.set_sensitive(on);
@@ -304,6 +356,12 @@ impl Energy {
             card.set_description(&setting_description(st, desc, can_suspend));
         }
         self.sleep_battery_card.widget().set_visible(self.battery.get());
+        self.suspend_notice.set_visible(suspend_off(&s, self.battery.get()));
+
+        let offered = saver_offered(p);
+        self.saver_card.widget().set_visible(offered);
+        self.saver.set_active(active == "power-saver");
+        self.saver.set_sensitive(offered && p["writable"] == true);
     }
 
     fn save(self: &Rc<Self>, patch: Value, writable: bool) {
@@ -365,7 +423,14 @@ impl Energy {
     }
 }
 
-fn energy_settings(p: &Page, initial: Value, battery: bool) -> (Rc<Energy>, Vec<gtk::Widget>) {
+/// The controls of the GNOME power settings, for the page to place.
+struct EnergyCards {
+    profile: SettingsCard,
+    screen_sleep: SettingsExpander,
+    saver: SettingsCard,
+}
+
+fn energy_settings(p: &Page, initial: Value, battery: bool) -> (Rc<Energy>, EnergyCards) {
     let dd = |name: &str| {
         let d = Dropdown::new(Vec::new(), None);
         d.set_placeholder(t("Niet beschikbaar", "Not available"));
@@ -388,6 +453,16 @@ fn energy_settings(p: &Page, initial: Value, battery: bool) -> (Rc<Energy>, Vec<
     sleep_ac_card.set_control(&common::sized(sleep_ac.widget(), 200));
     let sleep_battery_card = SettingsCard::new("sleep", t("Op batterij in slaapstand na", "On battery, put my device to sleep after"), "");
     sleep_battery_card.set_control(&common::sized(sleep_battery.widget(), 200));
+    let saver = ToggleSwitch::new(false);
+    saver.switch().set_widget_name("st-power-saver");
+    let saver_card = SettingsCard::new("", t("Altijd energiebesparing gebruiken", "Always use energy saver"), "");
+    saver_card.set_control(saver.widget());
+    // gnome-control-center's suspend notice
+    let notice = common::notice(t(
+        "Als je automatisch slapen uitschakelt, verbruikt de pc meer energie. Het is beter om automatisch slapen ingeschakeld te laten.",
+        "Disabling automatic sleep will result in higher power consumption. It’s recommended to keep automatic sleep turned on.",
+    ));
+    notice.widget().set_widget_name("st-power-suspend-notice");
     let e = Rc::new(Energy {
         page: p.clone(),
         state: RefCell::new(if initial.is_object() { initial } else { json!({}) }),
@@ -404,6 +479,9 @@ fn energy_settings(p: &Page, initial: Value, battery: bool) -> (Rc<Energy>, Vec<
         dim_card: dim_card.clone(),
         sleep_ac_card: sleep_ac_card.clone(),
         sleep_battery_card: sleep_battery_card.clone(),
+        saver: saver.clone(),
+        saver_card: saver_card.clone(),
+        suspend_notice: notice.widget().clone().upcast(),
     });
     let weak = Rc::downgrade(&e);
     profile.connect_changed(move |value| {
@@ -413,6 +491,12 @@ fn energy_settings(p: &Page, initial: Value, battery: bool) -> (Rc<Energy>, Vec<
             && s["writable"] == true
             && s["choices"].as_array().is_some_and(|a| a.iter().any(|ch| common::value_key(&ch["id"]) == value && ch["disabled"] != true));
         e.save(json!({ "powerProfile": value }), ok);
+    });
+    let weak = Rc::downgrade(&e);
+    saver.connect_toggled(move |on| {
+        let Some(e) = weak.upgrade() else { return };
+        let s = e.state.borrow()["profiles"].clone();
+        e.save(json!({ "powerProfile": saver_profile(on, &s) }), saver_offered(&s) && s["writable"] == true);
     });
     let weak = Rc::downgrade(&e);
     screen.connect_changed(move |value| {
@@ -444,14 +528,237 @@ fn energy_settings(p: &Page, initial: Value, battery: bool) -> (Rc<Energy>, Vec<
         });
     }
     e.sync();
-    let g1 = SettingsGroup::new(t("Energie", "Power"), "");
-    g1.add(profile_card.widget());
-    let g2 = SettingsGroup::new(t("Scherm en slaapstand", "Screen & sleep"), "");
-    g2.add(screen_card.widget());
-    g2.add(dim_card.widget());
-    g2.add(sleep_ac_card.widget());
-    g2.add(sleep_battery_card.widget());
-    (e, vec![g1.widget().clone().upcast(), g2.widget().clone().upcast()])
+    // Windows 23H2's "Scherm en slaapstand" (24H2: Time-outs voor scherm, slaapstand en sluimerstand)
+    let screen_sleep = SettingsExpander::new("sleep", t("Scherm en slaapstand", "Screen & sleep"), t("Scherm uitschakelen, dimmen en automatisch slapen", "Turn off the screen, dim it and sleep automatically"));
+    screen_sleep.header_button().set_widget_name("st-power-screen-sleep");
+    screen_sleep.add(screen_card.widget());
+    screen_sleep.add(dim_card.widget());
+    screen_sleep.add(sleep_ac_card.widget());
+    screen_sleep.add(sleep_battery_card.widget());
+    screen_sleep.add(notice.widget());
+    (e, EnergyCards { profile: profile_card, screen_sleep, saver: saver_card })
+}
+
+// ------------------------------------------------------------------------------- the GNOME rows of amendment 20
+
+/// GNOME's Power Button Behavior (one value for every power source): Windows' four choices, Sluimerstand only where
+/// logind can hibernate (or when it is set already).
+pub(crate) fn button_options(hibernate: bool, current: &str) -> Vec<(Value, String)> {
+    let mut out = vec![
+        (json!("nothing"), t("Niets doen", "Do nothing").to_owned()),
+        (json!("suspend"), t("Slaapstand", "Sleep").to_owned()),
+    ];
+    if hibernate || current == "hibernate" {
+        out.push((json!("hibernate"), t("Sluimerstand", "Hibernate").to_owned()));
+    }
+    // GNOME's Power Off: the power-off question with its countdown
+    out.push((json!("interactive"), t("Afsluiten", "Shut down").to_owned()));
+    out
+}
+
+fn lid_and_button(gs: &Gs) -> Option<SettingsExpander> {
+    if !gs.available(&BUTTON) {
+        return None;
+    }
+    let exp = SettingsExpander::new("power", t("Besturingselementen voor deksel en aan/uit-knop", "Lid & power button controls"), t("Wat er gebeurt als je op de aan/uit-knop drukt", "What happens when you press the power button"));
+    exp.header_button().set_widget_name("st-power-lid-button");
+    let current = gs.value(&BUTTON).as_str().unwrap_or("").to_owned();
+    let card = SettingsCard::new("", t("Als ik op de aan/uit-knop druk, gaat mijn pc naar", "Pressing the power button will make my PC"), "");
+    card.set_control(&common::sized(gs.dropdown(&BUTTON, button_options(common::caps()["hibernate"] == true, &current)).widget(), 200));
+    exp.add(card.widget());
+    Some(exp)
+}
+
+/// Energiebesparing (amendment 20): both rows inside the expander; the automatic one only with a battery and
+/// power-profiles-daemon, as GNOME's Automatic Power Saver.
+fn energy_saver(gs: &Gs, saver: &SettingsCard, battery: bool) -> SettingsExpander {
+    let exp = SettingsExpander::new("battery-saver", t("Energiebesparing", "Energy saver"), t("Energie besparen door de prestaties te beperken", "Save energy by limiting performance"));
+    exp.header_button().set_widget_name("st-power-energy-saver");
+    exp.add(saver.widget());
+    // without power-profiles-daemon's power-saver profile there is nothing to turn on (GNOME hides both rows too)
+    saver.widget().bind_property("visible", exp.widget(), "visible").sync_create().build();
+    if battery && gs.available(&LOW_BATTERY) {
+        let card = SettingsCard::new("", t("Energiebesparing automatisch inschakelen bij een laag batterijniveau", "Turn energy saver on automatically when the battery is low"), "");
+        card.set_control(gs.toggle(&LOW_BATTERY, false).widget());
+        exp.add(card.widget());
+    }
+    exp
+}
+
+/// Batterij opladen (GNOME's Battery Charging): two radio rows on battery.charging.*.
+struct Charging {
+    p: Page,
+    exp: SettingsExpander,
+    maximize: gtk::CheckButton,
+    preserve: gtk::CheckButton,
+    preserve_card: SettingsCard,
+    silent: Cell<bool>,
+}
+
+impl Charging {
+    fn apply(&self, state: &Value) {
+        self.exp.widget().set_visible(state["supported"] == true);
+        self.silent.set(true);
+        if state["enabled"] == true {
+            self.preserve.set_active(true);
+        } else {
+            self.maximize.set_active(true);
+        }
+        self.silent.set(false);
+        let mut desc = t("Verlengt de levensduur van de batterij door een lager laadniveau aan te houden", "Increases battery longevity by maintaining lower charge levels").to_owned();
+        if let Some(end) = state["end"].as_u64() {
+            desc.push_str(". ");
+            desc.push_str(&common::fill(t("De batterij wordt tot {n}% opgeladen.", "The battery is charged up to {n}%."), &[("n", &end.to_string())]));
+        }
+        self.preserve_card.set_description(&desc);
+    }
+}
+
+fn charging(p: &Page, state: &Value) -> Rc<Charging> {
+    let exp = SettingsExpander::new("battery-charging", t("Batterij opladen", "Battery charging"), t("Kiezen hoe ver de batterij wordt opgeladen", "Choose how far the battery is charged"));
+    exp.header_button().set_widget_name("st-power-charging");
+    let maximize = gtk::CheckButton::new();
+    maximize.add_css_class("w11-radio");
+    maximize.set_widget_name("st-power-charging-maximize");
+    let preserve = gtk::CheckButton::new();
+    preserve.add_css_class("w11-radio");
+    preserve.set_group(Some(&maximize));
+    preserve.set_widget_name("st-power-charging-preserve");
+    let max_card = SettingsCard::new("", t("Maximale lading", "Maximise charge"), t("Gebruikt de volledige capaciteit van de batterij. De batterij gaat sneller achteruit.", "Uses all battery capacity. Degrades batteries more quickly."));
+    max_card.set_icon_widget(&maximize);
+    let preserve_card = SettingsCard::new("", t("Batterijgezondheid behouden", "Preserve battery health"), "");
+    preserve_card.set_icon_widget(&preserve);
+    exp.add(max_card.widget());
+    exp.add(preserve_card.widget());
+    let ch = Rc::new(Charging { p: p.clone(), exp, maximize: maximize.clone(), preserve: preserve.clone(), preserve_card, silent: Cell::new(false) });
+    ch.apply(state);
+    for (button, enabled) in [(&maximize, false), (&preserve, true)] {
+        let weak = Rc::downgrade(&ch);
+        button.connect_toggled(move |b| {
+            let Some(ch) = weak.upgrade() else { return };
+            if ch.silent.get() || !b.is_active() {
+                return;
+            }
+            let wait = ch.p.run_with("battery.charging.set", json!({ "enabled": enabled }), Some(t("Het opladen kon niet worden gewijzigd", "Couldn’t change battery charging")), false);
+            let ch2 = ch.clone();
+            ch.p.spawn(async move {
+                let answer = wait.await;
+                if !ch2.p.alive() {
+                    return;
+                }
+                match answer {
+                    Some(v) if v["dryRun"] != true => ch2.apply(&v),
+                    _ => {
+                        let fresh = ch2.p.get("battery.charging.get", json!({})).await;
+                        if let Some(v) = fresh
+                            && ch2.p.alive()
+                        {
+                            ch2.apply(&v);
+                        }
+                    }
+                }
+            });
+        });
+    }
+    {
+        let weak = Rc::downgrade(&ch);
+        p.on("battery.changed", move |v| {
+            if let Some(ch) = weak.upgrade() {
+                ch.apply(v);
+            }
+        });
+    }
+    ch
+}
+
+/// UPower's history points [[time, value, state]] on a grid of `n` times from `now - span` to `now`: the last value
+/// at or before each time, starting at the first sample (the chart draws them from the right).
+pub(crate) fn resample(points: &[(f64, f64)], now: f64, span: f64, n: usize) -> Vec<f64> {
+    let n = n.max(2);
+    let step = span / (n - 1) as f64;
+    let mut out = Vec::new();
+    let mut j = 0;
+    let mut last = None;
+    for i in 0..n {
+        let at = now - span + i as f64 * step;
+        while j < points.len() && points[j].0 <= at {
+            last = Some(points[j].1);
+            j += 1;
+        }
+        if let Some(v) = last {
+            out.push(v.clamp(0.0, 100.0));
+        }
+    }
+    out
+}
+
+/// Batterijniveaus: Windows' battery levels chart for the last 24 hours or 7 days (battery.history).
+fn levels(p: &Page) -> SettingsExpander {
+    let exp = SettingsExpander::new("chart", t("Batterijniveaus", "Battery levels"), t("Het batterijniveau in de loop van de tijd", "The battery level over time"));
+    exp.header_button().set_widget_name("st-power-levels");
+    let span = Dropdown::new(
+        vec![DropdownOption::new("86400", t("Afgelopen 24 uur", "Last 24 hours")), DropdownOption::new("604800", t("Afgelopen 7 dagen", "Last 7 days"))],
+        Some("86400"),
+    );
+    span.widget().set_widget_name("st-power-levels-span");
+    let chart = LineChart::new(LineOptions { min: 0.0, max: 100.0, color: "accent".into(), points: 97, border: false, grid_rows: 4, scroll_grid: false, line_width: 1.5, ..Default::default() });
+    chart.widget().set_size_request(-1, 150);
+    chart.widget().set_widget_name("st-power-levels-chart");
+    let axis = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    let from = c::label("", "w11-text-3", false);
+    from.set_hexpand(true);
+    from.set_xalign(0.0);
+    let to = c::label(t("Nu", "Now"), "w11-text-3", false);
+    axis.append(&from);
+    axis.append(&to);
+    let body = gtk::Box::new(gtk::Orientation::Vertical, 6);
+    // in the expander, not on its header: a drop-down inside the header's button never gets the pointer's click
+    let range = common::sized(span.widget(), 180);
+    range.set_halign(gtk::Align::End);
+    body.append(&range);
+    let empty = c::label(t("Er is nog geen batterijgeschiedenis.", "There’s no battery history yet."), "w11-text-2", true);
+    body.append(&empty);
+    body.append(chart.widget());
+    body.append(&axis);
+    exp.add(&body);
+    let load = {
+        let (pp, chart, from, empty, span) = (p.clone(), chart.clone(), from.clone(), empty.clone(), span.clone());
+        Rc::new(move || {
+            let seconds: u64 = span.selected().and_then(|s| s.parse().ok()).unwrap_or(86_400);
+            let wait = pp.get("battery.history", json!({ "type": "charge", "timespan": seconds, "resolution": 200 }));
+            let (p2, chart, from, empty) = (pp.clone(), chart.clone(), from.clone(), empty.clone());
+            pp.spawn(async move {
+                let Some(v) = wait.await else { return };
+                if !p2.alive() {
+                    return;
+                }
+                let points: Vec<(f64, f64)> = v["points"].as_array().into_iter().flatten().filter_map(|p| Some((p[0].as_f64()?, p[1].as_f64()?))).collect();
+                let now = kit::format::now_ms() / 1000.0;
+                let n = if seconds > 86_400 { 169 } else { 97 };
+                let values = resample(&points, now, seconds as f64, n);
+                chart.set_points(n);
+                chart.update(vec![Series::new(values.clone())]);
+                empty.set_visible(values.is_empty());
+                chart.widget().set_visible(!values.is_empty());
+                let start = (now - seconds as f64) * 1000.0;
+                from.set_text(&format!("{} {}", kit::format::date(start, kit::format::DateFormat::DayShort), kit::format::time(start, false, common::setting_bool("time.h24", true))));
+            });
+        })
+    };
+    load();
+    {
+        let l = load.clone();
+        span.connect_changed(move |_| l());
+    }
+    {
+        // a new sample every few minutes (UPower records on every change of the level)
+        let l = load.clone();
+        p.interval(300_000, move || {
+            l();
+            true
+        });
+    }
+    exp
 }
 
 /// The battery hero (power.js batteryHero): glyph, percentage, state and time, a coloured bar.
@@ -512,22 +819,33 @@ fn power(p: Page) -> PageFuture {
                 }
             });
         }
-        let (br, er) = (p.call("system.battery.get", json!({})), p.call("system.power.settings.get", json!({})));
-        let (br, er) = (br.await, er.await);
+        let (br, er, cr) = (p.call("system.battery.get", json!({})), p.call("system.power.settings.get", json!({})), p.call("battery.charging.get", json!({})));
+        let gs = Gs::load(&p, &keys()).await;
+        let (br, er, cr) = (br.await, er.await, cr.await);
         if !p.alive() {
             return Content::new();
         }
         let b = br.ok().unwrap_or(Value::Null);
+        let present = b["present"] == true;
         let mut out: Content = Vec::new();
         let battery_slot = common::slot();
         let mains_slot = common::slot();
         out.push(battery_slot.clone().upcast());
+
+        // ---- Energie: Scherm en slaapstand, Besturingselementen voor deksel en aan/uit-knop, Energiestand
+        let power_group = SettingsGroup::new(t("Energie", "Power"), "");
+        let mut saver_card: Option<SettingsCard> = None;
         let q = queued.borrow_mut().take();
         match (er, q) {
             (_, Some(v)) | (Ok(v), None) => {
-                let (e, groups) = energy_settings(&p, v, b["present"] == true);
+                let (e, cards) = energy_settings(&p, v, present);
                 *energy.borrow_mut() = Some(e);
-                out.extend(groups);
+                power_group.add(cards.screen_sleep.widget());
+                if let Some(exp) = lid_and_button(&gs) {
+                    power_group.add(exp.widget());
+                }
+                power_group.add(cards.profile.widget());
+                saver_card = Some(cards.saver);
             }
             (Err(err), None) => {
                 let card = SettingsCard::new(
@@ -539,30 +857,62 @@ fn power(p: Page) -> PageFuture {
                 let pp = p.clone();
                 retry.connect_clicked(move |_| pp.refresh());
                 card.set_control(&retry);
-                let g = SettingsGroup::new(t("Energie", "Power"), "");
-                g.add(card.widget());
-                out.push(g.widget().clone().upcast());
+                power_group.add(card.widget());
+                if let Some(exp) = lid_and_button(&gs) {
+                    power_group.add(exp.widget());
+                }
             }
         }
+        // a pc without a battery: Energiebesparing is a row of Energie (Windows 24H2)
+        if !present && let Some(saver) = &saver_card {
+            power_group.add(energy_saver(&gs, saver, false).widget());
+        }
+        out.push(power_group.widget().clone().upcast());
+
+        // ---- Batterij: built once, shown while there is a battery; the figures below it follow the battery
+        let battery_group = SettingsGroup::new(t("Batterij", "Battery"), "");
+        battery_group.widget().set_widget_name("st-power-battery");
+        if present && let Some(saver) = &saver_card {
+            battery_group.add(energy_saver(&gs, saver, true).widget());
+        }
+        if let Some(card) = gs.toggle_card(
+            &PERCENT,
+            "battery",
+            t("Batterijpercentage", "Battery percentage"),
+            t("Het batterijpercentage naast het batterijpictogram in het systeemvak weergeven", "Show battery percentage next to battery icon in the system tray"),
+            false,
+        ) {
+            battery_group.add(card.widget());
+        }
+        let ch = charging(&p, &cr.unwrap_or(Value::Null));
+        battery_group.add(ch.exp.widget());
+        // the radios' handlers hold it weakly: the page keeps it while it is shown
+        p.on_cleanup(move || drop(ch));
+        battery_group.add(levels(&p).widget());
+        let info_slot = common::slot();
+        battery_group.add(&info_slot);
+        battery_group.widget().set_visible(present);
+        out.push(battery_group.widget().clone().upcast());
 
         let update_battery = {
-            let (energy, battery_slot, mains_slot) = (energy.clone(), battery_slot.clone(), mains_slot.clone());
+            let (energy, battery_slot, mains_slot, group, info_slot) = (energy.clone(), battery_slot.clone(), mains_slot.clone(), battery_group.widget().clone(), info_slot.clone());
             Rc::new(move |b: &Value| {
                 let present = b["present"] == true;
                 if let Some(e) = energy.borrow().as_ref() {
                     e.set_battery_present(present);
                 }
+                group.set_visible(present);
                 if !present {
                     common::set_slot(&battery_slot, &[]);
+                    common::set_slot(&info_slot, &[]);
                     let g = SettingsGroup::new(t("Batterij", "Battery"), "");
                     g.add(SettingsCard::new("lightning", t("Netstroom", "Mains power"), t("Deze computer heeft geen batterij en werkt altijd op netstroom.", "This computer has no battery and always runs on mains power.")).widget());
                     common::set_slot(&mains_slot, &[g.widget().clone().upcast()]);
                     return;
                 }
                 common::set_slot(&mains_slot, &[]);
-                let mut blocks: Vec<gtk::Widget> = vec![battery_hero(b)];
-                let g = SettingsGroup::new(t("Batterij", "Battery"), "");
-                let mut any = false;
+                common::set_slot(&battery_slot, &[battery_hero(b)]);
+                let mut cards: Vec<gtk::Widget> = Vec::new();
                 if let Some(h) = b["health"].as_f64() {
                     let hv = h.round() as i64;
                     let word = if hv >= 80 {
@@ -574,25 +924,24 @@ fn power(p: Page) -> PageFuture {
                     };
                     let card = SettingsCard::new("heart", t("Batterijconditie", "Battery health"), t("Hoeveel de batterij nog kan opslaan vergeleken met nieuw", "How much the battery can still hold compared to new"));
                     card.set_control(&common::value_label(&format!("{hv}% · {word}")));
-                    g.add(card.widget());
-                    any = true;
+                    cards.push(card.widget().clone());
                 }
                 if let Some(cy) = b["cycles"].as_f64() {
                     let card = SettingsCard::new("refresh", t("Laadcycli", "Charge cycles"), t("Hoe vaak de batterij volledig is opgeladen", "How often the battery has been fully charged"));
                     card.set_control(&common::value_label(&kit::format::number(cy, 0)));
-                    g.add(card.widget());
-                    any = true;
+                    cards.push(card.widget().clone());
                 }
                 if let Some(rate) = b["energyRate"].as_f64() {
                     let card = SettingsCard::new("lightning", t("Huidig stroomverbruik", "Current power use"), t("Hoeveel energie de computer nu gebruikt", "How much energy the computer uses right now"));
                     card.set_control(&common::value_label(&format!("{} W", kit::format::number(rate, 1))));
-                    g.add(card.widget());
-                    any = true;
+                    cards.push(card.widget().clone());
                 }
-                if any {
-                    blocks.push(g.widget().clone().upcast());
+                let col = gtk::Box::new(gtk::Orientation::Vertical, 4);
+                for w in &cards {
+                    col.append(w);
                 }
-                common::set_slot(&battery_slot, &blocks);
+                let list: Vec<gtk::Widget> = if cards.is_empty() { Vec::new() } else { vec![col.upcast()] };
+                common::set_slot(&info_slot, &list);
             })
         };
         update_battery(&b);
@@ -624,4 +973,54 @@ fn power(p: Page) -> PageFuture {
         out.push(mains_slot.upcast());
         out
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_power_button_offers_gnomes_values_in_windows_words() {
+        let values = |o: Vec<(Value, String)>| o.into_iter().map(|(v, _)| v.as_str().unwrap_or("").to_owned()).collect::<Vec<_>>();
+        assert_eq!(values(button_options(false, "interactive")), ["nothing", "suspend", "interactive"]);
+        assert_eq!(values(button_options(true, "suspend")), ["nothing", "suspend", "hibernate", "interactive"]);
+        assert_eq!(values(button_options(false, "hibernate")), ["nothing", "suspend", "hibernate", "interactive"], "a value already set stays visible");
+    }
+
+    #[test]
+    fn energy_saver_is_the_power_saver_profile() {
+        let three = json!({"available": true, "writable": true, "active": "balanced",
+            "choices": [{"id": "power-saver"}, {"id": "balanced"}, {"id": "performance"}]});
+        assert!(saver_offered(&three));
+        assert_eq!(saver_profile(true, &three), "power-saver");
+        assert_eq!(saver_profile(false, &three), "balanced");
+        let two = json!({"available": true, "choices": [{"id": "power-saver"}, {"id": "performance"}]});
+        assert_eq!(saver_profile(false, &two), "performance");
+        assert!(!saver_offered(&json!({"available": false, "choices": []})));
+        assert!(!saver_offered(&json!({"available": true, "choices": [{"id": "power-saver", "disabled": true}]})));
+    }
+
+    #[test]
+    fn gnomes_warning_shows_while_automatic_sleep_is_off() {
+        let state = json!({"canSuspend": true, "sleepAC": {"available": true, "action": "nothing", "timeout": 0},
+            "sleepBattery": {"available": true, "action": "suspend", "timeout": 900}});
+        assert!(suspend_off(&state, false), "a desktop: plugged in");
+        assert!(!suspend_off(&state, true), "a laptop: on battery");
+        let off = json!({"canSuspend": true, "sleepBattery": {"available": true, "action": "suspend", "timeout": 0}});
+        assert!(suspend_off(&off, true));
+        assert!(!suspend_off(&json!({}), true));
+        // the harness's session without logind: the sleep rows say it can't sleep, no warning on top of that
+        let cannot = json!({"canSuspend": false, "sleepAC": {"available": true, "action": "nothing", "timeout": 0}});
+        assert!(!suspend_off(&cannot, false));
+    }
+
+    #[test]
+    fn battery_levels_are_sampled_from_the_right() {
+        let points = [(100.0, 80.0), (160.0, 70.0), (400.0, 50.0)];
+        // 500 s on a grid of 6: 0, 100, ..., 500 → from the first sample at 100 on
+        assert_eq!(resample(&points, 500.0, 500.0, 6), [80.0, 70.0, 70.0, 50.0, 50.0]);
+        assert_eq!(resample(&[], 500.0, 500.0, 6), Vec::<f64>::new());
+        assert_eq!(resample(&[(0.0, 120.0)], 10.0, 10.0, 2), [100.0, 100.0], "clamped to 100 %");
+        assert_eq!(gs::control_name("power", &keys(), &BUTTON), "st-power-power-button-action");
+    }
 }

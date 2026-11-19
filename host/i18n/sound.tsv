@@ -1,0 +1,37 @@
+# host/i18n/sound.tsv: host texts of services/sound.rs and services/system/audio.rs.
+# Owner: batch D (settings parity, §5.5).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/sound.rs, sound/client.rs, sound/alerts.rs: GNOME's Sound panel through libpulse (settings parity, notes/claude/settings-parity.md §5.5, amendment 39; batch D)
+# sound.*: libpulse is missing, or no PulseAudio server (pipewire-pulse) answers
+#@ new
+sound.unavailable	Geluid kan hier niet worden geregeld.	Sound can’t be controlled here.
+# sound.*: the sink, source, card or app stream named in the call is not there (any more)
+#@ new
+sound.deviceGone	Dit geluidsapparaat is niet (meer) beschikbaar.	This sound device is no longer available.
+# sound.*: the server refused the change (its own message is in the error's data.error)
+#@ new
+sound.failed	Het geluid kon niet worden aangepast.	Couldn’t change the sound.
+# sound.setDefault: the card's new profile did not bring the chosen device within 3 s
+#@ new
+sound.profileTimeout	Het geluidsapparaat werd niet op tijd beschikbaar. Probeer het opnieuw.	The sound device didn’t become available in time. Try again.
+# sound.test: libcanberra is not installed
+#@ new
+sound.testUnavailable	Testgeluiden kunnen hier niet worden afgespeeld.	Test sounds can’t be played here.
+# sound.test: libcanberra could not play the test sound
+#@ new
+sound.testFailed	Het testgeluid kon niet worden afgespeeld.	Couldn’t play the test sound.
+# sound.alerts.set: GNOME's alert sound files (/usr/share/sounds/gnome/default/alerts) are not installed
+#@ new
+sound.alertMissing	Dit waarschuwingsgeluid is niet geïnstalleerd.	This alert sound isn’t installed.
+# sound.alerts.set: the custom sound theme (~/.local/share/sounds/__custom) could not be written
+#@ new
+sound.alertFailed	Het waarschuwingsgeluid kon niet worden ingesteld.	Couldn’t set the alert sound.

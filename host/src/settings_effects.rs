@@ -27,12 +27,17 @@ pub(crate) struct Effects {
     /// The Windows 11 caption buttons in other GTK apps (theme.captionButtons) are the panel host's job in GNOME
     /// too (D-G65): Robin, 13-11, "ik zie geen windows 3 knoppen rechts boven bij alle apps".
     pub captions: bool,
+    /// The settings mirror (settings_mirror.rs, notes/claude/settings-parity.md §6.4) runs in the panel host only.
+    pub mirror: bool,
     pub dry_run: bool,
 }
 impl Effects {
     pub(crate) fn apply(&self, settings: &Value, changed: &[String]) {
         if self.dry_run {
             return;
+        }
+        if self.mirror {
+            crate::settings_mirror::apply(settings, changed);
         }
         let theme = &settings["theme"];
         let relevant = changed.iter().any(|s| {
@@ -50,14 +55,11 @@ impl Effects {
             if result["ok"] != true {
                 eprintln!("GNOME-systeemthema niet volledig bijgewerkt: {result}");
             }
-            if changed
-                .iter()
-                .any(|s| matches!(s.as_str(), "theme" | "theme.gtkFamily"))
-            {
-                let result = sync_gtk4_block(family, &self.config_home);
-                if result["ok"] != true {
-                    eprintln!("GTK 4-thema niet bijgewerkt: {result}");
-                }
+        }
+        if let Some(family) = gtk4_target(settings, Some(changed)) {
+            let result = sync_gtk4_block(family, &self.config_home);
+            if result["ok"] != true {
+                eprintln!("GTK 4-thema niet bijgewerkt: {result}");
             }
         }
         if (self.layer || self.captions)
@@ -91,9 +93,11 @@ impl Effects {
             if result["ok"] != true {
                 eprintln!("GNOME-systeemthema niet volledig bijgewerkt: {result}");
             }
-            let result = sync_gtk4_block(family, &self.config_home);
-            if result["ok"] != true {
-                eprintln!("GTK 4-thema niet bijgewerkt: {result}");
+            if let Some(family) = gtk4_target(settings, None) {
+                let result = sync_gtk4_block(family, &self.config_home);
+                if result["ok"] != true {
+                    eprintln!("GTK 4-thema niet bijgewerkt: {result}");
+                }
             }
         }
         let result = apply_captions(
@@ -131,6 +135,33 @@ fn family(theme: &Value) -> &str {
     } else {
         "fluent"
     }
+}
+/// The GTK 4 block's family (amendment 46): "system", no Fluent block, while high contrast is on (libadwaita and
+/// the GTK 4 apps then show their own high-contrast style), else the theme's.
+fn gtk4_family(settings: &Value) -> &str {
+    if settings["accessibility"]["highContrast"] == true {
+        "system"
+    } else {
+        family(&settings["theme"])
+    }
+}
+/// The family the GTK 4 block follows after the change of `changed` (None: the panel host's start), or None when it
+/// stays as it is: with theme.syncSystem and a light or dark mode only, for a change of the theme family or of high
+/// contrast (so a theme change while high contrast is on never puts the block back).
+fn gtk4_target<'a>(settings: &'a Value, changed: Option<&[String]>) -> Option<&'a str> {
+    let theme = &settings["theme"];
+    if theme["syncSystem"] != true || !matches!(theme["mode"].as_str(), Some("light" | "dark")) {
+        return None;
+    }
+    let touched = changed.is_none_or(|changed| {
+        changed.iter().any(|s| {
+            matches!(
+                s.as_str(),
+                "theme" | "theme.gtkFamily" | "accessibility" | "accessibility.highContrast"
+            )
+        })
+    });
+    touched.then(|| gtk4_family(settings))
 }
 fn home() -> PathBuf {
     std::env::var_os("HOME")
@@ -786,5 +817,72 @@ pub(crate) fn gtk4_remove(path: &Path) -> io::Result<String> {
     } else {
         atomic(path, rest, path.metadata()?.permissions().mode() & 0o777)?;
         Ok("removed".into())
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn paths(list: &[&str]) -> Vec<String> {
+        list.iter().map(|p| (*p).to_owned()).collect()
+    }
+
+    #[test]
+    fn high_contrast_keeps_the_fluent_block_out_of_gtk4_at_the_start_and_after_a_theme_change() {
+        let synced = |high: bool, family: &str| {
+            json!({
+                "theme": {"syncSystem": true, "mode": "dark", "gtkFamily": family},
+                "accessibility": {"highContrast": high},
+            })
+        };
+        // high contrast on: the start and a theme change both sync "system" (the block leaves)
+        let on = synced(true, "fluent");
+        assert_eq!(gtk4_target(&on, None), Some("system"));
+        assert_eq!(gtk4_target(&on, Some(&paths(&["theme"]))), Some("system"));
+        assert_eq!(
+            gtk4_target(&on, Some(&paths(&["theme.gtkFamily"]))),
+            Some("system")
+        );
+        assert_eq!(
+            gtk4_target(&on, Some(&paths(&["accessibility.highContrast"]))),
+            Some("system")
+        );
+        // off again: the theme's family, the block is back
+        let off = synced(false, "fluent");
+        assert_eq!(gtk4_target(&off, None), Some("fluent"));
+        assert_eq!(
+            gtk4_target(&off, Some(&paths(&["accessibility"]))),
+            Some("fluent")
+        );
+        assert_eq!(gtk4_target(&synced(false, "system"), None), Some("system"));
+        // other changes, or no GNOME look sync: the block is left as it is
+        assert_eq!(
+            gtk4_target(&off, Some(&paths(&["theme.mode", "taskbar"]))),
+            None
+        );
+        let unsynced = json!({"theme": {"syncSystem": false, "mode": "dark"}, "accessibility": {"highContrast": true}});
+        assert_eq!(gtk4_target(&unsynced, None), None);
+        let auto = json!({"theme": {"syncSystem": true, "mode": "auto"}});
+        assert_eq!(gtk4_target(&auto, None), None);
+    }
+
+    #[test]
+    fn the_system_family_takes_the_fluent_block_out_and_keeps_the_rest() {
+        let config = std::env::temp_dir().join(format!("effects-gtk4-{}", crate::events::nonce()));
+        fs::create_dir_all(config.join("gtk-4.0")).unwrap();
+        let css = config.join("gtk-4.0/gtk.css");
+        let fluent = config.join("Fluent/gtk-4.0/gtk.css");
+        fs::create_dir_all(fluent.parent().unwrap()).unwrap();
+        fs::write(&fluent, "").unwrap();
+        let mut text = theme_block(Some(&fluent), None);
+        text.extend_from_slice(b"/* the user's own */\nwindow { padding: 1px; }\n");
+        fs::write(&css, text).unwrap();
+        let high = json!({"theme": {"syncSystem": true, "mode": "light"}, "accessibility": {"highContrast": true}});
+        let result = sync_gtk4_block(gtk4_target(&high, None).unwrap(), &config);
+        assert_eq!(result["ok"], true, "{result}");
+        let left = fs::read_to_string(&css).unwrap();
+        assert!(!left.contains(THEME_BEGIN), "{left}");
+        assert!(left.contains("the user's own"), "{left}");
+        let _ = fs::remove_dir_all(&config);
     }
 }

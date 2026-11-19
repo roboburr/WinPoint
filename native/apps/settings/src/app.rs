@@ -33,8 +33,24 @@ impl Default for Show {
 }
 
 enum Title {
+    None,
     Label(gtk::Label),
-    Crumb,
+    /// The breadcrumb and its (id, label) items: `set_title_text` replaces the last label.
+    Crumb(Breadcrumb, Vec<(String, String)>),
+}
+
+/// The breadcrumb items with the last label replaced by `text` (a data page's item name, `Page::set_title`).
+pub(crate) fn with_last_label(items: &[(String, String)], text: &str) -> Vec<(String, String)> {
+    let mut out = items.to_vec();
+    if let Some(last) = out.last_mut() {
+        last.1 = text.to_owned();
+    }
+    out
+}
+
+fn set_crumbs(bc: &Breadcrumb, items: &[(String, String)]) {
+    let refs: Vec<(&str, &str)> = items.iter().map(|(id, label)| (id.as_str(), label.as_str())).collect();
+    bc.set_items(&refs);
 }
 
 struct View {
@@ -69,6 +85,8 @@ struct User {
     kind: gtk::Label,
     real: RefCell<String>,
     image: RefCell<Option<String>>,
+    /// AccountsService answered (users.self): system.info's user, the fallback, no longer overrides it
+    accounts: Cell<bool>,
 }
 
 pub struct Router {
@@ -275,45 +293,51 @@ impl Router {
                 r.set_narrow(w > 0 && w < 760);
             }
         });
-        let v = Rc::new(View { root, head, head_box, title: RefCell::new(Title::Crumb), page, body });
+        let v = Rc::new(View { root, head, head_box, title: RefCell::new(Title::None), page, body });
         self.set_header(&v, id);
         v
     }
 
-    /// The fixed header: the title, or "Parent › Page" (main.js header).
+    /// The fixed header: the title, or the breadcrumb of the parent chain, "Netwerk en internet › Geavanceerde
+    /// netwerkinstellingen › Geavanceerde instellingen voor delen" (main.js header, N levels).
     fn set_header(&self, v: &View, id: &str) {
         c::clear(&v.head_box);
         let info = registry::page(id);
-        match info.and_then(|p| p.parent.and_then(registry::page).map(|parent| (p, parent))) {
-            Some((p, parent)) => {
-                let bc = Breadcrumb::new(true);
-                bc.set_items(&[(parent.id, parent.title()), (p.id, p.title())]);
-                bc.widget().add_css_class("st-title");
-                let weak = self.weak();
-                bc.connect_selected(move |pid, _| {
-                    if let Some(r) = weak.upgrade() {
-                        let pid = pid.to_owned();
-                        glib::idle_add_local_once(move || r.show(&pid, json!({}), Show::default()));
-                    }
-                });
-                v.head_box.append(bc.widget());
-                *v.title.borrow_mut() = Title::Crumb;
-            }
-            None => {
-                let text = if id == "search" { t("Zoekresultaten", "Search results") } else { info.map(|p| p.title()).unwrap_or("") };
-                let l = c::label(text, "w11-title st-title", true);
-                v.head_box.append(&l);
-                *v.title.borrow_mut() = Title::Label(l);
-            }
+        let chain = registry::ancestors(id);
+        if chain.len() > 1 {
+            let bc = Breadcrumb::new(true);
+            let items: Vec<(String, String)> = chain.iter().map(|p| (p.id.to_owned(), p.title().to_owned())).collect();
+            set_crumbs(&bc, &items);
+            bc.widget().add_css_class("st-title");
+            let weak = self.weak();
+            bc.connect_selected(move |pid, _| {
+                if let Some(r) = weak.upgrade() {
+                    let pid = pid.to_owned();
+                    glib::idle_add_local_once(move || r.show(&pid, json!({}), Show::default()));
+                }
+            });
+            v.head_box.append(bc.widget());
+            *v.title.borrow_mut() = Title::Crumb(bc, items);
+        } else {
+            let text = if id == "search" { t("Zoekresultaten", "Search results") } else { info.map(|p| p.title()).unwrap_or("") };
+            let l = c::label(text, "w11-title st-title", true);
+            v.head_box.append(&l);
+            *v.title.borrow_mut() = Title::Label(l);
         }
     }
 
-    /// ctx.setTitle: replace the title text (pages without a breadcrumb).
+    /// ctx.setTitle: replace the title text, on a sub-page the last crumb (a data page's item name: "Netwerk en
+    /// internet › Wi-Fi › Thuis").
     pub fn set_title_text(&self, text: &str) {
-        if let Some(v) = self.view.borrow().as_ref()
-            && let Title::Label(l) = &*v.title.borrow()
-        {
-            l.set_label(text);
+        let Some(v) = self.view.borrow().clone() else { return };
+        let mut title = v.title.borrow_mut();
+        match &mut *title {
+            Title::Label(l) => l.set_label(text),
+            Title::Crumb(bc, items) => {
+                *items = with_last_label(items, text);
+                set_crumbs(bc, items);
+            }
+            Title::None => {}
         }
     }
 
@@ -371,6 +395,27 @@ impl Router {
     }
 
     // ---- the user card
+
+    /// The card from AccountsService, as Je info shows the account (users.self: the name and the picture; Windows'
+    /// second line "Lokaal account"); asked at the start and again after every users.changed. Without
+    /// AccountsService the card keeps system.info's user.
+    fn load_user(&self) {
+        let weak = self.weak();
+        kit::ctx().call("users.self", json!({}), move |r| {
+            let (Some(r), Ok(u)) = (weak.upgrade(), r) else { return };
+            if u["available"] != true {
+                return;
+            }
+            let name = u["realName"].as_str().filter(|s| !s.trim().is_empty()).or(u["userName"].as_str()).unwrap_or("");
+            if name.is_empty() {
+                return;
+            }
+            r.user.accounts.set(true);
+            *r.user.real.borrow_mut() = name.to_owned();
+            *r.user.image.borrow_mut() = u["iconFile"].as_str().filter(|s| !s.is_empty()).map(str::to_owned);
+            r.render_user();
+        });
+    }
 
     fn render_user(&self) {
         let real = self.user.real.borrow().clone();
@@ -430,7 +475,7 @@ fn auto_accent() {
 /// The search results page (main.js renderSearch).
 fn search_results(p: &Page) -> Content {
     let q = p.param("q").unwrap_or_default();
-    let hits = registry::search(&q, kit::i18n::en(), 40);
+    let hits = registry::search_visible(&q, kit::i18n::en(), 40, &common::page_visible);
     let lead = c::label(&common::fill(t("Resultaten voor “{q}”", "Results for “{q}”"), &[("q", &q)]), "st-lead", true);
     if hits.is_empty() {
         let e = c::empty_state(
@@ -446,7 +491,8 @@ fn search_results(p: &Page) -> Content {
     }
     let group = SettingsGroup::new("", "");
     for page in hits {
-        let prefix = page.parent.and_then(registry::page).map(|pp| format!("{} › ", pp.title())).unwrap_or_default();
+        let chain = registry::ancestors(page.id);
+        let prefix: String = chain[..chain.len().saturating_sub(1)].iter().map(|pp| format!("{} › ", pp.title())).collect();
         let card = SettingsCard::clickable(page.icon, page.title(), &format!("{prefix}{}", page.description()), c::Chevron::Right);
         if let Some(b) = card.button() {
             b.set_widget_name(&format!("result-{}", page.id));
@@ -549,7 +595,7 @@ pub fn build(start: &str, params: Value) -> Rc<Router> {
         win: win.clone(),
         nav: nav.clone(),
         search: search.clone(),
-        user: User { avatar, name, kind, real: RefCell::new(String::new()), image: RefCell::new(None) },
+        user: User { avatar, name, kind, real: RefCell::new(String::new()), image: RefCell::new(None), accounts: Cell::new(false) },
         main,
         view: RefCell::new(None),
         hist: RefCell::new(Vec::new()),
@@ -569,7 +615,7 @@ pub fn build(start: &str, params: Value) -> Rc<Router> {
     kit::ctx().call("system.info", json!({}), move |r| {
         let (Some(r), Ok(si)) = (weak.upgrade(), r) else { return };
         let u = &si["user"];
-        if !u.is_object() {
+        if !u.is_object() || r.user.accounts.get() {
             return;
         }
         let name = u["realName"].as_str().filter(|s| !s.is_empty()).or(u["name"].as_str()).unwrap_or("").to_owned();
@@ -578,6 +624,14 @@ pub fn build(start: &str, params: Value) -> Rc<Router> {
         }
         *r.user.image.borrow_mut() = u["avatar"].as_str().filter(|s| !s.is_empty()).map(str::to_owned);
         r.render_user();
+    });
+    router.load_user();
+    let weak = Rc::downgrade(&router);
+    // a rename or a new picture in Je info (or in GNOME Settings, or another program), as Windows' pane follows it
+    kit::ctx().on("users.changed", move |_, _| {
+        if let Some(r) = weak.upgrade() {
+            r.load_user();
+        }
     });
 
     // ---- behaviour
@@ -594,7 +648,7 @@ pub fn build(start: &str, params: Value) -> Rc<Router> {
             r.search.set_suggestions(&[], false);
             return;
         }
-        let list: Vec<Suggestion> = registry::search(q, kit::i18n::en(), 8)
+        let list: Vec<Suggestion> = registry::search_visible(q, kit::i18n::en(), 8, &common::page_visible)
             .into_iter()
             .map(|p| Suggestion {
                 value: p.id.to_owned(),
@@ -678,4 +732,21 @@ pub fn build(start: &str, params: Value) -> Rc<Router> {
     router.show(start, start_params, Show { push: false, animated: false, keep_scroll: false });
     win.present();
     router
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_data_page_names_its_item_in_the_last_crumb() {
+        // review of B0, finding 7: Page::set_title on a sub-page (every data page) replaces the last crumb
+        let chain: Vec<(String, String)> = registry::ancestors("wifi-network").iter().map(|p| (p.id.to_owned(), p.title().to_owned())).collect();
+        assert_eq!(chain.len(), 3, "Netwerk en internet › Wi-Fi › Wi-Fi-eigenschappen");
+        let named = with_last_label(&chain, "Thuis");
+        assert_eq!(named.len(), 3);
+        assert_eq!(named[..2], chain[..2], "the parents stay, with their ids");
+        assert_eq!(named[2], ("wifi-network".to_owned(), "Thuis".to_owned()));
+        assert!(with_last_label(&[], "x").is_empty());
+    }
 }

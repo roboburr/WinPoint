@@ -1,0 +1,3753 @@
+{
+ "pages": [
+  {
+   "id": "home",
+   "parent": "none",
+   "status": "keep",
+   "windowsPage": "Home",
+   "titleNl": "Startpagina",
+   "titleEn": "Home",
+   "controls": [
+    {
+     "label": "Tegels en Aanbevolen instellingen (ongewijzigd) / Tiles and Recommended settings (unchanged)",
+     "kind": "info",
+     "gnomeFunction": "none",
+     "backing": "home.rs as now; the hero's Naam wijzigen calls system::rename_hint, which batch E turns into the real rename dialog",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "system",
+   "parent": "none",
+   "status": "extend",
+   "windowsPage": "System",
+   "titleNl": "Systeem",
+   "titleEn": "System",
+   "controls": [
+    {
+     "label": "Apparaatkaart met Naam wijzigen / Device card with Rename",
+     "kind": "button",
+     "gnomeFunction": "About › Device Name",
+     "backing": "system::device_hero; Rename opens the dialog of the about page (machine.setName)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Beeldscherm, Geluid, Meldingen, Schermtijd, Energie en batterij, Opslag, Multitasking, Geavanceerd, Extern bureaublad, Klembord, Info / Display, Sound, Notifications, Screen time, Power & battery, Storage, Multitasking, Advanced, Remote Desktop, Clipboard, About",
+     "kind": "link",
+     "gnomeFunction": "System panel rows (Region & Language, Date & Time, Users, Remote Desktop, Secure Shell, About, Software Updates), each reached at its Windows place",
+     "backing": "common::child_links(&p, \"system\") from the registry, filtered by caps.get (B0)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "display",
+   "parent": "system",
+   "status": "extend",
+   "windowsPage": "System › Display",
+   "titleNl": "Beeldscherm",
+   "titleEn": "Display",
+   "controls": [
+    {
+     "label": "Je beeldschermen opnieuw rangschikken + Identificeren / Rearrange your displays + Identify",
+     "kind": "list",
+     "gnomeFunction": "Displays › Arrangement",
+     "backing": "display.state (Mutter DisplayConfig GetCurrentState) + display.apply logical x,y; Identify = display.identify through extension/displayBridge.js (Main.osdMonitorLabeler, as GNOME's ShowMonitorLabels)",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Helderheid / Brightness",
+     "kind": "slider",
+     "gnomeFunction": "none in g-c-c (Quick Settings)",
+     "backing": "system.brightness.get/set as now (logind SetBrightness)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Helderheid automatisch wijzigen wanneer de verlichting verandert / Change brightness automatically when lighting changes",
+     "kind": "checkbox",
+     "gnomeFunction": "Power › Automatic Screen Brightness",
+     "backing": "gsettings org.gnome.settings-daemon.plugins.power ambient-enabled (b); shown when caps.ambientLight (SensorProxy HasAmbientLight)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Privacyscherm: Kijkhoek beperken / Privacy screen: Restrict viewing angle",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Screen Lock › Screen Privacy",
+     "backing": "gsettings org.gnome.desktop.privacy privacy-screen (b); shown when caps.privacyScreen (Mutter privacy-screen-state)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Nachtlampje (schakelaar + pijl) / Night light (switch + chevron)",
+     "kind": "toggle",
+     "gnomeFunction": "Displays › Night Light",
+     "backing": "gsettings org.gnome.settings-daemon.plugins.color night-light-enabled (b); chevron opens nightlight. Hyprland keeps system.nightLight.*",
+     "writes": "user dconf"
+    },
+    {
+     "label": "HDR gebruiken / Use HDR",
+     "kind": "toggle",
+     "gnomeFunction": "Displays › HDR",
+     "backing": "display.apply monitor property color-mode (0 default, 1 bt2100); shown when supported-color-modes has bt2100",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Schaal (100% (Aanbevolen), 125% …) + Aangepaste schaal / Scale + Custom scaling",
+     "kind": "dropdown",
+     "gnomeFunction": "Displays › Scale",
+     "backing": "display.apply logical monitor scale from the mode's supported-scales (custom rounds to the nearest); experimental-features scale-monitor-framebuffer read-only",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Beeldschermresolutie (Aanbevolen) / Display resolution (Recommended)",
+     "kind": "dropdown",
+     "gnomeFunction": "Displays › Resolution",
+     "backing": "display.apply mode id (is-preferred marks Aanbevolen)",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Afdrukstand van beeldscherm: Liggend, Staand, Liggend (gespiegeld), Staand (gespiegeld) / Display orientation",
+     "kind": "dropdown",
+     "gnomeFunction": "Displays › Orientation",
+     "backing": "display.apply logical monitor transform 0, 1, 2, 3",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Draaivergrendeling / Rotation lock",
+     "kind": "toggle",
+     "gnomeFunction": "Quick Settings › Auto Rotate (no g-c-c row)",
+     "backing": "gsettings org.gnome.settings-daemon.peripherals.touchscreen orientation-lock (b); shown when caps.accelerometer",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Meerdere beeldschermen: Deze beeldschermen dupliceren / uitbreiden / Alleen weergeven op 1 / 2 / Multiple displays: Duplicate / Extend / Show only on 1 / 2",
+     "kind": "dropdown",
+     "gnomeFunction": "Displays › Multiple Displays Join / Mirror + per-display on/off",
+     "backing": "display.apply: one logical monitor holding all monitors (mirror), one per monitor (join), or the other connectors left out",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Dit mijn hoofdbeeldscherm maken / Make this my main display",
+     "kind": "checkbox",
+     "gnomeFunction": "Displays › Primary Display",
+     "backing": "display.apply logical monitor primary=true",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Ander beeldscherm detecteren · Detecteren / Detect other display · Detect",
+     "kind": "button",
+     "gnomeFunction": "Displays (hotplug refresh)",
+     "backing": "display.state again; display.changed from MonitorsChanged",
+     "writes": "none"
+    },
+    {
+     "label": "Deze beeldscherminstellingen behouden? Wijzigingen behouden / Terugzetten (15 s) / Keep these display settings?",
+     "kind": "dialog",
+     "gnomeFunction": "Displays › Apply / Cancel and Keep Changes",
+     "backing": "ApplyMonitorsConfig method temporary, then persistent on Keep, previous config on Revert or timeout (verify GNOME Shell does not add its own confirmation on the persistent call)",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Beeldscherminstellingen kunnen nu niet worden gewijzigd / Display settings can't be changed right now",
+     "kind": "info",
+     "gnomeFunction": "Displays › Display Settings Disabled",
+     "backing": "GetCurrentState property apply-monitors-config-allowed false",
+     "writes": "none"
+    },
+    {
+     "label": "Geavanceerd beeldscherm, Kleurprofiel; Verwante instellingen: Tekstgrootte / Advanced display, Colour profile; Related: Text size",
+     "kind": "link",
+     "gnomeFunction": "Displays (per-display rows), Color panel",
+     "backing": "link_card display-advanced, colorprofile, textsize",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "display-advanced",
+   "parent": "display",
+   "status": "new",
+   "windowsPage": "System › Display › Advanced display",
+   "titleNl": "Geavanceerd beeldscherm",
+   "titleEn": "Advanced display",
+   "controls": [
+    {
+     "label": "Selecteer een beeldscherm om de instellingen ervan te bekijken of te wijzigen / Select a display to view or change its settings",
+     "kind": "dropdown",
+     "gnomeFunction": "Displays › per-display page",
+     "backing": "display.state monitors",
+     "writes": "none"
+    },
+    {
+     "label": "Beeldscherminformatie (verbonden met, bureaubladmodus, actieve signaalmodus, kleurmodus) + Kopiëren / Display information + Copy",
+     "kind": "info",
+     "gnomeFunction": "Displays (monitor details)",
+     "backing": "display.state connector, vendor, product, serial, current mode, color-mode",
+     "writes": "none"
+    },
+    {
+     "label": "Een vernieuwingsfrequentie kiezen / Choose a refresh rate",
+     "kind": "dropdown",
+     "gnomeFunction": "Displays › Refresh Rate",
+     "backing": "display.apply mode with the chosen refresh rate",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Dynamische vernieuwingsfrequentie / Dynamic refresh rate",
+     "kind": "toggle",
+     "gnomeFunction": "Displays › Variable Refresh Rate (+ preferred rate)",
+     "backing": "display.apply mode property refresh-rate-mode variable/fixed; monitor min-refresh-rate",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Aanpassen voor tv / Adjust for TV",
+     "kind": "toggle",
+     "gnomeFunction": "Displays › Adjust for TV",
+     "backing": "display.apply monitor property underscanning (b); only when supported",
+     "writes": "user session (Mutter monitors.xml)"
+    },
+    {
+     "label": "Wazige apps herstellen / Fix scaling for apps",
+     "kind": "toggle",
+     "gnomeFunction": "Displays › Built-in Scaling for Legacy Apps",
+     "backing": "gsettings org.gnome.mutter.wayland xwayland-scaling-factor (d); exact on/off values to be read from g-c-c 50 source before wiring",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "nightlight",
+   "parent": "display",
+   "status": "new",
+   "windowsPage": "System › Display › Night light",
+   "titleNl": "Nachtlampje",
+   "titleEn": "Night light",
+   "controls": [
+    {
+     "label": "Nu inschakelen / Nu uitschakelen / Turn on now / Turn off now",
+     "kind": "button",
+     "gnomeFunction": "Night Light › Restart Filter / Temporarily Disabled Until Tomorrow",
+     "backing": "display.nightLight.disableUntilTomorrow (session D-Bus org.gnome.SettingsDaemon.Color DisabledUntilTomorrow); turning on outside the schedule sets night-light-enabled with a manual schedule covering now",
+     "writes": "user session + user dconf"
+    },
+    {
+     "label": "Sterkte / Strength (0-100)",
+     "kind": "slider",
+     "gnomeFunction": "Night Light › Color Temperature",
+     "backing": "gsettings org.gnome.settings-daemon.plugins.color night-light-temperature (u) = 4700 - 30 × strength (1700-4700 K)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Nachtlampje plannen / Schedule night light",
+     "kind": "toggle",
+     "gnomeFunction": "Displays › Night Light on/off",
+     "backing": "night-light-enabled (b), the same key as the display page switch",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Zonsondergang tot zonsopkomst / Uren instellen / Sunset to sunrise / Set hours",
+     "kind": "radio",
+     "gnomeFunction": "Night Light › Schedule",
+     "backing": "night-light-schedule-automatic (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Inschakelen / Uitschakelen (tijdkiezers) / Turn on / Turn off (time pickers)",
+     "kind": "dropdown",
+     "gnomeFunction": "Night Light › Times From / To",
+     "backing": "night-light-schedule-from / -to (d, fractional hours) through pickers::TimePicker (24 h per clock-format)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Schakel locatieservices in om zonsondergang te bepalen / Turn on location services to find sunset",
+     "kind": "info",
+     "gnomeFunction": "Night Light (sunset needs location)",
+     "backing": "org.gnome.system.location enabled + night-light-last-coordinates; link to privacy location page",
+     "writes": "none"
+    },
+    {
+     "label": "Nachtlampje is niet beschikbaar / Night light isn't available",
+     "kind": "info",
+     "gnomeFunction": "Night Light Unavailable",
+     "backing": "display.nightLight.status (gsd Color properties absent or gamma unsupported)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "colorprofile",
+   "parent": "display",
+   "status": "new",
+   "windowsPage": "System › Display › Colour profile (24H2) / legacy Colour Management",
+   "titleNl": "Kleurprofiel",
+   "titleEn": "Colour profile",
+   "controls": [
+    {
+     "label": "Apparaten (beeldschermen, printers, scanners, camera's; Niet gekalibreerd) / Devices",
+     "kind": "list",
+     "gnomeFunction": "Color › device list",
+     "backing": "devices.color.get (system D-Bus org.freedesktop.ColorManager GetDevices + DeviceAdded/Removed/Changed)",
+     "writes": "none"
+    },
+    {
+     "label": "Kleurbeheer gebruiken voor dit apparaat / Use colour management for this device",
+     "kind": "toggle",
+     "gnomeFunction": "Color › enable device",
+     "backing": "devices.color.setEnabled → Device.SetEnabled (polkit org.freedesktop.color-manager.modify-device)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Standaardprofiel (keuzerondjes per profiel, Waarschuwingen) / Default profile",
+     "kind": "radio",
+     "gnomeFunction": "Color › choose default profile",
+     "backing": "devices.color.makeDefault → Device.MakeProfileDefault",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Profiel toevoegen + Bestand importeren… / Add profile + Import file…",
+     "kind": "dialog",
+     "gnomeFunction": "Color › Add Profile / Import File",
+     "backing": "devices.color.addProfile (Device.AddProfile hard) / importProfile (copy to ~/.local/share/icc + CreateProfileWithFd)",
+     "writes": "polkit system + user file"
+    },
+    {
+     "label": "Verwijderen / Remove",
+     "kind": "button",
+     "gnomeFunction": "Color › Remove Profile",
+     "backing": "Device.RemoveProfile",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Instellen voor alle gebruikers (schild) / Set for all users",
+     "kind": "button",
+     "gnomeFunction": "Color › Set for All Users",
+     "backing": "Profile.InstallSystemWide (polkit install-system-wide, auth_admin_keep)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Kalibreren… (Kwaliteit, Kalibratieapparaat, Beeldschermtype, Witpunt, Helderheid, Profielnaam, Samenvatting) / Calibrate…",
+     "kind": "dialog",
+     "gnomeFunction": "Color › Calibrate wizard",
+     "backing": "devices.color.calibrate.* → session D-Bus org.freedesktop.ColorHelper Start/Cancel/Resume + full-screen sample window in Settings; shown when caps.colorSensor",
+     "writes": "user file (new ICC profile)"
+    }
+   ]
+  },
+  {
+   "id": "sound",
+   "parent": "system",
+   "status": "extend",
+   "windowsPage": "System › Sound",
+   "titleNl": "Geluid",
+   "titleEn": "Sound",
+   "controls": [
+    {
+     "label": "Kies waar geluid moet worden afgespeeld (pijl naar Eigenschappen) / Choose where to play sound",
+     "kind": "radio",
+     "gnomeFunction": "Sound › Output Device",
+     "backing": "sound.setDefault {kind:sink} (+ port); the existing wpctl path stays as fallback",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Een nieuw uitvoerapparaat koppelen · Apparaat toevoegen / Pair a new output device",
+     "kind": "button",
+     "gnomeFunction": "Bluetooth › pair",
+     "backing": "p.go_with(bluetooth, {add:1})",
+     "writes": "none"
+    },
+    {
+     "label": "Volume + dempen / Volume + mute",
+     "kind": "slider",
+     "gnomeFunction": "Sound › Output Volume",
+     "backing": "system.audio.set as now; above 100% only with allow-volume-above-100-percent",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Kies een apparaat om te spreken of op te nemen / Choose a device for speaking or recording",
+     "kind": "radio",
+     "gnomeFunction": "Sound › Input Device",
+     "backing": "sound.setDefault {kind:source}",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Invoervolume + niveaumeter / Input volume + level meter",
+     "kind": "slider",
+     "gnomeFunction": "Sound › Input Volume + level bar",
+     "backing": "sound.setVolume source; sound.meter {on} → sound.level events (peak record stream)",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Volumemixer (Volumemix van apps, invoer- en uitvoerapparaten van apps) / Volume mixer",
+     "kind": "link",
+     "gnomeFunction": "Sound › Volume Levels",
+     "backing": "link_card volume-mixer",
+     "writes": "none"
+    },
+    {
+     "label": "Meer geluidsinstellingen → Geluiden: Geluidsschema Geen geluiden / Standaard / Klik / Snaar / Schommel / Brom + Testen (nl names to check against g-c-c nl.po) / More sound settings → Sounds: Sound scheme",
+     "kind": "dialog",
+     "gnomeFunction": "Sound › Alert Sound",
+     "backing": "sound.alerts.set → org.gnome.desktop.sound event-sounds (b) + theme-name (s, Ubuntu Yaru) + the __custom theme in ~/.local/share/sounds as g-c-c writes it",
+     "writes": "user dconf + user file"
+    },
+    {
+     "label": "Opstartgeluid afspelen / Play startup sound",
+     "kind": "checkbox",
+     "gnomeFunction": "Sound › Startup Sound (Ubuntu)",
+     "backing": "gsettings org.gnome.shell.ubuntu startup-sound (s: warty-startup or empty)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "sound-device",
+   "parent": "sound",
+   "status": "new",
+   "windowsPage": "System › Sound › Properties (output and input device)",
+   "titleNl": "Eigenschappen",
+   "titleEn": "Properties",
+   "controls": [
+    {
+     "label": "Audio: Toestaan / Niet toestaan / Audio: Allow / Don't allow",
+     "kind": "dropdown",
+     "gnomeFunction": "Sound › Output/Input Configuration (off profile)",
+     "backing": "sound.setProfile card profile off / previous",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Instellen als standaardgeluidsapparaat / Set as default sound device",
+     "kind": "button",
+     "gnomeFunction": "Sound › Output/Input Device",
+     "backing": "sound.setDefault",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Indeling (Analoge stereo-uitvoer, HDMI, A2DP …) / Format",
+     "kind": "dropdown",
+     "gnomeFunction": "Sound › Output/Input Configuration",
+     "backing": "sound.setProfile {card, profile}",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Poort (Luidsprekers, Koptelefoon …) / Port",
+     "kind": "dropdown",
+     "gnomeFunction": "Sound › Output Device port",
+     "backing": "sound.setPort",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Testen (per kanaal) / Test (per channel)",
+     "kind": "dialog",
+     "gnomeFunction": "Sound › Test…",
+     "backing": "sound.test {sink, channel} → libcanberra audio-channel-<position> (dlopen)",
+     "writes": "none"
+    },
+    {
+     "label": "Linkerkanaal / Rechterkanaal; Voor / achter; Subwoofer / Left / Right channel; Front / rear; Subwoofer",
+     "kind": "slider",
+     "gnomeFunction": "Sound › Balance, Fade, Subwoofer",
+     "backing": "sound.setBalance (pa_cvolume_set_balance / _fade / LFE position); fade and subwoofer only on surround",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Volume boven 100% toestaan / Allow volume above 100%",
+     "kind": "toggle",
+     "gnomeFunction": "Sound › Overamplification",
+     "backing": "gsettings org.gnome.desktop.sound allow-volume-above-100-percent (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Je microfoon testen · Test starten (invoer) / Test your microphone · Start test",
+     "kind": "info",
+     "gnomeFunction": "Sound › input level bar",
+     "backing": "sound.meter on the source",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "volume-mixer",
+   "parent": "sound",
+   "status": "new",
+   "windowsPage": "System › Sound › Volume mixer",
+   "titleNl": "Volumemixer",
+   "titleEn": "Volume mixer",
+   "controls": [
+    {
+     "label": "Systeem: Uitvoerapparaat, Invoerapparaat, Volume / System: Output device, Input device, Volume",
+     "kind": "dropdown",
+     "gnomeFunction": "Sound › Output/Input Device",
+     "backing": "sound.state + sound.setDefault",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Systeemgeluiden / System sounds",
+     "kind": "slider",
+     "gnomeFunction": "Sound › Volume Levels › System Sounds",
+     "backing": "sound.setEventVolume → pulse ext-stream-restore sink-input-by-media-role:event",
+     "writes": "user session (PipeWire)"
+    },
+    {
+     "label": "Apps: volume en dempen per app, met Uitvoerapparaat / Invoerapparaat / Apps: per-app volume and mute",
+     "kind": "list",
+     "gnomeFunction": "Sound › Volume Levels (per stream)",
+     "backing": "sound.setVolume / setMute on sink-inputs and source-outputs; sound.moveStream for the per-app device",
+     "writes": "user session (PipeWire)"
+    }
+   ]
+  },
+  {
+   "id": "notifications",
+   "parent": "system",
+   "status": "extend",
+   "windowsPage": "System › Notifications",
+   "titleNl": "Meldingen",
+   "titleEn": "Notifications",
+   "controls": [
+    {
+     "label": "Meldingen / Notifications (hoofdschakelaar)",
+     "kind": "toggle",
+     "gnomeFunction": "none (WinPoint toasts)",
+     "backing": "settings.json notifications.showToasts as now",
+     "writes": "settings.json"
+    },
+    {
+     "label": "Meldingen weergeven op het vergrendelingsscherm / Show notifications on the lock screen",
+     "kind": "checkbox",
+     "gnomeFunction": "Notifications › Lock Screen Notifications",
+     "backing": "gsettings org.gnome.desktop.notifications show-in-lock-screen (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Toestaan dat meldingen geluiden afspelen / Allow notifications to play sounds",
+     "kind": "checkbox",
+     "gnomeFunction": "none global (per-app Sound below)",
+     "backing": "settings.json notifications.sounds, now consumed by extension/notificationsBridge.js (drops a GNOME notification's sound while off)",
+     "writes": "settings.json"
+    },
+    {
+     "label": "Niet storen / Do not disturb",
+     "kind": "toggle",
+     "gnomeFunction": "Notifications › Do Not Disturb",
+     "backing": "gsettings org.gnome.desktop.notifications show-banners (b, inverted); B0 mirror keeps notifications.dnd equal for the shell, the flyout and Start",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Meldingen van apps en andere afzenders, Sorteren op Naam / Meest recent (schakelaar + pijl per app) / Notifications from apps and other senders",
+     "kind": "list",
+     "gnomeFunction": "Notifications › App Notifications",
+     "backing": "notifications.apps (desktop files with X-GNOME-UsesNotifications + application-children); per-app switch = relocatable enable",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Testmelding versturen / Send a test notification",
+     "kind": "button",
+     "gnomeFunction": "none",
+     "backing": "notifications.test as now",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "app-notifications",
+   "parent": "notifications",
+   "status": "new",
+   "windowsPage": "System › Notifications › (app)",
+   "titleNl": "Meldingen van app",
+   "titleEn": "App notifications",
+   "controls": [
+    {
+     "label": "Meldingen / Notifications",
+     "kind": "toggle",
+     "gnomeFunction": "Notifications › app › Notifications",
+     "backing": "relocatable org.gnome.desktop.notifications.application at /org/gnome/desktop/notifications/application/<id>/ enable (b); first write adds <id> to application-children and sets application-id",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Meldingsbanners weergeven / Show notification banners",
+     "kind": "checkbox",
+     "gnomeFunction": "app › Banners › Show Banners",
+     "backing": "same path show-banners (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Inhoud weergeven in banners / Show content in banners",
+     "kind": "checkbox",
+     "gnomeFunction": "app › Banners › Show Content",
+     "backing": "force-expanded (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Meldingen weergeven op het vergrendelingsscherm / Show notifications on the lock screen",
+     "kind": "checkbox",
+     "gnomeFunction": "app › Lock Screen › Show Banners",
+     "backing": "show-in-lock-screen (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Inhoud verbergen wanneer meldingen op het vergrendelingsscherm staan / Hide content when notifications are on the lock screen",
+     "kind": "checkbox",
+     "gnomeFunction": "app › Lock Screen › Show Content",
+     "backing": "details-in-lock-screen (b, inverted)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Een geluid afspelen wanneer er een melding binnenkomt / Play a sound when a notification arrives",
+     "kind": "checkbox",
+     "gnomeFunction": "app › Sound",
+     "backing": "enable-sound-alerts (b)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "screentime",
+   "parent": "system",
+   "status": "new",
+   "windowsPage": "System › Focus (sibling; wording of Microsoft Family screen time)",
+   "titleNl": "Schermtijd",
+   "titleEn": "Screen time",
+   "controls": [
+    {
+     "label": "Schermtijd: Vandaag, Gemiddelde per dag, Deze week, Gemiddelde week, Vorige / Volgende week / Screen time chart",
+     "kind": "info",
+     "gnomeFunction": "Wellbeing › Screen Time chart",
+     "backing": "wellbeing.history (gnome-shell session-active-history.json + session D-Bus org.gnome.Shell.ScreenTime State)",
+     "writes": "none"
+    },
+    {
+     "label": "Schermtijd vastleggen / Record screen time",
+     "kind": "toggle",
+     "gnomeFunction": "Wellbeing › Disable / Enable Screen Time",
+     "backing": "gsettings org.gnome.desktop.screen-time-limits history-enabled (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Limiet voor schermtijd + Dagelijkse limiet (uren, minuten) / Screen time limit + Daily limit",
+     "kind": "toggle",
+     "gnomeFunction": "Wellbeing › Screen Time Limit + Daily Limit",
+     "backing": "daily-limit-enabled (b), daily-limit-seconds (u, minimum 60 in the UI)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Grijswaarden bij het bereiken van de limiet / Greyscale when the limit is reached",
+     "kind": "checkbox",
+     "gnomeFunction": "Wellbeing › Grayscale",
+     "backing": "grayscale (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Herinneringen voor je ogen / Eyesight reminders",
+     "kind": "toggle",
+     "gnomeFunction": "Wellbeing › Eyesight Reminders",
+     "backing": "org.gnome.desktop.break-reminders selected-breaks (as) contains eyesight",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Herinneringen om te bewegen + Schema voor bewegingspauzes (5 minuten elke 30 minuten …) / Movement reminders + schedule",
+     "kind": "dropdown",
+     "gnomeFunction": "Wellbeing › Movement Reminders + Movement Break Schedule",
+     "backing": "selected-breaks contains movement; org.gnome.desktop.break-reminders.movement duration-seconds + interval-seconds (u)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Een geluid afspelen wanneer een pauze eindigt / Play a sound when a break ends",
+     "kind": "checkbox",
+     "gnomeFunction": "Wellbeing › Sounds",
+     "backing": "play-sound (b) in .movement and .eyesight",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "power",
+   "parent": "system",
+   "status": "extend",
+   "windowsPage": "System › Power & battery",
+   "titleNl": "Energie en batterij",
+   "titleEn": "Power & battery",
+   "controls": [
+    {
+     "label": "Energiestand, Time-outs voor scherm en slaapstand, Scherm dimmen, batterij, Aan/uit-acties (ongewijzigd) / Power mode, screen and sleep timeouts, dim, battery, power actions (unchanged)",
+     "kind": "info",
+     "gnomeFunction": "Power › Power Mode, Automatic Screen Blank, Automatic Suspend (battery / plugged in), Dim Screen, Battery status",
+     "backing": "system.power.settings.* and system.battery.get as now",
+     "writes": "user dconf + polkit system"
+    },
+    {
+     "label": "Energiebesparing: Altijd energiebesparing gebruiken / Energy saver: Always use energy saver",
+     "kind": "toggle",
+     "gnomeFunction": "Power › Power Mode (Power Saver)",
+     "backing": "system.power.settings.set {powerProfile: power-saver}",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Energiebesparing automatisch inschakelen bij een laag batterijniveau / Turn energy saver on automatically when the battery is low",
+     "kind": "toggle",
+     "gnomeFunction": "Power › Automatic Power Saver",
+     "backing": "gsettings org.gnome.settings-daemon.plugins.power power-saver-profile-on-low-battery (b); battery only",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Batterijpercentage weergeven in het systeemvak / Show battery percentage in the system tray",
+     "kind": "toggle",
+     "gnomeFunction": "Power › Show Battery Percentage",
+     "backing": "gsettings org.gnome.desktop.interface show-battery-percentage (b); mirror taskbar.batteryPercent, drawn by the tray (B0)",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Als ik op de aan/uit-knop druk, gaat mijn pc naar: Niets doen / Slaapstand / Sluimerstand / Afsluiten / Pressing the power button will make my PC",
+     "kind": "dropdown",
+     "gnomeFunction": "Power › Power Button Behavior",
+     "backing": "gsettings org.gnome.settings-daemon.plugins.power power-button-action nothing|suspend|hibernate|interactive (Sluimerstand only when caps.hibernate)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Batterij opladen: Maximale lading / Batterijgezondheid behouden / Battery charging: Maximise charge / Preserve battery health",
+     "kind": "radio",
+     "gnomeFunction": "Power › Battery Charging",
+     "backing": "battery.charging.set → UPower Device EnableChargeThreshold (polkit org.freedesktop.UPower.enable-charging-limit); shown when ChargeThresholdSupported",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Batterijniveaus (afgelopen 24 uur / 7 dagen) / Battery levels",
+     "kind": "info",
+     "gnomeFunction": "Power › battery level",
+     "backing": "battery.history → UPower Device GetHistory(charge)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "storage",
+   "parent": "system",
+   "status": "extend",
+   "windowsPage": "System › Storage",
+   "titleNl": "Opslag",
+   "titleEn": "Storage",
+   "controls": [
+    {
+     "label": "Opslagzin (schakelaar + pijl) / Storage Sense",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › File History & Trash",
+     "backing": "gsettings org.gnome.desktop.privacy remove-old-trash-files + remove-old-temp-files (both on/off; on if either); chevron opens storagesense",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Categorieën, Stations, Ruimte vrijmaken (ongewijzigd) / Categories, Drives, Free up space (unchanged)",
+     "kind": "info",
+     "gnomeFunction": "none",
+     "backing": "storage.* as now",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "storagesense",
+   "parent": "storage",
+   "status": "new",
+   "windowsPage": "System › Storage › Storage Sense",
+   "titleNl": "Opslagzin",
+   "titleEn": "Storage Sense",
+   "controls": [
+    {
+     "label": "Tijdelijke bestanden opschonen / Cleanup of temporary files",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Automatically Delete Temporary Files",
+     "backing": "remove-old-temp-files (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Bestanden in mijn Prullenbak verwijderen als ze er langer in staan dan: Nooit / 1 uur / 1 dag … 30 dagen / Delete files in my recycle bin if they have been there for over",
+     "kind": "dropdown",
+     "gnomeFunction": "Privacy › Automatically Empty Trash + Automatic Deletion Period",
+     "backing": "remove-old-trash-files (b) + old-files-age (u days, 0 = 1 hour; GNOME presets 0,1,2,3,4,5,6,7,14,30); note: the same period applies to temporary files",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Prullenbak nu leegmaken / Empty Recycle Bin now",
+     "kind": "button",
+     "gnomeFunction": "Privacy › Empty Trash…",
+     "backing": "files.emptyTrash (existing, confirm)",
+     "writes": "user file"
+    },
+    {
+     "label": "Tijdelijke bestanden nu verwijderen / Delete temporary files now",
+     "kind": "button",
+     "gnomeFunction": "Privacy › Delete Temporary Files…",
+     "backing": "storage.cleanTemp: user-owned files in g_get_tmp_dir(), as g-c-c (confirm)",
+     "writes": "user file"
+    }
+   ]
+  },
+  {
+   "id": "multitasking",
+   "parent": "system",
+   "status": "new",
+   "windowsPage": "System › Multitasking",
+   "titleNl": "Multitasking",
+   "titleEn": "Multitasking",
+   "controls": [
+    {
+     "label": "Vensters uitlijnen / Snap windows",
+     "kind": "toggle",
+     "gnomeFunction": "Multitasking › Window Resize (screen edges)",
+     "backing": "gsettings org.gnome.mutter edge-tiling (b); WinPoint's own snap layouts stay WinPoint settings",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Actieve hoek: Wijs de linkerbovenhoek aan om het overzicht te openen / Hot corner",
+     "kind": "toggle",
+     "gnomeFunction": "Multitasking › Hot Corner",
+     "backing": "gsettings org.gnome.desktop.interface enable-hot-corners (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Bureaubladen: Lege bureaubladen automatisch verwijderen / Vast aantal bureaubladen + Aantal bureaubladen / Desktops: Dynamic / Fixed number",
+     "kind": "radio",
+     "gnomeFunction": "Multitasking › Workspaces Dynamic / Fixed + Number",
+     "backing": "org.gnome.mutter dynamic-workspaces (b); org.gnome.desktop.wm.preferences num-workspaces (i 1-36, number_box)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Bureaubladen alleen op het hoofdbeeldscherm / op alle beeldschermen / Desktops on the main display only / on all displays",
+     "kind": "radio",
+     "gnomeFunction": "Multitasking › Multi-Monitor",
+     "backing": "org.gnome.mutter workspaces-only-on-primary (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Bij schakelen tussen apps (Windows-toets+Tab): Op alle bureaubladen / Alleen op het bureaublad dat ik gebruik / When switching apps (Windows key+Tab)",
+     "kind": "dropdown",
+     "gnomeFunction": "Multitasking › App Switching",
+     "backing": "org.gnome.shell.app-switcher current-workspace-only (b); Alt+Tab is WinPoint's Task View",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "system-advanced",
+   "parent": "system",
+   "status": "new",
+   "windowsPage": "System › Advanced (For developers) + Optional features",
+   "titleNl": "Geavanceerd",
+   "titleEn": "Advanced",
+   "controls": [
+    {
+     "label": "OpenSSH-server: Toegang tot deze pc via Secure Shell (SSH) / OpenSSH Server",
+     "kind": "toggle",
+     "gnomeFunction": "System › Secure Shell",
+     "backing": "sharing.ssh.set → system D-Bus org.freedesktop.systemd1 Start/StopUnit + Enable/DisableUnitFiles ssh.service (interactive; polkit systemd1.manage-units/-unit-files)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Een optionele functie toevoegen · Installeren (OpenSSH-server) / Add an optional feature · Install",
+     "kind": "button",
+     "gnomeFunction": "System › Secure Shell (package missing)",
+     "backing": "sharing.ssh.install → PackageKit InstallPackages openssh-server (polkit org.freedesktop.packagekit.package-install)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "SSH-aanmeldingsopdracht + Kopiëren / SSH login command + Copy",
+     "kind": "info",
+     "gnomeFunction": "Secure Shell › SSH Login Command",
+     "backing": "ssh <user>@<hostname> from machine.info",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "remotedesktop",
+   "parent": "system",
+   "status": "new",
+   "windowsPage": "System › Remote Desktop",
+   "titleNl": "Extern bureaublad",
+   "titleEn": "Remote Desktop",
+   "controls": [
+    {
+     "label": "Extern bureaublad + Extern bureaublad inschakelen? · Bevestigen / Remote Desktop + Enable Remote Desktop?",
+     "kind": "toggle",
+     "gnomeFunction": "Remote Desktop › Desktop Sharing",
+     "backing": "sharing.rdp.set → gsettings org.gnome.desktop.remote-desktop.rdp enable (b) + user unit gnome-remote-desktop.service enable/start (session D-Bus systemd user manager)",
+     "writes": "user dconf + user session"
+    },
+    {
+     "label": "Externe besturing: Toestaan dat externe apparaten muis en toetsenbord bedienen / Remote control",
+     "kind": "toggle",
+     "gnomeFunction": "Desktop Sharing › Remote Control",
+     "backing": "rdp view-only (b, inverted)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Pc-naam, IP-adres, Poort van Extern bureaublad + Kopiëren / PC name, IP address, Remote Desktop port + Copy",
+     "kind": "info",
+     "gnomeFunction": "Desktop Sharing › How to Connect",
+     "backing": "machine.info hostname + net.devices addresses + rdp port (q) / org.gnome.RemoteDesktop.Rdp.Server Port",
+     "writes": "none"
+    },
+    {
+     "label": "Aanmeldingsgegevens: Gebruikersnaam, Wachtwoord (Weergeven, Kopiëren), Nieuw wachtwoord genereren / Sign-in details",
+     "kind": "dialog",
+     "gnomeFunction": "Desktop Sharing › Login Details + Generate New Password",
+     "backing": "sharing.rdp.credentials.* → grdctl rdp set-credentials / status --show-credentials (login keyring)",
+     "writes": "user file (keyring)"
+    },
+    {
+     "label": "Versleuteling controleren (vingerafdruk) / Verify encryption",
+     "kind": "dialog",
+     "gnomeFunction": "Desktop Sharing › Verify Fingerprint",
+     "backing": "SHA-256 of rdp tls-cert; certificate created as g-c-c does when none exists",
+     "writes": "user file"
+    },
+    {
+     "label": "Extern aanmelden: Aanmelden op deze pc wanneer niemand is aangemeld (schakelaar, gegevens, poort, vingerafdruk) / Remote login",
+     "kind": "toggle",
+     "gnomeFunction": "Remote Desktop › Remote Login",
+     "backing": "sharing.rdp.system.* → system D-Bus org.gnome.RemoteDesktop.Configuration Rdp.Server Enable/Disable/SetCredentials + pkexec /usr/libexec/gnome-remote-desktop-enable-service (polkit org.gnome.remotedesktop.enable-system-daemon / configure-system-daemon)",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "clipboard",
+   "parent": "system",
+   "status": "keep",
+   "windowsPage": "System › Clipboard",
+   "titleNl": "Klembord",
+   "titleEn": "Clipboard",
+   "controls": [
+    {
+     "label": "Klembordgeschiedenis, Klembordgegevens wissen (ongewijzigd) / Clipboard history, Clear (unchanged)",
+     "kind": "info",
+     "gnomeFunction": "none",
+     "backing": "clipboard.* as now",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "about",
+   "parent": "system",
+   "status": "extend",
+   "windowsPage": "System › About",
+   "titleNl": "Info",
+   "titleEn": "About",
+   "controls": [
+    {
+     "label": "Naam van deze pc wijzigen → De naam van je pc wijzigen (letters, koppeltekens, cijfers) · Volgende / Rename this PC",
+     "kind": "dialog",
+     "gnomeFunction": "About › Device Name (also Sharing › Device Name)",
+     "backing": "machine.setName → system D-Bus org.freedesktop.hostname1 SetPrettyHostname + SetStaticHostname(ASCII form, interactive) (polkit set-static-hostname)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Apparaatspecificaties + Firmwareversie, Grafische kaart, Opslag + Kopiëren / Device specifications + Firmware version, Graphics card, Storage + Copy",
+     "kind": "info",
+     "gnomeFunction": "About › Hardware Model, Processor, Memory, Disk Capacity, System Details (Graphics, Firmware)",
+     "backing": "system.info + machine.info (hostname1 HardwareVendor/Model/FirmwareVersion, net.hadess.SwitcherooControl GPUs, UDisks2 drive sizes)",
+     "writes": "none"
+    },
+    {
+     "label": "Besturingssysteem + Build, GNOME-versie, Venstersysteem, Virtualisatie, Kernel + Kopiëren / Operating system + Build, GNOME version, Windowing system, Virtualisation, Kernel + Copy",
+     "kind": "info",
+     "gnomeFunction": "About › OS name, System Details (OS Build, OS Type, GNOME Version, Windowing System, Virtualization, Kernel)",
+     "backing": "machine.info (os-release BUILD_ID, /usr/share/gnome/gnome-version.xml, systemd1 Virtualization, uname)",
+     "writes": "none"
+    },
+    {
+     "label": "Verwante instellingen: Updates / Related: Updates",
+     "kind": "link",
+     "gnomeFunction": "System › Software Updates",
+     "backing": "link_card update (WinPoint's own update pages)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "bluetooth",
+   "parent": "none",
+   "status": "extend",
+   "windowsPage": "Bluetooth & devices",
+   "titleNl": "Bluetooth en apparaten",
+   "titleEn": "Bluetooth & devices",
+   "controls": [
+    {
+     "label": "Bluetooth: Detecteerbaar als ‘<naam>’ / Discoverable as ‘<name>’",
+     "kind": "toggle",
+     "gnomeFunction": "Bluetooth on/off + Visible as",
+     "backing": "system.bluetooth.setPowered as now; devices.bluetooth.adapter Alias; devices.bluetooth.setDiscoverable true while the page shows, false on cleanup (BlueZ DiscoverableTimeout as safety net)",
+     "writes": "user session (BlueZ)"
+    },
+    {
+     "label": "Apparaatkaarten met batterij / Device cards with battery",
+     "kind": "list",
+     "gnomeFunction": "Bluetooth device list + Power › Connected Devices",
+     "backing": "system.bluetooth.get + devices.batteries (UPower EnumerateDevices)",
+     "writes": "none"
+    },
+    {
+     "label": "Vliegtuigmodus uitschakelen / Turn off flight mode",
+     "kind": "button",
+     "gnomeFunction": "Bluetooth › Turn Off Airplane Mode",
+     "backing": "system.network.setAirplane {enabled:false}",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Apparaten, Printers en scanners, Muis, Touchpad, Pen en tablet, Automatisch afspelen, USB / Devices, Printers & scanners, Mouse, Touchpad, Pen & tablet, AutoPlay, USB",
+     "kind": "link",
+     "gnomeFunction": "Mouse & Touchpad, Printers, Wacom, Removable Media, Thunderbolt panels",
+     "backing": "link_card per id; Touchpad needs caps.touchpad, Pen caps.tablet, USB caps.thunderbolt",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "bluetooth-devices",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › Devices",
+   "titleNl": "Apparaten",
+   "titleEn": "Devices",
+   "controls": [
+    {
+     "label": "Muis, toetsenbord en pen / Audio / Overige apparaten, met ⋯ Verbinding maken / Verbinding verbreken / Apparaat verwijderen / Mouse, keyboard & pen / Audio / Other devices",
+     "kind": "list",
+     "gnomeFunction": "Bluetooth device dialog: Connection switch, Forget Device",
+     "backing": "system.bluetooth.connect/disconnect/remove as now (confirm Apparaat verwijderen?)",
+     "writes": "user session (BlueZ)"
+    },
+    {
+     "label": "Details: Gekoppeld, Type, Adres / Details: Paired, Type, Address",
+     "kind": "info",
+     "gnomeFunction": "Bluetooth device dialog Paired / Type / Address",
+     "backing": "system.bluetooth.get Device1 Paired, Icon, Address",
+     "writes": "none"
+    },
+    {
+     "label": "Muisinstellingen / Geluidsinstellingen / Toetsenbordinstellingen / Mouse / Sound / Keyboard settings",
+     "kind": "link",
+     "gnomeFunction": "Bluetooth device dialog settings shortcuts",
+     "backing": "p.go mouse / sound / keyboard-advanced by device type",
+     "writes": "none"
+    },
+    {
+     "label": "Bestanden verzenden via Bluetooth / Send files via Bluetooth",
+     "kind": "button",
+     "gnomeFunction": "Bluetooth › Send Files…",
+     "backing": "devices.bluetooth.sendFiles → bluetooth-sendto --device --name (GNOME's GTK 4 tool, through system_tool)",
+     "writes": "none"
+    },
+    {
+     "label": "Batterij van bekabelde apparaten en UPS / Battery of wired devices and UPS",
+     "kind": "info",
+     "gnomeFunction": "Power › Connected Devices",
+     "backing": "devices.batteries",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "printers",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › Printers & scanners",
+   "titleNl": "Printers en scanners",
+   "titleEn": "Printers & scanners",
+   "controls": [
+    {
+     "label": "Een printer of scanner toevoegen · Apparaat toevoegen / Add a printer or scanner · Add device",
+     "kind": "dialog",
+     "gnomeFunction": "Printers › Add Printer (local and network discovery)",
+     "backing": "printers.discover → CupsPkHelper DevicesGet (polkit devices-get) + Avahi _ipp/_ipps browse",
+     "writes": "none"
+    },
+    {
+     "label": "De printer die ik wil gebruiken, staat niet in de lijst · Handmatig toevoegen → Een printer toevoegen met behulp van een IP-adres of hostnaam / The printer that I want isn't listed · Add manually",
+     "kind": "dialog",
+     "gnomeFunction": "Add Printer › address entry + print-server authentication",
+     "backing": "printers.discover {address} (ipp/ipps/socket/lpd/smb probe, SMB credentials)",
+     "writes": "none"
+    },
+    {
+     "label": "Stuurprogramma kiezen: Automatisch (IPP Everywhere) / Uit de lijst / PPD-bestand installeren / Choose a driver",
+     "kind": "dialog",
+     "gnomeFunction": "Add Printer › Select Printer Driver",
+     "backing": "printers.drivers (CUPS-Get-PPDs, make-and-model match) + printers.add → CupsPkHelper PrinterAdd / PrinterAddWithPpdFile (polkit printeraddremove)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Printerlijst met status, model, locatie, inktniveau en Printers zoeken / Printer list with status, model, location, ink and search",
+     "kind": "list",
+     "gnomeFunction": "Printers › list, search, status, ink level",
+     "backing": "printers.list (libcups via dlopen: cupsGetDests2 + IPP printer-state, marker-levels); printers.changed while shown",
+     "writes": "none"
+    },
+    {
+     "label": "Afdrukservice niet beschikbaar / Print service unavailable",
+     "kind": "info",
+     "gnomeFunction": "Printers › No Print Service",
+     "backing": "printers.list error when cupsd is unreachable",
+     "writes": "none"
+    },
+    {
+     "label": "Scanner openen (Documentscanner) / Open scanner",
+     "kind": "button",
+     "gnomeFunction": "none (Windows row; GNOME has no scanner panel)",
+     "backing": "apps.launch org.gnome.SimpleScan when installed",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "printer",
+   "parent": "printers",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › Printers & scanners › (printer)",
+   "titleNl": "Printer",
+   "titleEn": "Printer",
+   "controls": [
+    {
+     "label": "Status + Hervatten / Status + Resume",
+     "kind": "button",
+     "gnomeFunction": "Printers › restart printer after an error",
+     "backing": "printers.setEnabled + setAcceptJobs → CupsPkHelper PrinterSetEnabled / PrinterSetAcceptJobs (polkit printer-enable)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Afdrukwachtrij openen: onderbreken, hervatten, annuleren, bovenaan zetten, Alles wissen, verifiëren / Open print queue",
+     "kind": "dialog",
+     "gnomeFunction": "Printers › Jobs dialog",
+     "backing": "printers.jobs (IPP Get-Jobs) + job.* → CupsPkHelper JobCancelPurge / JobSetHoldUntil / JobRestart, IPP Set-Job-Attributes job-priority (polkit job-edit / job-not-owned-edit)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Testpagina afdrukken / Print test page",
+     "kind": "button",
+     "gnomeFunction": "Printing Options › Test Page",
+     "backing": "printers.testPage → print /usr/share/cups/data/testprint",
+     "writes": "none"
+    },
+    {
+     "label": "Voorkeursinstellingen voor afdrukken (papierformaat, dubbelzijdig, kleur, kwaliteit …) / Printing preferences",
+     "kind": "dialog",
+     "gnomeFunction": "Printers › Printing Options",
+     "backing": "printers.get options (PPD / IPP *-default) + printers.setOption → PrinterAddOptionDefault (polkit printer-local-edit / -remote-edit)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Printereigenschappen: Naam, Locatie, Adres, Stuurprogramma (Uit de lijst kiezen, PPD-bestand installeren) / Printer properties",
+     "kind": "dialog",
+     "gnomeFunction": "Printers › Printer Details",
+     "backing": "PrinterRename, PrinterSetLocation, PrinterAddWithPpdFile (no space, tab, # or / in names)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Als standaard instellen / Set as default",
+     "kind": "button",
+     "gnomeFunction": "Printers › Use Printer by Default",
+     "backing": "PrinterSetDefault (polkit printer-set-default)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "⋯ Printkoppen reinigen / Clean print heads",
+     "kind": "button",
+     "gnomeFunction": "Printers › Clean Print Heads",
+     "backing": "CUPS maintenance job Clean all (when the printer advertises it)",
+     "writes": "none"
+    },
+    {
+     "label": "Verwijderen / Remove",
+     "kind": "button",
+     "gnomeFunction": "Printers › Remove Printer",
+     "backing": "PrinterDelete (polkit printeraddremove), confirm",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "mouse",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › Mouse",
+   "titleNl": "Muis",
+   "titleEn": "Mouse",
+   "controls": [
+    {
+     "label": "Primaire muisknop: Links / Rechts / Primary mouse button",
+     "kind": "dropdown",
+     "gnomeFunction": "Mouse & Touchpad › Primary Button",
+     "backing": "gsettings org.gnome.desktop.peripherals.mouse left-handed (b) (touchpad left-handed stays mouse)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Snelheid van muisaanwijzer (1-20) / Mouse pointer speed",
+     "kind": "slider",
+     "gnomeFunction": "Mouse › Pointer Speed",
+     "backing": "mouse speed (d -1..1) = (n - 10) / 10",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Nauwkeurigheid van aanwijzer verbeteren / Enhance pointer precision",
+     "kind": "toggle",
+     "gnomeFunction": "Mouse › Mouse Acceleration",
+     "backing": "mouse accel-profile: on = default, off = flat",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Schuiven › Schuifrichting: Neerwaartse beweging schuift omlaag / omhoog / Scrolling direction",
+     "kind": "dropdown",
+     "gnomeFunction": "Mouse › Scroll Direction Traditional / Natural",
+     "backing": "mouse natural-scroll (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Aanwijsstick: Snelheid, Versnelling / Pointing stick: Speed, Acceleration",
+     "kind": "slider",
+     "gnomeFunction": "Mouse & Touchpad › Pointing Stick Speed + Acceleration",
+     "backing": "org.gnome.desktop.peripherals.pointingstick speed (d), accel-profile; shown when caps.pointingstick",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Aanvullende muisinstellingen → Eigenschappen voor Muis, Knoppen: Primaire en secundaire knop omwisselen, Dubbelkliksnelheid + testmap, Middelste klik nabootsen / Additional mouse settings → Mouse Properties",
+     "kind": "dialog",
+     "gnomeFunction": "Mouse Primary Button, Accessibility › Double-Click Delay, schema middle-click-emulation",
+     "backing": "left-handed; mouse double-click (i ms 100-1000); mouse middle-click-emulation (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Instellingen testen (klikken, dubbelklikken, schuiven) / Test settings",
+     "kind": "dialog",
+     "gnomeFunction": "Mouse & Touchpad › Test Settings",
+     "backing": "local GTK test area reading double-click",
+     "writes": "none"
+    },
+    {
+     "label": "Opties voor aanwijzer: Locatie van aanwijzer weergeven wanneer ik op de Ctrl-toets druk / Show location of pointer when I press Ctrl",
+     "kind": "checkbox",
+     "gnomeFunction": "Accessibility › Locate Pointer",
+     "backing": "org.gnome.desktop.interface locate-pointer (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Verwante instellingen: Muisaanwijzer / Related: Mouse pointer",
+     "kind": "link",
+     "gnomeFunction": "Accessibility › Cursor Size",
+     "backing": "link_card mousepointer",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "touchpad",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › Touchpad",
+   "titleNl": "Touchpad",
+   "titleEn": "Touchpad",
+   "controls": [
+    {
+     "label": "Touchpad + Touchpad ingeschakeld laten wanneer er een muis is aangesloten / Touchpad + Leave touchpad on when a mouse is connected",
+     "kind": "toggle",
+     "gnomeFunction": "Mouse & Touchpad › Touchpad on/off",
+     "backing": "org.gnome.desktop.peripherals.touchpad send-events: enabled / disabled; checkbox off = disabled-on-external-mouse",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Cursorsnelheid (1-10) / Cursor speed",
+     "kind": "slider",
+     "gnomeFunction": "Touchpad › Pointer Speed",
+     "backing": "touchpad speed (d) = (n - 5) / 5",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Tikken › Touchpad uitschakelen tijdens het typen / Taps › Turn off touchpad while typing",
+     "kind": "checkbox",
+     "gnomeFunction": "Touchpad › Disable Touchpad While Typing",
+     "backing": "touchpad disable-while-typing (b); a Windows sensitivity dropdown only if mutter honours disable-while-typing-timeout",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Met één vinger tikken om één keer te klikken; Met twee vingers tikken om met de rechtermuisknop te klikken (vast) / Tap with a single finger to single-click; two fingers to right-click (fixed)",
+     "kind": "checkbox",
+     "gnomeFunction": "Touchpad › Tap to Click",
+     "backing": "touchpad tap-to-click (b); row shown when the device can tap",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Twee keer tikken en slepen om meerdere items te selecteren / Tap twice and drag to multi-select",
+     "kind": "checkbox",
+     "gnomeFunction": "schema tap-and-drag (no GNOME row)",
+     "backing": "touchpad tap-and-drag (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Op de rechterbenedenhoek van het touchpad drukken om met de rechtermuisknop te klikken / Press the lower right corner to right-click",
+     "kind": "checkbox",
+     "gnomeFunction": "Touchpad › Secondary Click Two Finger Push / Corner Push",
+     "backing": "touchpad click-method: on = areas, off = fingers",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Schuiven en zoomen › Met twee vingers slepen om te schuiven / Schuiven langs de rand / Drag two fingers to scroll / Edge scrolling",
+     "kind": "radio",
+     "gnomeFunction": "Touchpad › Scroll Method Two Finger / Edge",
+     "backing": "two-finger-scrolling-enabled + edge-scrolling-enabled (b) written together in one gsettings.set",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Schuifrichting: Neerwaartse beweging schuift omhoog / omlaag / Scrolling direction",
+     "kind": "dropdown",
+     "gnomeFunction": "Touchpad › Scroll Direction",
+     "backing": "touchpad natural-scroll (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Bewegingen met drie en vier vingers (vast in GNOME) / Three- and four-finger gestures (fixed)",
+     "kind": "info",
+     "gnomeFunction": "none (fixed shell gestures)",
+     "backing": "static text",
+     "writes": "none"
+    },
+    {
+     "label": "Opnieuw instellen / Reset",
+     "kind": "button",
+     "gnomeFunction": "none (g_settings_reset)",
+     "backing": "gsettings.reset on every touchpad key (Ubuntu overrides respected)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "pen",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › Pen & Windows Ink",
+   "titleNl": "Pen en tablet",
+   "titleEn": "Pen & tablet",
+   "controls": [
+    {
+     "label": "Tablet kiezen / Geen tablet gevonden / Choose tablet / No tablet found",
+     "kind": "dropdown",
+     "gnomeFunction": "Wacom › tablet detection",
+     "backing": "input.tablets (udev ID_INPUT_TABLET + /usr/share/libwacom/*.tablet)",
+     "writes": "none"
+    },
+    {
+     "label": "Kies met welke hand je schrijft: Rechterhand / Linkerhand / Choose which hand you write with",
+     "kind": "dropdown",
+     "gnomeFunction": "Wacom › Button Location (left-handed)",
+     "backing": "relocatable org.gnome.desktop.peripherals.tablet at /org/gnome/desktop/peripherals/tablets/<vid:pid>/ left-handed (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Tabletmodus (absolute positie) / Tablet mode",
+     "kind": "toggle",
+     "gnomeFunction": "Wacom › Tablet Mode",
+     "backing": "tablet mapping absolute / relative",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Toewijzen aan beeldscherm + Hoogte-breedteverhouding behouden / Map to display + Keep aspect ratio",
+     "kind": "dropdown",
+     "gnomeFunction": "Wacom › Map to Monitor, Keep Aspect Ratio",
+     "backing": "tablet output (as vendor, product, serial), keep-aspect (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Kalibreren / Calibrate",
+     "kind": "dialog",
+     "gnomeFunction": "Wacom › Calibrate",
+     "backing": "full-screen 4-point window in Settings → tablet area (ad)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Knoppen toewijzen / Map buttons",
+     "kind": "button",
+     "gnomeFunction": "Wacom › Map Buttons (pad)",
+     "backing": "input.tablet.mapButtons → extension/inputBridge.js GNOME Shell pad OSD; pad-button action / keybinding relocatable",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Penknoppen: Knop 1 / 2 / 3: Linkermuisknop, Middelste knop, Rechtermuisknop, Terug, Vooruit, Toetsaanslag verzenden (+ toewijzen), Ander beeldscherm / Pen buttons",
+     "kind": "dropdown",
+     "gnomeFunction": "Wacom › Stylus Button 1 / 2 / 3 + Assign Keystroke",
+     "backing": "relocatable org.gnome.desktop.peripherals.tablet.stylus at /org/gnome/desktop/peripherals/stylus/<serial>/ button-action, secondary-, tertiary-button-action + *-keybinding",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Gevoel van pendruk / van gumdruk: Zacht - Stevig / Tip / eraser pressure feel",
+     "kind": "slider",
+     "gnomeFunction": "Wacom › Tip Pressure Feel, Eraser Pressure Feel",
+     "backing": "stylus pressure-curve, eraser-pressure-curve (ai, GNOME's preset curves)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Instellingen testen (tekengebied) / Test settings",
+     "kind": "dialog",
+     "gnomeFunction": "Wacom › Test Settings",
+     "backing": "GTK drawing area; learns stylus serials from GdkDeviceTool",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "autoplay",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › AutoPlay",
+   "titleNl": "Automatisch afspelen",
+   "titleEn": "AutoPlay",
+   "controls": [
+    {
+     "label": "Automatisch afspelen gebruiken voor alle media en apparaten / Use AutoPlay for all media and devices",
+     "kind": "toggle",
+     "gnomeFunction": "Apps › Removable Media › Media Autostart",
+     "backing": "gsettings org.gnome.desktop.media-handling autorun-never (b, inverted; default true here)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Standaardinstellingen kiezen: Audio-cd, Dvd-video, Muziekspeler, Foto's (geheugenkaart), Software: Altijd vragen / Geen actie ondernemen / Map openen om bestanden weer te geven (Verkenner) / <app> / Choose AutoPlay defaults",
+     "kind": "dropdown",
+     "gnomeFunction": "Removable Media actions CD Audio, DVD Video, Music Player, Photos, Software",
+     "backing": "autorun-x-content-start-app / -ignore / -open-folder (as) + apps.setDefaultForType x-content/<type>",
+     "writes": "user dconf + user file (mimeapps.list)"
+    },
+    {
+     "label": "Andere mediatypen (Type + Actie) / Other media types",
+     "kind": "dialog",
+     "gnomeFunction": "Removable Media › Other Media Types",
+     "backing": "same keys for audio-dvd, blank-*, video-bluray, ebook-reader, video-hddvd, image-picturecd, video-svcd, video-vcd, win32-software",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "usb",
+   "parent": "bluetooth",
+   "status": "new",
+   "windowsPage": "Bluetooth & devices › USB › USB4 hubs and devices",
+   "titleNl": "USB",
+   "titleEn": "USB",
+   "controls": [
+    {
+     "label": "Directe toegang tot apparaten zoals docks en externe GPU's toestaan / Direct access",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Thunderbolt › Direct Access",
+     "backing": "devices.thunderbolt.setAuthMode → system D-Bus org.freedesktop.bolt1.Manager AuthMode (polkit org.freedesktop.bolt.manage)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "USB4-hubs en -apparaten: Autoriseren en verbinden / Apparaat vergeten + Status, UUID, tijdstip / USB4 hubs and devices",
+     "kind": "list",
+     "gnomeFunction": "Thunderbolt › Devices, Pending Devices, device dialog",
+     "backing": "devices.thunderbolt.* → Manager ListDevices / EnrollDevice / ForgetDevice, Device Authorize (polkit enroll / authorize)",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "network",
+   "parent": "none",
+   "status": "extend",
+   "windowsPage": "Network & internet",
+   "titleNl": "Netwerk en internet",
+   "titleEn": "Network & internet",
+   "controls": [
+    {
+     "label": "Statuskaart, Wi-Fi, Ethernet (ongewijzigd) + Netwerk niet beschikbaar / Status card, Wi-Fi, Ethernet + Network unavailable",
+     "kind": "info",
+     "gnomeFunction": "Network panel availability",
+     "backing": "system.network.get as now; NetworkManager not running → notice",
+     "writes": "none"
+    },
+    {
+     "label": "VPN, Mobiele hotspot (schakelaar), Vliegtuigmodus (schakelaar), Proxy, Mobiel netwerk, Geavanceerde netwerkinstellingen / VPN, Mobile hotspot, Flight mode, Proxy, Mobile network, Advanced network settings",
+     "kind": "link",
+     "gnomeFunction": "Network, Wi-Fi, Mobile Network panels",
+     "backing": "link_card per id; Mobiel netwerk needs caps.modem; hotspot switch net.hotspot.start/stop",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "wifi",
+   "parent": "network",
+   "status": "extend",
+   "windowsPage": "Network & internet › Wi-Fi",
+   "titleNl": "Wi-Fi",
+   "titleEn": "Wi-Fi",
+   "controls": [
+    {
+     "label": "Wi-Fi, Beschikbare netwerken weergeven, Verbinden (ongewijzigd) / Wi-Fi, Show available networks, Connect (unchanged)",
+     "kind": "list",
+     "gnomeFunction": "Wi-Fi on/off, Visible Networks, Connect",
+     "backing": "system.network.* as now",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Adapter (bij meerdere Wi-Fi-adapters) / Adapter",
+     "kind": "dropdown",
+     "gnomeFunction": "Wi-Fi › multiple adapters switcher",
+     "backing": "net.devices type wifi; wifiList per iface",
+     "writes": "none"
+    },
+    {
+     "label": "Eigenschappen per netwerk / Properties per network",
+     "kind": "link",
+     "gnomeFunction": "Wi-Fi › Network Options (gear)",
+     "backing": "p.go_with(wifi-network, {uuid})",
+     "writes": "none"
+    },
+    {
+     "label": "Verborgen netwerk → Netwerknaam, Beveiligingstype, Beveiligingssleutel / Hidden network",
+     "kind": "dialog",
+     "gnomeFunction": "Wi-Fi › Connect to Hidden Network…",
+     "backing": "net.wifi.hidden → NM AddAndActivateConnection2 with 802-11-wireless.hidden=true (enterprise fields from net_editor)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Bekende netwerken beheren / Manage known networks",
+     "kind": "link",
+     "gnomeFunction": "Wi-Fi › Saved Networks",
+     "backing": "link_card wifi-known",
+     "writes": "none"
+    },
+    {
+     "label": "Hardware-eigenschappen (stuurprogramma, MAC-adres, banden) / Hardware properties",
+     "kind": "info",
+     "gnomeFunction": "Wi-Fi Details (Hardware Address, Supported Frequencies)",
+     "backing": "net.devices",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "wifi-network",
+   "parent": "wifi",
+   "status": "new",
+   "windowsPage": "Network & internet › Wi-Fi › <SSID> properties",
+   "titleNl": "Wi-Fi-eigenschappen",
+   "titleEn": "Wi-Fi properties",
+   "controls": [
+    {
+     "label": "Automatisch verbinding maken als ik binnen bereik ben / Connect automatically when in range",
+     "kind": "toggle",
+     "gnomeFunction": "Connection editor › Connect automatically",
+     "backing": "net.connection.update connection.autoconnect (NM Update2, interactive; polkit settings.modify.own / .system)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Beschikbaar maken voor andere gebruikers / Make available to other users",
+     "kind": "toggle",
+     "gnomeFunction": "Connection editor › Make available to other users",
+     "backing": "connection.permissions [] or user:<name>",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Verbinding met een datalimiet / Metered connection",
+     "kind": "toggle",
+     "gnomeFunction": "Connection editor › Metered connection",
+     "backing": "connection.metered yes / no",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Willekeurige hardwareadressen: Uit / Aan / Dagelijks wijzigen / Random hardware addresses",
+     "kind": "dropdown",
+     "gnomeFunction": "Wi-Fi Identity › Cloned Address",
+     "backing": "802-11-wireless.cloned-mac-address permanent / stable / random",
+     "writes": "polkit system"
+    },
+    {
+     "label": "IP-toewijzing · Bewerken: Automatisch (DHCP) / Handmatig / Alleen link-local / Uitschakelen / Gedeeld met andere computers, IPv4 en IPv6, IP-adres, Subnetvoorvoegsel, Gateway, Routes, Deze verbinding alleen gebruiken voor bronnen in het eigen netwerk / IP assignment · Edit",
+     "kind": "dialog",
+     "gnomeFunction": "Connection editor › IPv4 and IPv6 tabs",
+     "backing": "ipv4/ipv6 method, address-data, gateway, route-data, ignore-auto-routes, never-default",
+     "writes": "polkit system"
+    },
+    {
+     "label": "DNS-servertoewijzing · Bewerken: Automatisch / Handmatig, Voorkeurs-DNS, Alternatieve DNS / DNS server assignment · Edit",
+     "kind": "dialog",
+     "gnomeFunction": "IPv4 / IPv6 › DNS Automatic + servers",
+     "backing": "ipv4/ipv6 ignore-auto-dns + dns",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Beveiligingstype · Bewerken: Geen, WEP, LEAP, Dynamische WEP, WPA/WPA2-Persoonlijk, WPA/WPA2-Enterprise (TLS, LEAP, PWD, FAST, TTLS, PEAP), WPA3-Persoonlijk, Enhanced Open; wachtwoord opslaan voor deze gebruiker / alle gebruikers / altijd vragen / Security type · Edit",
+     "kind": "dialog",
+     "gnomeFunction": "Connection editor › Security tab (+ 802.1x EAP)",
+     "backing": "802-11-wireless-security key-mgmt, psk, wep-key0, leap-*, 802-1x.*; secret flags",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Wi-Fi-beveiligingssleutel weergeven · Weergeven + Delen (QR-code) / View Wi-Fi security key + Share",
+     "kind": "dialog",
+     "gnomeFunction": "Wi-Fi › Share Network (QR)",
+     "backing": "net.wifi.secrets (Settings.Connection GetSecrets) → pickers::QrCode (libqrencode via dlopen), WIFI:S:…;T:…;P:…;;",
+     "writes": "none"
+    },
+    {
+     "label": "Eigenschappen + Kopiëren: SSID, Protocol, Beveiligingstype, Band, Kanaal, Verbindingssnelheid, IPv6-adres, IPv4-adres, DNS-servers, Standaardroute, Fysiek adres (MAC), Laatst gebruikt / Properties + Copy",
+     "kind": "info",
+     "gnomeFunction": "Connection editor › Details tab",
+     "backing": "NM ActiveConnection Ip4Config / Ip6Config, AccessPoint, Device.Wireless Bitrate, connection.timestamp",
+     "writes": "none"
+    },
+    {
+     "label": "Geavanceerd: BSSID, MAC-adres van apparaat / Advanced: BSSID, device MAC address",
+     "kind": "dropdown",
+     "gnomeFunction": "Wi-Fi Identity › SSID, BSSID, MAC Address",
+     "backing": "802-11-wireless.bssid, mac-address",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Vergeten / Forget",
+     "kind": "button",
+     "gnomeFunction": "Wi-Fi › Forget Network",
+     "backing": "net.connection.delete (Settings.Connection Delete)",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "wifi-known",
+   "parent": "wifi",
+   "status": "new",
+   "windowsPage": "Network & internet › Wi-Fi › Manage known networks",
+   "titleNl": "Bekende netwerken beheren",
+   "titleEn": "Manage known networks",
+   "controls": [
+    {
+     "label": "Bekende netwerken met Vergeten (Ongedaan maken) / Known networks with Forget (Undo)",
+     "kind": "list",
+     "gnomeFunction": "Wi-Fi › Saved Networks dialog",
+     "backing": "net.connections {type: 802-11-wireless} + net.connection.delete",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Netwerk toevoegen: Netwerknaam, Beveiligingstype, Beveiligingssleutel, Automatisch verbinding maken, Verbinding maken, zelfs als dit netwerk niet uitzendt · Opslaan / Add network",
+     "kind": "dialog",
+     "gnomeFunction": "Wi-Fi › Connect to Hidden Network",
+     "backing": "net.connection.add (AddConnection2, hidden flag)",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "ethernet",
+   "parent": "network",
+   "status": "extend",
+   "windowsPage": "Network & internet › Ethernet",
+   "titleNl": "Ethernet",
+   "titleEn": "Ethernet",
+   "controls": [
+    {
+     "label": "Adapter aan/uit + status (Verbonden, 1000 Mb/s) / Adapter on/off + status",
+     "kind": "toggle",
+     "gnomeFunction": "Network › Wired on/off and status",
+     "backing": "net.device.setEnabled → Device.Disconnect / ActivateConnection (polkit network-control)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Verificatie-instellingen · Bewerken (802.1X) / Authentication settings · Edit",
+     "kind": "dialog",
+     "gnomeFunction": "Ethernet › 802.1x Security tab",
+     "backing": "net.connection.update 802-1x.*",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Verbinding met een datalimiet, IP-toewijzing, DNS-servertoewijzing (zoals Wi-Fi) / Metered, IP and DNS assignment",
+     "kind": "dialog",
+     "gnomeFunction": "Connection editor › Metered, IPv4, IPv6",
+     "backing": "net_editor dialogs shared with wifi-network",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Profielen: activeren, Profiel toevoegen, Verwijderen / Profiles: activate, Add profile, Remove",
+     "kind": "list",
+     "gnomeFunction": "Wired profiles + Add Ethernet Connection + Remove Connection Profile",
+     "backing": "net.connections type 802-3-ethernet, net.connection.add / activate / delete",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Geavanceerd: Naam, MAC-adres, Gekloond adres, MTU / Advanced: Name, MAC address, Cloned address, MTU",
+     "kind": "dialog",
+     "gnomeFunction": "Ethernet Identity tab",
+     "backing": "connection.id, 802-3-ethernet.mac-address, cloned-mac-address, mtu",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Eigenschappen + Kopiëren (ongewijzigd) / Properties + Copy (unchanged)",
+     "kind": "info",
+     "gnomeFunction": "Connection editor › Details",
+     "backing": "as now",
+     "writes": "none"
+    },
+    {
+     "label": "Bluetooth-netwerk (PAN/DUN) aan/uit + Naam / Bluetooth network on/off + Name",
+     "kind": "toggle",
+     "gnomeFunction": "Network › Bluetooth devices (PAN/DUN) + Bluetooth tab",
+     "backing": "net.connection.activate / deactivate of bluetooth connections; connection.id",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "vpn",
+   "parent": "network",
+   "status": "new",
+   "windowsPage": "Network & internet › VPN",
+   "titleNl": "VPN",
+   "titleEn": "VPN",
+   "controls": [
+    {
+     "label": "VPN-verbindingen: Verbinding maken / verbreken / VPN connections: Connect / Disconnect",
+     "kind": "list",
+     "gnomeFunction": "Network › VPN list + connect switch",
+     "backing": "net.connections type vpn / wireguard + activate / deactivate",
+     "writes": "user session (NM)"
+    },
+    {
+     "label": "VPN toevoegen: VPN-provider (OpenVPN, PPTP, WireGuard), Verbindingsnaam, Servernaam of -adres, Type aanmeldingsgegevens, Gebruikersnaam, Wachtwoord · Opslaan / Add VPN",
+     "kind": "dialog",
+     "gnomeFunction": "Network › Add VPN",
+     "backing": "net.vpn.plugins (/usr/lib/NetworkManager/VPN/*.name) + net.connection.add (vpn.service-type + vpn.data / vpn.secrets; native wireguard)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Importeren uit bestand… (.ovpn, WireGuard .conf) / Import from file…",
+     "kind": "button",
+     "gnomeFunction": "Add VPN › Import from file…",
+     "backing": "net.vpn.import → nmcli connection import type openvpn | wireguard file (system_tool)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Geavanceerde opties · Bewerken: providervelden (certificaten, TA-sleutel, MPPE …), IPv4, IPv6; WireGuard: privésleutel, luisterpoort, fwmark, MTU, peerroutes, peers (eindpunt, openbare sleutel, vooraf gedeelde sleutel, toegestane IP-adressen, keepalive) / Advanced options",
+     "kind": "dialog",
+     "gnomeFunction": "Connection editor › VPN tab, WireGuard tab, IPv4, IPv6",
+     "backing": "net.connection.update; native forms for the common OpenVPN / PPTP keys, other vpn.data keys as name/value rows",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Verwijderen / Remove",
+     "kind": "button",
+     "gnomeFunction": "Remove VPN",
+     "backing": "net.connection.delete",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "hotspot",
+   "parent": "network",
+   "status": "new",
+   "windowsPage": "Network & internet › Mobile hotspot",
+   "titleNl": "Mobiele hotspot",
+   "titleEn": "Mobile hotspot",
+   "controls": [
+    {
+     "label": "Mobiele hotspot / Mobile hotspot",
+     "kind": "toggle",
+     "gnomeFunction": "Wi-Fi › Turn On Wi-Fi Hotspot… / Turn Off Hotspot…",
+     "backing": "net.hotspot.start / stop → NM AddAndActivateConnection2 (mode ap, ipv4 shared, autoconnect false) / DeactivateConnection (polkit wifi.share.protected + settings.modify.system); confirm on turn off",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Mijn internetverbinding delen vanaf; Delen via Wi-Fi / Share my internet connection from; Share over Wi-Fi",
+     "kind": "info",
+     "gnomeFunction": "Hotspot (needs another uplink)",
+     "backing": "system.network.get primary connection",
+     "writes": "none"
+    },
+    {
+     "label": "Eigenschappen · Bewerken: Netwerknaam, Wachtwoord (Willekeurig wachtwoord genereren), Netwerkband / Properties · Edit",
+     "kind": "dialog",
+     "gnomeFunction": "Hotspot dialog Network Name, Password, Generate Random Password",
+     "backing": "net.hotspot.start {ssid, password, band}",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Actief: QR-code, Beveiligingstype, Wachtwoord / Active: QR, security type, password",
+     "kind": "info",
+     "gnomeFunction": "Hotspot active view",
+     "backing": "net.hotspot.get + GetSecrets → QrCode",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "flightmode",
+   "parent": "network",
+   "status": "new",
+   "windowsPage": "Network & internet › Flight mode",
+   "titleNl": "Vliegtuigmodus",
+   "titleEn": "Flight mode",
+   "controls": [
+    {
+     "label": "Vliegtuigmodus: Alle draadloze communicatie stoppen / Flight mode: Stop all wireless communication",
+     "kind": "toggle",
+     "gnomeFunction": "Wi-Fi › Airplane Mode",
+     "backing": "system.network.setAirplane as now",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Draadloze apparaten: Wi-Fi, Bluetooth, Mobiel netwerk / Wireless devices",
+     "kind": "toggle",
+     "gnomeFunction": "Wi-Fi on/off, Bluetooth on/off, Mobile broadband on/off",
+     "backing": "net.radios.set (NM WirelessEnabled / WwanEnabled), system.bluetooth.setPowered",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Vliegtuigmodus via hardwareschakelaar staat aan / Hardware flight mode is on",
+     "kind": "info",
+     "gnomeFunction": "Hardware Airplane Mode is On",
+     "backing": "NM WirelessHardwareEnabled / rfkill hard block",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "proxy",
+   "parent": "network",
+   "status": "new",
+   "windowsPage": "Network & internet › Proxy",
+   "titleNl": "Proxy",
+   "titleEn": "Proxy",
+   "controls": [
+    {
+     "label": "Automatische proxyinstellingen: Instellingen automatisch detecteren / Automatically detect settings",
+     "kind": "toggle",
+     "gnomeFunction": "Proxy › Automatic (empty URL = WPAD)",
+     "backing": "gsettings org.gnome.system.proxy mode auto + autoconfig-url empty (modes are exclusive)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Installatiescript gebruiken · Instellen: Scriptadres · Opslaan / Use setup script · Set up",
+     "kind": "dialog",
+     "gnomeFunction": "Proxy › Configuration URL",
+     "backing": "mode auto + autoconfig-url (s)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Handmatige proxyinstellingen: Een proxyserver gebruiken · Instellen: IP-adres van proxy, Poort, uitzonderingen (puntkomma's), De proxyserver niet gebruiken voor lokale (intranet)adressen, Geavanceerd per protocol · Opslaan / Manual proxy setup",
+     "kind": "dialog",
+     "gnomeFunction": "Proxy › Manual HTTP, HTTPS, FTP, SOCKS + Ignored Hosts + Save",
+     "backing": "mode manual; org.gnome.system.proxy.http/.https/.ftp/.socks host + port, use-same-proxy, ignore-hosts (as); authentication-password is never written",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "mobile",
+   "parent": "network",
+   "status": "new",
+   "windowsPage": "Network & internet › Mobile (Cellular)",
+   "titleNl": "Mobiel netwerk",
+   "titleEn": "Mobile network",
+   "controls": [
+    {
+     "label": "Mobiel netwerk / Mobile network",
+     "kind": "toggle",
+     "gnomeFunction": "Mobile Network on/off + status pages",
+     "backing": "net.radios.set WwanEnabled (polkit enable-disable-wwan); net.modem.get (ModemManager1 ObjectManager)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Simkaart ontbreekt / is vergrendeld · Ontgrendelen (pincode, PUK) / SIM missing / locked · Unlock",
+     "kind": "dialog",
+     "gnomeFunction": "Mobile Network › SIM Unlock",
+     "backing": "net.modem.unlock → Sim SendPin / SendPuk (polkit ModemManager1.Device.Control)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Mobiele gegevens; Roaming: Niet roamen / Roamen / Mobile data; Roaming",
+     "kind": "toggle",
+     "gnomeFunction": "Mobile Data, Data Roaming",
+     "backing": "gsm connection autoconnect + activate; gsm.home-only (inverted)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Deze simkaart gebruiken voor mobiele gegevens; Primaire simsleuf / Use this SIM for mobile data; Primary SIM slot",
+     "kind": "dropdown",
+     "gnomeFunction": "Data Connection, Primary SIM Slot",
+     "backing": "which gsm connection autoconnects; Modem SetPrimarySimSlot",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Instellingen van mobiele provider: Voorkeursnetwerktype, Netwerk selecteren (Automatisch / kiezen) / Mobile operator settings",
+     "kind": "dialog",
+     "gnomeFunction": "Network Mode, Network (operator)",
+     "backing": "net.modem.setModes (SetCurrentModes), net.modem.scan / register (Modem3gpp Scan / Register)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Toegangspunt · APN toevoegen / bewerken: Profielnaam, APN, Gebruikersnaam, Wachtwoord, Type aanmeldingsgegevens, APN-type Internet / Koppelen / Access point · Add APN",
+     "kind": "dialog",
+     "gnomeFunction": "Access Point Names",
+     "backing": "gsm apn / username / password / initial-eps-bearer-*; presets from /usr/share/mobile-broadband-provider-info/serviceproviders.xml",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Pincode van simkaart gebruiken; Pincode wijzigen / Use SIM PIN; Change SIM PIN",
+     "kind": "dialog",
+     "gnomeFunction": "SIM Lock",
+     "backing": "Sim EnablePin / ChangePin",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Eigenschappen + Kopiëren: provider, netwerktype, signaal, status, telefoonnummer, fabrikant, model, firmware, IMEI / Properties + Copy",
+     "kind": "info",
+     "gnomeFunction": "Modem Details",
+     "backing": "Modem / Modem3gpp properties",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "network-advanced",
+   "parent": "network",
+   "status": "new",
+   "windowsPage": "Network & internet › Advanced network settings",
+   "titleNl": "Geavanceerde netwerkinstellingen",
+   "titleEn": "Advanced network settings",
+   "controls": [
+    {
+     "label": "Netwerkadapters: Uitschakelen / Inschakelen + Aanvullende eigenschappen weergeven / Network adapters",
+     "kind": "list",
+     "gnomeFunction": "Network devices on/off",
+     "backing": "net.devices + net.device.setEnabled",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Controle op internetverbinding: Verbindingsproblemen detecteren / Connectivity checking",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Connectivity Checking",
+     "backing": "net.connectivity.set → NM ConnectivityCheckEnabled (polkit enable-disable-connectivity-check)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Geavanceerde instellingen voor delen / Advanced sharing settings",
+     "kind": "link",
+     "gnomeFunction": "Sharing panel",
+     "backing": "link_card sharing-advanced",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "sharing-advanced",
+   "parent": "network-advanced",
+   "status": "new",
+   "windowsPage": "Network & internet › Advanced network settings › Advanced sharing settings (+ Media streaming options)",
+   "titleNl": "Geavanceerde instellingen voor delen",
+   "titleEn": "Advanced sharing settings",
+   "controls": [
+    {
+     "label": "Netwerkdetectie (staat aan) / Network discovery (on)",
+     "kind": "info",
+     "gnomeFunction": "none (Avahi)",
+     "backing": "static",
+     "writes": "none"
+    },
+    {
+     "label": "Mediastreaming / Media streaming",
+     "kind": "toggle",
+     "gnomeFunction": "Sharing › Media Sharing switch",
+     "backing": "sharing.media.set → session D-Bus org.gnome.SettingsDaemon.Sharing EnableService / DisableService rygel",
+     "writes": "user session + user dconf"
+    },
+    {
+     "label": "Mappen: Map toevoegen / Verwijderen (Muziek, Afbeeldingen, Video's) / Folders",
+     "kind": "list",
+     "gnomeFunction": "Media Sharing › Folders",
+     "backing": "~/.config/rygel.conf [MediaExport] uris",
+     "writes": "user file"
+    },
+    {
+     "label": "Netwerken: ingeschakeld op het huidige netwerk, andere netwerken verwijderen / Networks",
+     "kind": "list",
+     "gnomeFunction": "Sharing › Networks per service",
+     "backing": "Sharing ListNetworks + relocatable org.gnome.settings-daemon.plugins.sharing.service /…/sharing/rygel/ enabled-connections",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "personalization",
+   "parent": "none",
+   "status": "keep",
+   "windowsPage": "Personalisation",
+   "titleNl": "Persoonlijke instellingen",
+   "titleEn": "Personalisation",
+   "controls": [
+    {
+     "label": "Voorbeeld, thema's en kaarten (lijst nu uit het register) / Preview, themes and cards (list now from the registry)",
+     "kind": "link",
+     "gnomeFunction": "Appearance panel entry",
+     "backing": "common::child_links",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "background",
+   "parent": "personalization",
+   "status": "extend",
+   "windowsPage": "Personalisation › Background",
+   "titleNl": "Achtergrond",
+   "titleEn": "Background",
+   "controls": [
+    {
+     "label": "Je achtergrond aanpassen: Afbeelding / Effen kleur, Kies een passende weergave, Afbeelding aanpassen aan licht en donker (ongewijzigd) / Personalise your background (unchanged)",
+     "kind": "dropdown",
+     "gnomeFunction": "Appearance › Background chooser (solid colours, fit)",
+     "backing": "wallpaper.* via wallpaper.rs as now (gnome_look)",
+     "writes": "user dconf (WinPoint look, restored in GNOME sessions)"
+    },
+    {
+     "label": "Afbeeldingen van Ubuntu en GNOME (licht/donker-paren, diavoorstellingen met tijd) / Ubuntu and GNOME pictures (light/dark pairs, timed slideshows)",
+     "kind": "list",
+     "gnomeFunction": "Appearance › Background chooser items",
+     "backing": "background.catalog (/usr/share/gnome-background-properties/*.xml + ~/.local/share/gnome-background-properties)",
+     "writes": "user dconf (WinPoint look)"
+    },
+    {
+     "label": "Recente afbeeldingen + Door foto's bladeren + Verwijderen / Recent images + Browse photos + Remove",
+     "kind": "button",
+     "gnomeFunction": "Appearance › Add Picture… / remove",
+     "backing": "background.add copies into ~/.local/share/backgrounds as g-c-c; background.remove deletes the copy",
+     "writes": "user file"
+    }
+   ]
+  },
+  {
+   "id": "colors",
+   "parent": "personalization",
+   "status": "extend",
+   "windowsPage": "Personalisation › Colours",
+   "titleNl": "Kleuren",
+   "titleEn": "Colours",
+   "controls": [
+    {
+     "label": "Kies je modus: Licht / Donker (ongewijzigd) / Choose your mode",
+     "kind": "dropdown",
+     "gnomeFunction": "Appearance › Style Default / Dark",
+     "backing": "theme.mode → settings_effects color-scheme (gnome_look)",
+     "writes": "user dconf (WinPoint look)"
+    },
+    {
+     "label": "Accentkleur + noot: Ubuntu-apps gebruiken de dichtstbijzijnde GNOME-accentkleur / Accent colour + note",
+     "kind": "list",
+     "gnomeFunction": "Appearance › Accent Color",
+     "backing": "theme.accent; B0 mirror writes org.gnome.desktop.interface accent-color (nearest of the 10 names) through gnome_look::note while theme.syncSystem",
+     "writes": "user dconf (WinPoint look)"
+    }
+   ]
+  },
+  {
+   "id": "themes",
+   "parent": "personalization",
+   "status": "keep",
+   "windowsPage": "Personalisation › Themes",
+   "titleNl": "Thema’s",
+   "titleEn": "Themes",
+   "controls": [
+    {
+     "label": "Ongewijzigd / Unchanged",
+     "kind": "info",
+     "gnomeFunction": "none",
+     "backing": "themes.rs",
+     "writes": "settings.json"
+    }
+   ]
+  },
+  {
+   "id": "start",
+   "parent": "personalization",
+   "status": "keep",
+   "windowsPage": "Personalisation › Start",
+   "titleNl": "Start",
+   "titleEn": "Start",
+   "controls": [
+    {
+     "label": "Aanbevolen bestanden weergeven (volgt nu GNOME's bestandsgeschiedenis) / Show recommended files (now follows GNOME's file history)",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › File History (through the mirror)",
+     "backing": "start.showRecommended as now; privacy.recentFiles mirrored with remember-recent-files",
+     "writes": "settings.json"
+    }
+   ]
+  },
+  {
+   "id": "taskbar",
+   "parent": "personalization",
+   "status": "keep",
+   "windowsPage": "Personalisation › Taskbar",
+   "titleNl": "Taakbalk",
+   "titleEn": "Taskbar",
+   "controls": [
+    {
+     "label": "Ongewijzigd / Unchanged",
+     "kind": "info",
+     "gnomeFunction": "none (replaces Ubuntu Dock)",
+     "backing": "taskbar.rs",
+     "writes": "settings.json"
+    }
+   ]
+  },
+  {
+   "id": "desktopicons",
+   "parent": "personalization",
+   "status": "keep",
+   "windowsPage": "Personalisation › Themes › Desktop icon settings",
+   "titleNl": "Bureaubladpictogrammen",
+   "titleEn": "Desktop icons",
+   "controls": [
+    {
+     "label": "Ongewijzigd / Unchanged",
+     "kind": "info",
+     "gnomeFunction": "none (replaces Ubuntu Desktop Icons)",
+     "backing": "desktopicons.rs",
+     "writes": "settings.json"
+    }
+   ]
+  },
+  {
+   "id": "apps",
+   "parent": "none",
+   "status": "keep",
+   "windowsPage": "Apps",
+   "titleNl": "Apps",
+   "titleEn": "Apps",
+   "controls": [
+    {
+     "label": "Geïnstalleerde apps, Standaard-apps, Opstarten (lijst uit het register) / Installed apps, Default apps, Startup",
+     "kind": "link",
+     "gnomeFunction": "Apps panel entry",
+     "backing": "common::child_links",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "installed",
+   "parent": "apps",
+   "status": "extend",
+   "windowsPage": "Apps › Installed apps",
+   "titleNl": "Geïnstalleerde apps",
+   "titleEn": "Installed apps",
+   "controls": [
+    {
+     "label": "Apps zoeken, Sorteren, ⋯ Openen / Vastmaken / Verwijderen (ongewijzigd) / Search, sort, ⋯ Open / Pin / Uninstall",
+     "kind": "list",
+     "gnomeFunction": "Apps › app list + search + Open",
+     "backing": "apps.list, apps.launch, software.* as now",
+     "writes": "polkit system"
+    },
+    {
+     "label": "⋯ Geavanceerde opties / ⋯ Advanced options",
+     "kind": "link",
+     "gnomeFunction": "Apps › per-app App Settings page",
+     "backing": "p.go_with(app-advanced, {id})",
+     "writes": "none"
+    },
+    {
+     "label": "⋯ Openen in App Center / Open in App Center",
+     "kind": "button",
+     "gnomeFunction": "Apps › App Details",
+     "backing": "snap-store <id> on Ubuntu, otherwise gnome-software --details (apps.launch)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "app-advanced",
+   "parent": "installed",
+   "status": "new",
+   "windowsPage": "Apps › Installed apps › Advanced options",
+   "titleNl": "Geavanceerde opties",
+   "titleEn": "Advanced options",
+   "controls": [
+    {
+     "label": "Specificaties: Versie, App, Gegevens, Cache, Totaal + Cache wissen / Specifications + Clear cache",
+     "kind": "info",
+     "gnomeFunction": "Apps › Storage page + Clear Cache",
+     "backing": "privacy.app {id} (flatpak / snap installed size, ~/.var/app/<id>); privacy.app.clearCache",
+     "writes": "user file"
+    },
+    {
+     "label": "App-machtigingen: Locatie, Camera, Microfoon, Schermafbeeldingen, Achtergrond wijzigen, Systeemsneltoetsen blokkeren / App permissions",
+     "kind": "toggle",
+     "gnomeFunction": "Apps › Location Services, Camera, Microphone, Screenshots, Change Wallpaper, Inhibit Shortcuts",
+     "backing": "privacy.setPermission → session D-Bus org.freedesktop.impl.portal.PermissionStore tables location, devices/camera, devices/microphone, screenshot, wallpaper, gnome/shortcuts-inhibit (sandboxed apps, as GNOME)",
+     "writes": "user session (permission store)"
+    },
+    {
+     "label": "Meldingen (met geluid) / Notifications (with sound)",
+     "kind": "link",
+     "gnomeFunction": "Apps › Notifications, Sounds",
+     "backing": "app-notifications page for this app (enable, enable-sound-alerts)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Zoeken: Resultaten van deze app opnemen / Search",
+     "kind": "toggle",
+     "gnomeFunction": "Apps › Search",
+     "backing": "org.gnome.desktop.search-providers disabled / enabled (as) per DefaultDisabled; disable-external greys it",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Machtigingen voor apps op de achtergrond: Altijd / Nooit; Wordt uitgevoerd bij aanmelden / Background apps permissions; Runs at log-in",
+     "kind": "dropdown",
+     "gnomeFunction": "Apps › Run in Background, Autostart",
+     "backing": "PermissionStore background/background yes / no; ~/.config/autostart copy (sysmon.setStartup, X-Flatpak for flatpaks)",
+     "writes": "user session + user file"
+    },
+    {
+     "label": "Algemene sneltoetsen: bekijken, wijzigen, Alles verwijderen / Global shortcuts",
+     "kind": "dialog",
+     "gnomeFunction": "Apps › Global Shortcuts (GNOME 50)",
+     "backing": "privacy.app.globalShortcuts.set → org.gnome.GlobalShortcutsRebind RebindShortcuts; org.gnome.settings-daemon.global-shortcuts read",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Vereiste machtigingen: flatpak (alleen lezen), snap-interfaces aan/uit + slot / Required permissions",
+     "kind": "list",
+     "gnomeFunction": "Apps › Required Permissions (Flatpak static, Snap interfaces)",
+     "backing": "flatpak metadata [Context]; snapd REST /v2/connections over /run/snapd.socket (polkit io.snapcraft.snapd.manage-interfaces)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Standaardkoppelingen: Bestandstypen, Koppelingstypen, Verwijderen, Standaardwaarden herstellen / Default handlers",
+     "kind": "list",
+     "gnomeFunction": "Apps › Files & Links + Reset",
+     "backing": "privacy.app handlers (MimeType, mimeapps.list) + removeHandler / resetHandlers (g_app_info_reset_type_associations)",
+     "writes": "user file (mimeapps.list)"
+    },
+    {
+     "label": "Beëindigen, Verwijderen, Openen / Terminate, Uninstall, Open",
+     "kind": "button",
+     "gnomeFunction": "Apps › Open; none for terminate",
+     "backing": "sysmon.endTask, software.*, apps.launch",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "defaultapps",
+   "parent": "apps",
+   "status": "extend",
+   "windowsPage": "Apps › Default apps",
+   "titleNl": "Standaard-apps",
+   "titleEn": "Default apps",
+   "controls": [
+    {
+     "label": "Webbrowser, E-mail, Muziekspeler, Videospeler, Fotoviewer, … (ongewijzigd) / Web browser, Email, Music, Video, Photos (unchanged)",
+     "kind": "dropdown",
+     "gnomeFunction": "Default Apps › Web, Mail, Music, Video, Photos",
+     "backing": "apps.setDefault as now",
+     "writes": "user file (mimeapps.list)"
+    },
+    {
+     "label": "Agenda, Bellen, Sms (als er een app voor is) / Calendar, Calls, SMS",
+     "kind": "dropdown",
+     "gnomeFunction": "Default Apps › Calendar, Calls, SMS",
+     "backing": "apps.setDefault new kinds calendar (text/calendar), calls (x-scheme-handler/tel), sms (x-scheme-handler/sms) in host/src/apps/defaults.rs",
+     "writes": "user file (mimeapps.list)"
+    },
+    {
+     "label": "Een standaardwaarde instellen voor een bestandstype of koppelingstype / Set a default for a file type or link type",
+     "kind": "list",
+     "gnomeFunction": "Apps › Files & Links",
+     "backing": "apps.mimeTypes + apps.forType + apps.setDefaultForType (existing)",
+     "writes": "user file (mimeapps.list)"
+    }
+   ]
+  },
+  {
+   "id": "startup",
+   "parent": "apps",
+   "status": "keep",
+   "windowsPage": "Apps › Startup",
+   "titleNl": "Opstarten",
+   "titleEn": "Startup",
+   "controls": [
+    {
+     "label": "Opstart-apps (ongewijzigd) / Startup apps (unchanged)",
+     "kind": "toggle",
+     "gnomeFunction": "Apps › Autostart",
+     "backing": "sysmon.startup / setStartup",
+     "writes": "user file"
+    }
+   ]
+  },
+  {
+   "id": "accounts",
+   "parent": "none",
+   "status": "extend",
+   "windowsPage": "Accounts",
+   "titleNl": "Accounts",
+   "titleEn": "Accounts",
+   "controls": [
+    {
+     "label": "Kop: foto, naam, Lokaal account, Administrator / Standaardgebruiker / Header with account type",
+     "kind": "info",
+     "gnomeFunction": "Users › account type",
+     "backing": "users.self (AccountsService AccountType)",
+     "writes": "none"
+    },
+    {
+     "label": "Je info, E-mail en accounts, Aanmeldingsopties, Andere gebruikers / Your info, Email & accounts, Sign-in options, Other users",
+     "kind": "link",
+     "gnomeFunction": "Users, Online Accounts panels",
+     "backing": "common::child_links",
+     "writes": "none"
+    },
+    {
+     "label": "Nu vergrendelen (ongewijzigd) / Lock now",
+     "kind": "button",
+     "gnomeFunction": "none",
+     "backing": "system.power.action lock",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "yourinfo",
+   "parent": "accounts",
+   "status": "new",
+   "windowsPage": "Accounts › Your info",
+   "titleNl": "Je info",
+   "titleEn": "Your info",
+   "controls": [
+    {
+     "label": "Je foto aanpassen: Een bestand kiezen · Bladeren door bestanden / Choose a file · Browse files",
+     "kind": "button",
+     "gnomeFunction": "Users › Avatar › Select a File…",
+     "backing": "users.setIcon → org.freedesktop.Accounts.User SetIconFile (polkit change-own-user-data)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Een standaardafbeelding kiezen / Choose a default picture",
+     "kind": "list",
+     "gnomeFunction": "Users › Avatar face gallery",
+     "backing": "users.faces (/usr/share/pixmaps/faces) + SetIconFile",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Foto verwijderen / Remove picture",
+     "kind": "button",
+     "gnomeFunction": "Users › Remove Avatar",
+     "backing": "SetIconFile empty",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Naam wijzigen / Change name",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Name",
+     "backing": "users.setRealName → SetRealName",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "email-accounts",
+   "parent": "accounts",
+   "status": "new",
+   "windowsPage": "Accounts › Email & accounts",
+   "titleNl": "E-mail en accounts",
+   "titleEn": "Email & accounts",
+   "controls": [
+    {
+     "label": "Accounts die worden gebruikt door e-mail, agenda en contactpersonen (met waarschuwing als aanmelden nodig is) / Accounts used by email, calendar and contacts",
+     "kind": "list",
+     "gnomeFunction": "Online Accounts › Your Accounts",
+     "backing": "goa.list (session D-Bus org.gnome.OnlineAccounts ObjectManager, AttentionNeeded)",
+     "writes": "none"
+    },
+    {
+     "label": "Account toevoegen: Google, Microsoft 365, Microsoft Exchange, Nextcloud, IMAP en SMTP, WebDAV, Enterprise Login (Kerberos) / Add account",
+     "kind": "dialog",
+     "gnomeFunction": "Online Accounts › Connect an Account",
+     "backing": "goa.add spawns win11-gtk-settings --goa-add <provider> (goa_helper.rs: dlopen libgoa-backend-1.0, goa_provider_add_account in its own process; OAuth in the browser)",
+     "writes": "user file (GOA + keyring)"
+    },
+    {
+     "label": "Beheren: Gebruiken voor E-mail, Agenda, Contactpersonen, Bestanden, Foto's, Documenten, Printers, Kaarten, Muziek, Taken, Chat … / Manage: Use for …",
+     "kind": "toggle",
+     "gnomeFunction": "Online Accounts › account details Use for",
+     "backing": "goa.setService → Account *Disabled properties",
+     "writes": "user file (GOA)"
+    },
+    {
+     "label": "Opnieuw aanmelden / Sign in again",
+     "kind": "button",
+     "gnomeFunction": "Online Accounts › Sign In",
+     "backing": "goa.signIn → EnsureCredentials (or the helper's refresh)",
+     "writes": "user file"
+    },
+    {
+     "label": "Verwijderen / Remove",
+     "kind": "button",
+     "gnomeFunction": "Online Accounts › Remove",
+     "backing": "goa.remove → Account.Remove (confirm)",
+     "writes": "user file"
+    },
+    {
+     "label": "Geen verbinding: accounts kunnen niet worden toegevoegd / Offline banner",
+     "kind": "info",
+     "gnomeFunction": "Online Accounts offline banner",
+     "backing": "system.network.get connectivity",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "signin",
+   "parent": "accounts",
+   "status": "new",
+   "windowsPage": "Accounts › Sign-in options",
+   "titleNl": "Aanmeldingsopties",
+   "titleEn": "Sign-in options",
+   "controls": [
+    {
+     "label": "Vingerafdrukherkenning · Instellen / Verwijderen (lezer, vinger, voortgang) / Fingerprint recognition · Set up / Remove",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Fingerprint Login",
+     "backing": "users.fingerprint.* → net.reactivated.Fprint Claim / EnrollStart / EnrollStatus / DeleteEnrolledFingers2 (polkit fprint.device.enroll); shown when caps.fingerprint",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Wachtwoord · Wijzigen: Huidig wachtwoord, Nieuw wachtwoord, Wachtwoord bevestigen, sterkte, Een wachtwoord genereren / Password · Change",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Password (own)",
+     "backing": "users.changePassword → passwd in a PTY (LC_ALL=C) + users.passwordQuality (libpwquality via dlopen)",
+     "writes": "polkit system (passwd)"
+    },
+    {
+     "label": "Automatisch aanmelden / Automatic sign-in",
+     "kind": "toggle",
+     "gnomeFunction": "Users › Automatic Login",
+     "backing": "users.setAutoLogin → User.SetAutomaticLogin (polkit set-login-option / user-administration)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Als je weg bent geweest, wanneer moet je je opnieuw aanmelden? Wanneer het scherm wordt uitgeschakeld / Na 30 seconden … 1 uur / Nooit / If you've been away, when should you sign in again?",
+     "kind": "dropdown",
+     "gnomeFunction": "Privacy › Automatic Screen Lock + Delay",
+     "backing": "org.gnome.desktop.screensaver lock-enabled (b) + lock-delay (u 0,30,60,120,180,300,1800,3600)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Ook vergrendelen wanneer de pc in slaapstand gaat / Also lock when the PC goes to sleep",
+     "kind": "checkbox",
+     "gnomeFunction": "Privacy › Lock Screen on Suspend (Ubuntu)",
+     "backing": "org.gnome.desktop.screensaver ubuntu-lock-on-suspend (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Nieuwe USB-apparaten blokkeren wanneer de pc is vergrendeld / Block new USB devices while locked",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Forbid New USB Devices",
+     "backing": "org.gnome.desktop.privacy usb-protection (b); shown only when caps.usbguard (not on this machine, as GNOME)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "otherusers",
+   "parent": "accounts",
+   "status": "new",
+   "windowsPage": "Accounts › Other users",
+   "titleNl": "Andere gebruikers",
+   "titleEn": "Other users",
+   "controls": [
+    {
+     "label": "Gebruikers (foto, naam, type) / Users",
+     "kind": "list",
+     "gnomeFunction": "Users › Other Users",
+     "backing": "users.list (Accounts ListCachedUsers + UserAdded / UserRemoved)",
+     "writes": "none"
+    },
+    {
+     "label": "Een andere gebruiker toevoegen · Account toevoegen: Volledige naam, Gebruikersnaam, Administrator, De gebruiker stelt een wachtwoord in bij de eerste aanmelding / Nu een wachtwoord instellen / Add other user · Add account",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Add User",
+     "backing": "users.create → CreateUser + SetPasswordMode / SetPassword (yescrypt via libcrypt dlopen) (polkit user-administration)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Accounttype wijzigen: Administrator / Standaardgebruiker / Change account type",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Administrator",
+     "backing": "users.setAccountType → SetAccountType",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Wachtwoord opnieuw instellen; Automatisch aanmelden; Taal / Reset password; Automatic sign-in; Language",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Password (other user), Automatic Login, Language (other users)",
+     "backing": "SetPassword / SetPasswordMode, SetAutomaticLogin, SetLanguage",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Account en gegevens · Verwijderen: Bestanden verwijderen / Bestanden bewaren / Account and data · Remove",
+     "kind": "dialog",
+     "gnomeFunction": "Users › Remove User… (+ Delete Files)",
+     "backing": "users.delete → Accounts DeleteUser(uid, removeFiles) (not the signed-in user)",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "time",
+   "parent": "none",
+   "status": "keep",
+   "windowsPage": "Time & language",
+   "titleNl": "Tijd en taal",
+   "titleEn": "Time & language",
+   "controls": [
+    {
+     "label": "Klok, Tijdzone, Taal + Datum en tijd, Taal en regio, Typen (lijst uit het register) / Clock, time zone, language + links",
+     "kind": "link",
+     "gnomeFunction": "Region & Language, Date & Time, Keyboard entries",
+     "backing": "system.time + common::child_links",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "datetime",
+   "parent": "time",
+   "status": "extend",
+   "windowsPage": "Time & language › Date & time",
+   "titleNl": "Datum en tijd",
+   "titleEn": "Date & time",
+   "controls": [
+    {
+     "label": "Tijd automatisch instellen / Set time automatically",
+     "kind": "toggle",
+     "gnomeFunction": "Date & Time › Automatic Date & Time",
+     "backing": "machine.time.setNtp → system D-Bus org.freedesktop.timedate1 SetNTP (interactive; polkit set-ntp / datetime.configure)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Tijdzone automatisch instellen / Set time zone automatically",
+     "kind": "toggle",
+     "gnomeFunction": "Date & Time › Automatic Time Zone",
+     "backing": "org.gnome.desktop.datetime automatic-timezone (b); disabled with a hint when location is off",
+     "writes": "user dconf"
+    },
+    {
+     "label": "De datum en tijd handmatig instellen · Wijzigen (Datum, Tijd) / Set the date and time manually · Change",
+     "kind": "dialog",
+     "gnomeFunction": "Date & Time manual dialog",
+     "backing": "machine.time.setTime → SetTime(usec, false, true) only while NTP is off; pickers::DatePicker + TimePicker",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Tijdzone (UTC+01:00) Amsterdam + zoeken / Time zone + search",
+     "kind": "dropdown",
+     "gnomeFunction": "Date & Time › Time Zone (Search cities)",
+     "backing": "machine.time.zones (ListTimezones + zone1970.tab cities, UTC offsets) + setTimezone",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Nu synchroniseren + Laatste synchronisatie, Tijdserver / Sync now + last sync, time server",
+     "kind": "button",
+     "gnomeFunction": "none (Windows row; timesyncd)",
+     "backing": "machine.time.sync (NTP off/on) + org.freedesktop.timesync1 ServerName / NTPMessage",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Tijd en datum weergeven in het systeemvak; Seconden weergeven in de klok in het systeemvak; Weekdag weergeven in de klok / Show time and date in the system tray; Show seconds; Show the weekday",
+     "kind": "toggle",
+     "gnomeFunction": "Date & Time › Clock & Calendar Date, Seconds, Week Day",
+     "backing": "org.gnome.desktop.interface clock-show-date / clock-show-seconds / clock-show-weekday (b); mirrored to time.showDate / time.showSeconds + taskbar.showSeconds / time.showWeekday for the tray",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Weeknummers weergeven in de agenda / Show week numbers in the calendar",
+     "kind": "toggle",
+     "gnomeFunction": "Clock & Calendar › Week Numbers",
+     "backing": "org.gnome.desktop.calendar show-weekdate (b) ↔ time.weekNumbers (calendar flyout)",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "24-uursnotatie; Eerste dag van de week (bestaande rijen, nu aan GNOME gekoppeld) / 24-hour clock; First day of week",
+     "kind": "toggle",
+     "gnomeFunction": "Date & Time › Time Format, First Day of the Week",
+     "backing": "clock-format 24h / 12h ↔ time.h24; org.gnome.desktop.calendar week-start-day ↔ time.firstDayOfWeek",
+     "writes": "user dconf + settings.json (mirror)"
+    }
+   ]
+  },
+  {
+   "id": "language",
+   "parent": "time",
+   "status": "extend",
+   "windowsPage": "Time & language › Language & region",
+   "titleNl": "Taal en regio",
+   "titleEn": "Language & region",
+   "controls": [
+    {
+     "label": "Weergavetaal van WinPoint: Nederlands / English (ongewijzigd) / WinPoint display language",
+     "kind": "dropdown",
+     "gnomeFunction": "none",
+     "backing": "settings.json language",
+     "writes": "settings.json"
+    },
+    {
+     "label": "Weergavetaal van apps en Ubuntu + Afmelden om de nieuwe taal te gebruiken · Afmelden / Display language for apps and Ubuntu + Sign out",
+     "kind": "dropdown",
+     "gnomeFunction": "Region › Your Account › Language + Log Out banner",
+     "backing": "users.setLanguage → org.freedesktop.Accounts.User SetLanguage; system.power.action logout",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Voorkeurstalen · Een taal toevoegen (taalondersteuning installeren) / Preferred languages · Add a language",
+     "kind": "dialog",
+     "gnomeFunction": "Region › Manage Installed Languages",
+     "backing": "machine.languages + machine.languages.install → PackageKit InstallPackages from /usr/share/language-selector/data/pkg_depends (the Python language-selector itself is not run)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "⋯ Taalopties (toetsenborden) / Language options (keyboards)",
+     "kind": "link",
+     "gnomeFunction": "Keyboard › Input Sources",
+     "backing": "link_card language-options",
+     "writes": "none"
+    },
+    {
+     "label": "Regionale notatie (pijl) en Beheerinstellingen voor taal / Regional format and Administrative language settings",
+     "kind": "link",
+     "gnomeFunction": "Region › Formats, Login Screen",
+     "backing": "link_card formats, language-admin",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "language-options",
+   "parent": "language",
+   "status": "new",
+   "windowsPage": "Time & language › Language & region › Language options",
+   "titleNl": "Taalopties",
+   "titleEn": "Language options",
+   "controls": [
+    {
+     "label": "Geïnstalleerde toetsenborden met ⋯ Omhoog, Omlaag, Indeling weergeven, Opties, Verwijderen / Installed keyboards",
+     "kind": "list",
+     "gnomeFunction": "Keyboard › Input Sources + row menu (Move Up/Down, View Keyboard Layout, Preferences, Remove)",
+     "backing": "input.sources.set → org.gnome.desktop.input-sources sources a(ss) + Ubuntu's pkexec /usr/libexec/gnome-control-center-set-debian-keyboard (polkit org.gnome.controlcenter.set-keyboard); input.preview → tecla; input.engineSetup through extension/inputBridge.js (launched by GNOME Shell)",
+     "writes": "user dconf + polkit system"
+    },
+    {
+     "label": "Een toetsenbord toevoegen: Zoeken op taal of land, Overige, invoermethoden / Add a keyboard",
+     "kind": "dialog",
+     "gnomeFunction": "Keyboard › Add Input Source",
+     "backing": "input.layouts (xkeyboard-config evdev.xml + glib dgettext) + input.engines (/usr/share/ibus/component/*.xml)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Geen toetsenborden ingesteld: de indeling van het systeem wordt gebruikt / No keyboards set: the system layout is used",
+     "kind": "info",
+     "gnomeFunction": "Input Sources empty",
+     "backing": "sources empty",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "formats",
+   "parent": "language",
+   "status": "new",
+   "windowsPage": "Time & language › Language & region › Regional format › Change formats",
+   "titleNl": "Regionale notatie",
+   "titleEn": "Regional format",
+   "controls": [
+    {
+     "label": "Regionale notatie + voorbeeld (Datums, Tijden, Getallen, Maateenheden, Papier) / Regional format + preview",
+     "kind": "dropdown",
+     "gnomeFunction": "Region › Formats",
+     "backing": "gsettings org.gnome.system.locale region (s) + users.setFormats (AccountsService SetFormatsLocale); applies after sign-out",
+     "writes": "user dconf + polkit system"
+    },
+    {
+     "label": "Eerste dag van de week: Standaard (regio), maandag … zondag / First day of week",
+     "kind": "dropdown",
+     "gnomeFunction": "Date & Time › First Day of the Week",
+     "backing": "week-start-day ↔ time.firstDayOfWeek",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Korte tijd: 24-uurs (HH:mm) / 12-uurs (h:mm tt) / Short time",
+     "kind": "dropdown",
+     "gnomeFunction": "Date & Time › Time Format",
+     "backing": "clock-format ↔ time.h24",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Korte datum, Lange datum (volgen de regio) / Short date, Long date (follow the region)",
+     "kind": "info",
+     "gnomeFunction": "Formats preview",
+     "backing": "kit::format with the region locale",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "language-admin",
+   "parent": "language",
+   "status": "new",
+   "windowsPage": "Time & language › Language & region › Administrative language settings",
+   "titleNl": "Beheerinstellingen voor taal",
+   "titleEn": "Administrative language settings",
+   "controls": [
+    {
+     "label": "Taal van het aanmeldingsscherm (schild) / Sign-in screen language",
+     "kind": "dropdown",
+     "gnomeFunction": "Region › Login Screen › Language",
+     "backing": "machine.login.setLocale → system D-Bus org.freedesktop.locale1 SetLocale([LANG=…], interactive) (polkit set-locale)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Notaties van het aanmeldingsscherm / Sign-in screen formats",
+     "kind": "dropdown",
+     "gnomeFunction": "Region › Login Screen › Formats",
+     "backing": "SetLocale with LC_NUMERIC, LC_TIME, LC_MONETARY, LC_MEASUREMENT, LC_PAPER",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Mijn instellingen kopiëren / Copy my settings",
+     "kind": "button",
+     "gnomeFunction": "none (convenience)",
+     "backing": "current user's language and formats to the sign-in screen through the same SetLocale",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "typing",
+   "parent": "time",
+   "status": "new",
+   "windowsPage": "Time & language › Typing",
+   "titleNl": "Typen",
+   "titleEn": "Typing",
+   "controls": [
+    {
+     "label": "Aanraaktoetsenbord: Het aanraaktoetsenbord weergeven: Als er geen toetsenbord is aangesloten / Altijd / Touch keyboard",
+     "kind": "dropdown",
+     "gnomeFunction": "Accessibility › Screen Keyboard",
+     "backing": "org.gnome.desktop.a11y.applications screen-keyboard-enabled (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Geavanceerde toetsenbordinstellingen; Sneltoetsen / Advanced keyboard settings; Keyboard shortcuts",
+     "kind": "link",
+     "gnomeFunction": "Keyboard panel",
+     "backing": "link_card keyboard-advanced, shortcuts",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "keyboard-advanced",
+   "parent": "typing",
+   "status": "new",
+   "windowsPage": "Time & language › Typing › Advanced keyboard settings",
+   "titleNl": "Geavanceerde toetsenbordinstellingen",
+   "titleEn": "Advanced keyboard settings",
+   "controls": [
+    {
+     "label": "Standaardinvoermethode overschrijven / Override for default input method",
+     "kind": "dropdown",
+     "gnomeFunction": "Input Sources order",
+     "backing": "input.sources.set (first entry)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Voor elk app-venster een andere invoermethode gebruiken / Let me use a different input method for each app window",
+     "kind": "checkbox",
+     "gnomeFunction": "Keyboard › Input Source Switching",
+     "backing": "org.gnome.desktop.input-sources per-window (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Toets voor alternatieve tekens: Standaard van de indeling, Linker Alt, Rechter Alt, Linker / Rechter Windows-toets, Menutoets, Rechter Ctrl / Alternate characters key",
+     "kind": "dropdown",
+     "gnomeFunction": "Keyboard › Alternate Characters Key",
+     "backing": "input.options.set lv3:* in xkb-options (other options kept; off writes lv3:ralt_alt)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Samenstellingstoets: Uit, Rechter Alt, Linker / Rechter Windows-toets, Menutoets, Linker / Rechter Ctrl, Caps Lock, Scroll Lock, Print Screen, Insert / Compose key",
+     "kind": "dropdown",
+     "gnomeFunction": "Keyboard › Compose Key",
+     "backing": "input.options.set compose:* in xkb-options",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Tekenherhaling: Toetsen herhalen, Vertraging voor herhalen, Herhalingssnelheid + testvak / Character repeat",
+     "kind": "slider",
+     "gnomeFunction": "Accessibility › Repeat Keys (Speed, Delay)",
+     "backing": "org.gnome.desktop.peripherals.keyboard repeat (b), delay (u), repeat-interval (u, inverted)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Windows-toets opent Start / Windows key opens Start",
+     "kind": "toggle",
+     "gnomeFunction": "Keyboard › Activities Overview Shortcut",
+     "backing": "org.gnome.mutter overlay-key Super / empty (confirm: also the overview shortcut in GNOME sessions)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Sneltoetsen voor invoertaal / Input language hot keys",
+     "kind": "link",
+     "gnomeFunction": "Shortcuts › Typing",
+     "backing": "p.go_with(shortcuts, {section:typing})",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "shortcuts",
+   "parent": "typing",
+   "status": "new",
+   "windowsPage": "none in Windows 11 (WinPoint page in its style, under Typing)",
+   "titleNl": "Sneltoetsen",
+   "titleEn": "Keyboard shortcuts",
+   "controls": [
+    {
+     "label": "Sneltoetsen zoeken + secties Toegankelijkheid, Starters, Navigatie, Schermafbeeldingen, Geluid en media, Systeem, Typen, Vensters / Search shortcuts + sections",
+     "kind": "list",
+     "gnomeFunction": "Keyboard › View and Customize Shortcuts",
+     "backing": "input.shortcuts (catalogue from /usr/share/gnome-control-center/keybindings/*.xml with a built-in fallback)",
+     "writes": "none"
+    },
+    {
+     "label": "Sneltoets instellen: Esc annuleert, Backspace schakelt uit, conflict · Vervangen; Sneltoets opnieuw instellen / Set shortcut; Reset shortcut",
+     "kind": "dialog",
+     "gnomeFunction": "Keyboard › shortcut editor",
+     "backing": "pickers::KeyCapture (inhibits system shortcuts while capturing) + input.shortcuts.set / reset on wm.keybindings, mutter.keybindings, mutter.wayland.keybindings, shell.keybindings, media-keys",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Beheerd door WinPoint: Ctrl+Alt+Delete opent Taakbeheer, Alt+Tab Taakweergave, Windows-toets Start / Managed by WinPoint",
+     "kind": "info",
+     "gnomeFunction": "same rows (extension-held)",
+     "backing": "gsettings owned check (logout-restore, task-view-restore of the extension schema): read-only",
+     "writes": "none"
+    },
+    {
+     "label": "Aangepaste sneltoetsen: Sneltoets toevoegen (Naam, Opdracht, Sneltoets), Verwijderen / Custom shortcuts",
+     "kind": "dialog",
+     "gnomeFunction": "Keyboard › Custom Shortcuts",
+     "backing": "input.shortcuts.custom.* → media-keys custom-keybindings (as) + relocatable custom-keybinding name, command, binding",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Alles opnieuw instellen… / Reset all…",
+     "kind": "button",
+     "gnomeFunction": "Keyboard › Reset All…",
+     "backing": "input.shortcuts.resetAll (g_settings_reset per catalogued key except the WinPoint-held ones), confirm",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "accessibility",
+   "parent": "none",
+   "status": "extend",
+   "windowsPage": "Accessibility",
+   "titleNl": "Toegankelijkheid",
+   "titleEn": "Accessibility",
+   "controls": [
+    {
+     "label": "Zicht: Tekstgrootte, Visuele effecten, Muisaanwijzer en aanraken, Tekstcursor, Vergrootglas, Contrastthema's, Verteller; Gehoor: Audio; Interactie: Toetsenbord, Muis / Vision, Hearing, Interaction",
+     "kind": "link",
+     "gnomeFunction": "Accessibility panel sections Seeing, Hearing, Typing, Pointing & Clicking, Zoom",
+     "backing": "common::child_links grouped as Windows",
+     "writes": "none"
+    },
+    {
+     "label": "Toegankelijkheidsmenu altijd weergeven (tegel in Snelle instellingen) / Always show the accessibility menu",
+     "kind": "toggle",
+     "gnomeFunction": "Accessibility › Always Show Accessibility Menu",
+     "backing": "org.gnome.desktop.a11y always-show-universal-access-status (b); the quick settings flyout shows an Accessibility tile",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Snel aanpassen (ongewijzigd) / Quick adjust",
+     "kind": "toggle",
+     "gnomeFunction": "Reduced Motion",
+     "backing": "through the mirror",
+     "writes": "user dconf + settings.json (mirror)"
+    }
+   ]
+  },
+  {
+   "id": "textsize",
+   "parent": "accessibility",
+   "status": "extend",
+   "windowsPage": "Accessibility › Text size",
+   "titleNl": "Tekstgrootte",
+   "titleEn": "Text size",
+   "controls": [
+    {
+     "label": "Tekstgrootte 100-225% · Toepassen / Text size · Apply",
+     "kind": "slider",
+     "gnomeFunction": "Accessibility › Text Size",
+     "backing": "accessibility.textScale ↔ org.gnome.desktop.interface text-scaling-factor (d) through the mirror; the kit stops scaling itself where GTK already applies the factor",
+     "writes": "user dconf + settings.json (mirror)"
+    }
+   ]
+  },
+  {
+   "id": "visualeffects",
+   "parent": "accessibility",
+   "status": "extend",
+   "windowsPage": "Accessibility › Visual effects",
+   "titleNl": "Visuele effecten",
+   "titleEn": "Visual effects",
+   "controls": [
+    {
+     "label": "Schuifbalken altijd weergeven / Always show scrollbars",
+     "kind": "toggle",
+     "gnomeFunction": "Seeing › Always Show Scrollbars",
+     "backing": "org.gnome.desktop.interface overlay-scrolling (b, inverted)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Transparantie-effecten (ongewijzigd) / Transparency effects",
+     "kind": "toggle",
+     "gnomeFunction": "none",
+     "backing": "theme.transparency",
+     "writes": "settings.json"
+    },
+    {
+     "label": "Animatie-effecten / Animation effects",
+     "kind": "toggle",
+     "gnomeFunction": "Seeing › Reduced Motion",
+     "backing": "accessibility.reduceMotion ↔ org.gnome.desktop.a11y.interface reduced-motion (+ enable-animations written consistently)",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Vormen gebruiken voor aan/uit-status / On/off shapes",
+     "kind": "toggle",
+     "gnomeFunction": "Seeing › On/Off Shapes",
+     "backing": "org.gnome.desktop.a11y.interface show-status-shapes (b); kit ToggleSwitch draws them",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "contrast",
+   "parent": "accessibility",
+   "status": "extend",
+   "windowsPage": "Accessibility › Contrast themes",
+   "titleNl": "Contrastthema’s",
+   "titleEn": "Contrast themes",
+   "controls": [
+    {
+     "label": "Contrastthema's: Geen / Hoog contrast · Toepassen / Contrast themes: None / High contrast · Apply",
+     "kind": "dropdown",
+     "gnomeFunction": "Seeing › High Contrast",
+     "backing": "org.gnome.desktop.a11y.interface high-contrast (b) ↔ accessibility.highContrast (the shell follows); note: GTK apps have one high-contrast style",
+     "writes": "user dconf + settings.json (mirror)"
+    }
+   ]
+  },
+  {
+   "id": "mousepointer",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Mouse pointer and touch",
+   "titleNl": "Muisaanwijzer en aanraken",
+   "titleEn": "Mouse pointer and touch",
+   "controls": [
+    {
+     "label": "Grootte (5 stappen) / Size",
+     "kind": "slider",
+     "gnomeFunction": "Seeing › Cursor Size",
+     "backing": "org.gnome.desktop.interface cursor-size (i) 24, 32, 48, 64, 96 (96 to verify against GNOME 50)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Muisaanwijzerindicator: Locatie van aanwijzer weergeven wanneer ik op Ctrl druk / Mouse indicator",
+     "kind": "toggle",
+     "gnomeFunction": "Pointing & Clicking › Locate Pointer",
+     "backing": "locate-pointer (b)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "textcursor",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Text cursor",
+   "titleNl": "Tekstcursor",
+   "titleEn": "Text cursor",
+   "controls": [
+    {
+     "label": "Knipperende tekstcursor / Blinking text cursor",
+     "kind": "toggle",
+     "gnomeFunction": "Typing › Cursor Blinking",
+     "backing": "org.gnome.desktop.interface cursor-blink (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Knippersnelheid + testvak / Blink rate + test box",
+     "kind": "slider",
+     "gnomeFunction": "Typing › Blink Speed",
+     "backing": "cursor-blink-time (i 100-2500, inverted)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "magnifier",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Magnifier",
+   "titleNl": "Vergrootglas",
+   "titleEn": "Magnifier",
+   "controls": [
+    {
+     "label": "Vergrootglas (Alt+Windows-toets+8) / Magnifier",
+     "kind": "toggle",
+     "gnomeFunction": "Zoom › Desktop Zoom",
+     "backing": "org.gnome.desktop.a11y.applications screen-magnifier-enabled (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Zoomniveau - / + / Zoom level",
+     "kind": "button",
+     "gnomeFunction": "Zoom › Magnification Factor",
+     "backing": "org.gnome.desktop.a11y.magnifier mag-factor (d 1.0-20.0, step 0.25)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Weergave: Volledig scherm / Bovenste, onderste, linker of rechter helft / Lens / View",
+     "kind": "dropdown",
+     "gnomeFunction": "Zoom › Magnifier View + Screen Area",
+     "backing": "screen-position (enum) + lens-mode (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Buiten de schermranden doorgaan / Extend outside screen edges",
+     "kind": "checkbox",
+     "gnomeFunction": "Zoom › Extend Outside Screen Edges",
+     "backing": "scroll-at-edges (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "De muisaanwijzer houden: Gecentreerd op het scherm / Binnen de randen van het scherm / Met de inhoud meebewegen / Keep the mouse pointer",
+     "kind": "radio",
+     "gnomeFunction": "Zoom › Follow Behavior",
+     "backing": "mouse-tracking centered / push / proportional",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Kleuren omkeren; Kleuraanpassing: Helderheid, Contrast, Kleur / Invert colours; Colour adjustment",
+     "kind": "slider",
+     "gnomeFunction": "Zoom › Color Filters Inverted, Brightness, Contrast, Color",
+     "backing": "invert-lightness (b); brightness-red/green/blue, contrast-red/green/blue (d, set together), color-saturation (d)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Dradenkruis: aan, Over muisaanwijzer heen, Dikte, Lengte, Kleur / Crosshairs",
+     "kind": "slider",
+     "gnomeFunction": "Zoom › Crosshair Lines",
+     "backing": "show-cross-hairs, cross-hairs-clip (inverted), -thickness, -length, -color (colorpicker)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "narrator",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Narrator",
+   "titleNl": "Verteller",
+   "titleEn": "Narrator",
+   "controls": [
+    {
+     "label": "Verteller (Alt+Windows-toets+S) / Narrator",
+     "kind": "toggle",
+     "gnomeFunction": "Seeing › Screen Reader",
+     "backing": "org.gnome.desktop.a11y.applications screen-reader-enabled (b); GNOME Shell starts Orca",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Instellingen voor Verteller openen / Open Narrator settings",
+     "kind": "button",
+     "gnomeFunction": "Seeing › Screen Reader Configure",
+     "backing": "Orca's preferences launched through extension/launchBridge.js (a GNOME Shell child, so no Python runs under WinPoint)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "a11y-audio",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Audio",
+   "titleNl": "Audio",
+   "titleEn": "Audio",
+   "controls": [
+    {
+     "label": "Mijn scherm laten knipperen tijdens audiomeldingen: Uit / Het actieve venster laten knipperen / Het hele scherm laten knipperen + Testen / Flash my screen during audio notifications",
+     "kind": "dropdown",
+     "gnomeFunction": "Hearing › Visual Alerts + Flash Area + Test Flash",
+     "backing": "org.gnome.desktop.wm.preferences visual-bell (b) + visual-bell-type frame-flash / fullscreen-flash; Testen = GTK error bell",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Volume boven 100% toestaan / Over-amplification",
+     "kind": "toggle",
+     "gnomeFunction": "Hearing › Overamplification",
+     "backing": "org.gnome.desktop.sound allow-volume-above-100-percent (b)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "a11y-keyboard",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Keyboard",
+   "titleNl": "Toetsenbord",
+   "titleEn": "Keyboard",
+   "controls": [
+    {
+     "label": "Plaktoetsen + Plaktoetsen uitschakelen wanneer twee toetsen tegelijk worden ingedrukt, Een geluid afspelen bij sneltoetsen / Sticky keys",
+     "kind": "toggle",
+     "gnomeFunction": "Typing › Sticky Keys",
+     "backing": "org.gnome.desktop.a11y.keyboard stickykeys-enable, stickykeys-two-key-off, stickykeys-modifier-beep (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Filtertoetsen: Korte toetsaanslagen negeren (Trage toetsen + vertraging, pieptonen), Onbedoelde toetsaanslagen negeren (Stuitertoetsen + vertraging, pieptoon) / Filter keys",
+     "kind": "toggle",
+     "gnomeFunction": "Typing › Slow Keys, Bounce Keys",
+     "backing": "slowkeys-enable, slowkeys-delay, slowkeys-beep-press/-accept/-reject; bouncekeys-enable, bouncekeys-delay, bouncekeys-beep-reject",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Wisseltoetsen / Toggle keys",
+     "kind": "toggle",
+     "gnomeFunction": "Seeing › Sound Keys",
+     "backing": "togglekeys-enable (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Sneltoetsen voor toegankelijkheidsfuncties inschakelen / Turn on accessibility features from the keyboard",
+     "kind": "toggle",
+     "gnomeFunction": "Typing › Enable by Keyboard",
+     "backing": "org.gnome.desktop.a11y.keyboard enable (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Schermtoetsenbord; Tekenherhaling (pijl) / On-screen keyboard; Character repeat",
+     "kind": "toggle",
+     "gnomeFunction": "Typing › Screen Keyboard, Repeat Keys",
+     "backing": "screen-keyboard-enabled (b); link keyboard-advanced",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "a11y-mouse",
+   "parent": "accessibility",
+   "status": "new",
+   "windowsPage": "Accessibility › Mouse (+ Control Panel ease-of-access wording)",
+   "titleNl": "Muis",
+   "titleEn": "Mouse",
+   "controls": [
+    {
+     "label": "Muistoetsen: Het numerieke toetsenblok gebruiken om de muisaanwijzer te verplaatsen / Mouse keys",
+     "kind": "toggle",
+     "gnomeFunction": "Pointing & Clicking › Mouse Keys",
+     "backing": "org.gnome.desktop.a11y.keyboard mousekeys-enable (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Een venster activeren door de muisaanwijzer erop te plaatsen / Activate a window by hovering over it",
+     "kind": "toggle",
+     "gnomeFunction": "Pointing & Clicking › Activate Windows on Hover",
+     "backing": "org.gnome.desktop.wm.preferences focus-mode sloppy / click",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Dubbelkliksnelheid / Double-click speed",
+     "kind": "slider",
+     "gnomeFunction": "Pointing & Clicking › Double-Click Delay",
+     "backing": "org.gnome.desktop.peripherals.mouse double-click (i 100-1000)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Gesimuleerde secundaire klik: Ingedrukt houden + Acceptatievertraging / Simulated secondary click",
+     "kind": "slider",
+     "gnomeFunction": "Click Assist › Simulated Secondary Click",
+     "backing": "org.gnome.desktop.a11y.mouse secondary-click-enabled (b) + secondary-click-time (d 0.5-3.0)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Klikken door te zweven: Vertraging, Bewegingsdrempel / Hover click",
+     "kind": "slider",
+     "gnomeFunction": "Click Assist › Hover Click",
+     "backing": "dwell-click-enabled (b), dwell-time (d 0.2-3.0), dwell-threshold (i 0-30)",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "privacy",
+   "parent": "none",
+   "status": "extend",
+   "windowsPage": "Privacy & security",
+   "titleNl": "Privacy en beveiliging",
+   "titleEn": "Privacy & security",
+   "controls": [
+    {
+     "label": "Beveiliging: Apparaatbeveiliging; Machtigingen: Diagnostische gegevens en feedback, Activiteitengeschiedenis, Zoekmachtigingen, Deze pc doorzoeken; App-machtigingen: Locatie, Camera, Microfoon, Meldingen / Security; Permissions; App permissions",
+     "kind": "link",
+     "gnomeFunction": "Privacy & Security panel sub-pages, Search panel",
+     "backing": "common::child_links + link to notifications; the recent-files rows move to activity",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "security",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Windows Security",
+   "titleNl": "Apparaatbeveiliging",
+   "titleEn": "Device security",
+   "controls": [
+    {
+     "label": "Apparaatbeveiliging: beveiligingsniveau (HSI), Beveiligd opstarten, gebeurtenissen + Technisch rapport kopiëren / Device security + Copy technical report",
+     "kind": "info",
+     "gnomeFunction": "Privacy › Device Security",
+     "backing": "privacy.security → system D-Bus org.freedesktop.fwupd HostSecurityId, GetHostSecurityAttrs, GetHostSecurityEvents",
+     "writes": "none"
+    },
+    {
+     "label": "Beveiligingscentrum openen / Open Security Center",
+     "kind": "button",
+     "gnomeFunction": "Privacy › Security Center",
+     "backing": "privacy.securityCenter.open (desktop-security-center snap, through launchBridge)",
+     "writes": "none"
+    },
+    {
+     "label": "USB4- en Thunderbolt-apparaten / USB4 and Thunderbolt devices",
+     "kind": "link",
+     "gnomeFunction": "Privacy › Thunderbolt",
+     "backing": "link_card usb (caps.thunderbolt)",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "diagnostics",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Diagnostics & feedback",
+   "titleNl": "Diagnostische gegevens en feedback",
+   "titleEn": "Diagnostics & feedback",
+   "controls": [
+    {
+     "label": "Foutrapporten naar Canonical verzenden: Nooit / Automatisch / Handmatig / Send error reports to Canonical",
+     "kind": "dropdown",
+     "gnomeFunction": "Privacy › Telemetry › Send error reports (Ubuntu)",
+     "backing": "privacy.reports.set → system D-Bus com.ubuntu.WhoopsiePreferences SetReportCrashes / SetAutomaticallyReportCrashes (polkit com.ubuntu.whoopsiepreferences.change)",
+     "writes": "polkit system"
+    },
+    {
+     "label": "Elke maand een systeemrapport verzenden; Een systeemrapport verzenden bij een upgrade naar een nieuwe Ubuntu-versie / Send a system report every month; when upgrading",
+     "kind": "toggle",
+     "gnomeFunction": "Telemetry › System Reporting",
+     "backing": "privacy.insights.set → ubuntu-insights consent files (sources linux, ubuntu_release_upgrader; format verified first)",
+     "writes": "user file"
+    },
+    {
+     "label": "Diagnostische gegevens weergeven (rapport) / View diagnostic data",
+     "kind": "dialog",
+     "gnomeFunction": "Telemetry › Show Report / Cancel Report Generation",
+     "backing": "privacy.insights.report → ubuntu-insights collect dry run (system_tool), cancellable",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "activity",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Activity history",
+   "titleNl": "Activiteitengeschiedenis",
+   "titleEn": "Activity history",
+   "controls": [
+    {
+     "label": "Mijn activiteitengeschiedenis op dit apparaat opslaan / Store my activity history on this device",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › File History",
+     "backing": "org.gnome.desktop.privacy remember-recent-files (b) ↔ privacy.recentFiles",
+     "writes": "user dconf + settings.json (mirror)"
+    },
+    {
+     "label": "Geschiedenis bewaren gedurende: 1 dag / 7 dagen / 30 dagen / Altijd / Keep history for",
+     "kind": "dropdown",
+     "gnomeFunction": "Privacy › File History Duration",
+     "backing": "recent-files-max-age (i, -1 = always)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Activiteitengeschiedenis wissen · Geschiedenis wissen / Clear activity history",
+     "kind": "button",
+     "gnomeFunction": "Privacy › Clear History…",
+     "backing": "apps.clearRecent (existing, confirm)",
+     "writes": "user file"
+    }
+   ]
+  },
+  {
+   "id": "searchpermissions",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Search permissions",
+   "titleNl": "Zoekmachtigingen",
+   "titleEn": "Search permissions",
+   "controls": [
+    {
+     "label": "Zoekresultaten van apps opnemen / Include results from apps",
+     "kind": "toggle",
+     "gnomeFunction": "Search › App Search",
+     "backing": "org.gnome.desktop.search-providers disable-external (b, inverted)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Zoekresultaten: schakelaar per app + Omhoog / Omlaag / Search results per app + order",
+     "kind": "list",
+     "gnomeFunction": "Search › Search Results on/off + order",
+     "backing": "privacy.searchProviders (/usr/share/gnome-shell/search-providers/*.ini) + disabled / enabled / sort-order (as); note: the GNOME overview search",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "searching",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Searching Windows",
+   "titleNl": "Deze pc doorzoeken",
+   "titleEn": "Searching this PC",
+   "controls": [
+    {
+     "label": "Zoeklocaties: Persoonlijke map, Bureaublad, Documenten, Downloads, Muziek, Afbeeldingen, Video's / Search locations",
+     "kind": "toggle",
+     "gnomeFunction": "Search › Default Locations",
+     "backing": "org.freedesktop.Tracker3.Miner.Files index-recursive-directories / index-single-directories (as, tokens &DESKTOP …); caps.tracker",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Bladwijzerlocaties / Bookmarked locations",
+     "kind": "toggle",
+     "gnomeFunction": "Search › Bookmarked Locations",
+     "backing": "same keys; bookmarks from ~/.config/gtk-3.0/bookmarks",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Aangepaste locaties: Locatie toevoegen / Verwijderen / Custom locations",
+     "kind": "list",
+     "gnomeFunction": "Search › Custom Locations",
+     "backing": "folder dialog → index-recursive-directories",
+     "writes": "user dconf"
+    }
+   ]
+  },
+  {
+   "id": "location",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Location",
+   "titleNl": "Locatie",
+   "titleEn": "Location",
+   "controls": [
+    {
+     "label": "Locatieservices / Location services",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Location › Automatic Device Location",
+     "backing": "org.gnome.system.location enabled (b)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Apps toegang geven tot je locatie (lijst) / Let apps access your location",
+     "kind": "list",
+     "gnomeFunction": "Location › Permitted Apps",
+     "backing": "privacy.permissions / setPermission table location id location (EXACT / NONE)",
+     "writes": "user session (permission store)"
+    },
+    {
+     "label": "Desktop-apps toegang geven tot je locatie (alleen info) / Let desktop apps access your location (info)",
+     "kind": "info",
+     "gnomeFunction": "none (unsandboxed apps talk to geoclue directly)",
+     "backing": "static",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "camera",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Camera",
+   "titleNl": "Camera",
+   "titleEn": "Camera",
+   "controls": [
+    {
+     "label": "Cameratoegang / Camera access",
+     "kind": "toggle",
+     "gnomeFunction": "Privacy › Cameras › Camera Access",
+     "backing": "org.gnome.desktop.privacy disable-camera (b, inverted)",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Apps toegang geven tot je camera (lijst) / Let apps access your camera",
+     "kind": "list",
+     "gnomeFunction": "Cameras › Permitted Apps",
+     "backing": "PermissionStore devices / camera",
+     "writes": "user session (permission store)"
+    }
+   ]
+  },
+  {
+   "id": "microphone",
+   "parent": "privacy",
+   "status": "new",
+   "windowsPage": "Privacy & security › Microphone",
+   "titleNl": "Microfoon",
+   "titleEn": "Microphone",
+   "controls": [
+    {
+     "label": "Microfoontoegang / Microphone access",
+     "kind": "toggle",
+     "gnomeFunction": "Apps › Microphone (global key org.gnome.desktop.privacy disable-microphone)",
+     "backing": "disable-microphone (b, inverted); text says only apps that ask through the portal are covered",
+     "writes": "user dconf"
+    },
+    {
+     "label": "Apps toegang geven tot je microfoon (lijst) / Let apps access your microphone",
+     "kind": "list",
+     "gnomeFunction": "Apps › Microphone per app",
+     "backing": "PermissionStore devices / microphone",
+     "writes": "user session (permission store)"
+    }
+   ]
+  },
+  {
+   "id": "update",
+   "parent": "none",
+   "status": "keep",
+   "windowsPage": "Windows Update",
+   "titleNl": "Update en herstel",
+   "titleEn": "Update & recovery",
+   "controls": [
+    {
+     "label": "Ongewijzigd (ook de Software Updates-rij van GNOME) / Unchanged (also GNOME's Software Updates row)",
+     "kind": "info",
+     "gnomeFunction": "System › Software Updates",
+     "backing": "update.*, winpoint.*",
+     "writes": "polkit system"
+    }
+   ]
+  },
+  {
+   "id": "update-history",
+   "parent": "update",
+   "status": "keep",
+   "windowsPage": "Windows Update › Update history",
+   "titleNl": "Updategeschiedenis",
+   "titleEn": "Update history",
+   "controls": [
+    {
+     "label": "Ongewijzigd / Unchanged",
+     "kind": "info",
+     "gnomeFunction": "none",
+     "backing": "update.history",
+     "writes": "none"
+    }
+   ]
+  },
+  {
+   "id": "update-advanced",
+   "parent": "update",
+   "status": "keep",
+   "windowsPage": "Windows Update › Advanced options",
+   "titleNl": "Geavanceerde opties",
+   "titleEn": "Advanced options",
+   "controls": [
+    {
+     "label": "Ongewijzigd / Unchanged",
+     "kind": "info",
+     "gnomeFunction": "none",
+     "backing": "update.setAutoOpen and settings",
+     "writes": "user dconf"
+    }
+   ]
+  }
+ ],
+ "backend": "ONE GENERIC GSETTINGS SERVICE (batch B0), plus dedicated D-Bus methods per domain. Every write follows host/src/services/system/energy.rs. No new crates: the build stays --offline --locked. C libraries are opened with dlopen, using the bindings! pattern of host/src/files/archive_ffi.rs, which B0 lifts into host/src/dlib.rs. They are libpulse.so.0, libcups.so.2, libqrencode.so.4, libcanberra.so.0, libpwquality.so.1, libcrypt.so.1 and libgoa-backend-1.0.so.2. A missing library means that feature reports unavailable.\n\n1. gsettings.* (host/src/services/gsettings.rs, prefix gsettings.)\n- gsettings.get {keys:[{schema, key, path?}]}\n  - Returns {items:[{schema, path, key, allowed, available, writable, owned, value, default, isDefault, type, range}]}.\n  - The schema comes from SettingsSchemaSource::default().lookup(id, true). A missing schema gives available:false. writable is is_writable (lockdown). range is enum names, flag names or min/max.\n- gsettings.set {schema, path?, values:{key: value}}, dangerous\n  - Takes one or more keys of the same schema and path, all checked before anything is queued.\n  - Each key must be allowlisted and in Write mode, have the right type, pass range_check, and be writable.\n  - Then delay, set_value, apply, Settings::sync and a read-back of every key. A mismatch is failed (notTaken).\n  - ctx.dry_run validates only.\n- gsettings.reset {schema, path?, keys}, dangerous.\n- Event gsettings.changed {schema, path, key, item}.\n  - It comes from connect_changed and connect_writable_changed on every schema the service has opened.\n  - The watchers live on the service's own GLib MainContext thread, as system.rs does.\n- JSON to GVariant follows the key's type:\n  - b, i, u, q, d, s, as, ai, ad, a(ss), (dd)\n  - enum becomes a string, flags an array of strings\n  - other types are refused\n- Allowlist: host/src/services/gsettings/allow/{input, devices, network, system, accounts, apps}.rs, one file per batch. Each is a const table of Allow {schema, keys, path, mode}.\n  - path is a relocatable pattern with typed holes: {appid} [a-z0-9-]{1,128}, {custom} custom[0-9]{1,4}, {vidpid} [0-9a-f]{4}:[0-9a-f]{4}, {serial} [0-9a-f]{1,16}, {button} button[A-Z], {service} [a-z-]{1,32}.\n  - mode is one of Write, Read, or Owned(winpoint setting path).\n  - B0 fills all six files from the page table of this plan. A batch edits only its own file.\n- Refusals, all with nl/en texts in host/i18n/gsettings.tsv:\n  - Not allowlisted: denied gsettings.notAllowed.\n  - Owned by WinPoint's look: denied gsettings.ownedByWinPoint, with data.setting, so the page links to the WinPoint control. These are the keys written through gnome_look::note: color-scheme, gtk-theme, icon-theme, accent-color, button-layout, and every org.gnome.desktop.background key.\n  - Held by the extension: the media-keys logout key, and any wm.keybindings key recorded in the extension's logout-restore or task-view-restore. This check is dynamic.\n  - Locked: denied gsettings.locked.\n  - Type or range wrong: bad_args gsettings.badValue.\n  - Schema missing: unsupported gsettings.unavailable.\n- The allowlist never contains ubuntu-dock, DING or tiling-assistant schemas, and never org.gnome.shell enabled-extensions or mutter experimental-features. A test asserts this.\n\n2. Mirror (B0, host/src/settings_mirror.rs, called from settings_effects::apply in the panel host only)\n- Both directions, with an equality guard and origin tag so writers cannot loop.\n- Preference pairs:\n  - notifications.dnd ↔ show-banners (inverted)\n  - time.h24 ↔ clock-format\n  - time.showSeconds and taskbar.showSeconds ↔ clock-show-seconds\n  - time.showDate ↔ clock-show-date\n  - time.showWeekday (new) ↔ clock-show-weekday\n  - time.weekNumbers (new) ↔ calendar show-weekdate\n  - time.firstDayOfWeek (now also 'default' and 0-6) ↔ week-start-day\n  - privacy.recentFiles ↔ remember-recent-files\n  - accessibility.reduceMotion ↔ reduced-motion (writes enable-animations too)\n  - accessibility.textScale ↔ text-scaling-factor\n  - accessibility.highContrast ↔ high-contrast\n  - taskbar.batteryPercent (new) ↔ show-battery-percentage\n- Look pair: theme.accent → accent-color, the nearest of the 10 names. It runs only while theme.syncSystem and is recorded with gnome_look::note, so `win11-app --gnome-look` restores it in GNOME and Ubuntu sessions.\n- Preference keys are shared with GNOME exactly as GNOME Settings writes them, with no note.\n- B0 also adds the new keys to settings-defaults.json and their shell consumers:\n  - the tray clock weekday and the battery percentage (native/shell/src/panel/taskbar/system.rs)\n  - week numbers and the 'default' first day (native/shell/src/flyouts/calendar.rs, native/calendar/src/config.rs)\n\n3. caps.get (B0, host/src/services/caps.rs)\nHardware and packages, so pages hide what GNOME hides.\n- From the udev database: mouse, touchpad, pointingstick, tablet, touchscreen. These are read from /run/udev/data with ID_INPUT_* and refresh from a FileMonitor on /dev/input.\n- thunderbolt (/sys/bus/thunderbolt), modem (ModemManager1), ambientLight and accelerometer (net.hadess.SensorProxy), privacyScreen, backlight, battery, hibernate (logind CanHibernate), fingerprint (fprintd), colorSensor (colord GetSensors), geoclue, tracker, usbguard.\n- Installed tools: openssh-server, gnome-user-share, malcontent, realmd, rygel, tecla, orca, simple-scan, desktop-security-center, ubuntu-insights, whoopsie-preferences.\n- Event caps.changed.\n- The registry gets needs: Option<&str> per page. Navigation, child_links and search filter on it.\n\n4. Dedicated methods. Each prefix is a LazyService module that B0 registers in services/mod.rs and creates as a stub, then exactly one batch fills.\n- A, input.*:\n  - layouts, engines\n  - sources.set (also runs pkexec /usr/libexec/gnome-control-center-set-debian-keyboard, as Ubuntu's g-c-c does; argv verified first)\n  - options.set (lv3 and compose in xkb-options), preview (tecla), engineSetup (through the shell)\n  - shortcuts, shortcuts.set (conflict detection), shortcuts.reset, shortcuts.resetAll, shortcuts.custom.add, shortcuts.custom.update, shortcuts.custom.remove\n  - tablets, tablet.mapButtons\n- B, devices.*:\n  - bluetooth.adapter, bluetooth.setDiscoverable, bluetooth.sendFiles\n  - batteries (UPower EnumerateDevices)\n  - thunderbolt.get, thunderbolt.setAuthMode, thunderbolt.enroll, thunderbolt.authorize, thunderbolt.forget (bolt)\n  - color.get, setEnabled, makeDefault, addProfile, importProfile, removeProfile, installSystemWide, calibrate.start, calibrate.cancel, calibrate.resume (colord, ColorHelper)\n- B, printers.*:\n  - Reads and jobs through libcups (dlopen): list, get, discover (Avahi + CupsPkHelper DevicesGet), drivers (CUPS-Get-PPDs), jobs, testPage, cleanHeads.\n  - Admin writes through CupsPkHelper only: add, rename, setLocation, setDefault, setEnabled, setAcceptJobs, remove, setOption, job.*, jobs.clear.\n- C, net.*:\n  - connections, connection.get, connection.update (Update2), connection.add (AddConnection2), connection.delete, connection.activate, connection.deactivate\n  - devices, device.setEnabled\n  - wifi.hidden, wifi.secrets (GetSecrets)\n  - hotspot.get, hotspot.start, hotspot.stop\n  - radios.set (WirelessEnabled, WwanEnabled), connectivity.set\n  - vpn.plugins, vpn.import (nmcli connection import)\n  - modem.get, modem.unlock, modem.setPin, modem.changePin, modem.setModes, modem.scan, modem.register, modem.setPrimarySlot, modem.apns (serviceproviders.xml)\n  - NM settings are mapped a{sa{sv}} ↔ JSON, with ssid as bytes and IP address-data and route-data.\n  - Event net.changed.\n- C, sharing.*:\n  - rdp.get, rdp.set (grd keys plus the systemd user unit), rdp.credentials.* (grdctl), rdp.fingerprint\n  - rdp.system.* (org.gnome.RemoteDesktop.Configuration plus pkexec gnome-remote-desktop-enable-service)\n  - ssh.get, ssh.set (systemd1), ssh.install (PackageKit)\n  - media.get, media.set, media.folders.set, media.networks.remove (gsd Sharing plus rygel.conf)\n- D, display.* (extending host/src/services/display.rs):\n  - state (full GetCurrentState decode), apply (ApplyMonitorsConfig, method verify, temporary or persistent), identify (extension displayBridge.js)\n  - nightLight.status, nightLight.disableUntilTomorrow (gsd Color)\n  - Event display.changed from MonitorsChanged. Hyprland paths stay.\n- D, sound.*:\n  - libpulse through dlopen with a threaded mainloop. This is GNOME's own path (libgvc speaks the pulse protocol to pipewire-pulse). The existing wpctl path stays as the fallback.\n  - state, setDefault, setVolume, setMute, setBalance, setProfile, setPort, moveStream, setEventVolume (ext-stream-restore)\n  - test (libcanberra), meter (events sound.level), alerts.get, alerts.set (theme-name, event-sounds, the __custom theme)\n- D, smaller modules:\n  - battery.charging.get, battery.charging.set, battery.history (UPower)\n  - wellbeing.history\n  - storage.cleanTemp\n- E, users.*:\n  - AccountsService: self, list, setRealName, setIcon, faces, setLanguage, setFormats, setAccountType, setAutoLogin, create, delete, setPassword (yescrypt through libcrypt)\n  - changePassword (passwd in a PTY, LC_ALL=C), passwordQuality (libpwquality)\n  - fingerprint.* (fprintd, events users.fingerprint.progress)\n- E, goa.*:\n  - list, setService, signIn, remove, providers\n  - add, which spawns `win11-gtk-settings --goa-add <provider>`. That helper mode dlopens libgoa-backend in its own process, so libadwaita never loads into the Settings window.\n- E, machine.*:\n  - info (hostname1, switcheroo, UDisks2, systemd1 Virtualization, gnome-version.xml), setName (hostname1)\n  - time.get, time.setNtp, time.setTime, time.setTimezone, time.zones, time.sync (timedate1, timesync1)\n  - locales, languages, languages.install (PackageKit with language-selector's data files)\n  - login.get, login.setLocale (locale1)\n- F, privacy.*:\n  - permissions, setPermission, deletePermission (xdg PermissionStore on the session bus)\n  - apps.sandboxed\n  - reports.get, reports.set (WhoopsiePreferences)\n  - insights.get, insights.set, insights.report (ubuntu-insights)\n  - security (fwupd, read-only), securityCenter.open\n  - searchProviders\n  - app (flatpak metadata, snapd REST over /run/snapd.socket with a small HTTP/1.0 client on UnixStream, sizes, handlers), app.clearCache, app.resetHandlers, app.removeHandler, app.snapConnect, app.globalShortcuts.set (org.gnome.GlobalShortcutsRebind)\n- F, other prefixes:\n  - background.catalog, background.add, background.remove\n  - notifications.apps (host/src/services/notifications.rs)\n  - new default-app kinds calendar, calls and sms (host/src/apps/defaults.rs)\n- Every mutating method is listed with dangerous:true, skips its write under ctx.dry_run, emits <prefix>.changed and uses ApiError::tr with its own stem file.\n\n5. Polkit, like GNOME\n- No new root helper and no new .policy are needed. Every system write goes either to a daemon that checks polkit itself, or through GNOME's own pkexec helpers with GNOME's policies.\n- Daemons that check polkit: hostname1, timedate1, locale1, AccountsService, fprintd, NetworkManager, ModemManager, BlueZ, UPower, power-profiles-daemon, colord, bolt, CupsPkHelper, PackageKit, snapd, WhoopsiePreferences, systemd1, org.gnome.RemoteDesktop.Configuration.\n- GNOME's pkexec helpers: org.gnome.controlcenter.set-keyboard → /usr/libexec/gnome-control-center-set-debian-keyboard, and org.gnome.remotedesktop.enable-system-daemon → /usr/libexec/gnome-remote-desktop-enable-service.\n- B0 adds common::call_interactive.\n  - It uses DBusCallFlags::ALLOW_INTERACTIVE_AUTHORIZATION, sets interactive=true where the API takes it, and allows 10 minutes.\n  - NotAuthorized and Cancelled map to denied with core.notAuthorized or core.authCancelled.\n  - GNOME Shell's polkit agent shows the password dialog, and Ubuntu's rules let sudo users through where GNOME's do.\n  - The page puts a shield glyph on such buttons (pickers::AdminButton).\n- B0 adds host/src/tools.rs system_tool(name).\n  - It resolves to /usr/bin/<name>, or to $WIN11_SYSTEM_TOOL_DIR/<name> in the test sandboxes.\n  - Every new spawn goes through it: pkexec, grdctl, tecla, bluetooth-sendto, passwd, nmcli import, ubuntu-insights, simple-scan.\n  - That way the harness exec rule can see that no real pkexec runs.\n\n6. GNOME Shell bridge (only what gnome-shell can do)\n- extension/displayBridge.js (D): monitor labels for Identify.\n- extension/inputBridge.js (A): the pad OSD.\n- extension/launchBridge.js (B0): launches an app as a gnome-shell child. Used for Orca's and IBus engines' preferences and the Security Center, so no Python runs under a WinPoint process.\n- B0 wires all three into the panelBridge.js Call dispatch.\n\n7. Shared-file protocol (how parallel batches never conflict)\n- B0 runs first, alone, and creates every shared entry point:\n  - every registry entry (ids, parents, glyphs, nl/en titles, descriptions, keywords, needs) and ALIASES, with ms-settings names such as mousetouchpad, devices-touchpad, printers, pen, autoplay, usb, network-vpn, network-proxy, network-mobilehotspot, network-airplanemode, network-cellular, nightlight (now its own page), colorprofile, apps-volume, multitasking, remotedesktop, developers, emailandaccounts, signinoptions, otherusers, yourinfo, regionformatting, typing, easeofaccess-*, privacy-location, privacy-webcam, privacy-microphone, privacy-feedback, privacy-activityhistory, search-permissions, cortana-windowssearch, windowsdefender, appsfeatures-app, storagepolicies\n  - settings_pages.json regenerated\n  - pages/mod.rs with every `pub mod`, MODULES and MODULE_CSS entry, and a stub module per new file. Each stub has its PAGES ids pointing to common::placeholder.\n  - services/mod.rs with every new prefix, LazyService and shutdown\n  - runtime.rs loading api-methods.json plus host/src/api-methods/{foundation, input, devices, network, system, accounts, apps}.json\n  - i18n.rs STEMS plus an empty tsv per new stem\n  - the allowlist files\n  - main.rs (mod gs, pickers, goa_helper and the --goa-add switch)\n  - the extension dispatch\n  - the parent overview loops turned into registry-driven child_links\n- After B0, a batch edits only files it owns (see batches). New page modules, host modules, tsv, allowlist and api-methods fragments are all per batch.\n- A needed change to someone else's file (for example a registry keyword) goes into the batch's handoff as a registry note, which the integration step applies.\n\n8. Settings-side client (B0, native/apps/settings/src/gs.rs)\n- Gs::load(&p, keys) makes one gsettings.get per page.\n- Helpers: gs.toggle, gs.dropdown, gs.slider (with map functions), gs.radio, gs.number, gs_toggle_card, gs_dropdown_card.\n- They write optimistically and revert with the error toast. A key that is not writable shows the lock tooltip, and an unavailable key hides the card.\n- They follow gsettings.changed through p.on. They follow the existing common::setting_toggle style.\n- Every bound control is named st-<page>-<key> with set_widget_name, for the harness.\n- native/apps/settings/src/pickers.rs (B0) adds TimePicker and DatePicker (Windows flyouts), KeyCapture (inhibits system shortcuts), QrCode (libqrencode) and AdminButton.\n\n9. Testing without the live session\n- Never on Robin's dconf or buses.\n- Host unit tests run in tests/rust-sandbox/run-tests.sh: keyfile GSettings, a private session bus, an unreachable system bus, guard stubs, the heavy lock.\n- GSettings logic uses gio::memory_settings_backend_new, as energy/tests.rs does, plus a keyfile backend with a locks file for lockdown.\n- D-Bus methods are tested against fakes on private buses inside the bwrap layer pattern of tests/update/run.sh, which B0 generalises to tests/dbus-fakes/run.sh. Test-only Python fakes are allowed.\n- The GNOME harness drives everything end to end (see testing).",
+ "gnomeFunctionsLeftOut": [
+  "The whole Ubuntu Desktop panel. Desktop Icons on/off, size, new-icon position and show home folder. Dock on/off, auto-hide, panel mode, icon size, show on, position, show volumes / unmounted / network volumes and show trash. Enhanced Tiling on/off, tiling popup and tile groups. These configure ubuntu-dock, DING and tiling-assistant, which the WinPoint session never loads: /usr/share/gnome-shell/modes/winpoint.json enables only win11-gnome. WinPoint's taskbar, desktop icons and snap replace them (Taakbalk, Bureaubladpictogrammen, Multitasking). Writing those keys would only change the Ubuntu session.",
+  "Multitasking › monitor isolation (dash-to-dock isolate-monitors), and the Ubuntu patch's extra write of tiling-assistant tiling-popup-all-workspace with App Switching: same reason, Ubuntu Dock and tiling-assistant only. The current-workspace-only key itself is kept.",
+  "Multitasking › Reopen Windows After Login (org.gnome.desktop.session save-restore): its group is visible=false in GNOME 50's own UI, so it is not a working GNOME function. It returns under Aanmeldingsopties if GNOME shows it again.",
+  "Sharing › File Sharing (WebDAV, Public folder, Require Password, Password, networks) and Bluetooth file receiving: both need gnome-user-share, which is not installed, and GNOME hides the rows too. They would go to Geavanceerde instellingen voor delen and Apparaten once it is installed.",
+  "Users › Parental Controls, the Wellbeing Parental Controls banner and the malcontent app-list filter in Apps: malcontent-control is not installed and GNOME hides them. Their Windows place would be Accounts › Familie.",
+  "Users › Add Enterprise Login (realmd / adcli): not installed and hidden by GNOME. Its Windows place would be Accounts › Toegang tot werk of school.",
+  "Privacy › Telemetry › Automatic Error Reporting (ABRT): Fedora only. There is no ABRT service on Ubuntu and GNOME hides the row. Ubuntu's whoopsie and ubuntu-insights rows are kept.",
+  "Color › printer calibration and View Details (gcm-viewer): they need gnome-color-manager, which is not installed, and GNOME hides those buttons. Display calibration with a sensor is kept.",
+  "Printers › driver lookup through system-config-printer's D-Bus service (GetBestDrivers, GroupPhysicalDevices, MissingExecutables): scp-dbus-service is a Python program, and WinPoint may not run Python. Driver choice stays, through CUPS's own PPD list and driverless IPP Everywhere. Only the missing-executables check is gone.",
+  "About › Support GNOME / Donate: hidden in GNOME's own UI (visible=false), donation reminder off on Ubuntu, and not a setting.",
+  "Appearance › OLED hint: a label that is hidden in GNOME's UI. It is informational only."
+ ],
+ "batches": [
+  {
+   "name": "B0 Foundation (runs first, alone; every later batch branches from its commit)",
+   "pages": [
+    "placeholder modules for every new page id; system, time, personalization, apps, accounts, privacy and accessibility overview loops become registry-driven; nightlight alias moves from display to nightlight"
+   ],
+   "files": [
+    "native/apps/settings/src/registry.rs (all new entries with needs; ALIASES)",
+    "native/apps/settings/src/app.rs (N-level breadcrumb; top_of walks the parent chain)",
+    "native/apps/settings/src/main.rs (mod gs, pickers, goa_helper; --goa-add switch)",
+    "native/apps/settings/src/common.rs (child_links, placeholder)",
+    "native/apps/settings/src/gs.rs (new)",
+    "native/apps/settings/src/pickers.rs (new)",
+    "native/apps/settings/src/goa_helper.rs (stub, then owned by E)",
+    "native/apps/settings/src/pages/mod.rs (all pub mod, MODULES, MODULE_CSS, module doc)",
+    "native/apps/settings/src/pages/{system,time,personalization,apps,accounts,privacy,accessibility}.rs (only the child-list loops)",
+    "stubs: native/apps/settings/src/pages/{a11y_vision,a11y_interaction,mouse,touchpad,pen,keyboards,typing,shortcuts,bt_devices,printers,autoplay,usb,colorprofile,wifi_network,net_editor,vpn,hotspot,flightmode,proxy,mobile,network_advanced,remotedesktop,system_advanced,nightlight,sound_device,volume_mixer,storagesense,multitasking,screentime,yourinfo,email_accounts,signin,otherusers,formats,language_admin,app_advanced,app_notifications,privacy_security,privacy_history,privacy_perms}.rs",
+    "native/shell/src/start/settings_pages.json (regenerated)",
+    "native/kit/src/glyph_data.rs (new glyphs touchpad, pen, vpn, magnifier, narrator, text-cursor, remote-desktop)",
+    "native/shell/src/panel/taskbar/system.rs (weekday in clock, battery percentage)",
+    "native/shell/src/flyouts/calendar.rs and native/calendar/src/config.rs (week numbers, first day 'default')",
+    "host/src/services/mod.rs (all new prefixes)",
+    "host/src/services/gsettings.rs + host/src/services/gsettings/{value.rs, owned.rs, tests.rs, allow/mod.rs, allow/input.rs, allow/devices.rs, allow/network.rs, allow/system.rs, allow/accounts.rs, allow/apps.rs}",
+    "host/src/services/caps.rs",
+    "stubs: host/src/services/{input,devices,printers,net,sharing,sound,battery,wellbeing,users,goa,machine,privacy,background}.rs",
+    "host/src/services/system/common.rs (call_interactive)",
+    "host/src/tools.rs, host/src/dlib.rs, host/src/settings_mirror.rs, host/src/lib.rs (mod lines), host/src/settings_effects.rs (one mirror hook)",
+    "host/src/settings-defaults.json (time.showWeekday, time.weekNumbers, taskbar.batteryPercent, firstDayOfWeek 'default')",
+    "host/src/runtime.rs (methods() loads the fragments)",
+    "host/src/api-methods/{foundation,input,devices,network,system,accounts,apps}.json",
+    "host/src/i18n.rs (STEMS) + host/i18n/{gsettings,caps,input,devices,printers,net,sharing,sound,battery,wellbeing,users,goa,machine,privacy,background}.tsv headers; host/i18n/core.tsv (notAuthorized, authCancelled)",
+    "extension/panelBridge.js (dispatch), extension/launchBridge.js (new), extension/displayBridge.js and extension/inputBridge.js (stubs)",
+    "tools/i18n/check_rust.py (JSON_SKIP for the fragments)",
+    "tests/gnome/harness.py (stubs for grdctl, tecla, bluetooth-sendto, passwd, ubuntu-insights, simple-scan, orca, ibus; WIN11_SYSTEM_TOOL_DIR guard), tests/gnome/README.md, tests/gnome/lib/scenario.py (h.gsettings_get / h.gsettings_set on the private keyfile, h.settings_data_page), tests/gnome/lib/standins.py (new D-Bus stand-in builder), tests/rust-sandbox/run-tests.sh, tests/dbus-fakes/run.sh (generalised GW1 layer)"
+   ],
+   "hostWork": "The generic gsettings.* service with all six allowlist tables. caps.get. settings_mirror for every pair in the backend section, with the shell consumers of the new keys. call_interactive, system_tool, the dlib loader. The api-methods fragment loader, which keeps /api/methods output identical (a sorted union, duplicates rejected). New stems and stub service modules that return None. No feature pages.",
+   "risk": "It touches every shared file, so it must be small, reviewed and merged before the parallel work starts. Multi-level breadcrumbs change how the nav pane highlights its item (top_of must return the top-level id). The search order with about 90 pages needs re-checking for the existing queries. The text-scale mirror double-scales the kit until batch A lands, which is harmless on branches and fixed before integration. The mirror must run only in the panel host and must never loop."
+  },
+  {
+   "name": "A Input & accessibility",
+   "pages": [
+    "mouse",
+    "touchpad",
+    "pen",
+    "typing",
+    "language-options",
+    "keyboard-advanced",
+    "shortcuts",
+    "accessibility",
+    "textsize",
+    "visualeffects",
+    "contrast",
+    "mousepointer",
+    "textcursor",
+    "magnifier",
+    "narrator",
+    "a11y-audio",
+    "a11y-keyboard",
+    "a11y-mouse"
+   ],
+   "files": [
+    "native/apps/settings/src/pages/{mouse,touchpad,pen,keyboards,typing,shortcuts,accessibility,a11y_vision,a11y_interaction}.rs",
+    "host/src/services/input.rs + host/src/services/input/{layouts.rs, engines.rs, sources.rs, shortcuts.rs, tablets.rs, tests.rs}",
+    "host/src/services/gsettings/allow/input.rs",
+    "host/src/api-methods/input.json",
+    "host/i18n/input.tsv",
+    "extension/inputBridge.js",
+    "native/kit/src/theme.rs, native/kit/src/ctx.rs, native/kit/src/controls/toggles.rs (status shapes)",
+    "native/shell/src/theme.rs, native/shell/src/desktop/grid.rs (text scale), native/shell/src/flyouts/quick.rs (Accessibility tile)",
+    "tests/gnome/scenarios/settings-input.py, tests/gnome/scenarios/settings-a11y.py"
+   ],
+   "hostWork": "input.*: the xkeyboard-config catalogue (roxmltree + glib dgettext), IBus components, the sources write plus the Debian keyboard pkexec, xkb-options editing, the keybinding catalogue from the g-c-c XMLs with conflict detection and custom shortcuts, tablets from udev and libwacom data, and the pad OSD through the extension. In the kit: no double scaling once text-scaling-factor is applied by GTK, and on/off shapes in ToggleSwitch.",
+   "risk": "Text scaling may double between GTK and the kit, so it must be measured in the harness. overlay-key empty also stops Super from opening Start, which needs a confirm and clear wording. The set-debian-keyboard argv is inferred from strings and must be checked in g-c-c 50.3 source before use. Key capture competes with GNOME Shell grabs (the inhibit prompt). Extension-held keybindings must stay read-only. Stylus serials are only known after the pen is used. Kit changes affect every native app."
+  },
+  {
+   "name": "B Bluetooth, printers & colour",
+   "pages": [
+    "bluetooth",
+    "bluetooth-devices",
+    "printers",
+    "printer",
+    "autoplay",
+    "usb",
+    "colorprofile"
+   ],
+   "files": [
+    "native/apps/settings/src/pages/{bluetooth,bt_devices,printers,autoplay,usb,colorprofile}.rs",
+    "host/src/services/devices.rs + host/src/services/devices/{bluez.rs, batteries.rs, bolt.rs, colord.rs, tests.rs}",
+    "host/src/services/printers.rs + host/src/services/printers/{cups.rs, pkhelper.rs, discover.rs, drivers.rs, tests.rs}",
+    "host/src/services/gsettings/allow/devices.rs",
+    "host/src/api-methods/devices.json",
+    "host/i18n/devices.tsv, host/i18n/printers.tsv",
+    "tests/gnome/lib/fake_ipp.py, tests/gnome/scenarios/settings-devices.py"
+   ],
+   "hostWork": "devices.*: BlueZ alias and discoverable (reset on cleanup), bluetooth-sendto, UPower device batteries, bolt, colord and the ColorHelper calibration. printers.*: libcups through dlopen for reads, jobs and the test page; CupsPkHelper for every admin write; Avahi plus DevicesGet discovery; the CUPS-Get-PPDs driver list with IPP Everywhere first.",
+   "risk": "The libcups ABI surface through dlopen. Driver matching without system-config-printer may pick worse drivers. Calibration cannot be tested without a sensor (stand-in only). Discoverable must be switched off again even if Settings crashes (rely on DiscoverableTimeout). The Bluetooth page is the largest existing module (2649 lines), so keep its shared helpers' signatures for home.rs."
+  },
+  {
+   "name": "C Network & sharing",
+   "pages": [
+    "network",
+    "wifi",
+    "ethernet",
+    "wifi-network",
+    "wifi-known",
+    "vpn",
+    "hotspot",
+    "flightmode",
+    "proxy",
+    "mobile",
+    "network-advanced",
+    "sharing-advanced",
+    "remotedesktop",
+    "system-advanced"
+   ],
+   "files": [
+    "native/apps/settings/src/pages/{network,wifi_network,net_editor,vpn,hotspot,flightmode,proxy,mobile,network_advanced,remotedesktop,system_advanced}.rs",
+    "host/src/services/net.rs + host/src/services/net/{settings_map.rs, connections.rs, wifi.rs, vpn.rs, hotspot.rs, modem.rs, providers.rs, tests.rs}",
+    "host/src/services/sharing.rs + host/src/services/sharing/{rdp.rs, ssh.rs, media.rs, tests.rs}",
+    "host/src/services/gsettings/allow/network.rs",
+    "host/src/api-methods/network.json",
+    "host/i18n/net.tsv, host/i18n/sharing.tsv",
+    "tests/gnome/scenarios/settings-network.py, tests/gnome/scenarios/settings-sharing.py"
+   ],
+   "hostWork": "net.*: NM settings a{sa{sv}} ↔ JSON (byte SSIDs, address-data, route-data, secrets flags); interactive Update2, AddConnection2 and Delete; GetSecrets for the key view and QR; hotspot; radios; connectivity; VPN plugins and nmcli import; ModemManager (SIM, modes, operators, APN presets). sharing.*: grd user daemon (gsettings, systemd user unit, grdctl), grd system daemon (Configuration D-Bus plus GNOME's enable helper), SSH (systemd1, PackageKit install), rygel media sharing.",
+   "risk": "The settings dict mapping must keep keys it does not edit (Update2 merges; never rebuild a whole connection). Secrets: system-owned secrets need polkit and the shell's secret agent. VPN plugin options beyond the common fields only appear as name/value rows. Hotspot on a single-radio card drops Wi-Fi (warn, as GNOME does). No modem here (stand-in only). grd TLS certificate creation and keyring credentials must match what grdctl expects. SSH install is only testable with stubs."
+  },
+  {
+   "name": "D System: display, sound, power, storage, multitasking, screen time",
+   "pages": [
+    "display",
+    "display-advanced",
+    "nightlight",
+    "sound",
+    "sound-device",
+    "volume-mixer",
+    "power",
+    "storage",
+    "storagesense",
+    "multitasking",
+    "screentime"
+   ],
+   "files": [
+    "native/apps/settings/src/pages/{display,nightlight,sound,sound_device,volume_mixer,power,storage,storagesense,multitasking,screentime}.rs",
+    "host/src/services/display.rs + host/src/services/display/{mutter.rs, tests.rs}",
+    "host/src/services/sound.rs + host/src/services/sound/{pulse.rs, alerts.rs, tests.rs}",
+    "host/src/services/battery.rs, host/src/services/wellbeing.rs",
+    "host/src/services/storage.rs + host/src/services/storage/* (cleanTemp)",
+    "host/src/services/gsettings/allow/system.rs",
+    "host/src/api-methods/system.json",
+    "host/i18n/{sound,battery,wellbeing,display,storage}.tsv",
+    "extension/displayBridge.js",
+    "tests/gnome/scenarios/settings-system.py"
+   ],
+   "hostWork": "display.*: the full GetCurrentState decode and ApplyMonitorsConfig (verify, temporary, persistent) with WinPoint's 15 s keep dialog; the GNOME arrangement canvas (reuse the Hyprland one in display.rs); identify through the extension; gsd Color night-light status and DisabledUntilTomorrow. sound.*: libpulse through dlopen (devices, ports, card profiles, balance, fade, LFE, streams and moves, ext-stream-restore event volume, peak meters, subscribe) with the wpctl fallback; alert themes like g-c-c. battery.* (UPower charge threshold, history), wellbeing.history, storage.cleanTemp.",
+   "risk": "The ApplyMonitorsConfig signature a(iiduba(ssa{sv})) and properties must be exact. GNOME Shell may show its own keep-changes dialog on persistent applies, so only one dialog may be visible. The harness's virtual monitor offers few modes. A libpulse threaded mainloop through hand-written FFI is the largest FFI in the project. The power-button value interactive must be named Afsluiten in the UI. The screen-time history file format is not documented, so parse it defensively."
+  },
+  {
+   "name": "E Accounts, time & region, About",
+   "pages": [
+    "accounts",
+    "yourinfo",
+    "email-accounts",
+    "signin",
+    "otherusers",
+    "time",
+    "datetime",
+    "language",
+    "formats",
+    "language-admin",
+    "about",
+    "system (rename_hint only)"
+   ],
+   "files": [
+    "native/apps/settings/src/pages/{accounts,yourinfo,email_accounts,signin,otherusers,time,formats,language_admin,about,system}.rs (system.rs: rename_hint becomes the real dialog; device_hero signature kept)",
+    "native/apps/settings/src/goa_helper.rs",
+    "host/src/services/users.rs + host/src/services/users/{accounts.rs, passwd.rs, crypt.rs, fprint.rs, quality.rs, tests.rs}",
+    "host/src/services/goa.rs",
+    "host/src/services/machine.rs + host/src/services/machine/{info.rs, hostname.rs, time.rs, zones.rs, locale.rs, languages.rs, tests.rs}",
+    "host/src/services/gsettings/allow/accounts.rs",
+    "host/src/api-methods/accounts.json",
+    "host/i18n/{users,goa,machine}.tsv",
+    "tests/gnome/scenarios/settings-accounts.py, tests/gnome/scenarios/settings-time.py"
+   ],
+   "hostWork": "users.*: AccountsService for self and others; passwd driven through a PTY; yescrypt hashes through libcrypt; libpwquality; fprintd enrolment with progress events. goa.*: D-Bus management plus the --goa-add helper process (dlopen libgoa-backend). machine.*: hostname1, timedate1, timesync1, locale1, the zone list with Windows-style (UTC±hh:mm) City labels, language packs through PackageKit from language-selector's data files, and the About details.",
+   "risk": "passwd prompts and errors (force the C locale, cap retries). Deleting a user cannot be undone (confirm, never the signed-in user). The GOA provider dialogs are libadwaita-styled in their own window. AccountsService language and formats only apply at the next sign-in (banner). Timezone labels need care. Every write here asks for a password unless Ubuntu's rules allow it."
+  },
+  {
+   "name": "F Apps, notifications, privacy & background",
+   "pages": [
+    "installed",
+    "app-advanced",
+    "defaultapps",
+    "notifications",
+    "app-notifications",
+    "privacy",
+    "security",
+    "diagnostics",
+    "activity",
+    "searchpermissions",
+    "searching",
+    "location",
+    "camera",
+    "microphone",
+    "background",
+    "colors"
+   ],
+   "files": [
+    "native/apps/settings/src/pages/{apps,installed,app_advanced,defaultapps,notifications,app_notifications,privacy,privacy_security,privacy_history,privacy_perms,background,colors}.rs",
+    "host/src/services/privacy.rs + host/src/services/privacy/{store.rs, sandbox.rs, snapd.rs, telemetry.rs, fwupd.rs, search.rs, shortcuts.rs, tests.rs}",
+    "host/src/services/background.rs",
+    "host/src/services/notifications.rs (notifications.apps)",
+    "host/src/apps/defaults.rs (calendar, calls, sms)",
+    "host/src/services/gsettings/allow/apps.rs",
+    "host/src/api-methods/apps.json",
+    "host/i18n/{privacy,background}.tsv, host/i18n/notifications.tsv, host/i18n/apps.tsv",
+    "extension/notificationsBridge.js (notifications.sounds consumer)",
+    "tests/gnome/scenarios/settings-apps.py, tests/gnome/scenarios/settings-privacy.py"
+   ],
+   "hostWork": "privacy.*: PermissionStore read/write per table; the sandboxed app list; WhoopsiePreferences; ubuntu-insights consent and report; fwupd HSI; search-provider .ini catalogue; per-app advanced data (flatpak metadata and sizes, snapd REST, handlers, global shortcuts rebind). background.*: the gnome-background-properties catalogue and user copies. notifications.apps. New default-app kinds.",
+   "risk": "Portal permissions only cover sandboxed apps, and the microphone switch is weakly enforced, so the texts must say that honestly. A hand-written HTTP client to snapd. Flatpak system vs user installations. The ubuntu-insights consent file format must be verified before writing. Muting a notification's sound in the bridge must happen before GNOME plays it (check in the harness). Search providers change GNOME's overview, not WinPoint's own Start index."
+  },
+  {
+   "name": "I Integration (runs last, alone)",
+   "pages": [
+    "all"
+   ],
+   "files": [
+    "native/apps/settings/src/registry.rs and native/shell/src/start/settings_pages.json (registry notes from the batches)",
+    "native/apps/settings/src/common.rs (placeholder removed)",
+    "VALIDATION_SETTINGS.md, CHANGELOG.md, README.md, README.nl.md",
+    "tests/gnome/scenarios/settings-tour.py"
+   ],
+   "hostWork": "Merge A to F onto B0 in any order. By construction the merges have no textual conflicts; a conflict means a plan violation and goes back to the owning batch. Apply the registry notes and regenerate settings_pages.json. Remove the placeholder builder: a test asserts no page uses it. Run every test suite and the full harness tour in nl and en.",
+   "risk": "Cross-batch method names and page ids are fixed by this plan, so drift shows up only here. The tour must catch it (no unknown_method, no placeholder, no Dutch words in en)."
+  }
+ ],
+ "testing": "RULES\n- Nothing ever runs against Robin's live session: no gsettings, dconf, gdbus or busctl, no live buses.\n- Heavy work goes through tools/heavy.sh and its .heavy.lock. Harness runs queue behind each other, so the batches' runs are serialised. Use one cargo target dir per worktree (WIN11_CARGO_TARGET_DIR).\n\nUNIT TESTS, every batch\n- Host: tests/rust-sandbox/run-tests.sh --lib (keyfile GSettings, private session bus, unreachable system bus, guard-bin stubs).\n- Native workspace: cargo test, plus tests/i18n (test_native.py checks that settings_pages.json equals the registry; check_rust / check_native; the glossary; no Dutch words in en).\n\nB0 unit tests\n- Allowlist audit:\n  - every entry's schema is installed (or marked optional: tracker, ubuntu, whoopsie, remote-desktop) and every key exists with the type its mapping expects;\n  - relocatable entries are checked through the schema id;\n  - no ubuntu-dock, ding or tiling-assistant schema and no enabled-extensions or experimental-features in Write mode;\n  - every gnome_look key is Owned.\n- JSON ↔ GVariant round trips for every supported type, enum and flag. Unknown types are refused.\n- Memory backend: set, read back, reset, multi-key atomic set. A keyfile backend with a locks file gives denied. Wrong type or range gives bad_args. dry_run writes nothing.\n- gsettings.changed fires for an external write.\n- Extension-held keys are refused, from a fixture extension schema.\n- Mirror: both directions with a temporary settings.json and the memory backend; no loop; accent-color goes through gnome_look::note and --gnome-look restores it.\n- caps parses fixture /sys and /run/udev trees.\n- api-methods fragments: no duplicates. Every name in every service's METHODS table is listed, and every mutating one is dangerous.\n- Registry:\n  - every id has a builder;\n  - parent chains are acyclic and at most three deep;\n  - needs keys are known to caps;\n  - breadcrumbs for third-level pages;\n  - search: nl 'muis' and en 'mouse' find mouse first; 'touchpad', 'printer', 'vpn', 'proxy', 'nachtlampje' → nightlight, 'toetsenbord', 'sneltoetsen' and 'vergrootglas' resolve; a needs-filtered page is hidden.\n\nPer-batch unit tests\n- Pure parsers on fixtures, or on the installed files with a skip when absent:\n  - A: evdev.xml, ibus components, the keybinding XMLs, libwacom .tablet files.\n  - B: IPP and PPD responses, the bolt and colord dict decoders.\n  - C: the NM settings map (round trip keeps unknown keys), serviceproviders.xml, the WIFI: QR string.\n  - D: GetCurrentState decode and ApplyMonitorsConfig encode, night-light strength ↔ Kelvin, pulse volume and balance math.\n  - E: passwd PTY transcript states, crypt prefix, zone labels, the pkg_depends parser.\n  - F: search-provider .ini, flatpak metadata, the snapd HTTP client against a socketpair, consent files.\n- Value mappings: mouse 1-20 ↔ -1..1, touchpad 1-10, cursor sizes, lock-delay options, old-files-age presets.\n- Every method's dry-run path writes nothing.\n- D-Bus-backed methods run as #[ignore] bus tests inside tests/dbus-fakes/run.sh. That is B0's generalisation of the tests/update/run.sh bwrap layer: private system and session bus, stubs first on PATH, strace on connect. Fakes per batch go under tests/dbus-fakes/fakes/<batch>/:\n  - A: none needed beyond the extension.\n  - B: BlueZ Adapter1, UPower devices, bolt, colord, CupsPkHelper and Avahi; libcups talks to tests/gnome/lib/fake_ipp.py on loopback through CUPS_SERVER.\n  - C: NetworkManager with settings, secrets, devices and active connections; ModemManager; gsd Sharing; org.gnome.RemoteDesktop; systemd1.\n  - D: Mutter DisplayConfig is real in the harness; gsd Color; UPower.\n  - E: AccountsService, fprintd, hostname1, timedate1, timesync1, locale1, GOA, PackageKit.\n  - F: PermissionStore, WhoopsiePreferences, fwupd, GlobalShortcutsRebind.\n- Each fake records its calls, and the test compares them with what the page action must send, including interactive=true and the ALLOW_INTERACTIVE_AUTHORIZATION flag.\n\nGNOME HARNESS (tests/gnome/harness.py)\n- A private headless GNOME Shell 50 at 1440×900, with private keyfile GSettings at run/config/glib-2.0/settings/keyfile. Its private buses have no services, so the stand-ins come from tests/gnome/lib/standins.py, started by the scenario on the private system or session bus, as winpoint-update.py and native-gtk-apps.py do today.\n- One scenario per batch: settings-input.py, settings-a11y.py, settings-devices.py, settings-network.py, settings-sharing.py, settings-system.py, settings-accounts.py, settings-time.py, settings-apps.py, settings-privacy.py. Each runs twice:\n  - `tools/heavy.sh --min-mb 2560 --tag <batch> -- python3 -B tests/gnome/harness.py launch run --lang nl --scenario tests/gnome/scenarios/settings-<x>.py`\n  - the same with `--lang en --out tests/gnome/scenarios/settings-<x>.en.out`\n  - with --strace whenever a page can reach pkexec, systemctl, passwd, nmcli or grdctl.\n- Each scenario, per page:\n  1. Opens it with h.open('settings:<id>'). Data pages are reached by clicking through the parent, using h.settings_data_page, because their title is the item's name.\n  2. Takes h.screenshot('<id>.nl' or '<id>.en').\n  3. Checks the title, the breadcrumb chain and zero Dutch-word hits in en.\n  4. Flips every bound control by its st-<page>-<key> widget name with real pointer clicks, then reads the private keyfile with h.gsettings_get and requires GNOME's exact value. Mouse is the reference case: left-handed true, speed 0.5 from slider position 15, accel-profile flat, natural-scroll true.\n  5. Writes the key from outside with h.gsettings_set and requires the switch to follow (gsettings.changed).\n  6. Locks a key in the keyfile and requires the lock state; checks that a WinPoint-owned key shows its pointer instead of a switch.\n  7. For polkit actions: the stand-in receives the call with interactive=true. Where GNOME's helper is used, the run/stubs pkexec log shows the exact argv and the strace exec check shows that no real pkexec, apt, PackageKit client or python3 ran from a WinPoint process. Orca and IBus preferences must appear as gnome-shell children.\n  8. Hardware-dependent pages (touchpad, pen, usb, mobile, fingerprint, colour sensor) stay hidden without their stand-in or caps fixture and appear with it.\n- Mirror checks in settings-system.py and settings-time.py: DND in Settings changes show-banners and the shell flyout's state; the flyout's DND changes show-banners; clock-format, seconds and weekday reach the taskbar clock text; battery percentage reaches the tray.\n- Regression guard: native-shell.py, native-gtk-apps.py and lock-unlock.py still pass, and `win11-app --gnome-look` in a GNOME-mode run restores accent-color with the existing look keys. Nothing a batch writes appears in the Ubuntu-only schemas.\n- Integration runs settings-tour.py: every registry page in nl and en, screenshots kept locally (PNGs gitignored like the other .out dirs, results.json committed), no unknown_method, no placeholder, no error toast on an idle page, memory within the native-gtk-apps budget."
+}

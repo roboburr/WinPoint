@@ -5,8 +5,18 @@
 //! minimize the one window, or the window list of a group; middle click: a new instance; right click: the jump
 //! list (flyouts::menus). Hover: the window list after 450 ms. Drag: reorder the pins. Too many apps for the
 //! room: a "..." button with the rest.
+//!
+//! Every taskbar (the main one and those of the other monitors, panel/strips.rs) has its own buttons (`Apps`, one
+//! per taskbar, `Role`); the catalogue, the window list and the pins being written are shared (`Catalog`).
+//!
+//! Instellingen › Multitasking's "Op de taakbalk alle geopende vensters weergeven" (taskbar.allDesktops, settings
+//! parity amendment 12): Windows' default "Alleen op het bureaublad dat ik gebruik" shows the windows of the desktop
+//! (GNOME workspace) in use and those on every desktop, "Op alle bureaubladen" all of them; a pinned app whose windows
+//! are all on other desktops stays as a pin. Every taskbar filters alike. Taakweergave (flyouts/menus/taskview.rs)
+//! takes the same desktop for taskView.allDesktops (`desktop_in_use`, `shows_on_desktop`).
 use super::util;
 use crate::core::Shell;
+use crate::panel::strips::Mode;
 use gtk::prelude::*;
 use gtk::{gdk, glib};
 use serde_json::{Value, json};
@@ -47,23 +57,52 @@ struct Drag {
     active: bool,
 }
 
-pub struct Apps {
+/// Which taskbar an `Apps` belongs to: the main one (with Start, the tray and the clock) or the taskbar of another
+/// monitor (its index), which has only app buttons.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Role {
+    Main,
+    Secondary(i64),
+}
+
+/// What every taskbar shares: the catalogue (apps.list + apps.defaults), the extension's window list and the pins
+/// that were just written.
+struct Catalog {
     shell: Rc<Shell>,
-    strip: gtk::Widget,
-    pub boxw: gtk::Box,
-    group_box: RefCell<Option<gtk::Widget>>,
-    tray: RefCell<Option<gtk::Widget>>,
-    // catalogue
     list: RefCell<Vec<Value>>,
     by_id: RefCell<HashMap<String, Value>>,
     alias: RefCell<HashMap<String, String>>,
     browser: RefCell<Option<String>>,
-    catalog_ready: Cell<bool>,
+    ready: Cell<bool>,
     load_seq: Cell<u64>,
     load_timer: RefCell<Option<glib::SourceId>>,
-    // windows and pins
     windows: RefCell<Vec<Value>>,
+    /// The extension's `activeWorkspace` with the window list (windows.list, windows.changed), when it reports one.
+    active_workspace: Cell<Option<i64>>,
+    /// The focus history (window ids, most recent first), for the desktop in use when the extension does not say.
+    recent: RefCell<Vec<String>>,
     pending_pins: RefCell<Option<(Vec<String>, Instant)>>,
+}
+
+/// The buttons of one taskbar.
+pub struct Apps {
+    shell: Rc<Shell>,
+    cat: Rc<Catalog>,
+    role: Role,
+    /// The start of its widget names: "tb" for the main taskbar (tb-app-<key>, tb-more, tb-pv-<id>), "tb-m<N>"
+    /// for the taskbar of monitor N.
+    prefix: String,
+    strip: gtk::Widget,
+    pub boxw: gtk::Box,
+    group_box: RefCell<Option<gtk::Widget>>,
+    tray: RefCell<Option<gtk::Widget>>,
+    /// A taskbar of another monitor: its bar and group, which it aligns itself (taskbar.alignment), and the alignment
+    /// it has.
+    bar: RefCell<Option<(gtk::CenterBox, gtk::Box)>>,
+    align: RefCell<String>,
+    /// A taskbar of another monitor: its jump list (a popover there) is open, so no window list opens over it (the
+    /// main taskbar's open flyout does the same).
+    menu_open: Rc<Cell<bool>>,
     running_order: RefCell<Vec<String>>,
     groups: RefCell<Vec<Group>>,
     buttons: RefCell<HashMap<String, Rc<AppButton>>>,
@@ -93,12 +132,27 @@ pub struct Apps {
 }
 
 thread_local! {
-    static APPS: RefCell<Option<Rc<Apps>>> = const { RefCell::new(None) };
+    static CATALOG: RefCell<Option<Rc<Catalog>>> = const { RefCell::new(None) };
+    /// Every taskbar's buttons, the main taskbar's first.
+    static TASKBARS: RefCell<Vec<Rc<Apps>>> = const { RefCell::new(Vec::new()) };
 }
 
+fn catalog() -> Option<Rc<Catalog>> {
+    CATALOG.with(|c| c.borrow().clone())
+}
+
+/// The main taskbar's buttons.
 fn with<R>(f: impl FnOnce(&Rc<Apps>) -> R) -> Option<R> {
-    let a = APPS.with(|x| x.borrow().clone());
+    let a = TASKBARS.with(|t| t.borrow().iter().find(|a| a.role == Role::Main).cloned());
     a.map(|a| f(&a))
+}
+
+/// Every taskbar's buttons.
+fn each(f: impl Fn(&Rc<Apps>)) {
+    let all = TASKBARS.with(|t| t.borrow().clone());
+    for a in &all {
+        f(a);
+    }
 }
 
 fn cancel(slot: &RefCell<Option<glib::SourceId>>) {
@@ -278,7 +332,82 @@ fn is_focused(w: &Value) -> bool {
     w["focused"] == true && w["minimized"] != true
 }
 
+/// Whether the taskbar `role` shows a window on `monitor` (None: unknown, the extension's -1). `strips` are the
+/// monitors with a taskbar of their own; without any, the main taskbar shows every window, as on one monitor. Windows
+/// 11: "Alle taakbalken" shows every window everywhere; "Hoofdtaakbalk en taakbalk waar het venster is geopend" every
+/// window on the main taskbar and a monitor's own on its taskbar; "Taakbalk waar het venster is geopend" each
+/// taskbar its own monitor's (the main taskbar also a window on a monitor without a taskbar).
+pub fn shows(role: Role, mode: Mode, primary: i64, strips: &[i64], monitor: Option<i64>) -> bool {
+    match role {
+        Role::Main => {
+            strips.is_empty()
+                || mode != Mode::Window
+                || monitor.is_none_or(|m| m == primary || !strips.contains(&m))
+        }
+        Role::Secondary(n) => mode == Mode::All || monitor == Some(n),
+    }
+}
+
+/// The pins are on the main taskbar, and with "Alle taakbalken" on every taskbar.
+pub fn shows_pins(role: Role, mode: Mode) -> bool {
+    role == Role::Main || mode == Mode::All
+}
+
+/// A window's monitor in the extension's window JSON (None for -1 or none).
+fn monitor_of(w: &Value) -> Option<i64> {
+    w["monitor"].as_i64().filter(|m| *m >= 0)
+}
+
+/// The desktop (GNOME workspace index) in use: the extension's `activeWorkspace` when it reports one, else that of
+/// the window with the focus, else that of the most recently used window (`recent`, ids; the taskbar or Taakweergave
+/// may have the focus itself); a window on every desktop (`pinned`) or without one (-1) says nothing. None: nothing
+/// to go by.
+pub(crate) fn desktop_in_use(windows: &[Value], reported: Option<i64>, recent: &[String]) -> Option<i64> {
+    if let Some(n) = reported.filter(|n| *n >= 0) {
+        return Some(n);
+    }
+    let desktop = |w: &Value| (w["pinned"] != true).then(|| w["workspace"].as_i64()).flatten().filter(|n| *n >= 0);
+    if let Some(n) = windows.iter().filter(|w| is_focused(w)).find_map(desktop) {
+        return Some(n);
+    }
+    recent.iter().find_map(|id| windows.iter().find(|w| id_of(w) == *id).and_then(desktop))
+}
+
+/// Whether a window shows on desktop `active`: one on it, on every desktop (`pinned`, GNOME's sticky window) or on
+/// none known; every window when the desktop is not known (None).
+pub(crate) fn shows_on_desktop(w: &Value, active: Option<i64>) -> bool {
+    active.is_none_or(|a| w["pinned"] == true || w["workspace"].as_i64().is_none_or(|n| n < 0 || n == a))
+}
+
+/// The desktop whose windows the taskbars show: None (every window) with taskbar.allDesktops on, else the desktop
+/// in use.
+fn taskbar_desktop(all_desktops: &Value, windows: &[Value], reported: Option<i64>, recent: &[String]) -> Option<i64> {
+    if *all_desktops == true { None } else { desktop_in_use(windows, reported, recent) }
+}
+
+/// The extension's window list and its `activeWorkspace` (windows.list: `{windows, activeWorkspace?}`, or a bare
+/// array from an old extension).
+fn window_list(answer: &Value) -> (Vec<Value>, Option<i64>) {
+    let windows = answer
+        .get("windows")
+        .and_then(|w| w.as_array().cloned())
+        .or_else(|| answer.as_array().cloned())
+        .unwrap_or_default();
+    (windows, answer.get("activeWorkspace").and_then(Value::as_i64))
+}
+
 pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> gtk::Box {
+    build_for(shell, strip, Role::Main).0
+}
+
+/// The app buttons of a taskbar (`strip` its root): the main one's (`build`) or another monitor's. The first one
+/// loads the catalogue and follows the window list for all.
+pub fn build_for(shell: &Rc<Shell>, strip: &gtk::Widget, role: Role) -> (gtk::Box, Rc<Apps>) {
+    let cat = catalog().unwrap_or_else(|| Catalog::install(shell));
+    let prefix = match role {
+        Role::Main => "tb".to_owned(),
+        Role::Secondary(n) => format!("tb-m{n}"),
+    };
     let boxw = gtk::Box::new(gtk::Orientation::Horizontal, 4);
     boxw.add_css_class("w11-tb-apps");
     boxw.set_valign(gtk::Align::Center);
@@ -287,29 +416,22 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> gtk::Box {
     overflow_btn.add_css_class("w11-tb-btn");
     overflow_btn.add_css_class("w11-tb-overflow");
     overflow_btn.add_css_class("w11-tb-hit");
-    overflow_btn.set_widget_name("tb-more");
+    overflow_btn.set_widget_name(&format!("{prefix}-more"));
     overflow_btn.set_child(Some(&crate::icons::glyph("more", 20)));
     overflow_btn.set_visible(false);
-    overflow_btn.connect_clicked(|b| {
-        let b = b.clone();
-        with(move |a| a.open_overflow(&b));
-    });
 
     let apps = Rc::new(Apps {
         shell: shell.clone(),
+        cat: cat.clone(),
+        role,
+        prefix,
         strip: strip.clone(),
         boxw: boxw.clone(),
         group_box: RefCell::new(None),
         tray: RefCell::new(None),
-        list: RefCell::new(Vec::new()),
-        by_id: RefCell::new(HashMap::new()),
-        alias: RefCell::new(HashMap::new()),
-        browser: RefCell::new(None),
-        catalog_ready: Cell::new(false),
-        load_seq: Cell::new(0),
-        load_timer: RefCell::new(None),
-        windows: RefCell::new(Vec::new()),
-        pending_pins: RefCell::new(None),
+        bar: RefCell::new(None),
+        align: RefCell::new(String::new()),
+        menu_open: Rc::new(Cell::new(false)),
         running_order: RefCell::new(Vec::new()),
         groups: RefCell::new(Vec::new()),
         buttons: RefCell::new(HashMap::new()),
@@ -333,53 +455,43 @@ pub fn build(shell: &Rc<Shell>, strip: &gtk::Widget) -> gtk::Box {
         show_timer: RefCell::new(None),
         hide_timer: RefCell::new(None),
     });
-    APPS.with(|x| *x.borrow_mut() = Some(apps.clone()));
-    update_texts();
+    let weak = Rc::downgrade(&apps);
+    apps.overflow_btn.connect_clicked(move |b| {
+        if let Some(a) = weak.upgrade() {
+            a.open_overflow(b);
+        }
+    });
+    TASKBARS.with(|t| {
+        let mut t = t.borrow_mut();
+        t.retain(|a| a.role != role);
+        if role == Role::Main { t.insert(0, apps.clone()) } else { t.push(apps.clone()) }
+    });
+    apps.update_texts();
+    if cat.ready.get() {
+        apps.render();
+    }
+    (boxw, apps)
+}
 
-    // the catalogue (apps.list + apps.defaults); windows group under their app once it is there (or after 1.5 s)
-    load_catalog();
-    glib::timeout_add_local_once(Duration::from_millis(1500), || {
-        with(|a| {
-            if !a.catalog_ready.get() {
-                a.catalog_ready.set(true);
-                a.render();
-            }
-        });
+/// The taskbar of monitor `monitor` went (panel/strips.rs): its buttons are no longer updated.
+pub fn unregister(monitor: i64) {
+    let gone: Vec<Rc<Apps>> = TASKBARS.with(|t| {
+        let mut t = t.borrow_mut();
+        let (gone, keep): (Vec<_>, Vec<_>) = t.drain(..).partition(|a| a.role == Role::Secondary(monitor));
+        *t = keep;
+        gone
     });
-    shell.on("apps.changed", |_, _| {
-        ENTRY_ICONS.with(|c| c.borrow_mut().clear());
-        with(|a| {
-            cancel(&a.load_timer);
-            *a.load_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(400), || {
-                with(|a| *a.load_timer.borrow_mut() = None);
-                load_catalog();
-            }));
-        });
-    });
+    for a in gone {
+        a.hide_preview();
+        for timer in [&a.tray_timer, &a.render_timer, &a.icon_timer] {
+            cancel(timer);
+        }
+    }
+}
 
-    // the window list: the extension's windows.list, windows.changed and windows.focused
-    *apps.windows.borrow_mut() = shell.gnome.windows();
-    shell.on("windows.changed", |_, data| {
-        with(|a| {
-            *a.windows.borrow_mut() = data["windows"].as_array().cloned().unwrap_or_default();
-            a.render_soon();
-        });
-    });
-    shell.on("windows.focused", |_, data| {
-        let focused = match &data["id"] {
-            Value::String(s) => Some(s.clone()),
-            Value::Number(n) => Some(n.to_string()),
-            _ => None,
-        };
-        with(|a| {
-            for w in a.windows.borrow_mut().iter_mut() {
-                let on = focused.as_deref().is_some_and(|f| f == id_of(w));
-                w["focused"] = Value::Bool(on);
-            }
-            a.render_soon();
-        });
-    });
-    boxw
+/// Render every taskbar again (which taskbars exist decides what the main one shows, panel/strips.rs).
+pub fn render_all() {
+    each(|a| a.render());
 }
 
 /// The centre group and the tray, for the room the buttons have (taskbar.js layout()).
@@ -400,58 +512,155 @@ pub fn layout_now() {
     with(|a| a.layout());
 }
 
-/// Settings changed (`data`, core::touches): the buttons render for the pins and the language only.
+/// Settings changed (`data`, core::touches): the buttons render for the pins, taskbar.allDesktops and the language only.
 pub fn settings_changed(data: &Value, lang_changed: bool) {
-    with(|a| {
-        let done = {
-            let pending = a.pending_pins.borrow();
-            pending.as_ref().is_some_and(|(ids, at)| {
-                let now = a.shell.setting("taskbar.pinned");
-                let raw: Vec<String> =
-                    now.as_array().map(|l| l.iter().filter_map(|v| v.as_str().map(str::to_owned)).collect()).unwrap_or_default();
-                &raw == ids || at.elapsed() > Duration::from_secs(3)
-            })
-        };
-        if done {
-            *a.pending_pins.borrow_mut() = None;
-        }
-        if lang_changed {
-            update_texts();
-            load_catalog();
-        }
-        if done || lang_changed || crate::core::touches(data, &["taskbar.pinned"]) {
-            a.render();
-        }
-    });
+    let Some(cat) = catalog() else { return };
+    let done = {
+        let pending = cat.pending_pins.borrow();
+        pending.as_ref().is_some_and(|(ids, at)| {
+            let now = cat.shell.setting("taskbar.pinned");
+            let raw: Vec<String> =
+                now.as_array().map(|l| l.iter().filter_map(|v| v.as_str().map(str::to_owned)).collect()).unwrap_or_default();
+            &raw == ids || at.elapsed() > Duration::from_secs(3)
+        })
+    };
+    if done {
+        *cat.pending_pins.borrow_mut() = None;
+    }
+    if lang_changed {
+        each(|a| a.update_texts());
+        cat.load();
+    }
+    if done || lang_changed || crate::core::touches(data, &["taskbar.pinned", "taskbar.allDesktops"]) {
+        render_all();
+    }
+    if lang_changed || crate::core::touches(data, &["taskbar.alignment"]) {
+        each(|a| a.apply_alignment());
+    }
 }
 
 pub fn flyout_opened() {
-    with(|a| a.hide_preview());
+    each(|a| a.hide_preview());
 }
 
-fn update_texts() {
-    with(|a| {
-        a.overflow_btn.set_tooltip_text(Some(&a.shell.t("Meer apps", "More apps")));
+/// The extension adopted the panel again (its enable after the lock screen): it starts without any taskbar's
+/// rectangles, while each taskbar sends its own only when they changed in its window. So every one sends again.
+pub fn resend_icon_rects() {
+    each(|a| {
+        a.icon_key.borrow_mut().clear();
+        a.icon_rects_soon();
     });
 }
 
-fn load_catalog() {
-    let Some((shell, seq)) = with(|a| {
-        a.load_seq.set(a.load_seq.get() + 1);
-        (a.shell.clone(), a.load_seq.get())
-    }) else {
-        return;
-    };
-    shell.backend.set_lang(shell.lang());
-    let s2 = shell.clone();
-    shell.call("apps.defaults", json!({}), move |defaults| {
-        s2.call("apps.list", json!({}), move |list| {
-            with(|a| {
-                if a.load_seq.get() != seq {
+impl Catalog {
+    /// The shared part, once: the catalogue (windows group under their app once it is there, or after 1.5 s) and
+    /// the extension's window list (windows.list, windows.changed, windows.focused).
+    fn install(shell: &Rc<Shell>) -> Rc<Catalog> {
+        let cat = Rc::new(Catalog {
+            shell: shell.clone(),
+            list: RefCell::new(Vec::new()),
+            by_id: RefCell::new(HashMap::new()),
+            alias: RefCell::new(HashMap::new()),
+            browser: RefCell::new(None),
+            ready: Cell::new(false),
+            load_seq: Cell::new(0),
+            load_timer: RefCell::new(None),
+            windows: RefCell::new(Vec::new()),
+            active_workspace: Cell::new(None),
+            recent: RefCell::new(Vec::new()),
+            pending_pins: RefCell::new(None),
+        });
+        CATALOG.with(|c| *c.borrow_mut() = Some(cat.clone()));
+        cat.load();
+        glib::timeout_add_local_once(Duration::from_millis(1500), || {
+            if let Some(c) = catalog()
+                && !c.ready.get()
+            {
+                c.ready.set(true);
+                render_all();
+            }
+        });
+        shell.on("apps.changed", |_, _| {
+            ENTRY_ICONS.with(|c| c.borrow_mut().clear());
+            let Some(c) = catalog() else { return };
+            cancel(&c.load_timer);
+            *c.load_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(400), || {
+                if let Some(c) = catalog() {
+                    *c.load_timer.borrow_mut() = None;
+                    c.load();
+                }
+            }));
+        });
+        let (windows, active) = window_list(&shell.gnome.call("windows.list", &json!({})).unwrap_or(Value::Null));
+        cat.set_windows(windows, active);
+        shell.on("windows.changed", |_, data| {
+            let Some(c) = catalog() else { return };
+            c.set_windows(data["windows"].as_array().cloned().unwrap_or_default(), data["activeWorkspace"].as_i64());
+            each(|a| a.render_soon());
+        });
+        shell.on("windows.focused", |_, data| {
+            let focused = match &data["id"] {
+                Value::String(s) => Some(s.clone()),
+                Value::Number(n) => Some(n.to_string()),
+                _ => None,
+            };
+            let Some(c) = catalog() else { return };
+            for w in c.windows.borrow_mut().iter_mut() {
+                let on = focused.as_deref().is_some_and(|f| f == id_of(w));
+                w["focused"] = Value::Bool(on);
+            }
+            if let Some(id) = focused {
+                c.touch(&id);
+            }
+            each(|a| a.render_soon());
+        });
+        cat
+    }
+
+    /// A new window list from the extension, with its `activeWorkspace` (None: it did not say).
+    fn set_windows(&self, windows: Vec<Value>, active: Option<i64>) {
+        if let Some(id) = windows.iter().find(|w| is_focused(w)).map(id_of) {
+            self.touch(&id);
+        }
+        *self.windows.borrow_mut() = windows;
+        self.active_workspace.set(active);
+    }
+
+    /// The window `id` has the focus: first in the focus history.
+    fn touch(&self, id: &str) {
+        if id.is_empty() {
+            return;
+        }
+        let mut recent = self.recent.borrow_mut();
+        if recent.first().map(String::as_str) == Some(id) {
+            return;
+        }
+        recent.retain(|x| x != id);
+        recent.insert(0, id.to_owned());
+        recent.truncate(200);
+    }
+
+    /// The desktop whose windows the taskbars show (taskbar.allDesktops; None: every window).
+    fn desktop(&self) -> Option<i64> {
+        let windows = self.windows.borrow();
+        taskbar_desktop(&self.shell.setting("taskbar.allDesktops"), &windows, self.active_workspace.get(), &self.recent.borrow())
+    }
+
+    fn load(self: &Rc<Self>) {
+        self.load_seq.set(self.load_seq.get() + 1);
+        let seq = self.load_seq.get();
+        let shell = self.shell.clone();
+        shell.backend.set_lang(shell.lang());
+        let s2 = shell.clone();
+        let weak = Rc::downgrade(self);
+        shell.call("apps.defaults", json!({}), move |defaults| {
+            s2.call("apps.list", json!({}), move |list| {
+                let Some(c) = weak.upgrade() else { return };
+                if c.load_seq.get() != seq {
                     return;
                 }
                 if let Ok(d) = &defaults {
-                    *a.browser.borrow_mut() = d["browser"]["id"].as_str().map(str::to_owned);
+                    *c.browser.borrow_mut() = d["browser"]["id"].as_str().map(str::to_owned);
                 }
                 match list {
                     Ok(Value::Array(l)) => {
@@ -459,20 +668,18 @@ fn load_catalog() {
                             .into_iter()
                             .filter(|x| x.get("id").and_then(|i| i.as_str()).is_some_and(|i| !i.is_empty()) && x["noDisplay"] != true)
                             .collect();
-                        *a.list.borrow_mut() = l;
+                        *c.list.borrow_mut() = l;
                     }
-                    Ok(_) => *a.list.borrow_mut() = Vec::new(),
+                    Ok(_) => *c.list.borrow_mut() = Vec::new(),
                     Err(e) => eprintln!("win11-shell: apps.list: {e}"),
                 }
-                a.index();
-                a.catalog_ready.set(true);
-                a.render();
+                c.index();
+                c.ready.set(true);
+                render_all();
             });
         });
-    });
-}
+    }
 
-impl Apps {
     fn index(&self) {
         let list = self.list.borrow();
         let mut by_id = HashMap::new();
@@ -564,22 +771,58 @@ impl Apps {
         }
     }
 
-    fn set_pins(self: &Rc<Self>, ids: Vec<String>) {
+    fn set_pins(&self, ids: Vec<String>) {
         let mut seen = std::collections::HashSet::new();
         let ids: Vec<String> = ids.into_iter().filter(|x| seen.insert(x.clone())).collect();
         self.shell.set_setting("taskbar.pinned", json!(ids));
         *self.pending_pins.borrow_mut() = Some((ids, Instant::now()));
-        self.render();
+        render_all();
+    }
+}
+
+impl Apps {
+    fn update_texts(&self) {
+        self.overflow_btn.set_tooltip_text(Some(&self.shell.t("Meer apps", "More apps")));
+    }
+
+    /// A taskbar of another monitor: its bar and the group with the buttons, which it aligns as the main taskbar
+    /// does (taskbar.alignment: centred, or 8 px from the left edge).
+    pub fn set_bar(&self, center: &gtk::CenterBox, group: &gtk::Box) {
+        *self.bar.borrow_mut() = Some((center.clone(), group.clone()));
+        self.apply_alignment();
+    }
+
+    fn apply_alignment(&self) {
+        let Some((center, group)) = self.bar.borrow().clone() else { return };
+        let align = if self.shell.setting("taskbar.alignment").as_str() == Some("left") { "left" } else { "center" };
+        if *self.align.borrow() == align {
+            return;
+        }
+        *self.align.borrow_mut() = align.to_owned();
+        center.set_start_widget(None::<&gtk::Widget>);
+        center.set_center_widget(None::<&gtk::Widget>);
+        if align == "left" {
+            group.set_margin_start(8);
+            center.set_start_widget(Some(&group));
+        } else {
+            group.set_margin_start(0);
+            center.set_center_widget(Some(&group));
+        }
+        util::set_class(&self.strip, "is-left", align == "left");
     }
 
     fn compute_groups(&self) -> Vec<Group> {
-        let no_catalog = self.list.borrow().is_empty();
+        let cat = &self.cat;
+        let no_catalog = cat.list.borrow().is_empty();
+        let ctx = crate::panel::strips::context();
+        let pins = if shows_pins(self.role, ctx.mode) { cat.pins() } else { Vec::new() };
+        let desktop = cat.desktop();
         let mut out: Vec<Group> = Vec::new();
-        for id in self.pins() {
+        for id in pins {
             if out.iter().any(|g| g.key == id) {
                 continue;
             }
-            let app = self.app(&id);
+            let app = cat.app(&id);
             let own = id.ends_with(".desktop") && own_app(&id).is_some();
             if app.is_none() && (!no_catalog || !own) {
                 continue;
@@ -594,8 +837,11 @@ impl Apps {
                 .unwrap_or_else(|| guess_icon(&id));
             out.push(Group { key: id.clone(), app_id: Some(id), pinned: true, windows: Vec::new(), name, icon });
         }
-        for w in self.windows.borrow().iter() {
-            let app = self.resolve(&s(w, "desktopId"), &s(w, "appId"));
+        for w in cat.windows.borrow().iter() {
+            if !shows(self.role, ctx.mode, ctx.primary, &ctx.strips, monitor_of(w)) || !shows_on_desktop(w, desktop) {
+                continue;
+            }
+            let app = cat.resolve(&s(w, "desktopId"), &s(w, "appId"));
             let key = match &app {
                 Some(a) => s(a, "id"),
                 None => {
@@ -656,11 +902,12 @@ impl Apps {
         if self.render_timer.borrow().is_some() {
             return;
         }
-        *self.render_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(16), || {
-            with(|a| {
+        let weak = Rc::downgrade(self);
+        *self.render_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(16), move || {
+            if let Some(a) = weak.upgrade() {
                 *a.render_timer.borrow_mut() = None;
                 a.render();
-            });
+            }
         }));
     }
 
@@ -668,7 +915,7 @@ impl Apps {
         if self.drag.borrow().as_ref().is_some_and(|d| d.active) {
             return; // never reshuffle under the pointer
         }
-        if !self.catalog_ready.get() {
+        if !self.cat.ready.get() {
             return; // wait for apps.list so windows group under the right app
         }
         let groups = self.compute_groups();
@@ -740,11 +987,12 @@ impl Apps {
     /// iconRectsMessage, `git show 418ea594:vendor/ui/js/shell/taskbar.js`).
     fn icon_rects_soon(self: &Rc<Self>) {
         cancel(&self.icon_timer);
-        *self.icon_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(300), || {
-            with(|a| {
+        let weak = Rc::downgrade(self);
+        *self.icon_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(300), move || {
+            if let Some(a) = weak.upgrade() {
                 *a.icon_timer.borrow_mut() = None;
                 a.send_icon_rects();
-            });
+            }
         }));
     }
 
@@ -771,7 +1019,11 @@ impl Apps {
         let overflow: Vec<String> = self.overflow_keys.borrow().iter().flat_map(|k| ids(k)).collect();
         rects.extend(rect(self.overflow_btn.upcast_ref(), overflow));
         rects.sort_by(|a, b| a["x"].as_f64().unwrap_or(0.0).total_cmp(&b["x"].as_f64().unwrap_or(0.0)));
-        let msg = json!({"layer": "shell", "hidden": false, "rects": rects});
+        let msg = match self.role {
+            Role::Main => json!({"layer": "shell", "hidden": false, "rects": rects}),
+            // in the coordinates of its own window (the strip is all of it), with its monitor
+            Role::Secondary(n) => json!({"layer": "shell", "hidden": false, "monitor": n, "rects": rects}),
+        };
         let key = msg.to_string();
         if *self.icon_key.borrow() == key {
             return;
@@ -780,15 +1032,16 @@ impl Apps {
         self.shell.gnome.send("windows.setIconRects", msg);
     }
 
-    fn queue_layout(self: &Rc<Self>) {
+    pub fn queue_layout(self: &Rc<Self>) {
         if self.layout_queued.replace(true) {
             return;
         }
-        glib::idle_add_local_once(|| {
-            with(|a| {
+        let weak = Rc::downgrade(self);
+        glib::idle_add_local_once(move || {
+            if let Some(a) = weak.upgrade() {
                 a.layout_queued.set(false);
                 a.layout();
-            });
+            }
         });
     }
 
@@ -843,11 +1096,12 @@ impl Apps {
         cancel(&self.tray_timer);
         if let Some(due) = due {
             let wait = due.saturating_duration_since(at) + Duration::from_millis(50);
-            *self.tray_timer.borrow_mut() = Some(glib::timeout_add_local_once(wait, || {
-                with(|a| {
+            let weak = Rc::downgrade(self);
+            *self.tray_timer.borrow_mut() = Some(glib::timeout_add_local_once(wait, move || {
+                if let Some(a) = weak.upgrade() {
                     *a.tray_timer.borrow_mut() = None;
                     a.layout();
-                });
+                }
             }));
         }
         widest
@@ -858,7 +1112,7 @@ impl Apps {
         button.add_css_class("w11-tb-btn");
         button.add_css_class("w11-tb-app");
         button.add_css_class("w11-tb-hit");
-        button.set_widget_name(&format!("tb-app-{key}"));
+        button.set_widget_name(&format!("{}-app-{key}", self.prefix));
         let overlay = gtk::Overlay::new();
         let image = gtk::Image::new();
         image.add_css_class("w11-tb-ico");
@@ -874,75 +1128,90 @@ impl Apps {
         overlay.add_overlay(&ind);
         button.set_child(Some(&overlay));
 
-        let k = key.to_owned();
+        let me = Rc::downgrade(self);
+        let (k, weak) = (key.to_owned(), me.clone());
         button.connect_clicked(move |_| {
-            let k = k.clone();
-            with(move |a| {
+            if let Some(a) = weak.upgrade() {
                 let shift = a.shift.replace(false);
                 a.activate(&k, shift);
-            });
+            }
         });
         // Shift+click: a new instance (the state of the press)
         let press = gtk::GestureClick::new();
         press.set_button(gdk::BUTTON_PRIMARY);
         press.set_propagation_phase(gtk::PropagationPhase::Capture);
-        press.connect_pressed(|g, _, _, _| {
+        let weak = me.clone();
+        press.connect_pressed(move |g, _, _, _| {
             let shift = g.current_event_state().contains(gdk::ModifierType::SHIFT_MASK);
-            with(|a| a.shift.set(shift));
+            if let Some(a) = weak.upgrade() {
+                a.shift.set(shift);
+            }
         });
         button.add_controller(press);
         // middle click: a new instance
         let middle = gtk::GestureClick::new();
         middle.set_button(gdk::BUTTON_MIDDLE);
-        let k = key.to_owned();
+        let (k, weak) = (key.to_owned(), me.clone());
         middle.connect_released(move |g, _, _, _| {
             g.set_state(gtk::EventSequenceState::Claimed);
-            with(|a| {
-                if let Some(id) = a.group(&k).and_then(|g| g.app_id) {
-                    a.launch(&id);
-                }
-            });
+            if let Some(a) = weak.upgrade()
+                && let Some(id) = a.group(&k).and_then(|g| g.app_id)
+            {
+                a.launch(&id);
+            }
         });
         button.add_controller(middle);
         // right click: the jump list
         let right = gtk::GestureClick::new();
         right.set_button(gdk::BUTTON_SECONDARY);
-        let k = key.to_owned();
+        let (k, weak) = (key.to_owned(), me.clone());
         right.connect_pressed(move |g, _, _, _| {
             g.set_state(gtk::EventSequenceState::Claimed);
-            with(|a| a.open_jump_list(&k));
+            if let Some(a) = weak.upgrade() {
+                a.open_jump_list(&k);
+            }
         });
         button.add_controller(right);
         // hover: the window list
         let motion = gtk::EventControllerMotion::new();
-        let k = key.to_owned();
+        let (k, weak) = (key.to_owned(), me.clone());
         motion.connect_enter(move |_, _, _| {
-            with(|a| a.schedule_preview(&k));
+            if let Some(a) = weak.upgrade() {
+                a.schedule_preview(&k);
+            }
         });
-        motion.connect_leave(|_| {
-            with(|a| a.schedule_preview_hide());
+        let weak = me.clone();
+        motion.connect_leave(move |_| {
+            if let Some(a) = weak.upgrade() {
+                a.schedule_preview_hide();
+            }
         });
         button.add_controller(motion);
         // drag: reorder
         let drag = gtk::GestureDrag::new();
         drag.set_button(gdk::BUTTON_PRIMARY);
         drag.set_propagation_phase(gtk::PropagationPhase::Capture);
-        let k = key.to_owned();
+        let (k, weak) = (key.to_owned(), me.clone());
         drag.connect_drag_begin(move |g, x, y| {
             let Some(w) = g.widget() else { return };
-            with(|a| {
+            if let Some(a) = weak.upgrade() {
                 let start_x = w
                     .compute_point(&a.boxw, &gtk::graphene::Point::new(x as f32, y as f32))
                     .map(|p| p.x() as f64)
                     .unwrap_or(x);
                 *a.drag.borrow_mut() = Some(Drag { key: k.clone(), start_x, active: false });
-            });
+            }
         });
-        drag.connect_drag_update(|g, dx, dy| {
-            with(|a| a.drag_update(g, dx, dy));
+        let weak = me.clone();
+        drag.connect_drag_update(move |g, dx, dy| {
+            if let Some(a) = weak.upgrade() {
+                a.drag_update(g, dx, dy);
+            }
         });
-        drag.connect_drag_end(|_, _, _| {
-            with(|a| a.drag_end());
+        drag.connect_drag_end(move |_, _, _| {
+            if let Some(a) = me.upgrade() {
+                a.drag_end();
+            }
         });
         button.add_controller(drag);
 
@@ -980,7 +1249,7 @@ impl Apps {
             util::open_app(&self.shell, own);
         } else {
             let id2 = id.to_owned();
-            let name = self.app(id).map(|a| s(&a, "name")).unwrap_or_else(|| id.to_owned());
+            let name = self.cat.app(id).map(|a| s(&a, "name")).unwrap_or_else(|| id.to_owned());
             self.shell.call("apps.launch", json!({"id": id2}), move |r| {
                 if let Err(e) = r {
                     eprintln!("win11-shell: {name} kon niet worden gestart: {e}");
@@ -992,9 +1261,10 @@ impl Apps {
         }
     }
 
+    /// Focus or minimize in the shared window list too, so every taskbar shows it at once.
     fn focus(self: &Rc<Self>, w: &Value) {
         let id = id_of(w);
-        for x in self.windows.borrow_mut().iter_mut() {
+        for x in self.cat.windows.borrow_mut().iter_mut() {
             let me = id_of(x) == id;
             x["focused"] = Value::Bool(me);
             if me {
@@ -1002,19 +1272,19 @@ impl Apps {
             }
         }
         self.shell.gnome.send("windows.focus", json!({"id": id}));
-        self.render();
+        render_all();
     }
 
     fn minimize(self: &Rc<Self>, w: &Value) {
         let id = id_of(w);
-        for x in self.windows.borrow_mut().iter_mut() {
+        for x in self.cat.windows.borrow_mut().iter_mut() {
             if id_of(x) == id {
                 x["minimized"] = Value::Bool(true);
                 x["focused"] = Value::Bool(false);
             }
         }
         self.shell.gnome.send("windows.minimize", json!({"id": id}));
-        self.render();
+        render_all();
     }
 
     fn close_window(&self, w: &Value) {
@@ -1059,9 +1329,27 @@ impl Apps {
     fn open_jump_list(self: &Rc<Self>, key: &str) {
         let Some(g) = self.group(key) else { return };
         self.hide_preview();
+        if let Role::Secondary(_) = self.role {
+            // a taskbar of another monitor has no flyout host: the same menu as a popover above its button
+            let x = self.buttons.borrow().get(key).map(|b| util::center_x(&b.button, &self.strip));
+            let Some(x) = x else { return };
+            let menu = crate::flyouts::menus::jump_list_popover(&self.shell, &self.strip, g.app_id.clone(), g.windows.clone(), x);
+            if let Some(menu) = menu {
+                self.hold_previews(&menu);
+            }
+            return;
+        }
         let x = self.buttons.borrow().get(key).map(|b| util::window_point(&b.button, b.button.width() as f64 / 2.0, 0.0).0);
         let Some(x) = x else { return };
         crate::flyouts::menus::jump_list(&self.shell, g.app_id.clone(), g.windows.clone(), x);
+    }
+
+    /// A menu of a taskbar of another monitor is open as a popover (a jump list, the taskbar's own menu): no window
+    /// list opens over it until it closes, as the main taskbar's open flyout keeps them away.
+    pub fn hold_previews(&self, menu: &gtk::Popover) {
+        self.menu_open.set(true);
+        let open = self.menu_open.clone();
+        menu.connect_closed(move |_| open.set(false));
     }
 
     fn open_overflow(self: &Rc<Self>, anchor: &gtk::Button) {
@@ -1085,12 +1373,14 @@ impl Apps {
             line.append(&l);
             row.set_child(Some(&line));
             let p = popover.downgrade();
+            let weak = Rc::downgrade(self);
             row.connect_clicked(move |_| {
                 if let Some(p) = p.upgrade() {
                     p.popdown();
                 }
-                let k = k.clone();
-                with(move |a| a.activate(&k, false));
+                if let Some(a) = weak.upgrade() {
+                    a.activate(&k, false);
+                }
             });
             list.append(&row);
         }
@@ -1169,7 +1459,7 @@ impl Apps {
                 .collect()
         };
         let pinned_of = |k: &String| self.group(k).is_some_and(|g| g.pinned);
-        let pins = self.pins();
+        let pins = self.cat.pins();
         let visible_pinned: Vec<String> = keys.iter().filter(|k| pinned_of(k)).cloned().collect();
         let hidden_pinned: Vec<String> = pins.iter().filter(|k| !visible_pinned.contains(k)).cloned().collect();
         let next: Vec<String> = visible_pinned.into_iter().chain(hidden_pinned).collect();
@@ -1179,7 +1469,7 @@ impl Apps {
             let rest: Vec<String> = order.iter().filter(|k| !keys.contains(k)).cloned().collect();
             *order = unpinned.into_iter().chain(rest).collect();
         }
-        if next != pins { self.set_pins(next) } else { self.render() }
+        if next != pins { self.cat.set_pins(next) } else { self.render() }
     }
 
     /* ------------------------------------------------------ window list */
@@ -1189,7 +1479,7 @@ impl Apps {
         if self.drag.borrow().as_ref().is_some_and(|d| d.active) {
             return;
         }
-        if self.shell.flyouts.borrow().as_ref().is_some_and(|f| f.current().is_some()) {
+        if self.shell.flyouts.borrow().as_ref().is_some_and(|f| f.current().is_some()) || self.menu_open.get() {
             return;
         }
         let has_windows = self.group(key).is_some_and(|g| !g.windows.is_empty());
@@ -1204,13 +1494,13 @@ impl Apps {
         }
         cancel(&self.show_timer);
         let delay = if self.preview.borrow().is_some() { 60 } else { PREVIEW_DELAY };
-        let k = key.to_owned();
+        let (k, weak) = (key.to_owned(), Rc::downgrade(self));
         *self.show_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(delay), move || {
-            with(|a| {
+            if let Some(a) = weak.upgrade() {
                 *a.show_timer.borrow_mut() = None;
                 let sticky = a.preview_sticky.get();
                 a.show_preview(&k, sticky);
-            });
+            }
         }));
     }
 
@@ -1221,11 +1511,12 @@ impl Apps {
             return;
         }
         let ms = if self.preview_sticky.get() { 900 } else { 380 };
-        *self.hide_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(ms), || {
-            with(|a| {
+        let weak = Rc::downgrade(self);
+        *self.hide_timer.borrow_mut() = Some(glib::timeout_add_local_once(Duration::from_millis(ms), move || {
+            if let Some(a) = weak.upgrade() {
                 *a.hide_timer.borrow_mut() = None;
                 a.hide_preview();
-            });
+            }
         }));
     }
 
@@ -1252,17 +1543,17 @@ impl Apps {
                 p.set_position(gtk::PositionType::Top);
                 p.set_parent(&self.strip);
                 let weak = p.downgrade();
+                let owner = Rc::downgrade(self);
                 p.connect_closed(move |p| {
-                    let me = p.clone();
-                    with(|a| {
-                        let is_current = a.preview.borrow().as_ref().is_some_and(|x| x == &me);
+                    if let Some(a) = owner.upgrade() {
+                        let is_current = a.preview.borrow().as_ref().is_some_and(|x| x == p);
                         if is_current {
                             let key = a.preview_key.borrow_mut().take().unwrap_or_default();
                             *a.preview_closed.borrow_mut() = (key, Some(Instant::now()));
                             *a.preview.borrow_mut() = None;
                             a.preview_sticky.set(false);
                         }
-                    });
+                    }
                     let weak = weak.clone();
                     glib::idle_add_local_once(move || {
                         if let Some(p) = weak.upgrade() {
@@ -1306,7 +1597,7 @@ impl Apps {
         for w in &g.windows {
             let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
             row.add_css_class("w11-tb-pv-item");
-            row.set_widget_name(&format!("tb-pv-{}", id_of(w)));
+            row.set_widget_name(&format!("{}-pv-{}", self.prefix, id_of(w)));
             if is_focused(w) {
                 row.add_css_class("is-current");
             }
@@ -1334,17 +1625,19 @@ impl Apps {
             close.set_child(Some(&crate::icons::glyph("close", 12)));
             close.set_tooltip_text(Some(&close_text));
             close.set_focus_on_click(false);
-            let win = w.clone();
+            let (win, weak) = (w.clone(), Rc::downgrade(self));
             close.connect_clicked(move |b| {
                 if let Some(row) = b.parent() {
                     row.add_css_class("is-closing");
                 }
-                with(|a| a.close_window(&win));
+                if let Some(a) = weak.upgrade() {
+                    a.close_window(&win);
+                }
             });
             row.append(&close);
             let click = gtk::GestureClick::new();
             click.set_button(0);
-            let win = w.clone();
+            let (win, weak) = (w.clone(), Rc::downgrade(self));
             let close_w = close.clone();
             click.connect_released(move |g, _, x, y| {
                 let Some(row) = g.widget() else { return };
@@ -1353,15 +1646,12 @@ impl Apps {
                 {
                     return;
                 }
+                let Some(a) = weak.upgrade() else { return };
                 match g.current_button() {
-                    gdk::BUTTON_MIDDLE => {
-                        with(|a| a.close_window(&win));
-                    }
+                    gdk::BUTTON_MIDDLE => a.close_window(&win),
                     gdk::BUTTON_PRIMARY => {
-                        with(|a| {
-                            a.hide_preview();
-                            a.focus(&win);
-                        });
+                        a.hide_preview();
+                        a.focus(&win);
                     }
                     _ => {}
                 }
@@ -1370,11 +1660,17 @@ impl Apps {
             content.append(&row);
         }
         let motion = gtk::EventControllerMotion::new();
-        motion.connect_enter(|_, _, _| {
-            with(|a| cancel(&a.hide_timer));
+        let weak = Rc::downgrade(self);
+        motion.connect_enter(move |_, _, _| {
+            if let Some(a) = weak.upgrade() {
+                cancel(&a.hide_timer);
+            }
         });
-        motion.connect_leave(|_| {
-            with(|a| a.schedule_preview_hide());
+        let weak = Rc::downgrade(self);
+        motion.connect_leave(move |_| {
+            if let Some(a) = weak.upgrade() {
+                a.schedule_preview_hide();
+            }
         });
         content.add_controller(motion);
         popover.set_child(Some(&content));
@@ -1415,6 +1711,96 @@ mod tests {
         cap = next_cap(cap, narrow, narrow);
         assert_eq!(cap, narrow);
         assert_eq!(next_cap(cap, wide, wide), wide);
+    }
+
+    #[test]
+    fn each_taskbar_shows_the_windows_of_its_monitor_by_the_windows_setting() {
+        let (main, m1, m2) = (Role::Main, Role::Secondary(1), Role::Secondary(2));
+        // one monitor, or no taskbar of another monitor ("Show my taskbar on all displays" off): everything, as before
+        for mode in [Mode::All, Mode::MainAndWindow, Mode::Window] {
+            for monitor in [None, Some(0), Some(1)] {
+                assert!(shows(main, mode, 0, &[], monitor));
+            }
+        }
+        // "Taskbar where window is open" (the default)
+        let strips = [1, 2];
+        assert!(shows(main, Mode::Window, 0, &strips, Some(0)));
+        assert!(!shows(main, Mode::Window, 0, &strips, Some(1)));
+        assert!(shows(m1, Mode::Window, 0, &strips, Some(1)));
+        assert!(!shows(m1, Mode::Window, 0, &strips, Some(0)));
+        assert!(!shows(m2, Mode::Window, 0, &strips, Some(1)));
+        // a monitor without a taskbar of its own (not made yet) and an unknown monitor: the main taskbar
+        assert!(shows(main, Mode::Window, 0, &[1], Some(2)));
+        assert!(shows(main, Mode::Window, 0, &strips, None));
+        assert!(!shows(m1, Mode::Window, 0, &strips, None));
+        // "Main taskbar and taskbar where window is open"
+        assert!(shows(main, Mode::MainAndWindow, 0, &strips, Some(1)));
+        assert!(shows(m1, Mode::MainAndWindow, 0, &strips, Some(1)));
+        assert!(!shows(m1, Mode::MainAndWindow, 0, &strips, Some(0)));
+        // "All taskbars"
+        for role in [main, m1, m2] {
+            for monitor in [None, Some(0), Some(1), Some(2)] {
+                assert!(shows(role, Mode::All, 0, &strips, monitor));
+            }
+        }
+        // another primary: the main taskbar is there
+        assert!(shows(main, Mode::Window, 1, &[0], Some(1)));
+        assert!(!shows(main, Mode::Window, 1, &[0], Some(0)));
+        // the pins: the main taskbar, and every taskbar with "All taskbars"
+        assert!(shows_pins(main, Mode::Window) && shows_pins(main, Mode::MainAndWindow));
+        assert!(!shows_pins(m1, Mode::Window) && !shows_pins(m1, Mode::MainAndWindow));
+        assert!(shows_pins(m1, Mode::All));
+    }
+
+    #[test]
+    fn the_taskbar_shows_the_windows_of_the_desktop_in_use_unless_all_desktops_is_chosen() {
+        let win = |id: &str, workspace: i64, focused: bool, pinned: bool| {
+            json!({"id": id, "workspace": workspace, "focused": focused, "minimized": false, "pinned": pinned})
+        };
+        // windows 1 on desktop 0, 2 (focused) and 4 on desktop 1, 3 on every desktop
+        let list = vec![win("1", 0, false, false), win("2", 1, true, false), win("3", -1, false, true), win("4", 1, false, false)];
+        let shown = |active: Option<i64>| list.iter().filter(|w| shows_on_desktop(w, active)).map(id_of).collect::<Vec<_>>();
+        let off = json!(false);
+        // the extension's activeWorkspace wins over the focus
+        let d = taskbar_desktop(&off, &list, Some(0), &[]);
+        assert_eq!(d, Some(0));
+        assert_eq!(shown(d), ["1", "3"]);
+        // without it, the focused window's desktop
+        let d = taskbar_desktop(&off, &list, None, &[]);
+        assert_eq!(d, Some(1));
+        assert_eq!(shown(d), ["2", "3", "4"]);
+        // nothing focused (the taskbar has the focus): the most recently used window's desktop; a window on every
+        // desktop says nothing
+        let mut none_focused = list.clone();
+        for w in none_focused.iter_mut() {
+            w["focused"] = json!(false);
+        }
+        assert_eq!(taskbar_desktop(&off, &none_focused, None, &["3".into(), "1".into()]), Some(0));
+        // nothing to go by: every window
+        let d = taskbar_desktop(&off, &none_focused, None, &[]);
+        assert_eq!(d, None);
+        assert_eq!(shown(d), ["1", "2", "3", "4"]);
+        // a missing setting is Windows' default (only the desktop in use)
+        assert_eq!(taskbar_desktop(&Value::Null, &list, Some(1), &[]), Some(1));
+        // "Op alle bureaubladen": every window, whatever the extension says
+        let on = json!(true);
+        assert_eq!(taskbar_desktop(&on, &list, Some(0), &[]), None);
+        assert_eq!(shown(taskbar_desktop(&on, &list, Some(0), &[])), ["1", "2", "3", "4"]);
+        // a minimized window on desktop 0 belongs to desktop 0; a window without a desktop shows everywhere
+        assert!(shows_on_desktop(&json!({"id": "5", "workspace": 0, "minimized": true}), Some(0)));
+        assert!(!shows_on_desktop(&json!({"id": "5", "workspace": 0, "minimized": true}), Some(1)));
+        assert!(shows_on_desktop(&json!({"id": "6"}), Some(1)));
+    }
+
+    #[test]
+    fn the_window_list_carries_the_active_desktop_when_the_extension_reports_it() {
+        let (w, a) = window_list(&json!({"supported": true, "windows": [{"id": "1"}], "activeWorkspace": 2}));
+        assert_eq!((w.len(), a), (1, Some(2)));
+        let (w, a) = window_list(&json!({"supported": true, "windows": [{"id": "1"}, {"id": "2"}]}));
+        assert_eq!((w.len(), a), (2, None));
+        let (w, a) = window_list(&json!([{"id": "1"}]));
+        assert_eq!((w.len(), a), (1, None));
+        assert_eq!(window_list(&Value::Null), (Vec::new(), None));
     }
 
     #[test]

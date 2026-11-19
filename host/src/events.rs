@@ -374,6 +374,23 @@ fn valid_name(name: &str) -> bool {
         "windows.",
         "update.",
         "winpoint.",
+        // Settings parity (notes/claude/settings-parity.md §5, amendment 55)
+        "gsettings.",
+        "caps.",
+        "input.",
+        "devices.",
+        "printers.",
+        "net.",
+        "sharing.",
+        "sound.",
+        "battery.",
+        "wellbeing.",
+        "users.",
+        "goa.",
+        "machine.",
+        "privacy.",
+        "background.",
+        "launch.",
     ]
     .iter()
     .any(|prefix| name.starts_with(prefix))

@@ -1,10 +1,16 @@
 //! Flyout `quick`: Snelle instellingen (Win+A), ported from `git show 418ea594:vendor/ui/js/shell/quicksettings.js` and
 //! the QUICK SETTINGS part of `git show 418ea594:vendor/ui/css/flyouts.css`. Layout like Windows 11 23H2:
 //!   [media card]   a separate card when a player exists (media.list / media.changed)
-//!   [tiles 3x2]    Wi-Fi >, Bluetooth >, Vliegtuigmodus, Nachtlampje, Donkere modus, Niet storen
+//!   [tiles 3x2]    Wi-Fi >, Bluetooth >, Vliegtuigmodus, Nachtlampje, Donkere modus, Niet storen, and
+//!                  Toegankelijkheid > (settings parity, batch A: GNOME's accessibility menu, shown while
+//!                  org.gnome.desktop.a11y always-show-universal-access-status is on or one of its functions is)
 //!   [sliders]      helderheid (only when available), volume (mute button, > output devices)
 //!   [footer]       battery % (when present), all settings, power menu
-//! Sub-pages (Wi-Fi networks, Bluetooth devices, sound output) slide in with a back arrow. Live updates through
+//! Sub-pages (Wi-Fi networks, Bluetooth devices, sound output, accessibility) slide in with a back arrow. The
+//! accessibility page has GNOME's menu in Windows' words (Vergrootglas, Hoog contrast, Verteller, Plaktoetsen,
+//! Filtertoetsen, Muistoetsen, Schermtoetsenbord): GNOME keys read and written through the host's gsettings.get /
+//! gsettings.set (its allow rows), following gsettings.changed. The flyout never multiplies a text scale itself: its
+//! text sizes come from the shell's theme (native/shell/src/theme.rs, GNOME's text-scaling-factor). Live updates through
 //! system.*.changed, media.changed and settings.changed. Changes are optimistic and revert on an error or in the
 //! host's test mode (dryRun), with a short note on the visible page.
 use crate::core::Shell;
@@ -18,7 +24,45 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use std::time::{Duration, Instant};
 
-/* ==========================================================================
+
+/// Card-sized media artwork: texture pixels affect the crop, not the flyout's requested width.
+fn media_art_height(width: i32, height: i32) -> i32 {
+    let ratio = (f64::from(width.max(1)) / f64::from(height.max(1))).clamp(1.0, 2.4);
+    ((300.0 / ratio).round() as i32).clamp(110, 180)
+}
+
+/// Paint at card size without advertising the media texture's natural size to GTK layout.
+fn media_art_widget(texture: &gdk::Texture) -> Option<gtk::Widget> {
+    let surface = media_art_surface(texture)?;
+    let art = gtk::DrawingArea::new();
+    art.set_content_width(300);
+    art.set_content_height(media_art_height(texture.width(), texture.height()));
+    art.set_hexpand(true);
+    art.set_overflow(gtk::Overflow::Hidden);
+    art.add_css_class("fo-media__art");
+    art.set_draw_func(move |_, cr, w, h| {
+        let scale = (f64::from(w) / f64::from(surface.width())).max(f64::from(h) / f64::from(surface.height()));
+        cr.translate((f64::from(w) - f64::from(surface.width()) * scale) / 2.0,
+            (f64::from(h) - f64::from(surface.height()) * scale) / 2.0);
+        cr.scale(scale, scale);
+        if cr.set_source_surface(&surface, 0.0, 0.0).is_ok() { let _ = cr.paint(); }
+    });
+    Some(art.upcast())
+}
+
+fn media_art_surface(texture: &gdk::Texture) -> Option<gtk::cairo::ImageSurface> {
+    let (w, h) = (texture.width(), texture.height());
+    if w <= 0 || h <= 0 { return None; }
+    let stride = (w as usize).checked_mul(4)?;
+    let mut data = vec![0u8; stride.checked_mul(h as usize)?];
+    // GDK's default download format is Cairo ARGB32, as in desktop/wallpaper.rs.
+    texture.download(&mut data, stride);
+    gtk::cairo::ImageSurface::create_for_data(data, gtk::cairo::Format::ARgb32, w, h, stride as i32).ok()
+}
+
+/* ===================================================================    }
+}
+
    Texts (quicksettings.js)
    ========================================================================== */
 
@@ -32,6 +76,16 @@ const TEXTS: &[(&str, &str, &str)] = &[
     ("nightLight", "Nachtlampje", "Night light"),
     ("darkMode", "Donkere modus", "Dark mode"),
     ("dnd", "Niet storen", "Do not disturb"),
+    ("a11y", "Toegankelijkheid", "Accessibility"),
+    ("a11yMore", "Toegankelijkheidsfuncties weergeven", "Show accessibility features"),
+    ("a11ySettings", "Meer toegankelijkheidsinstellingen", "More accessibility settings"),
+    ("magnifier", "Vergrootglas", "Magnifier"),
+    ("highContrast", "Hoog contrast", "High contrast"),
+    ("narrator", "Verteller", "Narrator"),
+    ("stickyKeys", "Plaktoetsen", "Sticky keys"),
+    ("slowKeys", "Filtertoetsen", "Filter keys"),
+    ("mouseKeys", "Muistoetsen", "Mouse keys"),
+    ("screenKeyboard", "Schermtoetsenbord", "On-screen keyboard"),
     ("ethernet", "Ethernet", "Ethernet"),
     ("notConnected", "Niet verbonden", "Not connected"),
     ("network", "Netwerk", "Network"),
@@ -135,7 +189,9 @@ fn tp(key: &str, p: &str) -> String {
     t(key).replace("{p}", p)
 }
 
-/* ==========================================================================
+/* ===================================================================    }
+}
+
    Small helpers: JSON and widgets
    ========================================================================== */
 
@@ -407,7 +463,9 @@ fn flyout_open(name: &str) -> bool {
     host.is_some_and(|h| h.is_open(name))
 }
 
-/* ==========================================================================
+/* ===================================================================    }
+}
+
    Look: own light/dark classes and the Win11 accent palette (theme.js accentPalette)
    ========================================================================== */
 
@@ -614,7 +672,9 @@ pub(super) fn refresh_palette() {
     });
 }
 
-/* ==========================================================================
+/* ===================================================================    }
+}
+
    State
    ========================================================================== */
 
@@ -632,6 +692,41 @@ struct State {
     night_enabled: bool,
     wifi_list: Option<Vec<Value>>,
     scanning: bool,
+    /// The accessibility keys' gsettings items ("schema key" → item).
+    a11y: HashMap<String, Value>,
+}
+
+/// GNOME's accessibility menu (`always-show-universal-access-status`) and the functions of the accessibility
+/// sub-page in its order: (schema, key, text).
+const A11Y_MENU: (&str, &str) = ("org.gnome.desktop.a11y", "always-show-universal-access-status");
+const A11Y_ROWS: &[(&str, &str, &str)] = &[
+    ("org.gnome.desktop.a11y.applications", "screen-magnifier-enabled", "magnifier"),
+    ("org.gnome.desktop.a11y.interface", "high-contrast", "highContrast"),
+    ("org.gnome.desktop.a11y.applications", "screen-reader-enabled", "narrator"),
+    ("org.gnome.desktop.a11y.keyboard", "stickykeys-enable", "stickyKeys"),
+    ("org.gnome.desktop.a11y.keyboard", "slowkeys-enable", "slowKeys"),
+    ("org.gnome.desktop.a11y.keyboard", "mousekeys-enable", "mouseKeys"),
+    ("org.gnome.desktop.a11y.applications", "screen-keyboard-enabled", "screenKeyboard"),
+];
+
+fn a11y_id(schema: &str, key: &str) -> String {
+    format!("{schema} {key}")
+}
+
+/// Whether a gsettings item can be shown (installed and allowlisted) and written (not locked, a writing mode).
+fn item_shown(item: &Value) -> bool {
+    item["available"] == true && item["allowed"] == true
+}
+
+fn item_writable(item: &Value) -> bool {
+    item_shown(item) && item["writable"] == true && matches!(item["mode"].as_str(), Some("write" | "mirrored"))
+}
+
+/// The Toegankelijkheid tile: (shown, on). GNOME shows its menu while the setting is on or any function is on.
+fn a11y_tile_state(items: &HashMap<String, Value>) -> (bool, bool) {
+    let on = A11Y_ROWS.iter().any(|(schema, key, _)| items.get(&a11y_id(schema, key)).is_some_and(|i| i["value"] == true));
+    let menu = items.get(&a11y_id(A11Y_MENU.0, A11Y_MENU.1)).is_some_and(|i| i["value"] == true);
+    (menu || on, on)
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -660,6 +755,7 @@ enum Kind {
     Wifi,
     Bluetooth,
     Sound,
+    Accessibility,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -746,6 +842,9 @@ impl Tile {
         el.set_size_request(96, -1);
         el.append(&frame);
         el.append(&label);
+        // names for the harness's dev channel (tests/gnome/scenarios/settings-a11y.py)
+        el.set_widget_name(&format!("qs-tile-{id}"));
+        main.set_widget_name(&format!("qs-tile-{id}-main"));
         main.connect_clicked(move |_| {
             if let Some(q) = q() {
                 q.tile_clicked(id);
@@ -754,7 +853,11 @@ impl Tile {
         if let Some(m) = &more {
             m.connect_clicked(move |_| {
                 if let Some(q) = q() {
-                    q.open_sub(if id == "wifi" { Kind::Wifi } else { Kind::Bluetooth });
+                    q.open_sub(match id {
+                        "wifi" => Kind::Wifi,
+                        "accessibility" => Kind::Accessibility,
+                        _ => Kind::Bluetooth,
+                    });
                 }
             });
         }
@@ -874,7 +977,9 @@ impl Flyout for QuickFlyout {
     }
 }
 
-/* ==========================================================================
+/* ===================================================================    }
+}
+
    Setup
    ========================================================================== */
 
@@ -965,6 +1070,19 @@ pub fn register(shell: &Rc<Shell>) {
         let Some(q) = q() else { return };
         q.st.borrow_mut().players = players_of(d);
         q.render_media();
+    });
+    shell.on("gsettings.changed", |_, d| {
+        let Some(q) = q() else { return };
+        let item = &d["item"];
+        let id = a11y_id(item["schema"].as_str().unwrap_or(""), item["key"].as_str().unwrap_or(""));
+        if !q.st.borrow().a11y.contains_key(&id) {
+            return;
+        }
+        q.st.borrow_mut().a11y.insert(id, item.clone());
+        q.render_tiles();
+        if let Some(sub) = q.sub_of(Kind::Accessibility) {
+            q.render_sub(&sub);
+        }
     });
     shell.on("settings.changed", |_, _| {
         let Some(q) = q() else { return };
@@ -1063,6 +1181,7 @@ impl Quick {
             Tile::new("nightLight", "night-light", &t("nightLight"), None),
             Tile::new("dark", "moon", &t("darkMode"), None),
             Tile::new("dnd", "notification-off", &t("dnd"), None),
+            Tile::new("accessibility", "accessibility", &t("a11y"), Some(t("a11yMore"))),
         ];
         main.append(&grid);
 
@@ -1219,6 +1338,30 @@ impl Quick {
             }
             q.render_tiles();
         });
+        self.load_a11y();
+    }
+
+    /// The accessibility keys (gsettings.get): the tile and the sub-page.
+    fn load_a11y(self: &Rc<Self>) {
+        let keys: Vec<Value> = std::iter::once(A11Y_MENU)
+            .chain(A11Y_ROWS.iter().map(|(schema, key, _)| (*schema, *key)))
+            .map(|(schema, key)| json!({"schema": schema, "key": key}))
+            .collect();
+        sh().call("gsettings.get", json!({ "keys": keys }), |res| {
+            let Some(q) = q() else { return };
+            let Ok(v) = res else { return };
+            {
+                let mut st = q.st.borrow_mut();
+                for item in v["items"].as_array().into_iter().flatten() {
+                    let id = a11y_id(item["schema"].as_str().unwrap_or(""), item["key"].as_str().unwrap_or(""));
+                    st.a11y.insert(id, item.clone());
+                }
+            }
+            q.render_tiles();
+            if let Some(sub) = q.sub_of(Kind::Accessibility) {
+                q.render_sub(&sub);
+            }
+        });
     }
 
     fn load_night(self: &Rc<Self>, done: impl FnOnce(&Rc<Quick>, bool, bool) + 'static) {
@@ -1318,6 +1461,11 @@ impl Quick {
         }
         if let Some(d) = ui.tile("dnd") {
             d.set_on(shell.setting("notifications.dnd") == Value::Bool(true));
+        }
+        if let Some(a) = ui.tile("accessibility") {
+            let (shown, on) = a11y_tile_state(&self.st.borrow().a11y);
+            a.set_hidden(!shown);
+            a.set_on(on);
         }
         self.relayout(&ui);
     }
@@ -1557,15 +1705,7 @@ impl Quick {
         match cached {
             Some(Some(texture)) => {
                 // Full width, its own proportions between 1:1 and 2.4:1, 110 to 180 px high on the ~300 px card.
-                let ratio = (texture.width().max(1) as f64 / texture.height().max(1) as f64).clamp(1.0, 2.4);
-                let pic = gtk::Picture::for_paintable(&texture);
-                pic.set_content_fit(gtk::ContentFit::Cover);
-                pic.set_can_shrink(true);
-                pic.set_hexpand(true);
-                pic.set_size_request(-1, ((300.0 / ratio).round() as i32).clamp(110, 180));
-                pic.set_overflow(gtk::Overflow::Hidden);
-                pic.add_css_class("fo-media__art");
-                Some(pic.upcast())
+                media_art_widget(&texture)
             }
             Some(None) => None,
             None => {
@@ -1688,6 +1828,8 @@ impl Quick {
                 sh().set_setting("notifications.dnd", json!(on));
                 tile.set_on(on);
             }
+            // Windows' Accessibility tile is no switch: it opens its page
+            "accessibility" => self.open_sub(Kind::Accessibility),
             _ => {}
         }
     }
@@ -1925,6 +2067,7 @@ impl Quick {
             Kind::Wifi => (t("wifi"), t("moreWifi"), "wifi"),
             Kind::Bluetooth => (t("bluetooth"), t("moreBt"), "bluetooth"),
             Kind::Sound => (t("output"), t("moreSound"), "sound"),
+            Kind::Accessibility => (t("a11y"), t("a11ySettings"), "accessibility"),
         };
         let el = vbox(0, &["fo-qs__page", "fo-sub"]);
         let header = hbox(4, &["fo-sub__header"]);
@@ -1937,7 +2080,7 @@ impl Quick {
         let title_l = ell(lbl(&title, &["fo-sub__title", "q-strong"]));
         header.append(&back);
         header.append(&title_l);
-        let toggle = if kind == Kind::Sound {
+        let toggle = if matches!(kind, Kind::Sound | Kind::Accessibility) {
             None
         } else {
             let sw = gtk::Switch::new();
@@ -2056,6 +2199,7 @@ impl Quick {
                 });
             }
             Kind::Sound => {}
+            Kind::Accessibility => self.load_a11y(),
         }
     }
 
@@ -2078,6 +2222,7 @@ impl Quick {
             Kind::Wifi => ui.tile("wifi").and_then(|t| t.more.clone()).map(|b| b.upcast()),
             Kind::Bluetooth => ui.tile("bluetooth").and_then(|t| t.more.clone()).map(|b| b.upcast()),
             Kind::Sound => Some(ui.out.clone().upcast()),
+            Kind::Accessibility => ui.tile("accessibility").and_then(|t| t.more.clone()).map(|b| b.upcast()),
         };
         if let Some(w) = target {
             glib::idle_add_local_once(move || {
@@ -2091,7 +2236,69 @@ impl Quick {
             Kind::Wifi => self.render_wifi(sub),
             Kind::Bluetooth => self.render_bt(sub),
             Kind::Sound => self.render_sound(sub),
+            Kind::Accessibility => self.render_a11y(sub),
         }
+    }
+
+    /// The accessibility sub-page: one row per function GNOME has here, a switch on the right; a click toggles.
+    fn render_a11y(self: &Rc<Self>, sub: &Rc<Sub>) {
+        let items = self.st.borrow().a11y.clone();
+        self.keep_focus(sub);
+        clear_box(&sub.list);
+        let mut any = false;
+        for &(schema, key, text) in A11Y_ROWS {
+            let Some(item) = items.get(&a11y_id(schema, key)).filter(|i| item_shown(i)) else { continue };
+            any = true;
+            let on = item["value"] == true;
+            let row = button(&["fo-sink", "fo-a11y"]);
+            row.set_widget_name(&format!("qs-a11y-{key}"));
+            row.set_sensitive(item_writable(item));
+            let hb = hbox(12, &[]);
+            hb.set_margin_start(12);
+            let name = ell(lbl(&t(text), &["fo-sink__name"]));
+            name.set_hexpand(true);
+            name.set_xalign(0.0);
+            hb.append(&name);
+            let sw = gtk::Switch::new();
+            sw.add_css_class("q-switch");
+            sw.set_valign(gtk::Align::Center);
+            sw.set_active(on);
+            sw.set_can_target(false);
+            sw.set_can_focus(false);
+            hb.append(&sw);
+            row.set_child(Some(&hb));
+            set_a11y(&row, &format!("{}: {}", t(text), if on { t("on") } else { t("off") }));
+            sub.heads.borrow_mut().insert(key.to_owned(), row.clone());
+            let w = Rc::downgrade(sub);
+            row.connect_clicked(move |_| {
+                let (Some(q), Some(sub)) = (q(), w.upgrade()) else { return };
+                *sub.focus_after.borrow_mut() = Some(key.to_owned());
+                q.toggle_a11y(schema, key, !on);
+            });
+            sub.list.append(&row);
+        }
+        if !any {
+            sub.list.append(&empty_msg(&t("unavailable"), None, Some("accessibility")));
+        }
+        self.restore_focus(sub);
+    }
+
+    /// One accessibility function on or off: optimistic, back with the host's error (or in test mode).
+    fn toggle_a11y(self: &Rc<Self>, schema: &'static str, key: &'static str, on: bool) {
+        let id = a11y_id(schema, key);
+        let Some(prev) = self.st.borrow().a11y.get(&id).cloned() else { return };
+        self.st.borrow_mut().a11y.insert(id.clone(), with(&prev, "value", json!(on)));
+        self.rerender();
+        let me = self.clone();
+        self.guarded(
+            "gsettings.set",
+            json!({"schema": schema, "values": { key: on }}),
+            move || {
+                me.st.borrow_mut().a11y.insert(id, prev);
+                me.rerender();
+            },
+            |_| {},
+        );
     }
 
     /// Before a list is rebuilt: remember which row head (or the password box) has the focus.
@@ -2823,7 +3030,9 @@ impl Quick {
     }
 }
 
-/* ==========================================================================
+/* ===================================================================    }
+}
+
    Free-standing widgets
    ========================================================================== */
 
@@ -3032,5 +3241,51 @@ fn draw_battery(area: &gtk::DrawingArea, cr: &gtk::cairo::Context, percent: f64,
         }
         cr.set_line_width(0.8);
         let _ = cr.stroke();
+    }
+}
+
+
+#[cfg(test)]
+mod media_art_tests {
+    use super::*;
+
+    #[test]
+    fn large_media_art_does_not_request_a_screen_sized_flyout() {
+        if gtk::init().is_err() { return; }
+        let bytes = glib::Bytes::from_owned(vec![0u8; 1920 * 1080 * 4]);
+        let texture = gdk::MemoryTexture::new(1920, 1080, gdk::MemoryFormat::B8g8r8a8Premultiplied, &bytes, 1920 * 4);
+        let art = media_art_widget(texture.upcast_ref()).expect("media artwork");
+        let (_, width, _, _) = art.measure(gtk::Orientation::Horizontal, -1);
+        let (_, height, _, _) = art.measure(gtk::Orientation::Vertical, 300);
+        assert!(width <= 360, "the 1920-pixel source must not widen the card: {width}");
+        assert!(height <= 190, "artwork stays within the card's 180-pixel height plus margin: {height}");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn item(schema: &str, key: &str, value: bool) -> (String, Value) {
+        (a11y_id(schema, key), json!({"schema": schema, "key": key, "value": value, "available": true, "allowed": true, "writable": true, "mode": "write"}))
+    }
+
+    #[test]
+    fn the_accessibility_tile_shows_as_gnomes_menu_does() {
+        let mut items: HashMap<String, Value> = A11Y_ROWS.iter().map(|(s, k, _)| item(s, k, false)).collect();
+        items.extend([item(A11Y_MENU.0, A11Y_MENU.1, false)]);
+        assert_eq!(a11y_tile_state(&items), (false, false), "hidden while the menu is off and nothing is on");
+        items.extend([item(A11Y_MENU.0, A11Y_MENU.1, true)]);
+        assert_eq!(a11y_tile_state(&items), (true, false), "Toegankelijkheidsmenu altijd weergeven");
+        items.extend([item(A11Y_MENU.0, A11Y_MENU.1, false), item("org.gnome.desktop.a11y.keyboard", "stickykeys-enable", true)]);
+        assert_eq!(a11y_tile_state(&items), (true, true), "a function that is on shows it, lit");
+        assert_eq!(a11y_tile_state(&HashMap::new()), (false, false));
+        let (_, mut locked) = item("org.gnome.desktop.a11y.interface", "high-contrast", true);
+        assert!(item_writable(&locked));
+        locked["writable"] = json!(false);
+        assert!(item_shown(&locked) && !item_writable(&locked));
+        for (_, _, text) in A11Y_ROWS {
+            assert!(TEXTS.iter().any(|(k, _, _)| k == text), "{text} has its texts");
+        }
     }
 }

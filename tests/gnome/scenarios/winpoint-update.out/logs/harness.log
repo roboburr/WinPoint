@@ -1,108 +1,107 @@
-03:54:27 GE0c run lang=nl switch=False seed=defaults MemAvailable=7776784 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.py
-03:55:49 private install: exit 0 in 67.3 s, 87295 mutated paths, 0 outside the run dir, ok=True
-03:56:08 WinPoint bundle winpoint-0.9.0-linux-x86_64.tar.gz: 67246933 bytes in 18.7 s
-03:56:08 fake GitHub on 127.0.0.1:47811 (running 0.8.9, offers winpoint-0.9.0-linux-x86_64.tar.gz), seam /tmp/w11-winpoint
-03:56:12 GNOME Shell 50.1 up (mode user, unsafe True)
-03:56:16 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.py
-03:56:16   check PASS: the run has --winpoint-feed (the seam and the fake GitHub)
-03:56:16   check PASS: the fake offers this tree as a real release above the running version
-03:56:16   check PASS: the automatic check asked the fake GitHub once
-03:56:16   check PASS: the request carries WinPoint's User-Agent and GitHub's API version
-03:56:17   check PASS: GNOME's notification service owns org.freedesktop.Notifications
-03:56:17 kill_panel: signalled own descendants 524:win11-shell, 641:win11-panel, 726:glycin-svg
-03:56:24   check PASS: the restarted owner, with no state, checked again on its own
-03:56:24   check PASS: exactly one WinPoint notification, for the newer version
-03:56:26   check PASS: the notification brings Settings to Update & recovery (the card shows the newer version)
-03:56:26   check PASS: the notification is gone after its action
-03:56:26   check PASS: the card offers the newer version
-03:56:26   check PASS: the card names the running version and the release date
-03:56:26   check PASS: the card links to the release notes and offers Download and install
-03:56:26   check PASS: no download link and no how-to: WinPoint installs it itself (D-G74)
-03:56:26   check PASS: the automatic check recorded the announced version
-03:56:26   check PASS: no job and no work folder before a click
-03:56:26   check PASS: state.json stays 0600 after the edit
-03:56:55   check PASS: the manual check found the newer version and recorded notified
-03:56:55   check PASS: the card still offers the newer version
-03:56:58   check PASS: a manual check of a version not announced yet sends no notification
-03:57:26   check PASS: a failed check says why
-03:57:26   check PASS: the last known release stays below the failure
-03:57:26   check PASS: the raw detail is in Technical details
-03:57:57   check PASS: offline: the card says there is no internet connection
-03:57:57   check PASS: the offline refusal made no request
-03:57:58   check PASS: the card shows the check running
-03:58:01   check PASS: the check's start is in state.json (its rev is past the click's)
-03:58:01   check PASS: the owner holds check.lock while GitHub answers
-03:58:01   check PASS: winpoint.status keeps the card checking (the owner's lock, not the click)
-03:58:01   check PASS: the ring replaces the button while it checks
-03:58:04   check PASS: the card says WinPoint is up to date
-03:58:04   check PASS: up to date names the version and the time of the check
-03:58:04   check PASS: no release links when up to date
-03:58:05   check PASS: wait_text settings: 'Automatisch controleren op nieuwe versies van WinPoint'
-03:58:06   check PASS: Advanced options has the daily check, on
-03:58:07   check PASS: the toggle writes update.winpointAutoCheck false
-03:58:07   check PASS: the card says automatic checks are off
-03:58:08   check PASS: the toggle writes update.winpointAutoCheck true again
-03:58:08   check PASS: one request per check: two automatic, not announced, 500, current (none offline)
-03:58:08   check PASS: every request has the User-Agent
-03:58:08   check PASS: no notification after the first (every later check was manual)
-03:58:08   check PASS: no download before a click
-03:58:36   check PASS: the card offers the release with Download and install
-03:58:36   check PASS: the card shows the download with its progress and Cancel
-03:58:37   check PASS: the download moves on (the card patched in place)
-03:58:38   check PASS: the job asked GitHub for the release list again first
-03:59:05   check PASS: the card shows the installer running (no Cancel)
-03:59:05   check PASS: no Cancel while it installs
-03:59:24   check PASS: the card says the release is installed, with Restart WinPoint
-03:59:24   check PASS: installed: restart WinPoint to finish (the extension did not change)
-03:59:24   check PASS: job.json: installed with restart
-03:59:24   check PASS: the run prefix's VERSION is the release's (it said the running version before)
-03:59:24   check PASS: the installer swapped in a new payload: another directory, without the stray file
-03:59:24   check PASS: install.log is there and has no error
-03:59:24   check PASS: check.log is there and has no error
-03:59:24   check PASS: the installed release left no tarball and no bundle in work/
-03:59:24   check PASS: the fake saw the .sha256, the 302 hop to its CDN and the whole tarball
-03:59:24   check PASS: one "installed" notification that says how to finish
-03:59:27   check PASS: Settings and the shell restarted
-03:59:27   check PASS: the restarted owner (version V) cleared job.json and work/
-03:59:28   check PASS: the card offers the release again (the hosts still pretend to run the lower version)
-03:59:29   check PASS: a damaged download ends the job: not installed, the download deleted
-03:59:29   check PASS: nothing changed, and Retry is offered
-03:59:29   check PASS: job.json: failed with checksum, nothing changed
-03:59:29   check PASS: the damaged tarball was deleted at once (no tarball, no .part, no bundle)
-03:59:29   check PASS: the damaged tarball was fetched whole
-03:59:29   check PASS: the version on disk is still the installed one, in the same payload
-03:59:31   check PASS: Retry with a release without a digest: refused, a check offered instead
-03:59:31   check PASS: the refusal says to download it from the link, and the link is there: Release notes, Download on GitHub and the how-to line
-03:59:31   check PASS: job.json: failed with noDigest
-04:00:02   check PASS: a release without a digest: phase 1's card
-04:00:02   check PASS: Release notes, Download on GitHub and the how-to line; no install button
-04:00:04 shutdown app: signalled own descendants 1364:gjs
-04:00:04 shutdown shell clients: signalled own descendants 189:ibus-daemon, 1381:glycin-image-rs, 1396:win11-shell, 3168:win11-panel, 210:ibus-memconf, 214:ibus-extension-, 529:ibus-engine-sim
-04:00:04 shutdown gnome-shell: signalled own descendants 167:gnome-shell
-04:00:04 shutdown system bus: signalled own descendants 166:dbus-daemon
-04:00:04 inner sweep: signalled own descendants 3818:glycin-image-rs
-04:00:04 inner done: 0 surfaces, 0 failed []
-04:00:04 fake GitHub: signalled own descendants 156:python3
-04:00:07 strace connect:    157 x AF_INET 127.0.0.1 -> EINPROGRESS
-04:00:07 strace connect:     62 x AF_INET 127.0.0.1 -> UNFINISHED
-04:00:07 strace connect:      6 x AF_INET 127.0.0.1 -> ok
-04:00:07 strace connect:      1 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/ibus/dbus-* -> UNFINISHED
-04:00:07 strace connect:      3 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/ibus/dbus-* -> ok
-04:00:07 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
-04:00:07 strace connect:      2 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
-04:00:07 strace connect:      2 x AF_UNIX /tmp/w11-rt/bus -> UNFINISHED
-04:00:07 strace connect:     33 x AF_UNIX /tmp/w11-rt/bus -> ok
-04:00:07 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
-04:00:07 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
-04:00:07 strace connect:     11 x AF_UNIX /tmp/w11-rt/sbus -> ok
-04:00:07 strace connect:      1 x AF_UNIX /tmp/w11-rt/w11-wl -> UNFINISHED
-04:00:07 strace connect:      5 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
-04:00:07 strace connect:     15 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
-04:00:07 strace connect:    121 x AF_UNIX /var/run/nscd/socket -> ENOENT
-04:00:07 strace connect:      4 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
-04:00:07 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
-04:00:07 strace connect check: 495 connect() calls, OK
-04:00:12 strace exec:      1 x /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/stubs/apt (stub) -> ran
-04:00:12 strace exec check: 816 execve() calls, OK
-04:00:12 strace exec: WinPoint python3 at line 4359 (check, 12 vars): /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle
-04:00:12 strace exec: WinPoint python3 at line 4717 (install, 12 vars): /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle/scripts/install.py /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.0/bundle
+03:17:56 GE0c run lang=nl switch=False seed=defaults MemAvailable=6945328 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.py
+03:19:33 private install: exit 0 in 78.4 s, 87318 mutated paths, 0 outside the run dir, ok=True
+03:19:59 WinPoint bundle winpoint-0.9.1-linux-x86_64.tar.gz: 67250411 bytes in 25.6 s
+03:19:59 fake GitHub on 127.0.0.1:47811 (running 0.9.0, offers winpoint-0.9.1-linux-x86_64.tar.gz), seam /tmp/w11-winpoint
+03:20:05 GNOME Shell 50.1 up (mode user, unsafe True)
+03:20:10 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/winpoint-update.py
+03:20:10   check PASS: the run has --winpoint-feed (the seam and the fake GitHub)
+03:20:10   check PASS: the fake offers this tree as a real release above the running version
+03:20:10   check PASS: the automatic check asked the fake GitHub once
+03:20:10   check PASS: the request carries WinPoint's User-Agent and GitHub's API version
+03:20:11   check PASS: GNOME's notification service owns org.freedesktop.Notifications
+03:20:11 kill_panel: signalled own descendants 523:win11-shell, 636:win11-panel, 718:glycin-svg
+03:20:17   check PASS: the restarted owner, with no state, checked again on its own
+03:20:17   check PASS: exactly one WinPoint notification, for the newer version
+03:20:19   check PASS: the notification brings Settings to Update & recovery (the card shows the newer version)
+03:20:19   check PASS: the notification is gone after its action
+03:20:19   check PASS: the card offers the newer version
+03:20:19   check PASS: the card names the running version and the release date
+03:20:19   check PASS: the card links to the release notes and offers Download and install
+03:20:19   check PASS: no download link and no how-to: WinPoint installs it itself (D-G74)
+03:20:19   check PASS: the automatic check recorded the announced version
+03:20:19   check PASS: no job and no work folder before a click
+03:20:19   check PASS: state.json stays 0600 after the edit
+03:20:49   check PASS: the manual check found the newer version and recorded notified
+03:20:49   check PASS: the card still offers the newer version
+03:20:52   check PASS: a manual check of a version not announced yet sends no notification
+03:21:20   check PASS: a failed check says why
+03:21:20   check PASS: the last known release stays below the failure
+03:21:20   check PASS: the raw detail is in Technical details
+03:21:51   check PASS: offline: the card says there is no internet connection
+03:21:51   check PASS: the offline refusal made no request
+03:21:52   check PASS: the card shows the check running
+03:21:55   check PASS: the check's start is in state.json (its rev is past the click's)
+03:21:55   check PASS: the owner holds check.lock while GitHub answers
+03:21:55   check PASS: winpoint.status keeps the card checking (the owner's lock, not the click)
+03:21:55   check PASS: the ring replaces the button while it checks
+03:21:58   check PASS: the card says WinPoint is up to date
+03:21:58   check PASS: up to date names the version and the time of the check
+03:21:58   check PASS: no release links when up to date
+03:21:59   check PASS: wait_text settings: 'Automatisch controleren op nieuwe versies van WinPoint'
+03:22:00   check PASS: Advanced options has the daily check, on
+03:22:01   check PASS: the toggle writes update.winpointAutoCheck false
+03:22:01   check PASS: the card says automatic checks are off
+03:22:02   check PASS: the toggle writes update.winpointAutoCheck true again
+03:22:02   check PASS: one request per check: two automatic, not announced, 500, current (none offline)
+03:22:02   check PASS: every request has the User-Agent
+03:22:02   check PASS: no notification after the first (every later check was manual)
+03:22:02   check PASS: no download before a click
+03:22:30   check PASS: the card offers the release with Download and install
+03:22:30   check PASS: the card shows the download with its progress and Cancel
+03:22:31   check PASS: the download moves on (the card patched in place)
+03:22:32   check PASS: the job asked GitHub for the release list again first
+03:23:00   check PASS: the card shows the installer running (no Cancel)
+03:23:00   check PASS: no Cancel while it installs
+03:23:18   check PASS: the card says the release is installed, with Restart WinPoint
+03:23:18   check PASS: installed: restart WinPoint to finish (the extension did not change)
+03:23:18   check PASS: job.json: installed with restart
+03:23:18   check PASS: the run prefix's VERSION is the release's (it said the running version before)
+03:23:18   check PASS: the installer swapped in a new payload: another directory, without the stray file
+03:23:18   check PASS: install.log is there and has no error
+03:23:18   check PASS: check.log is there and has no error
+03:23:18   check PASS: the installed release left no tarball and no bundle in work/
+03:23:18   check PASS: the fake saw the .sha256, the 302 hop to its CDN and the whole tarball
+03:23:18   check PASS: one "installed" notification that says how to finish
+03:23:22   check PASS: Settings and the shell restarted
+03:23:22   check PASS: the restarted owner (version V) cleared job.json and work/
+03:23:22   check PASS: the card offers the release again (the hosts still pretend to run the lower version)
+03:23:23   check PASS: a damaged download ends the job: not installed, the download deleted
+03:23:23   check PASS: nothing changed, and Retry is offered
+03:23:23   check PASS: job.json: failed with checksum, nothing changed
+03:23:23   check PASS: the damaged tarball was deleted at once (no tarball, no .part, no bundle)
+03:23:23   check PASS: the damaged tarball was fetched whole
+03:23:23   check PASS: the version on disk is still the installed one, in the same payload
+03:23:25   check PASS: Retry with a release without a digest: refused, a check offered instead
+03:23:25   check PASS: the refusal says to download it from the link, and the link is there: Release notes, Download on GitHub and the how-to line
+03:23:25   check PASS: job.json: failed with noDigest
+03:23:57   check PASS: a release without a digest: phase 1's card
+03:23:57   check PASS: Release notes, Download on GitHub and the how-to line; no install button
+03:23:58 shutdown app: signalled own descendants 1359:gjs
+03:23:58 shutdown shell clients: signalled own descendants 192:ibus-daemon, 1376:glycin-image-rs, 1391:win11-shell, 3178:win11-panel, 207:ibus-memconf, 209:ibus-extension-, 366:ibus-engine-sim
+03:23:59 shutdown gnome-shell: signalled own descendants 167:gnome-shell
+03:23:59 shutdown system bus: signalled own descendants 166:dbus-daemon
+03:23:59 inner sweep: signalled own descendants 3820:glycin-image-rs
+03:23:59 inner done: 0 surfaces, 0 failed []
+03:23:59 fake GitHub: signalled own descendants 156:python3
+03:24:03 strace connect:    162 x AF_INET 127.0.0.1 -> EINPROGRESS
+03:24:03 strace connect:     61 x AF_INET 127.0.0.1 -> UNFINISHED
+03:24:03 strace connect:      6 x AF_INET 127.0.0.1 -> ok
+03:24:03 strace connect:      4 x AF_UNIX /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/ibus/dbus-* -> ok
+03:24:03 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+03:24:03 strace connect:      2 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+03:24:03 strace connect:      1 x AF_UNIX /tmp/w11-rt/bus -> UNFINISHED
+03:24:03 strace connect:     34 x AF_UNIX /tmp/w11-rt/bus -> ok
+03:24:03 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+03:24:03 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+03:24:03 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+03:24:03 strace connect:     11 x AF_UNIX /tmp/w11-rt/sbus -> ok
+03:24:03 strace connect:      6 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+03:24:03 strace connect:     14 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+03:24:03 strace connect:    121 x AF_UNIX /var/run/nscd/socket -> ENOENT
+03:24:03 strace connect:      3 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+03:24:03 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+03:24:03 strace connect check: 494 connect() calls, OK
+03:24:08 strace exec:      1 x /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/stubs/apt (stub) -> ran
+03:24:08 strace exec check: 815 execve() calls, OK
+03:24:08 strace exec: WinPoint python3 at line 4386 (check, 12 vars): /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.1/bundle/scripts/install.py /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.1/bundle
+03:24:08 strace exec: WinPoint python3 at line 4741 (install, 12 vars): /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.1/bundle/scripts/install.py /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run/cache/win11-gnome/winpoint/work/0.9.1/bundle

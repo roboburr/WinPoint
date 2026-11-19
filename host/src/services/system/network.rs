@@ -94,7 +94,8 @@ impl Network {
     }
     pub fn get(&self) -> Value {
         let airplane = airplane_state();
-        let unavailable = || json!({"connectivity":"unknown","wifiAvailable":false,"wifiEnabled":false,"airplane":airplane,"primary":{"type":"none","name":"","strength":null},"available":false});
+        let hardware = airplane_hardware();
+        let unavailable = || json!({"connectivity":"unknown","wifiAvailable":false,"wifiEnabled":false,"airplane":airplane,"airplaneHardware":hardware,"primary":{"type":"none","name":"","strength":null},"available":false});
         let Ok(bus) = system() else {
             return unavailable();
         };
@@ -157,7 +158,7 @@ impl Network {
             4 => "full",
             _ => "unknown",
         };
-        json!({"connectivity":connectivity,"wifiAvailable":wifi,"wifiEnabled":truth(&p["WirelessEnabled"])&&wifi,"airplane":airplane,"primary":out,"available":true,"wifiHardwareEnabled":truth(&p["WirelessHardwareEnabled"])})
+        json!({"connectivity":connectivity,"wifiAvailable":wifi,"wifiEnabled":truth(&p["WirelessEnabled"])&&wifi,"airplane":airplane,"airplaneHardware":hardware,"primary":out,"available":true,"wifiHardwareEnabled":truth(&p["WirelessHardwareEnabled"])})
     }
     fn saved(&self, max_age: u64) -> BTreeMap<String, Vec<String>> {
         if let Some((at, saved)) = self
@@ -265,7 +266,26 @@ impl Network {
         });
         json!(out)
     }
+    /// GNOME Settings' Wi-Fi switch (cc-wifi-panel.c): NetworkManager's WirelessEnabled through Properties.Set
+    /// (polkit's enable-disable-wifi, so with the password dialog allowed); nmcli only while NetworkManager is not
+    /// on the system bus.
     pub fn set_wifi(&self, enabled: bool) -> ApiResult {
+        if let Ok(bus) = system()
+            && getall(&bus, NM, PATH, NM).is_ok()
+        {
+            let args = (NM, "WirelessEnabled", enabled.to_variant()).to_variant();
+            call_interactive(
+                &bus,
+                NM,
+                PATH,
+                "org.freedesktop.DBus.Properties",
+                "Set",
+                Some(&args),
+                self.ctx.lang(),
+            )?;
+            self.invalidate();
+            return Ok(self.get());
+        }
         if !run(
             &["nmcli", "radio", "wifi", if enabled { "on" } else { "off" }],
             8,
@@ -371,9 +391,11 @@ impl Network {
         let Ok(devices) = self.devices() else {
             return Ok(wifi_fail(&self.ctx, "failed", Some("unavailable")));
         };
+        // optional `iface` (batch C): the adapter the Wi-Fi page shows when there are several
+        let only = args["iface"].as_str().filter(|s| !s.is_empty());
         let wifi = devices
             .iter()
-            .filter(|d| d["type"] == 2)
+            .filter(|d| d["type"] == 2 && only.is_none_or(|i| d["iface"] == i))
             .collect::<Vec<_>>();
         let Some(dev) = wifi
             .iter()
@@ -402,10 +424,13 @@ impl Network {
             return Ok(wifi_fail(&self.ctx, "not_found", None));
         };
         let sec = ap["security"].as_str().unwrap_or("open");
-        if matches!(sec, "enterprise" | "wep") {
+        // a saved profile first: an enterprise (802.1X) or WEP network the page added with its own fields connects
+        // like any other saved one (ActivateConnection; GNOME Shell's secret agent asks for what is missing), as
+        // GNOME's Wi-Fi panel does; only a new one needs those fields (the page's dialog, net.wifi.hidden)
+        let saved = self.saved(0).remove(name).unwrap_or_default();
+        if matches!(sec, "enterprise" | "wep") && saved.is_empty() {
             return Ok(wifi_fail(&self.ctx, "failed", Some(sec)));
         }
-        let saved = self.saved(0).remove(name).unwrap_or_default();
         let needs_key = matches!(sec, "wpa-psk" | "sae");
         if needs_key && password.is_none() && saved.is_empty() {
             return Ok(wifi_fail(&self.ctx, "needs_password", None));
@@ -550,7 +575,22 @@ impl Network {
             }
         }
     }
+    /// Flight mode (amendment 57): through gnome-settings-daemon's Rfkill when it runs (GNOME Settings' own switch:
+    /// AirplaneMode blocks or unblocks Wi-Fi, Bluetooth and mobile broadband together), else nmcli and rfkill.
     pub fn set_airplane(&self, enabled: bool, bt: &Bluetooth) -> ApiResult {
+        if let Some(result) = gsd_set_airplane(enabled) {
+            if result.is_err() {
+                return Err(ApiError::tr(
+                    "failed",
+                    self.ctx.lang(),
+                    "system.network.airplaneFailed",
+                    crate::i18n::NO_PARAMS,
+                ));
+            }
+            thread::sleep(Duration::from_millis(300));
+            self.invalidate();
+            return Ok(self.get());
+        }
         let mut ok = false;
         if available("nmcli") {
             ok = run(
@@ -824,7 +864,54 @@ pub(super) fn radios() -> Vec<Value> {
     }
     out
 }
+const RFKILL: &str = "org.gnome.SettingsDaemon.Rfkill";
+const RFKILL_PATH: &str = "/org/gnome/SettingsDaemon/Rfkill";
+/// gnome-settings-daemon's Rfkill on the session bus (its rfkill plugin; GNOME Settings' Wi-Fi panel and Flight
+/// mode switch use it): its properties, None when it is not there.
+pub(super) fn gsd_rfkill(bus: &gio::DBusConnection) -> Option<Value> {
+    let v = bus
+        .call_sync(
+            Some(RFKILL),
+            RFKILL_PATH,
+            "org.freedesktop.DBus.Properties",
+            "GetAll",
+            Some(&(RFKILL,).to_variant()),
+            None,
+            gio::DBusCallFlags::NONE,
+            500,
+            gio::Cancellable::NONE,
+        )
+        .ok()?;
+    let props = variant_json(&v.child_value(0));
+    props.get("AirplaneMode").is_some().then_some(props)
+}
+/// Set gsd's AirplaneMode (no polkit: gsd owns /dev/rfkill for the session); None without gsd's Rfkill.
+pub(super) fn gsd_set_airplane(enabled: bool) -> Option<Result<(), String>> {
+    let bus = session().ok()?;
+    gsd_rfkill(&bus)?;
+    Some(setprop(
+        &bus,
+        RFKILL,
+        RFKILL_PATH,
+        RFKILL,
+        "AirplaneMode",
+        enabled.to_variant(),
+        5000,
+    ))
+}
+/// GNOME's "Vliegtuigmodus via hardwareschakelaar staat aan" (gsd's HardwareAirplaneMode; without gsd: every radio
+/// hard-blocked): the flight mode page's notice, and its switch cannot change it.
+fn airplane_hardware() -> bool {
+    if let Some(props) = session().ok().and_then(|bus| gsd_rfkill(&bus)) {
+        return truth(&props["HardwareAirplaneMode"]);
+    }
+    let radios = radios();
+    !radios.is_empty() && radios.iter().all(|r| truth(&r["hard"]))
+}
 fn airplane_state() -> bool {
+    if let Some(props) = session().ok().and_then(|bus| gsd_rfkill(&bus)) {
+        return truth(&props["AirplaneMode"]) || truth(&props["HardwareAirplaneMode"]);
+    }
     let radios = radios();
     !radios.is_empty()
         && radios
@@ -848,6 +935,138 @@ mod tests {
         assert_eq!(security(1, 0x200, 0x100), "enterprise");
         assert_eq!(security(1, 0, 0), "wep");
         assert_eq!(security(0, 0, 0x800), "owe");
+    }
+    /// Flight mode through gsd's Rfkill (amendment 57), against tests/dbus-fakes/fakes/c/networkmanager.py.
+    #[test]
+    #[ignore = "batch C bus test: only tests/dbus-fakes/run.sh --batch c"]
+    fn bus_flight_mode_goes_through_gsd_rfkill() {
+        let Ok(file) = std::env::var("WIN11_FAKE_CALLS_NETWORKMANAGER") else {
+            eprintln!("skipped: run inside tests/dbus-fakes/run.sh --batch c");
+            return;
+        };
+        let calls = || -> Vec<Value> {
+            std::fs::read_to_string(&file)
+                .unwrap_or_default()
+                .lines()
+                .filter_map(|l| serde_json::from_str(l).ok())
+                .collect()
+        };
+        let n = calls().len();
+        assert!(gsd_rfkill(&session().unwrap()).is_some());
+        assert_eq!(gsd_set_airplane(true), Some(Ok(())));
+        assert!(airplane_state(), "AirplaneMode follows");
+        let set = calls()
+            .into_iter()
+            .skip(n)
+            .find(|c| c["method"] == "Set")
+            .expect("a Set call");
+        assert_eq!(set["bus"], "session");
+        assert_eq!(
+            set["args"],
+            "('org.gnome.SettingsDaemon.Rfkill', 'AirplaneMode', <true>)"
+        );
+        assert_eq!(gsd_set_airplane(false), Some(Ok(())));
+        assert!(!airplane_state());
+    }
+    /// The Wi-Fi switch is GNOME's: Properties.Set of NetworkManager's WirelessEnabled with the password dialog
+    /// allowed, no nmcli (the private settings harness found the switch failing on its nmcli stub).
+    #[test]
+    #[ignore = "batch C bus test: only tests/dbus-fakes/run.sh --batch c"]
+    fn bus_wifi_switch_sets_wireless_enabled() {
+        let Ok(file) = std::env::var("WIN11_FAKE_CALLS_NETWORKMANAGER") else {
+            eprintln!("skipped: run inside tests/dbus-fakes/run.sh --batch c");
+            return;
+        };
+        let calls = || -> Vec<Value> {
+            std::fs::read_to_string(&file)
+                .unwrap_or_default()
+                .lines()
+                .filter_map(|l| serde_json::from_str(l).ok())
+                .collect()
+        };
+        let context = super::super::common::LangContext::new("en", "settings");
+        let network = Network::new(context.ctx.clone());
+        let n = calls().len();
+        let state = network.set_wifi(false).expect("Wi-Fi off");
+        assert_eq!(
+            state["wifiEnabled"], false,
+            "the answer reads NetworkManager again"
+        );
+        let set = calls()
+            .into_iter()
+            .skip(n)
+            .find(|c| c["method"] == "Set")
+            .expect("a Set call");
+        assert_eq!(set["bus"], "system");
+        assert_eq!(
+            set["args"],
+            "('org.freedesktop.NetworkManager', 'WirelessEnabled', <false>)"
+        );
+        assert_eq!(set["interactive"], true);
+        assert_eq!(
+            network.set_wifi(true).expect("Wi-Fi on")["wifiEnabled"],
+            true
+        );
+    }
+    /// An enterprise (802.1X) network in the list: refused while it has no profile (the page then asks for its fields
+    /// and adds it with net.wifi.hidden {hidden: false}); once saved, connecting activates that profile, as GNOME's
+    /// Wi-Fi panel does, instead of the "zakelijk netwerk" refusal.
+    #[test]
+    #[ignore = "batch C bus test: only tests/dbus-fakes/run.sh --batch c"]
+    fn bus_a_saved_enterprise_network_connects() {
+        let Ok(file) = std::env::var("WIN11_FAKE_CALLS_NETWORKMANAGER") else {
+            eprintln!("skipped: run inside tests/dbus-fakes/run.sh --batch c");
+            return;
+        };
+        let calls = || -> Vec<Value> {
+            std::fs::read_to_string(&file)
+                .unwrap_or_default()
+                .lines()
+                .filter_map(|l| serde_json::from_str(l).ok())
+                .collect()
+        };
+        let context = super::super::common::LangContext::new("en", "settings");
+        let network = Network::new(context.ctx.clone());
+        let r = network.connect(&json!({ "ssid": "eduroam" })).unwrap();
+        assert_eq!(
+            (r["ok"].clone(), r["reason"].clone()),
+            (json!(false), json!("enterprise")),
+            "no profile yet: the page's dialog first"
+        );
+        // the page's dialog: WPA/WPA2-Enterprise with PEAP, a network in the list (not hidden)
+        let net = crate::services::net::Net::new(context.ctx.clone()).unwrap();
+        let n = calls().len();
+        net.call(
+            "net.wifi.hidden",
+            &json!({ "ssid": "eduroam", "security": "wpa-eap", "hidden": false, "iface": "wlan0",
+                "secrets": { "802-1x": { "eap": ["peap"], "identity": "alice", "phase2-auth": "mschapv2", "password": "x" } } }),
+        )
+        .unwrap()
+        .unwrap();
+        let add = calls()
+            .into_iter()
+            .skip(n)
+            .find(|c| c["method"] == "AddAndActivateConnection2")
+            .expect("AddAndActivateConnection2");
+        let body = add["args"].as_str().unwrap();
+        assert!(body.contains("'hidden': <false>"), "{body}");
+        assert!(body.contains("'key-mgmt': <'wpa-eap'>"), "{body}");
+        assert!(body.contains("'identity': <'alice'>"), "{body}");
+        net.shutdown();
+        let n = calls().len();
+        let r = network.connect(&json!({ "ssid": "eduroam" })).unwrap();
+        assert_eq!(r["ok"], true, "{r}");
+        let activate = calls()
+            .into_iter()
+            .skip(n)
+            .find(|c| c["method"] == "ActivateConnection")
+            .expect("ActivateConnection of the saved profile");
+        assert!(
+            activate["args"]
+                .as_str()
+                .is_some_and(|a| a.contains("/org/freedesktop/NetworkManager/AccessPoint/2")),
+            "{activate}"
+        );
     }
     #[test]
     fn secrets_and_variant_types() {

@@ -1,0 +1,359 @@
+# tests/i18n/windows-glossary/f.tsv: the Windows 11 UI strings settings-parity batch F uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch F
+# edits this file.
+# --- slice 1: Apps, Geïnstalleerde apps, Geavanceerde opties (app-advanced), Standaard-apps (amendments 7, 22, 43)
+# {store} is a store's product name in both languages (App Center, Ubuntu's own name; GNOME Software)
+Unknown	Onbekend	winpoint	no
+Use your precise location	Je exacte locatie gebruiken	winpoint	no
+Use your camera	Je camera gebruiken	winpoint	no
+Use your microphone	Je microfoon gebruiken	winpoint	no
+Screenshots	Schermafbeeldingen	winpoint	no
+Take screenshots without asking	Schermafbeeldingen maken zonder het te vragen	winpoint	no
+Change background	Achtergrond wijzigen	winpoint	no
+Set your desktop background	Je bureaubladachtergrond instellen	winpoint	no
+Block system shortcuts	Systeemsneltoetsen blokkeren	winpoint	no
+Take over the system’s shortcuts for a while	De sneltoetsen van het systeem tijdelijk overnemen	winpoint	no
+Full access	Volledige toegang	winpoint	no
+Read-only	Alleen-lezen	winpoint	no
+System bus	Systeembus	winpoint	no
+Session bus	Sessiebus	winpoint	no
+Full access to /dev	Volledige toegang tot /dev	winpoint	no
+Network	Netwerk	winpoint	no
+Has network access	Heeft netwerktoegang	winpoint	no
+Home folder	Thuismap	winpoint	no
+File system	Bestandssysteem	winpoint	no
+Settings	Instellingen	glossary	yes
+Can change settings	Kan instellingen wijzigen	winpoint	no
+Sound	Geluid	winpoint	no
+Can play and record sound	Kan geluid afspelen en opnemen	winpoint	no
+Play audio	Audio afspelen	winpoint	no
+Record audio	Audio opnemen	winpoint	no
+Provide network services	Netwerkdiensten aanbieden	winpoint	no
+Removable media	Verwisselbare media	winpoint	no
+Bluetooth	Bluetooth	winpoint	no
+Saved passwords	Opgeslagen wachtwoorden	winpoint	no
+Prevent the screen from sleeping	Slaapstand van het scherm voorkomen	winpoint	no
+Game controllers	Gamecontrollers	winpoint	no
+Printing	Afdrukken	winpoint	no
+View hardware	Hardware bekijken	winpoint	no
+View the system	Systeem bekijken	winpoint	no
+USB devices	USB-apparaten	winpoint	no
+None	Geen	winpoint	no
+Choose an app in Installed apps.	Kies een app in Geïnstalleerde apps.	winpoint	no
+System package	Systeempakket	winpoint	no
+Open	Openen	windows	no
+Open in {store}	Openen in {store}	windows	no
+Version {version}	Versie {version}	winpoint	no
+Specifications	Specificaties	windows	no
+Version	Versie	windows	no
+App	App	windows	no
+Data	Gegevens	windows	no
+Cache	Cache	winpoint	no
+Total	Totaal	windows	no
+Clear cache	Cache wissen	winpoint	no
+Delete this app’s temporary files. Your data will be kept.	De tijdelijke bestanden van deze app verwijderen. Je gegevens blijven behouden.	winpoint	no
+Clear cache?	Cache wissen?	winpoint	no
+This app’s temporary files will be deleted. Your data will be kept.	De tijdelijke bestanden van deze app worden verwijderd. Je gegevens blijven behouden.	winpoint	no
+{size} freed	{size} vrijgemaakt	winpoint	no
+No specifications of this app are known.	Er zijn geen specificaties van deze app bekend.	winpoint	no
+Turned off for all apps in Privacy & security	Uitgeschakeld voor alle apps in Privacy en beveiliging	winpoint	no
+Notifications	Meldingen	glossary	yes
+Notifications and sounds from this app	Meldingen en geluiden van deze app	winpoint	no
+Searching in apps is turned off	Zoeken in apps is uitgeschakeld	winpoint	no
+Include results from this app in search results	Resultaten van deze app opnemen in de zoekresultaten	winpoint	no
+Search	Zoeken	windows	no
+Start {app} when you sign in	{app} starten wanneer je je aanmeldt	winpoint	no
+Runs at log-in	Wordt uitgevoerd bij aanmelden	windows	no
+The app must be allowed to run in the background for this	Hiervoor moet de app op de achtergrond mogen worden uitgevoerd	winpoint	no
+Always	Altijd	windows	no
+Never	Nooit	windows	no
+Let this app run in the background	Deze app op de achtergrond laten uitvoeren	windows	no
+Background apps permissions	Machtigingen voor apps op de achtergrond	windows	no
+Global shortcuts	Algemene sneltoetsen	winpoint	no
+1 shortcut registered	1 sneltoets geregistreerd	winpoint	no
+{n} shortcuts registered	{n} sneltoetsen geregistreerd	winpoint	no
+Shortcuts for the whole system	Sneltoetsen voor het hele systeem	winpoint	no
+View	Weergeven	windows	no
+{app} has registered the following global shortcuts	{app} heeft de volgende algemene sneltoetsen geregistreerd	winpoint	no
+Change	Wijzigen	windows	no
+Shortcut for {action}	Sneltoets voor {action}	winpoint	no
+Remove all	Alles verwijderen	windows	no
+Remove all shortcuts?	Alle sneltoetsen verwijderen?	winpoint	no
+All actions from {app} that have been registered for global shortcuts will be removed.	Alle acties van {app} die voor algemene sneltoetsen zijn geregistreerd, worden verwijderd.	winpoint	no
+Remove	Verwijderen	windows	no
+Close	Sluiten	windows	no
+Required permissions	Vereiste machtigingen	winpoint	no
+{app} requires access to the following system resources. To stop this access, the app must be removed.	{app} heeft toegang nodig tot de volgende systeembronnen. Als je deze toegang wilt stoppen, moet de app worden verwijderd.	winpoint	no
+Choose what {app} can access. A change asks for your password.	Kies waartoe {app} toegang heeft. Een wijziging vraagt om je wachtwoord.	winpoint	no
+Default handlers	Standaardkoppelingen	winpoint	no
+{app} doesn’t open any file or link types.	{app} opent geen bestandstypen of koppelingen.	winpoint	no
+{app} is used to open the following types of files and links	{app} wordt gebruikt om de volgende typen bestanden en koppelingen te openen	winpoint	no
+File types	Bestandstypen	winpoint	no
+Link types	Koppelingstypen	winpoint	no
+Reset	Opnieuw instellen	windows	no
+Remove your own choices for these types	Je eigen keuzes voor deze typen verwijderen	winpoint	no
+Default	Standaard	winpoint	no
+Set as default	Als standaard instellen	winpoint	no
+Remove type	Type verwijderen	winpoint	no
+Type removed	Type verwijderd	winpoint	no
+Terminate	Beëindigen	windows	no
+Immediately terminate this app and its related processes.	Deze app en de bijbehorende processen onmiddellijk beëindigen.	windows	no
+{app} isn’t running.	{app} wordt niet uitgevoerd.	winpoint	no
+{app} was terminated.	{app} is beëindigd.	winpoint	no
+Uninstall	Verwijderen	windows	no
+Uninstall this app and its settings. Your documents will not be affected.	Deze app en de instellingen ervan verwijderen. Je documenten worden niet beïnvloed.	windows	no
+Calendar	Agenda	windows	no
+Calls	Oproepen	winpoint	no
+SMS	Sms	winpoint	no
+calls app	app voor oproepen	winpoint	no
+SMS app	sms-app	winpoint	no
+Calendar invitations and appointments (.ics)	Agenda-uitnodigingen en afspraken (.ics)	winpoint	no
+Phone numbers (tel links)	Telefoonnummers (tel-koppelingen)	winpoint	no
+Text messages (sms links)	Sms-berichten (sms-koppelingen)	winpoint	no
+Choose a default	Een standaardwaarde kiezen	windows	no
+Select a default app for {type}	Een standaard-app selecteren voor {type}	windows	no
+No apps can open this type.	Er zijn geen apps die dit type kunnen openen.	winpoint	no
+Set default	Standaard instellen	windows	no
+Set a default for a file type or link type	Een standaardwaarde instellen voor een bestandstype of koppelingstype	windows	no
+Enter a file type or link type	Voer een bestandstype of koppelingstype in	windows	no
+No file types or link types found	Geen bestandstypen of koppelingstypen gevonden	winpoint	no
+Set defaults for applications	Standaardwaarden instellen voor toepassingen	windows	no
+Search apps	Apps zoeken	windows	no
+Default apps by kind	Standaard-apps per soort	winpoint	no
+Web browser, email, calendar, music, video, photos and more	Webbrowser, e-mail, agenda, muziek, video, foto’s en meer	winpoint	no
+Choose defaults by file type	Standaardwaarden kiezen op bestandstype	windows	no
+Choose defaults by link type	Standaardwaarden kiezen op koppelingstype	windows	no
+Reset all default apps	Alle standaard-apps opnieuw instellen	windows	no
+Remove your own choices for file types and link types	Je eigen keuzes voor bestandstypen en koppelingstypen verwijderen	winpoint	no
+Reset all default apps?	Alle standaard-apps opnieuw instellen?	windows	no
+Your own choices for file types and link types will be removed, so the system’s defaults apply again.	Je eigen keuzes voor bestandstypen en koppelingstypen worden verwijderd, zodat de standaardwaarden van het systeem weer gelden.	winpoint	no
+Default apps were reset	De standaard-apps zijn opnieuw ingesteld	winpoint	no
+Show more	Meer weergeven	winpoint	no
+{store} can’t show this app.	{store} kan deze app niet weergeven.	winpoint	no
+Search in {store}	Zoeken in {store}	windows	no
+Install date	Installatiedatum	windows	no
+# --- slice 2: Meldingen, Meldingen van app (app-notifications), Persoonlijke instellingen, Achtergrond, Kleuren
+# (amendments 4, 5, 6, 63)
+Allow notifications to play sounds	Toestaan dat meldingen geluiden afspelen	windows	no
+Show notifications on the lock screen	Meldingen weergeven op het vergrendelingsscherm	windows	no
+Notifications will go directly to notification centre	Meldingen worden rechtstreeks naar het meldingencentrum gestuurd	windows	no
+Notifications from apps and other senders	Meldingen van apps en andere afzenders	windows	no
+Sort by	Sorteren op	glossary	yes
+Most recent	Meest recent	windows	no
+Name	Naam	windows	no
+Banners	Banners	windows	no
+Sounds	Geluiden	windows	no
+Do not disturb	Niet storen	glossary	yes
+Get notifications from this app	Meldingen van deze app ontvangen	winpoint	no
+Show notification banners	Meldingsbanners weergeven	windows	no
+# GNOME's "Show Content" of Banners (force-expanded); Windows has no such row
+Show content in banners	Inhoud weergeven in banners	winpoint	no
+Notification banners	Meldingsbanners	winpoint	no
+Notifications at the bottom right, above the taskbar	Meldingen rechtsonder in beeld, boven de taakbalk	winpoint	no
+Hide content when notifications are on the lock screen	Inhoud verbergen wanneer meldingen op het vergrendelingsscherm staan	windows	no
+Play a sound when a notification arrives	Een geluid afspelen wanneer er een melding binnenkomt	windows	no
+Notifications on the lock screen are turned off for all apps	Meldingen op het vergrendelingsscherm staan uit voor alle apps	winpoint	no
+Notification sounds are turned off in Notifications	Meldingsgeluiden staan uit in Meldingen	winpoint	no
+Choose an app in Notifications.	Kies een app in Meldingen.	winpoint	no
+This app wasn’t found.	Deze app is niet gevonden.	winpoint	no
+This app’s permissions, storage and default links	Machtigingen, opslag en standaardkoppelingen van deze app	winpoint	no
+Browse photos	Door foto’s bladeren	windows	no
+Recent images	Recente afbeeldingen	windows	no
+Choose a photo	Een foto kiezen	windows	no
+Pictures	Afbeeldingen	glossary	yes
+Ubuntu and GNOME pictures	Afbeeldingen van Ubuntu en GNOME	winpoint	no
+Slideshow	Diavoorstelling	windows	no
+Accent colour in Ubuntu and GNOME apps	Accentkleur in Ubuntu- en GNOME-apps	winpoint	no
+Ubuntu and GNOME apps use the nearest GNOME accent colour	Ubuntu- en GNOME-apps gebruiken de dichtstbijzijnde GNOME-accentkleur	winpoint	no
+Ubuntu and GNOME apps keep their own accent colour	Ubuntu- en GNOME-apps houden hun eigen accentkleur	winpoint	no
+# GNOME's accent colour names (org.gnome.desktop.interface accent-color, brown is Ubuntu's)
+Blue	Blauw	winpoint	no
+Teal	Groenblauw	winpoint	no
+Green	Groen	winpoint	no
+Yellow	Geel	winpoint	no
+Orange	Oranje	winpoint	no
+Red	Rood	winpoint	no
+Pink	Roze	winpoint	no
+Purple	Paars	winpoint	no
+Slate	Leigrijs	winpoint	no
+Brown	Bruin	winpoint	no
+# --- slice 3: Privacy en beveiliging, Apparaatbeveiliging, Diagnostische gegevens en feedback, Activiteitengeschiedenis,
+# Zoekmachtigingen, Deze pc doorzoeken, Locatie, Camera, Microfoon (amendments 38, 45)
+Which apps may show notifications	Welke apps meldingen mogen weergeven	winpoint	no
+1 day	1 dag	winpoint	no
+{n} days	{n} dagen	winpoint	no
+Forever	Altijd	winpoint	no
+Desktop	Bureaublad	glossary	yes
+Documents	Documenten	glossary	yes
+Downloads	Downloads	winpoint	no
+Music	Muziek	glossary	yes
+Videos	Video's	glossary	yes
+Home	Persoonlijke map	winpoint	no
+Clear activity history?	Activiteitengeschiedenis wissen?	winpoint	no
+Activity history was cleared	De activiteitengeschiedenis is gewist	winpoint	no
+Store my activity history on this device	Mijn activiteitengeschiedenis op dit apparaat opslaan	windows	no
+Keep track of the files you open, so Start, File Explorer and other apps can show your recent files. Only you see this list and it stays on this device.	Bijhouden welke bestanden je opent, zodat Start, Verkenner en andere apps je recente bestanden kunnen weergeven. Alleen jij ziet deze lijst en hij blijft op dit apparaat.	winpoint	no
+Keep history for	Geschiedenis bewaren gedurende	windows	no
+How long recent files stay in the list	Hoelang recente bestanden in de lijst blijven	winpoint	no
+Clear history	Geschiedenis wissen	windows	no
+Clear activity history	Activiteitengeschiedenis wissen	windows	no
+Related settings	Gerelateerde instellingen	windows	no
+These settings apply to searching in the GNOME overview (Activities). Search in Start uses WinPoint’s own index (Searching this PC).	Deze instellingen gelden voor het zoeken in het overzicht van GNOME (Activiteiten). Zoeken in Start gebruikt de eigen index van WinPoint (Deze pc doorzoeken).	winpoint	no
+Include results from apps	Zoekresultaten van apps opnemen	windows	no
+Apps can show results when you search in the overview	Apps kunnen resultaten weergeven wanneer je in het overzicht zoekt	winpoint	no
+Search results	Zoekresultaten	windows	no
+Results are shown in the order of this list.	De resultaten worden in de volgorde van deze lijst weergegeven.	winpoint	no
+Move up	Omhoog	winpoint	no
+Move down	Omlaag	winpoint	no
+Search your entire PC, including your libraries and desktop. Start searches every drive, and Files and the GNOME overview your whole home folder.	Je hele pc doorzoeken, inclusief je bibliotheken en bureaublad. Start doorzoekt alle schijven en Bestanden en het overzicht van GNOME je hele persoonlijke map.	windows	no
+Only search your libraries and desktop: the search locations below, in Start and in Files.	Alleen je bibliotheken en bureaublad doorzoeken: de zoeklocaties hieronder, in Start en in Bestanden.	windows	no
+File search (Tracker) isn’t available on this device.	Het zoeken in bestanden (Tracker) is op dit apparaat niet beschikbaar.	winpoint	no
+Find my files	Mijn bestanden zoeken	windows	no
+Choose where Start, Files and the GNOME overview look for your files	Kies waar Start, Bestanden en het overzicht van GNOME naar je bestanden zoeken	winpoint	no
+Classic	Klassiek	windows	no
+Enhanced	Uitgebreid	windows	no
+Advanced indexing options	Geavanceerde indexeringsopties	windows	no
+Drives, hidden files and rebuilding the index in Alles	Stations, verborgen bestanden en de index opnieuw opbouwen in Alles	winpoint	no
+Customise search locations	Zoeklocaties aanpassen	windows	no
+The folders Files and the GNOME overview search; in Classic also Start	De mappen die Bestanden en het overzicht van GNOME doorzoeken; in Klassiek ook Start	winpoint	no
+Default locations	Standaardlocaties	winpoint	no
+Bookmarked locations	Bladwijzerlocaties	winpoint	no
+Custom locations	Aangepaste locaties	winpoint	no
+{path} (without subfolders)	{path} (zonder submappen)	winpoint	no
+Add location	Locatie toevoegen	winpoint	no
+Add a folder that is searched with all its subfolders	Een map toevoegen die met alle submappen wordt doorzocht	winpoint	no
+Choose folder	Map kiezen	winpoint	no
+Choose a folder to search	Een map kiezen om te doorzoeken	winpoint	no
+Exclude folders from enhanced search	Mappen uitsluiten van uitgebreid zoeken	windows	no
+Start doesn’t search these folders and their subfolders.	Start doorzoekt deze mappen en hun submappen niet.	winpoint	no
+Add an excluded folder	Een uitgesloten map toevoegen	windows	no
+Browse	Bladeren	windows	no
+Choose a folder to exclude	Een map kiezen om uit te sluiten	winpoint	no
+Location services	Locatieservices	windows	no
+When this is on, the device works out its location with sources like Wi-Fi, GPS and mobile networks, and anyone using this device can choose which apps may use the location	Wanneer dit is ingeschakeld, bepaalt het apparaat zijn locatie met bronnen zoals wifi, gps en mobiele netwerken, en kan iedereen die dit apparaat gebruikt kiezen welke apps de locatie mogen gebruiken	winpoint	no
+Let apps access your location	Apps toegang geven tot je locatie	windows	no
+Choose which apps can access your precise location	Kies welke apps toegang hebben tot je exacte locatie	winpoint	no
+No sandboxed apps have asked for your location yet.	Er zijn nog geen apps in een sandbox die om je locatie hebben gevraagd.	winpoint	no
+Let desktop apps access your location	Desktop-apps toegang geven tot je locatie	windows	no
+Apps that don’t run in a sandbox ask for the location directly while Location services is on; GNOME asks for your permission first.	Apps die niet in een sandbox draaien, vragen de locatie rechtstreeks op zolang Locatieservices is ingeschakeld; GNOME vraagt je eerst om toestemming.	winpoint	no
+Camera access	Cameratoegang	windows	no
+Anyone using this device can choose if their apps have camera access when this is on	Wanneer dit is ingeschakeld, kan iedereen die dit apparaat gebruikt kiezen of zijn apps toegang hebben tot de camera	windows	no
+Let apps access your camera	Apps toegang geven tot je camera	windows	no
+Choose which apps can access your camera	Kies welke apps toegang hebben tot je camera	winpoint	no
+No sandboxed apps have asked for camera access yet.	Er zijn nog geen apps in een sandbox die om toegang tot je camera hebben gevraagd.	winpoint	no
+Let desktop apps access your camera	Desktop-apps toegang geven tot je camera	windows	no
+Apps that don’t run in a sandbox use the camera directly. These settings apply to apps that ask for the camera through GNOME’s portal (Flatpak and Snap).	Apps die niet in een sandbox draaien, gebruiken de camera rechtstreeks. Deze instellingen gelden voor apps die de camera via de portal van GNOME vragen (Flatpak en Snap).	winpoint	no
+Microphone access	Microfoontoegang	windows	no
+Anyone using this device can choose if their apps have microphone access when this is on	Wanneer dit is ingeschakeld, kan iedereen die dit apparaat gebruikt kiezen of zijn apps toegang hebben tot de microfoon	winpoint	no
+Let apps access your microphone	Apps toegang geven tot je microfoon	windows	no
+Choose which apps can access your microphone	Kies welke apps toegang hebben tot je microfoon	winpoint	no
+No sandboxed apps have asked for microphone access yet.	Er zijn nog geen apps in een sandbox die om toegang tot je microfoon hebben gevraagd.	winpoint	no
+Let desktop apps access your microphone	Desktop-apps toegang geven tot je microfoon	windows	no
+Apps that don’t run in a sandbox use the microphone directly. These settings only apply to apps that ask for the microphone through GNOME’s portal (Flatpak and Snap).	Apps die niet in een sandbox draaien, gebruiken de microfoon rechtstreeks. Deze instellingen gelden alleen voor apps die de microfoon via de portal van GNOME vragen (Flatpak en Snap).	winpoint	no
+Location services aren’t available on this device: GeoClue isn’t installed.	Locatieservices zijn op dit apparaat niet beschikbaar: GeoClue is niet geïnstalleerd.	winpoint	no
+App permissions aren’t available right now.	De machtigingen van apps zijn nu niet beschikbaar.	winpoint	no
+Turn this on above first	Schakel dit hierboven eerst in	winpoint	no
+Last accessed {date}	Laatst geopend op {date}	winpoint	no
+UEFI Secure Boot	UEFI Beveiligd opstarten	winpoint	no
+UEFI platform key	UEFI-platformsleutel	winpoint	no
+UEFI boot service variables	UEFI-opstartservicevariabelen	winpoint	no
+UEFI Secure Boot database	UEFI-database voor Beveiligd opstarten	winpoint	no
+TPM 2.0	TPM 2.0	winpoint	no
+TPM platform configuration	TPM-platformconfiguratie	winpoint	no
+TPM reconstruction	TPM-reconstructie	winpoint	no
+IOMMU protection	IOMMU-beveiliging	winpoint	no
+Pre-boot DMA protection	DMA-beveiliging voor het opstarten	winpoint	no
+Linux kernel lockdown	Vergrendeling van de Linux-kernel	winpoint	no
+Linux kernel verification	Controle van de Linux-kernel	winpoint	no
+Linux swap	Linux-wisselgeheugen	winpoint	no
+Encrypted RAM	Versleuteld RAM	winpoint	no
+Sleep (suspend to RAM)	Slaapstand (in RAM)	winpoint	no
+Sleep (suspend to idle)	Slaapstand (bij inactiviteit)	winpoint	no
+Supported processor	Ondersteunde processor	winpoint	no
+Firmware update verification	Controle van firmware-updates	winpoint	no
+Firmware attestation	Attestatie van de firmware	winpoint	no
+fwupd plug-ins	Invoegtoepassingen van fwupd	winpoint	no
+Firmware write protection	Schrijfbeveiliging van de firmware	winpoint	no
+Firmware lock	Vergrendeling van de firmware	winpoint	no
+Firmware BIOS region	BIOS-regio van de firmware	winpoint	no
+Firmware descriptor	Firmwaredescriptor	winpoint	no
+Platform debugging	Foutopsporing van het platform	winpoint	no
+Platform debugging lock	Vergrendeling van foutopsporing	winpoint	no
+Processor fused for production	Productiemodus van de processor	winpoint	no
+Enabled	Ingeschakeld	winpoint	no
+Disabled	Uitgeschakeld	winpoint	no
+Valid	Geldig	winpoint	no
+Invalid	Ongeldig	winpoint	no
+Locked	Vergrendeld	winpoint	no
+Unlocked	Ontgrendeld	winpoint	no
+Encrypted	Versleuteld	winpoint	no
+Not encrypted	Niet versleuteld	winpoint	no
+Tainted	Gewijzigd	winpoint	no
+Not tainted	Niet gewijzigd	winpoint	no
+Found	Gevonden	winpoint	no
+Not found	Niet gevonden	winpoint	no
+Supported	Ondersteund	winpoint	no
+Not supported	Niet ondersteund	winpoint	no
+Checks unavailable	Controles niet beschikbaar	winpoint	no
+Device security checks aren’t available for this device.	De beveiligingscontroles zijn voor dit apparaat niet beschikbaar.	winpoint	no
+Checks failed	Controles mislukt	winpoint	no
+This device doesn’t meet the basic requirements for hardware security.	Dit apparaat voldoet niet aan de basisvereisten voor hardwarebeveiliging.	winpoint	no
+Checks passed	Controles geslaagd	winpoint	no
+This device meets the basic security requirements. Its hardware protects against some types of security threats.	Dit apparaat voldoet aan de basisvereisten voor beveiliging. De hardware beschermt tegen sommige soorten beveiligingsrisico’s.	winpoint	no
+Protected	Beschermd	winpoint	no
+This device has extended protection against hardware security threats.	Dit apparaat is uitgebreid beschermd tegen beveiligingsrisico’s voor hardware.	winpoint	no
+Problems were found while the system is running.	Tijdens het gebruik zijn er problemen gevonden.	winpoint	no
+While running	Tijdens het gebruik	winpoint	no
+Security level {n}	Beveiligingsniveau {n}	winpoint	no
+Pass	Geslaagd	winpoint	no
+Fail	Mislukt	winpoint	no
+Device security report	Rapport over apparaatbeveiliging	winpoint	no
+Report details	Rapportgegevens	winpoint	no
+Date generated	Gemaakt op	winpoint	no
+fwupd version	fwupd-versie	winpoint	no
+System details	Systeemgegevens	winpoint	no
+Manufacturer	Fabrikant	winpoint	no
+Model	Model	winpoint	no
+Security level	Beveiligingsniveau	winpoint	no
+Security events	Beveiligingsgebeurtenissen	winpoint	no
+For the contents of this report, see https://fwupd.github.io/hsi.html	Meer over de inhoud van dit rapport: https://fwupd.github.io/hsi.html	winpoint	no
+Security that is built into your device	Beveiliging die in je apparaat is ingebouwd	windows	no
+Device security can’t be checked: the firmware service (fwupd) doesn’t answer.	De apparaatbeveiliging kan niet worden gecontroleerd: de firmwareservice (fwupd) antwoordt niet.	winpoint	no
+Level {n}	Niveau {n}	winpoint	no
+Copy	Kopiëren	winpoint	no
+The technical report was copied	Het technische rapport is gekopieerd	winpoint	no
+Copy technical report	Technisch rapport kopiëren	winpoint	no
+Every check and event as text, for a support request	Alle controles en gebeurtenissen als tekst, voor een supportvraag	winpoint	no
+Secure boot is on. It prevents malicious software from loading when your device starts up.	Beveiligd opstarten is ingeschakeld. Het voorkomt dat schadelijke software wordt geladen wanneer het apparaat opstart.	windows	no
+Secure boot is off. You can turn it on in the device’s firmware settings.	Beveiligd opstarten is uitgeschakeld. Je kunt het inschakelen in de firmware-instellingen van het apparaat.	winpoint	no
+A problem was found with secure boot.	Er is een probleem gevonden met Beveiligd opstarten.	winpoint	no
+Secure boot	Beveiligd opstarten	windows	no
+Your security processor (TPM 2.0) is present and provides additional encryption for your device.	Je beveiligingsprocessor (TPM 2.0) is aanwezig en biedt extra versleuteling voor je apparaat.	windows	no
+No working security processor (TPM 2.0) was found.	Er is geen werkende beveiligingsprocessor (TPM 2.0) gevonden.	winpoint	no
+Security processor	Beveiligingsprocessor	windows	no
+More security	Meer beveiliging	winpoint	no
+Open Security Centre	Beveiligingscentrum openen	winpoint	no
+Security Centre	Beveiligingscentrum	winpoint	no
+More of Ubuntu’s security settings, such as app permissions and the firewall	Meer beveiligingsinstellingen van Ubuntu, zoals de machtigingen van apps en de firewall	winpoint	no
+Direct access for docks and external devices	Directe toegang van docks en externe apparaten	winpoint	no
+Creating the report…	Het rapport wordt gemaakt…	winpoint	no
+Diagnostic data	Diagnostische gegevens	windows	no
+This is the system report Ubuntu would send. It contains no personal data and is only sent if you turned that on.	Dit is het systeemrapport dat Ubuntu zou verzenden. Het bevat geen persoonlijke gegevens en wordt alleen verzonden als je dat hebt ingeschakeld.	winpoint	no
+Help Canonical improve Ubuntu with anonymous system reports	Help Canonical Ubuntu te verbeteren met anonieme systeemrapporten	winpoint	no
+Send a system report every month	Elke maand een systeemrapport verzenden	winpoint	no
+Anonymous details about this device’s hardware and software	Anonieme gegevens over de hardware en software van dit apparaat	winpoint	no
+Send a system report when upgrading to a new Ubuntu version	Een systeemrapport verzenden bij een upgrade naar een nieuwe Ubuntu-versie	winpoint	no
+Once, when you upgrade Ubuntu to a new version	Eenmalig, wanneer je Ubuntu naar een nieuwe versie bijwerkt	winpoint	no
+System reports aren’t available on this device.	Systeemrapporten zijn op dit apparaat niet beschikbaar.	winpoint	no
+View report	Rapport weergeven	winpoint	no
+View diagnostic data	Diagnostische gegevens weergeven	windows	no
+See the system report this device would send	Het systeemrapport bekijken dat dit apparaat zou verzenden	winpoint	no
+Automatically	Automatisch	winpoint	no
+Manually	Handmatig	winpoint	no
+Send error reports to Canonical	Foutrapporten naar Canonical verzenden	winpoint	no
+Error reports contain technical details about problems, without your personal data. Changing this may ask for your password.	Foutrapporten bevatten technische details over problemen, zonder je persoonlijke gegevens. Wijzigen vraagt mogelijk om je wachtwoord.	winpoint	no

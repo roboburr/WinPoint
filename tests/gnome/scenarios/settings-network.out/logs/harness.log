@@ -1,0 +1,222 @@
+01:13:51 GE0c run lang=nl switch=False seed=defaults MemAvailable=6802692 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/scenarios/settings-network.py
+01:15:09 private install: exit 0 in 62.5 s, 87327 mutated paths, 0 outside the run dir, ok=True
+01:15:12 GNOME Shell 50.1 up (mode user, unsafe True)
+01:15:17 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/scenarios/settings-network.py
+01:15:17   check FAIL (known B-stubs-umask): run/stubs is private (tools::system_tool takes no group- or world-writable directory)
+01:15:17   check PASS: allow/network.rs has no Owned key (nothing here points to a WinPoint page)
+01:15:18   check PASS: network shows network-unavailable
+01:15:18   check PASS: network: title and breadcrumb Netwerk en internet
+01:15:19   check PASS: network nonm: Settings is in nl
+01:15:19   check PASS: network nonm: no placeholder
+01:15:20   check PASS: network without NetworkManager: GNOME's "Netwerk niet beschikbaar"
+01:15:20   check PASS: caps: no modem without ModemManager
+01:15:20   check PASS: network: Mobiel netwerk is not offered without a modem
+01:15:20   check PASS: mobile shows mobile-none
+01:15:20   check PASS: mobile by its deep link: GNOME's "no mobile broadband adapter" page
+01:15:21   check PASS: mobile without a modem: no switch
+01:15:22   check PASS: flightmode shows flightmode-airplane
+01:15:22   check PASS: flightmode without gsd's Rfkill: the fallback runs the run/stubs nmcli "radio all off"
+01:15:22   check PASS: flightmode without gsd's Rfkill: the switch goes back after the refusal
+01:15:23   check PASS: network shows network-wifi
+01:15:23   check PASS: network: title and breadcrumb Netwerk en internet
+01:15:24   check PASS: network: Settings is in nl
+01:15:24   check PASS: network: no placeholder
+01:15:25   check PASS: network: NetworkManager runs (no "Netwerk niet beschikbaar")
+01:15:25   check PASS: network: network-wifi
+01:15:25   check PASS: network: network-ethernet
+01:15:25   check PASS: network: link-vpn
+01:15:25   check PASS: network: link-hotspot
+01:15:25   check PASS: network: network-flightmode
+01:15:25   check PASS: network: link-proxy
+01:15:26   check PASS: network: link-network-advanced
+01:15:26   check PASS: network: still no Mobiel netwerk (no modem)
+01:15:26   check PASS: network: the hotspot switch once net.hotspot.get answers
+01:15:33   check FAIL: network: the hotspot switch asks GNOME's question first (Lab-5G would drop)
+01:15:39   check FAIL: network: cancelled, the hotspot switch goes back to Uit
+01:15:39   check PASS: network: cancelled, no hotspot started
+01:15:40   check PASS: wifi shows wifi-active-properties
+01:15:40   check PASS: wifi: title and breadcrumb Netwerk en internet › Wi-Fi
+01:15:40   check PASS: wifi: the current crumb is shown in full, not as "…"
+01:15:41   check PASS: wifi: Settings is in nl
+01:15:41   check PASS: wifi: no placeholder
+01:15:42   check PASS: wifi: wifi-active-properties
+01:15:42   check PASS: wifi: wifi-hidden-connect
+01:15:42   check PASS: wifi: wifi-toggle
+01:15:42   check PASS: wifi: the list shows NetworkManager's access point Lab-5G (D-Bus, as GNOME; no nmcli)
+01:15:42   check PASS: wifi: the switch shows NetworkManager's WirelessEnabled (on)
+01:15:43   check PASS: wifi: the switch sets WirelessEnabled false (GNOME's Wi-Fi switch, no nmcli)
+01:15:43   check PASS: wifi: WirelessEnabled false with the password dialog allowed
+01:15:43   check PASS: wifi: the switch stays off
+01:15:44   check PASS: wifi: the switch sets WirelessEnabled true (GNOME's Wi-Fi switch, no nmcli)
+01:15:44   check PASS: wifi: WirelessEnabled true with the password dialog allowed
+01:15:44   check PASS: wifi: the switch stays on
+01:15:49   check PASS: wifi: the enterprise network eduroam is listed
+01:15:50   check PASS: wifi: Verbinden on eduroam asks for its 802.1X fields (GNOME's Wi-Fi dialog, no key prompt)
+01:15:51   check PASS: wait_text settings: 'Lab-5G'
+01:15:52   check PASS: wifi-network: title and breadcrumb Netwerk en internet › Wi-Fi › Lab-5G
+01:15:52   check PASS: wifi-network: the current crumb is shown in full, not as "…"
+01:15:53   check PASS: wifi-network: Settings is in nl
+01:15:53   check PASS: wifi-network: no placeholder
+01:15:54   check PASS: wifi-network: st-wifi-network-autoconnect
+01:15:54   check PASS: wifi-network: st-wifi-network-permissions
+01:15:54   check PASS: wifi-network: st-wifi-network-assigned-mac-address
+01:15:54   check PASS: wifi-network: st-wifi-network-metered
+01:15:54   check PASS: wifi-network: wifi-network-ip-edit
+01:15:55   check PASS: wifi-network: wifi-network-dns-edit
+01:15:55   check PASS: wifi-network: wifi-network-security-edit
+01:15:55   check PASS: wifi-network: wifi-network-key-view
+01:15:55   check PASS: wifi-network: wifi-network-forget
+01:15:56   check PASS: wifi-network autoconnect: Update2 with 'autoconnect': <false>
+01:15:56   check PASS: wifi-network autoconnect: the profile's other keys kept
+01:15:56   check PASS: wifi-network autoconnect: with the password dialog allowed
+01:15:58   check PASS: wifi-network available to other users (off): Update2 with 'permissions': <['user:robin:']>
+01:15:58   check PASS: wifi-network available to other users (off): the profile's other keys kept
+01:15:58   check PASS: wifi-network available to other users (off): with the password dialog allowed
+01:16:00   check PASS: wifi-network metered (on): Update2 with 'metered': <1>
+01:16:00   check PASS: wifi-network metered (on): the profile's other keys kept
+01:16:00   check PASS: wifi-network metered (on): with the password dialog allowed
+01:16:03   check PASS: wifi-network random hardware addresses (change daily): Update2 with 'assigned-mac-address': <'random'>
+01:16:03   check PASS: wifi-network random hardware addresses (change daily): the profile's other keys kept
+01:16:03   check PASS: wifi-network random hardware addresses (change daily): with the password dialog allowed
+01:16:07   check PASS: wifi-known shows wifi-known-0
+01:16:07   check PASS: wifi-known: title and breadcrumb Netwerk en internet › Wi-Fi › Bekende netwerken beheren
+01:16:07   check PASS: wifi-known: the current crumb is shown in full, not as "…"
+01:16:08   check PASS: wifi-known: Settings is in nl
+01:16:08   check PASS: wifi-known: no placeholder
+01:16:09   check PASS: wifi-known: wifi-known-0
+01:16:09   check PASS: wifi-known: wifi-known-add
+01:16:09   check PASS: wifi-known: wifi-known-search
+01:16:10   check PASS: wifi-known: wifi-known-forget-0
+01:16:10   check PASS: ethernet shows ethernet-adapter-0
+01:16:11   check PASS: wait_text settings: 'Netwerkkabel losgekoppeld'
+01:16:11   check PASS: ethernet: title and breadcrumb Netwerk en internet › Ethernet
+01:16:11   check PASS: ethernet: the current crumb is shown in full, not as "…"
+01:16:12   check PASS: ethernet: Settings is in nl
+01:16:12   check PASS: ethernet: no placeholder
+01:16:13   check PASS: ethernet: eth0's switch insensitive while the cable is out (GNOME's)
+01:16:14   check PASS: ethernet metered (on): Update2 with 'metered': <1>
+01:16:14   check PASS: ethernet metered (on): the profile's other keys kept
+01:16:14   check PASS: ethernet metered (on): with the password dialog allowed
+01:16:16   check PASS: vpn shows vpn-0
+01:16:16   check PASS: vpn: title and breadcrumb Netwerk en internet › VPN
+01:16:16   check PASS: vpn: the current crumb is shown in full, not as "…"
+01:16:17   check PASS: vpn: Settings is in nl
+01:16:17   check PASS: vpn: no placeholder
+01:16:18   check PASS: vpn: vpn-0
+01:16:18   check PASS: vpn: vpn-1
+01:16:19   check PASS: vpn: vpn-add
+01:16:19   check PASS: vpn: vpn-import
+01:16:19   check PASS: vpn: vpn-0-connect
+01:16:20   check PASS: vpn: Verbinding maken sends ActivateConnection of Kantoor
+01:16:20   check PASS: vpn: ActivateConnection with the password dialog allowed
+01:16:23   check PASS: vpn available to other users (off): Update2 with 'permissions': <['user:robin:']>
+01:16:23   check PASS: vpn available to other users (off): the profile's other keys kept
+01:16:23   check PASS: vpn available to other users (off): with the password dialog allowed
+01:16:26   check PASS: flightmode shows flightmode-airplane
+01:16:26   check PASS: flightmode: title and breadcrumb Netwerk en internet › Vliegtuigmodus
+01:16:26   check PASS: flightmode: the current crumb is shown in full, not as "…"
+01:16:28   check PASS: flightmode: Settings is in nl
+01:16:28   check PASS: flightmode: no placeholder
+01:16:29   check PASS: flightmode: the Wi-Fi switch (Draadloze apparaten)
+01:16:29   check PASS: flightmode: no Mobiel netwerk switch without a modem
+01:16:29   check PASS: flightmode: no hardware notice
+01:16:30   check PASS: flightmode: the switch sets gsd's AirplaneMode true (amendment 57)
+01:16:30   check PASS: flightmode: the switch stays on
+01:16:31   check PASS: flightmode: the switch sets gsd's AirplaneMode false (amendment 57)
+01:16:31   check PASS: flightmode: the switch stays off
+01:16:33   check PASS: flightmode shows flightmode-hardware
+01:16:33   check PASS: flightmode with the hardware switch on: GNOME's notice
+01:16:33   check PASS: flightmode with the hardware switch on: the switch is on and cannot change it
+01:16:35   check PASS: proxy shows st-proxy-mode
+01:16:35   check PASS: proxy: title and breadcrumb Netwerk en internet › Proxy
+01:16:35   check PASS: proxy: the current crumb is shown in full, not as "…"
+01:16:36   check PASS: proxy: Settings is in nl
+01:16:36   check PASS: proxy: no placeholder
+01:16:37   check PASS: proxy: mode none at first
+01:16:37   check PASS: proxy: st-proxy-mode
+01:16:37   check PASS: proxy: proxy-script-edit
+01:16:38   check PASS: proxy: proxy-manual-edit
+01:16:38   check PASS: proxy: link-network-advanced
+01:16:38   check PASS: proxy: no WPAD warning while the proxy is off
+01:16:39   check PASS: proxy: the switch writes mode auto
+01:16:39   check PASS: proxy: with an empty autoconfig-url (WPAD)
+01:16:39   check PASS: proxy: GNOME's WPAD warning shows
+01:16:40   check PASS: proxy: off again writes mode none
+01:16:40   check PASS: proxy: an outside write of mode auto turns the switch on
+01:16:41   check PASS: proxy: an outside write of mode none turns it off
+01:16:52   check PASS: proxy: the script address written
+01:16:52   check PASS: proxy: then mode auto
+01:16:52   check PASS: proxy: a script is not "automatically detect"
+01:17:09   check PASS: proxy: the HTTP server (Windows' one server)
+01:17:09   check PASS: proxy: HTTPS and FTP the same ("Dezelfde proxyserver voor alle protocollen")
+01:17:09   check PASS: proxy: the exceptions and *.local for the intranet box
+01:17:09   check PASS: proxy: then mode manual
+01:17:09   check PASS: proxy: authentication-password never written
+01:17:10   check PASS: hotspot shows hotspot-switch
+01:17:10   check PASS: hotspot: title and breadcrumb Netwerk en internet › Mobiele hotspot
+01:17:10   check PASS: hotspot: the current crumb is shown in full, not as "…"
+01:17:12   check PASS: hotspot: Settings is in nl
+01:17:12   check PASS: hotspot: no placeholder
+01:17:13   check PASS: hotspot: hotspot-switch
+01:17:13   check PASS: hotspot: hotspot-from
+01:17:13   check PASS: hotspot: hotspot-edit
+01:17:14   check PASS: hotspot: a new hotspot shows its proposed password (no "Wachtwoord weergeven" to read a stored one)
+01:17:14   check PASS: hotspot: no QR code while the hotspot is off (GNOME shows it in the active view only)
+01:17:15   check PASS: hotspot: GNOME's question first (wlan0 carries Lab-5G)
+01:17:21   check PASS: hotspot: AddAndActivateConnection2 of GNOME's hotspot profile
+01:17:21   check PASS: hotspot: with the password dialog allowed
+01:17:21   check PASS: hotspot: on, the QR code of the network it was turned on with (GNOME's active view)
+01:17:24   check PASS: network shows network-wifi
+01:17:24   check PASS: caps: a modem with ModemManager
+01:17:24   check PASS: network: Mobiel netwerk is offered with a modem
+01:17:26   check PASS: flightmode shows flightmode-airplane
+01:17:26   check PASS: flightmode: the Mobiel netwerk switch with a modem
+01:17:27   check PASS: mobile shows mobile-switch
+01:17:27   check PASS: mobile: title and breadcrumb Netwerk en internet › Mobiel netwerk
+01:17:27   check PASS: mobile: the current crumb is shown in full, not as "…"
+01:17:29   check PASS: mobile: Settings is in nl
+01:17:29   check PASS: mobile: no placeholder
+01:17:30   check PASS: mobile: mobile-switch
+01:17:30   check PASS: mobile: mobile-sim
+01:17:31   check PASS: mobile: mobile-unlock
+01:17:31   check PASS: mobile: mobile-properties
+01:17:38   check PASS: mobile: SendPin with the typed PIN
+01:17:38   check PASS: mobile: SendPin with the password dialog allowed
+01:17:38   check PASS: mobile: Mobiele gegevens after the unlock
+01:17:40   check PASS: mobile: Mobiele gegevens on (the profile connects automatically)
+01:17:41   check PASS: mobile data (off): Update2 with 'autoconnect': <false>
+01:17:41   check PASS: mobile data (off): the profile's other keys kept
+01:17:41   check PASS: mobile data (off): with the password dialog allowed
+01:17:45   check PASS: mobile roaming (Roamen): Update2 with 'home-only': <false>
+01:17:45   check PASS: mobile roaming (Roamen): the profile's other keys kept
+01:17:45   check PASS: mobile roaming (Roamen): with the password dialog allowed
+01:17:46   check FAIL (known C-dialog-click): the widgets inside kit dialogs take real pointer clicks
+01:17:46   check PASS: every dialog action was done (real or dev click)
+01:17:46 shutdown app: signalled own descendants 2342:win11-gtk-setti, 2351:win11-app
+01:17:46 shutdown shell clients: signalled own descendants 187:ibus-daemon, 518:win11-shell, 1449:glycin-image-rs, 631:win11-panel, 2418:glycin-svg, 208:ibus-memconf, 211:ibus-extension-, 523:ibus-engine-sim
+01:17:47 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+01:17:47 shutdown system bus: signalled own descendants 163:dbus-daemon
+01:17:47 inner sweep: signalled own descendants 1464:glycin-image-rs
+01:17:47 inner done: 0 surfaces, 0 failed []
+01:17:49 strace connect:     66 x AF_INET 127.0.0.1 -> EINPROGRESS
+01:17:49 strace connect:     41 x AF_INET 127.0.0.1 -> UNFINISHED
+01:17:49 strace connect:      5 x AF_INET 127.0.0.1 -> ok
+01:17:49 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+01:17:49 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+01:17:49 strace connect:      4 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+01:17:49 strace connect:      2 x AF_UNIX /tmp/w11-rt/bus -> UNFINISHED
+01:17:49 strace connect:     43 x AF_UNIX /tmp/w11-rt/bus -> ok
+01:17:49 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+01:17:49 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+01:17:49 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+01:17:49 strace connect:      8 x AF_UNIX /tmp/w11-rt/sbus -> ok
+01:17:49 strace connect:      1 x AF_UNIX /tmp/w11-rt/w11-wl -> UNFINISHED
+01:17:49 strace connect:      3 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+01:17:49 strace connect:      9 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+01:17:49 strace connect:      1 x AF_UNIX /var/lib/sss/pipes/nss -> UNFINISHED
+01:17:49 strace connect:     32 x AF_UNIX /var/run/nscd/socket -> ENOENT
+01:17:49 strace connect:      2 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+01:17:49 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+01:17:49 strace connect check: 290 connect() calls, OK
+01:17:54 strace exec:      1 x /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-c/tests/gnome/run/stubs/apt (stub) -> ran
+01:17:54 strace exec check: 500 execve() calls, OK

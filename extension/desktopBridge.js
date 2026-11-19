@@ -9,6 +9,15 @@ import Mtk from 'gi://Mtk';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 export const DESKTOP_APP_ID = 'io.github.win11shell.Desktop';
+// A desktop window stays in one monitor's work area (Mutter): the desktop covers the primary monitor, and win11-shell
+// makes a wallpaper window for every other monitor with this app ID and the monitor's index
+// (native/shell/src/desktop/screens.rs).
+const SECONDARY_ID = /^io\.github\.win11shell\.SecondaryDesktop\.Monitor(\d{1,2})$/;
+/** The monitor index a desktop window of another monitor names in its app ID, else -1. */
+export const secondaryDesktop = window => {
+    const match = SECONDARY_ID.exec(window?.get_wm_class?.() || '');
+    return match ? Number(match[1]) : -1;
+};
 const DING_APP_ID = 'com.rastersoft.ding';
 const sameRect = (a, b) => a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
 const rectJSON = rect => ({x: rect.x, y: rect.y, w: rect.width, h: rect.height});
@@ -43,6 +52,8 @@ export class NativeDesktopBridge {
     }
 
     isDesktop(window) { return identity(window, DESKTOP_APP_ID); }
+    /** The desktop or the desktop window of another monitor. */
+    _ours(window) { return this.isDesktop(window) || secondaryDesktop(window) >= 0; }
     _isDing(window) {
         // Never hide a normal DING settings/file window or an unrelated desktop.
         return identity(window, DING_APP_ID) && window.get_window_type() === Meta.WindowType.DESKTOP;
@@ -51,7 +62,7 @@ export class NativeDesktopBridge {
 
     _watchWindow(window, existing = false) {
         if (!window || !this._enabled || this._windows.has(window)) return;
-        const entry = {signals: [], actor: null, actorSignals: [], original: null, inhibited: false,
+        const entry = {signals: [], actor: null, actorSignals: [], original: null, inhibited: false, secondary: -1,
             painted: existing && Boolean(window.get_compositor_private()?.mapped)};
         this._windows.set(window, entry);
         const connect = (name, callback) => entry.signals.push(window.connect(name, callback));
@@ -68,7 +79,8 @@ export class NativeDesktopBridge {
             this._unwatchWindow(window);
             // Only the desktop window takes its pid along: Start, a popup menu or a dialog of the same
             // win11-shell is unmanaged on every close, and the shell reports ready once per desktop window.
-            if (entry.original && ![...this._windows].some(([other, e]) => e.original && other.get_pid() === pid))
+            if (entry.original && entry.secondary < 0 &&
+                ![...this._windows].some(([other, e]) => e.original && e.secondary < 0 && other.get_pid() === pid))
                 this._readyPids.delete(pid);
             this._sync();
         });
@@ -78,7 +90,8 @@ export class NativeDesktopBridge {
     _consider(window) {
         const entry = this._windows.get(window);
         if (!this._enabled || !entry) return;
-        if (this.isDesktop(window)) {
+        if (this._ours(window)) {
+            entry.secondary = secondaryDesktop(window);
             if (!entry.original) {
                 entry.original = {type: window.get_window_type(), above: window.is_above(),
                     sticky: window.is_on_all_workspaces(), skip: window.skip_taskbar};
@@ -122,19 +135,36 @@ export class NativeDesktopBridge {
         return TEXT[key][this._language()] ?? TEXT[key].nl;
     }
 
+    /** The desktop window of another monitor, if any. */
+    _secondaryOf(index) {
+        return [...this._windows].find(([w, e]) => e.original && e.secondary === index && secondaryDesktop(w) === index)?.[0] ?? null;
+    }
+
+    /**
+     * Where the desktop goes: the primary monitor (a desktop window stays in one monitor's work area, so it never
+     * spanned the others), with `areas`, every monitor (its stage position and logical size, the primary marked),
+     * for win11-shell's wallpaper windows of the other monitors. With one monitor this is the bounds it always was.
+     */
     geometry() {
         const monitors = Main.layoutManager.monitors;
         if (!monitors.length) return {available: false, x: 0, y: 0, w: 0, h: 0, logical: {w: 0, h: 0}};
-        const x = Math.min(...monitors.map(m => m.x));
-        const y = Math.min(...monitors.map(m => m.y));
-        const width = Math.max(...monitors.map(m => m.x + m.width)) - x;
-        const height = Math.max(...monitors.map(m => m.y + m.height)) - y;
-        const bounds = new Mtk.Rectangle({x, y, width, height});
+        const primary = Main.layoutManager.primaryMonitor ?? monitors[0];
+        const rect = new Mtk.Rectangle({x: primary.x, y: primary.y, width: primary.width, height: primary.height});
         const window = [...this._windows.keys()].find(w => this.isDesktop(w));
-        let protocol = bounds;
-        try { protocol = window?.stage_to_protocol_rect(bounds) ?? bounds; } catch { /* Before mapping. */ }
-        return {available: true, ...rectJSON(bounds), width, height, logical: rectJSON(protocol),
-            monitor: Main.layoutManager.primaryIndex, monitors: monitors.map(m => ({index: m.index, ...rectJSON(m)}))};
+        let protocol = rect;
+        try { protocol = window?.stage_to_protocol_rect(rect) ?? rect; } catch { /* Before mapping. */ }
+        const areas = monitors.map(m => {
+            const own = m.index === primary.index ? window : this._secondaryOf(m.index);
+            const scale = global.display.get_monitor_scale(m.index) || 1;
+            let size = {w: Math.round(m.width / scale), h: Math.round(m.height / scale)};
+            try {
+                const p = own?.stage_to_protocol_rect(new Mtk.Rectangle({x: m.x, y: m.y, width: m.width, height: m.height}));
+                if (p?.width > 0 && p?.height > 0) size = {w: p.width, h: p.height};
+            } catch { /* Before mapping: the advertised scale. */ }
+            return {index: m.index, primary: m.index === primary.index, x: m.x, y: m.y, ...size};
+        });
+        return {available: true, ...rectJSON(rect), width: rect.width, height: rect.height, logical: rectJSON(protocol),
+            monitor: primary.index, monitors: monitors.map(m => ({index: m.index, ...rectJSON(m)})), areas};
     }
 
     _queueGeometry() {
@@ -147,9 +177,16 @@ export class NativeDesktopBridge {
             this._positioning = true;
             try {
                 for (const [window, entry] of this._windows) {
-                    if (!entry.original || !this.isDesktop(window)) continue;
-                    if (!sameRect(window.get_frame_rect(), rect))
-                        window.move_resize_frame(false, rect.x, rect.y, rect.width, rect.height);
+                    if (!entry.original || !this._ours(window)) continue;
+                    // the desktop on the primary monitor, a desktop window of another monitor on its own
+                    let target = rect;
+                    if (entry.secondary >= 0) {
+                        const m = Main.layoutManager.monitors[entry.secondary];
+                        if (!m) continue;
+                        target = new Mtk.Rectangle({x: m.x, y: m.y, width: m.width, height: m.height});
+                    }
+                    if (!sameRect(window.get_frame_rect(), target))
+                        window.move_resize_frame(false, target.x, target.y, target.width, target.height);
                     window.lower();
                 }
             } finally { this._positioning = false; }
@@ -164,9 +201,10 @@ export class NativeDesktopBridge {
         const userSession = this._userSession();
         let present = false;
         for (const [window, entry] of this._windows) {
-            if (!entry.original || !this.isDesktop(window)) continue;
+            if (!entry.original || !this._ours(window)) continue;
             if (!userSession && !entry.inhibited) { entry.inhibited = true; window.inhibit_mapped(); }
             else if (userSession && entry.inhibited) { entry.inhibited = false; window.uninhibit_mapped(); }
+            if (entry.secondary >= 0) continue;
             const actor = window.get_compositor_private();
             if (userSession && entry.painted && actor?.mapped && this._readyPids.has(window.get_pid())) present = true;
         }

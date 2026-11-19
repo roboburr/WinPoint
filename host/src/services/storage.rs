@@ -12,6 +12,21 @@ use std::{
     },
     time::Duration,
 };
+/// The methods (name, dangerous), as the api-methods files list them; batch D adds `storage.cleanTemp` here
+/// (notes/claude/settings-parity.md §5.5; services/mod.rs `method_tables`).
+#[cfg_attr(not(test), allow(dead_code))] // the dispatch tests compare it with the api-methods files
+pub(crate) const METHODS: &[(&str, bool)] = &[
+    ("storage.categories", false),
+    ("storage.cleanTemp", true),
+    ("storage.cleanup.list", false),
+    ("storage.cleanup.run", true),
+    ("storage.largeFiles", false),
+    ("storage.scan", false),
+    ("storage.scanCancel", false),
+    ("storage.scanResult", false),
+    ("storage.trashSize", false),
+    ("storage.volumes", false),
+];
 #[path = "storage/categories.rs"]
 mod categories;
 #[path = "storage/cleanup.rs"]
@@ -20,6 +35,11 @@ mod cleanup;
 pub(crate) mod common;
 #[path = "storage/scan.rs"]
 mod scan;
+#[path = "storage/sense.rs"]
+pub(crate) mod sense;
+#[cfg(test)]
+#[path = "storage/test_bus.rs"]
+pub(crate) mod test_bus;
 #[path = "storage/volumes.rs"]
 mod volumes;
 /// storage.volumes' 2 s cache. Its entries hold names in a language ("Systeemschijf" / "System drive"), so it is
@@ -164,6 +184,18 @@ impl Storage {
             "storage.cleanup.run" => {
                 let result = self.cleanup.run(&args["ids"], &args["paths"]);
                 *self.trash.lock().unwrap_or_else(|e| e.into_inner()) = None;
+                result
+            }
+            "storage.cleanTemp" => {
+                let bus = super::system::common::session().ok();
+                let session = bus.as_ref().map(|bus| (bus, sense::HOUSEKEEPING));
+                let result = sense::clean_temp(args, self.ctx.lang(), self.ctx.dry_run, session);
+                if let Ok(done) = &result
+                    && done["trash"]["removed"].as_u64().is_some_and(|n| n > 0)
+                {
+                    *self.trash.lock().unwrap_or_else(|e| e.into_inner()) = None;
+                    self.ctx.emit("files.trashChanged", json!({}));
+                }
                 result
             }
             "storage.largeFiles" => {

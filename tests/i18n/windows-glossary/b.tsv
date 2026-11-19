@@ -1,0 +1,338 @@
+# tests/i18n/windows-glossary/b.tsv: the Windows 11 UI strings settings-parity batch B uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch B
+# edits this file.
+# --- slice 1 (bluetooth, bluetooth-devices, autoplay, usb)
+# Bluetooth en apparaten: GNOME's "Airplane Mode is On" / "Hardware Airplane Mode is On" status pages
+Flight mode is on	Vliegtuigmodus staat aan	winpoint	no
+Bluetooth is off while flight mode is on.	Bluetooth staat uit zolang de vliegtuigmodus aan staat.	winpoint	no
+Turn off flight mode	Vliegtuigmodus uitschakelen	winpoint	no
+The flight mode switch is on	De vliegtuigmodusschakelaar staat aan	winpoint	no
+Turn off the flight mode switch on the computer to turn on Bluetooth.	Zet de vliegtuigmodusschakelaar op de computer uit om Bluetooth in te schakelen.	winpoint	no
+Discoverable as “{name}”	Detecteerbaar als “{name}”	windows	no
+# Apparaten (Windows' Devices page, GNOME's device dialog and Power › Connected Devices)
+Mouse, keyboard & pen	Muis, toetsenbord en pen	windows	no
+Audio	Audio	windows	no
+Other devices	Overige apparaten	windows	no
+Connect	Verbinding maken	windows	no
+Disconnect	Verbinding verbreken	windows	no
+Remove device	Apparaat verwijderen	windows	no
+Remove	Verwijderen	windows	no
+Add a device	Een apparaat toevoegen	windows	no
+Add device	Apparaat toevoegen	windows	no
+Paired	Gekoppeld	windows	no
+Connected	Verbonden	windows	no
+Type	Type	winpoint	no
+Address	Adres	winpoint	no
+Mouse settings	Muisinstellingen	winpoint	no
+Keyboard settings	Toetsenbordinstellingen	winpoint	no
+Sound settings	Geluidsinstellingen	winpoint	no
+Send files via Bluetooth	Bestanden verzenden via Bluetooth	windows	no
+Send files	Bestanden verzenden	winpoint	no
+Couldn’t send files	Bestanden verzenden lukte niet	winpoint	no
+Forget the device and its pairing	Het apparaat en de koppeling vergeten	winpoint	no
+Bluetooth is off	Bluetooth staat uit	winpoint	no
+Turn on Bluetooth to connect your devices.	Zet Bluetooth aan om je apparaten te verbinden.	winpoint	no
+Devices with a battery appear here once they’re connected.	Apparaten met een batterij verschijnen hier zodra ze zijn aangesloten.	winpoint	no
+Uninterruptible power supply (UPS)	Noodstroomvoeding (UPS)	winpoint	no
+Device	Apparaat	winpoint	no
+Battery {n}%	Batterij {n}%	windows	no
+Battery low	Batterij bijna leeg	winpoint	no
+Battery critically low	Batterij bijna op	winpoint	no
+Battery full	Batterij vol	winpoint	no
+Battery high	Batterij hoog	winpoint	no
+Battery good	Batterij goed	winpoint	no
+charging	wordt opgeladen	winpoint	no
+fully charged	volledig opgeladen	winpoint	no
+# review B finding 8: strings of the pages that were in no glossary file
+Tablet	Tablet	winpoint	no
+Bluetooth & devices	Bluetooth en apparaten	glossary	yes
+# Automatisch afspelen (Windows' AutoPlay with GNOME's Removable Media rows)
+Use AutoPlay for all media and devices	Automatisch afspelen gebruiken voor alle media en apparaten	windows	no
+Choose AutoPlay defaults	Standaardinstellingen voor Automatisch afspelen kiezen	windows	no
+Removable drive	Verwisselbaar station	windows	no
+Memory card	Geheugenkaart	windows	no
+Take no action	Geen actie ondernemen	windows	no
+Ask me every time	Altijd vragen	windows	no
+# Windows: “Open folder to view files (File Explorer)” / “Map openen om bestanden weer te geven (Verkenner)”; GNOME opens the default file manager
+Open folder to view files	Map openen om bestanden weer te geven	rename	no
+Photos	Foto’s	winpoint	no
+Audio CD	Audio-cd	winpoint	no
+DVD video	Dvd-video	winpoint	no
+Music player	Muziekspeler	winpoint	no
+Software	Software	winpoint	no
+Other media types	Andere mediatypen	winpoint	no
+Blank discs, Blu-ray, e-book readers and more	Lege schijven, Blu-ray, e-boeklezers en meer	winpoint	no
+Action	Actie	winpoint	no
+Close	Sluiten	winpoint	no
+# USB (Windows' USB page; its USB4 hubs and devices hold GNOME's Privacy › Thunderbolt)
+USB4 hubs and devices	USB4-hubs en -apparaten	windows	no
+Direct access	Directe toegang	winpoint	no
+Allow direct access to devices such as docks and external GPUs	Directe toegang tot apparaten zoals docks en externe GPU’s toestaan	winpoint	no
+Authorise and connect	Autoriseren en verbinden	winpoint	no
+Forget device	Apparaat vergeten	winpoint	no
+Forget	Vergeten	winpoint	no
+Forget this device?	Dit apparaat vergeten?	winpoint	no
+The device is then no longer authorised automatically	Het apparaat wordt dan niet meer automatisch geautoriseerd	winpoint	no
+Turn on direct access first.	Zet eerst Directe toegang aan.	winpoint	no
+Not connected	Niet verbonden	windows	no
+Connected, not authorised	Verbonden, niet geautoriseerd	winpoint	no
+Connected and authorised	Verbonden en geautoriseerd	winpoint	no
+Authorising…	Autoriseren…	winpoint	no
+Authorisation error	Fout bij autoriseren	winpoint	no
+Status	Status	winpoint	no
+Manufacturer	Fabrikant	winpoint	no
+Authorised on	Geautoriseerd op	winpoint	no
+Connected on	Verbonden op	winpoint	no
+Remembered since	Onthouden sinds	winpoint	no
+No USB4 or Thunderbolt devices are connected.	Er zijn geen USB4- of Thunderbolt-apparaten aangesloten.	winpoint	no
+Thunderbolt management isn’t available	Thunderbolt-beheer is niet beschikbaar	winpoint	no
+This computer’s firmware connects Thunderbolt devices without asking for permission.	De firmware van deze computer verbindt Thunderbolt-apparaten zonder toestemming te vragen.	winpoint	no
+Properties	Eigenschappen	glossary	yes
+Battery	Batterij	windows	no
+Not authorised yet	Nog niet geautoriseerd	winpoint	no
+The device works once you’ve authorised it	Het apparaat werkt pas nadat je het hebt geautoriseerd	winpoint	no
+# review B finding 8: strings of the page that were in no glossary file
+Couldn’t change direct access	Directe toegang wijzigen lukte niet	winpoint	no
+Couldn’t authorise	Autoriseren lukte niet	winpoint	no
+“{name}” will no longer be authorised automatically. If you connect it later, you’ll need to authorise it again.	“{name}” wordt niet meer automatisch geautoriseerd. Sluit je het later weer aan, dan moet je het opnieuw autoriseren.	winpoint	no
+Couldn’t forget the device	Vergeten lukte niet	winpoint	no
+Thunderbolt device	Thunderbolt-apparaat	winpoint	no
+UUID	UUID	winpoint	no
+The Thunderbolt service (bolt) isn’t running on this computer, so USB4 and Thunderbolt devices can’t be managed here.	De Thunderbolt-service (bolt) draait niet op deze computer, dus USB4- en Thunderbolt-apparaten kunnen hier niet worden beheerd.	winpoint	no
+# GNOME's device dialog "Depends on" (review B finding 11): the unauthorised devices a device hangs behind
+Depends on	Afhankelijk van	winpoint	no
+# --- slice 2 (printers, printer, colorprofile)
+# Printers en scanners and a printer's page (GNOME's Printers panel in Windows 11's pages)
+Low on paper	Papier bijna op	winpoint	no
+Out of paper	Papier op	winpoint	no
+Paper jam	Papierstoring	winpoint	no
+Low on toner	Toner bijna op	winpoint	no
+Out of toner	Toner op	winpoint	no
+Low on ink	Inkt bijna op	winpoint	no
+Out of ink	Inkt op	winpoint	no
+Waste receptacle almost full	Opvangbak bijna vol	winpoint	no
+Waste receptacle full	Opvangbak vol	winpoint	no
+Door open	Klep open	winpoint	no
+Cover open	Deksel open	winpoint	no
+Offline	Offline	windows	no
+Connecting to the printer…	Verbinden met de printer…	winpoint	no
+Drum almost worn out	Drum bijna versleten	winpoint	no
+Drum worn out	Drum versleten	winpoint	no
+Low on developer	Ontwikkelaar bijna op	winpoint	no
+Out of developer	Ontwikkelaar op	winpoint	no
+Driver incomplete	Stuurprogramma onvolledig	winpoint	no
+Print queue full	Afdrukwachtrij vol	winpoint	no
+Rejecting print jobs	Weigert afdruktaken	winpoint	no
+Printing	Bezig met afdrukken	windows	no
+Paused	Onderbroken	windows	no
+Idle	Inactief	windows	no
+Unknown	Onbekend	winpoint	no
+USB printer	USB-printer	winpoint	no
+Shared Windows printer (SMB)	Gedeelde Windows-printer (SMB)	winpoint	no
+Shared printer on a print server	Gedeelde printer op een afdrukserver	winpoint	no
+Network printer	Netwerkprinter	winpoint	no
+Authentication required	Verificatie vereist	winpoint	no
+Queued	In de wachtrij	winpoint	no
+Stopped	Gestopt	winpoint	no
+Cancelled	Geannuleerd	winpoint	no
+Aborted	Afgebroken	winpoint	no
+Completed	Voltooid	winpoint	no
+Portrait	Staand	windows	no
+Landscape	Liggend	windows	no
+Reverse landscape	Liggend (omgekeerd)	winpoint	no
+Reverse portrait	Staand (omgekeerd)	winpoint	no
+One-sided	Enkelzijdig	winpoint	no
+Two-sided, long edge	Dubbelzijdig, lange zijde	winpoint	no
+Two-sided, short edge	Dubbelzijdig, korte zijde	winpoint	no
+Pages per sheet	Pagina's per vel	windows	no
+Orientation	Afdrukstand	windows	no
+Print on both sides	Dubbelzijdig afdrukken	windows	no
+Couldn’t load the list of drivers	De lijst met stuurprogramma's kon niet worden geladen	winpoint	no
+Choose the driver for “{name}”.	Kies het stuurprogramma voor “{name}”.	winpoint	no
+Automatic (IPP Everywhere)	Automatisch (IPP Everywhere)	winpoint	no
+Recommended driver	Aanbevolen stuurprogramma	winpoint	no
+Choose from the list	Uit de lijst kiezen	winpoint	no
+Install a PPD file	PPD-bestand installeren	winpoint	no
+No file chosen	Geen bestand gekozen	winpoint	no
+Browse…	Bladeren…	winpoint	no
+PPD files	PPD-bestanden	winpoint	no
+Choose a PPD file	Een PPD-bestand kiezen	winpoint	no
+Driver	Stuurprogramma	winpoint	no
+Model	Model	winpoint	no
+Choose a driver	Stuurprogramma kiezen	winpoint	no
+Choose a driver first.	Kies eerst een stuurprogramma.	winpoint	no
+Couldn’t search for printers	Zoeken naar printers lukte niet	winpoint	no
+Add	Toevoegen	winpoint	no
+Couldn’t add the printer	De printer kon niet worden toegevoegd	winpoint	no
+“{name}” has been added	“{name}” is toegevoegd	winpoint	no
+For example 192.168.1.20 or printer.local	Bijvoorbeeld 192.168.1.20 of printer.local	winpoint	no
+Host name or IP address	Hostnaam of IP-adres	winpoint	no
+This print server asks for a user name and password.	Deze afdrukserver vraagt om een gebruikersnaam en wachtwoord.	winpoint	no
+User name	Gebruikersnaam	winpoint	no
+Password	Wachtwoord	winpoint	no
+Add a printer using an IP address or hostname	Een printer toevoegen met behulp van een IP-adres of hostnaam	windows	no
+Search	Zoeken	winpoint	no
+Searching…	Zoeken…	winpoint	no
+Enter the user name and password and search again.	Geef de gebruikersnaam en het wachtwoord op en zoek opnieuw.	winpoint	no
+No printer was found at this address.	Er is op dit adres geen printer gevonden.	winpoint	no
+Searching for printers and scanners…	Zoeken naar printers en scanners…	winpoint	no
+No new printers or scanners were found.	Er zijn geen nieuwe printers of scanners gevonden.	winpoint	no
+The printer that I want isn’t listed	De printer die ik wil gebruiken, staat niet in de lijst	windows	no
+Add manually	Handmatig toevoegen	windows	no
+Print service unavailable	Afdrukservice niet beschikbaar	winpoint	no
+Printing isn’t installed on this computer (CUPS is missing).	Afdrukken is op deze computer niet geïnstalleerd (CUPS ontbreekt).	winpoint	no
+No matching printers were found.	Geen printers gevonden die overeenkomen.	winpoint	no
+No printers have been added yet.	Er zijn nog geen printers toegevoegd.	winpoint	no
+Default	Standaard	windows	no
+Search printers	Printers zoeken	winpoint	no
+Add a printer or scanner	Een printer of scanner toevoegen	windows	no
+Scanners	Scanners	windows	no
+Open scanner	Scanner openen	windows	no
+Scan with Document Scanner	Scannen met Documentscanner	winpoint	no
+Open	Openen	winpoint	no
+Colour profiles of printers and displays	Kleurprofielen van printers en beeldschermen	winpoint	no
+Couldn’t resume the printer	De printer kon niet worden hervat	winpoint	no
+Remove this device?	Dit apparaat verwijderen?	windows	no
+“{name}” will be removed. Print jobs in the queue will be cancelled.	“{name}” wordt verwijderd. Afdruktaken in de wachtrij worden geannuleerd.	winpoint	no
+Yes	Ja	windows	no
+No	Nee	windows	no
+Couldn’t remove the printer	De printer kon niet worden verwijderd	winpoint	no
+Authenticate	Verifiëren	winpoint	no
+Resume	Hervatten	windows	no
+Pause	Onderbreken	windows	no
+More options	Meer opties	winpoint	no
+Move to top	Bovenaan zetten	winpoint	no
+Cancel all documents	Alle documenten annuleren	windows	no
+Print queue of {name}	Afdrukwachtrij van {name}	winpoint	no
+That didn’t work for this print job	Dat lukte niet met deze afdruktaak	winpoint	no
+There are no documents in the queue.	Er staan geen documenten in de wachtrij.	winpoint	no
+Cancel all documents?	Alle documenten annuleren?	winpoint	no
+All documents in this printer’s queue will be cancelled.	Alle documenten in de wachtrij van deze printer worden geannuleerd.	winpoint	no
+Couldn’t cancel	Annuleren lukte niet	winpoint	no
+Domain	Domein	winpoint	no
+Couldn’t authenticate	Verifiëren lukte niet	winpoint	no
+Couldn’t change the driver	Het stuurprogramma kon niet worden gewijzigd	winpoint	no
+Name	Naam	winpoint	no
+Without spaces, slashes, hash signs or quotation marks	Zonder spaties, slashes, hekjes of aanhalingstekens	winpoint	no
+Choose another driver	Ander stuurprogramma kiezen	winpoint	no
+Printer properties	Printereigenschappen	windows	no
+Couldn’t change the location	De locatie kon niet worden gewijzigd	winpoint	no
+Couldn’t change the name	De naam kon niet worden gewijzigd	winpoint	no
+Couldn’t change this setting	Deze instelling kon niet worden gewijzigd	winpoint	no
+Layout	Indeling	winpoint	no
+This printer has no settings you can change here.	Deze printer heeft geen instellingen die je hier kunt wijzigen.	winpoint	no
+Printing preferences	Voorkeursinstellingen voor afdrukken	windows	no
+Set as default	Als standaard instellen	windows	no
+Couldn’t set the default printer	De standaardprinter kon niet worden ingesteld	winpoint	no
+Clean print heads	Printkoppen reinigen	winpoint	no
+Couldn’t clean the print heads	Printkoppen reinigen lukte niet	winpoint	no
+The print heads are being cleaned	De printkoppen worden gereinigd	winpoint	no
+Status: {status}	Status: {status}	windows	no
+This is your default printer	Dit is je standaardprinter	winpoint	no
+The printer is rejecting print jobs	De printer weigert afdruktaken	winpoint	no
+The printer is paused	De printer is onderbroken	winpoint	no
+Resume the printer to print again.	Hervat de printer om weer af te drukken.	winpoint	no
+Printer settings	Printerinstellingen	windows	no
+Open print queue	Afdrukwachtrij openen	windows	no
+1 document in the queue	1 document in de wachtrij	winpoint	no
+{n} documents in the queue	{n} documenten in de wachtrij	winpoint	no
+Print test page	Testpagina afdrukken	windows	no
+Couldn’t print the test page	De testpagina kon niet worden afgedrukt	winpoint	no
+The test page has been sent to the printer	De testpagina is naar de printer gestuurd	winpoint	no
+Name, location, address and driver	Naam, locatie, adres en stuurprogramma	winpoint	no
+Paper size, two-sided, colour and quality	Papierformaat, dubbelzijdig, kleur en kwaliteit	winpoint	no
+Ink and toner	Inkt en toner	winpoint	no
+Level unknown	Niveau onbekend	winpoint	no
+More information	Meer informatie	windows	no
+Queue name	Naam van de wachtrij	winpoint	no
+Shared	Gedeeld	winpoint	no
+This printer wasn’t found	Deze printer is niet gevonden	winpoint	no
+The printer may have been removed. Go back to Printers & scanners.	De printer is misschien verwijderd. Ga terug naar Printers en scanners.	winpoint	no
+# review B finding 8: strings of the pages that were in no glossary file
+The printer reports its own features; no separate driver is needed.	De printer geeft zelf door wat hij kan; er is geen apart stuurprogramma nodig.	winpoint	no
+Only printers on the network are shown: local printers need permission.	Alleen printers op het netwerk worden getoond: voor de lokale printers is toestemming nodig.	winpoint	no
+Type the host name or IP address of the printer or the print server, or a full address such as ipp://, socket:// or smb://.	Typ de hostnaam of het IP-adres van de printer of de afdrukserver, of een volledig adres zoals ipp://, socket:// of smb://.	winpoint	no
+The print service (CUPS) isn’t running. Restart the computer or ask your administrator to start CUPS.	De afdrukservice (CUPS) draait niet. Start de computer opnieuw op of vraag je beheerder om CUPS te starten.	winpoint	no
+# Kleurprofiel (GNOME's Color panel and its calibration assistant)
+Display	Beeldscherm	winpoint	no
+Scanner	Scanner	winpoint	no
+Webcam	Webcam	winpoint	no
+Built-in display	Ingebouwd beeldscherm	winpoint	no
+Built-in webcam	Ingebouwde webcam	winpoint	no
+Default: {name}	Standaard: {name}	winpoint	no
+Colourspace: {name}	Kleurruimte: {name}	winpoint	no
+Test profile: {name}	Testprofiel: {name}	winpoint	no
+High	Hoog	winpoint	no
+40 minutes	40 minuten	winpoint	no
+Medium	Gemiddeld	winpoint	no
+30 minutes	30 minuten	winpoint	no
+Low	Laag	winpoint	no
+15 minutes	15 minuten	winpoint	no
+LCD	LCD	winpoint	no
+LED	LED	winpoint	no
+CRT	CRT	winpoint	no
+Projector	Projector	winpoint	no
+Plasma	Plasma	winpoint	no
+LCD (CCFL backlight)	LCD (CCFL-achtergrondverlichting)	winpoint	no
+LCD (RGB LED backlight)	LCD (RGB-ledachtergrondverlichting)	winpoint	no
+LCD (white LED backlight)	LCD (witte ledachtergrondverlichting)	winpoint	no
+Wide gamut LCD (CCFL backlight)	Breed kleurbereik LCD (CCFL-achtergrondverlichting)	winpoint	no
+Wide gamut LCD (RGB LED backlight)	Breed kleurbereik LCD (RGB-ledachtergrondverlichting)	winpoint	no
+Native to display	Eigen witpunt van het beeldscherm	winpoint	no
+D50 (printing and publishing)	D50 (drukwerk en publicaties)	winpoint	no
+D55	D55	winpoint	no
+D65 (photography and graphics)	D65 (fotografie en grafisch werk)	winpoint	no
+D75	D75	winpoint	no
+Place the colour sensor on the screen and choose Resume.	Plaats de kleursensor op het scherm en kies Hervatten.	winpoint	no
+Set the colour sensor to calibration mode and choose Resume.	Zet de kleursensor in de kalibratiestand en kies Hervatten.	winpoint	no
+Set the colour sensor to measurement mode and choose Resume.	Zet de kleursensor in de meetstand en kies Hervatten.	winpoint	no
+Don’t close the laptop lid while calibrating.	Sluit het deksel van de laptop niet tijdens het kalibreren.	winpoint	no
+Choose Resume to continue.	Kies Hervatten om verder te gaan.	winpoint	no
+There are no other profiles for this device. Import an ICC file.	Er zijn geen andere profielen voor dit apparaat. Importeer een ICC-bestand.	winpoint	no
+Choose a profile for this device.	Kies een profiel voor dit apparaat.	winpoint	no
+Import file…	Bestand importeren…	winpoint	no
+Add profile	Profiel toevoegen	windows	no
+Couldn’t add the profile	Het profiel kon niet worden toegevoegd	winpoint	no
+ICC colour profiles	ICC-kleurprofielen	winpoint	no
+Import a colour profile	Een kleurprofiel importeren	winpoint	no
+Couldn’t import the profile	Het profiel kon niet worden geïmporteerd	winpoint	no
+Quality	Kwaliteit	winpoint	no
+Calibration device	Kalibratieapparaat	winpoint	no
+Display type	Beeldschermtype	winpoint	no
+Profile white point	Witpunt van het profiel	winpoint	no
+Most displays should be calibrated to D65.	De meeste beeldschermen worden gekalibreerd op D65.	winpoint	no
+Profile name	Profielnaam	winpoint	no
+Calibrate display	Beeldscherm kalibreren	winpoint	no
+Start calibration	Kalibreren starten	winpoint	no
+Couldn’t start the calibration	Kalibreren kon niet worden gestart	winpoint	no
+Don’t disturb the calibration device while calibration is in progress.	Verstoor het kalibratieapparaat niet zolang het kalibreren bezig is.	winpoint	no
+Done	Gereed	winpoint	no
+Couldn’t resume	Hervatten lukte niet	winpoint	no
+Calibration is complete. The new profile is this display’s default profile.	Het kalibreren is voltooid. Het nieuwe profiel is het standaardprofiel van dit beeldscherm.	winpoint	no
+Calibration failed or was cancelled.	Het kalibreren is mislukt of afgebroken.	winpoint	no
+For all users	Voor alle gebruikers	winpoint	no
+Problems were found with this profile	Er zijn problemen met dit profiel gevonden	winpoint	no
+Set for all users	Instellen voor alle gebruikers	winpoint	no
+Couldn’t set the profile for all users	Het profiel kon niet voor alle gebruikers worden ingesteld	winpoint	no
+Couldn’t remove the profile	Het profiel kon niet worden verwijderd	winpoint	no
+Not calibrated	Niet gekalibreerd	winpoint	no
+Couldn’t change colour management	Kleurbeheer kon niet worden gewijzigd	winpoint	no
+Use colour management for this device	Kleurbeheer gebruiken voor dit apparaat	winpoint	no
+Couldn’t set the default profile	Het standaardprofiel kon niet worden ingesteld	winpoint	no
+The profile this device uses	Het profiel dat dit apparaat gebruikt	winpoint	no
+Calibrate	Kalibreren	winpoint	no
+Create a new profile with a colour sensor	Een nieuw profiel maken met een kleursensor	winpoint	no
+Calibrate…	Kalibreren…	winpoint	no
+Colour management isn’t available	Kleurbeheer is niet beschikbaar	winpoint	no
+No devices	Geen apparaten	winpoint	no
+No devices that can be colour managed were found.	Er zijn geen apparaten gevonden waarvan de kleur kan worden beheerd.	winpoint	no
+# review B finding 8: strings of the page that were in no glossary file
+Calibration creates a colour profile for your display. The longer calibration takes, the better the profile. You can’t use the device while it’s being calibrated.	Kalibreren maakt een kleurprofiel voor je beeldscherm. Hoe langer het kalibreren duurt, hoe beter het profiel. Je kunt het apparaat tijdens het kalibreren niet gebruiken.	winpoint	no
+Set the display to the brightness you usually use: colour management is most accurate there.	Stel het beeldscherm in op de helderheid die je meestal gebruikt: daar is het kleurbeheer het nauwkeurigst.	winpoint	no
+The colour management service (colord) isn’t running on this computer, so colour profiles can’t be managed here.	De kleurbeheerservice (colord) draait niet op deze computer, dus kleurprofielen kunnen hier niet worden beheerd.	winpoint	no
+Connect a colour sensor to calibrate a display.	Sluit een kleursensor aan om een beeldscherm te kalibreren.	winpoint	no

@@ -1,0 +1,106 @@
+21:27:42 GE0c run lang=nl switch=False seed=defaults MemAvailable=7305236 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-accounts.py
+21:28:59 private install: exit 0 in 61.6 s, 87327 mutated paths, 0 outside the run dir, ok=True
+21:29:01 GNOME Shell 50.1 up (mode user, unsafe True)
+21:29:06 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-accounts.py
+21:29:08   check PASS: accounts: the title is Accounts
+21:29:08   check PASS: accounts: built, no placeholder
+21:29:08   check PASS: accounts: the header names the own account and its type
+21:29:09   check PASS: accounts: Accountinstellingen links to the four pages
+21:29:09   check PASS: accounts: Nu vergrendelen is there
+21:29:11   check PASS: yourinfo: the breadcrumb is Accounts > Je info
+21:29:11   check PASS: yourinfo: built, no placeholder
+21:29:17   check FAIL (known kit-dialog-gesture): dialogs: a real pointer click on a kit dialog’s button (Annuleren) closes it
+21:29:19   check PASS: yourinfo: Naam wijzigen sends SetRealName to the own user, interactive
+21:29:19   check PASS: yourinfo: the dialog closes after the change
+21:29:19   check PASS: wait_text settings: 'Alex Morgan-Reed'
+21:29:19   check PASS: yourinfo: the page follows AccountsService (Changed): the new name
+21:29:20   check PASS: yourinfo: GNOME’s gallery (Een standaardafbeelding kiezen)
+21:29:23   check PASS: yourinfo: the default pictures are drawn at their own size (a 64 px picture in its button)
+21:29:25   check PASS: yourinfo: a default picture (a real click) sends SetIconFile with GNOME’s stock file, interactive
+21:29:25   check PASS: yourinfo: Foto verwijderen once the account has a picture
+21:29:27   check PASS: yourinfo: Foto verwijderen sends SetIconFile(''), interactive
+21:29:29   check PASS: email-accounts: the breadcrumb is Accounts > E-mail en accounts
+21:29:29   check PASS: email-accounts: built, no placeholder
+21:29:29   check PASS: email-accounts: without goa-daemon nothing can be added
+21:29:32   check PASS: email-accounts: the breadcrumb is Accounts > E-mail en accounts
+21:29:32   check PASS: email-accounts: built, no placeholder
+21:29:32   check PASS: wait_text settings: 'alex@example.org'
+21:29:32   check PASS: email-accounts: the GOA account is listed with its address
+21:29:40   check PASS: email-accounts: Beheren shows GOA’s services (mail and contacts on, calendar off)
+21:29:44   check PASS: email-accounts: the calendar switch sets CalendarDisabled false on the account
+21:29:52   check PASS: email-accounts: Verwijderen calls the account’s Remove, interactive
+21:29:53   check PASS: email-accounts: the removed account is no longer listed
+21:29:53   check PASS: email-accounts: with goa-daemon Account toevoegen can be clicked
+21:29:54   check PASS: email-accounts: Account toevoegen lists GOA’s providers (Google, Microsoft 365, Nextcloud, IMAP and SMTP)
+21:29:55   check PASS: email-accounts: a provider starts win11-gtk-settings --goa-add google (GOA’s own dialog)
+21:29:58 the GOA helper: signalled own descendants 1741:win11-gtk-setti
+21:30:01   check PASS: signin: the breadcrumb is Accounts > Aanmeldingsopties
+21:30:01   check PASS: signin: built, no placeholder
+21:30:01   check PASS: signin: no fingerprint row without fprintd
+21:30:02   check PASS: signin: no USB row without usbguard (caps)
+21:30:05   check PASS: signin: Na 5 minuten (real clicks) writes lock-enabled true and lock-delay 300
+21:30:08   check PASS: signin: Nooit writes lock-enabled false and keeps the delay, as GNOME
+21:30:09   check PASS: signin: the lock question follows lock-enabled and lock-delay written from outside (Na 1 minuut)
+21:30:09   check PASS: signin: ... and Nooit when lock-enabled goes false
+21:30:11   check PASS: signin: a real click on st-signin-ubuntu-lock-on-suspend writes ubuntu-lock-on-suspend false
+21:30:12   check PASS: signin: st-signin-ubuntu-lock-on-suspend follows ubuntu-lock-on-suspend = true written from outside
+21:30:13   check PASS: signin: Automatisch aanmelden (a real click) sends SetAutomaticLogin(true) for the own account, interactive
+21:30:13   check PASS: signin: the switch is on after the page reads AccountsService again
+21:30:13   check FAIL (known harness-stub-dir-mode): harness: run/stubs is private, so system_tool takes its stubs (note 16 for I)
+21:30:31   check FAIL (known sandbox-cracklib): signin: Wijzigen is enabled once the new password is typed twice and strong enough (libpwquality)
+21:30:33   check PASS: signin: Wachtwoord wijzigen runs passwd for the own account (the run/stubs passwd, no arguments)
+21:30:33   check PASS: signin: passwd’s refusal comes back as an error, not as a lost connection (the stub exits 97)
+21:30:37   check PASS: signin: the breadcrumb is Accounts > Aanmeldingsopties
+21:30:38   check PASS: signin: built, no placeholder
+21:30:38   check PASS: signin: with fprintd and a reader, Vingerafdrukherkenning is a way to sign in
+21:30:45   check PASS: wait_text settings: 'Er is 1 vingerafdruk ingesteld.'
+21:30:45   check PASS: signin: one finger set up: Nog een vinger toevoegen and Verwijderen
+21:30:50   check PASS: signin: the enrolment follows EnrollStatus to the end and the dialog closes
+21:30:50   check PASS: signin: an enrolment is Claim, EnrollStart(right index finger), EnrollStop, Release; the writes interactive
+21:30:56   check PASS: wait_text settings: 'Er zijn 2 vingerafdrukken ingesteld.'
+21:30:56   check PASS: signin: then two fingers are set up
+21:31:02   check PASS: signin: Vingerafdrukken verwijderen is Claim, DeleteEnrolledFingers2, Release; interactive
+21:31:05   check PASS: otherusers: the breadcrumb is Accounts > Andere gebruikers
+21:31:05   check PASS: otherusers: built, no placeholder
+21:31:07   check PASS: otherusers: the other user is listed, not the own one
+21:31:16   check PASS: otherusers: Automatisch aanmelden of another user (a real click) sends SetAutomaticLogin(true) to that user, interactive
+21:31:29   check PASS: otherusers: Accounttype wijzigen > Administrator sends SetAccountType(1) to that user, interactive
+21:31:42   check PASS: otherusers: Wachtwoord opnieuw instellen (at the next sign-in) sends SetPasswordMode(1) to that user, interactive
+21:31:48   check PASS: otherusers: Account toevoegen sends CreateUser(kim, Kim Lee, standard), then SetPasswordMode(1) (a password at the first sign-in); interactive
+21:31:48   check PASS: otherusers: the new user is listed
+21:32:02   check PASS: otherusers: Bestanden verwijderen sends DeleteUser(uid, true), interactive
+21:32:03   check PASS: otherusers: the deleted user is no longer listed
+21:32:06   check PASS: accounts: the title is Accounts
+21:32:06   check PASS: accounts: built, no placeholder
+21:32:10   check PASS: otherusers: the breadcrumb is Accounts > Andere gebruikers
+21:32:10   check PASS: otherusers: built, no placeholder
+21:32:21   check PASS: wait_text settings: 'Sam Taylor is nog aangemeld'
+21:32:24   check PASS: otherusers: a user who is still signed in gets GNOME’s “is nog aangemeld” with only Annuleren
+21:32:26   check PASS: otherusers: users.delete refuses the signed-in user (denied users.loggedIn)
+21:32:26   check PASS: otherusers: and no DeleteUser reached AccountsService
+21:32:26   check PASS: otherusers: logind was asked (ListSessions)
+21:32:26 shutdown app: signalled own descendants 1970:win11-gtk-setti, 1979:win11-app
+21:32:26 shutdown shell clients: signalled own descendants 188:ibus-daemon, 525:win11-shell, 1435:glycin-image-rs, 634:win11-panel, 207:ibus-memconf, 208:ibus-extension-, 368:ibus-engine-sim
+21:32:27 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+21:32:27 shutdown system bus: signalled own descendants 163:dbus-daemon
+21:32:27 inner sweep: signalled own descendants 1446:glycin-image-rs
+21:32:27 inner done: 0 surfaces, 0 failed []
+21:32:29 strace connect:     49 x AF_INET 127.0.0.1 -> EINPROGRESS
+21:32:29 strace connect:     39 x AF_INET 127.0.0.1 -> UNFINISHED
+21:32:29 strace connect:      3 x AF_INET 127.0.0.1 -> ok
+21:32:29 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+21:32:29 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+21:32:29 strace connect:      4 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+21:32:29 strace connect:      1 x AF_UNIX /tmp/w11-rt/bus -> UNFINISHED
+21:32:29 strace connect:     34 x AF_UNIX /tmp/w11-rt/bus -> ok
+21:32:29 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+21:32:29 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+21:32:29 strace connect:      2 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+21:32:29 strace connect:      8 x AF_UNIX /tmp/w11-rt/sbus -> ok
+21:32:29 strace connect:      5 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+21:32:29 strace connect:     10 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+21:32:29 strace connect:     34 x AF_UNIX /var/run/nscd/socket -> ENOENT
+21:32:29 strace connect:      2 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+21:32:29 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+21:32:29 strace connect check: 263 connect() calls, OK
+21:32:34 strace exec check: 558 execve() calls, OK

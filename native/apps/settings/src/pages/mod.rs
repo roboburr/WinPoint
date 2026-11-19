@@ -25,6 +25,12 @@
 //! description, search keywords): that list is the navigation, the breadcrumb and the search, so a module never
 //! registers search entries itself. A new page needs a registry.rs entry and a PAGES entry.
 //!
+//! Settings parity (notes/claude/settings-parity.md): batch B0 created every module, registry entry and table entry
+//! for the complete page tree. Every registered page now has its own builder. The page tree and module ownership
+//! are documented in that note's §2 and §4.
+//! The GNOME settings of a page bind through `crate::gs` (Gs::load, gs.toggle_card, ...), the pickers are in
+//! `crate::pickers`, the registry-driven link lists are `common::child_links` / `common::links_group`.
+//!
 //! ## How a page is built
 //!
 //! The router (app.rs) calls the builder with a fresh [`Page`] when the page is shown; it puts the page's title
@@ -140,6 +146,48 @@ pub mod update_history;
 pub mod update_release;
 pub mod update_winpoint;
 
+// settings parity (notes/claude/settings-parity.md §2-4): B0 created every module; each batch fills its own
+pub mod a11y_interaction;
+pub mod a11y_vision;
+pub mod app_advanced;
+pub mod app_notifications;
+pub mod autoplay;
+pub mod bt_devices;
+pub mod colorprofile;
+pub mod email_accounts;
+pub mod flightmode;
+pub mod formats;
+pub mod hotspot;
+pub mod keyboards;
+pub mod language_admin;
+pub mod mobile;
+pub mod mouse;
+pub mod multitasking;
+pub mod net_editor;
+pub mod network_advanced;
+pub mod nightlight;
+pub mod otherusers;
+pub mod pen;
+pub mod printers;
+pub mod privacy_history;
+pub mod privacy_perms;
+pub mod privacy_security;
+pub mod proxy;
+pub mod remotedesktop;
+pub mod screentime;
+pub mod shortcuts;
+pub mod signin;
+pub mod sound_device;
+pub mod storagesense;
+pub mod system_advanced;
+pub mod touchpad;
+pub mod typing;
+pub mod usb;
+pub mod volume_mixer;
+pub mod vpn;
+pub mod wifi_network;
+pub mod yourinfo;
+
 /// A page's body: the widgets of the scrolling column, top to bottom.
 pub type Content = Vec<gtk::Widget>;
 /// What a builder returns.
@@ -179,6 +227,46 @@ const MODULES: &[&[(&str, Builder)]] = &[
     update_history::PAGES,
     update_advanced::PAGES,
     update_release::PAGES,
+    a11y_vision::PAGES,
+    a11y_interaction::PAGES,
+    mouse::PAGES,
+    touchpad::PAGES,
+    pen::PAGES,
+    keyboards::PAGES,
+    typing::PAGES,
+    shortcuts::PAGES,
+    bt_devices::PAGES,
+    printers::PAGES,
+    autoplay::PAGES,
+    usb::PAGES,
+    colorprofile::PAGES,
+    wifi_network::PAGES,
+    net_editor::PAGES,
+    vpn::PAGES,
+    hotspot::PAGES,
+    flightmode::PAGES,
+    proxy::PAGES,
+    mobile::PAGES,
+    network_advanced::PAGES,
+    remotedesktop::PAGES,
+    system_advanced::PAGES,
+    nightlight::PAGES,
+    sound_device::PAGES,
+    volume_mixer::PAGES,
+    storagesense::PAGES,
+    multitasking::PAGES,
+    screentime::PAGES,
+    yourinfo::PAGES,
+    email_accounts::PAGES,
+    signin::PAGES,
+    otherusers::PAGES,
+    formats::PAGES,
+    language_admin::PAGES,
+    app_advanced::PAGES,
+    app_notifications::PAGES,
+    privacy_security::PAGES,
+    privacy_history::PAGES,
+    privacy_perms::PAGES,
 ];
 
 /// Every module's own CSS.
@@ -214,6 +302,46 @@ const MODULE_CSS: &[&str] = &[
     update_advanced::CSS,
     update_release::CSS,
     update_winpoint::CSS,
+    a11y_vision::CSS,
+    a11y_interaction::CSS,
+    mouse::CSS,
+    touchpad::CSS,
+    pen::CSS,
+    keyboards::CSS,
+    typing::CSS,
+    shortcuts::CSS,
+    bt_devices::CSS,
+    printers::CSS,
+    autoplay::CSS,
+    usb::CSS,
+    colorprofile::CSS,
+    wifi_network::CSS,
+    net_editor::CSS,
+    vpn::CSS,
+    hotspot::CSS,
+    flightmode::CSS,
+    proxy::CSS,
+    mobile::CSS,
+    network_advanced::CSS,
+    remotedesktop::CSS,
+    system_advanced::CSS,
+    nightlight::CSS,
+    sound_device::CSS,
+    volume_mixer::CSS,
+    storagesense::CSS,
+    multitasking::CSS,
+    screentime::CSS,
+    yourinfo::CSS,
+    email_accounts::CSS,
+    signin::CSS,
+    otherusers::CSS,
+    formats::CSS,
+    language_admin::CSS,
+    app_advanced::CSS,
+    app_notifications::CSS,
+    privacy_security::CSS,
+    privacy_history::CSS,
+    privacy_perms::CSS,
 ];
 
 /// The builder of a page id.
@@ -224,6 +352,31 @@ pub fn builder(id: &str) -> Option<Builder> {
 /// The pages' own CSS, appended to css/settings.css.
 pub fn css() -> String {
     MODULE_CSS.iter().filter(|c| !c.is_empty()).copied().collect::<Vec<_>>().join("\n")
+}
+
+// The shared helpers of home.rs keep their signatures (amendment 61d): a batch that changes one breaks this build.
+#[cfg(test)]
+#[allow(dead_code, unused_must_use, clippy::let_underscore_future)]
+mod home_api {
+    use super::{Page, bluetooth, system, themes};
+    use kit::CallError;
+    use kit::prelude::*;
+
+    async fn home_uses(p: Page, d: Value, e: CallError) {
+        let _: &'static str = bluetooth::device_glyph("headphones");
+        let _: String = bluetooth::device_status(&d);
+        let _: bool = bluetooth::is_not_responding(&e);
+        let _: Result<Value, CallError> = bluetooth::toggle_device(&p, &d).await;
+        let _: bluetooth::ResetOutcome = bluetooth::reset_bluetooth(&p).await;
+        bluetooth::open_add_device(&p);
+        let _: gtk::Widget = system::device_hero(&p, &d, &d, &d, false);
+        system::rename_hint(&p, "pc");
+        let _: &[themes::Theme] = themes::THEMES;
+        let _: Option<&'static themes::Theme> = themes::current_theme(&d);
+        themes::apply_theme(&p, &themes::THEMES[0]);
+        let _: gtk::Button = themes::theme_card(&p, &themes::THEMES[0], true);
+        let _: gtk::Widget = themes::theme_grid(&p, true);
+    }
 }
 
 // ---------------------------------------------------------------------------------------- the waiting

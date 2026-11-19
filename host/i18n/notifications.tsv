@@ -36,3 +36,9 @@ notifications.test.body	Meldingen van je apps verschijnen hier en blijven bewaar
 #@ host/src/services/notifications.rs 186 06e12cfbe9b6d668 plain
 #@ host/src/services/notifications.rs 187 5ad3dbd1242a4cea en
 notifications.test.ok	Prima	Got it
+# notifications.app.set (Settings parity, batch F): an appId that is no desktop id, or values that are not the six booleans
+#@ new
+notifications.badApp	Ongeldige meldingsinstelling.	Invalid notification setting.
+# notifications.app.set: no installed app has the desktop id, and GNOME Shell never recorded it
+#@ new
+notifications.appNotFound	Deze app is niet gevonden.	This app wasn’t found.

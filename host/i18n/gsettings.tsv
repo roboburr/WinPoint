@@ -1,0 +1,46 @@
+# host/i18n/gsettings.tsv: host texts of services/gsettings.rs.
+# Owner: B0 (settings parity, notes/claude/settings-parity.md §6.1).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/gsettings.rs (notes/claude/settings-parity.md §6.1)
+# gsettings.set/reset: the key is in no allow table of services/gsettings/allow
+#@ new
+gsettings.notAllowed	Deze instelling kan WinPoint niet wijzigen.	WinPoint can’t change this setting.
+# the key is allowlisted for reading only
+#@ new
+gsettings.readOnly	Deze instelling kan hier alleen worden bekeken.	This setting can only be viewed here.
+# the key is written by its own host method (data.method), which does more than this one key
+#@ new
+gsettings.useMethod	Deze instelling wordt op een andere plek gewijzigd.	This setting is changed somewhere else.
+# WinPoint's look holds the key (gnome_look::note); data.setting names the WinPoint setting the page links to
+#@ new
+gsettings.ownedByWinPoint	WinPoint regelt deze instelling zelf.	WinPoint manages this setting itself.
+# the value contains an accelerator WinPoint's extension holds (<Alt>Tab for Task View, Ctrl+Alt+Delete for Task Manager); data.accel, data.setting
+#@ new
+gsettings.heldByWinPoint	Deze sneltoets wordt al door WinPoint gebruikt.	WinPoint already uses this shortcut.
+# lockdown: the key is not writable (Windows: “Sommige van deze instellingen worden beheerd door je organisatie.”)
+#@ new
+gsettings.locked	Deze instelling wordt beheerd door je organisatie.	This setting is managed by your organisation.
+# the value has the wrong type for the key or is out of its range; data.key
+#@ new
+gsettings.badValue	Deze waarde is niet geldig voor deze instelling.	This value isn’t valid for this setting.
+# the call's arguments are malformed (no schema, a bad key name, a path that does not fit the schema)
+#@ new
+gsettings.badArgs	Ongeldige invoer.	Invalid input.
+# the schema or key is not installed on this computer; data.schema, data.key
+#@ new
+gsettings.unavailable	Deze instelling is op deze computer niet beschikbaar.	This setting isn’t available on this computer.
+# set_value refused the value
+#@ new
+gsettings.saveFailed	De instelling kon niet worden opgeslagen.	The setting couldn’t be saved.
+# the read-back after the write differs (another program changed it, or the backend ignored it); data.key
+#@ new
+gsettings.notTaken	De instelling is niet overgenomen.	The setting wasn’t applied.

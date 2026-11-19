@@ -313,6 +313,12 @@ impl Desk {
 
     pub fn apply_wallpaper(self: &Rc<Self>, instant: bool) {
         self.wall.apply(&self.shell, self.size.get(), self.scale(), instant);
+        super::screens::apply_wallpaper(self, instant);
+    }
+
+    /// Only the desktop's own wallpaper (screens.rs: where its monitor lies among the others changed).
+    pub fn apply_own_wallpaper(self: &Rc<Self>) {
+        self.wall.apply(&self.shell, self.size.get(), self.scale(), true);
     }
 
     fn on_resize(self: &Rc<Self>, w: i32, h: i32) {
@@ -542,7 +548,7 @@ impl Desk {
 
     pub fn compute_metrics(&self) -> Metrics {
         let (cw, ch, icon) = size_dims(&self.icon_size());
-        let ts = (self.shell.setting("accessibility.textScale").as_f64().unwrap_or(100.0)).clamp(100.0, 225.0) / 100.0;
+        let ts = crate::theme::look().text_scale;
         let cw = (cw + (ts - 1.0) * 24.0).round();
         let ch = (ch + (ts - 1.0) * 32.0).round();
         let bottom = if self.shell.setting("taskbar.autoHide") == true { 0.0 } else { crate::panel::BAR as f64 };
@@ -1630,6 +1636,12 @@ impl Desk {
         });
         let dot = if it.is_dir { None } else { name.rfind('.').filter(|i| *i > 0) };
         let end = dot.map(|i| name[..i].chars().count() as i32).unwrap_or(-1);
+        // Started from the desktop window of another monitor (its menu's Nieuw, screens.rs): that window has the
+        // keyboard, so this one asks for it (an activation of this client, which has the focus); the name typed next
+        // would go nowhere otherwise.
+        if !self.window.is_active() && super::screens::has_focus() {
+            self.window.present();
+        }
         let e = entry.clone();
         glib::idle_add_local_once(move || {
             e.grab_focus();

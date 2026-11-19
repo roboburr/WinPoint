@@ -19,6 +19,7 @@ tests/i18n/rust-literals.tsv	*	frozen-data	scan_rust.py's classification of ever
 tests/i18n/rust-frozen-all.tsv	*	frozen-data	every host literal at 3b898e6 (drift_rust.py --freeze reads git 3b898e6, never the tree)
 tests/i18n/BASELINE-CHANGES.rust*	*	frozen-data	append-only log of intended Dutch changes; its rows quote the removed literals (window.rs, window_state.rs, …)
 tests/i18n/BASELINE-CHANGES.ext	*	frozen-data	append-only log of intended text changes of the scripts and the extension
+tests/i18n/windows-glossary-baseline.json	WebKitGTK|JavaScriptCore|libsoup|GTK 3	frozen-data	pre-parity wording at af8eebdc; these entries name Ubuntu update packages for other apps, never WinPoint dependencies
 #
 # --- scenario outputs and baselines of the harness (records of runs; the WebKit-era ones show the WebKit apps)
 tests/gnome/scenarios/*.*/**	*	history	scenario output folders (*.out, *.prep, *.g67, r3-ontop.r3 …): what a run saw, WebKit-era runs included

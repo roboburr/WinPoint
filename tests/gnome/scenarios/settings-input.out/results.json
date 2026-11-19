@@ -1,0 +1,5404 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-17 01:32:29",
+ "seconds": 257.3,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 333,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 873218,
+   "rss_kb": 1103628,
+   "processes": 18,
+   "t": 161.8
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 504285,
+   "rss_kb": 733216
+  },
+  "minMemAvailableKb": 6206904,
+  "abortedForMemory": false,
+  "peakByName": {
+   "python3": {
+    "count": 2,
+    "pss_kb": 385770,
+    "rss_kb": 412568
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 318393,
+    "rss_kb": 373124
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 57045,
+    "rss_kb": 95940
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 40627,
+    "rss_kb": 71504
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 18465,
+    "rss_kb": 35116
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 15690,
+    "rss_kb": 24564
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 15651,
+    "rss_kb": 24248
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 11548,
+    "rss_kb": 19948
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4247,
+    "rss_kb": 11740
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2213,
+    "rss_kb": 4800
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1480,
+    "rss_kb": 9984
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 846,
+    "rss_kb": 7996
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 801,
+    "rss_kb": 7976
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 241,
+    "rss_kb": 1464
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 201,
+    "rss_kb": 2656
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 320251,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 210039,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 63899,
+    "first": 1.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 40903,
+    "first": 7.8
+   },
+   "glycin-svg": {
+    "pss_kb": 23438,
+    "first": 1.0
+   },
+   "nvidia-smi": {
+    "pss_kb": 19171,
+    "first": 7.8
+   },
+   "ibus-extension-": {
+    "pss_kb": 18580,
+    "first": 1.0
+   },
+   "win11-app": {
+    "pss_kb": 15867,
+    "first": 7.8
+   },
+   "win11-panel": {
+    "pss_kb": 15724,
+    "first": 1.6
+   },
+   "glycin-image-rs": {
+    "pss_kb": 8794,
+    "first": 1.6
+   },
+   "ibus-daemon": {
+    "pss_kb": 4265,
+    "first": 1.0
+   },
+   "strace": {
+    "pss_kb": 2222,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 864,
+    "first": 1.6
+   },
+   "ibus-memconf": {
+    "pss_kb": 863,
+    "first": 1.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 789,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 243,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 205,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/build/native-release",
+  "exit": 0,
+  "seconds": 61.3,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a"
+  }
+ },
+ "guardStubCalls": [
+  "01:33:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:46\tpw-dump\t--monitor --no-colors",
+  "01:33:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:48\tpw-dump\t--monitor --no-colors",
+  "01:33:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:52\tpw-dump\t--monitor --no-colors",
+  "01:33:53\tpw-dump\t--monitor --no-colors",
+  "01:33:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:55\tpw-dump\t--monitor --no-colors",
+  "01:33:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:33:59\tpw-dump\t--monitor --no-colors",
+  "01:33:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:00\tpw-dump\t--monitor --no-colors",
+  "01:34:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:07\tpw-dump\t--monitor --no-colors",
+  "01:34:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:16\tpw-dump\t--monitor --no-colors",
+  "01:34:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:23\tpw-dump\t--monitor --no-colors",
+  "01:34:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:47\tpw-dump\t--monitor --no-colors",
+  "01:34:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:53\tpw-dump\t--monitor --no-colors",
+  "01:34:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:34:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:10\tpkexec\t/usr/libexec/gnome-control-center-set-debian-keyboard nl,us ,intl",
+  "01:35:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:13\tpkexec\t/usr/libexec/gnome-control-center-set-debian-keyboard us,nl intl,",
+  "01:35:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:35:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "01:36:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 85,
+  "maxScanSeconds": 0.055,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-input.out/strace.txt"
+  ],
+  "connects": 246,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 110
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 21
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 26
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 7
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 8
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 28
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   }
+  ]
+ },
+ "straceExec": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-input.out/strace.txt"
+  ],
+  "execs": 470,
+  "ok": true,
+  "violations": [],
+  "forbidden": [
+   "pkexec",
+   "check-new-release",
+   "apt-get",
+   "apt-cache",
+   "do-release-upgrade",
+   "loginctl",
+   "apt",
+   "pkcon"
+  ],
+  "byProgram": [
+   {
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run/stubs/pkexec",
+    "where": "stub",
+    "result": "ran",
+    "count": 2
+   }
+  ],
+  "winpointPython": {
+   "execs": [],
+   "clicks": 0,
+   "perClick": {}
+  }
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-input.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "run/stubs mode"
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.42,
+    "args": {
+     "spec": "settings:mouse"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "mouse",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1357,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 1.56,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.56,
+    "args": {
+     "key": "caps"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 1.61,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": "muis"
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 2.22,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Return",
+     "name": "settings-search"
+    },
+    "result": {
+     "handled": true,
+     "key": "Return"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 2.88,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": ""
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.88,
+    "args": {
+     "key": "search 'muis'"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 3.49,
+    "args": {
+     "name": "search-mouse.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "search-mouse.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 274,
+      "meanLevel": 38.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 3.6,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": "touchpad"
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 4.21,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Return",
+     "name": "settings-search"
+    },
+    "result": {
+     "handled": true,
+     "key": "Return"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 4.93,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": ""
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.93,
+    "args": {
+     "key": "search 'touchpad'"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 5.04,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": "pen"
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 5.59,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Return",
+     "name": "settings-search"
+    },
+    "result": {
+     "handled": true,
+     "key": "Return"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 6.32,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": ""
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "record",
+    "t": 6.32,
+    "args": {
+     "key": "search 'pen'"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 6.43,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": "sneltoetsen"
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 7.04,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Return",
+     "name": "settings-search"
+    },
+    "result": {
+     "handled": true,
+     "key": "Return"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 7.72,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "settings-search",
+     "text": ""
+    },
+    "result": {
+     "typed": "settings-search"
+    }
+   },
+   {
+    "step": "record",
+    "t": 7.72,
+    "args": {
+     "key": "search 'sneltoetsen'"
+    }
+   },
+   {
+    "step": "open",
+    "t": 8.12,
+    "args": {
+     "spec": "settings:mouse"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "mouse",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 9.53,
+    "args": {
+     "name": "mouse.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mouse.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 304,
+      "meanLevel": 43.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.45,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "left-handed",
+     "path": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.45,
+    "args": {
+     "key": "mouse left-handed before"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.45,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "speed",
+     "path": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.45,
+    "args": {
+     "key": "mouse speed before"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.45,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.46,
+    "args": {
+     "key": "mouse accel-profile before"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.46,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "natural-scroll",
+     "path": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.46,
+    "args": {
+     "key": "mouse natural-scroll before"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 12.49,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "left-handed",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 12.49,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "left-handed",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 13.95,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "speed",
+     "path": null
+    },
+    "result": "0.5"
+   },
+   {
+    "step": "record",
+    "t": 13.95,
+    "args": {
+     "key": "mouse speed after a click at position 15"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 14.34,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null
+    },
+    "result": "'flat'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 14.34,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null
+    },
+    "result": "'flat'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 16.35,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "natural-scroll",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 16.35,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "natural-scroll",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "backend",
+    "t": 16.44,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 16.44,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "gtk-enable-primary-paste",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 16.9,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "gtk-enable-primary-paste",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 16.9,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "gtk-enable-primary-paste",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 16.98,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "gtk-enable-primary-paste",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 17.35,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null,
+     "value": "'default'"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 17.49,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null,
+     "value": "'flat'"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 17.87,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "left-handed",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 17.95,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "left-handed",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 18.62,
+    "args": {
+     "name": "mouse-set.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mouse-set.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 307,
+      "meanLevel": 44.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 20.95,
+    "args": {
+     "name": "mouse-properties.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mouse-properties.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 205,
+      "meanLevel": 40.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 21.12,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.12,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "middle-click-emulation",
+     "path": null
+    }
+   },
+   {
+    "step": "dev",
+    "t": 21.39,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-mouse-props-middle-click-emulation"
+    },
+    "result": {
+     "clicked": "st-mouse-props-middle-click-emulation"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.39,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "middle-click-emulation",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.39,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "middle-click-emulation",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 21.49,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "middle-click-emulation",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 21.6,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "double-click",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 23.13,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "double-click",
+     "path": null
+    },
+    "result": "700"
+   },
+   {
+    "step": "record",
+    "t": 23.13,
+    "args": {
+     "key": "double-click after a real click at step 4"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 23.53,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "tab-options"
+    },
+    "result": {
+     "clicked": "tab-options"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 24.33,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 24.33,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null
+    }
+   },
+   {
+    "step": "dev",
+    "t": 24.63,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-mouse-props-locate-pointer"
+    },
+    "result": {
+     "clicked": "st-mouse-props-locate-pointer"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 24.63,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 24.63,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 24.83,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "locate-pointer",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 25.15,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.15,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null
+    },
+    "result": "'flat'"
+   },
+   {
+    "step": "dev",
+    "t": 25.55,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-mouse-props-accel-profile"
+    },
+    "result": {
+     "clicked": "st-mouse-props-accel-profile"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.55,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null
+    },
+    "result": "'default'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 25.55,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null
+    },
+    "result": "'default'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 25.75,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.mouse",
+     "key": "accel-profile",
+     "path": null,
+     "value": "'flat'"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 26.52,
+    "args": {
+     "name": "mouse-properties-options.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mouse-properties-options.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 214,
+      "meanLevel": 37.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 28.21,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 31.17,
+    "args": {
+     "name": "mouse-test.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "mouse-test.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 214,
+      "meanLevel": 38.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 31.31,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 31.81,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 32.29,
+    "args": {
+     "spec": "settings:touchpad"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "touchpad",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 33.74,
+    "args": {
+     "name": "touchpad.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "touchpad.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 297,
+      "meanLevel": 43.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 34.72,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null
+    },
+    "result": "'disabled'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 34.72,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null
+    },
+    "result": "'disabled'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 35.01,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null,
+     "value": "'enabled'"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 35.31,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 35.31,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null
+    },
+    "result": "'enabled'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 35.78,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null
+    },
+    "result": "'disabled-on-external-mouse'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 35.78,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null
+    },
+    "result": "'disabled-on-external-mouse'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 35.93,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null,
+     "value": "'enabled'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 36.09,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "speed",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 37.71,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "speed",
+     "path": null
+    },
+    "result": "0.59999999999999998"
+   },
+   {
+    "step": "backend",
+    "t": 39.58,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 39.58,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "disable-while-typing",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.07,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "disable-while-typing",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.07,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "disable-while-typing",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 40.24,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "disable-while-typing",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 40.76,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 40.76,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 41.25,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 41.25,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 41.42,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 42.93,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 42.93,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "click-method",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 43.41,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "click-method",
+     "path": null
+    },
+    "result": "'areas'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 43.41,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "click-method",
+     "path": null
+    },
+    "result": "'areas'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 43.59,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "click-method",
+     "path": null,
+     "value": "'fingers'"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 43.78,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 43.78,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 44.32,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 44.32,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-and-drag",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 44.83,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-and-drag",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 44.83,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-and-drag",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 45.02,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-and-drag",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 45.21,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 45.21,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 45.61,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 46.37,
+    "args": {
+     "name": "touchpad-taps.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "touchpad-taps.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 292,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 48.82,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "edge-scrolling-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 48.82,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "edge-scrolling-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 48.82,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "two-finger-scrolling-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 48.82,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "two-finger-scrolling-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "backend",
+    "t": 48.82,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 51.52,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "natural-scroll",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 51.52,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "natural-scroll",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "screenshot",
+    "t": 52.09,
+    "args": {
+     "name": "touchpad-open.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "touchpad-open.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 298,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 55.67,
+    "args": {
+     "name": "touchpad-gestures.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "touchpad-gestures.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 313,
+      "meanLevel": 42.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 59.89,
+    "args": {
+     "name": "touchpad-reset.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "touchpad-reset.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 308,
+      "meanLevel": 43.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 59.89,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.89,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "send-events",
+     "path": null
+    },
+    "result": "'enabled'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.89,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "edge-scrolling-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.89,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "two-finger-scrolling-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.9,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "speed",
+     "path": null
+    },
+    "result": "0.59999999999999998"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.9,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "tap-to-click",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.9,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "disable-while-typing",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.9,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "click-method",
+     "path": null
+    },
+    "result": "'fingers'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.9,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.touchpad",
+     "key": "natural-scroll",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "backend",
+    "t": 60.13,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 60.74,
+    "args": {
+     "spec": "settings:pen"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "pen",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 62.37,
+    "args": {
+     "name": "pen.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "pen.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 236,
+      "meanLevel": 36.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 62.95,
+    "args": {
+     "spec": "settings:typing"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "typing",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 64.59,
+    "args": {
+     "name": "typing.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "typing.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 299,
+      "meanLevel": 42.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 67.96,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 67.96,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 70.57,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 70.57,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 70.57,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 70.83,
+    "args": {
+     "schema": "org.gnome.desktop.a11y.applications",
+     "key": "screen-keyboard-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "open",
+    "t": 71.41,
+    "args": {
+     "spec": "settings:language-options"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "language-options",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 73.11,
+    "args": {
+     "name": "language-options.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-options.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 267,
+      "meanLevel": 39.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 73.44,
+    "args": {
+     "key": "standin.polkit-challenge"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 74.76,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-language-options-search",
+     "text": "Nederlands"
+    },
+    "result": {
+     "typed": "st-language-options-search"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 76.12,
+    "args": {
+     "name": "language-options-add.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-options-add.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 221,
+      "meanLevel": 33.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 76.91,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-language-options-choice-xkb-nl"
+    },
+    "result": {
+     "clicked": "st-language-options-choice-xkb-nl"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 76.91,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'nl')]"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 76.91,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'nl')]"
+   },
+   {
+    "step": "record",
+    "t": 76.91,
+    "args": {
+     "key": "polkit (challenge) calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 78.26,
+    "args": {
+     "key": "standin.polkit"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 78.26,
+    "args": {
+     "surface": "settings",
+     "method": "input.sources.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "dev",
+    "t": 80.99,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-language-options-up"
+    },
+    "result": {
+     "clicked": "st-language-options-up"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 81.59,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'us+intl'), ('xkb', 'nl')]"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 81.59,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'us+intl'), ('xkb', 'nl')]"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 81.6,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'us+intl'), ('xkb', 'nl')]"
+   },
+   {
+    "step": "record",
+    "t": 81.6,
+    "args": {
+     "key": "polkit calls"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 82.18,
+    "args": {
+     "name": "language-options-two.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-options-two.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 278,
+      "meanLevel": 41.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 82.18,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 82.8,
+    "args": {
+     "spec": "settings:keyboard-advanced"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "keyboard-advanced",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 84.5,
+    "args": {
+     "name": "keyboard-advanced.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "keyboard-advanced.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 336,
+      "meanLevel": 43.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 89.78,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'nl'), ('xkb', 'us+intl')]"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 89.78,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "sources",
+     "path": null
+    },
+    "result": "[('xkb', 'nl'), ('xkb', 'us+intl')]"
+   },
+   {
+    "step": "backend",
+    "t": 90.37,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 90.38,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "per-window",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 90.98,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "per-window",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 90.99,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "per-window",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 91.29,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "per-window",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 94.92,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "xkb-options",
+     "path": null
+    },
+    "result": "['compose:rctrl']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 94.93,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "xkb-options",
+     "path": null
+    },
+    "result": "['compose:rctrl']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.8,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "xkb-options",
+     "path": null
+    },
+    "result": "['compose:rctrl', 'lv3:menu_switch']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.8,
+    "args": {
+     "schema": "org.gnome.desktop.input-sources",
+     "key": "xkb-options",
+     "path": null
+    },
+    "result": "['compose:rctrl', 'lv3:menu_switch']"
+   },
+   {
+    "step": "backend",
+    "t": 98.11,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.11,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "repeat",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.74,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "repeat",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.74,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "repeat",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 99.07,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "repeat",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 99.41,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "delay",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 101.35,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "delay",
+     "path": null
+    },
+    "result": "500"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 101.35,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "repeat-interval",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 104.5,
+    "args": {
+     "schema": "org.gnome.desktop.peripherals.keyboard",
+     "key": "repeat-interval",
+     "path": null
+    },
+    "result": "90"
+   },
+   {
+    "step": "backend",
+    "t": 104.82,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 104.83,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "overlay-key",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 105.46,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "overlay-key",
+     "path": null
+    },
+    "result": "''"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 105.46,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "overlay-key",
+     "path": null
+    },
+    "result": "''"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 105.81,
+    "args": {
+     "schema": "org.gnome.mutter",
+     "key": "overlay-key",
+     "path": null,
+     "value": "'Super'"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 108.14,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 109.74,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 110.31,
+    "args": {
+     "name": "keyboard-advanced-set.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "keyboard-advanced-set.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 313,
+      "meanLevel": 44.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 110.63,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 113.02,
+    "args": {
+     "spec": "settings:shortcuts"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1357,
+     "page": "shortcuts",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 114.9,
+    "args": {
+     "name": "shortcuts.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "shortcuts.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 264,
+      "meanLevel": 42.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 121.09,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Sneltoetsen – Instellingen",
+     "dutchWordHits": [
+      "aangepaste",
+      "actieve",
+      "afmelden",
+      "afsluiten",
+      "afspelen",
+      "alle",
+      "als",
+      "andere",
+      "anders",
+      "apparaten",
+      "beeldscherm",
+      "beveiliging",
+      "bij",
+      "boven",
+      "bureaublad",
+      "dempen",
+      "een",
+      "eigen",
+      "gebruik",
+      "geluid",
+      "gerelateerde",
+      "groter",
+      "herstel",
+      "herstellen",
+      "het",
+      "hun",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "klik",
+      "laatste",
+      "lokaal",
+      "maken",
+      "maximaliseren",
+      "meer",
+      "melding",
+      "met",
+      "minimaliseren",
+      "naar",
+      "navigatie",
+      "netwerk",
+      "om",
+      "omhoog",
+      "onder",
+      "onderbreken",
+      "opdracht",
+      "openen",
+      "opheffen",
+      "opnieuw",
+      "opstarten",
+      "opties",
+      "persoonlijke",
+      "plaatsen",
+      "rechts",
+      "scherm",
+      "selecteren",
+      "sluiten",
+      "snelle",
+      "sneltoetsen",
+      "standaardwaarden",
+      "starten",
+      "startpagina",
+      "stoppen",
+      "systeem",
+      "taakbeheer",
+      "taakweergave",
+      "taal",
+      "te",
+      "tekst",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "toets",
+      "toetsenbord",
+      "toevoegen",
+      "tussen",
+      "typen",
+      "uitgeschakeld",
+      "uitlijnen",
+      "uitschakelen",
+      "uitvoeren",
+      "uitwerpen",
+      "van",
+      "venster",
+      "vensters",
+      "verbergen",
+      "vergrendelen",
+      "verplaatsen",
+      "volgende",
+      "volledig",
+      "voren",
+      "vorige",
+      "webbrowser",
+      "weergeven",
+      "wijzigen",
+      "zoek",
+      "zoeken",
+      "één"
+     ],
+     "chars": 8978
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Sneltoetsen – Instellingen",
+     "titles": [
+      "Sneltoetsen – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTijd en taal\nTypen\nTypen\nSneltoetsen\nSneltoetsen zoeken\nZoeken\nWinPoint\n3 sneltoetsen\nTaakweergave openen\nAlt + Tab\nAlt\nTab\nMeer opties\nTaakbeheer openen\nCtrl + Alt + Delete\nCtrl\nAlt\nDelete\nMeer opties\nStart openen\nWindows-toets. In- of uitschakelen bij Geavanceerde toetsenbordinstellingen\nWindows\nToegankelijkheid\n8 sneltoetsen\nVergrootglas in- of uitschakelen\nWindows + Alt + 8\nWindows\nAlt\n8\nMeer opties\nInzoomen\nWindows + Alt + =\nWindows\nAlt\n=\nMeer opties\nUitzoomen\nWindows + Alt + -\nWindows\nAlt\n-\nMeer opties\nVerteller in- of uitschakelen\nWindows + Alt + S\nWindows\nAlt\nS\nMeer opties\nSchermtoetsenbord in- of uitschakelen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nTekst groter maken\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nTekst kleiner maken\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nContrastthema in- of uitschakelen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nStarters\n8 sneltoetsen\nHelp-browser starten\nWindows + F1\nWindows\nF1\nMeer opties\nInstellingen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nRekenmachine starten\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nE-mailprogramma starten\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nTerminal starten\nCtrl + Alt + T\nCtrl\nAlt\nT\nMeer opties\nWebbrowser starten\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nPersoonlijke map\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nZoeken\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nNavigatie\n26 sneltoetsen\nVenster naar bureaublad 1 verplaatsen\nWindows + Shift + Home\nWindows\nShift\nHome\nMeer opties\nVenster naar bureaublad 2 verplaatsen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster naar bureaublad 3 verplaatsen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster naar bureaublad 4 verplaatsen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster naar het laatste bureaublad verplaatsen\nWindows + Shift + End\nWindows\nShift\nEnd\nMeer opties\nVenster één bureaublad naar links verplaatsen\nWindows + Shift + Page Up, Windows + Shift + Num Prior, Windows + Alt + Shift + Pijl-links, Ctrl + Alt + Shift + Pijl-links\nWindows\nShift\nPage Up\n+3\nMeer opties\nVenster één bureaublad naar rechts verplaatsen\nWindows + Shift + Page Down, Windows + Shift + Num Next, Windows + Alt + Shift + Pijl-rechts, Ctrl + Alt + Shift + Pijl-rechts\nWindows\nShift\nPage Down\n+3\nMeer opties\nVenster één beeldscherm naar links verplaatsen\nWindows + Shift + Pijl-links\nWindows\nShift\nPijl-links\nMeer opties\nVenster één beeldscherm naar rechts verplaatsen\nWindows + Shift + Pijl-rechts\nWindows\nShift\nPijl-rechts\nMeer opties\nVenster één beeldscherm omhoog verplaatsen\nWindows + Shift + Pijl-omhoog\nWindows\nShift\nPijl-omhoog\nMeer opties\nVenster één beeldscherm omlaag verplaatsen\nWindows + Shift + Pijl-omlaag\nWindows\nShift\nPijl-omlaag\nMeer opties\nSchakelen tussen apps\nAlt + Tab: In gebruik door Taakweergave\nWindows + Tab\nWindows\nTab\nMeer opties\nSchakelen tussen vensters\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nSchakelen tussen vensters van een app\nWindows + Toets boven Tab, Alt + Toets boven Tab\nWindows\nToets boven Tab\n+1\nMeer opties\nSchakelen tussen systeembesturingselementen\nCtrl + Alt + Tab\nCtrl\nAlt\nTab\nMeer opties\nDirect schakelen tussen vensters\nAlt + Esc\nAlt\nEsc\nMeer opties\nDirect schakelen tussen vensters van een app\nAlt + F6\nAlt\nF6\nMeer opties\nDirect schakelen tussen systeembesturingselementen\nCtrl + Alt + Esc\nCtrl\nAlt\nEsc\nMeer opties\nAlle vensters verbergen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nNaar bureaublad 1 schakelen\nWindows + Home\nWindows\nHome\nMeer opties\nNaar bureaublad 2 schakelen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nNaar bureaublad 3 schakelen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nNaar bureaublad 4 schakelen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nNaar het laatste bureaublad schakelen\nWindows + End\nWindows\nEnd\nMeer opties\nNaar het bureaublad links schakelen\nWindows + Page Up, Windows + Num Prior, Windows + Alt + Pijl-links, Ctrl + Alt + Pijl-links\nWindows\nPage Up\n+3\nMeer opties\nNaar het bureaublad rechts schakelen\nWindows + Page Down, Windows + Num Next, Windows + Alt + Pijl-rechts, Ctrl + Alt + Pijl-rechts\nWindows\nPage Down\n+3\nMeer opties\nSchermafbeeldingen\n4 sneltoetsen\nInteractief een schermafbeelding maken\nPrint Screen\nPrint Screen\nMeer opties\nEen schermafbeelding maken\nShift + Print Screen\nShift\nPrint Screen\nMeer opties\nEen schermafbeelding van een venster maken\nAlt + Print Screen\nAlt\nPrint Screen\nMeer opties\nInteractief een schermopname maken\nCtrl + Alt + Shift + R\nCtrl\nAlt\nShift\nR\nMeer opties\nGeluid en media\n11 sneltoetsen\nGeluid dempen of dempen opheffen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVolume omlaag\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVolume omhoog\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nMicrofoon dempen of dempen opheffen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nMediaspeler starten\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nAfspelen (of afspelen/onderbreken)\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nAfspelen onderbreken\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nAfspelen stoppen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVorig nummer\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVolgend nummer\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nUitwerpen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nSysteem\n11 sneltoetsen\nAfmelden\nCtrl + Alt + Delete: In gebruik door Taakbeheer\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nOpnieuw opstarten\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nAfsluiten\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nScherm vergrendelen\nWindows + L\nWindows\nL\nMeer opties\nDe meldingenlijst weergeven\nWindows + V, Windows + M\nWindows\nV\n+1\nMeer opties\nSnelle instellingen openen\nWindows + S\nWindows\nS\nMeer opties\nDe actieve melding selecteren\nWindows + N\nWindows\nN\nMeer opties\nHet activiteitenoverzicht weergeven\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nAlle apps weergeven\nWindows + A\nWindows\nA\nMeer opties\nHet venster Uitvoeren weergeven\nAlt + F2\nAlt\nF2\nMeer opties\nDe sneltoetsen terugzetten\nWindows + Esc\nWindows\nEsc\nMeer opties\nTypen\n2 sneltoetsen\nNaar de volgende invoermethode schakelen\nWindows + Spatiebalk, Keyboard\nWindows\nSpatiebalk\n+1\nMeer opties\nNaar de vorige invoermethode schakelen\nWindows + Shift + Spatiebalk, Shift + Keyboard\nWindows\nShift\nSpatiebalk\n+1\nMeer opties\nVensters\n17 sneltoetsen\nHet venstermenu openen\nAlt + Spatiebalk\nAlt\nSpatiebalk\nMeer opties\nVolledig scherm in- of uitschakelen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster maximaliseren of herstellen\nAlt + F10\nAlt\nF10\nMeer opties\nVenster maximaliseren\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster herstellen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster sluiten\nAlt + F4\nAlt\nF4\nMeer opties\nVenster minimaliseren\nWindows + H\nWindows\nH\nMeer opties\nVenster verplaatsen\nAlt + F7\nAlt\nF7\nMeer opties\nFormaat van venster wijzigen\nAlt + F8\nAlt\nF8\nMeer opties\nVenster op alle bureaubladen of op één weergeven\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster naar voren halen als het bedekt is, anders naar achteren\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster boven andere vensters plaatsen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster onder andere vensters plaatsen\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster verticaal maximaliseren\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster horizontaal maximaliseren\nKlik om een sneltoets in te stellen\nUitgeschakeld\nMeer opties\nVenster links uitlijnen\nWindows + Pijl-links\nWindows\nPijl-links\nMeer opties\nVenster rechts uitlijnen\nWindows + Pijl-rechts\nWindows\nPijl-rechts\nMeer opties\nAangepaste sneltoetsen\n0 sneltoetsen\nEen aangepaste sneltoets toevoegen\nEen opdracht starten met een eigen toetsencombinatie\nSneltoets toevoegen\nSneltoets toevoegen\nAlle sneltoetsen opnieuw instellen\nDe sneltoetsen van GNOME op hun standaardwaarden zetten\nAlles opnieuw instellen…\nAlles opnieuw instellen…\nGerelateerde instellingen\nGeavanceerde toetsenbordinstellingen\nInvoermethode, tekenherhaling, Windows-toets\nToegankelijkheid van toetsenbord\nPlaktoetsen, filtertoetsen, schermtoetsenbord",
+     "dutchWordHits": [
+      "aangepaste",
+      "actieve",
+      "afmelden",
+      "afsluiten",
+      "afspelen",
+      "alle",
+      "als",
+      "andere",
+      "anders",
+      "apparaten",
+      "beeldscherm",
+      "beveiliging",
+      "bij",
+      "boven",
+      "bureaublad",
+      "dempen",
+      "een",
+      "eigen",
+      "gebruik",
+      "geluid",
+      "gerelateerde",
+      "groter",
+      "herstel",
+      "herstellen",
+      "het",
+      "hun",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "klik",
+      "laatste",
+      "lokaal",
+      "maken",
+      "maximaliseren",
+      "meer",
+      "melding",
+      "met",
+      "minimaliseren",
+      "naar",
+      "navigatie",
+      "netwerk",
+      "om",
+      "omhoog",
+      "onder",
+      "onderbreken",
+      "opdracht",
+      "openen",
+      "opheffen",
+      "opnieuw",
+      "opstarten",
+      "opties",
+      "persoonlijke",
+      "plaatsen",
+      "rechts",
+      "scherm",
+      "selecteren",
+      "sluiten",
+      "snelle",
+      "sneltoetsen",
+      "standaardwaarden",
+      "starten",
+      "startpagina",
+      "stoppen",
+      "systeem",
+      "taakbeheer",
+      "taakweergave",
+      "taal",
+      "te",
+      "tekst",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "toets",
+      "toetsenbord",
+      "toevoegen",
+      "tussen",
+      "typen",
+      "uitgeschakeld",
+      "uitlijnen",
+      "uitschakelen",
+      "uitvoeren",
+      "uitwerpen",
+      "van",
+      "venster",
+      "vensters",
+      "verbergen",
+      "vergrendelen",
+      "verplaatsen",
+      "volgende",
+      "volledig",
+      "voren",
+      "vorige",
+      "webbrowser",
+      "weergeven",
+      "wijzigen",
+      "zoek",
+      "zoeken",
+      "één"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 131.85,
+    "args": {
+     "name": "shortcuts-capture.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "shortcuts-capture.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 240,
+      "meanLevel": 34.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 132.06,
+    "args": {
+     "key": "keys Super+Q"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 132.07,
+    "args": {
+     "schema": "org.gnome.desktop.wm.keybindings",
+     "key": "close",
+     "path": null
+    },
+    "result": "['<Super>q']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 132.07,
+    "args": {
+     "schema": "org.gnome.desktop.wm.keybindings",
+     "key": "close",
+     "path": null
+    },
+    "result": "['<Super>q']"
+   },
+   {
+    "step": "backend",
+    "t": 132.07,
+    "args": {
+     "surface": "settings",
+     "method": "input.shortcuts.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 132.07,
+    "args": {
+     "schema": "org.gnome.desktop.wm.keybindings",
+     "key": "close",
+     "path": null
+    },
+    "result": "['<Super>q']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 132.08,
+    "args": {
+     "schema": "org.gnome.desktop.wm.keybindings",
+     "key": "close",
+     "path": null
+    },
+    "result": "['<Super>q']"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 133.32,
+    "args": {
+     "schema": "org.gnome.desktop.wm.keybindings",
+     "key": "close",
+     "path": null,
+     "value": "['<Alt>F4']"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 147.1,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-shortcuts-custom-name",
+     "text": "Terminal"
+    },
+    "result": {
+     "typed": "st-shortcuts-custom-name"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 147.63,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-shortcuts-custom-command",
+     "text": "kgx"
+    },
+    "result": {
+     "typed": "st-shortcuts-custom-command"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 148.19,
+    "args": {
+     "name": "shortcuts-custom.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "shortcuts-custom.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 242,
+      "meanLevel": 33.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 149.32,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.33,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.media-keys",
+     "key": "custom-keybindings",
+     "path": null
+    },
+    "result": "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 149.33,
+    "args": {
+     "schema": "org.gnome.settings-daemon.plugins.media-keys",
+     "key": "custom-keybindings",
+     "path": null
+    },
+    "result": "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+   },
+   {
+    "step": "backend",
+    "t": 149.33,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 163.43,
+    "args": {
+     "name": "shortcuts-reset.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "shortcuts-reset.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 241,
+      "meanLevel": 31.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 164.73,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 166.23,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 166.24,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 166.24,
+    "args": {
+     "key": "click inputs"
+    }
+   },
+   {
+    "step": "close",
+    "t": 166.76,
+    "args": {
+     "name": "settings"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "the tool seam run/stubs is private (no group or world write), so system_tool uses the stubs",
+    "ok": true,
+    "t": 0.81,
+    "was": "0o775"
+   },
+   {
+    "check": "wait_text settings: 'Primaire muisknop'",
+    "ok": true,
+    "t": 1.52,
+    "seconds": 0.1
+   },
+   {
+    "check": "the search finds Muis first, before Toegankelijkheid > Muis (amendment 65)",
+    "ok": true,
+    "t": 2.88,
+    "hits": [
+     "mouse",
+     "a11y-mouse",
+     "mousepointer",
+     "bluetooth"
+    ]
+   },
+   {
+    "check": "Touchpad is in the search exactly while caps has a touchpad",
+    "ok": true,
+    "t": 4.93,
+    "hits": [],
+    "touchpad": false
+   },
+   {
+    "check": "Pen en tablet is in the search exactly while caps has a tablet",
+    "ok": true,
+    "t": 6.32,
+    "hits": [
+     "typing",
+     "searching",
+     "power",
+     "system-advanced",
+     "sound",
+     "clipboard",
+     "colors",
+     "defaultapps",
+     "start",
+     "vpn",
+     "installed",
+     "flightmode"
+    ],
+    "tablet": false
+   },
+   {
+    "check": "Sneltoetsen (needs gnome) is in the search while caps.gnome",
+    "ok": true,
+    "t": 7.72,
+    "hits": [
+     "shortcuts",
+     "typing"
+    ],
+    "gnome": true
+   },
+   {
+    "check": "mouse: st-mouse-left-handed is on the page",
+    "ok": true,
+    "t": 8.23
+   },
+   {
+    "check": "mouse: title and breadcrumb \"Bluetooth en apparaten > Muis\"",
+    "ok": true,
+    "t": 8.94,
+    "got": [
+     [
+      "bluetooth",
+      "Bluetooth en apparaten"
+     ],
+     [
+      null,
+      "Muis"
+     ]
+    ],
+    "want": [
+     "Bluetooth en apparaten",
+     "Muis"
+    ]
+   },
+   {
+    "check": "Muis has st-mouse-left-handed",
+    "ok": true,
+    "t": 9.65
+   },
+   {
+    "check": "Muis has st-mouse-mouse-speed",
+    "ok": true,
+    "t": 9.76
+   },
+   {
+    "check": "Muis has st-mouse-mouse-accel-profile",
+    "ok": true,
+    "t": 9.82
+   },
+   {
+    "check": "Muis has st-mouse-natural-scroll",
+    "ok": true,
+    "t": 9.95
+   },
+   {
+    "check": "Muis has st-mouse-gtk-enable-primary-paste",
+    "ok": true,
+    "t": 10.06
+   },
+   {
+    "check": "Muis has st-mouse-more",
+    "ok": true,
+    "t": 10.13
+   },
+   {
+    "check": "Muis has st-mouse-test",
+    "ok": true,
+    "t": 10.25
+   },
+   {
+    "check": "the pointing-stick group shows exactly while caps has one",
+    "ok": true,
+    "t": 10.32
+   },
+   {
+    "check": "Inactieve vensters schuiven is on and fixed (GNOME always scrolls the window under the pointer)",
+    "ok": true,
+    "t": 10.45
+   },
+   {
+    "check": "Primaire muisknop Rechts writes left-handed true",
+    "ok": true,
+    "t": 12.49,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Snelheid van muisaanwijzer at position 15 writes speed 0.5 ((n - 10) / 10)",
+    "ok": true,
+    "t": 13.95,
+    "value": "0.5",
+    "exact": true
+   },
+   {
+    "check": "Nauwkeurigheid van aanwijzer verbeteren off writes accel-profile flat",
+    "ok": true,
+    "t": 14.34,
+    "want": "'flat'",
+    "value": "'flat'"
+   },
+   {
+    "check": "Schuifrichting \"down motion scrolls up\" writes natural-scroll true",
+    "ok": true,
+    "t": 16.36,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Plakken met de middelste muisknop: a click writes gtk-enable-primary-paste true",
+    "ok": true,
+    "t": 16.9,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Plakken met de middelste muisknop: the control shows the new value",
+    "ok": true,
+    "t": 16.98,
+    "active": true
+   },
+   {
+    "check": "Plakken met de middelste muisknop: gtk-enable-primary-paste false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 17.35
+   },
+   {
+    "check": "an outside write of accel-profile moves the switch (gsettings.changed)",
+    "ok": true,
+    "t": 17.49
+   },
+   {
+    "check": "left-handed false written from outside shows Primaire muisknop Links",
+    "ok": true,
+    "t": 17.95
+   },
+   {
+    "check": "mouse: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 18.79,
+    "left": [],
+    "flipped": [
+     "st-mouse-gtk-enable-primary-paste",
+     "st-mouse-mouse-accel-profile"
+    ],
+    "skipped": [
+     "st-mouse-scroll-inactive"
+    ]
+   },
+   {
+    "check": "Aanvullende muisinstellingen opens Eigenschappen voor Muis",
+    "ok": true,
+    "t": 20.39
+   },
+   {
+    "check": "its swap box follows the page (left-handed true)",
+    "ok": true,
+    "t": 20.39,
+    "node": {
+     "active": true,
+     "children": [
+      {
+       "children": [],
+       "classes": [],
+       "label": null,
+       "name": "GtkBuiltinIcon",
+       "rect": [
+        218,
+        266,
+        20,
+        20
+       ],
+       "sensitive": true,
+       "type": "GtkBuiltinIcon",
+       "visible": true
+      },
+      {
+       "children": [],
+       "classes": [],
+       "label": "Primaire en secundaire knop omwisselen",
+       "name": "GtkLabel",
+       "rect": [
+        246,
+        266,
+        636,
+        20
+       ],
+       "sensitive": true,
+       "type": "GtkLabel",
+       "visible": true
+      }
+     ],
+     "classes": [
+      "text-button",
+      "w11-check"
+     ],
+     "label": null,
+     "name": "st-mouse-props-left-handed",
+     "rect": [
+      218,
+      260,
+      664,
+      32
+     ],
+     "sensitive": true,
+     "type": "GtkCheckButton",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "Middelste klik nabootsen: a click writes middle-click-emulation true",
+    "ok": true,
+    "t": 21.39,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Middelste klik nabootsen: the control shows the new value",
+    "ok": true,
+    "t": 21.49,
+    "active": true
+   },
+   {
+    "check": "Middelste klik nabootsen: middle-click-emulation false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 21.6
+   },
+   {
+    "check": "Dubbelkliksnelheid at step 4 writes double-click 700 ms (1000 - 100 (n - 1))",
+    "ok": true,
+    "t": 23.13,
+    "value": "700",
+    "before": null
+   },
+   {
+    "check": "Eigenschappen voor Muis has the tab Opties voor aanwijzer",
+    "ok": true,
+    "t": 23.31
+   },
+   {
+    "check": "the tab Opties voor aanwijzer is selected",
+    "ok": true,
+    "t": 24.22
+   },
+   {
+    "check": "Locatie van aanwijzer weergeven: a click writes locate-pointer true",
+    "ok": true,
+    "t": 24.63,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Locatie van aanwijzer weergeven: the control shows the new value",
+    "ok": true,
+    "t": 24.83,
+    "active": true
+   },
+   {
+    "check": "Locatie van aanwijzer weergeven: locate-pointer false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 25.03
+   },
+   {
+    "check": "Nauwkeurigheid van aanwijzer verbeteren (Eigenschappen): a click writes accel-profile 'default'",
+    "ok": true,
+    "t": 25.55,
+    "want": "'default'",
+    "value": "'default'"
+   },
+   {
+    "check": "Nauwkeurigheid van aanwijzer verbeteren (Eigenschappen): the control shows the new value",
+    "ok": true,
+    "t": 25.75,
+    "active": true
+   },
+   {
+    "check": "Nauwkeurigheid van aanwijzer verbeteren (Eigenschappen): accel-profile 'flat' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 25.96
+   },
+   {
+    "check": "a real pointer click on a kit Dialog button registers",
+    "ok": false,
+    "t": 28.09,
+    "known": "kit-dialog-claims-presses"
+   },
+   {
+    "check": "Instellingen testen opens the test dialog",
+    "ok": true,
+    "t": 29.64
+   },
+   {
+    "check": "a click in the test area ticks Primaire klik",
+    "ok": true,
+    "t": 30.62
+   },
+   {
+    "check": "Muis: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 31.81,
+    "owned": [],
+    "keys": 8,
+    "items": 8
+   },
+   {
+    "check": "touchpad: st-touchpad-expander is on the page",
+    "ok": true,
+    "t": 32.43
+   },
+   {
+    "check": "touchpad: title and breadcrumb \"Bluetooth en apparaten > Touchpad\"",
+    "ok": true,
+    "t": 33.16,
+    "got": [
+     [
+      "bluetooth",
+      "Bluetooth en apparaten"
+     ],
+     [
+      null,
+      "Touchpad"
+     ]
+    ],
+    "want": [
+     "Bluetooth en apparaten",
+     "Touchpad"
+    ]
+   },
+   {
+    "check": "without a touchpad the page says so",
+    "ok": true,
+    "t": 33.88
+   },
+   {
+    "check": "the Touchpad switch off writes send-events disabled",
+    "ok": true,
+    "t": 34.72,
+    "want": "'disabled'",
+    "value": "'disabled'"
+   },
+   {
+    "check": "a click on the header switch leaves the expander open (w11-expanded)",
+    "ok": true,
+    "t": 34.87
+   },
+   {
+    "check": "... and makes the mouse box insensitive",
+    "ok": true,
+    "t": 35.01
+   },
+   {
+    "check": "send-events 'enabled' written from outside turns the switch on",
+    "ok": true,
+    "t": 35.16
+   },
+   {
+    "check": "Touchpad ingeschakeld laten wanneer er een muis is aangesloten: a click writes send-events 'disabled-on-external-mouse'",
+    "ok": true,
+    "t": 35.78,
+    "want": "'disabled-on-external-mouse'",
+    "value": "'disabled-on-external-mouse'"
+   },
+   {
+    "check": "Touchpad ingeschakeld laten wanneer er een muis is aangesloten: the control shows the new value",
+    "ok": true,
+    "t": 35.93,
+    "active": false
+   },
+   {
+    "check": "Touchpad ingeschakeld laten wanneer er een muis is aangesloten: send-events 'enabled' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 36.09
+   },
+   {
+    "check": "Cursorsnelheid: a click at 8 writes speed near 0.6",
+    "ok": true,
+    "t": 37.71,
+    "value": "0.59999999999999998",
+    "want": 0.6,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Tikken has no sensitivity drop-down (amendment 67)",
+    "ok": true,
+    "t": 39.25
+   },
+   {
+    "check": "Touchpad uitschakelen tijdens het typen: a click writes disable-while-typing false",
+    "ok": true,
+    "t": 40.07,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Touchpad uitschakelen tijdens het typen: the control shows the new value",
+    "ok": true,
+    "t": 40.24,
+    "active": false
+   },
+   {
+    "check": "Touchpad uitschakelen tijdens het typen: disable-while-typing true written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 40.41
+   },
+   {
+    "check": "Met één vinger tikken: a click writes tap-to-click false",
+    "ok": true,
+    "t": 41.25,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Met één vinger tikken: the control shows the new value",
+    "ok": true,
+    "t": 41.42,
+    "active": false
+   },
+   {
+    "check": "Met één vinger tikken: tap-to-click true written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 41.6
+   },
+   {
+    "check": "Rechterbenedenhoek: a click writes click-method 'areas'",
+    "ok": true,
+    "t": 43.41,
+    "want": "'areas'",
+    "value": "'areas'"
+   },
+   {
+    "check": "Rechterbenedenhoek: the control shows the new value",
+    "ok": true,
+    "t": 43.59,
+    "active": true
+   },
+   {
+    "check": "Rechterbenedenhoek: click-method 'fingers' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 43.77
+   },
+   {
+    "check": "Twee keer tikken en slepen: a click writes tap-and-drag false",
+    "ok": true,
+    "t": 44.83,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Twee keer tikken en slepen: the control shows the new value",
+    "ok": true,
+    "t": 45.02,
+    "active": false
+   },
+   {
+    "check": "Twee keer tikken en slepen: tap-and-drag true written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 45.21
+   },
+   {
+    "check": "without tap-to-click, tapping and dragging is insensitive and the fixed two-finger box unticked",
+    "ok": true,
+    "t": 45.61
+   },
+   {
+    "check": "with tap-to-click the fixed two-finger box is ticked",
+    "ok": true,
+    "t": 45.8
+   },
+   {
+    "check": "Schuiven langs de rand writes edge-scrolling-enabled true",
+    "ok": true,
+    "t": 48.82,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "... and two-finger-scrolling-enabled false in the same write",
+    "ok": true,
+    "t": 48.82,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Schuifrichting 'Neerwaartse beweging schuift omlaag' writes natural-scroll false",
+    "ok": true,
+    "t": 51.52,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Bewegingen met drie vingers says what a three-finger tap does (tap-button-map)",
+    "ok": true,
+    "t": 55.1,
+    "label": "Met drie vingers tikken: middelste muisknop"
+   },
+   {
+    "check": "touchpad: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 55.9,
+    "left": [],
+    "flipped": [
+     "st-touchpad-click-method",
+     "st-touchpad-disable-while-typing",
+     "st-touchpad-edge-scrolling-enabled",
+     "st-touchpad-send-events",
+     "st-touchpad-send-events-mouse",
+     "st-touchpad-tap-and-drag",
+     "st-touchpad-tap-to-click"
+    ],
+    "skipped": [
+     "st-touchpad-pinch",
+     "st-touchpad-tap-two-fingers"
+    ]
+   },
+   {
+    "check": "Opnieuw instellen resets send-events",
+    "ok": true,
+    "t": 59.89,
+    "value": "enabled",
+    "keyfile": "'enabled'"
+   },
+   {
+    "check": "Opnieuw instellen resets edge-scrolling-enabled",
+    "ok": true,
+    "t": 59.89,
+    "value": false,
+    "keyfile": "true"
+   },
+   {
+    "check": "Opnieuw instellen resets two-finger-scrolling-enabled",
+    "ok": true,
+    "t": 59.9,
+    "value": true,
+    "keyfile": "false"
+   },
+   {
+    "check": "Opnieuw instellen resets speed",
+    "ok": true,
+    "t": 59.9,
+    "value": 0.0,
+    "keyfile": "0.59999999999999998"
+   },
+   {
+    "check": "Opnieuw instellen resets tap-to-click",
+    "ok": true,
+    "t": 59.9,
+    "value": true,
+    "keyfile": "true"
+   },
+   {
+    "check": "Opnieuw instellen resets disable-while-typing",
+    "ok": true,
+    "t": 59.9,
+    "value": true,
+    "keyfile": "true"
+   },
+   {
+    "check": "Opnieuw instellen resets click-method",
+    "ok": true,
+    "t": 59.9,
+    "value": "fingers",
+    "keyfile": "'fingers'"
+   },
+   {
+    "check": "Opnieuw instellen resets natural-scroll",
+    "ok": true,
+    "t": 59.9,
+    "value": true,
+    "keyfile": "false"
+   },
+   {
+    "check": "after Opnieuw instellen the Touchpad switch is on again",
+    "ok": true,
+    "t": 60.13
+   },
+   {
+    "check": "Touchpad: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 60.13,
+    "owned": [],
+    "keys": 10,
+    "items": 10
+   },
+   {
+    "check": "pen: title and breadcrumb \"Bluetooth en apparaten > Pen en tablet\"",
+    "ok": true,
+    "t": 61.57,
+    "got": [
+     [
+      "bluetooth",
+      "Bluetooth en apparaten"
+     ],
+     [
+      null,
+      "Pen en tablet"
+     ]
+    ],
+    "want": [
+     "Bluetooth en apparaten",
+     "Pen en tablet"
+    ]
+   },
+   {
+    "check": "Pen en tablet without a tablet says so",
+    "ok": true,
+    "t": 61.81,
+    "node": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "children": [],
+           "classes": [
+            "w11-glyph"
+           ],
+           "label": null,
+           "name": "GtkImage",
+           "rect": [
+            340,
+            141,
+            20,
+            20
+           ],
+           "sensitive": true,
+           "type": "GtkImage",
+           "visible": true
+          }
+         ],
+         "classes": [
+          "horizontal",
+          "w11-sc-icon"
+         ],
+         "label": null,
+         "name": "GtkBox",
+         "rect": [
+          340,
+          141,
+          20,
+          20
+         ],
+         "sensitive": true,
+         "type": "GtkBox",
+         "visible": true
+        },
+        {
+         "children": [
+          {
+           "children": [],
+           "classes": [
+            "w11-sc-title"
+           ],
+           "label": "Geen tablet gevonden",
+           "name": "GtkLabel",
+           "rect": [
+            380,
+            133,
+            662,
+            20
+           ],
+           "sensitive": true,
+           "type": "GtkLabel",
+           "visible": true
+          },
+          {
+           "children": [],
+           "classes": [
+            "w11-sc-desc"
+           ],
+           "label": "Sluit een tekentablet of pen aan om de instellingen ervan te zien.",
+           "name": "GtkLabel",
+           "rect": [
+            380,
+            153,
+            662,
+            17
+           ],
+           "sensitive": true,
+           "type": "GtkLabel",
+           "visible": true
+          }
+         ],
+         "classes": [
+          "vertical"
+         ],
+         "label": null,
+         "name": "GtkBox",
+         "rect": [
+          380,
+          133,
+          662,
+          37
+         ],
+         "sensitive": true,
+         "type": "GtkBox",
+         "visible": true
+        }
+       ],
+       "classes": [
+        "horizontal"
+       ],
+       "label": null,
+       "name": "GtkBox",
+       "rect": [
+        338,
+        133,
+        704,
+        37
+       ],
+       "sensitive": true,
+       "type": "GtkBox",
+       "visible": true
+      }
+     ],
+     "classes": [
+      "horizontal",
+      "w11-settings-card"
+     ],
+     "label": null,
+     "name": "st-pen-none",
+     "rect": [
+      321,
+      118,
+      738,
+      68
+     ],
+     "sensitive": true,
+     "type": "GtkBox",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "typing: st-typing-screen-keyboard-enabled is on the page",
+    "ok": true,
+    "t": 63.19
+   },
+   {
+    "check": "typing: title and breadcrumb \"Tijd en taal > Typen\"",
+    "ok": true,
+    "t": 64.02,
+    "got": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      null,
+      "Typen"
+     ]
+    ],
+    "want": [
+     "Tijd en taal",
+     "Typen"
+    ]
+   },
+   {
+    "check": "Typen links to Geavanceerde toetsenbordinstellingen",
+    "ok": true,
+    "t": 64.83
+   },
+   {
+    "check": "Typen links to Sneltoetsen while caps.gnome",
+    "ok": true,
+    "t": 65.08
+   },
+   {
+    "check": "Aanraaktoetsenbord Altijd writes screen-keyboard-enabled true",
+    "ok": true,
+    "t": 67.96,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "... and its other choice writes false",
+    "ok": true,
+    "t": 70.57,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "screen-keyboard-enabled true written from outside shows Altijd",
+    "ok": true,
+    "t": 70.83
+   },
+   {
+    "check": "language-options: st-language-options-add is on the page",
+    "ok": true,
+    "t": 71.67
+   },
+   {
+    "check": "language-options: title and breadcrumb \"Tijd en taal > Taal en regio > Taalopties\"",
+    "ok": true,
+    "t": 72.53,
+    "got": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      "language",
+      "Taal en regio"
+     ],
+     [
+      null,
+      "Taalopties"
+     ]
+    ],
+    "want": [
+     "Tijd en taal",
+     "Taal en regio",
+     "Taalopties"
+    ]
+   },
+   {
+    "check": "without sources it says the system layout is used",
+    "ok": true,
+    "t": 73.37
+   },
+   {
+    "check": "Een toetsenbord toevoegen opens its dialog with the search",
+    "ok": true,
+    "t": 74.51
+   },
+   {
+    "check": "the search finds the Dutch layout",
+    "ok": true,
+    "t": 76.39
+   },
+   {
+    "check": "choosing Dutch writes sources [(xkb, nl)] (input.sources.set)",
+    "ok": true,
+    "t": 76.91,
+    "want": "[('xkb', 'nl')]",
+    "value": "[('xkb', 'nl')]"
+   },
+   {
+    "check": "the keyboard write asks polkit for org.gnome.controlcenter.set-keyboard once",
+    "ok": true,
+    "t": 76.92,
+    "calls": [
+     {
+      "path": "/org/freedesktop/PolicyKit1/Authority",
+      "iface": "org.freedesktop.PolicyKit1.Authority",
+      "method": "CheckAuthorization",
+      "args": "(('unix-process', {'start-time': <uint64 37897234>, 'uid': <1000>, 'pid': <uint32 1366>}), 'org.gnome.controlcenter.set-keyboard', @a{ss} {}, uint32 0, '')",
+      "interactive": false
+     }
+    ]
+   },
+   {
+    "check": "... for this process (unix-process), with flags 0 and no interactive authorization (GNOME Settings never prompts for the system keyboard)",
+    "ok": true,
+    "t": 76.92,
+    "call": [
+     {
+      "path": "/org/freedesktop/PolicyKit1/Authority",
+      "iface": "org.freedesktop.PolicyKit1.Authority",
+      "method": "CheckAuthorization",
+      "args": "(('unix-process', {'start-time': <uint64 37897234>, 'uid': <1000>, 'pid': <uint32 1366>}), 'org.gnome.controlcenter.set-keyboard', @a{ss} {}, uint32 0, '')",
+      "interactive": false
+     }
+    ]
+   },
+   {
+    "check": "polkit would ask: no pkexec runs (the session setting only)",
+    "ok": true,
+    "t": 77.92,
+    "pkexec": []
+   },
+   {
+    "check": "the page shows the new keyboard",
+    "ok": true,
+    "t": 78.19
+   },
+   {
+    "check": "polkit says yes: pkexec runs GNOME's helper with the sources' layouts and variants (/usr/libexec/gnome-control-center-set-debian-keyboard nl,us ,intl)",
+    "ok": true,
+    "t": 78.46,
+    "pkexec": [
+     "/usr/libexec/gnome-control-center-set-debian-keyboard nl,us ,intl"
+    ]
+   },
+   {
+    "check": "the ⋯ menu has Omhoog",
+    "ok": true,
+    "t": 81.59
+   },
+   {
+    "check": "Omhoog moves the second keyboard first",
+    "ok": true,
+    "t": 81.6,
+    "want": "[('xkb', 'us+intl'), ('xkb', 'nl')]",
+    "value": "[('xkb', 'us+intl'), ('xkb', 'nl')]"
+   },
+   {
+    "check": "... and the system keyboard follows the new order (us,nl intl,)",
+    "ok": true,
+    "t": 81.6,
+    "pkexec": [
+     "/usr/libexec/gnome-control-center-set-debian-keyboard nl,us ,intl",
+     "/usr/libexec/gnome-control-center-set-debian-keyboard us,nl intl,"
+    ]
+   },
+   {
+    "check": "every keyboard write asked polkit without interactive authorization",
+    "ok": true,
+    "t": 81.6,
+    "calls": 2
+   },
+   {
+    "check": "Taalopties: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 82.18,
+    "owned": [],
+    "keys": 1,
+    "items": 1
+   },
+   {
+    "check": "keyboard-advanced: st-keyboard-advanced-default is on the page",
+    "ok": true,
+    "t": 83.06
+   },
+   {
+    "check": "keyboard-advanced: title and breadcrumb \"Tijd en taal > Typen > Geavanceerde toetsenbordinstellingen\"",
+    "ok": true,
+    "t": 83.93,
+    "got": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      "typing",
+      "Typen"
+     ],
+     [
+      null,
+      "Geavanceerde toetsenbordinstellingen"
+     ]
+    ],
+    "want": [
+     "Tijd en taal",
+     "Typen",
+     "Geavanceerde toetsenbordinstellingen"
+    ]
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-per-window",
+    "ok": true,
+    "t": 84.77
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-lv3",
+    "ok": true,
+    "t": 85.05
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-compose",
+    "ok": true,
+    "t": 85.32
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-repeat",
+    "ok": true,
+    "t": 85.6
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-delay",
+    "ok": true,
+    "t": 85.89
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-repeat-interval",
+    "ok": true,
+    "t": 86.16
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-windows-key",
+    "ok": true,
+    "t": 86.44
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-overlay-key",
+    "ok": true,
+    "t": 86.71
+   },
+   {
+    "check": "the advanced page has st-keyboard-advanced-hotkeys",
+    "ok": true,
+    "t": 86.99
+   },
+   {
+    "check": "Standaardinvoermethode overschrijven moves Dutch first",
+    "ok": true,
+    "t": 89.78,
+    "want": "[('xkb', 'nl'), ('xkb', 'us+intl')]",
+    "value": "[('xkb', 'nl'), ('xkb', 'us+intl')]"
+   },
+   {
+    "check": "Voor elk app-venster een andere invoermethode: a click writes per-window true",
+    "ok": true,
+    "t": 90.99,
+    "want": "true",
+    "value": "true"
+   },
+   {
+    "check": "Voor elk app-venster een andere invoermethode: the control shows the new value",
+    "ok": true,
+    "t": 91.29,
+    "active": true
+   },
+   {
+    "check": "Voor elk app-venster een andere invoermethode: per-window false written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 92.1
+   },
+   {
+    "check": "Samenstellingstoets Rechter Ctrl writes compose:rctrl",
+    "ok": true,
+    "t": 94.93,
+    "want": "['compose:rctrl']",
+    "value": "['compose:rctrl']"
+   },
+   {
+    "check": "Toets voor alternatieve tekens Menutoets adds lv3:menu_switch and keeps compose:rctrl",
+    "ok": true,
+    "t": 97.8,
+    "want": "['compose:rctrl', 'lv3:menu_switch']",
+    "value": "['compose:rctrl', 'lv3:menu_switch']"
+   },
+   {
+    "check": "Toetsen herhalen: a click writes repeat false",
+    "ok": true,
+    "t": 98.74,
+    "want": "false",
+    "value": "false"
+   },
+   {
+    "check": "Toetsen herhalen: the control shows the new value",
+    "ok": true,
+    "t": 99.07,
+    "active": false
+   },
+   {
+    "check": "Toetsen herhalen: repeat true written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 99.41
+   },
+   {
+    "check": "Vertraging voor herhalen: a click at 15 writes delay near 600",
+    "ok": true,
+    "t": 101.35,
+    "value": "500",
+    "want": 600,
+    "before": null,
+    "exact": false
+   },
+   {
+    "check": "Herhalingssnelheid: a click at 5 writes repeat-interval near 90",
+    "ok": true,
+    "t": 104.5,
+    "value": "90",
+    "want": 90,
+    "before": null,
+    "exact": true
+   },
+   {
+    "check": "Windows-toets opent het activiteitenoverzicht: a click writes overlay-key ''",
+    "ok": true,
+    "t": 105.46,
+    "want": "''",
+    "value": "''"
+   },
+   {
+    "check": "Windows-toets opent het activiteitenoverzicht: the control shows the new value",
+    "ok": true,
+    "t": 105.81,
+    "active": false
+   },
+   {
+    "check": "Windows-toets opent het activiteitenoverzicht: overlay-key 'Super' written from outside moves the control back (gsettings.changed)",
+    "ok": true,
+    "t": 106.15
+   },
+   {
+    "check": "Windows-toets opent Start off writes start.windowsKey false (amendment 58)",
+    "ok": true,
+    "t": 108.14,
+    "start": {
+     "pinned": [],
+     "showRecommended": true,
+     "showRecentApps": true,
+     "windowsKey": false,
+     "layout": "default",
+     "folders": [
+      "settings",
+      "explorer",
+      "documents",
+      "downloads"
+     ]
+    }
+   },
+   {
+    "check": "... and on again true",
+    "ok": true,
+    "t": 109.74,
+    "start": {
+     "pinned": [],
+     "showRecommended": true,
+     "showRecentApps": true,
+     "windowsKey": true,
+     "layout": "default",
+     "folders": [
+      "settings",
+      "explorer",
+      "documents",
+      "downloads"
+     ]
+    }
+   },
+   {
+    "check": "keyboard-advanced: every switch and check box on the page was flipped by a click",
+    "ok": true,
+    "t": 110.63,
+    "left": [],
+    "flipped": [
+     "st-keyboard-advanced-overlay-key",
+     "st-keyboard-advanced-per-window",
+     "st-keyboard-advanced-repeat",
+     "st-keyboard-advanced-windows-key"
+    ],
+    "skipped": []
+   },
+   {
+    "check": "Geavanceerde toetsenbordinstellingen: no key the page binds is Owned (no pointer to a WinPoint page)",
+    "ok": true,
+    "t": 110.63,
+    "owned": [],
+    "keys": 7,
+    "items": 7
+   },
+   {
+    "check": "a real click on the breadcrumb's Typen shows Typen",
+    "ok": true,
+    "t": 112.32,
+    "crumbs": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      null,
+      "Typen"
+     ]
+    ]
+   },
+   {
+    "check": "shortcuts: st-shortcuts-section-windows is on the page",
+    "ok": true,
+    "t": 113.37
+   },
+   {
+    "check": "shortcuts: title and breadcrumb \"Tijd en taal > Typen > Sneltoetsen\"",
+    "ok": true,
+    "t": 114.33,
+    "got": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      "typing",
+      "Typen"
+     ],
+     [
+      null,
+      "Sneltoetsen"
+     ]
+    ],
+    "want": [
+     "Tijd en taal",
+     "Typen",
+     "Sneltoetsen"
+    ]
+   },
+   {
+    "check": "Sneltoetsen has the section winpoint",
+    "ok": true,
+    "t": 115.27
+   },
+   {
+    "check": "Sneltoetsen has the section accessibility",
+    "ok": true,
+    "t": 115.65
+   },
+   {
+    "check": "Sneltoetsen has the section launchers",
+    "ok": true,
+    "t": 116.04
+   },
+   {
+    "check": "Sneltoetsen has the section navigation",
+    "ok": true,
+    "t": 116.43
+   },
+   {
+    "check": "Sneltoetsen has the section screenshots",
+    "ok": true,
+    "t": 116.82
+   },
+   {
+    "check": "Sneltoetsen has the section media",
+    "ok": true,
+    "t": 117.22
+   },
+   {
+    "check": "Sneltoetsen has the section system",
+    "ok": true,
+    "t": 117.62
+   },
+   {
+    "check": "Sneltoetsen has the section typing",
+    "ok": true,
+    "t": 118.02
+   },
+   {
+    "check": "Sneltoetsen has the section windows",
+    "ok": true,
+    "t": 118.44
+   },
+   {
+    "check": "Sneltoetsen has the section custom",
+    "ok": true,
+    "t": 118.86
+   },
+   {
+    "check": "Schakelen tussen apps names the Alt+Tab WinPoint holds (amendment 13)",
+    "ok": true,
+    "t": 121.09
+   },
+   {
+    "check": "Venster sluiten by real keys Super+Q writes close [<Super>q]",
+    "ok": true,
+    "t": 132.07,
+    "want": "['<Super>q']",
+    "value": "['<Super>q']"
+   },
+   {
+    "check": "Super+L, the lock screen's, is a conflict and nothing is written",
+    "ok": true,
+    "t": 132.08,
+    "answer": {
+     "conflict": {
+      "schema": "org.gnome.settings-daemon.plugins.media-keys",
+      "key": "screensaver",
+      "path": null,
+      "id": null,
+      "name": "Lock screen",
+      "accel": "<Super>l"
+     }
+    },
+    "close": "['<Super>q']"
+   },
+   {
+    "check": "close [<Alt>F4] written from outside shows on Venster sluiten (gsettings.changed)",
+    "ok": true,
+    "t": 134.5,
+    "before": [
+     "Windows",
+     "Q"
+    ],
+    "after": [
+     "Alt",
+     "F4"
+    ]
+   },
+   {
+    "check": "Toevoegen lists the custom shortcut",
+    "ok": true,
+    "t": 149.33,
+    "want": "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']",
+    "value": "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+   },
+   {
+    "check": "... with its command at custom0",
+    "ok": true,
+    "t": 149.33,
+    "item": {
+     "schema": "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding",
+     "path": "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/",
+     "key": "command",
+     "allowed": true,
+     "available": true,
+     "writable": true,
+     "mode": "service",
+     "setting": null,
+     "method": "input.shortcuts.custom.update",
+     "value": "kgx",
+     "default": "",
+     "isDefault": false,
+     "type": "s",
+     "range": null
+    }
+   },
+   {
+    "check": "Alles opnieuw instellen asks first",
+    "ok": true,
+    "t": 162.86
+   },
+   {
+    "check": "Alles opnieuw instellen resets Venster sluiten",
+    "ok": true,
+    "t": 166.23,
+    "item": {
+     "schema": "org.gnome.desktop.wm.keybindings",
+     "path": "/org/gnome/desktop/wm/keybindings/",
+     "key": "close",
+     "allowed": true,
+     "available": true,
+     "writable": true,
+     "mode": "service",
+     "setting": null,
+     "method": "input.shortcuts.set",
+     "value": [
+      "<Alt>F4"
+     ],
+     "default": [
+      "<Alt>F4"
+     ],
+     "isDefault": true,
+     "type": "as",
+     "range": null
+    }
+   },
+   {
+    "check": "... and keeps the custom shortcut",
+    "ok": true,
+    "t": 166.24,
+    "item": {
+     "schema": "org.gnome.settings-daemon.plugins.media-keys",
+     "path": "/org/gnome/settings-daemon/plugins/media-keys/",
+     "key": "custom-keybindings",
+     "allowed": true,
+     "available": true,
+     "writable": true,
+     "mode": "service",
+     "setting": null,
+     "method": "input.shortcuts.set",
+     "value": [
+      "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+     ],
+     "default": [],
+     "isDefault": false,
+     "type": "as",
+     "range": null
+    }
+   }
+  ],
+  "records": {
+   "run/stubs mode": {
+    "was": "0o775",
+    "now": "0o755"
+   },
+   "caps": {
+    "session": "gnome",
+    "gnome": true,
+    "mouse": true,
+    "touchpad": false,
+    "pointingstick": false,
+    "tablet": false,
+    "touchscreen": false,
+    "thunderbolt": false,
+    "modem": false,
+    "ambientLight": false,
+    "accelerometer": false,
+    "privacyScreen": false,
+    "backlight": false,
+    "battery": false,
+    "hibernate": false,
+    "fingerprint": false,
+    "colorSensor": false,
+    "geoclue": true,
+    "tracker": true,
+    "usbguard": false,
+    "sshServer": false,
+    "userShare": false,
+    "malcontent": false,
+    "realmd": false,
+    "rygel": true,
+    "tecla": true,
+    "orca": true,
+    "simpleScan": true,
+    "securityCenter": false,
+    "insights": true,
+    "whoopsie": true
+   },
+   "search 'muis'": [
+    "mouse",
+    "a11y-mouse",
+    "mousepointer",
+    "bluetooth"
+   ],
+   "search 'touchpad'": [],
+   "search 'pen'": [
+    "typing",
+    "searching",
+    "power",
+    "system-advanced",
+    "sound",
+    "clipboard",
+    "colors",
+    "defaultapps",
+    "start",
+    "vpn",
+    "installed",
+    "flightmode"
+   ],
+   "search 'sneltoetsen'": [
+    "shortcuts",
+    "typing"
+   ],
+   "mouse left-handed before": "false",
+   "mouse speed before": "0.0",
+   "mouse accel-profile before": "'default'",
+   "mouse natural-scroll before": "false",
+   "mouse speed after a click at position 15": "0.5",
+   "double-click after a real click at step 4": "700",
+   "standin.polkit-challenge": {
+    "pid": 2126,
+    "bus": "system",
+    "name": "org.freedesktop.PolicyKit1",
+    "objects": [
+     "/org/freedesktop/PolicyKit1/Authority"
+    ]
+   },
+   "polkit (challenge) calls": [
+    {
+     "path": "/org/freedesktop/PolicyKit1/Authority",
+     "iface": "org.freedesktop.PolicyKit1.Authority",
+     "method": "CheckAuthorization",
+     "args": "(('unix-process', {'start-time': <uint64 37897234>, 'uid': <1000>, 'pid': <uint32 1366>}), 'org.gnome.controlcenter.set-keyboard', @a{ss} {}, uint32 0, '')",
+     "interactive": false
+    }
+   ],
+   "standin.polkit": {
+    "pid": 2153,
+    "bus": "system",
+    "name": "org.freedesktop.PolicyKit1",
+    "objects": [
+     "/org/freedesktop/PolicyKit1/Authority"
+    ]
+   },
+   "polkit calls": [
+    {
+     "path": "/org/freedesktop/PolicyKit1/Authority",
+     "iface": "org.freedesktop.PolicyKit1.Authority",
+     "method": "CheckAuthorization",
+     "args": "(('unix-process', {'pid': <uint32 1366>, 'start-time': <uint64 37897234>, 'uid': <1000>}), 'org.gnome.controlcenter.set-keyboard', @a{ss} {}, uint32 0, '')",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/PolicyKit1/Authority",
+     "iface": "org.freedesktop.PolicyKit1.Authority",
+     "method": "CheckAuthorization",
+     "args": "(('unix-process', {'uid': <1000>, 'pid': <uint32 1366>, 'start-time': <uint64 37897234>}), 'org.gnome.controlcenter.set-keyboard', @a{ss} {}, uint32 0, '')",
+     "interactive": false
+    }
+   ],
+   "keys Super+Q": [
+    "Super_L",
+    "q"
+   ],
+   "click inputs": {
+    "clutter": 52,
+    "dev": 8
+   }
+  },
+  "shots": [
+   "search-mouse.nl.png",
+   "mouse.nl.png",
+   "mouse-set.nl.png",
+   "mouse-properties.nl.png",
+   "mouse-properties-options.nl.png",
+   "mouse-test.nl.png",
+   "touchpad.nl.png",
+   "touchpad-taps.nl.png",
+   "touchpad-open.nl.png",
+   "touchpad-gestures.nl.png",
+   "touchpad-reset.nl.png",
+   "pen.nl.png",
+   "typing.nl.png",
+   "language-options.nl.png",
+   "language-options-add.nl.png",
+   "language-options-two.nl.png",
+   "keyboard-advanced.nl.png",
+   "keyboard-advanced-set.nl.png",
+   "shortcuts.nl.png",
+   "shortcuts-capture.nl.png",
+   "shortcuts-custom.nl.png",
+   "shortcuts-reset.nl.png"
+  ],
+  "error": null,
+  "seconds": 166.76,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 480,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 480,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 480,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [
+   "a real pointer click on a kit Dialog button registers"
+  ],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=5851dddd6193515df66d82246afba0e9",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 480,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 480
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "mouse",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "touchpad",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "pen",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "typing",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "language-options",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "keyboard-advanced",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "shortcuts",
+     "exit": 0,
+     "seconds": 0.03
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "search-mouse.nl.png",
+    "group": "scenario",
+    "bytes": 185980,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mouse.nl.png",
+    "group": "scenario",
+    "bytes": 223098,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mouse-set.nl.png",
+    "group": "scenario",
+    "bytes": 220483,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mouse-properties.nl.png",
+    "group": "scenario",
+    "bytes": 117144,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mouse-properties-options.nl.png",
+    "group": "scenario",
+    "bytes": 124440,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "mouse-test.nl.png",
+    "group": "scenario",
+    "bytes": 126190,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "touchpad.nl.png",
+    "group": "scenario",
+    "bytes": 203602,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "touchpad-taps.nl.png",
+    "group": "scenario",
+    "bytes": 208111,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "touchpad-open.nl.png",
+    "group": "scenario",
+    "bytes": 211402,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "touchpad-gestures.nl.png",
+    "group": "scenario",
+    "bytes": 207796,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "touchpad-reset.nl.png",
+    "group": "scenario",
+    "bytes": 218564,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "pen.nl.png",
+    "group": "scenario",
+    "bytes": 168238,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "typing.nl.png",
+    "group": "scenario",
+    "bytes": 218521,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-options.nl.png",
+    "group": "scenario",
+    "bytes": 197293,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-options-add.nl.png",
+    "group": "scenario",
+    "bytes": 128986,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-options-two.nl.png",
+    "group": "scenario",
+    "bytes": 215341,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "keyboard-advanced.nl.png",
+    "group": "scenario",
+    "bytes": 239240,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "keyboard-advanced-set.nl.png",
+    "group": "scenario",
+    "bytes": 226424,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "shortcuts.nl.png",
+    "group": "scenario",
+    "bytes": 202233,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "shortcuts-capture.nl.png",
+    "group": "scenario",
+    "bytes": 164273,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "shortcuts-custom.nl.png",
+    "group": "scenario",
+    "bytes": 162420,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "shortcuts-reset.nl.png",
+    "group": "scenario",
+    "bytes": 168591,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-input.out/search-mouse.nl.png",
+  "tests/gnome/scenarios/settings-input.out/mouse.nl.png",
+  "tests/gnome/scenarios/settings-input.out/mouse-set.nl.png",
+  "tests/gnome/scenarios/settings-input.out/mouse-properties.nl.png",
+  "tests/gnome/scenarios/settings-input.out/mouse-properties-options.nl.png",
+  "tests/gnome/scenarios/settings-input.out/mouse-test.nl.png",
+  "tests/gnome/scenarios/settings-input.out/touchpad.nl.png",
+  "tests/gnome/scenarios/settings-input.out/touchpad-taps.nl.png",
+  "tests/gnome/scenarios/settings-input.out/touchpad-open.nl.png",
+  "tests/gnome/scenarios/settings-input.out/touchpad-gestures.nl.png",
+  "tests/gnome/scenarios/settings-input.out/touchpad-reset.nl.png",
+  "tests/gnome/scenarios/settings-input.out/pen.nl.png",
+  "tests/gnome/scenarios/settings-input.out/typing.nl.png",
+  "tests/gnome/scenarios/settings-input.out/language-options.nl.png",
+  "tests/gnome/scenarios/settings-input.out/language-options-add.nl.png",
+  "tests/gnome/scenarios/settings-input.out/language-options-two.nl.png",
+  "tests/gnome/scenarios/settings-input.out/keyboard-advanced.nl.png",
+  "tests/gnome/scenarios/settings-input.out/keyboard-advanced-set.nl.png",
+  "tests/gnome/scenarios/settings-input.out/shortcuts.nl.png",
+  "tests/gnome/scenarios/settings-input.out/shortcuts-capture.nl.png",
+  "tests/gnome/scenarios/settings-input.out/shortcuts-custom.nl.png",
+  "tests/gnome/scenarios/settings-input.out/shortcuts-reset.nl.png"
+ ]
+}

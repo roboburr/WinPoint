@@ -49,7 +49,7 @@ WinPoint geeft GNOME 50 een taakbalk, Startmenu, snelle instellingen, meldingenc
 
 ## Mogelijkheden
 
-- **Taakbalk**: vastgemaakte en geopende apps met groepering en jump lists, pictogrammen in het systeemvak, klok, gecentreerd of links uitgelijnd, desgewenst automatisch verbergen.
+- **Taakbalk**: vastgemaakte en geopende apps met groepering en jump lists, pictogrammen in het systeemvak, klok, gecentreerd of links uitgelijnd, desgewenst automatisch verbergen. Met meer dan één beeldscherm krijgt elk scherm een eigen taakbalk met de apps die daar geopend zijn, zoals in Windows 11.
 - **Start**: vastgemaakte apps, Alle apps, aanbevolen bestanden, en zoeken in apps, instellingen, bestanden en op internet.
 - **Snelle instellingen**: Wi-Fi, Bluetooth, vliegtuigmodus, nachtlampje, donkere modus, niet storen, helderheid, volume en mediabediening.
 - **Meldingencentrum** met pop-upmeldingen en een maandagenda.
@@ -60,6 +60,8 @@ WinPoint geeft GNOME 50 een taakbalk, Startmenu, snelle instellingen, meldingenc
 - **Nederlands en Engels**, op elk moment om te schakelen, los van de taal van GNOME.
 - **Sneltoetsen**: de Windows-toets opent Start, Alt+Tab de taakweergave en Ctrl+Alt+Delete Taakbeheer.
 
+Instellingen bevat de GNOME-functies voor beeldscherm, geluid, muis, touchpad, toetsenbord, toegankelijkheid, netwerk, accounts en privacy in pagina’s in Windows-stijl. Wijzigingen respecteren beheerde instellingen; aanvullende bediening verschijnt alleen als de hardware of dienst beschikbaar is.
+
 ## Vereisten
 
 - Ubuntu 26.04 met GNOME Shell 50 op Wayland, het enige geteste systeem. De uitgaven zijn gebouwd voor x86_64.
@@ -69,38 +71,37 @@ WinPoint geeft GNOME 50 een taakbalk, Startmenu, snelle instellingen, meldingenc
 
 ## Installeren
 
-Download `winpoint-<versie>-linux-x86_64.tar.gz` van de [nieuwste uitgave](https://github.com/roboburr/WinPoint/releases/latest) en voer daarna uit:
+Download `winpoint-<versie>-linux-x86_64.tar.gz` van de [nieuwste uitgave](https://github.com/roboburr/WinPoint/releases/latest) naar je map Downloads, open een terminal en plak deze regel (de uitgavenotities geven hem voor die uitgave):
 
 ```bash
-tar -xzf winpoint-*-linux-x86_64.tar.gz
-cd winpoint-*/
-./scripts/install.sh --lang nl
+cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.2-linux-x86_64.tar.gz && ./winpoint-0.9.2/scripts/install.sh
 ```
 
-De installer zet WinPoint in je thuismap (`~/.local`) en voegt **WinPoint** toe als keuze bij het inloggen; `pkexec` vraagt daarvoor één keer om je wachtwoord. Meld je af, klik op je naam, kies **WinPoint** met het tandwiel rechtsonder en meld je aan. Je GNOME- en Ubuntu-sessies blijven zoals ze waren.
+De installer zet WinPoint in je thuismap (`~/.local`) en voegt **WinPoint** toe aan het inlogscherm, naast Ubuntu. Hij vraagt één keer om je wachtwoord; is je account geen beheerder, dan is het wachtwoord van een beheerder nodig. Meld je daarna af: WinPoint start bij de volgende keer aanmelden. Je Ubuntu-sessie houdt zijn eigen uiterlijk en dock; kies **Ubuntu** met het tandwiel rechtsonder op het inlogscherm om die te gebruiken.
 
-`--lang nl` of `--lang en` kiest de taal bij een eerste installatie; zonder die optie raadt de installer de taal uit je systeeminstellingen. Later wijzig je de taal in **Instellingen › Tijd en taal › Taal en regio**.
-
-Wil je WinPoint liever in je gewone GNOME-sessie gebruiken, installeer dan met `--no-session` (geen wachtwoord nodig), meld je één keer af en weer aan en voer `gnome-extensions enable win11-gnome@win11shell.local` uit. Ubuntu Dock blijft daar aan; zet het uit met `gnome-extensions disable ubuntu-dock@ubuntu.com`.
+De installer kiest Nederlands of Engels op basis van de taal en regio van je systeem. Je kunt de taal altijd wijzigen in **Instellingen › Tijd en taal › Taal en regio**.
 
 ## Bijwerken
 
-WinPoint kijkt één keer per dag op GitHub en meldt het als er een nieuwe uitgave is. Klik in **Instellingen › Update en herstel** op **Downloaden en installeren**: WinPoint downloadt de uitgave, controleert hem met het controlegetal van GitHub en installeert hem; je instellingen blijven bewaard. Start daarna WinPoint opnieuw of meld je af en weer aan, zoals de pagina aangeeft. Het automatisch controleren kun je uitzetten onder **Geavanceerde opties**; een nieuwere uitgave zelf installeren, zoals hierboven, kan ook.
+De nieuwste uitgave is **[WinPoint 0.9.2](https://github.com/roboburr/WinPoint/releases/tag/v0.9.2)**. Deze bevat de uitgebreide Instellingen, taakbalken op extra beeldschermen en compacte media-afbeeldingen in de snelle instellingen. De volledige lijst staat in het [wijzigingslog](CHANGELOG.md#092).
+
+WinPoint kijkt één keer per dag op GitHub en meldt het als er een nieuwe uitgave is. Klik in **Instellingen › Update en herstel** op **Downloaden en installeren**: WinPoint downloadt de uitgave, controleert hem met het controlegetal van GitHub en installeert hem; je instellingen blijven bewaard. Start daarna WinPoint opnieuw of meld je af en weer aan, zoals de pagina aangeeft. Het automatisch controleren kun je uitzetten onder **Geavanceerde opties**; een nieuwere uitgave zelf installeren met de regel hierboven kan ook.
+
+Wil je nu controleren, open dan **Instellingen › Update en herstel › Controleren op updates**. Versie 0.9.2 wordt aangeboden aan zowel 0.9.0 als de niet-gepubliceerde ontwikkelversie 0.9.1. De download bevat alle 19 programma’s en de GNOME-extensie. Tijdens het installeren blijven de programma’s draaien; de pagina geeft aan wanneer je WinPoint opnieuw moet starten of je moet afmelden om de nieuwe onderdelen te gebruiken.
 
 ## Verwijderen
 
-Voer deze opdrachten uit in de uitgepakte map van de uitgave die je hebt geïnstalleerd (download die uitgave opnieuw als je de map niet meer hebt), of in je git-kloon:
+Meld je aan bij **Ubuntu** (niet bij WinPoint), open een terminal en voer uit:
 
 ```bash
-./scripts/uninstall.sh
-python3 scripts/install-session.py --remove
+~/.local/bin/winpoint-uninstall
 ```
 
-De eerste opdracht zet de extensie uit, verwijdert de bestanden van WinPoint en zet het eigen uiterlijk van GNOME terug. De tweede haalt de keuze WinPoint bij het inloggen weg (`pkexec` vraagt om je wachtwoord). Je instellingen (`~/.config/win11-gnome`) en je gebeurtenissen in Agenda (`~/.local/share/win11-gnome-calendar`) blijven staan; wil je alles weg hebben, verwijder dan ook die mappen en `~/.cache/win11-gnome`.
-
-Na een installatie met `--no-session` zet je eerst **Instellingen › Persoonlijke instellingen › Kleuren › Windows 11-vensterknoppen in apps** uit, en kies je daarna je thema en achtergrond opnieuw in de Instellingen van GNOME.
+Dit vraagt één keer om je wachtwoord en verwijdert de bestanden van WinPoint en de keuze WinPoint op het inlogscherm. WinPoint 0.9.0 heeft nog geen `winpoint-uninstall`: werk WinPoint eerst bij, of voer `./scripts/uninstall.sh` uit in de uitgepakte map van een nieuwere uitgave. Je instellingen (`~/.config/win11-gnome`) en je gebeurtenissen in Agenda (`~/.local/share/win11-gnome-calendar`) blijven staan; wil je alles weg hebben, verwijder dan ook die mappen en `~/.cache/win11-gnome`.
 
 ## Bouwen vanuit de broncode
+
+De actuele broncode staat op **`main`**. Uitgaven hebben een tag zoals `v0.9.2`; tijdelijke werkbranches worden na samenvoegen opgeruimd.
 
 Je hebt Rust 1.92 of nieuwer nodig (het `cargo`-pakket van Ubuntu is nieuw genoeg) en de ontwikkelbestanden van GTK 4:
 
@@ -111,24 +112,22 @@ cd WinPoint
 cargo fetch --locked
 cargo fetch --locked --manifest-path native/Cargo.toml
 ./scripts/build.sh
-./scripts/install.sh --lang nl
+./scripts/install.sh
 ```
 
 `build.sh` bouwt offline; daarom halen de twee `cargo fetch`-regels eerst de crates op. De programma's komen in `target/release`, waar de installer ze vindt. Heb je `CARGO_TARGET_DIR` gezet, geef de installer die map dan mee: `WIN11_BUILD_DIR="$CARGO_TARGET_DIR/release" ./scripts/install.sh`. `WIN11_BUILD_JOBS` bepaalt het aantal gelijktijdige bouwtaken (standaard 2).
 
 ## Zo werkt het
 
-Een GNOME Shell-extensie start `win11-shell`, één GTK 4-proces voor de taakbalk, Start, de flyouts en het bureaublad, en regelt de plaats van de vensters, het matglas en de sneltoetsen. Een Rust-backend geeft de shell via een lokale JSON-API toegang tot apps, instellingen, het systeemvak, meldingen, geluid, netwerk, energie en bestanden; elke app is een eigen GTK 4-proces. Zet je de extensie uit, dan heb je weer gewoon GNOME.
+Een GNOME Shell-extensie start `win11-shell`, één GTK 4-proces voor de taakbalk, Start, de flyouts en het bureaublad, en regelt de plaats van de vensters, het matglas en de sneltoetsen. Een Rust-backend geeft de shell via een lokale JSON-API toegang tot apps, instellingen, het systeemvak, meldingen, geluid, netwerk, energie en bestanden; elke app is een eigen GTK 4-proces. De extensie draait alleen in de WinPoint-sessie; je Ubuntu-sessie laadt haar niet.
 
 Instellingen staan in `~/.config/win11-gnome/settings.json` (standaardwaarden in [host/src/settings-defaults.json](host/src/settings-defaults.json)). Wie wil bijdragen, begint met [native/ARCH.md](native/ARCH.md), [native/APPS.md](native/APPS.md) en [tests/gnome/README.md](tests/gnome/README.md) (in het Engels) en draait voor een pull request `python3 -B tools/i18n/check.py` (elke tekst in de interface is een Nederlands/Engels paar) en `tests/rust-sandbox/run-tests.sh`.
 
 ## Bekende beperkingen
 
-- Ubuntu 26.10 (GNOME 51) wordt nog niet ondersteund; ondersteuning is onderweg ([#1](https://github.com/roboburr/WinPoint/issues/1)). Gebruik tot die tijd Ubuntu 26.04 LTS.
 - De taakweergave toont app-pictogrammen, geen live miniaturen van de vensters.
 - De sneltoets Win+X werkt nog niet; open dat menu met een rechtsklik op Start.
-- Beeldscherminstellingen zijn in de Instellingen van WinPoint alleen te bekijken; wijzig ze in de Instellingen van GNOME.
-- Met meer dan één beeldscherm staan de taakbalk, Start en de andere uitklapvensters alleen op het hoofdscherm, en loopt het bureaublad (achtergrond en pictogrammen) als één vlak over alle schermen. Een taakbalk op elk scherm is in de maak.
+- Instellingen voor specifieke hardware zijn afhankelijk van de aanwezige hardware en GNOME-diensten. Zie [Instellingen valideren](VALIDATION_SETTINGS.md) voor het geteste bereik en de resterende grenzen.
 - Het App-installatieprogramma is nog niet getest met echte installaties op een systeem.
 - Wachtwoordvensters, berichten van PackageKit en NetworkManager en de onderdelen van GNOME zelf volgen de taal van het systeem, niet die van WinPoint.
 

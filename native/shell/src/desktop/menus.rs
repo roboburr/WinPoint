@@ -183,13 +183,19 @@ pub fn item(desk: &Rc<Desk>, items: &[Item], apps: &[Value]) -> gio::Menu {
 }
 
 fn popup(desk: &Rc<Desk>, model: &gio::Menu, x: f64, y: f64) {
+    popup_on(desk, desk.layer.upcast_ref(), model, x, y);
+}
+
+/// The menu at (x, y) of `parent`: the icon layer, or the wallpaper window of another monitor (screens.rs), which
+/// carries the same "dt" action group.
+fn popup_on(desk: &Rc<Desk>, parent: &gtk::Widget, model: &gio::Menu, x: f64, y: f64) {
     let popover = gtk::PopoverMenu::from_model_full(model, gtk::PopoverMenuFlags::NESTED);
     popover.add_css_class("dt-menu");
     popover.set_widget_name("desktop-menu");
     popover.set_has_arrow(false);
     popover.set_position(gtk::PositionType::Bottom);
     popover.set_halign(gtk::Align::Start);
-    popover.set_parent(&desk.layer);
+    popover.set_parent(parent);
     popover.set_pointing_to(Some(&gdk::Rectangle::new(x.round() as i32, y.round() as i32, 1, 1)));
     desk.menu_open.set(true);
     let weak = Rc::downgrade(desk);
@@ -207,6 +213,38 @@ fn popup(desk: &Rc<Desk>, model: &gio::Menu, x: f64, y: f64) {
         });
     });
     popover.popup();
+}
+
+/// The background menu on the desktop window of another monitor (screens.rs), at (x, y) of `parent` there. The icons
+/// stay on the primary monitor: what it makes (a new folder, a paste) goes to the first free place there.
+pub fn open_background_on(desk: &Rc<Desk>, parent: &gtk::Widget, x: f64, y: f64) {
+    desk.finish_rename(false);
+    desk.clear_selection();
+    {
+        let mut s = desk.s.borrow_mut();
+        s.menu_keys.clear();
+        s.menu_point = None;
+    }
+    let shown = Rc::new(Cell::new(false));
+    let parent = parent.downgrade();
+    let show = {
+        let desk = desk.clone();
+        move || {
+            if shown.replace(true) {
+                return;
+            }
+            let Some(parent) = parent.upgrade() else { return };
+            super::actions::sync(&desk, &[]);
+            popup_on(&desk, &parent, &background(&desk), x, y);
+        }
+    };
+    let late = show.clone();
+    glib::timeout_add_local_once(Duration::from_millis(250), move || late());
+    let desk = desk.clone();
+    glib::spawn_future_local(async move {
+        desk.load_clip().await;
+        show();
+    });
 }
 
 /// Open the background menu, or the item menu for the selection, at a point of the icon layer.

@@ -1,0 +1,593 @@
+# tests/i18n/windows-glossary/c.tsv: the Windows 11 UI strings settings-parity batch C uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch C
+# edits this file.
+# host/i18n/net.tsv (services/net*.rs): the host's messages of batch C, slice 1
+NetworkManager isn’t available.	NetworkManager is niet beschikbaar.	winpoint	no
+Invalid input.	Ongeldige invoer.	winpoint	no
+A network setting has a value that isn’t valid.	Een netwerkinstelling heeft een ongeldige waarde.	winpoint	no
+This connection no longer exists.	Deze verbinding bestaat niet meer.	winpoint	no
+This network adapter wasn’t found.	Deze netwerkadapter is niet gevonden.	winpoint	no
+No Wi-Fi adapter was found on this computer.	Er is geen Wi-Fi-adapter gevonden op deze computer.	winpoint	no
+This connection isn’t active.	Deze verbinding is niet actief.	winpoint	no
+This connection isn’t a Wi-Fi network.	Deze verbinding is geen Wi-Fi-netwerk.	winpoint	no
+# native/apps/settings/src/pages/network.rs (settings parity C, slice 1)
+Network unavailable	Netwerk niet beschikbaar	winpoint	no
+NetworkManager isn’t running. Network settings can only be changed once it runs again.	NetworkManager wordt niet uitgevoerd. Netwerkinstellingen kunnen pas worden gewijzigd als het weer wordt uitgevoerd.	winpoint	no
+Authentication, IP and DNS settings, metered network	Verificatie, IP- en DNS-instellingen, verbinding met een datalimiet	windows	no
+Add, connect, manage	Toevoegen, verbinden, beheren	windows	no
+Proxy server for Wi-Fi and Ethernet connections	Proxyserver voor Wi-Fi- en Ethernet-verbindingen	windows	no
+Hidden network	Verborgen netwerk	windows	no
+A network that doesn’t broadcast its name	Een netwerk dat zijn naam niet uitzendt	winpoint	no
+Connect to a hidden network	Verbinding maken met een verborgen netwerk	winpoint	no
+Driver:	Stuurprogramma:	winpoint	no
+Firmware version:	Firmwareversie:	winpoint	no
+Supported bands:	Ondersteunde banden:	winpoint	no
+Network adapter:	Netwerkadapter:	winpoint	no
+Adapter	Adapter	winpoint	no
+The Wi-Fi adapter of this list	De Wi-Fi-adapter van deze lijst	winpoint	no
+{ssid} properties	Eigenschappen van {ssid}	winpoint	no
+Hardware properties	Hardware-eigenschappen	windows	no
+Driver, MAC address and bands of the Wi-Fi adapter	Stuurprogramma, MAC-adres en banden van de Wi-Fi-adapter	winpoint	no
+Connected, {speed} Mbps	Verbonden, {speed} Mbps	winpoint	no
+Connecting…	Verbinding maken…	winpoint	no
+Disconnecting…	Verbinding verbreken…	winpoint	no
+Network cable unplugged	Netwerkkabel losgekoppeld	winpoint	no
+Not managed by NetworkManager	Niet beheerd door NetworkManager	winpoint	no
+Edit	Bewerken	windows	no
+Metered connection	Verbinding met een datalimiet	windows	no
+Some apps might work differently to reduce data usage when you’re connected to this network	Sommige apps werken mogelijk anders om het gegevensgebruik te beperken wanneer je met dit netwerk bent verbonden	winpoint	no
+IP assignment:	IP-toewijzing:	windows	no
+DNS server assignment:	DNS-servertoewijzing:	windows	no
+Name	Naam	windows	no
+None (any adapter)	Geen (elke adapter)	winpoint	no
+MAC address	MAC-adres	winpoint	no
+The adapter this profile is for	De adapter waarvoor dit profiel geldt	winpoint	no
+Cloned address	Gekloond adres	winpoint	no
+MTU	MTU	winpoint	no
+0 is automatic	0 is automatisch	winpoint	no
+Edit advanced properties	Geavanceerde eigenschappen bewerken	winpoint	no
+Type a name.	Typ een naam.	winpoint	no
+Add a profile	Een profiel toevoegen	winpoint	no
+Remove the profile “{name}”?	Profiel “{name}” verwijderen?	winpoint	no
+The settings of this profile will be removed.	De instellingen van dit profiel worden verwijderd.	winpoint	no
+Rename	Naam wijzigen	glossary	yes
+Enabled ({method})	Ingeschakeld ({method})	winpoint	no
+Authentication settings	Verificatie-instellingen	windows	no
+Advanced:	Geavanceerd:	windows	no
+Name, MAC address, cloned address, MTU	Naam, MAC-adres, gekloond adres, MTU	winpoint	no
+No profile	Geen profiel	winpoint	no
+This adapter doesn’t have a profile with settings yet.	Deze adapter heeft nog geen profiel met instellingen.	winpoint	no
+Add profile	Profiel toevoegen	windows	no
+Profiles	Profielen	winpoint	no
+Choose which profile this adapter uses	Kies welk profiel deze adapter gebruikt	winpoint	no
+Active	Actief	winpoint	no
+Activate	Activeren	winpoint	no
+Bluetooth network	Bluetooth-netwerk	winpoint	no
+Dial-up network (DUN)	Inbelnetwerk (DUN)	winpoint	no
+Personal area network (PAN)	Persoonlijk netwerk (PAN)	winpoint	no
+# native/apps/settings/src/pages/wifi_network.rs (settings parity C, slice 1)
+This network isn’t saved on this PC (any more).	Dit netwerk is niet (meer) opgeslagen op deze pc.	winpoint	no
+Connect automatically when in range	Automatisch verbinding maken als ik binnen bereik ben	windows	no
+Make available to other users	Beschikbaar maken voor andere gebruikers	windows	no
+Other users of this PC can use this network too	Andere gebruikers van deze pc kunnen dit netwerk ook gebruiken	winpoint	no
+Random hardware addresses	Willekeurige hardwareadressen	windows	no
+Help protect your privacy by making it harder for people to track your device location when you connect to this network	Help je privacy te beschermen door het moeilijker te maken om de locatie van je apparaat te volgen wanneer je verbinding maakt met dit netwerk	winpoint	no
+View Wi-Fi security key	Wi-Fi-beveiligingssleutel weergeven	windows	no
+Also as a QR code to share with a phone	Ook als QR-code om met een telefoon te delen	winpoint	no
+View	Weergeven	windows	no
+Last used:	Laatst gebruikt:	winpoint	no
+BSSID and the Wi-Fi adapter of this network	BSSID en de Wi-Fi-adapter van dit netwerk	winpoint	no
+BSSID	BSSID	winpoint	no
+Only connect to this access point	Alleen verbinden met dit toegangspunt	winpoint	no
+Device MAC address	MAC-adres van apparaat	winpoint	no
+The Wi-Fi adapter that uses this network	De Wi-Fi-adapter die dit netwerk gebruikt	winpoint	no
+Forget this network	Dit netwerk vergeten	winpoint	no
+Remove the saved settings and the security key of this network	De opgeslagen instellingen en de beveiligingssleutel van dit netwerk verwijderen	winpoint	no
+Forget	Vergeten	windows	no
+Forget “{ssid}”?	“{ssid}” vergeten?	winpoint	no
+You’ll have to type the security key again to connect again.	Je moet de beveiligingssleutel opnieuw typen om weer verbinding te maken.	winpoint	no
+“{ssid}” forgotten	“{ssid}” vergeten	winpoint	no
+Undo	Ongedaan maken	glossary	yes
+Add a new network	Een nieuw netwerk toevoegen	winpoint	no
+Add network	Netwerk toevoegen	windows	no
+Known networks	Bekende netwerken	winpoint	no
+There are no known networks	Er zijn geen bekende netwerken	winpoint	no
+Networks you connect to are saved here.	Netwerken waarmee je verbinding maakt, worden hier opgeslagen.	winpoint	no
+Search this list	Zoeken in deze lijst	winpoint	no
+Last used: {date}	Laatst gebruikt: {date}	winpoint	no
+# native/apps/settings/src/pages/net_editor.rs (settings parity C, slice 1)
+Automatic (DHCP)	Automatisch (DHCP)	windows	no
+Manual	Handmatig	winpoint	no
+Link-local only	Alleen link-local	winpoint	no
+Shared to other computers	Gedeeld met andere computers	winpoint	no
+Disabled	Uitgeschakeld	winpoint	no
+Automatic	Automatisch	windows	no
+Automatic, DHCP only	Automatisch, alleen DHCP	winpoint	no
+Ignored	Genegeerd	winpoint	no
+Enhanced Open	Enhanced Open	winpoint	no
+WEP key (40/128-bit)	WEP-sleutel (40/128-bits)	winpoint	no
+WEP passphrase (128-bit)	WEP-wachtwoordzin (128-bits)	winpoint	no
+LEAP	LEAP	winpoint	no
+Dynamic WEP (802.1X)	Dynamische WEP (802.1X)	winpoint	no
+WPA/WPA2-Personal	WPA/WPA2-Persoonlijk	winpoint	no
+WPA3-Personal	WPA3-Persoonlijk	winpoint	no
+WPA/WPA2-Enterprise	WPA/WPA2-Enterprise	winpoint	no
+Protected EAP (PEAP)	Beveiligde EAP (PEAP)	winpoint	no
+Tunnelled TLS (TTLS)	Getunneld TLS (TTLS)	winpoint	no
+TLS	TLS	winpoint	no
+PWD	PWD	winpoint	no
+FAST	FAST	winpoint	no
+MSCHAPv2	MSCHAPv2	winpoint	no
+MD5	MD5	winpoint	no
+GTC	GTC	winpoint	no
+PAP	PAP	winpoint	no
+MSCHAP	MSCHAP	winpoint	no
+MSCHAPv2 (no EAP)	MSCHAPv2 (geen EAP)	winpoint	no
+CHAP	CHAP	winpoint	no
+Version 0	Versie 0	winpoint	no
+Version 1	Versie 1	winpoint	no
+Anonymous	Anoniem	winpoint	no
+Authenticated	Geverifieerd	winpoint	no
+Both	Beide	winpoint	no
+Save for this user only	Alleen voor deze gebruiker opslaan	winpoint	no
+Save for all users	Voor alle gebruikers opslaan	winpoint	no
+Ask every time	Elke keer vragen	winpoint	no
+On	Aan	windows	no
+Change daily	Dagelijks wijzigen	windows	no
+Default	Standaard	windows	no
+Preserve	Behouden	winpoint	no
+Permanent address	Vast hardwareadres	winpoint	no
+Random	Willekeurig	winpoint	no
+Stable	Stabiel	winpoint	no
+2.4 GHz	2,4 GHz	winpoint	no
+SSID:	SSID:	winpoint	no
+Security type:	Beveiligingstype:	windows	no
+Manufacturer:	Fabrikant:	windows	no
+Description:	Beschrijving:	windows	no
+Driver version:	Versie van stuurprogramma:	windows	no
+Network band:	Netwerkband:	windows	no
+Network channel:	Netwerkkanaal:	windows	no
+Link speed (Receive/Transmit):	Verbindingssnelheid (ontvangen/verzenden):	windows	no
+IPv6 address:	IPv6-adres:	winpoint	no
+Link-local IPv6 address:	Link-local IPv6-adres:	winpoint	no
+IPv6 DNS servers:	IPv6-DNS-servers:	winpoint	no
+IPv4 address:	IPv4-adres:	windows	no
+IPv4 DNS servers:	IPv4-DNS-servers:	windows	no
+Default gateway:	Standaardgateway:	winpoint	no
+Physical address (MAC):	Fysiek adres (MAC):	windows	no
+Show characters	Tekens weergeven	winpoint	no
+Remove	Verwijderen	windows	no
+IP assignment	IP-toewijzing	windows	no
+Subnet prefix length	Lengte van subnetvoorvoegsel	winpoint	no
+Subnet mask	Subnetmasker	windows	no
+IP address	IP-adres	windows	no
+Add address	Adres toevoegen	winpoint	no
+Addresses	Adressen	winpoint	no
+Gateway	Gateway	windows	no
+Routes and how this connection is used	Routes en het gebruik van deze verbinding	winpoint	no
+Get routes automatically	Routes automatisch ophalen	winpoint	no
+Address	Adres	winpoint	no
+Metric	Metrische waarde	winpoint	no
+Add route	Route toevoegen	winpoint	no
+Routes	Routes	winpoint	no
+Use this connection only for resources on its network	Deze verbinding alleen gebruiken voor bronnen in het eigen netwerk	winpoint	no
+{family}: “{value}” isn’t a valid IP address.	{family}: “{value}” is geen geldig IP-adres.	winpoint	no
+{family}: “{value}” isn’t a valid subnet mask or prefix.	{family}: “{value}” is geen geldig subnetmasker of voorvoegsel.	winpoint	no
+{family}: “{value}” isn’t a valid gateway.	{family}: “{value}” is geen geldige gateway.	winpoint	no
+{family}: type at least one IP address.	{family}: typ ten minste één IP-adres.	winpoint	no
+{family}: “{value}” isn’t a valid metric.	{family}: “{value}” is geen geldige metrische waarde.	winpoint	no
+Edit IP settings	IP-instellingen bewerken	windows	no
+DNS server assignment	DNS-servertoewijzing	windows	no
+Separated by commas	Gescheiden door komma's	winpoint	no
+Preferred DNS	Voorkeurs-DNS	windows	no
+Alternate DNS	Alternatieve DNS	windows	no
+More DNS servers	Meer DNS-servers	winpoint	no
+Also use the network’s DNS servers	Ook de DNS-servers van het netwerk gebruiken	winpoint	no
+“{value}” isn’t a valid DNS server address.	“{value}” is geen geldig DNS-serveradres.	winpoint	no
+Edit DNS settings	DNS-serverinstellingen bewerken	winpoint	no
+None	Geen	winpoint	no
+Browse…	Bladeren…	windows	no
+Choose a file	Een bestand kiezen	windows	no
+Authentication method	Verificatiemethode	winpoint	no
+Unchanged	Ongewijzigd	winpoint	no
+Anonymous identity	Anonieme identiteit	winpoint	no
+Domain	Domein	winpoint	no
+CA certificate	CA-certificaat	winpoint	no
+User certificate	Gebruikerscertificaat	winpoint	no
+Private key	Persoonlijke sleutel	winpoint	no
+Private key password	Wachtwoord van persoonlijke sleutel	winpoint	no
+PEAP version	PEAP-versie	winpoint	no
+PAC provisioning	PAC-inrichting	winpoint	no
+PAC file	PAC-bestand	winpoint	no
+Inner authentication	Interne verificatie	winpoint	no
+User name	Gebruikersnaam	windows	no
+Password	Wachtwoord	windows	no
+Save password	Wachtwoord opslaan	winpoint	no
+Identity	Identiteit	winpoint	no
+“{value}” isn’t a file. Choose a file with Browse.	“{value}” is geen bestand. Kies een bestand met Bladeren.	winpoint	no
+Type an identity.	Typ een identiteit.	winpoint	no
+Type a user name.	Typ een gebruikersnaam.	winpoint	no
+TLS needs a user certificate and a private key.	TLS heeft een gebruikerscertificaat en een persoonlijke sleutel nodig.	winpoint	no
+Enable IEEE 802.1X authentication	IEEE 802.1X-verificatie inschakelen	winpoint	no
+Edit authentication settings	Verificatie-instellingen bewerken	winpoint	no
+Security type	Beveiligingstype	windows	no
+Security key	Beveiligingssleutel	windows	no
+WEP index	WEP-index	winpoint	no
+Open system	Open systeem	winpoint	no
+Shared key	Gedeelde sleutel	winpoint	no
+Authentication	Verificatie	winpoint	no
+The security key must be 8 to 63 characters.	De beveiligingssleutel moet uit 8 tot 63 tekens bestaan.	winpoint	no
+Type a valid WEP key.	Typ een geldige WEP-sleutel.	winpoint	no
+Edit security settings	Beveiligingsinstellingen bewerken	winpoint	no
+This network doesn’t have a security key.	Dit netwerk heeft geen beveiligingssleutel.	winpoint	no
+Scan this QR code with a phone or tablet to connect to this network.	Scan deze QR-code met een telefoon of tablet om verbinding te maken met dit netwerk.	winpoint	no
+Wi-Fi security key of “{ssid}”	Wi-Fi-beveiligingssleutel van “{ssid}”	winpoint	no
+Network name	Netwerknaam	windows	no
+Connect automatically	Automatisch verbinding maken	windows	no
+Connect even if this network is not broadcasting	Verbinding maken, zelfs als dit netwerk niet uitzendt	windows	no
+Type a network name of 1 to 32 characters.	Typ een netwerknaam van 1 tot 32 tekens.	winpoint	no
+# host/i18n/net.tsv (services/net/hotspot.rs, vpn.rs, modem.rs): the host's messages of batch C, slice 2
+The network password isn’t valid. Use 8 to 63 characters.	Het netwerkwachtwoord is niet geldig. Gebruik 8 tot 63 tekens.	winpoint	no
+The network name must be 1 to 32 characters.	De netwerknaam moet uit 1 tot 32 tekens bestaan.	winpoint	no
+This file isn’t a VPN configuration that can be imported.	Dit bestand is geen VPN-configuratie die kan worden geïmporteerd.	winpoint	no
+The name of a WireGuard file must be a valid interface name, such as wg0.conf.	De naam van een WireGuard-bestand moet een geldige interfacenaam zijn, zoals wg0.conf.	winpoint	no
+The VPN connection can’t be imported: {error}	De VPN-verbinding kan niet worden geïmporteerd: {error}	winpoint	no
+The VPN plug-in for this file isn’t installed.	De VPN-plug-in voor dit bestand is niet geïnstalleerd.	winpoint	no
+This mobile broadband adapter wasn’t found.	Deze mobiele breedbandadapter is niet gevonden.	winpoint	no
+No SIM card was found.	Er is geen simkaart gevonden.	winpoint	no
+A PIN has 4 to 8 digits, a PUK has 8 digits.	Een pincode bestaat uit 4 tot 8 cijfers, een PUK-code uit 8 cijfers.	winpoint	no
+# native/apps/settings/src/pages/proxy.rs (settings parity C, slice 2)
+Automatic proxy setup	Automatische proxyinstellingen	windows	no
+Use a proxy server for Ethernet or Wi-Fi connections. Only one of these proxy settings can be on at a time.	Gebruik een proxyserver voor Ethernet- of Wi-Fi-verbindingen. Er kan maar één van deze proxyinstellingen tegelijk aan staan.	winpoint	no
+Automatically detect settings	Instellingen automatisch detecteren	windows	no
+Without a script address WPAD (Web Proxy Auto-Discovery) is used. This isn’t recommended for untrusted public networks.	Zonder scriptadres wordt WPAD (automatische proxydetectie) gebruikt. Dit wordt niet aanbevolen voor openbare netwerken die je niet vertrouwt.	winpoint	no
+Use setup script	Installatiescript gebruiken	windows	no
+Set up	Instellen	windows	no
+Manual proxy setup	Handmatige proxyinstellingen	windows	no
+Use a proxy server for Ethernet or Wi-Fi connections.	Gebruik een proxyserver voor Ethernet- of Wi-Fi-verbindingen.	winpoint	no
+Use a proxy server	Een proxyserver gebruiken	windows	no
+Script address	Scriptadres	windows	no
+Edit setup script	Installatiescript bewerken	winpoint	no
+Type a script address that starts with http://, https:// or file://.	Typ een scriptadres dat begint met http://, https:// of file://.	winpoint	no
+Port	Poort	windows	no
+Proxy IP address	IP-adres van proxy	windows	no
+Use the proxy server except for addresses that start with the following entries. Use semicolons (;) to separate entries.	Gebruik de proxyserver behalve voor adressen die beginnen met de volgende vermeldingen. Gebruik puntkomma’s (;) om vermeldingen te scheiden.	windows	no
+Don’t use the proxy server for local (intranet) addresses	De proxyserver niet gebruiken voor lokale (intranet)adressen	windows	no
+Another proxy server per protocol	Een andere proxyserver per protocol	winpoint	no
+Use the same proxy server for all protocols	Dezelfde proxyserver voor alle protocollen gebruiken	winpoint	no
+Edit proxy server	Proxyserver bewerken	winpoint	no
+Type the IP address or name of the proxy server.	Typ het IP-adres of de naam van de proxyserver.	winpoint	no
+Type a port from 1 to 65535.	Typ een poort van 1 tot 65535.	winpoint	no
+{protocol}: type the address of the proxy server.	{protocol}: typ het adres van de proxyserver.	winpoint	no
+{protocol}: type a port from 1 to 65535.	{protocol}: typ een poort van 1 tot 65535.	winpoint	no
+# native/apps/settings/src/pages/flightmode.rs (settings parity C, slice 2)
+Hardware flight mode is on	Vliegtuigmodus via hardwareschakelaar staat aan	winpoint	no
+Turn off the wireless switch on your PC to use wireless devices again.	Zet de schakelaar voor draadloze verbindingen op je pc uit om draadloze apparaten weer te gebruiken.	winpoint	no
+Wireless devices	Draadloze apparaten	windows	no
+Wi-Fi	Wi-Fi	windows	no
+Bluetooth	Bluetooth	windows	no
+# native/apps/settings/src/pages/hotspot.rs (settings parity C, slice 2)
+Any available	Elke beschikbare	winpoint	no
+Open	Open	winpoint	no
+Unknown	Onbekend	winpoint	no
+Turning on…	Wordt ingeschakeld…	winpoint	no
+On: other devices can connect	Aan: andere apparaten kunnen verbinding maken	winpoint	no
+Ethernet	Ethernet	windows	no
+No internet connection	Geen internetverbinding	winpoint	no
+Name:	Naam:	winpoint	no
+Password:	Wachtwoord:	winpoint	no
+Band:	Band:	winpoint	no
+Scan the QR code with your phone to connect to the hotspot.	Scan de QR-code met je telefoon om verbinding te maken met de hotspot.	winpoint	no
+Share my internet connection from	Mijn internetverbinding delen vanaf	windows	no
+Share over	Delen via	windows	no
+Show password	Wachtwoord weergeven	winpoint	no
+Turn on mobile hotspot?	Mobiele hotspot inschakelen?	winpoint	no
+You’ll be disconnected from {name}: this Wi-Fi adapter can’t stay connected and share a hotspot at the same time.	De verbinding met {name} wordt verbroken: deze Wi-Fi-adapter kan niet tegelijk verbonden zijn en een hotspot delen.	winpoint	no
+Turn on	Inschakelen	windows	no
+Turn off mobile hotspot?	Mobiele hotspot uitschakelen?	winpoint	no
+Devices that use the hotspot will be disconnected.	Apparaten die de hotspot gebruiken, worden losgekoppeld.	winpoint	no
+Turn off	Uitschakelen	windows	no
+Leave unchanged	Ongewijzigd laten	winpoint	no
+Generate random password	Willekeurig wachtwoord genereren	winpoint	no
+Network password (WEP key)	Netwerkwachtwoord (WEP-sleutel)	winpoint	no
+Network password (at least 8 characters)	Netwerkwachtwoord (minimaal 8 tekens)	winpoint	no
+Network band	Netwerkband	winpoint	no
+Edit network info	Netwerkinformatie bewerken	winpoint	no
+5 GHz	5 GHz	winpoint	no
+# native/apps/settings/src/pages/vpn.rs (settings parity C, slice 2)
+Type a connection name.	Typ een verbindingsnaam.	winpoint	no
+Type the server name or address.	Typ de servernaam of het serveradres.	winpoint	no
+Type an interface name of up to 15 characters, such as wg0.	Typ een interfacenaam van maximaal 15 tekens, zoals wg0.	winpoint	no
+A WireGuard key has 44 characters and ends in =.	Een WireGuard-sleutel bestaat uit 44 tekens en eindigt op =.	winpoint	no
+Type this computer’s IP address in the tunnel, such as 10.8.0.2/24.	Typ het IP-adres van deze computer in de tunnel, zoals 10.8.0.2/24.	winpoint	no
+Type valid allowed IP addresses, such as 0.0.0.0/0.	Typ geldige toegestane IP-adressen, zoals 0.0.0.0/0.	winpoint	no
+Choose the static key and type the local and remote IP addresses.	Kies de statische sleutel en typ het lokale en het externe IP-adres.	winpoint	no
+Choose the user certificate and the private key.	Kies het gebruikerscertificaat en de persoonlijke sleutel.	winpoint	no
+This VPN provider can’t be set up here. Import a configuration file.	Deze VPN-provider kan hier niet worden ingesteld. Importeer een configuratiebestand.	winpoint	no
+Connected	Verbonden	windows	no
+VPN connections	VPN-verbindingen	windows	no
+Add VPN	VPN toevoegen	windows	no
+Import from file…	Importeren uit bestand…	winpoint	no
+There are no VPN connections yet.	Er zijn nog geen VPN-verbindingen.	winpoint	no
+Disconnect	Verbinding verbreken	windows	no
+Connect	Verbinding maken	windows	no
+Server, sign-in info, certificates and other provider settings	Server, aanmeldingsgegevens, certificaten en andere instellingen van de provider	winpoint	no
+IP settings	IP-instellingen	winpoint	no
+IPv4 and IPv6 of the tunnel	IPv4 en IPv6 van de tunnel	winpoint	no
+Remove this VPN connection	Deze VPN-verbinding verwijderen	winpoint	no
+Remove the VPN connection “{name}”?	VPN-verbinding “{name}” verwijderen?	winpoint	no
+The settings and saved sign-in info of this connection will be removed.	De instellingen en opgeslagen aanmeldingsgegevens van deze verbinding worden verwijderd.	winpoint	no
+Import a VPN configuration	Een VPN-configuratie importeren	winpoint	no
+VPN configurations (*.ovpn, *.conf, *.pcf)	VPN-configuraties (*.ovpn, *.conf, *.pcf)	winpoint	no
+Can’t import the VPN connection	Kan de VPN-verbinding niet importeren	winpoint	no
+The VPN connection was imported	De VPN-verbinding is geïmporteerd	winpoint	no
+No VPN plug-in is installed.	Er is geen VPN-plug-in geïnstalleerd.	winpoint	no
+VPN provider	VPN-provider	windows	no
+Connection name	Verbindingsnaam	windows	no
+Server name or address	Servernaam of -adres	windows	no
+Type of sign-in info	Type aanmeldingsgegevens	windows	no
+Private key password	Wachtwoord voor persoonlijke sleutel	winpoint	no
+Static key	Statische sleutel	winpoint	no
+Local IP address	Lokaal IP-adres	winpoint	no
+Remote IP address	Extern IP-adres	winpoint	no
+User name (optional)	Gebruikersnaam (optioneel)	windows	no
+Password (optional)	Wachtwoord (optioneel)	windows	no
+Remember my sign-in info	Mijn aanmeldingsgegevens onthouden	windows	no
+Interface name	Interfacenaam	winpoint	no
+Private key	Privésleutel	winpoint	no
+This computer’s IP address	IP-adres van deze computer	winpoint	no
+Server public key	Openbare sleutel van de server	winpoint	no
+Allowed IP addresses	Toegestane IP-adressen	winpoint	no
+Pre-shared key (optional)	Vooraf gedeelde sleutel (optioneel)	winpoint	no
+Add a VPN connection	Een VPN-verbinding toevoegen	windows	no
+Other settings	Andere instellingen	winpoint	no
+Value	Waarde	winpoint	no
+Add setting	Instelling toevoegen	winpoint	no
+Every other setting needs a name of its own.	Elke andere instelling heeft een eigen naam nodig.	winpoint	no
+Peer {n}: check the public key, endpoint and allowed IP addresses.	Peer {n}: controleer de openbare sleutel, het eindpunt en de toegestane IP-adressen.	winpoint	no
+Listen port	Luisterpoort	winpoint	no
+Firewall mark (fwmark)	Firewallmarkering (fwmark)	winpoint	no
+0 is off	0 is uit	winpoint	no
+Add routes for the peers’ allowed IP addresses	Routes voor de toegestane IP-adressen van de peers toevoegen	winpoint	no
+Peers	Peers	winpoint	no
+Public key	Openbare sleutel	winpoint	no
+Endpoint	Eindpunt	winpoint	no
+Keepalive (s)	Keepalive (s)	winpoint	no
+Pre-shared key	Vooraf gedeelde sleutel	winpoint	no
+Add peer	Peer toevoegen	winpoint	no
+Type a connection name and an interface name of up to 15 characters.	Typ een verbindingsnaam en een interfacenaam van maximaal 15 tekens.	winpoint	no
+OpenVPN	OpenVPN	winpoint	no
+PPTP (Point-to-Point Tunnelling Protocol)	PPTP (Point-to-Point Tunneling Protocol)	winpoint	no
+L2TP/IPsec	L2TP/IPsec	winpoint	no
+IKEv2 (strongSwan)	IKEv2 (strongSwan)	winpoint	no
+Cisco-compatible VPN (vpnc)	Cisco-compatibele VPN (vpnc)	winpoint	no
+Cisco AnyConnect (OpenConnect)	Cisco AnyConnect (OpenConnect)	winpoint	no
+SSTP	SSTP	winpoint	no
+Fortinet SSL VPN	Fortinet SSL-VPN	winpoint	no
+WireGuard	WireGuard	winpoint	no
+User name and password	Gebruikersnaam en wachtwoord	winpoint	no
+Certificates (TLS)	Certificaten (TLS)	winpoint	no
+Password with certificates (TLS)	Wachtwoord met certificaten (TLS)	winpoint	no
+Server	Server	winpoint	no
+Use a TCP connection	Een TCP-verbinding gebruiken	winpoint	no
+Key direction (0 or 1)	Sleutelrichting (0 of 1)	winpoint	no
+Device type (tun or tap)	Apparaattype (tun of tap)	winpoint	no
+Cipher	Versleuteling	winpoint	no
+HMAC authentication	HMAC-verificatie	winpoint	no
+TLS authentication key	TLS-verificatiesleutel	winpoint	no
+TLS key direction (0 or 1)	Richting van de TLS-sleutel (0 of 1)	winpoint	no
+TLS encryption key	TLS-versleutelingssleutel	winpoint	no
+Verify the server certificate type	Certificaattype van de server controleren	winpoint	no
+Tunnel MTU	MTU van de tunnel	winpoint	no
+NT domain	NT-domein	winpoint	no
+Use point-to-point encryption (MPPE)	Point-to-point-versleuteling (MPPE) gebruiken	winpoint	no
+128-bit encryption only	Alleen 128-bits versleuteling	winpoint	no
+Allow stateful encryption	Stateful versleuteling toestaan	winpoint	no
+Allow PAP	PAP toestaan	winpoint	no
+Allow CHAP	CHAP toestaan	winpoint	no
+Allow MSCHAP	MSCHAP toestaan	winpoint	no
+Allow MSCHAPv2	MSCHAPv2 toestaan	winpoint	no
+Allow EAP	EAP toestaan	winpoint	no
+Allow BSD data compression	BSD-gegevenscompressie toestaan	winpoint	no
+Allow Deflate data compression	Deflate-gegevenscompressie toestaan	winpoint	no
+Use TCP header compression	TCP-headercompressie gebruiken	winpoint	no
+# native/apps/settings/src/pages/mobile.rs (settings parity C, slice 2)
+All	Alle	winpoint	no
+{allowed} (preferred: {preferred})	{allowed} (voorkeur: {preferred})	winpoint	no
+Registered	Geregistreerd	winpoint	no
+Roaming	Roaming	windows	no
+Searching	Zoeken	winpoint	no
+Denied	Geweigerd	winpoint	no
+Emergency calls only	Alleen noodoproepen	winpoint	no
+Not registered	Niet geregistreerd	winpoint	no
+The SIM card is locked	De simkaart is vergrendeld	winpoint	no
+Type the SIM PIN to unlock it. You have {n} attempts left.	Typ de pincode van de simkaart om hem te ontgrendelen. Je hebt nog {n} pogingen.	winpoint	no
+Type the SIM PIN to unlock it.	Typ de pincode van de simkaart om hem te ontgrendelen.	winpoint	no
+The SIM card is blocked	De simkaart is geblokkeerd	winpoint	no
+Type the PUK from your operator and a new PIN. You have {n} attempts left.	Typ de PUK-code van je provider en een nieuwe pincode. Je hebt nog {n} pogingen.	winpoint	no
+Type the PUK from your operator and a new PIN.	Typ de PUK-code van je provider en een nieuwe pincode.	winpoint	no
+No SIM card	Geen simkaart	winpoint	no
+Insert a SIM card to use mobile data.	Plaats een simkaart om mobiele gegevens te gebruiken.	winpoint	no
+SIM card error	Simkaartfout	winpoint	no
+The SIM card isn’t working. Insert it again or contact your operator.	De simkaart werkt niet. Plaats hem opnieuw of neem contact op met je provider.	winpoint	no
+Off	Uit	winpoint	no
+Connected to {op}, {kind}	Verbonden met {op}, {kind}	winpoint	no
+Connected to {op}	Verbonden met {op}	winpoint	no
+Not connected ({op})	Niet verbonden ({op})	winpoint	no
+Not connected	Niet verbonden	windows	no
+Operator:	Provider:	winpoint	no
+Network type:	Netwerktype:	winpoint	no
+Signal strength:	Signaalsterkte:	winpoint	no
+Network status:	Netwerkstatus:	winpoint	no
+Phone number:	Telefoonnummer:	winpoint	no
+Model:	Model:	winpoint	no
+IMEI:	IMEI:	winpoint	no
+SIM ICCID:	ICCID van simkaart:	winpoint	no
+Type a profile name.	Typ een profielnaam.	winpoint	no
+Type the access point name (APN), without spaces.	Typ de naam van het toegangspunt (APN), zonder spaties.	winpoint	no
+Flight mode is on	Vliegtuigmodus staat aan	winpoint	no
+Turn off flight mode to use the mobile network.	Schakel Vliegtuigmodus uit om het mobiele netwerk te gebruiken.	winpoint	no
+Turn off flight mode	Vliegtuigmodus uitschakelen	winpoint	no
+No mobile broadband adapter found	Er is geen mobiele breedbandadapter gevonden	winpoint	no
+Connect a modem or insert a SIM card to use a mobile network.	Sluit een modem aan of plaats er een simkaart in om een mobiel netwerk te gebruiken.	winpoint	no
+Modem	Modem	winpoint	no
+Unlock	Ontgrendelen	winpoint	no
+Mobile data	Mobiele gegevens	winpoint	no
+Access data using the mobile network	Toegang tot gegevens via het mobiele netwerk	winpoint	no
+Don’t roam	Niet roamen	windows	no
+Roam	Roamen	windows	no
+Use mobile data outside your operator’s network	Mobiele gegevens gebruiken buiten het netwerk van je provider	winpoint	no
+SIM {n}	Simkaart {n}	winpoint	no
+empty	leeg	winpoint	no
+Use another SIM slot?	Een andere simsleuf gebruiken?	winpoint	no
+The modem restarts and the mobile network is unavailable for a moment.	De modem start opnieuw en het mobiele netwerk is even niet beschikbaar.	winpoint	no
+Change	Wijzigen	windows	no
+Primary SIM slot	Primaire simsleuf	winpoint	no
+Mobile operator settings	Instellingen van mobiele provider	windows	no
+Preferred network type	Voorkeursnetwerktype	winpoint	no
+Select network	Netwerk selecteren	winpoint	no
+Choose	Kiezen	winpoint	no
+Use this SIM for mobile data	Deze simkaart gebruiken voor mobiele gegevens	windows	no
+PUK	PUK-code	winpoint	no
+New PIN	Nieuwe pincode	winpoint	no
+Confirm new PIN	Nieuwe pincode bevestigen	winpoint	no
+SIM PIN	Pincode van simkaart	winpoint	no
+Unlock SIM card	Simkaart ontgrendelen	winpoint	no
+A PUK has 8 digits, a PIN 4 to 8 digits.	Een PUK-code bestaat uit 8 cijfers, een pincode uit 4 tot 8 cijfers.	winpoint	no
+The PINs don’t match.	De pincodes komen niet overeen.	winpoint	no
+A PIN has 4 to 8 digits.	Een pincode bestaat uit 4 tot 8 cijfers.	winpoint	no
+Searching for networks… This can take a minute.	Zoeken naar netwerken… Dit kan een minuut duren.	winpoint	no
+Select	Selecteren	winpoint	no
+Access point	Toegangspunt	windows	no
+Add APN	APN toevoegen	windows	no
+In use	In gebruik	winpoint	no
+Apply	Toepassen	glossary	yes
+Remove the access point “{name}”?	Toegangspunt “{name}” verwijderen?	winpoint	no
+Profile name	Profielnaam	winpoint	no
+APN	APN	winpoint	no
+APN type	APN-type	winpoint	no
+Fill in myself	Zelf invullen	winpoint	no
+Your operator’s settings	Instellingen van je provider	winpoint	no
+Edit APN	APN bewerken	winpoint	no
+SIM security	Beveiliging van simkaart	winpoint	no
+Use SIM PIN	Pincode van simkaart gebruiken	windows	no
+The PIN is needed when you start the PC or insert the SIM card	De pincode is nodig als je de pc opstart of de simkaart plaatst	winpoint	no
+Change SIM PIN	Pincode van simkaart wijzigen	windows	no
+Current PIN	Huidige pincode	winpoint	no
+Turn on SIM PIN	Pincode van simkaart inschakelen	winpoint	no
+Turn off SIM PIN	Pincode van simkaart uitschakelen	winpoint	no
+OK	OK	windows	no
+MS-CHAP v2	MS-CHAP v2	winpoint	no
+Internet	Internet	winpoint	no
+Internet and attach	Internet en koppelen	winpoint	no
+# host/i18n/sharing.tsv (services/sharing*.rs): the host messages of batch C, slice 3
+Sharing isn’t available here.	Delen is hier niet beschikbaar.	winpoint	no
+Enter a user name and a password, without line breaks. The user name can’t start with a hyphen.	Vul een gebruikersnaam en een wachtwoord in, zonder regeleinden. De gebruikersnaam mag niet met een streepje beginnen.	winpoint	no
+A folder must be a full path.	Een map moet een volledig pad zijn.	winpoint	no
+Remote Desktop isn’t available: gnome-remote-desktop isn’t installed.	Extern bureaublad is niet beschikbaar: gnome-remote-desktop is niet geïnstalleerd.	winpoint	no
+Remote login isn’t available on this PC.	Extern aanmelden is niet beschikbaar op deze pc.	winpoint	no
+The Remote Desktop certificate can’t be created: GnuTLS (libgnutls.so.30) is missing or doesn’t work.	Het certificaat voor Extern bureaublad kan niet worden gemaakt: GnuTLS (libgnutls.so.30) ontbreekt of werkt niet.	winpoint	no
+The Remote Desktop certificate couldn’t be saved: {error}	Het certificaat voor Extern bureaublad kon niet worden opgeslagen: {error}	winpoint	no
+The Remote Desktop sign-in details couldn’t be read or saved: {error}	De aanmeldingsgegevens voor Extern bureaublad konden niet worden gelezen of opgeslagen: {error}	winpoint	no
+OpenSSH Server isn’t installed.	OpenSSH-server is niet geïnstalleerd.	winpoint	no
+The openssh-server package wasn’t found in the software sources.	Het pakket openssh-server is niet gevonden in de softwarebronnen.	winpoint	no
+The installation failed: {error}	De installatie is mislukt: {error}	winpoint	no
+An optional feature is already being installed.	Er wordt al een optionele functie geïnstalleerd.	winpoint	no
+Network sharing isn’t available: gnome-settings-daemon isn’t running or this PC isn’t connected to a network.	Delen in het netwerk is niet beschikbaar: gnome-settings-daemon wordt niet uitgevoerd of deze pc is niet verbonden met een netwerk.	winpoint	no
+The media streaming settings couldn’t be saved: {error}	De instellingen voor mediastreaming konden niet worden opgeslagen: {error}	winpoint	no
+# native/apps/settings/src/pages/{network_advanced,remotedesktop,system_advanced}.rs (settings parity C, slice 3)
+Bluetooth Network Connection	Bluetooth-netwerkverbinding	winpoint	no
+Status:	Status:	winpoint	no
+Connection:	Verbinding:	winpoint	no
+Network adapters	Netwerkadapters	windows	no
+No network adapters found	Geen netwerkadapters gevonden	winpoint	no
+Disable	Uitschakelen	windows	no
+Enable	Inschakelen	windows	no
+This adapter can’t be enabled right now.	Deze adapter kan nu niet worden ingeschakeld.	winpoint	no
+View additional properties	Aanvullende eigenschappen weergeven	windows	no
+More settings	Meer instellingen	windows	no
+Hardware and connection properties	Hardware- en verbindingseigenschappen	windows	no
+The properties of every network adapter	De eigenschappen van alle netwerkadapters	winpoint	no
+Connectivity checking	Controle op internetverbinding	winpoint	no
+Detect connection problems to help you stay online. To do this, this PC now and then connects to a server of your distribution.	Verbindingsproblemen detecteren, zodat je online blijft. Hiervoor maakt deze pc af en toe verbinding met een server van je distributie.	winpoint	no
+Network sharing isn’t available: gnome-settings-daemon isn’t running.	Delen in het netwerk is niet beschikbaar: gnome-settings-daemon wordt niet uitgevoerd.	winpoint	no
+This PC isn’t connected to a network.	Deze pc is niet verbonden met een netwerk.	winpoint	no
+Sharing isn’t possible on a mobile network.	Op een mobiel netwerk kan niet worden gedeeld.	winpoint	no
+Sharing isn’t possible on a network without security.	Op een netwerk zonder beveiliging kan niet worden gedeeld.	winpoint	no
+Network sharing isn’t available right now.	Delen in het netwerk is nu niet beschikbaar.	winpoint	no
+Media streaming	Mediastreaming	windows	no
+Media streaming lets DLNA devices on the current network play your pictures, music and videos.	Met mediastreaming kunnen apparaten met DLNA in het huidige netwerk je afbeeldingen, muziek en video’s afspelen.	winpoint	no
+Stream music, photos and videos to devices on the current network	Muziek, foto’s en video’s streamen naar apparaten in het huidige netwerk	winpoint	no
+Stream music, photos and videos to devices on {network}	Muziek, foto’s en video’s streamen naar apparaten in {network}	winpoint	no
+Folders	Mappen	windows	no
+The folders that are shared	De mappen die worden gedeeld	winpoint	no
+Add folder	Map toevoegen	windows	no
+Choose a folder	Een map kiezen	winpoint	no
+No folders are shared	Er worden geen mappen gedeeld	winpoint	no
+Networks	Netwerken	windows	no
+The networks media streaming is turned on for	De netwerken waarop mediastreaming is ingeschakeld	winpoint	no
+Not turned on for any network	Op geen enkel netwerk ingeschakeld	winpoint	no
+Current network	Huidig netwerk	windows	no
+Network discovery	Netwerkdetectie	windows	no
+Your PC can find other devices on the network and be found by them. This is always on in WinPoint.	Je pc kan andere apparaten in het netwerk vinden en door ze worden gevonden. Dit staat in WinPoint altijd aan.	winpoint	no
+This needs rygel. Install the rygel package to stream media.	Hiervoor is rygel nodig. Installeer het pakket rygel om media te streamen.	winpoint	no
+Copy	Kopiëren	windows	no
+The encryption fingerprint can be seen in apps that connect to this PC and should be identical there.	De versleutelingsvingerafdruk is te zien in apps die verbinding maken met deze pc en moet daar hetzelfde zijn.	winpoint	no
+There’s no certificate yet. It’s made when you turn on Remote Desktop.	Er is nog geen certificaat. Het wordt gemaakt wanneer je Extern bureaublad inschakelt.	winpoint	no
+Encryption fingerprint	Versleutelingsvingerafdruk	winpoint	no
+Close	Sluiten	windows	no
+Generate new password	Nieuw wachtwoord genereren	windows	no
+Enter a user name and a password. The user name can’t start with a hyphen.	Vul een gebruikersnaam en een wachtwoord in. De gebruikersnaam mag niet met een streepje beginnen.	winpoint	no
+Show	Weergeven	windows	no
+Hide	Verbergen	windows	no
+Use a Remote Desktop (RDP) app to connect to and use this PC from another device	Gebruik een app voor Extern bureaublad (RDP) om verbinding te maken met deze pc en deze vanaf een ander apparaat te gebruiken	winpoint	no
+Remote Desktop is on, but the sign-in details couldn’t be saved.	Extern bureaublad staat aan, maar de aanmeldingsgegevens konden niet worden opgeslagen.	winpoint	no
+Enable Remote Desktop?	Extern bureaublad inschakelen?	windows	no
+Other devices can then connect to your current desktop with the sign-in details on this page. The connection uses the current screen resolution.	Andere apparaten kunnen dan met de aanmeldingsgegevens van deze pagina verbinding maken met je huidige bureaublad. De verbinding gebruikt de huidige schermresolutie.	winpoint	no
+Confirm	Bevestigen	windows	no
+Require devices to use Network Level Authentication to connect (Recommended)	Apparaten verplichten verificatie op netwerkniveau te gebruiken om verbinding te maken (aanbevolen)	windows	no
+Remote Desktop always asks for a user name and password.	Extern bureaublad vraagt altijd om een gebruikersnaam en wachtwoord.	winpoint	no
+Remote Desktop port	Poort van Extern bureaublad	windows	no
+Remote control	Externe besturing	winpoint	no
+Allow remote devices to use the mouse and keyboard	Toestaan dat externe apparaten de muis en het toetsenbord bedienen	winpoint	no
+Not set yet. Turning it on uses your user name and a new password.	Nog niet ingesteld. Bij het inschakelen worden je gebruikersnaam en een nieuw wachtwoord gebruikt.	winpoint	no
+Use these details to sign in from the other device	Gebruik deze gegevens om je aan te melden vanaf het andere apparaat	winpoint	no
+Sign-in details	Aanmeldingsgegevens	winpoint	no
+Edit sign-in details	Aanmeldingsgegevens bewerken	winpoint	no
+Verify encryption	Versleuteling controleren	winpoint	no
+Remote login	Extern aanmelden	winpoint	no
+Sign in to your account remotely when nobody is using this PC. The screen resolution can be set remotely.	Op afstand aanmelden bij je account wanneer niemand deze pc gebruikt. De schermresolutie kan op afstand worden ingesteld.	winpoint	no
+Turn on remote login?	Extern aanmelden inschakelen?	winpoint	no
+Use these details to sign in to this PC remotely.	Met deze gegevens kun je je op afstand aanmelden bij deze pc.	winpoint	no
+Not set yet	Nog niet ingesteld	winpoint	no
+Remote Desktop isn’t available	Extern bureaublad is niet beschikbaar	winpoint	no
+gnome-remote-desktop isn’t installed. Install the gnome-remote-desktop package to use this PC remotely.	gnome-remote-desktop is niet geïnstalleerd. Installeer het pakket gnome-remote-desktop om deze pc op afstand te gebruiken.	winpoint	no
+Remote Desktop is on but isn’t running. Turn it off and on again to restart it.	Extern bureaublad staat aan, maar wordt niet uitgevoerd. Zet het uit en weer aan om het opnieuw te starten.	winpoint	no
+GnuTLS is missing: the Remote Desktop certificate can’t be created.	GnuTLS ontbreekt: het certificaat voor Extern bureaublad kan niet worden gemaakt.	winpoint	no
+How to connect	Verbinding maken	winpoint	no
+Use a Remote Desktop app with the RDP protocol. Additional information about this device’s network location may also be required.	Gebruik een app voor Extern bureaublad met het RDP-protocol. Soms is ook meer informatie over de netwerklocatie van dit apparaat nodig.	winpoint	no
+PC name	Pc-naam	windows	no
+Use this PC name to connect to this PC from your other device	Gebruik deze pc-naam om vanaf je andere apparaat verbinding te maken met deze pc	windows	no
+Or connect to this address	Of maak verbinding met dit adres	winpoint	no
+On: there’s a connection now	Aan: er is nu een verbinding	winpoint	no
+On: starts when a connection comes in	Aan: start wanneer er een verbinding binnenkomt	winpoint	no
+Couldn’t start	Kan niet worden gestart	winpoint	no
+Installing… {n}%	Wordt geïnstalleerd… {n}%	winpoint	no
+Installing…	Wordt geïnstalleerd…	winpoint	no
+OpenSSH Server	OpenSSH-server	windows	no
+Access this PC using Secure Shell (SSH)	Toegang tot deze pc via Secure Shell (SSH)	winpoint	no
+Status	Status	windows	no
+SSH login command	SSH-aanmeldingsopdracht	winpoint	no
+Run this command on the other device to sign in to this PC	Voer deze opdracht uit op het andere apparaat om je aan te melden bij deze pc	winpoint	no
+Not installed. This gives access to this PC using Secure Shell (SSH).	Niet geïnstalleerd. Hiermee krijg je toegang tot deze pc via Secure Shell (SSH).	winpoint	no
+Install	Installeren	windows	no
+OpenSSH Server is installed	OpenSSH-server is geïnstalleerd	winpoint	no
+OpenSSH Server is installed and turned on	OpenSSH-server is geïnstalleerd en ingeschakeld	winpoint	no
+Secure Shell	Secure Shell	winpoint	no
+Add an optional feature	Een optionele functie toevoegen	windows	no
+Optional features are installed from your distribution’s software sources with PackageKit.	Optionele functies worden met PackageKit uit de softwarebronnen van je distributie geïnstalleerd.	winpoint	no

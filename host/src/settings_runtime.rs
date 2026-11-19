@@ -25,6 +25,8 @@ pub(crate) struct SettingsRuntime {
     gate: Mutex<()>,
     stopped: AtomicBool,
     ui: PathBuf,
+    /// GNOME → settings.json (settings_mirror.rs), the panel host only.
+    mirror: Mutex<Option<crate::settings_mirror::Watcher>>,
 }
 impl SettingsRuntime {
     pub(crate) fn new(
@@ -39,6 +41,7 @@ impl SettingsRuntime {
         let config = std::env::var_os("WIN11_GNOME_CONFIG_DIR")
             .map(PathBuf::from)
             .unwrap_or_else(|| glib::user_config_dir().join("win11-gnome"));
+        let agreed = config.join("gnome-mirror.json");
         let runtime = Arc::new(Self {
             store: SettingsStore::new(config).map_err(|e| e.message)?,
             effects: effects::Effects {
@@ -51,18 +54,23 @@ impl SettingsRuntime {
                 // These GNOME hosts replace the original --mode serve backend.
                 layer: false,
                 captions: kind == "panel",
+                mirror: kind == "panel",
                 dry_run: crate::backend::dry_run(),
             },
             events: events.clone(),
             gate: Mutex::new(()),
             stopped: AtomicBool::new(false),
             ui: ui.canonicalize().unwrap_or_else(|_| ui.to_owned()),
+            mirror: Mutex::new(None),
         });
         if kind == "panel" {
             runtime.sync_wallpaper();
         }
         if let Ok(settings) = runtime.store.snapshot() {
             runtime.effects.captions_at_start(&settings);
+        }
+        if runtime.effects.mirror && !runtime.effects.dry_run {
+            runtime.start_mirror(agreed);
         }
         let weak = Arc::downgrade(&runtime);
         events.set_settings_loader(Arc::new(move |invalidation| {
@@ -145,7 +153,44 @@ impl SettingsRuntime {
             Err(error) => eprintln!("Achtergrondinstellingen lezen: {}", error.message),
         }
     }
+    /// The panel host's GNOME → settings.json mirror (settings_mirror.rs `watch`): at the start the side that moved
+    /// since the values both last agreed on (`agreed`, next to settings.json) wins, and GNOME's changes patch
+    /// settings.json through this runtime, so every host hears settings.changed.
+    fn start_mirror(self: &Arc<Self>, agreed: PathBuf) {
+        let weak = Arc::downgrade(self);
+        let snapshot: crate::settings_mirror::Snapshot = Arc::new(move || {
+            let runtime = weak.upgrade()?;
+            if runtime.stopped.load(Ordering::Relaxed) {
+                return None;
+            }
+            runtime.store.snapshot().ok()
+        });
+        let weak = Arc::downgrade(self);
+        let patch: crate::settings_mirror::Patch = Arc::new(move |patch| {
+            let Some(runtime) = weak.upgrade() else {
+                return;
+            };
+            if let Some(Err(error)) = runtime.call("settings.patch", &json!({ "patch": patch })) {
+                eprintln!(
+                    "settings mirror: GNOME values not taken over: {}",
+                    error.message
+                );
+            }
+        });
+        let weak = Arc::downgrade(self);
+        let locked: crate::settings_mirror::Locked = Arc::new(move |f: &mut dyn FnMut(&Value)| {
+            let Some(runtime) = weak.upgrade() else {
+                return false;
+            };
+            runtime.store.with_snapshot(|settings| f(settings)).is_ok()
+        });
+        let watcher = crate::settings_mirror::watch(snapshot, patch, locked, agreed);
+        *self.mirror.lock().unwrap_or_else(|e| e.into_inner()) = Some(watcher);
+    }
     pub(crate) fn shutdown(&self) {
+        if let Some(watcher) = self.mirror.lock().unwrap_or_else(|e| e.into_inner()).take() {
+            watcher.stop();
+        }
         let _guard = self.gate.lock().unwrap_or_else(|e| e.into_inner());
         self.stopped.store(true, Ordering::Relaxed);
     }

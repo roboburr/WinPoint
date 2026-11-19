@@ -1,0 +1,55 @@
+# host/i18n/devices.tsv: host texts of services/devices.rs.
+# Owner: batch B (settings parity, §5.3).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/devices.rs and devices/*.rs (notes/claude/settings-parity.md §5.3)
+# devices.*: an argument of the wrong kind (on is not true or false, a mode or policy bolt does not know)
+#@ new
+devices.badArgs	Ongeldige invoer.	Invalid input.
+# devices.*: the Bluetooth address or the Thunderbolt uid is not one
+#@ new
+devices.badDevice	Ongeldig apparaat.	Invalid device.
+# devices.bluetooth.setDiscoverable: no BlueZ or no adapter
+#@ new
+devices.noBluetooth	Er is geen Bluetooth gevonden op deze computer.	No Bluetooth was found on this computer.
+# devices.bluetooth.setDiscoverable: BlueZ refused Discoverable
+#@ new
+devices.discoverableFailed	Deze pc kan nu niet detecteerbaar worden gemaakt.	This PC can’t be made discoverable right now.
+# devices.bluetooth.sendFiles: /usr/bin/bluetooth-sendto (gnome-bluetooth) is not installed
+#@ new
+devices.sendFilesMissing	Bestanden verzenden via Bluetooth is op deze computer niet beschikbaar.	Sending files via Bluetooth isn’t available on this computer.
+# devices.bluetooth.sendFiles: bluetooth-sendto did not start
+#@ new
+devices.sendFilesFailed	Bestanden verzenden kon niet worden gestart.	Couldn’t start sending files.
+# devices.thunderbolt.*: bolt (the Thunderbolt daemon) does not run
+#@ new
+devices.thunderboltUnavailable	Thunderbolt-beheer is op deze computer niet beschikbaar.	Thunderbolt management isn’t available on this computer.
+# devices.thunderbolt.*: bolt does not know the device (any more)
+#@ new
+devices.thunderboltNotFound	Dit apparaat is niet gevonden. Sluit het opnieuw aan.	This device wasn’t found. Connect it again.
+# devices.color.*: colord does not run
+#@ new
+devices.noColord	Kleurbeheer is op deze computer niet beschikbaar.	Colour management isn’t available on this computer.
+# devices.color.*: colord does not know the device or the profile (any more)
+#@ new
+devices.colorNotFound	Dit apparaat of dit profiel is niet gevonden.	This device or profile wasn’t found.
+# devices.color.importProfile: the file is not an ICC profile
+#@ new
+devices.notIcc	Dit bestand is geen ICC-kleurprofiel.	This file isn’t an ICC colour profile.
+# devices.color.importProfile: copying or registering failed; {error} is the reason
+#@ new
+devices.importFailed	Het profiel kon niet worden geïmporteerd: {error}	The profile couldn’t be imported: {error}
+# devices.color.calibrate.start: no colour sensor is connected
+#@ new
+devices.noSensor	Er is geen kleursensor aangesloten.	No colour sensor is connected.
+# devices.color.calibrate.*: colord-session (org.freedesktop.ColorHelper) is not installed
+#@ new
+devices.noCalibration	Kalibreren is op deze computer niet beschikbaar.	Calibration isn’t available on this computer.

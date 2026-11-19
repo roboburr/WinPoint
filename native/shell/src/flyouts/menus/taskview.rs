@@ -1,6 +1,10 @@
 //! Taakweergave (`git show 418ea594:vendor/ui/js/shell/taskview.js`): the whole monitor above the taskbar, tinted, with
 //! a card per open window (app icon and title, a little window mock-up with the app icon large as the "thumbnail"), the
 //! window you were using first. Click = focus, the cross = close, keyboard: arrows, Tab, Home/End, Enter, Delete, Esc.
+//! Alt+Tab opens it, so Instellingen › Multitasking's "Alle geopende vensters weergeven wanneer ik op Alt+Tab druk"
+//! decides which windows it shows (setting taskView.allDesktops, settings parity amendment 12): Windows' default
+//! "Alleen op het bureaublad dat ik gebruik" shows the windows of the desktop (GNOME workspace) in use and those on
+//! every desktop, "Op alle bureaubladen" all of them.
 use super::util;
 use crate::core::Shell;
 use crate::flyouts::{Flyout, Placement};
@@ -66,6 +70,18 @@ fn id_of(w: &Value) -> String {
         Value::Number(n) => n.to_string(),
         _ => String::new(),
     }
+}
+
+/// The desktop (GNOME workspace index) in use: the extension's `activeWorkspace` when windows.list reports it, else
+/// that of the window with the focus, else that of the most recently used window (Taakweergave itself takes the
+/// focus); a window on every desktop (`pinned`) or without one (-1) says nothing. None: nothing to go by. The
+/// taskbar's taskbar.allDesktops takes the same desktop (panel/taskbar/apps.rs).
+pub(crate) use crate::panel::taskbar::desktop_in_use;
+
+/// The windows Taakweergave shows on desktop `active`: those on it and those on every desktop (all of them when the
+/// desktop is not known), as the taskbar does.
+pub(crate) fn on_desktop(windows: Vec<Value>, active: Option<i64>) -> Vec<Value> {
+    windows.into_iter().filter(|w| crate::panel::taskbar::shows_on_desktop(w, active)).collect()
 }
 
 pub fn register(shell: &Rc<Shell>) {
@@ -206,13 +222,23 @@ impl TaskView {
         mru.truncate(200);
     }
 
-    /// The open windows, the one in use first, then by focus history, then as listed.
+    /// The open windows, the one in use first, then by focus history, then as listed; only those of the desktop in
+    /// use while taskView.allDesktops is off (module docs).
     fn gather(&self) -> Vec<Value> {
         let mut seen = Vec::<String>::new();
-        let all: Vec<Value> = self
-            .shell
-            .gnome
-            .windows()
+        let answer = self.shell.gnome.call("windows.list", &json!({})).unwrap_or(Value::Null);
+        let listed: Vec<Value> = answer
+            .get("windows")
+            .and_then(|w| w.as_array().cloned())
+            .or_else(|| answer.as_array().cloned())
+            .unwrap_or_default();
+        let listed = if self.shell.setting("taskView.allDesktops") == true {
+            listed
+        } else {
+            let active = desktop_in_use(&listed, answer.get("activeWorkspace").and_then(Value::as_i64), &self.mru.borrow());
+            on_desktop(listed, active)
+        };
+        let all: Vec<Value> = listed
             .into_iter()
             .filter(|w| {
                 let id = id_of(w);
@@ -506,5 +532,33 @@ impl TaskView {
         self.sel.set(next);
         self.sync_sel();
         true
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn win(id: &str, workspace: i64, focused: bool, pinned: bool) -> Value {
+        json!({"id": id, "workspace": workspace, "focused": focused, "minimized": false, "pinned": pinned})
+    }
+
+    #[test]
+    fn alt_tab_shows_the_desktop_in_use_unless_all_desktops_is_chosen() {
+        let list = vec![win("1", 0, false, false), win("2", 1, true, false), win("3", -1, false, true), win("4", 1, false, false)];
+        // the extension's own answer wins (step I's panelBridge.js activeWorkspace)
+        assert_eq!(desktop_in_use(&list, Some(0), &[]), Some(0));
+        // else the focused window's desktop, else the most recent one's
+        assert_eq!(desktop_in_use(&list, None, &["1".into()]), Some(1));
+        let mut none_focused = list.clone();
+        for w in none_focused.iter_mut() {
+            w["focused"] = json!(false);
+        }
+        assert_eq!(desktop_in_use(&none_focused, None, &["3".into(), "1".into()]), Some(0), "a window on every desktop says nothing");
+        assert_eq!(desktop_in_use(&none_focused, None, &[]), None);
+        let ids = |v: Vec<Value>| v.iter().map(id_of).collect::<Vec<_>>();
+        assert_eq!(ids(on_desktop(list.clone(), Some(1))), ["2", "3", "4"]);
+        assert_eq!(ids(on_desktop(list.clone(), Some(0))), ["1", "3"]);
+        assert_eq!(ids(on_desktop(list, None)), ["1", "2", "3", "4"], "nothing to go by: every window");
     }
 }

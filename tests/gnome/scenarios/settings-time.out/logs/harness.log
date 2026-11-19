@@ -1,0 +1,107 @@
+22:39:01 GE0c run lang=nl switch=False seed=defaults MemAvailable=8044916 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-time.py
+22:40:19 private install: exit 0 in 62.4 s, 87327 mutated paths, 0 outside the run dir, ok=True
+22:40:21 GNOME Shell 50.1 up (mode user, unsafe True)
+22:40:26 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-time.py
+22:40:28   check PASS: time: the title is Tijd en taal
+22:40:28   check PASS: time: built, no placeholder
+22:40:28   check PASS: time: the clock shows the stand-in’s zone
+22:40:29   check PASS: time: Datum en tijd, Taal en regio and Typen are linked
+22:40:31   check PASS: datetime: the breadcrumb is Tijd en taal > Datum en tijd
+22:40:31   check PASS: datetime: built, no placeholder
+22:40:31   check PASS: datetime: Tijd automatisch instellen follows timedated’s NTP
+22:40:31   check PASS: datetime: the manual time only while NTP is off
+22:40:31   check PASS: datetime: the time zone in Windows’ label
+22:40:31   check PASS: datetime: Automatisch aanpassen aan zomertijd on and fixed (tzdata does it)
+22:40:31   check PASS: datetime: no 24-hour row here (amendment 16)
+22:40:35   check PASS: datetime: Nu synchroniseren (a real click) is SetNTP(false) then SetNTP(true), interactive, nothing else
+22:40:35   check PASS: datetime: no toast after Nu synchroniseren (amendment 68)
+22:40:37   check PASS: datetime: a real click on st-datetime-clock-show-date writes clock-show-date false
+22:40:38   check PASS: datetime: st-datetime-clock-show-date follows clock-show-date = true written from outside
+22:40:39   check PASS: datetime: a real click on st-datetime-show-weekdate writes show-weekdate true
+22:40:39   check PASS: datetime: st-datetime-show-weekdate follows show-weekdate = false written from outside
+22:40:40   check PASS: datetime: a real click on Seconden weergeven writes clock-show-seconds true
+22:40:40   check PASS: datetime: the mirror sets WinPoint’s time.showSeconds and taskbar.showSeconds
+22:40:41   check PASS: datetime: the taskbar clock shows the seconds
+22:40:42   check PASS: datetime: Seconden weergeven follows clock-show-seconds written from outside
+22:40:42   check PASS: datetime: and the taskbar clock drops the seconds
+22:40:43   check PASS: datetime: a real click on Weekdag weergeven writes clock-show-weekday true
+22:40:43   check PASS: datetime: the mirror sets WinPoint’s time.showWeekday
+22:40:51   check FAIL (known I-note-2): datetime: the taskbar clock shows the weekday (contract §8 note 2, for I)
+22:40:52   check PASS: datetime: Weekdag weergeven follows clock-show-weekday written from outside
+22:40:52   check PASS: wait_text settings: 'Hiervoor moeten locatievoorzieningen zijn ingeschakeld.'
+22:40:52   check PASS: datetime: Tijdzone automatisch instellen waits for location services (insensitive, with the hint)
+22:40:52   check PASS: datetime: it follows location services turned on from outside
+22:40:55   check PASS: datetime: a real click on st-datetime-automatic-timezone writes automatic-timezone true
+22:40:55   check PASS: datetime: st-datetime-automatic-timezone follows automatic-timezone = false written from outside
+22:40:55   check PASS: datetime: with the automatic time zone on, the time zone can’t be chosen
+22:40:56   check PASS: datetime: with location services off the time zone can be chosen, the automatic time zone on or not
+22:40:56   check PASS: datetime: and with location services on again it can’t
+22:40:56   check PASS: datetime: and with it off again, the drop-down is there again
+22:40:57   check PASS: datetime: Tijd automatisch instellen off (a real click) sends SetNTP(false, true), interactive
+22:40:58   check PASS: datetime: the page follows timedated: De datum en tijd handmatig instellen can be used, Nu synchroniseren not
+22:41:01   check PASS: datetime: Wijzigen sends SetTime(the picked local time in µs, false, true), interactive
+22:41:05   check PASS: datetime: Tijdzone (UTC-11:00) Niue (real clicks) sends SetTimezone(Pacific/Niue, true), interactive
+22:41:05   check PASS: datetime: the page shows timedated’s new zone
+22:41:09   check PASS: datetime: Tijd automatisch instellen back on sends SetNTP(true, true)
+22:41:12   check PASS: formats: the breadcrumb is Tijd en taal > Taal en regio > Regionale notatie
+22:41:12   check PASS: formats: built, no placeholder
+22:41:12   check PASS: formats: st-formats-region
+22:41:12   check PASS: formats: st-formats-week-start-day
+22:41:13   check PASS: formats: st-formats-interface-clock-format
+22:41:13   check PASS: formats: st-formats-preview
+22:41:42   check PASS: formats: Regionale notatie Engels (Antigua en Barbuda) (real clicks) writes region and AccountsService’s FormatsLocale, interactive
+22:41:42   check PASS: formats: Windows’ sign-out banner: the session keeps its formats until the next sign-in
+22:41:53   check PASS: formats: Aanbevolen writes region '' (the display language’s formats)
+22:41:53   check PASS: formats: and FormatsLocale gets the display language’s locale (en_US.UTF-8), not ''
+22:41:54   check PASS: formats: and the banner goes
+22:42:05   check PASS: formats: Eerste dag van de week Maandag (real clicks) writes week-start-day monday
+22:42:05   check PASS: formats: the drop-down follows week-start-day written from outside
+22:42:34   check PASS: formats: Korte tijd 12-uurs (real clicks) writes clock-format 12h
+22:42:34   check PASS: formats: and the file choosers’ copies (GTK 3 and GTK 4), in the same write
+22:42:35   check PASS: formats: Lange tijd follows (2:35:12 PM)
+22:42:36   check PASS: formats: the mirror takes the 12-hour clock to the taskbar clock (time.h24)
+22:42:38   check PASS: formats: Korte tijd follows clock-format written from outside
+22:42:41   check PASS: language: the breadcrumb is Tijd en taal > Taal en regio
+22:42:42   check PASS: language: built, no placeholder
+22:42:42   check PASS: language: st-language-display
+22:42:42   check PASS: language: language-display
+22:42:43   check PASS: language: st-language-add
+22:42:43   check PASS: language: st-language-region-samples
+22:42:44   check PASS: language: st-language-region
+22:42:44   check PASS: language: st-language-change-formats
+22:42:51   check PASS: language: Weergavetaal offers only languages that are installed (by their own names)
+22:42:51   check PASS: language: Weergavetaal shows the account’s language by its own name
+22:42:52   check PASS: language: no sign-out banner while the account’s language is the session’s
+22:42:58   check PASS: language: Weergavetaal English (Antigua and Barbuda) (real clicks) sends SetLanguage, interactive
+22:42:59   check PASS: language: Windows’ sign-out banner for the new display language
+22:43:00   check PASS: language: Een taal toevoegen can be clicked with PackageKit
+22:43:10   check PASS: language: the install shows its progress card
+22:43:14   check PASS: language: installing de is Resolve (not installed, newest, native architecture) of its packages, then InstallPackages ONLY_TRUSTED of what PackageKit found for this architecture, with interactive authorization
+22:43:14   check PASS: language: the install transaction carries PackageKit’s interactive hint
+22:43:16   check PASS: language: the page is read again after the install (no error)
+22:43:21   check PASS: language-admin: the breadcrumb is Tijd en taal > Taal en regio > Beheerinstellingen voor taal
+22:43:22   check PASS: language-admin: built, no placeholder
+22:43:39   check PASS: language-admin: Taal van het aanmeldingsscherm Engels (Antigua en Barbuda) (real clicks) sends locale1 SetLocale, interactive
+22:43:43   check PASS: language-admin: Instellingen kopiëren sends the own language to locale1, interactive
+22:43:47   check PASS: about: the breadcrumb is Systeem > Info
+22:43:48   check PASS: about: built, no placeholder
+22:43:48   check PASS: about: the name from hostname1
+22:43:48   check PASS: about: GNOME’s version from GNOME Shell
+22:43:50   check PASS: about: Apparaatspecificaties and the OS specifications
+22:44:37   check PASS: about: the new name goes to hostname1 as GNOME sends it, interactive
+22:44:39   check PASS: about: the page shows hostnamed’s new name (machine.changed)
+22:44:43   check PASS: system: the title is Systeem
+22:44:44   check PASS: system: built, no placeholder
+22:44:44   check PASS: system: the device card with Naam wijzigen
+22:44:44   check PASS: system: the device card shows system.info’s name (the /etc/machine-info hostnamed writes)
+22:44:50   check PASS: system: Naam wijzigen opens Windows’ rename dialog
+22:44:59   check PASS: switch: Taal van WinPoint en switches Settings
+22:45:00   check PASS: wait_text settings: 'Language & region'
+22:45:00   check PASS: switch: the page title in the other language
+22:45:07   check PASS: switch: and back to nl
+22:45:07 shutdown app: signalled own descendants 1487:win11-gtk-setti, 1496:win11-app
+22:45:07 shutdown shell clients: signalled own descendants 181:ibus-daemon, 511:win11-shell, 1562:glycin-image-rs, 624:win11-panel, 346:ibus-memconf, 348:ibus-extension-, 516:ibus-engine-sim
+22:45:08 shutdown gnome-shell: signalled own descendants 160:gnome-shell
+22:45:08 shutdown system bus: signalled own descendants 159:dbus-daemon
+22:45:08 inner sweep: signalled own descendants 2698:glycin-image-rs
+22:45:08 inner done: 0 surfaces, 0 failed []

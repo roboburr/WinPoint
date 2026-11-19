@@ -56,6 +56,11 @@ const METHODS: &[&str] = &[
     "disks.lock",
     "disks.smart",
 ];
+/// The method table, for services/mod.rs `method_tables` (the api-methods fragments must list every name).
+#[cfg(test)]
+pub(crate) fn method_names() -> &'static [&'static str] {
+    METHODS
+}
 fn arr(v: &Value) -> &[Value] {
     v.as_array().map(Vec::as_slice).unwrap_or(&[])
 }

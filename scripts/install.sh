@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# User-local installation; on a terminal it first offers WinPoint's own choice at the login screen
-# (scripts/install-session.py, pkexec asks the password once).
-# Arguments go to install.py: [--lang nl|en] (Win11's language on a first install), [--no-session], -h/--help.
+# User-local installation. On a terminal it adds WinPoint's own choice at the login screen and the system files
+# (scripts/install-session.py --system; pkexec asks the password once) and makes WinPoint the session your next
+# sign-in starts; your normal Ubuntu session stays as it was. -h/--help lists the options.
+# /usr/bin/python3 -E -s -B, as WinPoint's updater runs install.py: Ubuntu's own Python, without PYTHON* variables,
+# user site-packages or bytecode files in this folder.
 set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-exec python3 "$ROOT/scripts/install.py" "$ROOT" "$@"
+exec /usr/bin/python3 -E -s -B "$ROOT/scripts/install.py" "$ROOT" "$@"

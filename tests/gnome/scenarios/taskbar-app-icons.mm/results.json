@@ -1,0 +1,2919 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 08:08:58",
+ "seconds": 131.7,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 98,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 907884,
+   "rss_kb": 1488696,
+   "processes": 34,
+   "t": 44.6
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 712370,
+   "rss_kb": 1260816
+  },
+  "minMemAvailableKb": 5073696,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 324478,
+    "rss_kb": 388096
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 195063,
+    "rss_kb": 224008
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 96126,
+    "rss_kb": 139448
+   },
+   "glycin-svg": {
+    "count": 3,
+    "pss_kb": 53498,
+    "rss_kb": 92968
+   },
+   "win11-app": {
+    "count": 7,
+    "pss_kb": 42139,
+    "rss_kb": 137120
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 27514,
+    "rss_kb": 63528
+   },
+   "win11-gtk-taskm": {
+    "count": 1,
+    "pss_kb": 26347,
+    "rss_kb": 62612
+   },
+   "win11-gtk-defau": {
+    "count": 1,
+    "pss_kb": 23651,
+    "rss_kb": 57092
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 18500,
+    "rss_kb": 34196
+   },
+   "win11-gtk-explo": {
+    "count": 1,
+    "pss_kb": 17862,
+    "rss_kb": 50464
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 16056,
+    "rss_kb": 24540
+   },
+   "win11-gtk-alles": {
+    "count": 1,
+    "pss_kb": 15328,
+    "rss_kb": 48092
+   },
+   "win11-gtk-insta": {
+    "count": 1,
+    "pss_kb": 14843,
+    "rss_kb": 47628
+   },
+   "win11-gtk-disks": {
+    "count": 1,
+    "pss_kb": 14287,
+    "rss_kb": 46792
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 12332,
+    "rss_kb": 26204
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4213,
+    "rss_kb": 11496
+   },
+   "win11-index-wor": {
+    "count": 1,
+    "pss_kb": 1814,
+    "rss_kb": 5104
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1808,
+    "rss_kb": 9988
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 817,
+    "rss_kb": 7764
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 757,
+    "rss_kb": 7684
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 245,
+    "rss_kb": 1364
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 206,
+    "rss_kb": 2508
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 324478,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 157802,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 104780,
+    "first": 1.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 31429,
+    "first": 14.6
+   },
+   "glycin-svg": {
+    "pss_kb": 30892,
+    "first": 1.0
+   },
+   "win11-gtk-taskm": {
+    "pss_kb": 26738,
+    "first": 17.8
+   },
+   "win11-gtk-defau": {
+    "pss_kb": 26344,
+    "first": 27.9
+   },
+   "win11-gtk-explo": {
+    "pss_kb": 22216,
+    "first": 11.4
+   },
+   "ibus-extension-": {
+    "pss_kb": 19559,
+    "first": 1.0
+   },
+   "nvidia-smi": {
+    "pss_kb": 19158,
+    "first": 17.8
+   },
+   "win11-gtk-insta": {
+    "pss_kb": 17682,
+    "first": 31.1
+   },
+   "win11-panel": {
+    "pss_kb": 16720,
+    "first": 1.6
+   },
+   "win11-gtk-alles": {
+    "pss_kb": 16513,
+    "first": 21.5
+   },
+   "win11-gtk-disks": {
+    "pss_kb": 15456,
+    "first": 24.7
+   },
+   "win11-app": {
+    "pss_kb": 12294,
+    "first": 11.4
+   },
+   "glycin-image-rs": {
+    "pss_kb": 7864,
+    "first": 1.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4360,
+    "first": 1.0
+   },
+   "win11-index-wor": {
+    "pss_kb": 1822,
+    "first": 21.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 1144,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 976,
+    "first": 1.0
+   },
+   "ibus-memconf": {
+    "pss_kb": 890,
+    "first": 1.0
+   },
+   "bwrap": {
+    "pss_kb": 258,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 239,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+  "exit": 0,
+  "seconds": 64.6,
+  "mutatingSyscallPaths": 87318,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+  }
+ },
+ "guardStubCalls": [
+  "08:10:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:19\tpw-dump\t--monitor --no-colors",
+  "08:10:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:21\tpw-dump\t--monitor --no-colors",
+  "08:10:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:25\tpw-dump\t--monitor --no-colors",
+  "08:10:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:33\tpw-dump\t--monitor --no-colors",
+  "08:10:33\tapt\tlist --upgradable",
+  "08:10:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:34\tpw-dump\t--monitor --no-colors",
+  "08:10:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:35\tpw-dump\t--monitor --no-colors",
+  "08:10:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:36\tpw-dump\t--monitor --no-colors",
+  "08:10:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:36\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "08:10:36\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "08:10:36\tapt\tlist --upgradable",
+  "08:10:36\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:36\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:37\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:37\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:38\tpw-dump\t--monitor --no-colors",
+  "08:10:38\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:38\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:39\tpw-dump\t--monitor --no-colors",
+  "08:10:39\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:39\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:40\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:40\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:41\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:41\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:42\tpw-dump\t--monitor --no-colors",
+  "08:10:42\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:42\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:43\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:43\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:44\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:44\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:45\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:45\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:46\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:46\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:47\tpw-dump\t--monitor --no-colors",
+  "08:10:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:47\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:47\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:49\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "08:10:49\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "08:10:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:50\tpw-dump\t--monitor --no-colors",
+  "08:10:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:50\tpw-dump\t--monitor --no-colors",
+  "08:10:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:10:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:03\tpw-dump\t--monitor --no-colors",
+  "08:11:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:06\tpw-dump\t--monitor --no-colors",
+  "08:11:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "08:11:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 26,
+  "maxScanSeconds": 0.049,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/taskbar-app-icons.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 3.81,
+    "args": {
+     "key": "iconTheme"
+    }
+   },
+   {
+    "step": "record",
+    "t": 3.81,
+    "args": {
+     "key": "catalogue.own"
+    }
+   },
+   {
+    "step": "record",
+    "t": 3.87,
+    "args": {
+     "key": "iconRoute"
+    }
+   },
+   {
+    "step": "native",
+    "t": 3.97,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.51,
+    "args": {
+     "name": "taskbar-before"
+    },
+    "result": {
+     "png": "taskbar-before.png",
+     "area": [
+      692,
+      852,
+      272,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       272,
+       48
+      ],
+      "distinctColours": 84,
+      "meanLevel": 47.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 7.21,
+    "args": {
+     "key": "explorer.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 7.26,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 7.26,
+    "args": {
+     "key": "explorer.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 7.77,
+    "args": {
+     "name": "taskbar-explorer"
+    },
+    "result": {
+     "png": "taskbar-explorer.png",
+     "area": [
+      692,
+      852,
+      272,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       272,
+       48
+      ],
+      "distinctColours": 100,
+      "meanLevel": 50.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.48,
+    "args": {
+     "key": "settings.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 10.59,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 10.59,
+    "args": {
+     "key": "settings.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.1,
+    "args": {
+     "name": "taskbar-settings"
+    },
+    "result": {
+     "png": "taskbar-settings.png",
+     "area": [
+      692,
+      852,
+      272,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       272,
+       48
+      ],
+      "distinctColours": 104,
+      "meanLevel": 55.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.8,
+    "args": {
+     "key": "taskmgr.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 13.91,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 13.91,
+    "args": {
+     "key": "taskmgr.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 14.42,
+    "args": {
+     "name": "taskbar-taskmgr"
+    },
+    "result": {
+     "png": "taskbar-taskmgr.png",
+     "area": [
+      670,
+      852,
+      316,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       316,
+       48
+      ],
+      "distinctColours": 116,
+      "meanLevel": 53.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 17.13,
+    "args": {
+     "key": "alles.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 17.18,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 17.18,
+    "args": {
+     "key": "alles.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 17.69,
+    "args": {
+     "name": "taskbar-alles"
+    },
+    "result": {
+     "png": "taskbar-alles.png",
+     "area": [
+      648,
+      852,
+      360,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       360,
+       48
+      ],
+      "distinctColours": 126,
+      "meanLevel": 53.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 20.4,
+    "args": {
+     "key": "disks.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 20.5,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 20.5,
+    "args": {
+     "key": "disks.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 21.01,
+    "args": {
+     "name": "taskbar-disks"
+    },
+    "result": {
+     "png": "taskbar-disks.png",
+     "area": [
+      626,
+      852,
+      404,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       404,
+       48
+      ],
+      "distinctColours": 137,
+      "meanLevel": 53.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 23.72,
+    "args": {
+     "key": "defaultapps.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 23.82,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 23.82,
+    "args": {
+     "key": "defaultapps.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 24.34,
+    "args": {
+     "name": "taskbar-defaultapps"
+    },
+    "result": {
+     "png": "taskbar-defaultapps.png",
+     "area": [
+      604,
+      852,
+      448,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       448,
+       48
+      ],
+      "distinctColours": 133,
+      "meanLevel": 50.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 27.05,
+    "args": {
+     "key": "installer.window"
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.1,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 27.1,
+    "args": {
+     "key": "installer.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 27.61,
+    "args": {
+     "name": "taskbar-installer"
+    },
+    "result": {
+     "png": "taskbar-installer.png",
+     "area": [
+      582,
+      852,
+      492,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       492,
+       48
+      ],
+      "distinctColours": 148,
+      "meanLevel": 51.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 28.72,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 28.72,
+    "args": {
+     "key": "all.buttons"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 29.23,
+    "args": {
+     "name": "taskbar-all"
+    },
+    "result": {
+     "png": "taskbar-all.png",
+     "area": [
+      582,
+      852,
+      492,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       492,
+       48
+      ],
+      "distinctColours": 148,
+      "meanLevel": 51.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 29.33,
+    "args": {
+     "native": "flyout",
+     "name": "taskview"
+    },
+    "result": {
+     "open": "taskview"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 31.91,
+    "args": {
+     "name": "taskview"
+    },
+    "result": {
+     "png": "taskview.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 540,
+      "meanLevel": 33.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 31.97,
+    "args": {
+     "native": "flyout",
+     "name": "taskview"
+    },
+    "result": {
+     "open": null
+    }
+   },
+   {
+    "step": "open",
+    "t": 33.17,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "native",
+     "pid": 471,
+     "page": null,
+     "alive": true,
+     "shell": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 35.79,
+    "args": {
+     "name": "start"
+    },
+    "result": {
+     "png": "start.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 751,
+      "meanLevel": 35.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 35.85,
+    "args": {
+     "native": "click",
+     "name": "start-all-apps"
+    },
+    "result": {
+     "clicked": "start-all-apps"
+    }
+   },
+   {
+    "step": "native",
+    "t": 37.46,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 37.46,
+    "args": {
+     "key": "start.allApps"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 38.07,
+    "args": {
+     "name": "start-allapps"
+    },
+    "result": {
+     "png": "start-allapps.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 643,
+      "meanLevel": 34.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 38.18,
+    "args": {
+     "native": "click",
+     "name": "start-all-back"
+    },
+    "result": {
+     "clicked": "start-all-back"
+    }
+   },
+   {
+    "step": "native",
+    "t": 39.09,
+    "args": {
+     "native": "type",
+     "name": "start-search",
+     "text": "verkenner"
+    },
+    "result": {
+     "typed": "start-search"
+    }
+   },
+   {
+    "step": "native",
+    "t": 41.2,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "record",
+    "t": 41.2,
+    "args": {
+     "key": "start.search"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 41.81,
+    "args": {
+     "name": "start-search"
+    },
+    "result": {
+     "png": "start-search.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 666,
+      "meanLevel": 36.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 41.87,
+    "args": {
+     "native": "type",
+     "name": "start-search",
+     "text": ""
+    },
+    "result": {
+     "typed": "start-search"
+    }
+   },
+   {
+    "step": "close",
+    "t": 42.58,
+    "args": {
+     "name": "start"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "catalogue: explorer has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-explorer.desktop",
+     "entry": "io.github.win11shell.Explorer.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg",
+     "own": true,
+     "name": "Verkenner"
+    },
+    "want": "icons/Win11/apps/scalable/system-file-manager.svg"
+   },
+   {
+    "check": "catalogue: settings has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-settings.desktop",
+     "entry": "io.github.win11shell.Settings.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+     "own": true,
+     "name": "Instellingen"
+    },
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "catalogue: taskmgr has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-taskmgr.desktop",
+     "entry": "io.github.win11shell.TaskManager.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg",
+     "own": true,
+     "name": "Taakbeheer"
+    },
+    "want": "icons/Win11/apps/scalable/utilities-system-monitor.svg"
+   },
+   {
+    "check": "catalogue: alles has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-alles.desktop",
+     "entry": "io.github.win11shell.Search.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg",
+     "own": true,
+     "name": "Alles"
+    },
+    "want": "icons/Win11/apps/scalable/system-search.svg"
+   },
+   {
+    "check": "catalogue: disks has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-disks.desktop",
+     "entry": "io.github.win11shell.Disks.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg",
+     "own": true,
+     "name": "Schijven"
+    },
+    "want": "icons/Win11/devices/scalable/drive-harddisk.svg"
+   },
+   {
+    "check": "catalogue: defaultapps has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-defaultapps.desktop",
+     "entry": "io.github.win11shell.DefaultApps.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+     "own": true,
+     "name": "Standaard-apps"
+    },
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "catalogue: installer has its entry and the entry's icon",
+    "ok": true,
+    "t": 3.81,
+    "item": {
+     "id": "win11shell-installer.desktop",
+     "entry": "io.github.win11shell.Installer.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg",
+     "own": true,
+     "name": "App-installatie"
+    },
+    "want": "icons/Win11/apps/scalable/system-software-install.svg"
+   },
+   {
+    "check": "catalogue: our desktop entries are not listed as apps of their own",
+    "ok": true,
+    "t": 3.81,
+    "listed": [
+     "io.github.win11shell.Calendar.desktop"
+    ]
+   },
+   {
+    "check": "icon route: utilities-system-monitor",
+    "ok": true,
+    "t": 3.87,
+    "row": {
+     "name": "utilities-system-monitor",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 7027,
+     "sha": "4d629f89cebc",
+     "withFallback": 200,
+     "isGenericFallback": false
+    }
+   },
+   {
+    "check": "icon route: system-search",
+    "ok": true,
+    "t": 3.87,
+    "row": {
+     "name": "system-search",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 2874,
+     "sha": "5a170d5b81b5",
+     "withFallback": 200,
+     "isGenericFallback": false
+    }
+   },
+   {
+    "check": "icon route: system-software-install",
+    "ok": true,
+    "t": 3.87,
+    "row": {
+     "name": "system-software-install",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 4183,
+     "sha": "9292c95b1cd8",
+     "withFallback": 200,
+     "isGenericFallback": false
+    }
+   },
+   {
+    "check": "icon route: drive-harddisk",
+    "ok": true,
+    "t": 3.87,
+    "row": {
+     "name": "drive-harddisk",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 6541,
+     "sha": "c96df6e4a9b1",
+     "withFallback": 200,
+     "isGenericFallback": false
+    }
+   },
+   {
+    "check": "icon route: system-file-manager",
+    "ok": true,
+    "t": 3.87,
+    "row": {
+     "name": "system-file-manager",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 5975,
+     "sha": "b53df7815d32",
+     "withFallback": 200,
+     "isGenericFallback": false
+    }
+   },
+   {
+    "check": "explorer: a focused taskbar button",
+    "ok": true,
+    "t": 7.26,
+    "focused": [
+     {
+      "key": "win11shell-explorer.desktop",
+      "tooltip": "Verkenner, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running",
+       "is-pinned"
+      ],
+      "rect": [
+       812,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+     }
+    ]
+   },
+   {
+    "check": "explorer: the window has its entry's icon",
+    "ok": true,
+    "t": 7.26,
+    "entry": [
+     {
+      "id": "1401855466",
+      "appId": "io.github.win11shell.Explorer",
+      "desktopId": "win11shell-explorer.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg",
+      "title": "robin - Verkenner"
+     }
+    ],
+    "want": "icons/Win11/apps/scalable/system-file-manager.svg"
+   },
+   {
+    "check": "explorer: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 7.26,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg",
+    "want": "icons/Win11/apps/scalable/system-file-manager.svg"
+   },
+   {
+    "check": "settings: a focused taskbar button",
+    "ok": true,
+    "t": 10.59,
+    "focused": [
+     {
+      "key": "win11shell-settings.desktop",
+      "tooltip": "Instellingen, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running",
+       "is-pinned"
+      ],
+      "rect": [
+       900,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+     }
+    ]
+   },
+   {
+    "check": "settings: the window has its entry's icon",
+    "ok": true,
+    "t": 10.59,
+    "entry": [
+     {
+      "id": "1401855467",
+      "appId": "io.github.win11shell.Settings",
+      "desktopId": "win11shell-settings.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+      "title": "Startpagina – Instellingen"
+     }
+    ],
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "settings: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 10.59,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "taskmgr: a focused taskbar button",
+    "ok": true,
+    "t": 13.91,
+    "focused": [
+     {
+      "key": "win11shell-taskmgr.desktop",
+      "tooltip": "Taakbeheer, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running"
+      ],
+      "rect": [
+       922,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+     }
+    ]
+   },
+   {
+    "check": "taskmgr: the window has its entry's icon",
+    "ok": true,
+    "t": 13.91,
+    "entry": [
+     {
+      "id": "1401855468",
+      "appId": "io.github.win11shell.TaskManager",
+      "desktopId": "win11shell-taskmgr.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg",
+      "title": "Taakbeheer – Samenvatting"
+     }
+    ],
+    "want": "icons/Win11/apps/scalable/utilities-system-monitor.svg"
+   },
+   {
+    "check": "taskmgr: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 13.91,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg",
+    "want": "icons/Win11/apps/scalable/utilities-system-monitor.svg"
+   },
+   {
+    "check": "alles: a focused taskbar button",
+    "ok": true,
+    "t": 17.18,
+    "focused": [
+     {
+      "key": "win11shell-alles.desktop",
+      "tooltip": "Alles, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running"
+      ],
+      "rect": [
+       944,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg"
+     }
+    ]
+   },
+   {
+    "check": "alles: the window has its entry's icon",
+    "ok": true,
+    "t": 17.18,
+    "entry": [
+     {
+      "id": "1401855469",
+      "appId": "io.github.win11shell.Search",
+      "desktopId": "win11shell-alles.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg",
+      "title": "Alles"
+     }
+    ],
+    "want": "icons/Win11/apps/scalable/system-search.svg"
+   },
+   {
+    "check": "alles: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 17.18,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg",
+    "want": "icons/Win11/apps/scalable/system-search.svg"
+   },
+   {
+    "check": "disks: a focused taskbar button",
+    "ok": true,
+    "t": 20.5,
+    "focused": [
+     {
+      "key": "win11shell-disks.desktop",
+      "tooltip": "Schijven, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running"
+      ],
+      "rect": [
+       966,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg"
+     }
+    ]
+   },
+   {
+    "check": "disks: the window has its entry's icon",
+    "ok": true,
+    "t": 20.5,
+    "entry": [
+     {
+      "id": "1401855470",
+      "appId": "io.github.win11shell.Disks",
+      "desktopId": "win11shell-disks.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg",
+      "title": "Schijven"
+     }
+    ],
+    "want": "icons/Win11/devices/scalable/drive-harddisk.svg"
+   },
+   {
+    "check": "disks: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 20.5,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg",
+    "want": "icons/Win11/devices/scalable/drive-harddisk.svg"
+   },
+   {
+    "check": "defaultapps: a focused taskbar button",
+    "ok": true,
+    "t": 23.82,
+    "focused": [
+     {
+      "key": "win11shell-defaultapps.desktop",
+      "tooltip": "Standaard-apps, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running"
+      ],
+      "rect": [
+       988,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+     }
+    ]
+   },
+   {
+    "check": "defaultapps: the window has its entry's icon",
+    "ok": true,
+    "t": 23.83,
+    "entry": [
+     {
+      "id": "1401855471",
+      "appId": "io.github.win11shell.DefaultApps",
+      "desktopId": "win11shell-defaultapps.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+      "title": "Standaard-apps"
+     }
+    ],
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "defaultapps: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 23.83,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "installer: a focused taskbar button",
+    "ok": true,
+    "t": 27.1,
+    "focused": [
+     {
+      "key": "win11shell-installer.desktop",
+      "tooltip": "App-installatie, 1 venster geopend",
+      "classes": [
+       "is-focused",
+       "is-running"
+      ],
+      "rect": [
+       1010,
+       856,
+       40,
+       40
+      ],
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg"
+     }
+    ]
+   },
+   {
+    "check": "installer: the window has its entry's icon",
+    "ok": true,
+    "t": 27.1,
+    "entry": [
+     {
+      "id": "1401855472",
+      "appId": "io.github.win11shell.Installer",
+      "desktopId": "win11shell-installer.desktop",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg",
+      "title": "App-installatieprogramma"
+     }
+    ],
+    "want": "icons/Win11/apps/scalable/system-software-install.svg"
+   },
+   {
+    "check": "installer: the taskbar button asks for that icon",
+    "ok": true,
+    "t": 27.1,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg",
+    "want": "icons/Win11/apps/scalable/system-software-install.svg"
+   },
+   {
+    "check": "start: explorer in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg",
+    "want": "icons/Win11/apps/scalable/system-file-manager.svg"
+   },
+   {
+    "check": "start: settings in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "start: taskmgr in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg",
+    "want": "icons/Win11/apps/scalable/utilities-system-monitor.svg"
+   },
+   {
+    "check": "start: alles in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg",
+    "want": "icons/Win11/apps/scalable/system-search.svg"
+   },
+   {
+    "check": "start: disks in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg",
+    "want": "icons/Win11/devices/scalable/drive-harddisk.svg"
+   },
+   {
+    "check": "start: defaultapps in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+    "want": "ui/assets/icons/settings.svg"
+   },
+   {
+    "check": "start: installer in All apps with its entry's icon",
+    "ok": true,
+    "t": 38.07,
+    "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg",
+    "want": "icons/Win11/apps/scalable/system-software-install.svg"
+   },
+   {
+    "check": "start: none of our entries in All apps as an app of its own",
+    "ok": true,
+    "t": 38.07,
+    "listed": [
+     "io.github.win11shell.Calendar.desktop",
+     "win11shell-alles.desktop",
+     "win11shell-defaultapps.desktop",
+     "win11shell-disks.desktop",
+     "win11shell-explorer.desktop",
+     "win11shell-installer.desktop",
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ]
+   },
+   {
+    "check": "start: a search for verkenner finds Verkenner once, with its entry's icon",
+    "ok": true,
+    "t": 41.81,
+    "results": [
+     {
+      "name": "start-result-0",
+      "title": "Verkenner",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+     },
+     {
+      "name": "start-result-1",
+      "title": "Bestanden",
+      "icon": "org.gnome.Nautilus"
+     },
+     {
+      "name": "start-result-2",
+      "title": "Firefox webbrowser",
+      "icon": "firefox"
+     },
+     {
+      "name": "start-result-3",
+      "title": "Dolphin",
+      "icon": "org.kde.dolphin"
+     }
+    ]
+   }
+  ],
+  "records": {
+   "iconTheme": {
+    "iconTheme": "Adwaita",
+    "user": false,
+    "desktop": "GNOME"
+   },
+   "catalogue.own": [
+    {
+     "id": "io.github.win11shell.Calendar.desktop",
+     "entry": null,
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/office-calendar.svg",
+     "own": false,
+     "name": "Agenda"
+    },
+    {
+     "id": "win11shell-alles.desktop",
+     "entry": "io.github.win11shell.Search.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg",
+     "own": true,
+     "name": "Alles"
+    },
+    {
+     "id": "win11shell-installer.desktop",
+     "entry": "io.github.win11shell.Installer.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg",
+     "own": true,
+     "name": "App-installatie"
+    },
+    {
+     "id": "win11shell-settings.desktop",
+     "entry": "io.github.win11shell.Settings.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+     "own": true,
+     "name": "Instellingen"
+    },
+    {
+     "id": "win11shell-disks.desktop",
+     "entry": "io.github.win11shell.Disks.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg",
+     "own": true,
+     "name": "Schijven"
+    },
+    {
+     "id": "win11shell-defaultapps.desktop",
+     "entry": "io.github.win11shell.DefaultApps.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+     "own": true,
+     "name": "Standaard-apps"
+    },
+    {
+     "id": "win11shell-taskmgr.desktop",
+     "entry": "io.github.win11shell.TaskManager.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg",
+     "own": true,
+     "name": "Taakbeheer"
+    },
+    {
+     "id": "win11shell-explorer.desktop",
+     "entry": "io.github.win11shell.Explorer.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg",
+     "own": true,
+     "name": "Verkenner"
+    }
+   ],
+   "iconRoute": [
+    {
+     "name": "utilities-system-monitor",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 7027,
+     "sha": "4d629f89cebc",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "system-search",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 2874,
+     "sha": "5a170d5b81b5",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "system-software-install",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 4183,
+     "sha": "9292c95b1cd8",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "drive-harddisk",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 6541,
+     "sha": "c96df6e4a9b1",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "system-file-manager",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 5975,
+     "sha": "b53df7815d32",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "preferences-desktop-default-applications",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 5864,
+     "sha": "88f30a47b9ed",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "org.gnome.DiskUtility",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 11086,
+     "sha": "ce00b9197491",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "package-x-generic",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 3458,
+     "sha": "dfa8b652cb92",
+     "withFallback": 200,
+     "isGenericFallback": false
+    },
+    {
+     "name": "win11shell-taskmgr",
+     "status": 404,
+     "type": "text/plain; charset=utf-8",
+     "bytes": 10,
+     "sha": null,
+     "withFallback": 200,
+     "isGenericFallback": true
+    },
+    {
+     "name": "io.github.win11shell.TaskManager",
+     "status": 404,
+     "type": "text/plain; charset=utf-8",
+     "bytes": 10,
+     "sha": null,
+     "withFallback": 200,
+     "isGenericFallback": true
+    },
+    {
+     "name": "application-x-executable",
+     "status": 200,
+     "type": "image/svg+xml",
+     "bytes": 8571,
+     "sha": "9d81fe88bd39",
+     "withFallback": 200,
+     "isGenericFallback": true
+    }
+   ],
+   "explorer.window": [
+    {
+     "id": "1401855466",
+     "appId": "io.github.win11shell.Explorer",
+     "desktopId": "win11shell-explorer.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg",
+     "title": "robin - Verkenner"
+    }
+   ],
+   "explorer.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      812,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      856,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      900,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    }
+   ],
+   "settings.window": [
+    {
+     "id": "1401855467",
+     "appId": "io.github.win11shell.Settings",
+     "desktopId": "win11shell-settings.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+     "title": "Startpagina – Instellingen"
+    }
+   ],
+   "settings.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      812,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      856,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      900,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    }
+   ],
+   "taskmgr.window": [
+    {
+     "id": "1401855468",
+     "appId": "io.github.win11shell.TaskManager",
+     "desktopId": "win11shell-taskmgr.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg",
+     "title": "Taakbeheer – Samenvatting"
+    }
+   ],
+   "taskmgr.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      790,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      834,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      878,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "tooltip": "Taakbeheer, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running"
+     ],
+     "rect": [
+      922,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+    }
+   ],
+   "alles.window": [
+    {
+     "id": "1401855469",
+     "appId": "io.github.win11shell.Search",
+     "desktopId": "win11shell-alles.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg",
+     "title": "Alles"
+    }
+   ],
+   "alles.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      768,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      812,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      856,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "tooltip": "Taakbeheer, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      900,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+    },
+    {
+     "key": "win11shell-alles.desktop",
+     "tooltip": "Alles, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running"
+     ],
+     "rect": [
+      944,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg"
+    }
+   ],
+   "disks.window": [
+    {
+     "id": "1401855470",
+     "appId": "io.github.win11shell.Disks",
+     "desktopId": "win11shell-disks.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg",
+     "title": "Schijven"
+    }
+   ],
+   "disks.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      746,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      790,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      834,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "tooltip": "Taakbeheer, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      878,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+    },
+    {
+     "key": "win11shell-alles.desktop",
+     "tooltip": "Alles, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      922,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg"
+    },
+    {
+     "key": "win11shell-disks.desktop",
+     "tooltip": "Schijven, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running"
+     ],
+     "rect": [
+      966,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg"
+    }
+   ],
+   "defaultapps.window": [
+    {
+     "id": "1401855471",
+     "appId": "io.github.win11shell.DefaultApps",
+     "desktopId": "win11shell-defaultapps.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg",
+     "title": "Standaard-apps"
+    }
+   ],
+   "defaultapps.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      724,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      768,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      812,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "tooltip": "Taakbeheer, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      856,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+    },
+    {
+     "key": "win11shell-alles.desktop",
+     "tooltip": "Alles, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      900,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg"
+    },
+    {
+     "key": "win11shell-disks.desktop",
+     "tooltip": "Schijven, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      944,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg"
+    },
+    {
+     "key": "win11shell-defaultapps.desktop",
+     "tooltip": "Standaard-apps, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running"
+     ],
+     "rect": [
+      988,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    }
+   ],
+   "installer.window": [
+    {
+     "id": "1401855472",
+     "appId": "io.github.win11shell.Installer",
+     "desktopId": "win11shell-installer.desktop",
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg",
+     "title": "App-installatieprogramma"
+    }
+   ],
+   "installer.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      702,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      746,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      790,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "tooltip": "Taakbeheer, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      834,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+    },
+    {
+     "key": "win11shell-alles.desktop",
+     "tooltip": "Alles, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      878,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg"
+    },
+    {
+     "key": "win11shell-disks.desktop",
+     "tooltip": "Schijven, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      922,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg"
+    },
+    {
+     "key": "win11shell-defaultapps.desktop",
+     "tooltip": "Standaard-apps, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      966,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-installer.desktop",
+     "tooltip": "App-installatie, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running"
+     ],
+     "rect": [
+      1010,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg"
+    }
+   ],
+   "all.buttons": [
+    {
+     "key": "win11shell-explorer.desktop",
+     "tooltip": "Verkenner, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      702,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+    },
+    {
+     "key": "firefox.desktop",
+     "tooltip": "Firefox webbrowser",
+     "classes": [
+      "is-pinned"
+     ],
+     "rect": [
+      746,
+      856,
+      40,
+      40
+     ],
+     "icon": "firefox"
+    },
+    {
+     "key": "win11shell-settings.desktop",
+     "tooltip": "Instellingen, 1 venster geopend",
+     "classes": [
+      "is-running",
+      "is-pinned"
+     ],
+     "rect": [
+      790,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-taskmgr.desktop",
+     "tooltip": "Taakbeheer, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      834,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/utilities-system-monitor.svg"
+    },
+    {
+     "key": "win11shell-alles.desktop",
+     "tooltip": "Alles, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      878,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-search.svg"
+    },
+    {
+     "key": "win11shell-disks.desktop",
+     "tooltip": "Schijven, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      922,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/devices/scalable/drive-harddisk.svg"
+    },
+    {
+     "key": "win11shell-defaultapps.desktop",
+     "tooltip": "Standaard-apps, 1 venster geopend",
+     "classes": [
+      "is-running"
+     ],
+     "rect": [
+      966,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/ui/assets/icons/settings.svg"
+    },
+    {
+     "key": "win11shell-installer.desktop",
+     "tooltip": "App-installatie, 1 venster geopend",
+     "classes": [
+      "is-focused",
+      "is-running"
+     ],
+     "rect": [
+      1010,
+      856,
+      40,
+      40
+     ],
+     "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-software-install.svg"
+    }
+   ],
+   "start.allApps": [
+    "blender.desktop",
+    "blueman-manager.desktop",
+    "chatgpt.desktop",
+    "com.anthropic.Claude.desktop",
+    "com.mattjakeman.ExtensionManager.desktop",
+    "debian-uxterm.desktop",
+    "debian-xterm.desktop",
+    "dev.lizardbyte.app.Sunshine.desktop",
+    "firefox.desktop",
+    "gnome-language-selector.desktop",
+    "gridline.desktop",
+    "info.desktop",
+    "io.github.win11shell.Calendar.desktop",
+    "kdesystemsettings.desktop",
+    "libreoffice-calc.desktop",
+    "libreoffice-draw.desktop",
+    "libreoffice-impress.desktop",
+    "libreoffice-math.desktop",
+    "libreoffice-startcenter.desktop",
+    "libreoffice-writer.desktop",
+    "net.nokyan.Resources.desktop",
+    "nm-connection-editor.desktop",
+    "nvidia-settings.desktop",
+    "org.deskflow.deskflow.desktop",
+    "org.gnome.Calculator.desktop",
+    "org.gnome.Calendar.desktop",
+    "org.gnome.Characters.desktop",
+    "org.gnome.DejaDup.desktop",
+    "org.gnome.DiskUtility.desktop",
+    "org.gnome.FileRoller.desktop",
+    "org.gnome.Logs.desktop",
+    "org.gnome.Loupe.desktop",
+    "org.gnome.Nautilus.desktop",
+    "org.gnome.Papers.desktop",
+    "org.gnome.Ptyxis.desktop",
+    "org.gnome.Settings.desktop",
+    "org.gnome.Shotwell.desktop",
+    "org.gnome.Snapshot.desktop",
+    "org.gnome.Sysprof.desktop",
+    "org.gnome.TextEditor.desktop",
+    "org.gnome.Yelp.desktop",
+    "org.gnome.baobab.desktop",
+    "org.gnome.clocks.desktop",
+    "org.gnome.font-viewer.desktop",
+    "org.gnome.seahorse.Application.desktop",
+    "org.gnome.tweaks.desktop",
+    "org.kde.dolphin.desktop",
+    "org.remmina.Remmina.desktop",
+    "peazip.desktop",
+    "simple-scan.desktop",
+    "steam.desktop",
+    "transmission-gtk.desktop",
+    "update-manager.desktop",
+    "usb-creator-gtk.desktop",
+    "virt-manager.desktop",
+    "win11shell-alles.desktop",
+    "win11shell-defaultapps.desktop",
+    "win11shell-disks.desktop",
+    "win11shell-explorer.desktop",
+    "win11shell-installer.desktop",
+    "win11shell-settings.desktop",
+    "win11shell-taskmgr.desktop",
+    "winetricks.desktop"
+   ],
+   "start.search": {
+    "query": "verkenner",
+    "typed": {
+     "typed": "start-search"
+    },
+    "apps": [
+     {
+      "name": "start-result-0",
+      "title": "Verkenner",
+      "icon": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/prefix/share/win11-gnome/icons/Win11/apps/scalable/system-file-manager.svg"
+     },
+     {
+      "name": "start-result-1",
+      "title": "Bestanden",
+      "icon": "org.gnome.Nautilus"
+     },
+     {
+      "name": "start-result-2",
+      "title": "Firefox webbrowser",
+      "icon": "firefox"
+     },
+     {
+      "name": "start-result-3",
+      "title": "Dolphin",
+      "icon": "org.kde.dolphin"
+     }
+    ]
+   }
+  },
+  "shots": [
+   "icon-route.png",
+   "taskbar-before.png",
+   "taskbar-explorer.png",
+   "taskbar-settings.png",
+   "taskbar-taskmgr.png",
+   "taskbar-alles.png",
+   "taskbar-disks.png",
+   "taskbar-defaultapps.png",
+   "taskbar-installer.png",
+   "taskbar-all.png",
+   "taskview.png",
+   "start.png",
+   "start-allapps.png",
+   "start-search.png"
+  ],
+  "error": null,
+  "seconds": 44.7,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 471,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 471,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 471,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=0a961441a27e63164ccdb2c46afaac5a",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 471,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 471
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "icon-route.png",
+    "group": "scenario",
+    "bytes": 19357
+   },
+   {
+    "file": "taskbar-before.png",
+    "group": "scenario",
+    "bytes": 8831,
+    "area": [
+     692,
+     852,
+     272,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-explorer.png",
+    "group": "scenario",
+    "bytes": 9153,
+    "area": [
+     692,
+     852,
+     272,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-settings.png",
+    "group": "scenario",
+    "bytes": 7814,
+    "area": [
+     692,
+     852,
+     272,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-taskmgr.png",
+    "group": "scenario",
+    "bytes": 8926,
+    "area": [
+     670,
+     852,
+     316,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-alles.png",
+    "group": "scenario",
+    "bytes": 9963,
+    "area": [
+     648,
+     852,
+     360,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-disks.png",
+    "group": "scenario",
+    "bytes": 10813,
+    "area": [
+     626,
+     852,
+     404,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-defaultapps.png",
+    "group": "scenario",
+    "bytes": 11334,
+    "area": [
+     604,
+     852,
+     448,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-installer.png",
+    "group": "scenario",
+    "bytes": 12517,
+    "area": [
+     582,
+     852,
+     492,
+     48
+    ]
+   },
+   {
+    "file": "taskbar-all.png",
+    "group": "scenario",
+    "bytes": 12517,
+    "area": [
+     582,
+     852,
+     492,
+     48
+    ]
+   },
+   {
+    "file": "taskview.png",
+    "group": "scenario",
+    "bytes": 122171,
+    "area": null
+   },
+   {
+    "file": "start.png",
+    "group": "scenario",
+    "bytes": 286879,
+    "area": null
+   },
+   {
+    "file": "start-allapps.png",
+    "group": "scenario",
+    "bytes": 277970,
+    "area": null
+   },
+   {
+    "file": "start-search.png",
+    "group": "scenario",
+    "bytes": 290610,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/taskbar-app-icons.mm/icon-route.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-before.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-explorer.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-settings.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-taskmgr.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-alles.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-disks.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-defaultapps.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-installer.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskbar-all.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/taskview.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/start.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/start-allapps.png",
+  "tests/gnome/scenarios/taskbar-app-icons.mm/start-search.png"
+ ]
+}

@@ -114,6 +114,10 @@ UUID = 'win11-gnome@win11shell.local'
 WL = 'w11-wl'                                     # private Wayland display name (socket RT/w11-wl)
 WIDTH, HEIGHT = 1440, 900
 TASKBAR = 48
+# --second-monitor WxH (16-11, multi-monitor taskbars): a second virtual monitor. Mutter makes the larger one (by area)
+# the primary and lays them out left to right from it, so one smaller than 1440x900 lands right of the first, which
+# stays the primary (scenarios check that rather than assume it)
+SECOND_MONITOR = re.compile(r'^(\d{3,4})x(\d{3,4})$')
 UID = os.getuid()
 REAL_HOME = Path(pwd.getpwuid(UID).pw_dir)
 LIVE_RUNTIME = Path(f'/run/user/{UID}')
@@ -129,7 +133,11 @@ STUBS = ('pkexec sudo su systemctl systemd-run loginctl busctl gnome-session-qui
          'apt apt-get aptitude pkcon do-release-upgrade update-manager gnome-software snap xdg-open notify-send '
          'nmcli bluetoothctl rfkill wpctl pactl pw-dump udisksctl pkill killall hyprctl hyprlock hyprsunset '
          'xdg-terminal-exec screen apt-cache apt-config check-new-release ptyxis gnome-terminal kgx unattended-upgrade '
-         'firefox shutdown reboot poweroff timedatectl hostnamectl localectl gnome-control-center').split()
+         'firefox shutdown reboot poweroff timedatectl hostnamectl localectl gnome-control-center '
+         # settings parity (notes/claude/settings-parity.md §6.6, amendment 61c): the tools the Settings services
+         # spawn through host/src/tools.rs system_tool (WIN11_SYSTEM_TOOL_DIR = run/stubs) and GNOME's pkexec helpers
+         'grdctl tecla bluetooth-sendto passwd localedef ubuntu-insights simple-scan orca ibus ibus-setup snap-store '
+         'gnome-remote-desktop-enable-service gnome-control-center-set-debian-keyboard').split()
 # plan-critique F24: each of these must be absent (set but empty counts as set), with its own refusal code.
 F24_POINTERS = {'WIN11_REFERENCE_SETTINGS': 'reference-settings-set', 'WIN11_REFERENCE_INSTANCE': 'reference-instance-set',
                 'WIN11_GNOME_CONFIG_DIR': 'gnome-config-dir-set', 'AT_SPI_BUS_ADDRESS': 'at-spi-bus-set',
@@ -143,6 +151,8 @@ LIVE_POINTERS = ('WIN11_UI_DIR',
 # D-G42 (GW1's layer, tests/update/run.sh root_argv): the sandbox root is an allowlist, not `--ro-bind / /`.
 ROOT_LINKS = ('bin', 'sbin', 'lib', 'lib64', 'lib32', 'libx32')     # links into /usr (or plain directories)
 FONTCONFIG_CACHE = Path('/var/cache/fontconfig')  # the system font cache, read-only (as GW3's update-ui/nonet.sh)
+# Public system dictionary data only, never the rest of /var; libpwquality needs all three files.
+CRACKLIB_FILES = tuple(Path('/var/cache/cracklib') / f'cracklib_dict.{ext}' for ext in ('pwd', 'pwi', 'hwm'))
 # udev's database, read-only: mutter finds the GPU's render node through udev's "seat" tag. Its sockets
 # (control, io.systemd.Udev) are in /proc/net/unix, so launch masks them like every other host socket.
 UDEV_DATA = Path('/run/udev')
@@ -208,6 +218,8 @@ def private_env() -> dict[str, str]:
         # D-G44 (gw4.md N1): GIO's local VFS only, so no GVfs client contacts a session bus on its own
         'GIO_USE_VFS': 'local',
         **{key: str(path) for key, path in UPDATE_SEAMS.items()},
+        # settings parity: host/src/tools.rs system_tool resolves every tool to its stub here
+        'WIN11_SYSTEM_TOOL_DIR': str(RUN / 'stubs'),
         **({WINPOINT_VAR: str(WINPOINT_SEAM)} if WINPOINT_FEED else {}),
         # Outer stage: a socket that never exists, so an accidental session-bus use fails.
         # dbus-run-session replaces it with RT/bus for the inner stage.
@@ -345,6 +357,9 @@ def env_problems(env: dict[str, str], stage: str) -> list[tuple[str, str]]:
     for key in LIVE_POINTERS:
         if key in env:
             add('live-pointer-var', f'{key} is set')
+    # settings parity: the tool seam names this run's stubs, nothing else (a real directory would run real tools)
+    if 'WIN11_SYSTEM_TOOL_DIR' in env and env['WIN11_SYSTEM_TOOL_DIR'] != str(RUN / 'stubs'):
+        add('system-tool-dir', f"WIN11_SYSTEM_TOOL_DIR={env['WIN11_SYSTEM_TOOL_DIR']!r} is not {RUN / 'stubs'}")
     for key, value in env.items():
         if '/run/user/' in value and key not in ('DBUS_SESSION_BUS_ADDRESS', 'XDG_RUNTIME_DIR'):
             add('live-runtime-ref', f'{key} refers to /run/user/')
@@ -711,6 +726,18 @@ def dutch_words() -> set[str]:
 # launch: build the sandbox (the only command that may start from a live shell)
 # --------------------------------------------------------------------------------------------------------
 
+def readable_dictionary_files(paths=CRACKLIB_FILES):
+    """Only fixed, readable regular dictionary files may be exposed read-only; no symlinks or sockets."""
+    out = []
+    for path in paths:
+        try:
+            if stat.S_ISREG(path.lstat().st_mode) and os.access(path, os.R_OK):
+                out.append(path)
+        except OSError:
+            pass
+    return out
+
+
 def root_argv(extra_ro: list[Path] = ()) -> tuple[list[str], list[str]]:
     """D-G42: GW1's allowlisted root (tests/update/run.sh root_argv) instead of `--ro-bind / /`, and the
     directories it makes visible (for the socket scan). Read-only: /usr with the /bin, /sbin, /lib… links, /etc,
@@ -739,6 +766,9 @@ def root_argv(extra_ro: list[Path] = ()) -> tuple[list[str], list[str]]:
         if path.is_dir():
             argv += ['--ro-bind', str(path), str(path)]
             visible.append(str(path))
+    for path in readable_dictionary_files():
+        argv += ['--ro-bind', str(path), str(path)]
+        visible.append(str(path))
     argv += ['--ro-bind', str(G), str(G)]
     visible.append(str(G))
     for path in extra_ro:
@@ -862,6 +892,11 @@ def launch_problems(opts) -> list[tuple[str, str]]:
         path = Path(os.path.realpath(opts.scenario))
         if not path.is_file() or path.suffix != '.py' or not _inside(path, G):
             p.append(('scenario-invalid', f'--scenario {opts.scenario} is not a .py file inside {G}'))
+    if not opts.guard_only:
+        p += run_modes_problems()
+    if getattr(opts, 'second_monitor', None) and not second_monitor_ok(opts.second_monitor):
+        p.append(('second-monitor-invalid', f'--second-monitor {opts.second_monitor} is not WxH between 640x480 '
+                                             'and 3840x2160'))
     if opts.out:
         out = Path(os.path.realpath(opts.out))
         if out_problem(out):
@@ -874,6 +909,36 @@ def launch_problems(opts) -> list[tuple[str, str]]:
             p.append(('out-invalid', f'--strace {opts.strace} must be inside the output directory {out} '
                                      '(the only writable directory besides run/)'))
     return p
+
+
+def run_modes_problems() -> list[tuple[str, str]]:
+    """run/ must keep Unix modes: the hosts refuse a settings lock others could read (host/src/settings.rs lock(),
+    mode & 0o077), and on NTFS through fuseblk or on exFAT every file reads 0755, so the run had no backend at all
+    (16-11, a worktree on the 22 TB disk). A probe file made 0600 next to run/ shows it."""
+    probe = HERE / f'.mode-probe-{os.getpid()}'
+    try:
+        fd = os.open(probe, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        os.close(fd)
+        os.chmod(probe, 0o600)
+        mode = stat.S_IMODE(os.stat(probe).st_mode)
+    except OSError as error:
+        return [('run-dir-no-modes', f'cannot probe the file modes of {HERE}: {error}')]
+    finally:
+        try:
+            os.unlink(probe)
+        except OSError:
+            pass
+    if mode & 0o077:
+        return [('run-dir-no-modes', f'{RUN} is on a file system without Unix permissions (a file made 0600 reads '
+                                     f'{mode:o}): the hosts refuse their settings lock there and the run would have '
+                                     'no backend. Run the harness from a checkout on ext4 or tmpfs.')]
+    return []
+
+
+def second_monitor_ok(value: str) -> bool:
+    """--second-monitor: WxH with 640 <= W <= 3840 and 480 <= H <= 2160."""
+    match = SECOND_MONITOR.match(value or '')
+    return bool(match) and 640 <= int(match[1]) <= 3840 and 480 <= int(match[2]) <= 2160
 
 
 def git_common_dir() -> Path | None:
@@ -1947,6 +2012,7 @@ def prepare(lang: str, seed: str = 'defaults') -> None:
     RT.mkdir(mode=0o700, exist_ok=True)
     os.chmod(RT, 0o700)
     os.chmod(RUN / 'home', 0o700)
+    os.chmod(RUN / 'stubs', 0o700)
     # dbus-daemon refuses unix socket paths longer than 99 bytes (_DBUS_MAX_SUN_PATH_LENGTH), Wayland 107.
     # The system bus socket is RT/sbus so a git worktree (.wt/<name>) still fits.
     for name in ('bus', 'sbus'):
@@ -2154,11 +2220,17 @@ def _strace_paths(line: str) -> tuple[str, list[str]] | None:
 
 
 def install(env: dict[str, str]) -> dict:
-    """scripts/install.py into the private prefix, under strace; every mutated path must be under RUN."""
+    """scripts/install.py into the private prefix, under strace; every mutated path must be under RUN. --no-session
+    when the source's installer knows it: 0.9.1's refuses a run without a terminal otherwise (sessionTerminal), and
+    on one would ask the password for the login session's root files; with it, as before, the session counts when
+    this machine has it installed."""
     logs = RUN / 'logs'
     trace = logs / 'install.strace'
+    script = SRC / 'scripts' / 'install.py'
     argv = ['strace', '-f', '-qq', '-y', '-e', 'trace=%file,connect', '-e', 'signal=none', '-o', str(trace),
-            '/usr/bin/python3', '-B', str(SRC / 'scripts' / 'install.py'), str(SRC)]
+            '/usr/bin/python3', '-B', str(script), str(SRC)]
+    if '"--no-session"' in script.read_text():
+        argv.append('--no-session')
     started = time.monotonic()
     with open(logs / 'install.log', 'w') as out:
         proc = subprocess.run(argv, env=env, stdout=out, stderr=subprocess.STDOUT, cwd=str(RUN), timeout=600)
@@ -2402,6 +2474,9 @@ def cmd_run(args) -> int:
         print('GUARD OK (outer stage: private environment inside the bubblewrap sandbox)')
         return 0
     problems = build_dir_problems(BUILD)
+    if args.second_monitor and not second_monitor_ok(args.second_monitor):
+        problems.append(('second-monitor-invalid', f'--second-monitor {args.second_monitor} is not WxH between '
+                                                   '640x480 and 3840x2160'))
     if args.scenario and not Path(args.scenario).is_file():
         problems.append(('scenario-invalid', f'--scenario {args.scenario} does not exist'))
     if winpoint_scenario(args) and not args.strace:
@@ -2502,6 +2577,8 @@ def cmd_run(args) -> int:
         inner.append('--patch-extension')
     if args.winpoint_feed:
         inner.append('--winpoint-feed')
+    if args.second_monitor:
+        inner += ['--second-monitor', args.second_monitor]
     if args.scenario:
         inner += ['--scenario', str(Path(args.scenario).resolve())]
     argv = traced('') + ['dbus-run-session', f'--config-file={RUN / "session-bus.conf"}', '--'] + inner
@@ -2564,6 +2641,7 @@ def cmd_run(args) -> int:
         'commit': _git_head(), 'startedAt': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(started)),
         'seconds': round(time.time() - started, 1), 'innerExit': proc.returncode, 'innerTimedOut': timed_out,
         'buildDir': str(BUILD), 'source': source, 'lock': lock_note,
+        **({'secondMonitor': args.second_monitor} if args.second_monitor else {}),
         'memory': memory, 'install': verify, 'guardStubCalls': guard_calls, 'updateToolCalls': update_calls,
         'leftoverProcessesAfterInner': leftovers, 'socketCleanup': sockets, 'socketWatch': watch.summary(),
         **({'straceConnect': connects} if connects else {}),
@@ -2666,6 +2744,8 @@ class Session:
             raise RuntimeError(f'private system bus reported {address!r}')
         self.facts['systemBus'] = address
         argv = ['gnome-shell', '--headless', f'--virtual-monitor={WIDTH}x{HEIGHT}', f'--wayland-display={WL}', '--no-x11']
+        if self.args.second_monitor:
+            argv.insert(3, f'--virtual-monitor={self.args.second_monitor}')
         if SESSION_MODE:
             argv.append(f'--mode={SESSION_MODE}')
         if not self.args.patch_extension:
@@ -2678,6 +2758,8 @@ class Session:
         self.facts['shellVersion'] = self.ev("(await import('resource:///org/gnome/shell/misc/config.js')).PACKAGE_VERSION")
         self.facts['sessionMode'] = self.ev('Main.sessionMode.currentMode')
         until(lambda: self.ev('!Main.layoutManager._startingUp'), 'GNOME Shell startup complete', 90, 0.3)
+        self.facts['monitors'] = self.ev('Main.layoutManager.monitors.map(m=>({index:m.index,x:m.x,y:m.y,w:m.width,'
+                                         'h:m.height,primary:m.index===Main.layoutManager.primaryIndex}))')
         self.ev('Main.overview.hide()')
         until(lambda: self.ev('!Main.overview.visible && !Main.overview.animationInProgress'), 'overview hidden', 30, 0.2)
 
@@ -3313,6 +3395,9 @@ def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
     p.add_argument('--winpoint-feed', action='store_true',
                    help="D-G74a: WinPoint's update check against a fake GitHub on loopback (tests/gnome/lib/"
                         'fake_github.py) through its test seam WIN11_WINPOINT_TEST; without it the daily check is off')
+    p.add_argument('--second-monitor', metavar='WxH',
+                   help='a second virtual monitor of this size next to the 1440x900 one (multi-monitor taskbars; '
+                        'between 640x480 and 3840x2160)')
     p.add_argument('--strace', metavar='FILE',
                    help='D-G42: every connect() of the install and the whole session under strace into FILE '
                         '(inside tests/gnome, outside run/); the run fails when one reached a socket outside the '

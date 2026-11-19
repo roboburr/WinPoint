@@ -8,8 +8,11 @@ registry.
   page! macro, JSON objects), skips test code, and reports its rules (empty halves, placeholders, NL/EN tables,
   Dutch in English, apostrophes, the glossary, articles, allow-list rows, Dutch outside every pair);
 * native/shell/src/start/settings_pages.json (what Start's search offers) is native/apps/settings/src/registry.rs
-  (the Settings app's own registry) without its Home page: the same pages in the same order, with the same parent,
-  icon, titles, descriptions and keywords. Change both, or Start finds a page by a title Settings no longer has;
+  (the Settings app's own registry) without its Home page and its data pages (DATA_PAGES, settings parity amendment
+  26): the same pages in the same order, with the same parent, icon, titles, descriptions and keywords. Change both
+  (python3 -B tools/settings-pages.py --write), or Start finds a page by a title Settings no longer has;
+* the caps keys a registry page may need (registry.rs KNOWN_NEEDS) are the keys of the host's caps.get
+  (host/src/services/caps.rs KEYS without "session");
 * every app kind has its name (the window title, kit AppSpec) in both languages, as the WebKit host's C4 title test
   had it (`git show 6ebf169f:host/src/window.rs`, title_tests).
 
@@ -20,6 +23,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -196,6 +200,22 @@ class Rules(unittest.TestCase):
         self.assertEqual(rep.stats["native_uncovered"], 1)              # "Instellingen wijzigen"
         self.assertEqual(rep.stats["native_pairs"], 19)
 
+    def test_empty_keyword_lists_are_valid_only_when_both_languages_are_empty(self):
+        with fixture() as root:
+            data = [
+                {"id": "empty", "keywords": {"nl": [], "en": []}},
+                {"id": "nl_only", "keywords": {"nl": ["geluid"], "en": []}},
+                {"id": "en_only", "keywords": {"nl": [], "en": ["sound"]}},
+                {"id": "both", "keywords": {"nl": ["geluid"], "en": ["sound"]}},
+            ]
+            (root / "native/apps/demo/src/data.json").write_text(json.dumps(data), encoding="utf-8")
+            rep = layer(root)
+        got = self.issues(rep)
+        self.assertNotIn(("error", "native-pair", "empty.keywords"), got)
+        self.assertNotIn(("error", "native-pair", "both.keywords"), got)
+        self.assertIn(("error", "native-pair", "nl_only.keywords"), got)
+        self.assertIn(("error", "native-pair", "en_only.keywords"), got)
+
     def test_allow_rows_accept_a_dutch_name_and_go_stale(self):
         allow = ("# fixture\n"
                  "native/apps/demo/src/*.rs\ten:bestand\ta Dutch word on purpose (fixture)\n"
@@ -220,9 +240,37 @@ class Rules(unittest.TestCase):
 
 REGISTRY = "native/apps/settings/src/registry.rs"
 START_PAGES = "native/shell/src/start/settings_pages.json"
+CAPS = "host/src/services/caps.rs"
+
+
+def rust_str_list(text: str, name: str) -> list[str]:
+    """The string literals of a `static/const NAME: &[&str] = &[...];` table."""
+    import re  # noqa: PLC0415
+    m = re.search(rf"{name}: &\[&str\] = &\[(.*?)\];", text, re.S)
+    if not m:
+        raise ValueError(f"no table {name}")
+    return re.findall(r'"([^"]*)"', m.group(1))
+
+
+def data_pages(root: Path = ROOT) -> set[str]:
+    """registry.rs DATA_PAGES: pages that need a parameter (never in Start's search)."""
+    return set(rust_str_list((root / REGISTRY).read_text(encoding="utf-8"), "DATA_PAGES"))
+
+
 # Pages of the registry that Start's search does not offer: Settings' own Home page (the JSON never had it,
-# f728b33b; registry.js's search in the HTML shell did).
-NOT_IN_START = {"home"}
+# f728b33b; registry.js's search in the HTML shell did) and the data pages (settings parity amendment 26).
+NOT_IN_START = {"home"} | data_pages()
+
+
+
+def page_needs(root: Path = ROOT) -> dict[str, str]:
+    """The registry's page-to-capability table, also exported to Start."""
+    import re  # noqa: PLC0415
+    text = (root / REGISTRY).read_text(encoding="utf-8")
+    table = re.search(r'\bNEEDS\s*:\s*&\[\(&str,\s*&str\)\]\s*=\s*&\[(.*?)\];', text, re.S)
+    if table is None:
+        raise ValueError("no NEEDS table in registry")
+    return dict(re.findall(r'\(\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\)', table.group(1)))
 
 
 def registry_pages(root: Path = ROOT) -> list[dict]:
@@ -253,6 +301,10 @@ def registry_pages(root: Path = ROOT) -> list[dict]:
                 raise ValueError(f"{REGISTRY}:{toks[i].line}: page! with {len(v)} arguments")
             out.append({"id": v[0], "parent": v[1], "icon": v[2], "title": {"nl": v[3], "en": v[4]},
                         "description": {"nl": v[5], "en": v[6]}, "keywords": {"nl": v[7], "en": v[8]}})
+    needs = page_needs(root)
+    for page in out:
+        if page["id"] in needs:
+            page["needs"] = needs[page["id"]]
     return out
 
 
@@ -278,6 +330,32 @@ class SettingsPages(unittest.TestCase):
         cls.registry = registry_pages()
         cls.start = json.loads((ROOT / START_PAGES).read_text(encoding="utf-8"))
 
+    def test_every_settings_page_has_replaced_the_temporary_placeholder(self):
+        source = ROOT / "native/apps/settings/src"
+        self.assertNotIn("fn placeholder(", (source / "common.rs").read_text())
+        for page in (source / "pages").glob("*.rs"):
+            self.assertNotIn("common::placeholder", page.read_text(), str(page))
+
+    def test_the_needs_keys_are_the_hosts_caps_keys(self):
+        known = rust_str_list((ROOT / REGISTRY).read_text(encoding="utf-8"), "KNOWN_NEEDS")
+        caps = [k for k in rust_str_list((ROOT / CAPS).read_text(encoding="utf-8"), "KEYS") if k != "session"]
+        self.assertEqual(known, caps, f"{REGISTRY} KNOWN_NEEDS and {CAPS} KEYS disagree")
+
+    def test_start_exports_capability_requirements_and_detects_their_drift(self):
+        needs = page_needs()
+        expected = {p["id"]: needs[p["id"]] for p in self.registry if p["id"] in needs and p["id"] not in NOT_IN_START}
+        actual = {p["id"]: p["needs"] for p in self.start if "needs" in p}
+        self.assertEqual(actual, expected)
+        start = json.loads(json.dumps(self.start))
+        page = next(p for p in start if "needs" in p)
+        del page["needs"]
+        self.assertTrue(any(line.startswith(page["id"] + ".needs:") for line in differences(self.registry, start)))
+
+    def test_data_pages_are_registry_pages(self):
+        ids = {p["id"] for p in self.registry}
+        self.assertTrue(data_pages() <= ids, data_pages() - ids)
+        self.assertEqual(data_pages() & {p["id"] for p in self.start}, set(), "a data page is offered in Start")
+
     def test_start_offers_the_registry_s_pages(self):
         self.assertGreater(len(self.registry), 30)
         self.assertEqual(NOT_IN_START - {p["id"] for p in self.registry}, set(), "NOT_IN_START names no page")
@@ -291,6 +369,55 @@ class SettingsPages(unittest.TestCase):
         del start[-1]
         got = differences(self.registry, start)
         self.assertEqual(len(got), 3, got)
+
+
+def glossary_text(text: str) -> str:
+    """Both TSV formats escape tabs, newlines and backslashes in a single field."""
+    return re.sub(r"\\([nt\\])", lambda m: {"n": "\n", "t": "\t", "\\": "\\"}[m[1]], text)
+
+
+def unlisted_windows_pairs(root: Path = ROOT) -> list[tuple[str, str, str]]:
+    baseline = json.loads((root / "tests/i18n/windows-glossary-baseline.json").read_text())
+    if baseline["revision"] != "af8eebdc":
+        raise ValueError("The pre-parity wording baseline must stay at af8eebdc")
+    allowed = {tuple(pair) for pair in baseline["pairs"]}
+    for path in (root / "tests/i18n/windows-glossary").glob("*.tsv"):
+        for line in path.read_text().splitlines():
+            if line.strip() and not line.startswith("#"):
+                en, nl, *_ = line.split("\t")
+                allowed.add((glossary_text(en), glossary_text(nl)))
+    pairs, _ = check_native.read_pairs(root)
+    current = [(p.en, p.nl, f"{p.file}:{p.key}") for p in pairs
+               if isinstance(p.nl, str) and isinstance(p.en, str) and p.nl.strip() and p.en.strip()]
+    for path in (root / "host/i18n").glob("*.tsv"):
+        for line in path.read_text().splitlines():
+            if line.strip() and not line.startswith("#"):
+                key, nl, en = line.split("\t")
+                current.append((glossary_text(en), glossary_text(nl), f"{path.relative_to(root)}:{key}"))
+    return [(en, nl, place) for en, nl, place in current if (en, nl) not in allowed]
+
+
+class WindowsGlossary(unittest.TestCase):
+    """tests/i18n/windows-glossary/<batch>.tsv (settings parity amendment 28): one file per batch, four columns."""
+
+    def test_new_ui_texts_are_listed_in_the_windows_wording_files(self):
+        self.assertEqual(unlisted_windows_pairs(), [],
+                         "List new native UI and host feedback in windows-glossary/*.tsv with its source and verification status")
+
+    def test_the_files_are_well_formed(self):
+        files = sorted((HERE / "windows-glossary").glob("*.tsv"))
+        self.assertEqual([f.stem for f in files], ["a", "b", "b0", "c", "d", "e", "f", "i"])
+        for f in files:
+            for no, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+                if not line.strip() or line.startswith("#"):
+                    continue
+                cols = line.split("\t")
+                self.assertEqual(len(cols), 4, f"{f.name}:{no}: en, nl, source, verified")
+                en, nl, source, verified = cols
+                self.assertTrue(en and nl, f"{f.name}:{no}")
+                self.assertIn(source, {"glossary", "windows", "rename", "winpoint"}, f"{f.name}:{no}")
+                self.assertIn(verified, {"yes", "no"}, f"{f.name}:{no}")
+                self.assertNotIn("—", line, f"{f.name}:{no}: no em-dash")
 
 
 # ------------------------------------------------------------------------------------------------------------------

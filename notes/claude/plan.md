@@ -45,7 +45,7 @@ Branch `claude/gnome-english-update`; `codex-baseline` (3b898e6) is Codex's unto
 | D-G10 | `vendor/host` (Python reference) stays untranslated. Amended by D-G73 (2026-11-14): vendor/host is deleted, so nothing of it is left to translate. |
 | D-G11 | Polkit, PackageKit, NetworkManager and WebKit's own strings stay in the system language; documented. Amended by D-G72 (2026-11-14): WinPoint has no WebKit any more; GTK's own strings (a text field's context menu, its built-in dialogs) take that place in the list. |
 | D-G12 | Windows Update per `windows-update-gnome.md` (hold with "Toch upgraden…" behind a warning on an untested GNOME major, owner lock, cheap verdict first, tests only with recorded apt outputs). Robin decides R-items (update-notifier auto-open, postponing Ubuntu's own prompt). |
-| D-G13 | Package version 0.8.0. Amended by D-G74a (2026-11-14): 0.9.0, from `[workspace.package]` in the root Cargo.toml. |
+| D-G13 | Package version 0.8.0. Amended by D-G74a (2026-11-14): 0.9.0, from `[workspace.package]` in the root Cargo.toml. Then D-G75 (2026-11-16): 0.9.1. |
 | D-G14 | Own-app window memory hardened; all-app window memory waits for Robin. |
 | D-G15 | en-GB; logs stay as they are; machine markers byte-identical; XDG folder names never renamed (H D1, D10-D12). |
 | D-G16 | Branding ("Win11 Shell" in Settings texts, extension name) unchanged in this work. Amended by D-G74a (2026-11-14): the product name is WinPoint on the About and Update pages and in every update text (`update.product`). |
@@ -655,6 +655,64 @@ Coordinator decisions:
   chain and is not `stale` once WinPoint runs V), so V installed by hand after a job
   that changed nothing counts, and uninstall.sh run again after an interrupted uninstall repairs first and removes
   what that one left.
+  Released 2026-11-16 (Robin: "breng uit"): GitHub main 0b2f8489 (tree of 8364af0e), tag v0.9.0, the tarball
+  (67242341 bytes) sha256:d5ea2d05982d600c31de9baec9c91c0683c675383ffcee099588b27ee160b717; GitHub's digests of both
+  assets matched on the draft and the anonymous feed passes feed.rs's rules. Immutable releases were still off in the
+  repository's settings when it was published.
+* D-G75: Robin (2026-11-16), asked whether the install can be easier now that WinPoint is its own login session, chose:
+  "1. standaard" (the installer makes WinPoint the user's session at the login screen), "2. zolang de originele gnome
+  blijft mag je doen wat je wil" (installs always go through WinPoint's own session; the normal GNOME and Ubuntu
+  sessions stay exactly as they are) and "3. ja" (one password for everything). Version 0.9.1. (1) A terminal install
+  (a tty, no --no-session, WIN11_NO_SESSION unset) runs one pkexec, install-session.py --system: the four session
+  files and install-system.py's four files of host/data, each checked by the fixed root script against the sha256 on
+  its command line; it runs when one of the eight is missing or differs (winpoint.json by meaning, without the keys it
+  copies from Ubuntu's mode). Missing session files afterwards refuse the install (sessionNeeded) before any change;
+  without a terminal it refuses (sessionTerminal), as without gnome-session or pkexec (missingParts), as root
+  (noRoot) and for another CPU architecture ("abi"). After the commit it sets AccountsService's Session "winpoint"
+  and SessionType "wayland" (busctl, no interactive authorization; polkit change-own-user-data) and takes WinPoint's
+  UUID out of enabled-extensions (an earlier in-GNOME install: the mode turns it on in WinPoint) and then out of
+  disabled-extensions (GNOME's mode skips what is listed there); otherwise nothing of the normal session. A failure
+  after the root step rolls the home folder back and says that the root files stay (rolledBackRoot, with the command
+  that removes them). Messages before the language is resolved follow the locale guess (also as root).
+  (2) The payload carries scripts/ and ~/.local/bin/winpoint-uninstall: from Ubuntu (refused inside WinPoint) it
+  removes the eight root files first in one pkexec (cancel: nothing removed; --keep-session skips it), resets Session
+  "winpoint" to GDM's default and takes the UUID out of both extension lists; with the payload already gone (an older
+  uninstall.sh) it still removes the root files and its own wrapper, and the wrapper itself says so when its
+  uninstall.py is missing. (3) The updater's path (D-G74) is
+  unchanged: install-session.py's contents() are byte-identical to v0.9.0's (tested against git show v0.9.0), host/data
+  is unchanged, --check's systemFiles can only shrink. (4) README: download, one line with the version (release.py
+  bump rewrites it, check wants it), one password, sign out; uninstall is ~/.local/bin/winpoint-uninstall. The
+  in-GNOME mode (--no-session) stays for the updater, the tests and existing installs, and is no longer documented.
+* D-G76: Robin (2026-11-16): "hoofdscherm met hoofdtaakbalk. en tweede scherm met taakbalk met alleen de draaiende
+  app op dat scherm". Every non-primary monitor gets its own taskbar window in win11-shell (app id
+  io.github.win11shell.SecondaryTaskbar.Monitor<N>, a DOCK with its own strut, placed and hidden by panelBridge.js,
+  which publishes the monitor list as panel.monitors); the app buttons are one instance per taskbar over a shared
+  catalogue. Settings › Taakbalk gains Windows 11's two rows: "Mijn taakbalk op alle beeldschermen weergeven"
+  (taskbar.allDisplays, default on) and "Mijn taakbalk-apps weergeven op" (taskbar.multiDisplayApps: all,
+  mainAndWindow, window = default "Taakbalk waar het venster is geopend"). The desktop stays one window over the
+  bounding box for the icons (primary monitor only) and gets a wallpaper window per other monitor; Span (Uitspreiden)
+  crops one picture over all monitors. Single-monitor behaviour is unchanged (every new path needs two monitors).
+  Branch claude/multi-monitor (worktree on the 22 TB disk), 9 review findings fixed; harness multi-monitor.py 75/75
+  nl and en with --second-monitor 1280x960, native-shell 21/21, taskbar-app-icons 43/43, lock-unlock 5/5. Merged
+  into claude/gnome-english-update as af8eebdc; the README limitation of 1c14ff4a is gone with it.
+* D-G77: Robin (2026-11-16): "alle settings van de originele GNOME functies moeten erin komen, maar in de style van
+  windows settings app. kijk vooral af ... bijvoorbeeld muis settings mist". Settings parity: the contract is
+  notes/claude/settings-parity.md (91 pages, 371 controls, 69 critique amendments decided; sources in
+  notes/claude/settings-parity/). B0 (6ca213f1..3250a191, 19 review fixes) is the foundation: the allowlisted
+  gsettings.* service, caps.get, the settings mirror (gnome-mirror.json: the side that moved since both last agreed
+  wins at a panel start, GNOME on the first), the registry of all pages with N-level breadcrumbs, gs.rs, pickers.rs,
+  the api-methods fragments and the test layers (tests/dbus-fakes, harness stand-ins). Batches A-F then run in six
+  worktrees (/run/media/robin/22TB/win11-gnome-wt/{a..f}, branches claude/settings-<x>, based on af8eebdc), each in
+  vertical slices with its own harness scenarios, two reviews and a fix; step I merges them. No VM was used to look at
+  Windows: the Windows 11 layout and strings come from windows.json (marked verified=no in the glossary files where no
+  verified source had them). 17-11 about 02:15, Robin: "schrijf een handover, codex gaat verder". Claude stopped with
+  B, D, E, F finished and merged into claude/settings-i (dcba2107, worktree e); A done up to its harness step; C's fix
+  and three step-I packages left as WIP commits. State, work list and next steps: notes/claude/handover-codex.md.
+  Codex completion (2026-11-17): A/C reviews and repairs, all three final packages and deferred integration completed;
+  host/native release builds and the full nl/en isolated regression matrix passed with the physical virtual-monitor
+  calibration limit explicitly recorded. The oversized media panel is corrected and measured at its compact size.
+  See VALIDATION_SETTINGS.md and notes/claude/settings-i.md for evidence and boundaries. Existing session untouched;
+  no install, push or release. Real Windows/hardware/daemon and clean-VM installer checks remain Robin-only.
 ### Rounds 4-6: Windows Update per `windows-update-gnome.md` (GW steps, its own ownership table), own-app window
 memory hardening (D-G14) alongside round 4.
 

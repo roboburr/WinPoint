@@ -115,7 +115,7 @@ impl Ctx {
         let gs = gnome_settings();
         let system_dark = prefers_dark(&gs);
         let settings = settings_file().unwrap_or_else(|| json!({}));
-        crate::i18n::set_lang(if settings["language"].as_str() == Some("en") { "en" } else { "nl" });
+        crate::i18n::set_lang(crate::i18n::resolve(&settings["language"]));
         let backend = if spec.backend {
             match Backend::start(spec.kind, || dispatch("backend.ready".into(), Value::Null)) {
                 Ok(b) => b,
@@ -415,10 +415,10 @@ impl Ctx {
 
     pub(crate) fn apply_look(&self) {
         let s = self.settings();
-        let lang = if s["language"].as_str() == Some("en") { "en" } else { "nl" };
-        crate::i18n::set_lang(lang);
+        crate::i18n::set_lang(crate::i18n::resolve(&s["language"]));
         self.backend.set_lang(crate::i18n::lang());
-        let look = Look::from_settings(&s, self.system_dark.get());
+        // GNOME's session settings (theme.rs System): the text scale, high contrast, the on/off shapes
+        let look = Look::from_settings_and_system(&s, self.system_dark.get(), &crate::theme::System::read());
         crate::theme::apply(&look, false);
         crate::backdrop::settings_changed(look.transparency, look.high_contrast);
     }
@@ -468,14 +468,21 @@ impl Ctx {
         self.setting("theme.accent").as_str().unwrap_or("#0078d4").to_owned()
     }
 
-    /// accessibility.textScale / 100 (1.0 ..= 2.25).
+    /// The text scale in effect: GNOME's text-scaling-factor (GSettings, else GTK's gtk-xft-dpi), else
+    /// accessibility.textScale / 100 (0.5 ..= 3.0). The kit's px type ramp is already scaled by it.
     pub fn text_scale(&self) -> f64 {
         crate::theme::look().text_scale
     }
 
-    /// accessibility.highContrast.
+    /// accessibility.highContrast, or GNOME's high contrast (GTK's prefers-contrast: more).
     pub fn high_contrast(&self) -> bool {
         crate::theme::look().high_contrast
+    }
+
+    /// GNOME's On/Off Shapes (org.gnome.desktop.a11y.interface show-status-shapes): switches show I
+    /// and O; an app that draws its own state can follow it too.
+    pub fn status_shapes(&self) -> bool {
+        crate::theme::look().status_shapes
     }
 
     /// theme.transparency (default on).

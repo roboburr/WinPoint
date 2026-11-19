@@ -9,14 +9,21 @@ import Mtk from 'gi://Mtk';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {NativeDesktopBridge, DESKTOP_APP_ID} from './desktopBridge.js';
+import {NativeDesktopBridge, DESKTOP_APP_ID, secondaryDesktop} from './desktopBridge.js';
 import {NativeNotificationsBridge} from './notificationsBridge.js';
 import {NativeFrostedBridge} from './frostedBridge.js';
+import {LaunchBridge} from './launchBridge.js';
+import {DisplayBridge} from './displayBridge.js';
+import {InputBridge} from './inputBridge.js';
 
 export const BRIDGE_NAME = 'io.github.win11shell.GnomeBridge';
 export const BRIDGE_PATH = '/io/github/win11shell/GnomeBridge';
 export const PANEL_APP_ID = 'io.github.win11shell.Panel';
 export const START_APP_ID = 'io.github.win11shell.Start';
+// The taskbars of the other monitors (Windows 11's "Show my taskbar on all displays"): win11-shell makes one window per
+// monitor without the main taskbar, with this app ID and the monitor's index (native/shell/src/panel/strips.rs).
+export const STRIP_APP_ID = 'io.github.win11shell.SecondaryTaskbar';
+const STRIP_ID = /^io\.github\.win11shell\.SecondaryTaskbar\.Monitor(\d{1,2})$/;
 const HEIGHT = 48;
 // Over a fullscreen app (Windows 11): how long Super or Alt+Tab keeps the taskbar shown before Start or the task
 // view has the focus, and how long a window chosen in the task view has to arrive before Esc's focus return.
@@ -93,6 +100,30 @@ function text(key, language, params = {}) {
     return (pair[language] ?? pair.nl).replace(/\{(\w+)\}/g, (all, name) => Object.hasOwn(params, name) ? String(params[name]) : all);
 }
 
+/** The monitor index a taskbar window of another monitor names in its app ID, else -1. */
+export function stripMonitor(window) {
+    const match = STRIP_ID.exec(window?.get_wm_class?.() || '');
+    return match ? Number(match[1]) : -1;
+}
+
+/** Whether two maps of window id -> rectangle (or null) hold the same rectangles. */
+function sameRects(a, b) {
+    if ((a?.size ?? 0) !== b.size)
+        return false;
+    for (const [id, rect] of b) {
+        if (!a.has(id))
+            return false;
+        const other = a.get(id);
+        if (!rect || !other) {
+            if (rect !== other)
+                return false;
+        } else if (rect.x !== other.x || rect.y !== other.y || rect.width !== other.width || rect.height !== other.height) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function iconName(app) {
     try {
         const icon = app?.get_app_info()?.get_icon();
@@ -129,11 +160,27 @@ export class NativePanelBridge {
         this._panelOriginal = null;
         this._panelInhibited = false;
         this._panelPresent = false;
+        // The taskbars of the other monitors: Meta.Window -> {monitor, original, inhibited, strut}; the icon
+        // rectangles of every taskbar ('main' or a monitor index) for the minimize animation: as it sent them (in
+        // its own window) and where they are on the stage now.
+        this._strips = new Map();
+        this._iconSources = new Map();
+        this._iconRects = new Map();
+        this._lastMonitors = '';
         this._notificationsBridge = new NativeNotificationsBridge(
             (event, data) => this._emit(event, data),
             pid => this._enabled && this._panelPresent && this._panel?.get_pid() === pid && !this._hidden(),
             this._language);
         this._notificationsBridge.enable();
+        // Settings parity's bridges (notes/claude/settings-parity.md section 8.1): launch.*, display.*, input.*. A
+        // new set at every enable (the session mode's unlock too); the display bridge's keep-question ids rise across.
+        const emit = (event, data) => this._emit(event, data);
+        this._launchBridge = new LaunchBridge(emit, this._language);
+        this._launchBridge.enable();
+        this._displayBridge = new DisplayBridge(emit, this._language);
+        this._displayBridge.enable();
+        this._inputBridge = new InputBridge(emit, this._language);
+        this._inputBridge.enable();
         this._strut = null;
         this._updateId = 0;
         this._geometryId = 0;
@@ -160,7 +207,10 @@ export class NativePanelBridge {
         this._exported.export(Gio.DBus.session, BRIDGE_PATH);
         this._nameId = Gio.bus_own_name_on_connection(
             Gio.DBus.session, BRIDGE_NAME, Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
-            () => this._queueWindows(),
+            () => {
+                this._queueWindows();
+                this._emitMonitors(true);
+            },
             () => console.warn('Win11 GNOME bridge could not own its D-Bus name'));
         this._highContrast = false;
         const a11ySchema = Gio.SettingsSchemaSource.get_default()?.lookup('org.gnome.desktop.a11y.interface', true);
@@ -174,6 +224,8 @@ export class NativePanelBridge {
         }
         this._frostedBridge = new NativeFrostedBridge({panel: () => this._panel,
             geometry: () => this._geometry(), windows: () => [...this._windows.keys()], registeredOnly: true,
+            strips: () => [...this._strips].filter(([, entry]) => !entry.inhibited)
+                .map(([window, entry]) => ({window, monitor: entry.monitor})),
             available: () => this._enabled && !this._hidden() && !this._highContrast,
             onChanged: data => this._emit('nativeBackdrop.changed', data), language: this._language});
         this._frostedBridge.configure({enabled: this._frostedEnabled, blur: true, windowBlur: this._frostedWindowBlur, shadows: true, radius: 14});
@@ -221,7 +273,11 @@ export class NativePanelBridge {
         });
         this._connect(global.display, 'in-fullscreen-changed', () => this._syncVisibility());
         this._connect(global.workspace_manager, 'active-workspace-changed', () => { this._queueWindows(); this._queueGeometry(); });
-        this._connect(Main.layoutManager, 'monitors-changed', () => this._queueGeometry());
+        // A monitor plugged in or out (or a new primary) can renumber the monitors without moving a window.
+        this._connect(Main.layoutManager, 'monitors-changed', () => {
+            this._queueGeometry();
+            this._queueWindows();
+        });
         this._connect(global.display, 'workareas-changed', () => this._queueGeometry());
         this._connect(Main.sessionMode, 'updated', () => {
             this._syncVisibility();
@@ -706,9 +762,10 @@ export class NativePanelBridge {
         const changed = () => {
             this._watchActor(window);
             this._considerPanel(window);
+            this._considerStrip(window);
             this._considerStart(window);
             this._considerPicker(window);
-            if (this._panel === window)
+            if (this._panel === window || this._strips.has(window))
                 this._queueGeometry();
             this._queueWindows();
         };
@@ -725,6 +782,7 @@ export class NativePanelBridge {
         connect('shown', () => {
             this._watchActor(window);
             this._considerPanel(window);
+            this._considerStrip(window);
             this._considerStart(window, true);
             this._considerPicker(window);
             if (this._panel === window)
@@ -737,6 +795,8 @@ export class NativePanelBridge {
             const start = this._isStart(window);
             if (this._panel === window)
                 this._forgetPanel();
+            if (this._strips.has(window))
+                this._forgetStrip(window);
             this._unwatchWindow(window);
             // Start closed: over a fullscreen app that has the focus again, the taskbar hides with it.
             if (start)
@@ -745,6 +805,7 @@ export class NativePanelBridge {
         });
         this._watchActor(window);
         this._considerPanel(window);
+        this._considerStrip(window);
         this._considerStart(window);
         this._considerPicker(window);
     }
@@ -811,6 +872,7 @@ export class NativePanelBridge {
         try { this._onPanelChanged(present); } catch (error) { console.error(error); }
         this._syncStrut();
         this._emit('panel.changed', {present});
+        this._emitMonitors();
         if (present && this._pendingTaskView) {
             this._pendingTaskView = false;
             this._openTaskView();
@@ -846,6 +908,220 @@ export class NativePanelBridge {
         this._returnTo = null;
         this._removeStrut();
         this._reportPanel(false);
+    }
+
+    /**
+     * A taskbar window of another monitor (win11-shell, app ID STRIP_APP_ID.Monitor<N>): like the panel a dock
+     * on every workspace, above the windows and out of the window list, placed at the bottom of its monitor with
+     * its own strut. It takes the place of nothing: a window that carried the panel's app ID for a moment is the
+     * panel's until _considerPanel lets it go.
+     */
+    _considerStrip(window) {
+        if (!this._enabled)
+            return;
+        const monitor = stripMonitor(window);
+        const entry = this._strips.get(window);
+        if (monitor < 0 || this._panel === window) {
+            if (entry)
+                this._releaseStrip(window);
+            return;
+        }
+        if (entry) {
+            if (entry.monitor !== monitor) {
+                entry.monitor = monitor;
+                this._queueGeometry();
+            }
+            return;
+        }
+        const created = {monitor, inhibited: false, strut: null, original: {
+            type: window.get_window_type(), above: window.is_above(),
+            sticky: window.is_on_all_workspaces(), skip: window.skip_taskbar,
+        }};
+        this._strips.set(window, created);
+        window.set_type(Meta.WindowType.DOCK);
+        window.hide_from_window_list();
+        window.stick();
+        window.make_above();
+        this._positionStrip(window, created);
+        this._syncStrips();
+        this._queueFrosted();
+        this._emitMonitors();
+    }
+
+    /** Undo what _considerStrip did and nobody changed since, then forget the window (its app ID changed). */
+    _releaseStrip(window) {
+        const entry = this._strips.get(window);
+        if (!entry)
+            return;
+        try {
+            if (entry.inhibited)
+                window.uninhibit_mapped();
+            if (window.get_window_type() === Meta.WindowType.DOCK)
+                window.set_type(entry.original.type);
+            if (!entry.original.above && window.is_above())
+                window.unmake_above();
+        } catch (e) {
+            logError(e, 'win11-gnome: releasing a window taken for a taskbar');
+        }
+        this._forgetStrip(window);
+    }
+
+    _forgetStrip(window) {
+        const entry = this._strips.get(window);
+        if (!entry)
+            return;
+        this._strips.delete(window);
+        this._removeStripStrut(entry);
+        // its buttons are gone: its windows minimize into the taskbar that still lists them (unless a new taskbar
+        // window of that monitor sent its own already)
+        if (!this._stripOf(entry.monitor)) {
+            this._iconSources.delete(entry.monitor);
+            if (this._iconRects.has(entry.monitor))
+                this._applyIconRects(entry.monitor, new Map());
+        }
+        this._queueFrosted();
+    }
+
+    /** The adopted taskbar window of monitor `index`, if any. */
+    _stripOf(index) {
+        for (const [window, entry] of this._strips) {
+            if (entry.monitor === index)
+                return window;
+        }
+        return null;
+    }
+
+    /** A monitor's rectangle in the protocol units of our clients (its own taskbar's, else the panel's), else by
+     *  its advertised scale. */
+    _logicalMonitor(monitor) {
+        const stage = new Mtk.Rectangle({x: monitor.x, y: monitor.y, width: monitor.width, height: monitor.height});
+        for (const window of [this._stripOf(monitor.index), this._panel]) {
+            if (!window)
+                continue;
+            try {
+                const protocol = window.stage_to_protocol_rect(stage);
+                if (protocol?.width > 0 && protocol?.height > 0)
+                    return rectJSON(protocol);
+            } catch { /* Not mapped yet. */ }
+        }
+        const scale = global.display.get_monitor_scale(monitor.index) || 1;
+        return {x: Math.round(monitor.x / scale), y: Math.round(monitor.y / scale),
+            w: Math.round(monitor.width / scale), h: Math.round(monitor.height / scale)};
+    }
+
+    /** panel.monitors: every monitor (stage rectangle and logical size), the primary and whether the panel is up;
+     *  win11-shell makes a taskbar for each other monitor from it. */
+    _monitorsJSON() {
+        const layout = Main.layoutManager;
+        const primary = layout.primaryIndex ?? -1;
+        const monitors = (layout.monitors ?? []).map(monitor => ({
+            index: monitor.index, primary: monitor.index === primary, ...rectJSON(monitor),
+            scale: global.display.get_monitor_scale(monitor.index) || 1, logical: this._logicalMonitor(monitor),
+        }));
+        return {available: monitors.length > 0, primary, panel: this._panelPresent, monitors};
+    }
+
+    _emitMonitors(force = false) {
+        if (!this._enabled)
+            return;
+        const data = this._monitorsJSON();
+        const fingerprint = JSON.stringify(data);
+        if (fingerprint === this._lastMonitors && !force)
+            return;
+        this._lastMonitors = fingerprint;
+        this._emit('panel.monitors', data);
+    }
+
+    /** Where the taskbar of another monitor goes: its bottom 48 logical px, the monitor's whole width. None for the
+     *  primary monitor or one that is gone: such a taskbar stays hidden until win11-shell removes it. */
+    _stripGeometry(entry) {
+        const layout = Main.layoutManager;
+        const monitor = layout.monitors?.[entry.monitor];
+        if (!monitor || entry.monitor === layout.primaryIndex)
+            return null;
+        const logical = this._logicalMonitor(monitor);
+        const height = Math.max(1, Math.round(HEIGHT * monitor.width / Math.max(1, logical.w)));
+        return {x: monitor.x, y: monitor.y + monitor.height - height, w: monitor.width, h: height};
+    }
+
+    _positionStrip(window, entry) {
+        const target = this._stripGeometry(entry);
+        if (!target)
+            return;
+        const rect = window.get_frame_rect();
+        if (rect.x !== target.x || rect.y !== target.y || rect.width !== target.w || rect.height !== target.h)
+            window.move_resize_frame(false, target.x, target.y, target.w, target.h);
+    }
+
+    /** The panel's rule for the taskbar of another monitor: hidden outside the user session, in the overview, and
+     *  while a fullscreen app on that monitor (or one of its transients) has the focus (_showOverFullscreen
+     *  without Start, the task view and the reveal, which belong to the main taskbar). */
+    _stripHidden(entry) {
+        if (!this._isUserSession() || this._inOverview || !this._stripGeometry(entry))
+            return true;
+        if (!global.display.get_monitor_in_fullscreen(entry.monitor))
+            return false;
+        const workspace = global.workspace_manager.get_active_workspace();
+        const fullscreen = window => window.is_fullscreen() && !window.minimized &&
+            window.get_monitor() === entry.monitor && window.located_on_workspace(workspace);
+        if (!this._userWindows(true).some(fullscreen))
+            return true;
+        let focus = global.display.focus_window;
+        for (let depth = 0; depth < 16 && focus?.get_transient_for(); depth++)
+            focus = focus.get_transient_for();
+        return !(Boolean(focus) && !fullscreen(focus));
+    }
+
+    _syncStrips() {
+        if (!this._enabled || !this._strips?.size)
+            return;
+        let changed = false;
+        for (const [window, entry] of this._strips) {
+            const hidden = this._stripHidden(entry);
+            if (hidden && !entry.inhibited) {
+                entry.inhibited = true;
+                window.inhibit_mapped();
+                changed = true;
+            } else if (!hidden && entry.inhibited) {
+                entry.inhibited = false;
+                window.uninhibit_mapped();
+                changed = true;
+            }
+            this._syncStripStrut(entry);
+        }
+        if (changed)
+            this._queueFrosted();
+    }
+
+    /** As _syncStrut: an independent 48 px chrome actor reserves the bottom of that monitor, so a maximized window
+     *  there ends above its taskbar; none over a fullscreen app on it. */
+    _syncStripStrut(entry) {
+        const target = this._stripGeometry(entry);
+        if (!target || !this._isUserSession() || this._inOverview ||
+            global.display.get_monitor_in_fullscreen(entry.monitor)) {
+            this._removeStripStrut(entry);
+            return;
+        }
+        if (!entry.strut) {
+            const strut = new St.Widget({reactive: false, opacity: 0});
+            strut.connect('destroy', () => {
+                if (entry.strut === strut)
+                    entry.strut = null;
+            });
+            entry.strut = strut;
+            Main.layoutManager.addChrome(strut, {affectsStruts: true, trackFullscreen: false});
+        }
+        entry.strut.set_position(target.x, target.y);
+        entry.strut.set_size(target.w, target.h);
+    }
+
+    _removeStripStrut(entry) {
+        const strut = entry.strut;
+        if (!strut)
+            return;
+        entry.strut = null;
+        Main.layoutManager.removeChrome(strut);
+        strut.destroy();
     }
 
     _geometry() {
@@ -890,8 +1166,12 @@ export class NativePanelBridge {
         this._geometryId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
             this._geometryId = 0;
             this._positionPanel();
+            for (const [window, entry] of this._strips)
+                this._positionStrip(window, entry);
+            this._reapplyIconRects();
             this.positionStarts();
             this._syncVisibility();
+            this._emitMonitors();
             return GLib.SOURCE_REMOVE;
         });
     }
@@ -939,6 +1219,7 @@ export class NativePanelBridge {
     _syncVisibility() {
         this._notificationsBridge?.sync();
         this._frostedBridge?.sync();
+        this._syncStrips();
         if (!this._enabled || !this._panel)
             return;
         const hidden = this._hidden();
@@ -988,7 +1269,7 @@ export class NativePanelBridge {
         if (!this._isUserSession())
             return [];
         return global.get_window_actors().map(actor => actor.meta_window)
-            .filter(window => window && !this._isPanel(window) &&
+            .filter(window => window && !this._isPanel(window) && stripMonitor(window) < 0 && secondaryDesktop(window) < 0 &&
                 window.get_gtk_application_id() !== DESKTOP_APP_ID && window.get_wm_class() !== DESKTOP_APP_ID &&
                 window.get_gtk_application_id() !== 'io.github.win11shell.Start' && window.get_wm_class() !== 'io.github.win11shell.Start' &&
                 USER_WINDOW_TYPES.has(window.get_window_type()) &&
@@ -1049,10 +1330,12 @@ export class NativePanelBridge {
             }
             this._frostedBridge?.sync();
             const windows = this._userWindows().map(window => this._windowJSON(window));
-            const fingerprint = JSON.stringify(windows);
+            // the desktop in use (Taakweergave, the taskbar's "only this desktop"): a switch alone is a change too
+            const activeWorkspace = global.workspace_manager.get_active_workspace_index();
+            const fingerprint = JSON.stringify([windows, activeWorkspace]);
             if (fingerprint !== this._lastWindows) {
                 this._lastWindows = fingerprint;
-                this._emit('windows.changed', {windows});
+                this._emit('windows.changed', {windows, activeWorkspace});
             }
             const focused = windows.find(window => window.focused)?.id ?? null;
             if (focused !== this._lastFocused) {
@@ -1068,16 +1351,35 @@ export class NativePanelBridge {
             this._exported.emit_signal('Event', new GLib.Variant('(ss)', [name, JSON.stringify(data)]));
     }
 
-    // D-Bus success values are raw results. Only failures carry an {ok:false,error} envelope.
-    Call(method, argsJSON) {
+    // D-Bus success values are raw results. Only failures carry an {ok:false,error} envelope. A bridge may answer
+    // with a promise (inputBridge.js input.capture waits for a key): the reply waits for it. GJS takes a synchronous
+    // Call before CallAsync, so there is no Call.
+    CallAsync([method, argsJSON], invocation) {
+        const envelope = error => ({ok: false, error: {code: error?.code || 'native_error',
+            message: error?.message || String(error)}});
+        const reply = value => {
+            let text;
+            try {
+                // a method without a value answers null (JSON has no undefined, and '(s)' needs a string)
+                text = JSON.stringify(value === undefined ? null : value);
+            } catch (error) {
+                text = JSON.stringify(envelope(error));
+            }
+            invocation.return_value(new GLib.Variant('(s)', [text]));
+        };
+        const fail = error => reply(envelope(error));
+        let result;
         try {
             const args = JSON.parse(argsJSON || '{}');
+            // failure() throws: the catch below answers with its envelope
             if (!args || typeof args !== 'object' || Array.isArray(args))
-                return failure('bad_args', this._t('argsObject'));
-            return JSON.stringify(this._call(method, args));
+                failure('bad_args', this._t('argsObject'));
+            result = this._call(method, args);
         } catch (error) {
-            return JSON.stringify({ok: false, error: {code: error.code || 'native_error', message: error.message || String(error)}});
+            fail(error);
+            return;
         }
+        Promise.resolve(result).then(reply, fail);
     }
 
     _call(method, args) {
@@ -1089,6 +1391,12 @@ export class NativePanelBridge {
             return this._frostedBridge.start(args);
         if (method.startsWith('notifications.'))
             return this._notificationsBridge.call(method, args);
+        if (method.startsWith('launch.'))
+            return this._launchBridge.call(method, args);
+        if (method.startsWith('display.'))
+            return this._displayBridge.call(method, args);
+        if (method.startsWith('input.'))
+            return this._inputBridge.call(method, args);
         if (method === 'panel.keyboard')
             return this._setPanelKeyboard(args);
         if (method === 'panel.inputChanged')
@@ -1101,6 +1409,8 @@ export class NativePanelBridge {
             return this._activationToken(args);
         if (method === 'panel.geometry')
             return this._geometry();
+        if (method === 'panel.monitors')
+            return this._monitorsJSON();
         if (method === 'panel.openTaskView')
             return this._openTaskView();
         if (method === 'panel.toggleStart')
@@ -1136,7 +1446,8 @@ export class NativePanelBridge {
                 startFocused: Boolean(global.display.focus_window && this._isStart(global.display.focus_window)),
                 panelFocused: this._panelFocused()};
         if (method === 'windows.list')
-            return {supported: true, windows: this._userWindows().map(window => this._windowJSON(window))};
+            return {supported: true, windows: this._userWindows().map(window => this._windowJSON(window)),
+                activeWorkspace: global.workspace_manager.get_active_workspace_index()};
         if (method === 'windows.setIconRects')
             return this._setIconRects(args);
         if (method === 'windows.showDesktop')
@@ -1249,30 +1560,112 @@ export class NativePanelBridge {
         return {supported: true, showingDesktop: Boolean(this._desktopRestore)};
     }
 
+    /**
+     * windows.setIconRects: where each window's button rests on one taskbar, for the minimize animation. The main
+     * taskbar sends its rectangles in the panel window's coordinates (no `monitor`), a taskbar of another monitor in
+     * its own window's with its `monitor`. Every taskbar's last rectangles are kept: a window minimizes into its
+     * button on the taskbar of its own monitor, else on the main taskbar, else on any taskbar that shows it (Windows
+     * 11's "All taskbars" shows it on several). With one taskbar this is the rectangle that taskbar sent.
+     *
+     * A taskbar sends again only when its buttons move in its own window, not when the window itself moves (another
+     * monitor layout, another primary): so the rectangles are kept as sent and placed on the stage again wherever
+     * that taskbar is now (_reapplyIconRects from _queueGeometry).
+     */
     _setIconRects(args) {
         if (!this._isUserSession())
             return {ok: true, count: 0, anim: false};
         if (!Array.isArray(args.rects))
             return failure('bad_args', this._t('badRects'));
-        const windows = new Map(this._userWindows().map(window => [String(window.get_id()), window]));
-        const geometry = this._geometry();
-        const factor = geometry.logical?.w > 0 ? geometry.w / geometry.logical.w : 1;
-        let count = 0;
+        const source = Number.isInteger(args.monitor) ? args.monitor : 'main';
+        if (source !== 'main' && !this._stripOf(source))
+            return {ok: true, count: 0, anim: false};
+        const sent = [];
         for (const rect of args.rects.slice(0, 2048)) {
             if (!rect || ![rect.x, rect.y, rect.w, rect.h].every(Number.isFinite) || rect.w <= 0 || rect.h <= 0)
                 continue;
-            const ids = Array.isArray(rect.ids) ? rect.ids : [rect.id];
-            const target = new Mtk.Rectangle({x: Math.round(geometry.x + rect.x * factor), y: Math.round(geometry.y + rect.y * factor),
+            const ids = (Array.isArray(rect.ids) ? rect.ids : [rect.id]).map(id => String(id));
+            sent.push({ids, x: rect.x, y: rect.y, w: rect.w, h: rect.h});
+        }
+        this._iconSources.set(source, {rects: sent, hidden: Boolean(args.hidden)});
+        const windows = new Map(this._userWindows().map(window => [String(window.get_id()), window]));
+        const {rects, count} = this._stageIconRects(source, windows);
+        this._applyIconRects(source, rects, windows);
+        return {ok: true, count, anim: false};
+    }
+
+    /** Taskbar `source`'s rectangles as it sent them, on the stage where that taskbar is now: the main taskbar's
+     *  from the primary monitor's corner (the panel window covers it), another monitor's from the place of its
+     *  taskbar there (_stripGeometry; none while that monitor is gone or the primary). Window id -> rectangle. */
+    _stageIconRects(source, windows) {
+        const rects = new Map();
+        const sent = this._iconSources.get(source);
+        if (!sent)
+            return {rects, count: 0};
+        let origin, factor;
+        if (source === 'main') {
+            const geometry = this._geometry();
+            origin = {x: geometry.x, y: geometry.y};
+            factor = geometry.logical?.w > 0 ? geometry.w / geometry.logical.w : 1;
+        } else {
+            const strip = this._stripOf(source);
+            const target = strip ? this._stripGeometry(this._strips.get(strip)) : null;
+            if (!target)
+                return {rects, count: 0};
+            let protocol = null;
+            try {
+                protocol = strip.stage_to_protocol_rect(new Mtk.Rectangle({x: target.x, y: target.y,
+                    width: target.w, height: target.h}));
+            } catch { /* Not mapped yet. */ }
+            origin = {x: target.x, y: target.y};
+            factor = protocol?.width > 0 ? target.w / protocol.width : 1;
+        }
+        let count = 0;
+        for (const rect of sent.rects) {
+            const target = new Mtk.Rectangle({x: Math.round(origin.x + rect.x * factor), y: Math.round(origin.y + rect.y * factor),
                 width: Math.round(rect.w * factor), height: Math.round(rect.h * factor)});
-            for (const id of ids) {
-                const window = windows.get(String(id));
-                if (window) {
-                    window.set_icon_geometry(args.hidden ? null : target);
+            for (const id of rect.ids) {
+                if (windows.has(id)) {
+                    rects.set(id, sent.hidden ? null : target);
                     count++;
                 }
             }
         }
-        return {ok: true, count, anim: false};
+        return {rects, count};
+    }
+
+    /** Every taskbar's rectangles placed again where it is now (a monitor moved, the primary changed): only a taskbar
+     *  whose rectangles moved on the stage gives its windows a new icon geometry. */
+    _reapplyIconRects() {
+        if (!this._enabled || !this._iconSources.size)
+            return;
+        const windows = new Map(this._userWindows().map(window => [String(window.get_id()), window]));
+        for (const source of [...this._iconSources.keys()]) {
+            const {rects} = this._stageIconRects(source, windows);
+            if (!sameRects(this._iconRects.get(source), rects))
+                this._applyIconRects(source, rects, windows);
+        }
+    }
+
+    /** Keep `rects` (window id -> rectangle or null) as taskbar `source`'s and give every window it names now or
+     *  named before its rectangle (see _setIconRects); a window no taskbar names keeps the one it has. */
+    _applyIconRects(source, rects, windows = null) {
+        const before = this._iconRects.get(source);
+        if (rects.size)
+            this._iconRects.set(source, rects);
+        else
+            this._iconRects.delete(source);
+        windows ??= new Map(this._userWindows().map(window => [String(window.get_id()), window]));
+        const ids = new Set([...before?.keys() ?? [], ...rects.keys()]);
+        for (const id of ids) {
+            const window = windows.get(id);
+            if (!window)
+                continue;
+            const own = this._stripOf(window.get_monitor()) ? window.get_monitor() : 'main';
+            const order = [own, 'main', ...this._iconRects.keys()];
+            const from = order.find(key => this._iconRects.get(key)?.has(id));
+            if (from !== undefined)
+                window.set_icon_geometry(this._iconRects.get(from).get(id));
+        }
     }
 
     disable() {
@@ -1285,6 +1678,12 @@ export class NativePanelBridge {
         this._a11y = null;
         this._notificationsBridge?.disable();
         this._notificationsBridge = null;
+        this._launchBridge?.disable();
+        this._launchBridge = null;
+        this._displayBridge?.disable();
+        this._displayBridge = null;
+        this._inputBridge?.disable();
+        this._inputBridge = null;
         this._stopStart();
         this._desktopBridge?.disable();
         this._desktopBridge = null;
@@ -1308,6 +1707,32 @@ export class NativePanelBridge {
         this._signals = [];
         for (const window of [...this._windows.keys()])
             this._unwatchWindow(window);
+        // The taskbars of the other monitors as the panel below: restored, then closed (win11-shell drops them and
+        // makes new ones once the panel is back).
+        for (const [window, entry] of this._strips) {
+            try {
+                if (entry.inhibited)
+                    window.uninhibit_mapped();
+                window.set_type(entry.original.type);
+                if (!entry.original.above)
+                    window.unmake_above();
+                if (!entry.original.sticky)
+                    window.unstick();
+                if (!entry.original.skip)
+                    window.show_in_window_list();
+            } catch (e) {
+                logError(e, 'win11-gnome: restoring a taskbar window');
+            }
+            this._removeStripStrut(entry);
+            try {
+                window.delete(global.get_current_time());
+            } catch (e) {
+                logError(e, 'win11-gnome: closing a taskbar window');
+            }
+        }
+        this._strips.clear();
+        this._iconSources.clear();
+        this._iconRects.clear();
         const panel = this._panel;
         const original = this._panelOriginal;
         if (panel && original) {

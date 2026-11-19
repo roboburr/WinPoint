@@ -4,7 +4,7 @@ St taskbar shows the right language after the panel stops. Keeps every check of 
 
 Order:
  1. nl: extension_labels() (labels, accessible names, Ctrl+Alt+Tab group, clock), the GNOME names of the own
-    entries (install.py, C6), a bridge failure (in-process Call) and the "app missing" GNOME notification
+    entries (install.py, C6), a bridge failure (in-process CallAsync) and the "app missing" GNOME notification
     (Main.notify). D-G70: the taskbar is the native shell's (no page), so the checks of the HTML panel (its failure
     toast through the host relay, the Win11 toast mirror of the notification, its <html lang>) are gone.
  2. nl -> en through the real Settings dropdown (since 13-11 the native Settings: pointer clicks on its Taal en
@@ -44,7 +44,6 @@ STATE = "Main.extensionManager.lookup('" + UUID + "').stateObj"
 WIDTH = ("(()=>{const s=" + STATE + ";const b=s&&s._searchButton;"
          "return b?{button:b.get_preferred_width(-1)[1],label:b.child.get_preferred_width(-1)[1],"
          "compact:b.has_style_class_name('compact'),text:b.child.text,bar:s._bar.width,visible:s._bar.visible}:null;})()")
-CALL = ("JSON.parse(" + STATE + "._panelBridge.Call('windows.focus', JSON.stringify({id: 'ge1c-nope'})))")
 # The extension's language watcher, wrapped once so every re-label is timed (Date.now(), realtime ms).
 ARM = ("(()=>{const s=" + STATE + ";const w=s&&s._language;if(!w)return {error:'no LanguageWatch'};"
        "globalThis.__ge1cRelabels??=[];if(!w.__ge1cWrapped){const orig=w._onChange;"
@@ -103,8 +102,8 @@ def labels_in(h, lang, label, wait=0.0, panel_alive=True):
         own = [*value.get('labels', []), *own_names(value), *value.get('ctrlAltTab', [])]
         own = [x for x in own if x not in (EXPLORER_NAME['nl'],)]     # GNOME's app name, checked separately
         h.check(f'{label}: no Dutch word in the extension\'s own texts', not h._hits(*own), hits=h._hits(*own))
-    reply = h.eval(CALL)
-    h.check(f'{label}: bridge failure text {lang} (in-process Call)', reply.get('error', {}).get('message') == FAILURE[lang],
+    reply = h.bridge('windows.focus', {'id': 'ge1c-nope'})
+    h.check(f'{label}: bridge failure text {lang} (in-process CallAsync)', reply.get('error', {}).get('message') == FAILURE[lang],
             code=reply.get('error', {}).get('code'), seen=reply.get('error', {}).get('message'))
     missing_notification(h, lang, label, panel_alive)
     h.record(f'{label}.extension', value)
@@ -177,13 +176,23 @@ def c6_runtime(h, label, name, timeout=12.0):
 
 
 def run(h):
-    h.require('session starts in Dutch', h.lang == 'nl', lang=h.lang)
+    h.check('session starts in the requested language', h.settings_file().get('language') == h.lang, lang=h.lang)
+    if h.lang == 'en':
+        labels_in(h, 'en', 'en-initial', wait=5)
+        h.set_language('nl', via='rename')
+        wait_labels(h, 'nl', 'nl-before-cycle', 5)
     h.record('arm', h.eval(ARM))
     count = 0
 
     # 1. Dutch -----------------------------------------------------------------------------------------------
     labels_in(h, 'nl', 'nl')
-    names = h.app_names()
+    # On an English seed the explicit initial switch to nl also rewrites desktop entries. GNOME's
+    # desktop-dir/AppSystem cache trails the extension's labels (the same 12 s bound as c6_runtime below).
+    try:
+        names = h.until(lambda: (lambda names: names if all(names.get(k) == v for k, v in ENTRY['nl'].items())
+                                else None)(h.app_names()), 'initial desktop entry names in Dutch', 12, .25)
+    except TimeoutError:
+        names = h.app_names()
     h.record('nl.appNames', names)
     h.check('nl: GNOME names of the own entries (install.py, C6)', all(names.get(k) == v for k, v in ENTRY['nl'].items()),
             seen=names)

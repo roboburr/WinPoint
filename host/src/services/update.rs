@@ -137,6 +137,11 @@ const METHODS: &[(&str, &[&str], bool)] = &[
     // this host, never forwarded
     ("update.setWatching", &["on"], false),
 ];
+/// The method table as (name, dangerous), for services/mod.rs `method_tables`.
+#[cfg(test)]
+pub(crate) fn method_flags() -> Vec<(&'static str, Option<bool>)> {
+    METHODS.iter().map(|(name, _, write)| (*name, Some(*write))).collect()
+}
 const MAX_DETAIL_IDS: usize = 20;
 const MIRROR_RETRY_SECONDS: u32 = 30;
 /// A bus test's shorter mirror retry (0 = [`MIRROR_RETRY_SECONDS`]): the takeover after an owner crash (review m6).

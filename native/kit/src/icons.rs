@@ -66,6 +66,8 @@ pub fn has_glyph(name: &str) -> bool {
 pub fn glyph_names() -> Vec<&'static str> {
     let mut names: Vec<&'static str> = glyph_data::NAMES.to_vec();
     names.extend(["start-logo", "start-logo-mono", "task-view", "battery-100", "battery-charging-100"]);
+    // the settings-parity pages' glyphs (glyph_data.rs)
+    names.extend(["touchpad", "pen", "vpn", "magnifier", "narrator", "text-cursor", "remote-desktop"]);
     names
 }
 

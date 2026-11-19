@@ -37,8 +37,6 @@ START = 'io.github.win11shell.Start'
 CAL_APP = 'io.github.win11shell.Calendar'
 CAL_DESKTOP = f'{CAL_APP}.desktop'
 BRIDGE = "Main.extensionManager.lookup('win11-gnome@win11shell.local').stateObj._panelBridge"
-TOKEN_JS = ("(()=>{try{return JSON.parse(" + BRIDGE + ".Call('apps.activationToken',JSON.stringify({desktopId:'"
-            + CAL_DESKTOP + "'}))).token||null;}catch(e){return null;}})()")
 CAL_WINDOWS_JS = ("(()=>{const Meta=imports.gi.Meta;return global.get_window_actors().map(a=>a.meta_window)"
                   ".filter(w=>(w.get_wm_class()==='" + CAL_APP + "'||w.get_gtk_application_id()==='" + CAL_APP + "')"
                   "&&w.get_window_type()===Meta.WindowType.NORMAL).map(w=>{const r=w.get_frame_rect();"
@@ -162,8 +160,9 @@ def notify(h, desktop_id, app, summary, body):
 
 def test_notification(h):
     """The product's own test notification (Settings > Notifications' button): notifications.test of the bridge."""
-    return h.eval("(()=>{try{return JSON.parse(" + BRIDGE + ".Call('notifications.test',JSON.stringify({language:'en'})))"
-                  ".notification?.summary||true;}catch(e){return String(e);}})()")
+    reply = h.bridge('notifications.test', {'language': 'en'}) or {}
+    h.check('the public async bridge accepts the test notification', not reply.get('error'), error=reply.get('error'))
+    return (reply.get('notification') or {}).get('summary') or not reply.get('error')
 
 
 def win11_icons(h, dark=True):
@@ -213,7 +212,7 @@ def seed_events(h, today):
 def spawn_calendar(h, args):
     binary = h.hm.RUN / 'prefix' / 'bin' / 'win11-calendar'
     env = dict(os.environ, WAYLAND_DISPLAY=h.hm.WL, GDK_BACKEND='wayland')
-    token = h.eval(TOKEN_JS)
+    token = (h.bridge('apps.activationToken', {'desktopId': CAL_DESKTOP}) or {}).get('token')
     if token:
         env.update(XDG_ACTIVATION_TOKEN=token, DESKTOP_STARTUP_ID=token)
     log = open(h.hm.RUN / 'logs' / 'app-calendar.log', 'a')

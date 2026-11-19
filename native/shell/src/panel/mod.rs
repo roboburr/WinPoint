@@ -1,7 +1,9 @@
 //! The taskbar window: as the WebKit panel host did, it covers the primary monitor, is transparent, takes input
 //! only where it has something (the 48 px strip, the open flyout and the toasts; the whole monitor for Task View
 //! and the power screen, see `Input`). The extension recognises it by its application ID (PANEL_ID), positions
-//! it, reserves the strut and blurs the strip (`nativeBackdrop.configure` kind "panel").
+//! it, reserves the strut and blurs the strip (`nativeBackdrop.configure` kind "panel"). The other monitors get
+//! taskbars of their own with only app buttons (strips.rs).
+pub mod strips;
 pub mod taskbar;
 
 use crate::core::Shell;
@@ -124,17 +126,27 @@ pub fn install(shell: &Rc<Shell>) {
     });
     let strip_weak = strip.downgrade();
     shell.on("settings.changed", move |_, _| {
+        let shell = crate::core::shell();
         if let Some(strip) = strip_weak.upgrade() {
-            let shell = crate::core::shell();
             let now = backdrop_options(&shell);
             if options.replace(now) != now {
                 configure_backdrop(&shell, &strip, now);
             }
         }
+        // a language switch: the window's title (Ctrl+Alt+Tab, a screen reader) in the new one, as strips::retitle
+        // does for the taskbars of the other monitors
+        let name = shell.t("Taakbalk", "Taskbar");
+        if let Some(w) = WINDOW.with(|w| w.borrow().upgrade())
+            && w.title().as_deref() != Some(name.as_str())
+        {
+            w.set_title(Some(&name));
+        }
     });
 
     install_actions(shell);
     window.present();
+    // the taskbars of the other monitors, once the extension has this one
+    strips::install(shell);
 }
 
 /// The GApplication was activated (the extension's open_new_window when it comes back, or a second start of
@@ -145,6 +157,7 @@ pub fn show_again() {
     {
         window.present();
     }
+    strips::show_again();
 }
 
 fn monitor_size(shell: &Shell) -> (i32, i32) {

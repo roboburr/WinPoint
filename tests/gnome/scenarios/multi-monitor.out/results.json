@@ -1,0 +1,5516 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 07:57:28",
+ "seconds": 143.7,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "secondMonitor": "1280x960",
+ "memory": {
+  "samples": 124,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 988778,
+   "rss_kb": 1328312,
+   "processes": 24,
+   "t": 54.7
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 777569,
+   "rss_kb": 1084864
+  },
+  "minMemAvailableKb": 4753104,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 375548,
+    "rss_kb": 431068
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 210752,
+    "rss_kb": 239604
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 172292,
+    "rss_kb": 213648
+   },
+   "glycin-svg": {
+    "count": 4,
+    "pss_kb": 85757,
+    "rss_kb": 139332
+   },
+   "win11-gtk-taskm": {
+    "count": 1,
+    "pss_kb": 28824,
+    "rss_kb": 62432
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 26392,
+    "rss_kb": 59664
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 23375,
+    "rss_kb": 37252
+   },
+   "win11-app": {
+    "count": 2,
+    "pss_kb": 22136,
+    "rss_kb": 45288
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 19245,
+    "rss_kb": 34696
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 16381,
+    "rss_kb": 24660
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4279,
+    "rss_kb": 11480
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1619,
+    "rss_kb": 9804
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 893,
+    "rss_kb": 7860
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 828,
+    "rss_kb": 7680
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 245,
+    "rss_kb": 1360
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 212,
+    "rss_kb": 2484
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 396108,
+    "first": 0.5
+   },
+   "win11-shell": {
+    "pss_kb": 242285,
+    "first": 1.0
+   },
+   "python3": {
+    "pss_kb": 157561,
+    "first": 0.0
+   },
+   "glycin-svg": {
+    "pss_kb": 65325,
+    "first": 1.0
+   },
+   "win11-gtk-taskm": {
+    "pss_kb": 31047,
+    "first": 30.3
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 26600,
+    "first": 30.9
+   },
+   "ibus-extension-": {
+    "pss_kb": 19849,
+    "first": 1.0
+   },
+   "glycin-image-rs": {
+    "pss_kb": 18410,
+    "first": 1.0
+   },
+   "win11-app": {
+    "pss_kb": 17595,
+    "first": 30.3
+   },
+   "win11-panel": {
+    "pss_kb": 17319,
+    "first": 1.6
+   },
+   "ibus-daemon": {
+    "pss_kb": 4367,
+    "first": 1.0
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 965,
+    "first": 1.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 936,
+    "first": 0.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 911,
+    "first": 1.0
+   },
+   "bwrap": {
+    "pss_kb": 263,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 251,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+  "exit": 0,
+  "seconds": 63.2,
+  "mutatingSyscallPaths": 87318,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+  }
+ },
+ "guardStubCalls": [
+  "07:58:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:58:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:58:48\tpw-dump\t--monitor --no-colors",
+  "07:58:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:58:50\tpw-dump\t--monitor --no-colors",
+  "07:58:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:58:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:58:54\tpw-dump\t--monitor --no-colors",
+  "07:58:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:58:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:02\tpw-dump\t--monitor --no-colors",
+  "07:59:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:17\tpw-dump\t--monitor --no-colors",
+  "07:59:17\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:17\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:17\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "07:59:17\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "07:59:17\tapt\tlist --upgradable",
+  "07:59:18\tpw-dump\t--monitor --no-colors",
+  "07:59:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:18\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:18\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:18\tpw-dump\t--monitor --no-colors",
+  "07:59:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:19\tpw-dump\t--monitor --no-colors",
+  "07:59:19\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:19\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:20\tpw-dump\t--monitor --no-colors",
+  "07:59:20\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:20\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:21\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:21\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:22\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:22\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:23\tpw-dump\t--monitor --no-colors",
+  "07:59:23\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:23\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:24\tpw-dump\t--monitor --no-colors",
+  "07:59:24\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:24\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:25\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:25\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:26\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:26\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:27\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:27\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:29\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:29\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:30\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:30\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:31\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:31\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:31\tpw-dump\t--monitor --no-colors",
+  "07:59:32\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:32\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:32\tpw-dump\t--monitor --no-colors",
+  "07:59:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:33\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:33\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:34\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:34\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:35\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:35\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:36\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:36\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:37\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:37\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:38\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:38\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:39\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:39\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:40\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:40\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:41\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:41\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:42\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:42\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:43\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "07:59:43\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "07:59:43\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:43\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:43\tsystemctl\t--user list-units --type=service --state=failed --no-pager --output=json",
+  "07:59:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:43\tsystemctl\t--user list-units --type=service --state=failed --no-pager --plain --no-legend",
+  "07:59:43\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:43\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:44\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:44\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:46\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:46\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:47\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:47\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:47\tpw-dump\t--monitor --no-colors",
+  "07:59:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:48\tpw-dump\t--monitor --no-colors",
+  "07:59:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:48\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:48\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:48\tpw-dump\t--monitor --no-colors",
+  "07:59:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:49\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:49\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "07:59:50\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "07:59:50\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "07:59:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 32,
+  "maxScanSeconds": 0.055,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/multi-monitor.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "keyboard"
+    }
+   },
+   {
+    "step": "monitors",
+    "t": 0.81,
+    "result": [
+     {
+      "index": 0,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "primary": true,
+      "fullscreen": false
+     },
+     {
+      "index": 1,
+      "x": 1440,
+      "y": 0,
+      "w": 1280,
+      "h": 960,
+      "primary": false,
+      "fullscreen": false
+     }
+    ]
+   },
+   {
+    "step": "record",
+    "t": 0.81,
+    "args": {
+     "key": "monitors"
+    }
+   },
+   {
+    "step": "strip_windows",
+    "t": 0.82,
+    "result": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 1440,
+      "y": 912,
+      "w": 1280,
+      "h": 48,
+      "monitor": 1,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ]
+   },
+   {
+    "step": "record",
+    "t": 0.82,
+    "args": {
+     "key": "strip windows"
+    }
+   },
+   {
+    "step": "record",
+    "t": 2.32,
+    "args": {
+     "key": "bridge"
+    }
+   },
+   {
+    "step": "work_area",
+    "t": 2.32,
+    "args": {
+     "monitor": 1
+    },
+    "result": {
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 912
+    }
+   },
+   {
+    "step": "work_area",
+    "t": 2.32,
+    "args": {
+     "monitor": 0
+    },
+    "result": {
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 852
+    }
+   },
+   {
+    "step": "native",
+    "t": 2.42,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 2.52,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 3.7,
+    "args": {
+     "name": "nl-both-monitors"
+    },
+    "result": {
+     "png": "nl-both-monitors.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       2720,
+       960
+      ],
+      "distinctColours": 2667,
+      "meanLevel": 63.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.52,
+    "args": {
+     "name": "nl-monitor1"
+    },
+    "result": {
+     "png": "nl-monitor1.png",
+     "area": [
+      0,
+      0,
+      1440,
+      900
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 2149,
+      "meanLevel": 61.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.33,
+    "args": {
+     "name": "nl-monitor2"
+    },
+    "result": {
+     "png": "nl-monitor2.png",
+     "area": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       960
+      ],
+      "distinctColours": 1996,
+      "meanLevel": 69.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.84,
+    "args": {
+     "name": "nl-taskbar2"
+    },
+    "result": {
+     "png": "nl-taskbar2.png",
+     "area": [
+      1440,
+      912,
+      1280,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       48
+      ],
+      "distinctColours": 48,
+      "meanLevel": 32.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 5.84,
+    "args": {
+     "key": "desktop windows"
+    }
+   },
+   {
+    "step": "record",
+    "t": 5.87,
+    "args": {
+     "key": "wallpaper"
+    }
+   },
+   {
+    "step": "native",
+    "t": 9.97,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.59,
+    "args": {
+     "name": "nl-wallpaper"
+    },
+    "result": {
+     "png": "nl-wallpaper.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       2720,
+       960
+      ],
+      "distinctColours": 269,
+      "meanLevel": 100.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 11.79,
+    "args": {
+     "key": "wallpaper span"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 17.41,
+    "args": {
+     "name": "nl-wallpaper-span"
+    },
+    "result": {
+     "png": "nl-wallpaper-span.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       2720,
+       960
+      ],
+      "distinctColours": 253,
+      "meanLevel": 100.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 17.7,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 18.06,
+    "args": {
+     "key": "right click on the desktop of monitor 2"
+    }
+   },
+   {
+    "step": "native",
+    "t": 18.11,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 18.66,
+    "args": {
+     "name": "nl-desktop-menu-monitor2"
+    },
+    "result": {
+     "png": "nl-desktop-menu-monitor2.png",
+     "area": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       960
+      ],
+      "distinctColours": 68,
+      "meanLevel": 116.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 18.81,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 19.16,
+    "args": {
+     "key": "right click on the desktop of monitor 2 (Nieuw)"
+    }
+   },
+   {
+    "step": "native",
+    "t": 19.22,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 19.57,
+    "args": {
+     "key": "click on Nieuw"
+    }
+   },
+   {
+    "step": "native",
+    "t": 20.22,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 20.58,
+    "args": {
+     "key": "click on Map"
+    }
+   },
+   {
+    "step": "native",
+    "t": 20.68,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 21.24,
+    "args": {
+     "name": "nl-new-folder-rename"
+    },
+    "result": {
+     "png": "nl-new-folder-rename.png",
+     "area": [
+      0,
+      0,
+      1440,
+      900
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 282,
+      "meanLevel": 86.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 21.59,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 21.69,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 21.8,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 22.21,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "open",
+    "t": 24.22,
+    "args": {
+     "spec": "taskmgr"
+    },
+    "result": {
+     "name": "taskmgr",
+     "kind": "taskmgr",
+     "window": "native-taskmgr",
+     "pid": 1776,
+     "page": null,
+     "alive": true,
+     "boot": {
+      "app": "taskmgr",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1776,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 24.22,
+    "args": {
+     "key": "task manager moved"
+    }
+   },
+   {
+    "step": "native",
+    "t": 24.33,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 24.44,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "open",
+    "t": 25.07,
+    "args": {
+     "spec": "settings:taskbar"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1917,
+     "page": "taskbar",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1917,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 25.07,
+    "args": {
+     "key": "settings moved"
+    }
+   },
+   {
+    "step": "native",
+    "t": 25.13,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 25.23,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 25.88,
+    "args": {
+     "name": "nl-apps-on-monitor2"
+    },
+    "result": {
+     "png": "nl-apps-on-monitor2.png",
+     "area": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       960
+      ],
+      "distinctColours": 1370,
+      "meanLevel": 42.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 26.4,
+    "args": {
+     "name": "nl-taskbar1-apps"
+    },
+    "result": {
+     "png": "nl-taskbar1-apps.png",
+     "area": [
+      0,
+      852,
+      1440,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       48
+      ],
+      "distinctColours": 237,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 26.91,
+    "args": {
+     "name": "nl-taskbar2-apps"
+    },
+    "result": {
+     "png": "nl-taskbar2-apps.png",
+     "area": [
+      1440,
+      912,
+      1280,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       48
+      ],
+      "distinctColours": 58,
+      "meanLevel": 31.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.92,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 26.92,
+    "args": {
+     "key": "settings.set taskbar.multiDisplayApps=\"all\""
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.03,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.14,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 27.65,
+    "args": {
+     "name": "nl-taskbar2-all"
+    },
+    "result": {
+     "png": "nl-taskbar2-all.png",
+     "area": [
+      1440,
+      912,
+      1280,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       48
+      ],
+      "distinctColours": 88,
+      "meanLevel": 33.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.65,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 27.65,
+    "args": {
+     "key": "settings.set taskbar.multiDisplayApps=\"mainAndWindow\""
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.77,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.82,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "backend",
+    "t": 27.83,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 27.83,
+    "args": {
+     "key": "settings.set taskbar.multiDisplayApps=\"window\""
+    }
+   },
+   {
+    "step": "native",
+    "t": 27.94,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 28.07,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 28.13,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 28.24,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 29.37,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 29.72,
+    "args": {
+     "key": "click 1"
+    }
+   },
+   {
+    "step": "native",
+    "t": 29.84,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 30.75,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 31.12,
+    "args": {
+     "key": "click 2"
+    }
+   },
+   {
+    "step": "native",
+    "t": 32.24,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 32.6,
+    "args": {
+     "key": "click 3"
+    }
+   },
+   {
+    "step": "native",
+    "t": 33.46,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 33.82,
+    "args": {
+     "key": "right click on the button"
+    }
+   },
+   {
+    "step": "native",
+    "t": 33.88,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 33.94,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 35.07,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 35.62,
+    "args": {
+     "name": "nl-taskbar2-jumplist"
+    },
+    "result": {
+     "png": "nl-taskbar2-jumplist.png",
+     "area": [
+      1440,
+      660,
+      1280,
+      300
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       300
+      ],
+      "distinctColours": 510,
+      "meanLevel": 43.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 35.78,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 36.14,
+    "args": {
+     "key": "right click on empty space"
+    }
+   },
+   {
+    "step": "native",
+    "t": 36.26,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 36.38,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 36.92,
+    "args": {
+     "name": "nl-taskbar2-menu"
+    },
+    "result": {
+     "png": "nl-taskbar2-menu.png",
+     "area": [
+      1440,
+      760,
+      1280,
+      200
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       200
+      ],
+      "distinctColours": 535,
+      "meanLevel": 44.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "native",
+    "t": 36.99,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 38.22,
+    "args": {
+     "key": "pointer on the button with the taskbar menu open"
+    }
+   },
+   {
+    "step": "native",
+    "t": 38.28,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 38.41,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "native",
+    "t": 38.57,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 38.83,
+    "args": {
+     "key": "rows"
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 38.89,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Taakbalk – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "achter",
+      "alle",
+      "als",
+      "andere",
+      "apparaten",
+      "automatisch",
+      "beeldschermen",
+      "beveiliging",
+      "beweegt",
+      "bij",
+      "een",
+      "gebruik",
+      "gebruikt",
+      "gecentreerd",
+      "gedrag",
+      "geen",
+      "geopend",
+      "herstel",
+      "het",
+      "hier",
+      "iets",
+      "instelling",
+      "instellingen",
+      "je",
+      "klok",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "meerdere",
+      "met",
+      "minimaliseren",
+      "muis",
+      "naar",
+      "netwerk",
+      "niet",
+      "nog",
+      "onderkant",
+      "persoonlijke",
+      "pictogram",
+      "pictogrammen",
+      "pijl",
+      "scherm",
+      "seconden",
+      "sluiten",
+      "staan",
+      "startpagina",
+      "stroom",
+      "systeem",
+      "systeemvak",
+      "systeemvakpictogrammen",
+      "taakbalk",
+      "taakbalkitems",
+      "taakweergave",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "tonen",
+      "uit",
+      "uitlijning",
+      "van",
+      "venster",
+      "verbergen",
+      "verborgen",
+      "verschijnen",
+      "verschijnt",
+      "vind",
+      "waar",
+      "weergeven",
+      "ze",
+      "zijn",
+      "zoals",
+      "zodra",
+      "zoek",
+      "zoeken",
+      "zoekvak"
+     ],
+     "chars": 1277
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Taakbalk – Instellingen",
+     "titles": [
+      "Taakbalk – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPersoonlijke instellingen\nPersoonlijke instellingen\nTaakbalk\nZoeken\n07:59\n16-11-2026\nTaakbalkitems\nPictogrammen op de taakbalk weergeven of verbergen\nZoeken\nZoekvak\nTaakweergave\nAan\nWidgets\nUit\nAndere systeemvakpictogrammen\nExtra systeemvakpictogrammen weergeven of verbergen\nMenu met verborgen pictogrammen\nPictogrammen die niet op de taakbalk staan, vind je achter de pijl ^\nAan\nEr zijn nog geen apps met een pictogram in het systeemvak. Apps zoals Discord, Steam of Nextcloud verschijnen hier zodra ze er een tonen.\nGedrag van de taakbalk\nUitlijning, automatisch verbergen, meerdere beeldschermen, klok\nUitlijning van de taakbalk\nGecentreerd\nDe taakbalk automatisch verbergen\nDe taakbalk verschijnt als je de muis naar de onderkant van het scherm beweegt\nUit\nMijn taakbalk weergeven op alle beeldschermen\nAan\nBij gebruik van meerdere beeldschermen mijn taakbalk-apps weergeven op\nTaakbalk waar het venster is geopend\nSeconden weergeven in de klok van het systeemvak\nGebruikt iets meer stroom\nUit",
+     "dutchWordHits": [
+      "aan",
+      "achter",
+      "alle",
+      "als",
+      "andere",
+      "apparaten",
+      "automatisch",
+      "beeldschermen",
+      "beveiliging",
+      "beweegt",
+      "bij",
+      "een",
+      "gebruik",
+      "gebruikt",
+      "gecentreerd",
+      "gedrag",
+      "geen",
+      "geopend",
+      "herstel",
+      "het",
+      "hier",
+      "iets",
+      "instelling",
+      "instellingen",
+      "je",
+      "klok",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "meerdere",
+      "met",
+      "minimaliseren",
+      "muis",
+      "naar",
+      "netwerk",
+      "niet",
+      "nog",
+      "onderkant",
+      "persoonlijke",
+      "pictogram",
+      "pictogrammen",
+      "pijl",
+      "scherm",
+      "seconden",
+      "sluiten",
+      "staan",
+      "startpagina",
+      "stroom",
+      "systeem",
+      "systeemvak",
+      "systeemvakpictogrammen",
+      "taakbalk",
+      "taakbalkitems",
+      "taakweergave",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "tonen",
+      "uit",
+      "uitlijning",
+      "van",
+      "venster",
+      "verbergen",
+      "verborgen",
+      "verschijnen",
+      "verschijnt",
+      "vind",
+      "waar",
+      "weergeven",
+      "ze",
+      "zijn",
+      "zoals",
+      "zodra",
+      "zoek",
+      "zoeken",
+      "zoekvak"
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 38.89,
+    "args": {
+     "key": "settings text"
+    }
+   },
+   {
+    "step": "record",
+    "t": 39.96,
+    "args": {
+     "key": "scroll"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 41.32,
+    "args": {
+     "name": "nl-settings-taskbar",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "nl-settings-taskbar.png",
+     "area": [
+      1530,
+      86,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 146,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 41.76,
+    "args": {
+     "key": "switch off"
+    }
+   },
+   {
+    "step": "work_area",
+    "t": 41.76,
+    "args": {
+     "monitor": 1
+    },
+    "result": {
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960
+    }
+   },
+   {
+    "step": "work_area",
+    "t": 41.76,
+    "args": {
+     "monitor": 1
+    },
+    "result": {
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960
+    }
+   },
+   {
+    "step": "native",
+    "t": 41.89,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 4
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 42.64,
+    "args": {
+     "name": "nl-settings-taskbar-off",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "nl-settings-taskbar-off.png",
+     "area": [
+      1530,
+      86,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 149,
+      "meanLevel": 41.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 43.28,
+    "args": {
+     "name": "nl-off-monitor2"
+    },
+    "result": {
+     "png": "nl-off-monitor2.png",
+     "area": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1280,
+       960
+      ],
+      "distinctColours": 831,
+      "meanLevel": 41.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 43.73,
+    "args": {
+     "key": "switch on"
+    }
+   },
+   {
+    "step": "native",
+    "t": 43.81,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "record",
+    "t": 43.85,
+    "args": {
+     "key": "lock"
+    }
+   },
+   {
+    "step": "record",
+    "t": 47.86,
+    "args": {
+     "key": "locked state"
+    }
+   },
+   {
+    "step": "record",
+    "t": 47.88,
+    "args": {
+     "key": "unlock"
+    }
+   },
+   {
+    "step": "native",
+    "t": 48.38,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 49.33,
+    "args": {
+     "name": "nl-after-unlock"
+    },
+    "result": {
+     "png": "nl-after-unlock.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       2720,
+       960
+      ],
+      "distinctColours": 2421,
+      "meanLevel": 50.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "set_language",
+    "t": 49.34,
+    "args": {
+     "lang": "en",
+     "via": "rename",
+     "skip": [
+      "settings",
+      "taskmgr"
+     ]
+    },
+    "result": {
+     "lang": "en",
+     "via": "rename",
+     "seconds": {},
+     "fileBefore": {
+      "language": "nl",
+      "inode": 2643054,
+      "mtime": 1794812377.53256,
+      "keys": 18
+     },
+     "fileAfter": {
+      "language": "en",
+      "inode": 2643168,
+      "mtime": 1794812383.2133985,
+      "keys": 18
+     },
+     "fileLanguageOk": true,
+     "sameInode": false
+    }
+   },
+   {
+    "step": "record",
+    "t": 49.34,
+    "args": {
+     "key": "language en"
+    }
+   },
+   {
+    "step": "set_language",
+    "t": 49.65,
+    "args": {
+     "lang": "nl",
+     "via": "rename",
+     "skip": [
+      "settings",
+      "taskmgr"
+     ]
+    },
+    "result": {
+     "lang": "nl",
+     "via": "rename",
+     "seconds": {},
+     "fileBefore": {
+      "language": "en",
+      "inode": 2643168,
+      "mtime": 1794812383.2133985,
+      "keys": 18
+     },
+     "fileAfter": {
+      "language": "nl",
+      "inode": 2643169,
+      "mtime": 1794812383.5216386,
+      "keys": 18
+     },
+     "fileLanguageOk": true,
+     "sameInode": false
+    }
+   },
+   {
+    "step": "record",
+    "t": 49.65,
+    "args": {
+     "key": "language nl"
+    }
+   },
+   {
+    "step": "display_config",
+    "t": 50.04,
+    "args": {
+     "primary": 1,
+     "disable": null,
+     "enableAll": false
+    },
+    "result": {
+     "ok": true,
+     "config": [
+      [
+       0,
+       0,
+       false,
+       "Meta-0",
+       "1440x900@60.000"
+      ],
+      [
+       1440,
+       0,
+       true,
+       "Meta-1",
+       "1280x960@60.000"
+      ]
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 50.05,
+    "args": {
+     "key": "monitors with the other primary"
+    }
+   },
+   {
+    "step": "native",
+    "t": 51.44,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 5
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 52.38,
+    "args": {
+     "name": "nl-other-primary"
+    },
+    "result": {
+     "png": "nl-other-primary.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       2720,
+       960
+      ],
+      "distinctColours": 2381,
+      "meanLevel": 51.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "display_config",
+    "t": 52.39,
+    "args": {
+     "primary": 0,
+     "disable": null,
+     "enableAll": false
+    },
+    "result": {
+     "ok": true,
+     "config": [
+      [
+       0,
+       0,
+       true,
+       "Meta-0",
+       "1440x900@60.000"
+      ],
+      [
+       1440,
+       0,
+       false,
+       "Meta-1",
+       "1280x960@60.000"
+      ]
+     ]
+    }
+   },
+   {
+    "step": "display_config",
+    "t": 53.33,
+    "args": {
+     "primary": null,
+     "disable": null,
+     "enableAll": false,
+     "order": [
+      1,
+      0
+     ]
+    },
+    "result": {
+     "ok": true,
+     "config": [
+      [
+       0,
+       0,
+       false,
+       "Meta-1",
+       "1280x960@60.000"
+      ],
+      [
+       1280,
+       0,
+       true,
+       "Meta-0",
+       "1440x900@60.000"
+      ]
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 53.34,
+    "args": {
+     "key": "monitors in the other order"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 54.74,
+    "args": {
+     "name": "nl-other-order"
+    },
+    "result": {
+     "png": "nl-other-order.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       2720,
+       960
+      ],
+      "distinctColours": 1566,
+      "meanLevel": 41.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "display_config",
+    "t": 54.76,
+    "args": {
+     "primary": null,
+     "disable": null,
+     "enableAll": false,
+     "order": [
+      1,
+      0
+     ]
+    },
+    "result": {
+     "ok": true,
+     "config": [
+      [
+       0,
+       0,
+       true,
+       "Meta-0",
+       "1440x900@60.000"
+      ],
+      [
+       1440,
+       0,
+       false,
+       "Meta-1",
+       "1280x960@60.000"
+      ]
+     ]
+    }
+   },
+   {
+    "step": "display_config",
+    "t": 55.1,
+    "args": {
+     "primary": null,
+     "disable": 1,
+     "enableAll": false
+    },
+    "result": {
+     "ok": true,
+     "config": [
+      [
+       0,
+       0,
+       true,
+       "Meta-0",
+       "1440x900@60.000"
+      ]
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 56.46,
+    "args": {
+     "name": "nl-one-monitor"
+    },
+    "result": {
+     "png": "nl-one-monitor.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 800,
+      "meanLevel": 38.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "display_config",
+    "t": 56.47,
+    "args": {
+     "primary": null,
+     "disable": null,
+     "enableAll": true
+    },
+    "result": {
+     "ok": true,
+     "config": [
+      [
+       0,
+       0,
+       true,
+       "Meta-0",
+       "1440x900@60.000"
+      ],
+      [
+       1440,
+       0,
+       false,
+       "Meta-1",
+       "1280x960@60.000"
+      ]
+     ]
+    }
+   },
+   {
+    "step": "close",
+    "t": 57.68,
+    "args": {
+     "name": "settings"
+    }
+   },
+   {
+    "step": "close",
+    "t": 58.2,
+    "args": {
+     "name": "taskmgr"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "two monitors, the first one primary",
+    "ok": true,
+    "t": 0.81,
+    "monitors": [
+     {
+      "index": 0,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "primary": true,
+      "fullscreen": false
+     },
+     {
+      "index": 1,
+      "x": 1440,
+      "y": 0,
+      "w": 1280,
+      "h": 960,
+      "primary": false,
+      "fullscreen": false
+     }
+    ]
+   },
+   {
+    "check": "the second monitor lies right of the first",
+    "ok": true,
+    "t": 0.81,
+    "monitors": [
+     {
+      "index": 0,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "primary": true,
+      "fullscreen": false
+     },
+     {
+      "index": 1,
+      "x": 1440,
+      "y": 0,
+      "w": 1280,
+      "h": 960,
+      "primary": false,
+      "fullscreen": false
+     }
+    ]
+   },
+   {
+    "check": "the taskbar of monitor 2 is a 48 px dock at its bottom, as wide as the monitor",
+    "ok": true,
+    "t": 0.82,
+    "strip": {
+     "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+     "title": "Taakbalk",
+     "pid": 520,
+     "type": "DOCK",
+     "x": 1440,
+     "y": 912,
+     "w": 1280,
+     "h": 48,
+     "monitor": 1,
+     "mapped": true,
+     "visible": true,
+     "above": true,
+     "sticky": true,
+     "skipTaskbar": true
+    }
+   },
+   {
+    "check": "it is on monitor 2, above the windows, on every workspace and out of the window list",
+    "ok": true,
+    "t": 0.82,
+    "strip": {
+     "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+     "title": "Taakbalk",
+     "pid": 520,
+     "type": "DOCK",
+     "x": 1440,
+     "y": 912,
+     "w": 1280,
+     "h": 48,
+     "monitor": 1,
+     "mapped": true,
+     "visible": true,
+     "above": true,
+     "sticky": true,
+     "skipTaskbar": true
+    }
+   },
+   {
+    "check": "one taskbar window per other monitor only",
+    "ok": true,
+    "t": 0.82,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 1440,
+      "y": 912,
+      "w": 1280,
+      "h": 48,
+      "monitor": 1,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ]
+   },
+   {
+    "check": "the panel window covers monitor 1 (the primary)",
+    "ok": true,
+    "t": 2.32,
+    "bridge": {
+     "panel": [
+      0,
+      0,
+      1440,
+      900
+     ],
+     "present": true,
+     "strips": [
+      {
+       "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+       "monitor": 1,
+       "inhibited": false,
+       "rect": [
+        1440,
+        912,
+        1280,
+        48
+       ],
+       "strut": [
+        1440,
+        912,
+        1280,
+        48
+       ]
+      }
+     ],
+     "iconSources": [
+      "main",
+      "1"
+     ],
+     "frosted": [
+      {
+       "kind": "taskbar",
+       "rect": {
+        "x": 0,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true
+      },
+      {
+       "kind": "strip",
+       "rect": {
+        "x": 1440,
+        "y": 912,
+        "w": 1280,
+        "h": 48
+       },
+       "effect": true
+      }
+     ]
+    }
+   },
+   {
+    "check": "monitor 2 has a strut: its work area ends above its taskbar",
+    "ok": true,
+    "t": 2.32,
+    "work": {
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 912
+    },
+    "monitor": {
+     "index": 1,
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960,
+     "primary": false,
+     "fullscreen": false
+    }
+   },
+   {
+    "check": "monitor 1 keeps its own strut",
+    "ok": true,
+    "t": 2.32,
+    "work": {
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 852
+    }
+   },
+   {
+    "check": "the dev state has the taskbar of monitor 2 (tb-strip-m1)",
+    "ok": true,
+    "t": 2.42,
+    "toplevels": [
+     [
+      "Taakbalk",
+      1280,
+      48
+     ],
+     [
+      "Bureaublad",
+      1280,
+      960
+     ],
+     [
+      "Bureaublad",
+      1440,
+      852
+     ],
+     [
+      "Taakbalk",
+      1440,
+      900
+     ]
+    ]
+   },
+   {
+    "check": "its window is the monitor wide and 48 px high",
+    "ok": true,
+    "t": 2.42,
+    "size": [
+     1280,
+     48
+    ]
+   },
+   {
+    "check": "it has no Start, search, Task View, tray or clock",
+    "ok": true,
+    "t": 2.42,
+    "names": [
+     "GtkBox",
+     "GtkCenterBox",
+     "GtkDrawingArea",
+     "tb-strip-m1",
+     "tb-strip-window-m1"
+    ]
+   },
+   {
+    "check": "the main taskbar keeps Start, Task View, the tray and the clock",
+    "ok": true,
+    "t": 2.42
+   },
+   {
+    "check": "the taskbar of monitor 2 is frosted like the main one (w11-glass, a strip backdrop)",
+    "ok": true,
+    "t": 2.53,
+    "frosted": [
+     {
+      "kind": "taskbar",
+      "rect": {
+       "x": 0,
+       "y": 852,
+       "w": 1440,
+       "h": 48
+      },
+      "effect": true
+     },
+     {
+      "kind": "strip",
+      "rect": {
+       "x": 1440,
+       "y": 912,
+       "w": 1280,
+       "h": 48
+      },
+      "effect": true
+     }
+    ]
+   },
+   {
+    "check": "the desktop window covers monitor 1 (the primary; Mutter keeps a desktop window in one work area)",
+    "ok": true,
+    "t": 5.84,
+    "desktop": {
+     "wm": "io.github.win11shell.Desktop",
+     "title": "Bureaublad",
+     "type": "DESKTOP",
+     "frame": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "buffer": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "monitor": 0,
+     "work": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "mapped": true,
+     "geometry": {
+      "available": true,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "width": 1440,
+      "height": 900,
+      "logical": {
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      },
+      "monitor": 0,
+      "monitors": [
+       {
+        "index": 0,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ],
+      "areas": [
+       {
+        "index": 0,
+        "primary": true,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "primary": false,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ]
+     }
+    }
+   },
+   {
+    "check": "monitor 2 has a desktop window of its own (SecondaryDesktop.Monitor1, a desktop window on monitor 2)",
+    "ok": true,
+    "t": 5.84,
+    "desktop": {
+     "wm": "io.github.win11shell.SecondaryDesktop.Monitor1",
+     "title": "Bureaublad",
+     "type": "DESKTOP",
+     "frame": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "buffer": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "monitor": 1,
+     "work": [
+      1440,
+      0,
+      1280,
+      912
+     ],
+     "mapped": true,
+     "geometry": {
+      "available": true,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "width": 1440,
+      "height": 900,
+      "logical": {
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      },
+      "monitor": 0,
+      "monitors": [
+       {
+        "index": 0,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ],
+      "areas": [
+       {
+        "index": 0,
+        "primary": true,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "primary": false,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ]
+     }
+    }
+   },
+   {
+    "check": "the desktop geometry lists both monitors with the primary marked",
+    "ok": true,
+    "t": 5.84,
+    "geometry": {
+     "available": true,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "width": 1440,
+     "height": 900,
+     "logical": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+     },
+     "monitor": 0,
+     "monitors": [
+      {
+       "index": 0,
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      },
+      {
+       "index": 1,
+       "x": 1440,
+       "y": 0,
+       "w": 1280,
+       "h": 960
+      }
+     ],
+     "areas": [
+      {
+       "index": 0,
+       "primary": true,
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      },
+      {
+       "index": 1,
+       "primary": false,
+       "x": 1440,
+       "y": 0,
+       "w": 1280,
+       "h": 960
+      }
+     ]
+    }
+   },
+   {
+    "check": "the desktop window of monitor 2 draws the wallpaper over all of it (desktop-wall-1)",
+    "ok": true,
+    "t": 9.97,
+    "page": [
+     0,
+     0,
+     1280,
+     960
+    ],
+    "window": [
+     1280,
+     960
+    ]
+   },
+   {
+    "check": "monitor 1 shows the whole picture by itself (four colours at 25 %/75 %, in our desktop window there)",
+    "ok": true,
+    "t": 11.69,
+    "pixels": {
+     "red": {
+      "at": [
+       360,
+       225
+      ],
+      "rgb": [
+       255,
+       0,
+       0
+      ],
+      "is": "red"
+     },
+     "green": {
+      "at": [
+       1080,
+       225
+      ],
+      "rgb": [
+       0,
+       255,
+       0
+      ],
+      "is": "green"
+     },
+     "blue": {
+      "at": [
+       360,
+       630
+      ],
+      "rgb": [
+       0,
+       0,
+       255
+      ],
+      "is": "blue"
+     },
+     "yellow": {
+      "at": [
+       1080,
+       630
+      ],
+      "rgb": [
+       255,
+       255,
+       0
+      ],
+      "is": "yellow"
+     }
+    }
+   },
+   {
+    "check": "monitor 2 shows the whole picture by itself (four colours at 25 %/75 %, in our desktop window there)",
+    "ok": true,
+    "t": 11.79,
+    "pixels": {
+     "red": {
+      "at": [
+       1760,
+       240
+      ],
+      "rgb": [
+       255,
+       0,
+       0
+      ],
+      "is": "red"
+     },
+     "green": {
+      "at": [
+       2400,
+       240
+      ],
+      "rgb": [
+       0,
+       255,
+       0
+      ],
+      "is": "green"
+     },
+     "blue": {
+      "at": [
+       1760,
+       672
+      ],
+      "rgb": [
+       0,
+       0,
+       255
+      ],
+      "is": "blue"
+     },
+     "yellow": {
+      "at": [
+       2400,
+       672
+      ],
+      "rgb": [
+       255,
+       255,
+       0
+      ],
+      "is": "yellow"
+     }
+    }
+   },
+   {
+    "check": "span: monitor 1 shows its own part of one picture over both monitors",
+    "ok": true,
+    "t": 17.53,
+    "pixels": {
+     "0.25/0.25": {
+      "at": [
+       360,
+       225
+      ],
+      "rgb": [
+       255,
+       0,
+       0
+      ],
+      "is": "red",
+      "want": "red"
+     },
+     "0.75/0.25": {
+      "at": [
+       1080,
+       225
+      ],
+      "rgb": [
+       255,
+       0,
+       0
+      ],
+      "is": "red",
+      "want": "red"
+     },
+     "0.98/0.25": {
+      "at": [
+       1411,
+       225
+      ],
+      "rgb": [
+       0,
+       255,
+       0
+      ],
+      "is": "green",
+      "want": "green"
+     },
+     "0.25/0.7": {
+      "at": [
+       360,
+       630
+      ],
+      "rgb": [
+       0,
+       0,
+       255
+      ],
+      "is": "blue",
+      "want": "blue"
+     },
+     "0.75/0.7": {
+      "at": [
+       1080,
+       630
+      ],
+      "rgb": [
+       0,
+       0,
+       255
+      ],
+      "is": "blue",
+      "want": "blue"
+     }
+    }
+   },
+   {
+    "check": "span: monitor 2 shows its own part of one picture over both monitors",
+    "ok": true,
+    "t": 17.65,
+    "pixels": {
+     "0.25/0.25": {
+      "at": [
+       1760,
+       240
+      ],
+      "rgb": [
+       0,
+       255,
+       0
+      ],
+      "is": "green",
+      "want": "green"
+     },
+     "0.75/0.25": {
+      "at": [
+       2400,
+       240
+      ],
+      "rgb": [
+       0,
+       255,
+       0
+      ],
+      "is": "green",
+      "want": "green"
+     },
+     "0.98/0.25": {
+      "at": [
+       2694,
+       240
+      ],
+      "rgb": [
+       0,
+       255,
+       0
+      ],
+      "is": "green",
+      "want": "green"
+     },
+     "0.25/0.7": {
+      "at": [
+       1760,
+       672
+      ],
+      "rgb": [
+       255,
+       255,
+       0
+      ],
+      "is": "yellow",
+      "want": "yellow"
+     },
+     "0.75/0.7": {
+      "at": [
+       2400,
+       672
+      ],
+      "rgb": [
+       255,
+       255,
+       0
+      ],
+      "is": "yellow",
+      "want": "yellow"
+     }
+    }
+   },
+   {
+    "check": "every desktop icon lies on monitor 1 above its taskbar",
+    "ok": true,
+    "t": 17.7,
+    "icons": 5,
+    "outside": []
+   },
+   {
+    "check": "a right click on the empty desktop of monitor 2 opens the desktop menu there (in its desktop window)",
+    "ok": true,
+    "t": 18.11,
+    "menu": [
+     617,
+     306,
+     328,
+     371
+    ]
+   },
+   {
+    "check": "Escape closes the desktop menu",
+    "ok": true,
+    "t": 18.81
+   },
+   {
+    "check": "Nieuw > Map on monitor 2 makes the folder on the desktop of monitor 1, its name ready to type",
+    "ok": true,
+    "t": 20.68,
+    "rename": [
+     -2,
+     561,
+     86,
+     24
+    ]
+   },
+   {
+    "check": "the desktop of monitor 1 has the keyboard now, not the desktop window of monitor 2 that was clicked",
+    "ok": true,
+    "t": 20.69,
+    "focus": "io.github.win11shell.Desktop"
+   },
+   {
+    "check": "the name typed right after goes into it: the folder is called \"mmreis\"",
+    "ok": true,
+    "t": 21.53,
+    "files": [
+     "Folder",
+     "alpha.txt",
+     "beta.txt",
+     "mmreis"
+    ]
+   },
+   {
+    "check": "Task Manager is on monitor 2",
+    "ok": true,
+    "t": 24.22,
+    "window": {
+     "rect": [
+      1560,
+      96,
+      1040,
+      720
+     ],
+     "monitor": 1,
+     "minimized": false,
+     "focus": true,
+     "icon": [
+      2060,
+      916,
+      40,
+      40
+     ]
+    }
+   },
+   {
+    "check": "by default (\"Taskbar where window is open\") Task Manager shows on the taskbar of monitor 2 only",
+    "ok": true,
+    "t": 24.44,
+    "main": [
+     "firefox.desktop",
+     "win11shell-explorer.desktop",
+     "win11shell-settings.desktop"
+    ],
+    "other": [
+     "win11shell-taskmgr.desktop"
+    ]
+   },
+   {
+    "check": "Settings on monitor 2: running on its taskbar, the main taskbar keeps its pin without is-running",
+    "ok": true,
+    "t": 25.24,
+    "main": {
+     "win11shell-explorer.desktop": [
+      "is-pinned"
+     ],
+     "firefox.desktop": [
+      "is-pinned"
+     ],
+     "win11shell-settings.desktop": [
+      "is-pinned"
+     ]
+    },
+    "other": {
+     "win11shell-taskmgr.desktop": [
+      "is-running"
+     ],
+     "win11shell-settings.desktop": [
+      "is-focused",
+      "is-running"
+     ]
+    }
+   },
+   {
+    "check": "the taskbar of monitor 2 shows no pins by default",
+    "ok": true,
+    "t": 25.24,
+    "other": [
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ]
+   },
+   {
+    "check": "\"All taskbars\": Task Manager on both taskbars, the pins on monitor 2 too",
+    "ok": true,
+    "t": 27.14,
+    "main": [
+     "firefox.desktop",
+     "win11shell-explorer.desktop",
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ],
+    "other": [
+     "firefox.desktop",
+     "win11shell-explorer.desktop",
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ]
+   },
+   {
+    "check": "\"Main taskbar and taskbar where window is open\": Task Manager on both, no pins on monitor 2",
+    "ok": true,
+    "t": 27.83,
+    "main": [
+     "firefox.desktop",
+     "win11shell-explorer.desktop",
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ],
+    "other": [
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ]
+   },
+   {
+    "check": "back to the default: on the taskbar of monitor 2 only",
+    "ok": true,
+    "t": 27.94
+   },
+   {
+    "check": "moved to monitor 1 it is on the main taskbar and leaves the other",
+    "ok": true,
+    "t": 28.13,
+    "main": [
+     "firefox.desktop",
+     "win11shell-explorer.desktop",
+     "win11shell-settings.desktop",
+     "win11shell-taskmgr.desktop"
+    ],
+    "other": [
+     "win11shell-settings.desktop"
+    ]
+   },
+   {
+    "check": "moved back to monitor 2 it is on its taskbar again",
+    "ok": true,
+    "t": 28.25
+   },
+   {
+    "check": "the Task Manager button on the taskbar of monitor 2",
+    "ok": true,
+    "t": 29.37
+   },
+   {
+    "check": "a click on its button on the taskbar of monitor 2 focuses Task Manager",
+    "ok": true,
+    "t": 29.72,
+    "window": {
+     "rect": [
+      1560,
+      96,
+      1040,
+      720
+     ],
+     "monitor": 1,
+     "minimized": false,
+     "focus": true,
+     "icon": [
+      2082,
+      916,
+      40,
+      40
+     ]
+    }
+   },
+   {
+    "check": "a second click minimizes it",
+    "ok": true,
+    "t": 31.12,
+    "window": {
+     "rect": [
+      1560,
+      96,
+      1040,
+      720
+     ],
+     "monitor": 1,
+     "minimized": true,
+     "focus": false,
+     "icon": [
+      2082,
+      916,
+      40,
+      40
+     ]
+    }
+   },
+   {
+    "check": "it minimizes into its button on the taskbar of monitor 2 (icon geometry inside that taskbar)",
+    "ok": true,
+    "t": 31.12,
+    "icon": [
+     2082,
+     916,
+     40,
+     40
+    ],
+    "strip": [
+     1440,
+     912,
+     1280,
+     48
+    ],
+    "button": [
+     2102,
+     936
+    ]
+   },
+   {
+    "check": "a third click restores and focuses it",
+    "ok": true,
+    "t": 32.6,
+    "window": {
+     "rect": [
+      1560,
+      96,
+      1040,
+      720
+     ],
+     "monitor": 1,
+     "minimized": false,
+     "focus": true,
+     "icon": [
+      2082,
+      916,
+      40,
+      40
+     ]
+    }
+   },
+   {
+    "check": "a right click on the button opens its jump list (menus-jump-launch, -pin, -close) on monitor 2",
+    "ok": true,
+    "t": 33.95
+   },
+   {
+    "check": "no window list opens over the jump list while the pointer stays on the button",
+    "ok": true,
+    "t": 35.07,
+    "lists": []
+   },
+   {
+    "check": "Escape closes it",
+    "ok": true,
+    "t": 35.78
+   },
+   {
+    "check": "a right click on its empty space opens the taskbar menu (Taakbeheer, Taakbalkinstellingen)",
+    "ok": true,
+    "t": 36.38
+   },
+   {
+    "check": "no window list opens over the taskbar menu while the pointer rests on an app button",
+    "ok": true,
+    "t": 38.41,
+    "lists": []
+   },
+   {
+    "check": "Settings has \"Show my taskbar on all displays\", on and enabled with two displays",
+    "ok": true,
+    "t": 38.83
+   },
+   {
+    "check": "and \"When using multiple displays, show my taskbar apps on\", enabled",
+    "ok": true,
+    "t": 38.83
+   },
+   {
+    "check": "\"Show my taskbar on all displays\" off: the taskbar of monitor 2 is gone",
+    "ok": true,
+    "t": 41.76,
+    "strips": []
+   },
+   {
+    "check": "and its strut: the work area of monitor 2 is the whole monitor",
+    "ok": true,
+    "t": 41.76,
+    "work": {
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960
+    }
+   },
+   {
+    "check": "the main taskbar shows Task Manager again (every window, as with one monitor)",
+    "ok": true,
+    "t": 41.89
+   },
+   {
+    "check": "the second row is greyed out while the first is off",
+    "ok": true,
+    "t": 42.1
+   },
+   {
+    "check": "on again: the taskbar of monitor 2 is back",
+    "ok": true,
+    "t": 43.74
+   },
+   {
+    "check": "and Task Manager is on it again",
+    "ok": true,
+    "t": 43.81
+   },
+   {
+    "check": "locked: no taskbar of monitor 2",
+    "ok": true,
+    "t": 47.86,
+    "strips": []
+   },
+   {
+    "check": "after unlock the taskbar of monitor 2 is back at its place",
+    "ok": true,
+    "t": 48.26,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 1440,
+      "y": 912,
+      "w": 1280,
+      "h": 48,
+      "monitor": 1,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ]
+   },
+   {
+    "check": "after unlock Task Manager is on it again (and not on the main taskbar)",
+    "ok": true,
+    "t": 48.38
+   },
+   {
+    "check": "after unlock both taskbars tell GNOME again where their buttons are (windows.setIconRects; the main taskbar too, whose buttons did not move)",
+    "ok": true,
+    "t": 48.38,
+    "bridge": {
+     "panel": [
+      0,
+      0,
+      1440,
+      900
+     ],
+     "present": true,
+     "strips": [
+      {
+       "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+       "monitor": 1,
+       "inhibited": false,
+       "rect": [
+        1440,
+        912,
+        1280,
+        48
+       ],
+       "strut": [
+        1440,
+        912,
+        1280,
+        48
+       ]
+      }
+     ],
+     "iconSources": [
+      "1",
+      "main"
+     ],
+     "frosted": [
+      {
+       "kind": "window",
+       "rect": {
+        "x": 1560,
+        "y": 96,
+        "w": 1040,
+        "h": 720
+       },
+       "effect": false
+      },
+      {
+       "kind": "window",
+       "rect": {
+        "x": 1530,
+        "y": 86,
+        "w": 1100,
+        "h": 740
+       },
+       "effect": false
+      },
+      {
+       "kind": "taskbar",
+       "rect": {
+        "x": 0,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true
+      },
+      {
+       "kind": "strip",
+       "rect": {
+        "x": 1440,
+        "y": 912,
+        "w": 1280,
+        "h": 48
+       },
+       "effect": true
+      }
+     ]
+    }
+   },
+   {
+    "check": "the windows of monitor 2 carry their nl titles",
+    "ok": true,
+    "t": 49.34,
+    "strips": [
+     "Taakbalk"
+    ],
+    "desktops": {
+     "io.github.win11shell.SecondaryDesktop.Monitor1": "Bureaublad",
+     "io.github.win11shell.Desktop": "Bureaublad"
+    }
+   },
+   {
+    "check": "after switching to en the taskbar and desktop windows of monitor 2 have their en titles",
+    "ok": true,
+    "t": 49.64,
+    "strips": [
+     "Taskbar"
+    ],
+    "desktops": {
+     "io.github.win11shell.SecondaryDesktop.Monitor1": "Desktop",
+     "io.github.win11shell.Desktop": "Desktop"
+    }
+   },
+   {
+    "check": "and back in nl",
+    "ok": true,
+    "t": 49.95
+   },
+   {
+    "check": "the main taskbar moves to the new primary",
+    "ok": true,
+    "t": 50.35,
+    "bridge": {
+     "panel": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "present": true,
+     "strips": [
+      {
+       "wm": "io.github.win11shell.SecondaryTaskbar.Monitor0",
+       "monitor": 0,
+       "inhibited": false,
+       "rect": [
+        0,
+        852,
+        1440,
+        48
+       ],
+       "strut": [
+        0,
+        852,
+        1440,
+        48
+       ]
+      }
+     ],
+     "iconSources": [
+      "main"
+     ],
+     "frosted": [
+      {
+       "kind": "window",
+       "rect": {
+        "x": 1560,
+        "y": 96,
+        "w": 1040,
+        "h": 720
+       },
+       "effect": false
+      },
+      {
+       "kind": "window",
+       "rect": {
+        "x": 1530,
+        "y": 86,
+        "w": 1100,
+        "h": 740
+       },
+       "effect": false
+      },
+      {
+       "kind": "taskbar",
+       "rect": {
+        "x": 1440,
+        "y": 912,
+        "w": 1280,
+        "h": 48
+       },
+       "effect": true
+      },
+      {
+       "kind": "strip",
+       "rect": {
+        "x": 0,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true
+      }
+     ]
+    },
+    "primary": {
+     "index": 1,
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960,
+     "primary": true,
+     "fullscreen": false
+    }
+   },
+   {
+    "check": "the other taskbar is io.github.win11shell.SecondaryTaskbar.Monitor0 at the bottom of the other monitor",
+    "ok": true,
+    "t": 50.35,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor0",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 0,
+      "y": 852,
+      "w": 1440,
+      "h": 48,
+      "monitor": 0,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ]
+   },
+   {
+    "check": "the desktop (with the icons) moves to the new primary, the other monitor gets its own desktop window",
+    "ok": true,
+    "t": 50.36,
+    "desktops": {
+     "io.github.win11shell.SecondaryDesktop.Monitor0": {
+      "wm": "io.github.win11shell.SecondaryDesktop.Monitor0",
+      "title": "Bureaublad",
+      "type": "DESKTOP",
+      "frame": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "buffer": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "monitor": 0,
+      "work": [
+       0,
+       0,
+       1440,
+       852
+      ],
+      "mapped": true,
+      "geometry": {
+       "available": true,
+       "x": 1440,
+       "y": 0,
+       "w": 1280,
+       "h": 960,
+       "width": 1280,
+       "height": 960,
+       "logical": {
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       },
+       "monitor": 1,
+       "monitors": [
+        {
+         "index": 0,
+         "x": 0,
+         "y": 0,
+         "w": 1440,
+         "h": 900
+        },
+        {
+         "index": 1,
+         "x": 1440,
+         "y": 0,
+         "w": 1280,
+         "h": 960
+        }
+       ],
+       "areas": [
+        {
+         "index": 0,
+         "primary": false,
+         "x": 0,
+         "y": 0,
+         "w": 1440,
+         "h": 900
+        },
+        {
+         "index": 1,
+         "primary": true,
+         "x": 1440,
+         "y": 0,
+         "w": 1280,
+         "h": 960
+        }
+       ]
+      }
+     },
+     "io.github.win11shell.Desktop": {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Bureaublad",
+      "type": "DESKTOP",
+      "frame": [
+       1440,
+       0,
+       1280,
+       912
+      ],
+      "buffer": [
+       1440,
+       0,
+       1280,
+       912
+      ],
+      "monitor": 1,
+      "work": [
+       1440,
+       0,
+       1280,
+       912
+      ],
+      "mapped": true,
+      "geometry": {
+       "available": true,
+       "x": 1440,
+       "y": 0,
+       "w": 1280,
+       "h": 960,
+       "width": 1280,
+       "height": 960,
+       "logical": {
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       },
+       "monitor": 1,
+       "monitors": [
+        {
+         "index": 0,
+         "x": 0,
+         "y": 0,
+         "w": 1440,
+         "h": 900
+        },
+        {
+         "index": 1,
+         "x": 1440,
+         "y": 0,
+         "w": 1280,
+         "h": 960
+        }
+       ],
+       "areas": [
+        {
+         "index": 0,
+         "primary": false,
+         "x": 0,
+         "y": 0,
+         "w": 1440,
+         "h": 900
+        },
+        {
+         "index": 1,
+         "primary": true,
+         "x": 1440,
+         "y": 0,
+         "w": 1280,
+         "h": 960
+        }
+       ]
+      }
+     }
+    }
+   },
+   {
+    "check": "the desktop icons follow the primary",
+    "ok": true,
+    "t": 51.44,
+    "outside": []
+   },
+   {
+    "check": "back: the taskbar of monitor 2 is there again",
+    "ok": true,
+    "t": 52.7,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 1440,
+      "y": 912,
+      "w": 1280,
+      "h": 48,
+      "monitor": 1,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ]
+   },
+   {
+    "check": "before: Settings minimizes into the main taskbar, Task Manager into the taskbar of monitor 2",
+    "ok": true,
+    "t": 53.32,
+    "places": {
+     "settings": [
+      900,
+      856,
+      40,
+      40
+     ],
+     "mainBar": [
+      0,
+      852,
+      1440,
+      48
+     ],
+     "taskmgr": [
+      2060,
+      916,
+      40,
+      40
+     ],
+     "strip": [
+      1440,
+      912,
+      1280,
+      48
+     ],
+     "ok": true
+    }
+   },
+   {
+    "check": "monitor 2 left of monitor 1: Settings still minimizes into the main taskbar and Task Manager into the taskbar of its monitor, though neither taskbar changed size",
+    "ok": true,
+    "t": 53.95,
+    "places": {
+     "settings": [
+      2180,
+      856,
+      40,
+      40
+     ],
+     "mainBar": [
+      1280,
+      852,
+      1440,
+      48
+     ],
+     "taskmgr": [
+      620,
+      916,
+      40,
+      40
+     ],
+     "strip": [
+      0,
+      912,
+      1280,
+      48
+     ],
+     "ok": true
+    },
+    "bridge": {
+     "panel": [
+      1280,
+      0,
+      1440,
+      900
+     ],
+     "present": true,
+     "strips": [
+      {
+       "wm": "io.github.win11shell.SecondaryTaskbar.Monitor0",
+       "monitor": 0,
+       "inhibited": false,
+       "rect": [
+        0,
+        912,
+        1280,
+        48
+       ],
+       "strut": [
+        0,
+        912,
+        1280,
+        48
+       ]
+      }
+     ],
+     "iconSources": [
+      "main",
+      "0"
+     ],
+     "frosted": [
+      {
+       "kind": "window",
+       "rect": {
+        "x": 120,
+        "y": 96,
+        "w": 1040,
+        "h": 720
+       },
+       "effect": false
+      },
+      {
+       "kind": "taskbar",
+       "rect": {
+        "x": 1280,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true
+      },
+      {
+       "kind": "window",
+       "rect": {
+        "x": 1450,
+        "y": 56,
+        "w": 1100,
+        "h": 740
+       },
+       "effect": true
+      },
+      {
+       "kind": "strip",
+       "rect": {
+        "x": 0,
+        "y": 912,
+        "w": 1280,
+        "h": 48
+       },
+       "effect": true
+      }
+     ]
+    }
+   },
+   {
+    "check": "back in the first order: the taskbar of monitor 2 is in its place again",
+    "ok": true,
+    "t": 55.09,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 1440,
+      "y": 912,
+      "w": 1280,
+      "h": 48,
+      "monitor": 1,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ]
+   },
+   {
+    "check": "monitor 2 off: no taskbar of another monitor",
+    "ok": true,
+    "t": 55.41,
+    "strips": []
+   },
+   {
+    "check": "the desktop covers monitor 1 alone",
+    "ok": true,
+    "t": 55.41,
+    "geometry": {
+     "available": true,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "width": 1440,
+     "height": 900,
+     "logical": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+     },
+     "monitor": 0,
+     "monitors": [
+      {
+       "index": 0,
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      }
+     ],
+     "areas": [
+      {
+       "index": 0,
+       "primary": true,
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      }
+     ]
+    }
+   },
+   {
+    "check": "and no desktop window of another monitor is left",
+    "ok": true,
+    "t": 55.41,
+    "desktops": {
+     "io.github.win11shell.Desktop": {
+      "wm": "io.github.win11shell.Desktop",
+      "title": "Bureaublad",
+      "type": "DESKTOP",
+      "frame": [
+       0,
+       0,
+       1440,
+       852
+      ],
+      "buffer": [
+       0,
+       0,
+       1440,
+       852
+      ],
+      "monitor": 0,
+      "work": [
+       0,
+       0,
+       1440,
+       852
+      ],
+      "mapped": true,
+      "geometry": {
+       "available": true,
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900,
+       "width": 1440,
+       "height": 900,
+       "logical": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       "monitor": 0,
+       "monitors": [
+        {
+         "index": 0,
+         "x": 0,
+         "y": 0,
+         "w": 1440,
+         "h": 900
+        }
+       ],
+       "areas": [
+        {
+         "index": 0,
+         "primary": true,
+         "x": 0,
+         "y": 0,
+         "w": 1440,
+         "h": 900
+        }
+       ]
+      }
+     }
+    }
+   },
+   {
+    "check": "Settings, left open on its Taskbar page, greys both rows out with one display",
+    "ok": true,
+    "t": 55.84,
+    "rows": {
+     "taskbar-all-displays": false,
+     "taskbar-multi-display-apps": false
+    }
+   },
+   {
+    "check": "monitor 2 on again: its taskbar is back",
+    "ok": true,
+    "t": 56.78,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "title": "Taakbalk",
+      "pid": 520,
+      "type": "DOCK",
+      "x": 1440,
+      "y": 912,
+      "w": 1280,
+      "h": 48,
+      "monitor": 1,
+      "mapped": true,
+      "visible": true,
+      "above": true,
+      "sticky": true,
+      "skipTaskbar": true
+     }
+    ],
+    "monitors": [
+     {
+      "index": 0,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "primary": true,
+      "fullscreen": false
+     },
+     {
+      "index": 1,
+      "x": 1440,
+      "y": 0,
+      "w": 1280,
+      "h": 960,
+      "primary": false,
+      "fullscreen": false
+     }
+    ]
+   },
+   {
+    "check": "and Settings enables both rows again with two displays",
+    "ok": true,
+    "t": 57.17,
+    "rows": {
+     "taskbar-all-displays": true,
+     "taskbar-multi-display-apps": true
+    }
+   }
+  ],
+  "records": {
+   "keyboard": true,
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true,
+     "fullscreen": false
+    },
+    {
+     "index": 1,
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960,
+     "primary": false,
+     "fullscreen": false
+    }
+   ],
+   "strip windows": [
+    {
+     "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+     "title": "Taakbalk",
+     "pid": 520,
+     "type": "DOCK",
+     "x": 1440,
+     "y": 912,
+     "w": 1280,
+     "h": 48,
+     "monitor": 1,
+     "mapped": true,
+     "visible": true,
+     "above": true,
+     "sticky": true,
+     "skipTaskbar": true
+    }
+   ],
+   "bridge": {
+    "panel": [
+     0,
+     0,
+     1440,
+     900
+    ],
+    "present": true,
+    "strips": [
+     {
+      "wm": "io.github.win11shell.SecondaryTaskbar.Monitor1",
+      "monitor": 1,
+      "inhibited": false,
+      "rect": [
+       1440,
+       912,
+       1280,
+       48
+      ],
+      "strut": [
+       1440,
+       912,
+       1280,
+       48
+      ]
+     }
+    ],
+    "iconSources": [
+     "main",
+     "1"
+    ],
+    "frosted": [
+     {
+      "kind": "taskbar",
+      "rect": {
+       "x": 0,
+       "y": 852,
+       "w": 1440,
+       "h": 48
+      },
+      "effect": true
+     },
+     {
+      "kind": "strip",
+      "rect": {
+       "x": 1440,
+       "y": 912,
+       "w": 1280,
+       "h": 48
+      },
+      "effect": true
+     }
+    ]
+   },
+   "desktop windows": {
+    "io.github.win11shell.SecondaryDesktop.Monitor1": {
+     "wm": "io.github.win11shell.SecondaryDesktop.Monitor1",
+     "title": "Bureaublad",
+     "type": "DESKTOP",
+     "frame": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "buffer": [
+      1440,
+      0,
+      1280,
+      960
+     ],
+     "monitor": 1,
+     "work": [
+      1440,
+      0,
+      1280,
+      912
+     ],
+     "mapped": true,
+     "geometry": {
+      "available": true,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "width": 1440,
+      "height": 900,
+      "logical": {
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      },
+      "monitor": 0,
+      "monitors": [
+       {
+        "index": 0,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ],
+      "areas": [
+       {
+        "index": 0,
+        "primary": true,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "primary": false,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ]
+     }
+    },
+    "io.github.win11shell.Desktop": {
+     "wm": "io.github.win11shell.Desktop",
+     "title": "Bureaublad",
+     "type": "DESKTOP",
+     "frame": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "buffer": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "monitor": 0,
+     "work": [
+      0,
+      0,
+      1440,
+      852
+     ],
+     "mapped": true,
+     "geometry": {
+      "available": true,
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "width": 1440,
+      "height": 900,
+      "logical": {
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 900
+      },
+      "monitor": 0,
+      "monitors": [
+       {
+        "index": 0,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ],
+      "areas": [
+       {
+        "index": 0,
+        "primary": true,
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+       },
+       {
+        "index": 1,
+        "primary": false,
+        "x": 1440,
+        "y": 0,
+        "w": 1280,
+        "h": 960
+       }
+      ]
+     }
+    }
+   },
+   "wallpaper": {
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/home/w11-quad.png",
+    "fit": "fill",
+    "size": [
+     1600,
+     1000
+    ]
+   },
+   "wallpaper span": {
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/home/w11-quad.png",
+    "fit": "span",
+    "size": [
+     1600,
+     1000
+    ]
+   },
+   "right click on the desktop of monitor 2": [
+    2080,
+    320
+   ],
+   "right click on the desktop of monitor 2 (Nieuw)": [
+    2080,
+    320
+   ],
+   "click on Nieuw": [
+    2118,
+    497
+   ],
+   "click on Map": {
+    "x": 2393,
+    "y": 505,
+    "surface": [
+     2354,
+     479,
+     171,
+     99
+    ],
+    "popover": [
+     297,
+     173,
+     171,
+     99
+    ],
+    "row": [
+     322,
+     183,
+     28,
+     32
+    ],
+    "pointer": [
+     2393,
+     505
+    ]
+   },
+   "task manager moved": 1,
+   "settings moved": 1,
+   "settings.set taskbar.multiDisplayApps=\"all\"": {
+    "version": 1,
+    "language": "nl",
+    "theme": {
+     "mode": "dark",
+     "accent": "#0067c0",
+     "accentFromWallpaper": false,
+     "transparency": true,
+     "syncSystem": true,
+     "accentOnTaskbar": false,
+     "captionButtons": true,
+     "gtkFamily": "system"
+    },
+    "wallpaper": {
+     "type": "image",
+     "path": "builtin:lotus-dark",
+     "color": "#0b2a4a",
+     "fit": "fill",
+     "followTheme": true
+    },
+    "taskbar": {
+     "alignment": "center",
+     "search": "box",
+     "taskView": true,
+     "widgets": false,
+     "autoHide": false,
+     "allDisplays": true,
+     "multiDisplayApps": "all",
+     "showSeconds": false,
+     "pinned": [
+      "win11shell-explorer.desktop",
+      "firefox_firefox.desktop",
+      "snap-store_snap-store.desktop",
+      "win11shell-settings.desktop"
+     ],
+     "tray": {
+      "hiddenMenu": true,
+      "shown": [],
+      "order": [],
+      "known": {}
+     }
+    },
+    "start": {
+     "pinned": [],
+     "showRecommended": true,
+     "showRecentApps": true,
+     "layout": "default",
+     "folders": [
+      "settings",
+      "explorer",
+      "documents",
+      "downloads"
+     ]
+    },
+    "desktop": {
+     "showIcons": true,
+     "iconSize": "medium",
+     "autoArrange": false,
+     "alignToGrid": true,
+     "sortBy": "name",
+     "positions": {
+      "::thispc": {
+       "x": 0.0,
+       "y": 0.0
+      },
+      "::trash": {
+       "x": 0.0,
+       "y": 1.0
+      },
+      "Folder": {
+       "x": 0.0,
+       "y": 2.0
+      },
+      "alpha.txt": {
+       "x": 0.0,
+       "y": 3.0
+      },
+      "beta.txt": {
+       "x": 0.0,
+       "y": 4.0
+      },
+      "mmreis": {
+       "x": 0,
+       "y": 5
+      }
+     },
+     "showThisPC": true,
+     "showTrash": true,
+     "showHome": false
+    },
+    "notifications": {
+     "dnd": false,
+     "sounds": true,
+     "showToasts": true
+    },
+    "time": {
+     "h24": true,
+     "showSeconds": false,
+     "showDate": true,
+     "firstDayOfWeek": 1
+    },
+    "accessibility": {
+     "textScale": 100,
+     "reduceMotion": false
+    },
+    "nightLight": {
+     "enabled": false,
+     "temperature": 4500
+    },
+    "taskmgr": {
+     "updateSpeed": "normal",
+     "defaultPage": "summary",
+     "alwaysOnTop": false,
+     "confirmEndTask": true,
+     "colorKeyedGraphs": true,
+     "graphSeconds": 60
+    },
+    "alles": {
+     "roots": "auto",
+     "excluded": [],
+     "matchCase": false,
+     "matchPath": false,
+     "regex": false,
+     "wholeWord": false,
+     "showHidden": false,
+     "liveUpdate": true
+    },
+    "explorer": {
+     "view": "details",
+     "showHidden": false,
+     "showExtensions": true,
+     "sortBy": "name",
+     "sortDesc": false,
+     "groupBy": "none",
+     "navPane": true,
+     "detailsPane": false,
+     "previewPane": false,
+     "checkboxes": false,
+     "compact": false,
+     "navWidth": 248,
+     "columns": {},
+     "hiddenColumns": [],
+     "favorites": []
+    },
+    "privacy": {
+     "recentFiles": true
+    },
+    "power": {
+     "confirm": true
+    },
+    "search": {
+     "webEngine": "https://duckduckgo.com/?q="
+    },
+    "update": {
+     "notifyRestart": true,
+     "metered": false,
+     "winpointAutoCheck": false,
+     "autoOpenPrevious": null,
+     "ubuntuHoldPrevious": null
+    }
+   },
+   "settings.set taskbar.multiDisplayApps=\"mainAndWindow\"": {
+    "version": 1,
+    "language": "nl",
+    "theme": {
+     "mode": "dark",
+     "accent": "#0067c0",
+     "accentFromWallpaper": false,
+     "transparency": true,
+     "syncSystem": true,
+     "accentOnTaskbar": false,
+     "captionButtons": true,
+     "gtkFamily": "system"
+    },
+    "wallpaper": {
+     "type": "image",
+     "path": "builtin:lotus-dark",
+     "color": "#0b2a4a",
+     "fit": "fill",
+     "followTheme": true
+    },
+    "taskbar": {
+     "alignment": "center",
+     "search": "box",
+     "taskView": true,
+     "widgets": false,
+     "autoHide": false,
+     "allDisplays": true,
+     "multiDisplayApps": "mainAndWindow",
+     "showSeconds": false,
+     "pinned": [
+      "win11shell-explorer.desktop",
+      "firefox_firefox.desktop",
+      "snap-store_snap-store.desktop",
+      "win11shell-settings.desktop"
+     ],
+     "tray": {
+      "hiddenMenu": true,
+      "shown": [],
+      "order": [],
+      "known": {}
+     }
+    },
+    "start": {
+     "pinned": [],
+     "showRecommended": true,
+     "showRecentApps": true,
+     "layout": "default",
+     "folders": [
+      "settings",
+      "explorer",
+      "documents",
+      "downloads"
+     ]
+    },
+    "desktop": {
+     "showIcons": true,
+     "iconSize": "medium",
+     "autoArrange": false,
+     "alignToGrid": true,
+     "sortBy": "name",
+     "positions": {
+      "::thispc": {
+       "x": 0.0,
+       "y": 0.0
+      },
+      "::trash": {
+       "x": 0.0,
+       "y": 1.0
+      },
+      "Folder": {
+       "x": 0.0,
+       "y": 2.0
+      },
+      "alpha.txt": {
+       "x": 0.0,
+       "y": 3.0
+      },
+      "beta.txt": {
+       "x": 0.0,
+       "y": 4.0
+      },
+      "mmreis": {
+       "x": 0,
+       "y": 5
+      }
+     },
+     "showThisPC": true,
+     "showTrash": true,
+     "showHome": false
+    },
+    "notifications": {
+     "dnd": false,
+     "sounds": true,
+     "showToasts": true
+    },
+    "time": {
+     "h24": true,
+     "showSeconds": false,
+     "showDate": true,
+     "firstDayOfWeek": 1
+    },
+    "accessibility": {
+     "textScale": 100,
+     "reduceMotion": false
+    },
+    "nightLight": {
+     "enabled": false,
+     "temperature": 4500
+    },
+    "taskmgr": {
+     "updateSpeed": "normal",
+     "defaultPage": "summary",
+     "alwaysOnTop": false,
+     "confirmEndTask": true,
+     "colorKeyedGraphs": true,
+     "graphSeconds": 60
+    },
+    "alles": {
+     "roots": "auto",
+     "excluded": [],
+     "matchCase": false,
+     "matchPath": false,
+     "regex": false,
+     "wholeWord": false,
+     "showHidden": false,
+     "liveUpdate": true
+    },
+    "explorer": {
+     "view": "details",
+     "showHidden": false,
+     "showExtensions": true,
+     "sortBy": "name",
+     "sortDesc": false,
+     "groupBy": "none",
+     "navPane": true,
+     "detailsPane": false,
+     "previewPane": false,
+     "checkboxes": false,
+     "compact": false,
+     "navWidth": 248,
+     "columns": {},
+     "hiddenColumns": [],
+     "favorites": []
+    },
+    "privacy": {
+     "recentFiles": true
+    },
+    "power": {
+     "confirm": true
+    },
+    "search": {
+     "webEngine": "https://duckduckgo.com/?q="
+    },
+    "update": {
+     "notifyRestart": true,
+     "metered": false,
+     "winpointAutoCheck": false,
+     "autoOpenPrevious": null,
+     "ubuntuHoldPrevious": null
+    }
+   },
+   "settings.set taskbar.multiDisplayApps=\"window\"": {
+    "version": 1,
+    "language": "nl",
+    "theme": {
+     "mode": "dark",
+     "accent": "#0067c0",
+     "accentFromWallpaper": false,
+     "transparency": true,
+     "syncSystem": true,
+     "accentOnTaskbar": false,
+     "captionButtons": true,
+     "gtkFamily": "system"
+    },
+    "wallpaper": {
+     "type": "image",
+     "path": "builtin:lotus-dark",
+     "color": "#0b2a4a",
+     "fit": "fill",
+     "followTheme": true
+    },
+    "taskbar": {
+     "alignment": "center",
+     "search": "box",
+     "taskView": true,
+     "widgets": false,
+     "autoHide": false,
+     "allDisplays": true,
+     "multiDisplayApps": "window",
+     "showSeconds": false,
+     "pinned": [
+      "win11shell-explorer.desktop",
+      "firefox_firefox.desktop",
+      "snap-store_snap-store.desktop",
+      "win11shell-settings.desktop"
+     ],
+     "tray": {
+      "hiddenMenu": true,
+      "shown": [],
+      "order": [],
+      "known": {}
+     }
+    },
+    "start": {
+     "pinned": [],
+     "showRecommended": true,
+     "showRecentApps": true,
+     "layout": "default",
+     "folders": [
+      "settings",
+      "explorer",
+      "documents",
+      "downloads"
+     ]
+    },
+    "desktop": {
+     "showIcons": true,
+     "iconSize": "medium",
+     "autoArrange": false,
+     "alignToGrid": true,
+     "sortBy": "name",
+     "positions": {
+      "::thispc": {
+       "x": 0.0,
+       "y": 0.0
+      },
+      "::trash": {
+       "x": 0.0,
+       "y": 1.0
+      },
+      "Folder": {
+       "x": 0.0,
+       "y": 2.0
+      },
+      "alpha.txt": {
+       "x": 0.0,
+       "y": 3.0
+      },
+      "beta.txt": {
+       "x": 0.0,
+       "y": 4.0
+      },
+      "mmreis": {
+       "x": 0,
+       "y": 5
+      }
+     },
+     "showThisPC": true,
+     "showTrash": true,
+     "showHome": false
+    },
+    "notifications": {
+     "dnd": false,
+     "sounds": true,
+     "showToasts": true
+    },
+    "time": {
+     "h24": true,
+     "showSeconds": false,
+     "showDate": true,
+     "firstDayOfWeek": 1
+    },
+    "accessibility": {
+     "textScale": 100,
+     "reduceMotion": false
+    },
+    "nightLight": {
+     "enabled": false,
+     "temperature": 4500
+    },
+    "taskmgr": {
+     "updateSpeed": "normal",
+     "defaultPage": "summary",
+     "alwaysOnTop": false,
+     "confirmEndTask": true,
+     "colorKeyedGraphs": true,
+     "graphSeconds": 60
+    },
+    "alles": {
+     "roots": "auto",
+     "excluded": [],
+     "matchCase": false,
+     "matchPath": false,
+     "regex": false,
+     "wholeWord": false,
+     "showHidden": false,
+     "liveUpdate": true
+    },
+    "explorer": {
+     "view": "details",
+     "showHidden": false,
+     "showExtensions": true,
+     "sortBy": "name",
+     "sortDesc": false,
+     "groupBy": "none",
+     "navPane": true,
+     "detailsPane": false,
+     "previewPane": false,
+     "checkboxes": false,
+     "compact": false,
+     "navWidth": 248,
+     "columns": {},
+     "hiddenColumns": [],
+     "favorites": []
+    },
+    "privacy": {
+     "recentFiles": true
+    },
+    "power": {
+     "confirm": true
+    },
+    "search": {
+     "webEngine": "https://duckduckgo.com/?q="
+    },
+    "update": {
+     "notifyRestart": true,
+     "metered": false,
+     "winpointAutoCheck": false,
+     "autoOpenPrevious": null,
+     "ubuntuHoldPrevious": null
+    }
+   },
+   "click 1": [
+    2102,
+    936
+   ],
+   "click 2": [
+    2102,
+    936
+   ],
+   "click 3": [
+    2102,
+    936
+   ],
+   "right click on the button": [
+    2102,
+    936
+   ],
+   "right click on empty space": [
+    2680,
+    936
+   ],
+   "pointer on the button with the taskbar menu open": [
+    2102,
+    936
+   ],
+   "rows": {
+    "taskbar-all-displays": {
+     "sensitive": true,
+     "active": true,
+     "label": null
+    },
+    "taskbar-multi-display-apps": {
+     "sensitive": true,
+     "active": null,
+     "label": null
+    }
+   },
+   "settings text": {
+    "lang": "nl",
+    "dutchWordHits": [
+     "aan",
+     "achter",
+     "alle",
+     "als",
+     "andere",
+     "apparaten",
+     "automatisch",
+     "beeldschermen",
+     "beveiliging",
+     "beweegt",
+     "bij",
+     "een",
+     "gebruik",
+     "gebruikt",
+     "gecentreerd",
+     "gedrag",
+     "geen",
+     "geopend",
+     "herstel",
+     "het",
+     "hier",
+     "iets",
+     "instelling",
+     "instellingen",
+     "je",
+     "klok",
+     "lokaal",
+     "maximaliseren",
+     "meer",
+     "meerdere",
+     "met",
+     "minimaliseren",
+     "muis",
+     "naar",
+     "netwerk",
+     "niet",
+     "nog",
+     "onderkant",
+     "persoonlijke",
+     "pictogram",
+     "pictogrammen",
+     "pijl",
+     "scherm",
+     "seconden",
+     "sluiten",
+     "staan",
+     "startpagina",
+     "stroom",
+     "systeem",
+     "systeemvak",
+     "systeemvakpictogrammen",
+     "taakbalk",
+     "taakbalkitems",
+     "taakweergave",
+     "taal",
+     "terug",
+     "tijd",
+     "toegankelijkheid",
+     "tonen",
+     "uit",
+     "uitlijning",
+     "van",
+     "venster",
+     "verbergen",
+     "verborgen",
+     "verschijnen",
+     "verschijnt",
+     "vind",
+     "waar",
+     "weergeven",
+     "ze",
+     "zijn",
+     "zoals",
+     "zodra",
+     "zoek",
+     "zoeken",
+     "zoekvak"
+    ]
+   },
+   "scroll": true,
+   "switch off": {
+    "input": "clutter",
+    "x": 2552,
+    "y": 620,
+    "rect": [
+     1002,
+     524,
+     40,
+     20
+    ],
+    "name": "taskbar-all-displays",
+    "window": [
+     1530,
+     86,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      2552,
+      620
+     ],
+     "focusPid": 1917
+    }
+   },
+   "switch on": {
+    "input": "clutter",
+    "x": 2552,
+    "y": 620,
+    "rect": [
+     1002,
+     524,
+     40,
+     20
+    ],
+    "name": "taskbar-all-displays",
+    "window": [
+     1530,
+     86,
+     1100,
+     740
+    ],
+    "shell": {
+     "pointer": [
+      2552,
+      620
+     ],
+     "focusPid": 1917
+    }
+   },
+   "lock": "unlock-dialog",
+   "locked state": {
+    "state": 2,
+    "mode": "unlock-dialog",
+    "locked": true
+   },
+   "unlock": "user",
+   "language en": {
+    "lang": "en",
+    "via": "rename",
+    "seconds": {},
+    "fileBefore": {
+     "language": "nl",
+     "inode": 2643054,
+     "mtime": 1794812377.53256,
+     "keys": 18
+    },
+    "fileAfter": {
+     "language": "en",
+     "inode": 2643168,
+     "mtime": 1794812383.2133985,
+     "keys": 18
+    },
+    "fileLanguageOk": true,
+    "sameInode": false
+   },
+   "language nl": {
+    "lang": "nl",
+    "via": "rename",
+    "seconds": {},
+    "fileBefore": {
+     "language": "en",
+     "inode": 2643168,
+     "mtime": 1794812383.2133985,
+     "keys": 18
+    },
+    "fileAfter": {
+     "language": "nl",
+     "inode": 2643169,
+     "mtime": 1794812383.5216386,
+     "keys": 18
+    },
+    "fileLanguageOk": true,
+    "sameInode": false
+   },
+   "monitors with the other primary": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": false,
+     "fullscreen": false
+    },
+    {
+     "index": 1,
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960,
+     "primary": true,
+     "fullscreen": false
+    }
+   ],
+   "monitors in the other order": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1280,
+     "h": 960,
+     "primary": false,
+     "fullscreen": false
+    },
+    {
+     "index": 1,
+     "x": 1280,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true,
+     "fullscreen": false
+    }
+   ]
+  },
+  "shots": [
+   "nl-both-monitors.png",
+   "nl-monitor1.png",
+   "nl-monitor2.png",
+   "nl-taskbar2.png",
+   "nl-wallpaper.png",
+   "nl-wallpaper-span.png",
+   "nl-desktop-menu-monitor2.png",
+   "nl-new-folder-rename.png",
+   "nl-apps-on-monitor2.png",
+   "nl-taskbar1-apps.png",
+   "nl-taskbar2-apps.png",
+   "nl-taskbar2-all.png",
+   "nl-taskbar2-jumplist.png",
+   "nl-taskbar2-menu.png",
+   "nl-settings-taskbar.png",
+   "nl-settings-taskbar-off.png",
+   "nl-off-monitor2.png",
+   "nl-after-unlock.png",
+   "nl-other-primary.png",
+   "nl-other-order.png",
+   "nl-one-monitor.png"
+  ],
+  "error": null,
+  "seconds": 58.2,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 520,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 520,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 520,
+    "page": null,
+    "alive": true,
+    "shell": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=0d006b992a2cb17414e0e16b6afaa9a7",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--virtual-monitor=1280x960",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    },
+    {
+     "index": 1,
+     "x": 1440,
+     "y": 0,
+     "w": 1280,
+     "h": 960,
+     "primary": false
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 520,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 520
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "nl-both-monitors.png",
+    "group": "scenario",
+    "bytes": 2197248,
+    "area": null
+   },
+   {
+    "file": "nl-monitor1.png",
+    "group": "scenario",
+    "bytes": 1109214,
+    "area": [
+     0,
+     0,
+     1440,
+     900
+    ]
+   },
+   {
+    "file": "nl-monitor2.png",
+    "group": "scenario",
+    "bytes": 1063359,
+    "area": [
+     1440,
+     0,
+     1280,
+     960
+    ]
+   },
+   {
+    "file": "nl-taskbar2.png",
+    "group": "scenario",
+    "bytes": 8569,
+    "area": [
+     1440,
+     912,
+     1280,
+     48
+    ]
+   },
+   {
+    "file": "nl-wallpaper.png",
+    "group": "scenario",
+    "bytes": 39975,
+    "area": null
+   },
+   {
+    "file": "nl-wallpaper-span.png",
+    "group": "scenario",
+    "bytes": 36626,
+    "area": null
+   },
+   {
+    "file": "nl-desktop-menu-monitor2.png",
+    "group": "scenario",
+    "bytes": 22691,
+    "area": [
+     1440,
+     0,
+     1280,
+     960
+    ]
+   },
+   {
+    "file": "nl-new-folder-rename.png",
+    "group": "scenario",
+    "bytes": 32729,
+    "area": [
+     0,
+     0,
+     1440,
+     900
+    ]
+   },
+   {
+    "file": "nl-apps-on-monitor2.png",
+    "group": "scenario",
+    "bytes": 450594,
+    "area": [
+     1440,
+     0,
+     1280,
+     960
+    ]
+   },
+   {
+    "file": "nl-taskbar1-apps.png",
+    "group": "scenario",
+    "bytes": 26871,
+    "area": [
+     0,
+     852,
+     1440,
+     48
+    ]
+   },
+   {
+    "file": "nl-taskbar2-apps.png",
+    "group": "scenario",
+    "bytes": 8164,
+    "area": [
+     1440,
+     912,
+     1280,
+     48
+    ]
+   },
+   {
+    "file": "nl-taskbar2-all.png",
+    "group": "scenario",
+    "bytes": 11172,
+    "area": [
+     1440,
+     912,
+     1280,
+     48
+    ]
+   },
+   {
+    "file": "nl-taskbar2-jumplist.png",
+    "group": "scenario",
+    "bytes": 128602,
+    "area": [
+     1440,
+     660,
+     1280,
+     300
+    ]
+   },
+   {
+    "file": "nl-taskbar2-menu.png",
+    "group": "scenario",
+    "bytes": 108276,
+    "area": [
+     1440,
+     760,
+     1280,
+     200
+    ]
+   },
+   {
+    "file": "nl-settings-taskbar.png",
+    "group": "scenario",
+    "bytes": 111997,
+    "area": [
+     1530,
+     86,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "nl-settings-taskbar-off.png",
+    "group": "scenario",
+    "bytes": 110445,
+    "area": [
+     1530,
+     86,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "nl-off-monitor2.png",
+    "group": "scenario",
+    "bytes": 393503,
+    "area": [
+     1440,
+     0,
+     1280,
+     960
+    ]
+   },
+   {
+    "file": "nl-after-unlock.png",
+    "group": "scenario",
+    "bytes": 1496979,
+    "area": null
+   },
+   {
+    "file": "nl-other-primary.png",
+    "group": "scenario",
+    "bytes": 1485726,
+    "area": null
+   },
+   {
+    "file": "nl-other-order.png",
+    "group": "scenario",
+    "bytes": 890431,
+    "area": null
+   },
+   {
+    "file": "nl-one-monitor.png",
+    "group": "scenario",
+    "bytes": 341501,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/multi-monitor.out/nl-both-monitors.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-monitor1.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-monitor2.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-taskbar2.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-wallpaper.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-wallpaper-span.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-desktop-menu-monitor2.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-new-folder-rename.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-apps-on-monitor2.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-taskbar1-apps.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-taskbar2-apps.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-taskbar2-all.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-taskbar2-jumplist.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-taskbar2-menu.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-settings-taskbar.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-settings-taskbar-off.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-off-monitor2.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-after-unlock.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-other-primary.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-other-order.png",
+  "tests/gnome/scenarios/multi-monitor.out/nl-one-monitor.png"
+ ]
+}

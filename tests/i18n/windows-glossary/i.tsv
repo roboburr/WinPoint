@@ -1,0 +1,274 @@
+# tests/i18n/windows-glossary/i.tsv: the Windows 11 UI strings settings-parity step I adds (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Only step I edits this file.
+# Taakbalk: the Ubuntu Dock line (amendment 27, contract section 8.4)
+The Ubuntu Dock isn’t used in WinPoint. These settings apply to WinPoint’s taskbar.	De Ubuntu Dock wordt in WinPoint niet gebruikt. Deze instellingen gelden voor de taakbalk van WinPoint.	winpoint	no
+# Standaard-apps › <app>: the data page's description (the page's own heading in Windows)
+Set default file types or link types	Standaardbestandstypen of -koppelingstypen instellen	windows	no
+
+# Integration audit: new page descriptions, locale endonyms and host feedback.
+# These rows remain verified=no until the real Windows wording check; host feedback is WinPoint wording.
+# native/apps/settings/src/registry.rs:page(autoplay).description, native/shell/src/start/settings_pages.json:autoplay.description
+Defaults for removable drives and memory cards	Standaardinstellingen voor verwisselbare stations en geheugenkaarten	windows	no
+# native/apps/settings/src/registry.rs:page(privacy).description, native/shell/src/start/settings_pages.json:privacy.description
+Device security, app permissions, activity history	Apparaatbeveiliging, app-machtigingen, activiteitengeschiedenis	windows	no
+# native/apps/settings/src/pages/time.rs:winpoint_language_name/Nederlands
+English (United Kingdom)	Nederlands	winpoint	no
+# native/apps/settings/src/registry.rs:page(bluetooth-devices).description, native/shell/src/start/settings_pages.json:bluetooth-devices.description
+Mouse, keyboard, pen, audio, displays and docks, other devices	Muis, toetsenbord, pen, audio, beeldschermen en docks, overige apparaten	windows	no
+# native/apps/settings/src/registry.rs:page(visualeffects).description, native/shell/src/start/settings_pages.json:visualeffects.description
+Scroll bars, transparency, animations	Schuifbalken, transparantie, animaties	windows	no
+# host/i18n/background.tsv:background.badArgs
+Invalid picture.	Ongeldige afbeelding.	winpoint	no
+# host/i18n/background.tsv:background.notFound
+The picture no longer exists.	De afbeelding bestaat niet meer.	winpoint	no
+# host/i18n/background.tsv:background.notAnImage
+This file isn’t a picture.	Dit bestand is geen afbeelding.	winpoint	no
+# host/i18n/background.tsv:background.tooLarge
+This picture is too large.	Deze afbeelding is te groot.	winpoint	no
+# host/i18n/background.tsv:background.copyFailed
+The picture wasn’t copied.	De afbeelding is niet gekopieerd.	winpoint	no
+# host/i18n/background.tsv:background.notOwn
+Only your own pictures can be removed.	Alleen je eigen afbeeldingen kunnen worden verwijderd.	winpoint	no
+# host/i18n/background.tsv:background.removeFailed
+The picture wasn’t removed.	De afbeelding is niet verwijderd.	winpoint	no
+# host/i18n/battery.tsv:battery.unavailable
+No battery was found on this computer.	Op deze computer is geen batterij gevonden.	winpoint	no
+# host/i18n/battery.tsv:battery.noChargeLimit
+This battery doesn’t support a charge limit.	Deze batterij ondersteunt geen laadlimiet.	winpoint	no
+# host/i18n/devices.tsv:devices.badDevice
+Invalid device.	Ongeldig apparaat.	winpoint	no
+# host/i18n/devices.tsv:devices.discoverableFailed
+This PC can’t be made discoverable right now.	Deze pc kan nu niet detecteerbaar worden gemaakt.	winpoint	no
+# host/i18n/devices.tsv:devices.sendFilesMissing
+Sending files via Bluetooth isn’t available on this computer.	Bestanden verzenden via Bluetooth is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/devices.tsv:devices.sendFilesFailed
+Couldn’t start sending files.	Bestanden verzenden kon niet worden gestart.	winpoint	no
+# host/i18n/devices.tsv:devices.thunderboltUnavailable
+Thunderbolt management isn’t available on this computer.	Thunderbolt-beheer is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/devices.tsv:devices.thunderboltNotFound
+This device wasn’t found. Connect it again.	Dit apparaat is niet gevonden. Sluit het opnieuw aan.	winpoint	no
+# host/i18n/devices.tsv:devices.noColord
+Colour management isn’t available on this computer.	Kleurbeheer is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/devices.tsv:devices.colorNotFound
+This device or profile wasn’t found.	Dit apparaat of dit profiel is niet gevonden.	winpoint	no
+# host/i18n/devices.tsv:devices.notIcc
+This file isn’t an ICC colour profile.	Dit bestand is geen ICC-kleurprofiel.	winpoint	no
+# host/i18n/devices.tsv:devices.importFailed
+The profile couldn’t be imported: {error}	Het profiel kon niet worden geïmporteerd: {error}	winpoint	no
+# host/i18n/devices.tsv:devices.noSensor
+No colour sensor is connected.	Er is geen kleursensor aangesloten.	winpoint	no
+# host/i18n/devices.tsv:devices.noCalibration
+Calibration isn’t available on this computer.	Kalibreren is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/display.tsv:display.nightLightUnavailable
+Night light isn’t available.	Nachtlampje is niet beschikbaar.	winpoint	no
+# host/i18n/goa.tsv:goa.noHelper
+Adding accounts isn’t available on this computer.	Accounts toevoegen is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/goa.tsv:goa.badProvider
+This type of account isn’t supported.	Dit soort account wordt niet ondersteund.	winpoint	no
+# host/i18n/goa.tsv:goa.noSuchAccount
+This account no longer exists.	Dit account bestaat niet meer.	winpoint	no
+# host/i18n/goa.tsv:goa.badService
+This account can’t be used for this.	Dit account kan hier niet voor worden gebruikt.	winpoint	no
+# host/i18n/goa.tsv:goa.helperFailed
+The account window couldn’t be opened.	Het venster voor het account kan niet worden geopend.	winpoint	no
+# host/i18n/goa.tsv:goa.provider.imapSmtp
+IMAP and SMTP	IMAP en SMTP	winpoint	no
+# host/i18n/goa.tsv:goa.provider.kerberos
+Enterprise Login (Kerberos)	Zakelijke aanmelding (Kerberos)	winpoint	no
+# host/i18n/input.tsv:input.orcaNotRunning
+Narrator isn’t running. Turn on Narrator to open its settings.	Verteller is niet actief. Schakel Verteller in om de instellingen te openen.	winpoint	no
+# host/i18n/input.tsv:input.orcaFailed
+Narrator settings can’t be opened.	De instellingen voor Verteller kunnen niet worden geopend.	winpoint	no
+# host/i18n/machine.tsv:machine.badName
+Enter a name of up to 64 characters with at least one letter or digit.	Voer een naam in van maximaal 64 tekens met minstens één letter of cijfer.	winpoint	no
+# host/i18n/machine.tsv:machine.hostnameUnavailable
+The name of this PC can’t be changed here.	De naam van deze pc kan hier niet worden gewijzigd.	winpoint	no
+# host/i18n/machine.tsv:machine.badTime
+Choose a date between 2000 and 2199.	Kies een datum tussen 2000 en 2199.	winpoint	no
+# host/i18n/machine.tsv:machine.ntpOn
+Turn off Set time automatically first.	Zet Tijd automatisch instellen eerst uit.	winpoint	no
+# host/i18n/machine.tsv:machine.ntpOff
+Turn on Set time automatically first.	Zet Tijd automatisch instellen eerst aan.	winpoint	no
+# host/i18n/machine.tsv:machine.badZone
+This time zone doesn’t exist.	Deze tijdzone bestaat niet.	winpoint	no
+# host/i18n/machine.tsv:machine.zone.utc
+Coordinated Universal Time	Gecoördineerde wereldtijd	winpoint	no
+# host/i18n/machine.tsv:machine.badLocale
+This locale isn’t valid.	Deze landinstelling is niet geldig.	winpoint	no
+# host/i18n/machine.tsv:machine.badLanguage
+This language isn’t available.	Deze taal is niet beschikbaar.	winpoint	no
+# host/i18n/machine.tsv:machine.packagesUnavailable
+Languages can’t be installed here.	Talen kunnen hier niet worden geïnstalleerd.	winpoint	no
+# host/i18n/machine.tsv:machine.installBusy
+A language is already being installed. Wait until it’s finished.	Er wordt al een taal geïnstalleerd. Wacht tot die klaar is.	winpoint	no
+# host/i18n/machine.tsv:machine.installFailed
+The language can’t be installed: {error}	De taal kan niet worden geïnstalleerd: {error}	winpoint	no
+# host/i18n/machine.tsv:machine.nothingToInstall
+This language’s packages weren’t found. Check your internet connection.	De pakketten van deze taal zijn niet gevonden. Controleer je internetverbinding.	winpoint	no
+# host/i18n/machine.tsv:machine.installStopped
+The language installation stopped.	De installatie van de taal is gestopt.	winpoint	no
+# host/i18n/machine.tsv:machine.chineseSimplified
+Simplified	vereenvoudigd	winpoint	no
+# host/i18n/machine.tsv:machine.chineseTraditional
+Traditional	traditioneel	winpoint	no
+# host/i18n/notifications.tsv:notifications.badApp
+Invalid notification setting.	Ongeldige meldingsinstelling.	winpoint	no
+# host/i18n/printers.tsv:printers.badName
+A printer name can’t contain spaces, tabs, slashes, hash signs or quotation marks.	Een printernaam mag geen spaties, tabs, slashes, hekjes of aanhalingstekens bevatten.	winpoint	no
+# host/i18n/printers.tsv:printers.badAddress
+This isn’t a valid printer address.	Dit is geen geldig adres van een printer.	winpoint	no
+# host/i18n/printers.tsv:printers.badFile
+This isn’t a PPD file that you can open.	Dit is geen PPD-bestand dat je kunt openen.	winpoint	no
+# host/i18n/printers.tsv:printers.noCups
+The print service isn’t available.	De afdrukservice is niet beschikbaar.	winpoint	no
+# host/i18n/printers.tsv:printers.noLibcups
+Printing isn’t available on this computer.	Afdrukken is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/printers.tsv:printers.noHelper
+Managing printers isn’t available on this computer.	Printers beheren is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/printers.tsv:printers.notFound
+This printer wasn’t found.	Deze printer is niet gevonden.	winpoint	no
+# host/i18n/printers.tsv:printers.jobNotFound
+This print job wasn’t found.	Deze afdruktaak is niet gevonden.	winpoint	no
+# host/i18n/printers.tsv:printers.failed
+The print service refused this: {error}	De afdrukservice weigerde dit: {error}	winpoint	no
+# host/i18n/printers.tsv:printers.noTestPage
+No test page was found on this computer.	Er is op deze computer geen testpagina gevonden.	winpoint	no
+# host/i18n/printers.tsv:printers.noCleaning
+This printer can’t clean its print heads.	Deze printer kan zijn printkoppen niet reinigen.	winpoint	no
+# host/i18n/printers.tsv:printers.testPageTitle
+Test page	Testpagina	winpoint	no
+# host/i18n/privacy.tsv:privacy.permissionFailed
+The permission wasn’t changed.	De machtiging is niet gewijzigd.	winpoint	no
+# host/i18n/privacy.tsv:privacy.noCache
+This app has no cache that can be cleared here.	Deze app heeft geen cache die hier kan worden gewist.	winpoint	no
+# host/i18n/privacy.tsv:privacy.cacheFailed
+The cache wasn’t completely cleared.	De cache is niet helemaal gewist.	winpoint	no
+# host/i18n/privacy.tsv:privacy.handlerFailed
+The default handler wasn’t changed.	De standaardkoppeling is niet gewijzigd.	winpoint	no
+# host/i18n/privacy.tsv:privacy.snapUnavailable
+Snap interfaces aren’t available right now.	De snap-interfaces zijn nu niet beschikbaar.	winpoint	no
+# host/i18n/privacy.tsv:privacy.snapFailed
+The snap interface wasn’t changed: {error}	De snap-interface is niet gewijzigd: {error}	winpoint	no
+# host/i18n/privacy.tsv:privacy.shortcutsUnavailable
+This app’s global shortcuts can’t be changed right now.	De algemene sneltoetsen van deze app kunnen nu niet worden gewijzigd.	winpoint	no
+# host/i18n/privacy.tsv:privacy.shortcutsFailed
+The shortcuts weren’t changed. Open the app and try again.	De sneltoetsen zijn niet gewijzigd. Open de app en probeer het opnieuw.	winpoint	no
+# host/i18n/privacy.tsv:privacy.autostartFailed
+Starting at sign-in wasn’t changed.	Starten bij aanmelden is niet gewijzigd.	winpoint	no
+# host/i18n/privacy.tsv:privacy.reportsUnavailable
+Error reports aren’t available on this device.	Foutrapporten zijn op dit apparaat niet beschikbaar.	winpoint	no
+# host/i18n/privacy.tsv:privacy.consentFailed
+Your choice for system reports wasn’t saved.	Je keuze voor systeemrapporten is niet opgeslagen.	winpoint	no
+# host/i18n/privacy.tsv:privacy.insightsFailed
+The system report can’t be created.	Het systeemrapport kan niet worden gemaakt.	winpoint	no
+# host/i18n/privacy.tsv:privacy.reportBusy
+A report is already being created.	Er wordt al een rapport gemaakt.	winpoint	no
+# host/i18n/privacy.tsv:privacy.reportCancelled
+Creating the report was cancelled.	Het maken van het rapport is geannuleerd.	winpoint	no
+# host/i18n/privacy.tsv:privacy.securityCenterMissing
+Security Centre isn’t installed.	Het Beveiligingscentrum is niet geïnstalleerd.	winpoint	no
+# host/i18n/sound.tsv:sound.unavailable
+Sound can’t be controlled here.	Geluid kan hier niet worden geregeld.	winpoint	no
+# host/i18n/sound.tsv:sound.deviceGone
+This sound device is no longer available.	Dit geluidsapparaat is niet (meer) beschikbaar.	winpoint	no
+# host/i18n/sound.tsv:sound.failed
+Couldn’t change the sound.	Het geluid kon niet worden aangepast.	winpoint	no
+# host/i18n/sound.tsv:sound.profileTimeout
+The sound device didn’t become available in time. Try again.	Het geluidsapparaat werd niet op tijd beschikbaar. Probeer het opnieuw.	winpoint	no
+# host/i18n/sound.tsv:sound.testUnavailable
+Test sounds can’t be played here.	Testgeluiden kunnen hier niet worden afgespeeld.	winpoint	no
+# host/i18n/sound.tsv:sound.testFailed
+Couldn’t play the test sound.	Het testgeluid kon niet worden afgespeeld.	winpoint	no
+# host/i18n/sound.tsv:sound.alertMissing
+This alert sound isn’t installed.	Dit waarschuwingsgeluid is niet geïnstalleerd.	winpoint	no
+# host/i18n/sound.tsv:sound.alertFailed
+Couldn’t set the alert sound.	Het waarschuwingsgeluid kon niet worden ingesteld.	winpoint	no
+# host/i18n/storage.tsv:storage.tempUnavailable
+The temporary files folder wasn’t found.	De map met tijdelijke bestanden is niet gevonden.	winpoint	no
+# host/i18n/storage.tsv:storage.tempFailed
+Couldn’t delete the temporary files.	De tijdelijke bestanden konden niet worden verwijderd.	winpoint	no
+# host/i18n/users.tsv:users.noSuchUser
+This user no longer exists.	Deze gebruiker bestaat niet meer.	winpoint	no
+# host/i18n/users.tsv:users.badName
+Enter a name of up to 255 characters, without a colon or comma.	Voer een naam in van maximaal 255 tekens, zonder dubbele punt of komma.	winpoint	no
+# host/i18n/users.tsv:users.badUserName
+A user name consists of lowercase letters, digits, - and _ and starts with a letter.	Een gebruikersnaam bestaat uit kleine letters, cijfers, - en _ en begint met een letter.	winpoint	no
+# host/i18n/users.tsv:users.userNameTaken
+This user name is already in use.	Deze gebruikersnaam wordt al gebruikt.	winpoint	no
+# host/i18n/users.tsv:users.deleteSelf
+You can’t remove your own account while you’re signed in.	Je kunt je eigen account niet verwijderen terwijl je bent aangemeld.	winpoint	no
+# host/i18n/users.tsv:users.loggedIn
+This user is still signed in. Deleting a user while they’re signed in can leave the system in an inconsistent state.	Deze gebruiker is nog aangemeld. Een gebruiker verwijderen terwijl die is aangemeld, kan het systeem in een inconsistente toestand achterlaten.	winpoint	no
+# host/i18n/users.tsv:users.lastAdmin
+This PC needs at least one administrator.	Deze pc heeft minstens één administrator nodig.	winpoint	no
+# host/i18n/users.tsv:users.badPicture
+This picture can’t be used as an account picture.	Deze afbeelding kan niet als accountafbeelding worden gebruikt.	winpoint	no
+# host/i18n/users.tsv:users.badLanguage
+This language isn’t valid.	Deze taal is niet geldig.	winpoint	no
+# host/i18n/users.tsv:users.passwordRequired
+Enter a password.	Voer een wachtwoord in.	winpoint	no
+# host/i18n/users.tsv:users.cryptUnavailable
+The password can’t be set on this computer.	Het wachtwoord kan op deze computer niet worden ingesteld.	winpoint	no
+# host/i18n/users.tsv:users.passwd.unavailable
+Changing passwords isn’t available on this computer.	Wachtwoorden wijzigen is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/users.tsv:users.passwd.wrongCurrent
+Your current password is incorrect. Try again.	Je huidige wachtwoord is onjuist. Probeer het opnieuw.	winpoint	no
+# host/i18n/users.tsv:users.passwd.tooWeak
+Choose a stronger password. {hint}	Kies een sterker wachtwoord. {hint}	winpoint	no
+# host/i18n/users.tsv:users.passwd.tooSoon
+You can’t change your password again yet.	Je kunt je wachtwoord nog niet opnieuw wijzigen.	winpoint	no
+# host/i18n/users.tsv:users.passwd.unchanged
+The password wasn’t changed.	Het wachtwoord is niet gewijzigd.	winpoint	no
+# host/i18n/users.tsv:users.fingerprint.none
+No fingerprint reader was found.	Er is geen vingerafdruklezer gevonden.	winpoint	no
+# host/i18n/users.tsv:users.fingerprint.busy
+The fingerprint reader is already being used by another app.	De vingerafdruklezer wordt al door een andere app gebruikt.	winpoint	no
+# host/i18n/users.tsv:users.quality.unavailable
+Generating a password isn’t available on this computer.	Een wachtwoord genereren is op deze computer niet beschikbaar.	winpoint	no
+# host/i18n/users.tsv:users.quality.same
+The new password needs to be different from the old one.	Het nieuwe wachtwoord moet anders zijn dan het oude.	winpoint	no
+# host/i18n/users.tsv:users.quality.caseOnly
+Try changing some letters and numbers.	Probeer enkele letters en cijfers te wijzigen.	winpoint	no
+# host/i18n/users.tsv:users.quality.similar
+Try changing the password a bit more.	Probeer het wachtwoord iets meer te wijzigen.	winpoint	no
+# host/i18n/users.tsv:users.quality.userName
+A password without your user name would be stronger.	Een wachtwoord zonder je gebruikersnaam is sterker.	winpoint	no
+# host/i18n/users.tsv:users.quality.realName
+Try to avoid using your name in the password.	Vermijd je naam in het wachtwoord.	winpoint	no
+# host/i18n/users.tsv:users.quality.badWords
+Try to avoid some of the words included in the password.	Vermijd enkele van de woorden in het wachtwoord.	winpoint	no
+# host/i18n/users.tsv:users.quality.dictionary
+Try to avoid common words.	Vermijd veelgebruikte woorden.	winpoint	no
+# host/i18n/users.tsv:users.quality.palindrome
+Try to avoid reordering existing words.	Vermijd het omdraaien van bestaande woorden.	winpoint	no
+# host/i18n/users.tsv:users.quality.digits
+Try to use more numbers.	Gebruik meer cijfers.	winpoint	no
+# host/i18n/users.tsv:users.quality.uppers
+Try to use more uppercase letters.	Gebruik meer hoofdletters.	winpoint	no
+# host/i18n/users.tsv:users.quality.lowers
+Try to use more lowercase letters.	Gebruik meer kleine letters.	winpoint	no
+# host/i18n/users.tsv:users.quality.others
+Try to use more special characters, like punctuation.	Gebruik meer speciale tekens, zoals leestekens.	winpoint	no
+# host/i18n/users.tsv:users.quality.classes
+Try to use a mixture of letters, numbers and punctuation.	Gebruik een mix van letters, cijfers en leestekens.	winpoint	no
+# host/i18n/users.tsv:users.quality.consecutive
+Try to avoid repeating the same character.	Vermijd hetzelfde teken meerdere keren achter elkaar.	winpoint	no
+# host/i18n/users.tsv:users.quality.classRepeat
+Try to avoid repeating the same type of character: you need to mix up letters, numbers and punctuation.	Vermijd tekens van hetzelfde soort achter elkaar: wissel letters, cijfers en leestekens af.	winpoint	no
+# host/i18n/users.tsv:users.quality.sequence
+Try to avoid sequences like 1234 or abcd.	Vermijd reeksen zoals 1234 of abcd.	winpoint	no
+# host/i18n/users.tsv:users.quality.short
+Password needs to be longer. Try to add more letters, numbers and punctuation.	Het wachtwoord moet langer zijn. Voeg meer letters, cijfers en leestekens toe.	winpoint	no
+# host/i18n/users.tsv:users.quality.empty
+Mix uppercase and lowercase and try to use a number or two.	Gebruik hoofdletters en kleine letters door elkaar en een paar cijfers.	winpoint	no
+# host/i18n/users.tsv:users.quality.mix
+Choose another password with uppercase and lowercase letters and a number or two.	Kies een ander wachtwoord met hoofdletters, kleine letters en een paar cijfers.	winpoint	no
+# host/i18n/users.tsv:users.quality.strong
+Great! This is a very good password.	Uitstekend! Dit is een heel goed wachtwoord.	winpoint	no
+# host/i18n/users.tsv:users.quality.stronger
+Adding more letters, numbers and punctuation will make the password stronger.	Met meer letters, cijfers en leestekens wordt het wachtwoord sterker.	winpoint	no

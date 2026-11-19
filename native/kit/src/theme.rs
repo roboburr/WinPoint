@@ -1,9 +1,20 @@
 //! Look: the Win11 tokens and controls as GTK CSS (css/tokens.css, base.css, controls.css, frame.css), a
 //! generated part for the user's choices (theme.js `apply`: the accent palette from theme.accent with Windows'
-//! own blue, the text ramp scaled by accessibility.textScale, tooltips) and the app's own sheet
+//! own blue, the text ramp scaled by the text scale, tooltips, the on/off shapes) and the app's own sheet
 //! (`install_app_css`). Every toplevel gets the classes `w11`, `w11-dark` / `w11-light`,
 //! `w11-transparent` / `w11-opaque`, `w11-hc` (high contrast) and `w11-reduce-motion`, kept up to date live; a
 //! window with the class `w11-unstyled` is left alone.
+//!
+//! What GNOME sets for the whole session comes in as GNOME's own keys ([`System`], notes/claude/settings-parity.md
+//! amendments 46 and 49): the text scale is `org.gnome.desktop.interface text-scaling-factor`. GTK 4.22 applies
+//! that factor to text sized in points only, never to px, and the kit's type ramp is px, so the kit scales its ramp
+//! by exactly GNOME's factor: once, the same as GNOME's own apps, and never settings.json's textScale on top (the
+//! mirror keeps that setting equal to GNOME's key; it is only the fallback without the schema). The kit reads the
+//! keys itself (GSettings) because GTK 4.22's Wayland backend takes its settings from the settings portal only (no
+//! portal: gtk-xft-dpi -1, gtk-interface-contrast unsupported, as in the test harness); GTK's dpi is the next
+//! source. GNOME's high contrast (`org.gnome.desktop.a11y.interface high-contrast`, GTK's `prefers-contrast: more`)
+//! turns `w11-hc` on as accessibility.highContrast does, and GNOME's On/Off Shapes (`show-status-shapes`) show the I
+//! and O shapes in the toggle switches.
 //!
 //! The tokens can be read from Rust for cairo drawing: `token("text-2")`, `token("chart-cpu")`, `accent_rgba()`.
 use gtk::gdk;
@@ -29,8 +40,11 @@ pub struct Look {
     pub transparency: bool,
     pub high_contrast: bool,
     pub reduce_motion: bool,
-    /// accessibility.textScale / 100, 1.0 ..= 2.25.
+    /// The text scale in effect (module docs): GNOME's text-scaling-factor, else accessibility.textScale / 100;
+    /// 0.5 ..= 3.0.
     pub text_scale: f64,
+    /// GNOME's On/Off Shapes (org.gnome.desktop.a11y.interface show-status-shapes).
+    pub status_shapes: bool,
 }
 
 impl Default for Look {
@@ -42,7 +56,68 @@ impl Default for Look {
             high_contrast: false,
             reduce_motion: false,
             text_scale: 1.0,
+            status_shapes: false,
         }
+    }
+}
+
+/// GNOME's settings for the session (module docs): org.gnome.desktop.interface text-scaling-factor and
+/// org.gnome.desktop.a11y.interface high-contrast and show-status-shapes, else what GTK carries of them.
+#[derive(Clone, Copy, PartialEq, Debug, Default)]
+pub struct System {
+    /// text-scaling-factor (0.5 ..= 3.0); None without the schema and without a dpi from GTK.
+    pub text_scale: Option<f64>,
+    /// high-contrast.
+    pub high_contrast: bool,
+    /// show-status-shapes.
+    pub status_shapes: bool,
+}
+
+/// GNOME's two schemas, opened once (`install`) where they are installed; their changes apply the look again.
+struct GnomeKeys {
+    interface: Option<gio::Settings>,
+    a11y: Option<gio::Settings>,
+}
+
+thread_local! {
+    static GNOME_KEYS: RefCell<Option<GnomeKeys>> = const { RefCell::new(None) };
+}
+
+/// A schema's settings object when the schema and the key are installed.
+fn settings_with(schema: &str, key: &str) -> Option<gio::Settings> {
+    let source = gio::SettingsSchemaSource::default()?;
+    let found = source.lookup(schema, true)?;
+    found.has_key(key).then(|| gio::Settings::new(schema))
+}
+
+/// GNOME's text-scaling-factor as the kit uses it (finite, within the schema's 0.5 ..= 3.0).
+fn factor(v: f64) -> Option<f64> {
+    (v.is_finite() && v > 0.0).then(|| v.clamp(0.5, 3.0))
+}
+
+impl System {
+    /// GNOME's text-scaling-factor from GTK's dpi (GTK's Wayland backend: 96 x 1024 x the factor), within the
+    /// schema's 0.5 ..= 3.0; None for GTK's "no dpi".
+    pub fn text_scale_of_dpi(dpi: i32) -> Option<f64> {
+        (dpi > 0).then(|| (f64::from(dpi) / (96.0 * 1024.0)).clamp(0.5, 3.0))
+    }
+
+    /// GNOME's keys now (module docs), else GTK's settings (all off without either).
+    pub fn read() -> System {
+        let gtk_settings = gtk::Settings::default();
+        let (interface, a11y) =
+            GNOME_KEYS.with(|g| g.borrow().as_ref().map(|k| (k.interface.clone(), k.a11y.clone())).unwrap_or((None, None)));
+        let text_scale = interface
+            .as_ref()
+            .and_then(|i| factor(i.double("text-scaling-factor")))
+            .or_else(|| gtk_settings.as_ref().and_then(|s| System::text_scale_of_dpi(s.gtk_xft_dpi())));
+        let (high_contrast, status_shapes) = match &a11y {
+            Some(a) => (a.boolean("high-contrast"), a.boolean("show-status-shapes")),
+            None => gtk_settings.as_ref().map_or((false, false), |s| {
+                (s.gtk_interface_contrast() == gtk::InterfaceContrast::More, s.is_gtk_show_status_shapes())
+            }),
+        };
+        System { text_scale, high_contrast, status_shapes }
     }
 }
 
@@ -62,8 +137,21 @@ impl Look {
             transparency: s["theme"]["transparency"] != false,
             high_contrast: s["accessibility"]["highContrast"] == true,
             reduce_motion: s["accessibility"]["reduceMotion"] == true,
-            text_scale: ts.clamp(100.0, 225.0) / 100.0,
+            text_scale: ts.clamp(50.0, 300.0) / 100.0,
+            status_shapes: false,
         }
+    }
+
+    /// The look of a settings object with GNOME's session settings (module docs): GNOME's text scale replaces
+    /// textScale (never both), GNOME's high contrast and status shapes join WinPoint's.
+    pub fn from_settings_and_system(s: &serde_json::Value, system_dark: bool, sys: &System) -> Look {
+        let mut look = Look::from_settings(s, system_dark);
+        if let Some(ts) = sys.text_scale {
+            look.text_scale = ts;
+        }
+        look.high_contrast |= sys.high_contrast;
+        look.status_shapes = sys.status_shapes;
+        look
     }
 }
 
@@ -127,6 +215,30 @@ pub(crate) fn install() {
         s.dynamic = Some(dynamic);
         s.toplevels = Some(toplevels);
     });
+    // GNOME's session settings (System): a change of the keys, or of what GTK carries, applies the look again
+    let again = || {
+        if let Some(ctx) = crate::ctx::try_ctx() {
+            ctx.apply_look();
+        }
+    };
+    let keys = GnomeKeys {
+        interface: settings_with("org.gnome.desktop.interface", "text-scaling-factor"),
+        a11y: settings_with("org.gnome.desktop.a11y.interface", "show-status-shapes"),
+    };
+    if let Some(i) = &keys.interface {
+        i.connect_changed(Some("text-scaling-factor"), move |_, _| again());
+    }
+    if let Some(a) = &keys.a11y {
+        for key in ["high-contrast", "show-status-shapes"] {
+            a.connect_changed(Some(key), move |_, _| again());
+        }
+    }
+    GNOME_KEYS.with(|g| *g.borrow_mut() = Some(keys));
+    if let Some(settings) = gtk::Settings::default() {
+        settings.connect_gtk_xft_dpi_notify(move |_| again());
+        settings.connect_gtk_interface_contrast_notify(move |_| again());
+        settings.connect_gtk_show_status_shapes_notify(move |_| again());
+    }
     let look = look();
     apply(&look, true);
 }
@@ -183,6 +295,11 @@ pub(crate) fn apply(look: &Look, force: bool) {
             gtk::InterfaceColorScheme::Light
         });
         settings.set_gtk_enable_animations(!look.reduce_motion);
+        // GtkSwitch draws its I and O images only while GTK's own setting says so, and GTK takes it from the
+        // settings portal alone: the kit sets it from GNOME's key (module docs), as it sets the animations
+        if settings.is_gtk_show_status_shapes() != look.status_shapes {
+            settings.set_gtk_show_status_shapes(look.status_shapes);
+        }
     }
     let (css, dyn_tokens) = ST.with(|s| {
         let s = s.borrow();
@@ -342,6 +459,12 @@ fn parse_block(css: &str, head: &str) -> HashMap<String, String> {
     out
 }
 
+/// GNOME's On/Off Shapes in the kit's switches: GtkSwitch's own I (on) and O (off) images, which controls.css
+/// hides otherwise; the slider covers the image of the other state.
+const STATUS_SHAPES_CSS: &str = "switch.w11-switch > image { color: var(--text-2); opacity: 1; -gtk-icon-size: 10px; }\n\
+    switch.w11-switch:checked > image { color: var(--accent-text); }\n\
+    switch.w11-switch:disabled > image { color: var(--text-disabled); }\n";
+
 fn dynamic_css(look: &Look, p: &Palette) -> (String, HashMap<String, String>) {
     let dark = look.dark;
     let (accent, accent_text) = if dark { (&p.light2, &p.on_dark) } else { (&p.dark1, &p.on_light) };
@@ -393,6 +516,9 @@ fn dynamic_css(look: &Look, p: &Palette) -> (String, HashMap<String, String>) {
         css.push_str(&format!("  --{k}: {v};\n"));
     }
     css.push_str("}\n");
+    if look.status_shapes {
+        css.push_str(STATUS_SHAPES_CSS);
+    }
     // Tooltips are popups of their own (no window.w11 around them): their colours come from here (tokens.css
     // --bg-tooltip-solid, --stroke-flyout, --shadow-tooltip; components.css .fl-tooltip).
     let (tip_bg, tip_fg, tip_stroke, tip_shadow) = if dark {
@@ -603,5 +729,42 @@ mod tests {
         assert_eq!(vars.get("bg-mica-glass").map(String::as_str), Some("#202020"));
         let (_, vars) = dynamic_css(&Look::default(), &accent_palette("#0078d4"));
         assert_eq!(vars.get("bg-mica-glass"), None, "with transparency the tokens' 90 % stays");
+    }
+
+    #[test]
+    fn the_text_scale_is_gtks_factor_once_and_settings_json_only_without_it() {
+        // settings parity, amendment 49: GNOME's text-scaling-factor, else GTK's dpi (96 x 1024 at 1.0)
+        assert_eq!(factor(1.25), Some(1.25));
+        assert_eq!(factor(8.0), Some(3.0), "within the schema's range");
+        assert_eq!(factor(f64::NAN), None);
+        assert_eq!(System::text_scale_of_dpi(96 * 1024), Some(1.0));
+        assert_eq!(System::text_scale_of_dpi(147_456), Some(1.5));
+        assert_eq!(System::text_scale_of_dpi(-1), None);
+        assert_eq!(System::text_scale_of_dpi(10), Some(0.5), "within the schema's range");
+        let s = serde_json::json!({"accessibility": {"textScale": 125, "highContrast": false}});
+        let sys = System { text_scale: Some(1.5), ..System::default() };
+        let look = Look::from_settings_and_system(&s, true, &sys);
+        assert_eq!(look.text_scale, 1.5, "GNOME's factor, not 1.25 x 1.5");
+        let (_, vars) = dynamic_css(&look, &accent_palette(&look.accent));
+        assert_eq!(vars.get("fs-body").map(String::as_str), Some("21px"), "14 px x 1.5, once");
+        // neither GNOME's key nor a dpi from GTK: settings.json's textScale, as before (now within GNOME's 50-300 %)
+        let look = Look::from_settings_and_system(&s, true, &System::default());
+        assert_eq!(look.text_scale, 1.25);
+        let wide = serde_json::json!({"accessibility": {"textScale": 300}});
+        assert_eq!(Look::from_settings(&wide, true).text_scale, 3.0);
+    }
+
+    #[test]
+    fn gnome_high_contrast_and_status_shapes_reach_the_look() {
+        let s = serde_json::json!({"accessibility": {"highContrast": false}});
+        let sys = System { high_contrast: true, status_shapes: true, ..System::default() };
+        let look = Look::from_settings_and_system(&s, true, &sys);
+        assert!(look.high_contrast && look.status_shapes);
+        let (css, _) = dynamic_css(&look, &accent_palette(&look.accent));
+        assert!(css.contains("switch.w11-switch > image { color: var(--text-2); opacity: 1;"));
+        let on = serde_json::json!({"accessibility": {"highContrast": true}});
+        assert!(Look::from_settings_and_system(&on, true, &System::default()).high_contrast);
+        let (css, _) = dynamic_css(&Look::default(), &accent_palette("#0078d4"));
+        assert!(!css.contains("switch.w11-switch > image"), "no shapes unless GNOME asks for them");
     }
 }

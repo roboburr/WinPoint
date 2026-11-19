@@ -826,6 +826,29 @@ fn spawn(command: Command) -> io::Result<()> {
     crate::process_scope::spawn(command, "file-open", Some(env)).map_err(io::Error::other)
 }
 
+/// The longest socket path `bind` takes (`sun_path` is 108 bytes with its NUL).
+const SUN_PATH_MAX: usize = 107;
+/// The longest name [`launch_gio`] puts under [`ack_base`]: `/win11-launch-<pid>-<nanoseconds>/ack`.
+const ACK_NAME_MAX: usize = "/win11-launch-".len() + 10 + 1 + 20 + "/ack".len();
+
+/// Where [`launch_gio`] makes its ack socket's directory: the runtime directory (`$XDG_RUNTIME_DIR`: short, and the
+/// sockets' own place) when it is a directory of this user that nobody else may enter and the socket's path fits
+/// `sun_path`, else `temp`, the temp directory (a long `$TMPDIR`, the GNOME harness's, exceeded `sun_path` there),
+/// else /tmp when that is too long as well (the directory itself is new and 0700 either way).
+fn ack_base(runtime: Option<&Path>, temp: PathBuf) -> PathBuf {
+    let fits = |dir: &Path| dir.as_os_str().len() + ACK_NAME_MAX <= SUN_PATH_MAX;
+    let private = |dir: &Path| {
+        fs::metadata(dir).is_ok_and(|meta| {
+            meta.is_dir() && meta.uid() == unsafe { libc::geteuid() } && meta.mode() & 0o077 == 0
+        })
+    };
+    match runtime {
+        Some(dir) if dir.is_absolute() && fits(dir) && private(dir) => dir.to_path_buf(),
+        _ if fits(&temp) => temp,
+        _ => PathBuf::from("/tmp"),
+    }
+}
+
 /// Starts `request` through the standalone win11-launch helper and waits for its answer; the error is the
 /// helper's own text or one of ours in `lang` (it goes into ApiError.data).
 fn launch_gio(mut request: Value, info: Option<&gio::AppInfo>, lang: Lang) -> Result<(), String> {
@@ -855,8 +878,13 @@ fn launch_gio(mut request: Value, info: Option<&gio::AppInfo>, lang: Lang) -> Re
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_nanos();
-    let directory =
-        std::env::temp_dir().join(format!("win11-launch-{}-{nonce}", std::process::id()));
+    let directory = ack_base(
+        std::env::var_os("XDG_RUNTIME_DIR")
+            .map(PathBuf::from)
+            .as_deref(),
+        std::env::temp_dir(),
+    )
+    .join(format!("win11-launch-{}-{nonce}", std::process::id()));
     fs::DirBuilder::new()
         .mode(0o700)
         .create(&directory)
@@ -1073,6 +1101,58 @@ mod tests {
         os::unix::fs::symlink,
         sync::atomic::{AtomicU64, Ordering},
     };
+
+    #[test]
+    fn the_launch_ack_socket_prefers_a_private_runtime_directory() {
+        let temp = Temp::new();
+        let fallback = PathBuf::from("/fallback-temp");
+        let runtime = temp.0.join("rt");
+        fs::DirBuilder::new().mode(0o700).create(&runtime).unwrap();
+        let fits = runtime.as_os_str().len() + ACK_NAME_MAX <= SUN_PATH_MAX;
+        assert_eq!(
+            ack_base(Some(&runtime), fallback.clone()),
+            if fits {
+                runtime.clone()
+            } else {
+                fallback.clone()
+            },
+            "a private runtime directory whose socket path fits"
+        );
+        // unset, relative, missing, a file, open to others: the temp directory
+        assert_eq!(ack_base(None, fallback.clone()), fallback);
+        assert_eq!(ack_base(Some(Path::new("rt")), fallback.clone()), fallback);
+        assert_eq!(
+            ack_base(Some(&temp.0.join("missing")), fallback.clone()),
+            fallback
+        );
+        let file = temp.0.join("file");
+        fs::write(&file, "").unwrap();
+        assert_eq!(ack_base(Some(&file), fallback.clone()), fallback);
+        fs::set_permissions(&runtime, fs::Permissions::from_mode(0o755)).unwrap();
+        assert_eq!(
+            ack_base(Some(&runtime), fallback.clone()),
+            fallback,
+            "a runtime directory others may enter"
+        );
+        // a runtime directory too long for sun_path; a temp directory too long as well (the harness's run/tmp was
+        // 152 bytes): /tmp
+        let long = PathBuf::from(format!("/{}", "r".repeat(SUN_PATH_MAX)));
+        assert_eq!(ack_base(Some(&long), fallback.clone()), fallback);
+        assert_eq!(ack_base(None, long.clone()), PathBuf::from("/tmp"));
+        // the longest name launch_gio makes fits ACK_NAME_MAX, so an accepted base always binds
+        assert_eq!(
+            ACK_NAME_MAX,
+            format!("/win11-launch-{}-{}/ack", u32::MAX, u64::MAX).len()
+        );
+        let longest = PathBuf::from(format!("/{}", "r".repeat(SUN_PATH_MAX - ACK_NAME_MAX - 1)));
+        let socket = format!(
+            "{}/win11-launch-{}-{}/ack",
+            longest.display(),
+            u32::MAX,
+            u64::MAX
+        );
+        assert!(socket.len() < 108, "{socket}");
+    }
     struct Temp(PathBuf);
     impl Temp {
         fn new() -> Self {

@@ -1,0 +1,61 @@
+# host/i18n/input.tsv: host texts of services/input.rs.
+# Owner: batch A (settings parity, §5.2).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- new texts
+# input.tablet.mapButtons: the vid:pid is not four hex digits, a colon and four hex digits
+#@ new
+input.badTablet	Deze tablet is niet geldig.	This tablet isn’t valid.
+# input.tablet.mapButtons: no tablet with this vid:pid is connected
+#@ new
+input.tabletNotFound	Deze tablet is niet aangesloten.	This tablet isn’t connected.
+# input.tablet.mapButtons: the tablet has no pad (no ExpressKeys, rings, strips or dials)
+#@ new
+input.noPad	Deze tablet heeft geen knoppen om toe te wijzen.	This tablet has no buttons to assign.
+# input.tablet.mapButtons: the pad OSD is GNOME Shell's, reached through the WinPoint extension (inputBridge.js)
+#@ new
+input.shellUnavailable	Hiervoor moet GNOME Shell met de WinPoint-extensie actief zijn.	This needs GNOME Shell with the WinPoint extension running.
+# input.sources.set: sources is not a list of [type, id] pairs of xkb layouts and IBus engines
+#@ new
+input.badSources	Deze lijst met toetsenborden is niet geldig.	This list of keyboards isn’t valid.
+# input.options.set: lv3 or compose is not one of GNOME Settings' choices
+#@ new
+input.badOption	Deze toets is hier niet te kiezen.	This key can’t be chosen here.
+# input.preview: the layout is not an xkb layout or layout+variant
+#@ new
+input.badLayout	Deze toetsenbordindeling is niet geldig.	This keyboard layout isn’t valid.
+# input.preview: tecla (the keyboard layout viewer) is not installed
+#@ new
+input.noTecla	Het programma om toetsenbordindelingen weer te geven is niet geïnstalleerd.	The program that shows keyboard layouts isn’t installed.
+# input.preview: tecla could not be started
+#@ new
+input.previewFailed	De toetsenbordindeling kan niet worden weergegeven.	The keyboard layout can’t be shown.
+# input.engineSetup: the engine name is not an IBus engine name
+#@ new
+input.badEngine	Deze invoermethode is niet geldig.	This input method isn’t valid.
+# input.shortcuts.*: an accelerator or a list of them is not valid
+#@ new
+input.badShortcut	Deze sneltoets is niet geldig.	This shortcut isn’t valid.
+# input.shortcuts.*: the shortcut is not in GNOME's list (or the custom shortcut is gone)
+#@ new
+input.noShortcut	Deze sneltoets bestaat niet.	This shortcut doesn’t exist.
+# input.shortcuts.custom.*: the name is empty, too long or has control characters
+#@ new
+input.badName	Geef een naam op.	Enter a name.
+# input.shortcuts.custom.*: the command is empty, too long or has control characters
+#@ new
+input.badCommand	Geef een opdracht op.	Enter a command.
+# input.screenReader.preferences: no Orca on the session bus (the screen reader is off or Orca is not installed)
+#@ new
+input.orcaNotRunning	Verteller is niet actief. Schakel Verteller in om de instellingen te openen.	Narrator isn’t running. Turn on Narrator to open its settings.
+# input.screenReader.preferences: Orca refused ShowPreferences or the call failed
+#@ new
+input.orcaFailed	De instellingen voor Verteller kunnen niet worden geopend.	Narrator settings can’t be opened.

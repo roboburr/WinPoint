@@ -1,0 +1,4139 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "en",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 21:50:50",
+ "seconds": 288.4,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 393,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 846462,
+   "rss_kb": 1151132,
+   "processes": 21,
+   "t": 202.5
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 559916,
+   "rss_kb": 860576
+  },
+  "minMemAvailableKb": 5619196,
+  "abortedForMemory": false,
+  "peakByName": {
+   "python3": {
+    "count": 4,
+    "pss_kb": 386261,
+    "rss_kb": 449156
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 296361,
+    "rss_kb": 386676
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 58339,
+    "rss_kb": 98128
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 25953,
+    "rss_kb": 56852
+   },
+   "win11-app": {
+    "count": 2,
+    "pss_kb": 24392,
+    "rss_kb": 33236
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17194,
+    "rss_kb": 35116
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 15737,
+    "rss_kb": 24728
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 12149,
+    "rss_kb": 20492
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4118,
+    "rss_kb": 11576
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2287,
+    "rss_kb": 4836
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1568,
+    "rss_kb": 10248
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 862,
+    "rss_kb": 8064
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 796,
+    "rss_kb": 7908
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 243,
+    "rss_kb": 1468
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 202,
+    "rss_kb": 2648
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 296621,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 178067,
+    "first": 0.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 77804,
+    "first": 7.8
+   },
+   "win11-shell": {
+    "pss_kb": 60033,
+    "first": 1.0
+   },
+   "win11-app": {
+    "pss_kb": 24392,
+    "first": 7.8
+   },
+   "glycin-svg": {
+    "pss_kb": 20980,
+    "first": 1.0
+   },
+   "ibus-extension-": {
+    "pss_kb": 17307,
+    "first": 1.0
+   },
+   "win11-panel": {
+    "pss_kb": 15744,
+    "first": 1.6
+   },
+   "glycin-image-rs": {
+    "pss_kb": 8881,
+    "first": 1.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4164,
+    "first": 1.0
+   },
+   "strace": {
+    "pss_kb": 2298,
+    "first": 0.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 997,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 882,
+    "first": 1.6
+   },
+   "ibus-memconf": {
+    "pss_kb": 869,
+    "first": 1.0
+   },
+   "bwrap": {
+    "pss_kb": 245,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 208,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/build/native-release",
+  "exit": 0,
+  "seconds": 61.0,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e"
+  }
+ },
+ "guardStubCalls": [
+  "21:52:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:07\tpw-dump\t--monitor --no-colors",
+  "21:52:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:09\tpw-dump\t--monitor --no-colors",
+  "21:52:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:13\tpw-dump\t--monitor --no-colors",
+  "21:52:13\tpw-dump\t--monitor --no-colors",
+  "21:52:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:15\tpw-dump\t--monitor --no-colors",
+  "21:52:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:19\tpw-dump\t--monitor --no-colors",
+  "21:52:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:21\tpw-dump\t--monitor --no-colors",
+  "21:52:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:27\tpw-dump\t--monitor --no-colors",
+  "21:52:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:37\tpw-dump\t--monitor --no-colors",
+  "21:52:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:43\tpw-dump\t--monitor --no-colors",
+  "21:52:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:52:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:07\tpw-dump\t--monitor --no-colors",
+  "21:53:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:13\tpw-dump\t--monitor --no-colors",
+  "21:53:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:39\tpasswd\t",
+  "21:53:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:41\tpw-dump\t--monitor --no-colors",
+  "21:53:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:41\tlocaledef\t--list-archive",
+  "21:53:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:43\tpw-dump\t--monitor --no-colors",
+  "21:53:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:47\tpw-dump\t--monitor --no-colors",
+  "21:53:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:55\tpw-dump\t--monitor --no-colors",
+  "21:53:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:53:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:11\tpw-dump\t--monitor --no-colors",
+  "21:54:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:41\tpw-dump\t--monitor --no-colors",
+  "21:54:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:54:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "21:55:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 101,
+  "maxScanSeconds": 0.053,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-accounts.en.out/strace.txt"
+  ],
+  "connects": 264,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 57
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 37
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 34
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 9
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 5
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 9
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 34
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   }
+  ]
+ },
+ "straceExec": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-accounts.en.out/strace.txt"
+  ],
+  "execs": 556,
+  "ok": true,
+  "violations": [],
+  "forbidden": [
+   "pkexec",
+   "check-new-release",
+   "apt-get",
+   "apt-cache",
+   "do-release-upgrade",
+   "loginctl",
+   "apt",
+   "pkcon"
+  ],
+  "byProgram": [],
+  "winpointPython": {
+   "execs": [],
+   "clicks": 0,
+   "perClick": {}
+  }
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-accounts.py",
+  "startLanguage": "en",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.88,
+    "args": {
+     "key": "standin.accounts"
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.49,
+    "args": {
+     "spec": "settings:accounts"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1363,
+     "page": "accounts",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1363,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 2.7,
+    "args": {
+     "name": "accounts.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "accounts.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 284,
+      "meanLevel": 42.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 2.75,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Accounts – Settings",
+     "dutchWordHits": [],
+     "chars": 758
+    },
+    "text": {
+     "lang": "en",
+     "title": "Accounts – Settings",
+     "titles": [
+      "Accounts – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAM\nAlex Morgan\nLocal account\nAdministrator\nAccount settings\nYour info\nYour picture and your name\nEmail & accounts\nOnline accounts for email, calendar and contacts\nSign-in options\nPassword, fingerprint, automatic sign-in, lock\nOther users\nAccounts of other users on this PC\nLock\nLock the screen when you step away (Windows logo key + L)\nLock now\nLock now\nYour account stays on this computer. WinPoint doesn’t send any data about you to the internet; only the daily update check asks GitHub for WinPoint’s latest version.",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "open",
+    "t": 4.29,
+    "args": {
+     "spec": "settings:yourinfo"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1363,
+     "page": "yourinfo",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.47,
+    "args": {
+     "name": "yourinfo.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "yourinfo.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 268,
+      "meanLevel": 41.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 5.59,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Your info – Settings",
+     "dutchWordHits": [],
+     "chars": 719
+    },
+    "text": {
+     "lang": "en",
+     "title": "Your info – Settings",
+     "titles": [
+      "Your info – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nYour info\nAM\nAlex Morgan\nLocal account\nAdministrator\nAdjust your photo\nChoose a file\nBrowse files\nBrowse files\nChoose a default picture\nThe pictures that come with Ubuntu\nbicycle\nbook\ncalculator\ncat\ncoffee2\nflower2\ngamepad\nguitar2\nheadphones\nhummingbird\nmountain\nplane\nsurfer\ntomatoes\ntree\nAccount settings\nChange name\nAlex Morgan\nChange\nChange\nRelated settings\nSign-in options\nPassword, fingerprint, automatic sign-in, lock\nOther users\nAccounts of other users on this PC",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "record",
+    "t": 11.3,
+    "args": {
+     "key": "dialog probe: real click on Annuleren"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 11.44,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 13.1,
+    "args": {
+     "name": "yourinfo-rename.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "yourinfo-rename.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 247,
+      "meanLevel": 32.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 13.25,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-yourinfo-name-entry",
+     "text": "Alex Morgan-Reed"
+    },
+    "result": {
+     "typed": "st-yourinfo-name-entry"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 13.51,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "record",
+    "t": 14.36,
+    "args": {
+     "key": "yourinfo faces"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 18.82,
+    "args": {
+     "name": "yourinfo-gallery.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "yourinfo-gallery.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 1593,
+      "meanLevel": 45.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 20.88,
+    "args": {
+     "name": "yourinfo-picture.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "yourinfo-picture.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 753,
+      "meanLevel": 42.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 22.31,
+    "args": {
+     "spec": "settings:email-accounts"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1363,
+     "page": "email-accounts",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 23.48,
+    "args": {
+     "name": "email-accounts.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "email-accounts.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 273,
+      "meanLevel": 38.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 23.6,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Email & accounts – Settings",
+     "dutchWordHits": [],
+     "chars": 527
+    },
+    "text": {
+     "lang": "en",
+     "title": "Email & accounts – Settings",
+     "titles": [
+      "Email & accounts – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nEmail & accounts\nOnline accounts aren’t available on this computer.\nAccounts used by email, calendar and contacts\nAdd an account\nGoogle, Microsoft 365, Nextcloud, IMAP and more\nAdd account\nAdd account\nRelated settings\nDefault apps\nWhich app opens your web pages, music and photos",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "record",
+    "t": 24.4,
+    "args": {
+     "key": "standin.goa"
+    }
+   },
+   {
+    "step": "open",
+    "t": 24.9,
+    "args": {
+     "spec": "settings:accounts"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1363,
+     "page": "accounts",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 25.37,
+    "args": {
+     "spec": "settings:email-accounts"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1363,
+     "page": "email-accounts",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 26.54,
+    "args": {
+     "name": "email-accounts-goa.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "email-accounts-goa.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 257,
+      "meanLevel": 38.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 26.67,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Email & accounts – Settings",
+     "dutchWordHits": [],
+     "chars": 602
+    },
+    "text": {
+     "lang": "en",
+     "title": "Email & accounts – Settings",
+     "titles": [
+      "Email & accounts – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nEmail & accounts\nAccounts used by email, calendar and contacts\nAdd an account\nGoogle, Microsoft 365, Nextcloud, IMAP and more\nAdd account\nAdd account\nalex@example.org\nGoogle\nAccount settings\nChoose what you use this account for\nManage\nManage\nRemove this account\nRemove\nRemove\nRelated settings\nDefault apps\nWhich app opens your web pages, music and photos",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 31.84,
+    "args": {
+     "name": "email-accounts-open.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "email-accounts-open.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 278,
+      "meanLevel": 40.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 34.19,
+    "args": {
+     "name": "email-accounts-manage.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "email-accounts-manage.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 231,
+      "meanLevel": 32.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 39.09,
+    "args": {
+     "key": "dialog probe: real click on a switch in a dialog"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 39.39,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-email-accounts-calendar"
+    },
+    "result": {
+     "clicked": "st-email-accounts-calendar"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 39.84,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-close"
+    },
+    "result": {
+     "clicked": "w11-dialog-close"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 46.19,
+    "args": {
+     "name": "email-accounts-remove.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "email-accounts-remove.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 230,
+      "meanLevel": 30.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 46.71,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "record",
+    "t": 49.0,
+    "args": {
+     "key": "email-accounts providers"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 49.95,
+    "args": {
+     "name": "email-accounts-add.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "email-accounts-add.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 212,
+      "meanLevel": 36.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 50.31,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-email-accounts-add-google"
+    },
+    "result": {
+     "clicked": "st-email-accounts-add-google"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 52.95,
+    "args": {
+     "name": "email-accounts-goa-helper.en"
+    },
+    "result": {
+     "png": "email-accounts-goa-helper.en.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 865,
+      "meanLevel": 38.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 53.23,
+    "args": {
+     "key": "goa.calls"
+    }
+   },
+   {
+    "step": "open",
+    "t": 53.77,
+    "args": {
+     "spec": "settings:signin"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1363,
+     "page": "signin",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 54.95,
+    "args": {
+     "name": "signin.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 291,
+      "meanLevel": 41.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 55.13,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Sign-in options – Settings",
+     "dutchWordHits": [],
+     "chars": 797
+    },
+    "text": {
+     "lang": "en",
+     "title": "Sign-in options – Settings",
+     "titles": [
+      "Sign-in options – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nSign-in options\nWays to sign in\nPassword\nSign in with your account password\nYou can sign in with your account password.\nChange\nChange\nAdditional settings\nIf you’ve been away, when should WinPoint require you to sign in again?\nAlso lock when the PC goes to sleep\nNever\nAutomatic sign-in\nSign in without a password when the PC starts\nOff\nThis needs an administrator password.\nRelated settings\nPower & battery\nWhen the screen turns off and the PC goes to sleep\nOther users\nAccounts of other users on this PC\nFollow the steps in the Google window.\nClose",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.46,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "record",
+    "t": 56.46,
+    "args": {
+     "key": "lock-enabled at start"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 56.46,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-delay",
+     "path": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 56.46,
+    "args": {
+     "key": "lock-delay at start"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.66,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.66,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-delay",
+     "path": null
+    },
+    "result": "300"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.66,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 59.66,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-delay",
+     "path": null
+    },
+    "result": "300"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 62.82,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 62.82,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-delay",
+     "path": null
+    },
+    "result": "300"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 62.82,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 62.82,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-delay",
+     "path": null
+    },
+    "result": "300"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 62.82,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-delay",
+     "path": null,
+     "value": "uint32 60"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 62.82,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 63.25,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "lock-enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 64.24,
+    "args": {
+     "name": "signin-never.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin-never.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 280,
+      "meanLevel": 41.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 64.24,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "ubuntu-lock-on-suspend",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 65.79,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "ubuntu-lock-on-suspend",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 65.8,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "ubuntu-lock-on-suspend",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 65.8,
+    "args": {
+     "schema": "org.gnome.desktop.screensaver",
+     "key": "ubuntu-lock-on-suspend",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "record",
+    "t": 67.85,
+    "args": {
+     "key": "run/stubs mode"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 74.52,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-signin-password-current",
+     "text": "Qh4-harness-1x"
+    },
+    "result": {
+     "typed": "st-signin-password-current"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 74.77,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-signin-password-new",
+     "text": "Vz8#qLm2!pRt9kWx"
+    },
+    "result": {
+     "typed": "st-signin-password-new"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 75.03,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-signin-password-confirm",
+     "text": "Vz8#qLm2!pRt9kWx"
+    },
+    "result": {
+     "typed": "st-signin-password-confirm"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 85.93,
+    "args": {
+     "name": "signin-password.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin-password.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 237,
+      "meanLevel": 32.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 87.15,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 87.45,
+    "args": {
+     "surface": "settings",
+     "method": "users.changePassword"
+    },
+    "result": {
+     "ok": false
+    }
+   },
+   {
+    "step": "record",
+    "t": 87.45,
+    "args": {
+     "key": "users.changePassword through the backend"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 88.02,
+    "args": {
+     "name": "signin-password-refused.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin-password-refused.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 300,
+      "meanLevel": 41.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 88.37,
+    "args": {
+     "key": "standin.fprintd"
+    }
+   },
+   {
+    "step": "close",
+    "t": 88.89,
+    "args": {
+     "name": "settings"
+    }
+   },
+   {
+    "step": "open",
+    "t": 90.07,
+    "args": {
+     "spec": "settings:signin"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1978,
+     "page": "signin",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1978,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 91.25,
+    "args": {
+     "name": "signin-fprintd.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin-fprintd.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 288,
+      "meanLevel": 42.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 91.53,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Sign-in options – Settings",
+     "dutchWordHits": [],
+     "chars": 936
+    },
+    "text": {
+     "lang": "en",
+     "title": "Sign-in options – Settings",
+     "titles": [
+      "Sign-in options – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nSign-in options\nWays to sign in\nFingerprint recognition\nSign in with your fingerprint reader\n1 fingerprint has been set up.\nWinPoint Test Reader\nAdd another finger\nAdd another finger\nRemove fingerprints\nRemove\nRemove\nPassword\nSign in with your account password\nYou can sign in with your account password.\nChange\nChange\nAdditional settings\nIf you’ve been away, when should WinPoint require you to sign in again?\nAlso lock when the PC goes to sleep\nNever\nAutomatic sign-in\nSign in without a password when the PC starts\nOn\nThis needs an administrator password.\nRelated settings\nPower & battery\nWhen the screen turns off and the PC goes to sleep\nOther users\nAccounts of other users on this PC",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 98.67,
+    "args": {
+     "name": "signin-fingerprint.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin-fingerprint.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 303,
+      "meanLevel": 42.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 102.19,
+    "args": {
+     "name": "signin-enroll.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "signin-enroll.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 239,
+      "meanLevel": 32.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 103.12,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 116.77,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "record",
+    "t": 116.77,
+    "args": {
+     "key": "fprintd.calls"
+    }
+   },
+   {
+    "step": "open",
+    "t": 117.48,
+    "args": {
+     "spec": "settings:otherusers"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1978,
+     "page": "otherusers",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 118.65,
+    "args": {
+     "name": "otherusers.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 254,
+      "meanLevel": 38.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 118.98,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Other users – Settings",
+     "dutchWordHits": [],
+     "chars": 812
+    },
+    "text": {
+     "lang": "en",
+     "title": "Other users – Settings",
+     "titles": [
+      "Other users – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nOther users\nOther users\nAdd other user\nThis needs an administrator password.\nAdd account\nST\nSam Taylor\nStandard user · Local account\nAccount options\nThis needs an administrator password.\nChange account type\nPassword\nThis needs an administrator password.\nReset password\nAutomatic sign-in\nThis user is signed in without a password when the PC starts\nOff\nLanguage\nApplies from this user’s next sign-in\nEnglish (United States)\nAccount and data\nThis needs an administrator password.\nRemove\nRelated settings\nSign-in options\nPassword, fingerprint, automatic sign-in, lock",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 128.26,
+    "args": {
+     "name": "otherusers-open.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-open.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 285,
+      "meanLevel": 41.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 140.05,
+    "args": {
+     "name": "otherusers-type.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-type.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 232,
+      "meanLevel": 32.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 141.25,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-otherusers-type-choice-administrator"
+    },
+    "result": {
+     "clicked": "st-otherusers-type-choice-administrator"
+    }
+   },
+   {
+    "step": "record",
+    "t": 142.03,
+    "args": {
+     "key": "otherusers: Administrator picked in the dialog"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 143.24,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 153.91,
+    "args": {
+     "name": "otherusers-password.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-password.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 241,
+      "meanLevel": 32.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 155.19,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 158.59,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-otherusers-add-name",
+     "text": "Kim Lee"
+    },
+    "result": {
+     "typed": "st-otherusers-add-name"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 159.65,
+    "args": {
+     "name": "otherusers-add.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-add.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 221,
+      "meanLevel": 32.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 160.09,
+    "args": {
+     "key": "otherusers: the suggested user name"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 161.37,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 173.09,
+    "args": {
+     "name": "otherusers-remove.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-remove.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 231,
+      "meanLevel": 32.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 174.48,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "record",
+    "t": 175.94,
+    "args": {
+     "key": "standin.logind"
+    }
+   },
+   {
+    "step": "open",
+    "t": 176.75,
+    "args": {
+     "spec": "settings:accounts"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1978,
+     "page": "accounts",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 177.92,
+    "args": {
+     "name": "accounts-again.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "accounts-again.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 294,
+      "meanLevel": 43.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 178.41,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Accounts – Settings",
+     "dutchWordHits": [],
+     "chars": 763
+    },
+    "text": {
+     "lang": "en",
+     "title": "Accounts – Settings",
+     "titles": [
+      "Accounts – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAM\nAlex Morgan-Reed\nLocal account\nAdministrator\nAccount settings\nYour info\nYour picture and your name\nEmail & accounts\nOnline accounts for email, calendar and contacts\nSign-in options\nPassword, fingerprint, automatic sign-in, lock\nOther users\nAccounts of other users on this PC\nLock\nLock the screen when you step away (Windows logo key + L)\nLock now\nLock now\nYour account stays on this computer. WinPoint doesn’t send any data about you to the internet; only the daily update check asks GitHub for WinPoint’s latest version.",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "open",
+    "t": 180.11,
+    "args": {
+     "spec": "settings:otherusers"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1978,
+     "page": "otherusers",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 181.28,
+    "args": {
+     "name": "otherusers-signed-in-page.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-signed-in-page.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 250,
+      "meanLevel": 38.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 181.74,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "en",
+     "title": "Other users – Settings",
+     "dutchWordHits": [],
+     "chars": 835
+    },
+    "text": {
+     "lang": "en",
+     "title": "Other users – Settings",
+     "titles": [
+      "Other users – Settings"
+     ],
+     "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAccounts\nOther users\nOther users\nAdd other user\nThis needs an administrator password.\nAdd account\nST\nSam Taylor\nAdministrator · Local account\nAccount options\nThis needs an administrator password.\nChange account type\nPassword\nSet at the next sign-in\nThis needs an administrator password.\nReset password\nAutomatic sign-in\nThis user is signed in without a password when the PC starts\nOn\nLanguage\nApplies from this user’s next sign-in\nEnglish (United States)\nAccount and data\nThis needs an administrator password.\nRemove\nRelated settings\nSign-in options\nPassword, fingerprint, automatic sign-in, lock",
+     "dutchWordHits": []
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 195.17,
+    "args": {
+     "name": "otherusers-signed-in.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "otherusers-signed-in.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 237,
+      "meanLevel": 33.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 198.15,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-close"
+    },
+    "result": {
+     "clicked": "w11-dialog-close"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 198.65,
+    "args": {
+     "surface": "settings",
+     "method": "users.delete"
+    },
+    "result": {
+     "ok": false
+    }
+   },
+   {
+    "step": "record",
+    "t": 198.65,
+    "args": {
+     "key": "otherusers: users.delete of the signed-in user"
+    }
+   },
+   {
+    "step": "record",
+    "t": 198.65,
+    "args": {
+     "key": "logind.calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 198.66,
+    "args": {
+     "key": "scenario seconds"
+    }
+   },
+   {
+    "step": "record",
+    "t": 198.66,
+    "args": {
+     "key": "accounts.calls"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "accounts: the title is Accounts",
+    "ok": true,
+    "t": 2.86,
+    "heads": [
+     "Accounts"
+    ]
+   },
+   {
+    "check": "accounts: built, no placeholder",
+    "ok": true,
+    "t": 2.96
+   },
+   {
+    "check": "accounts: no Dutch words in en",
+    "ok": true,
+    "t": 2.96,
+    "hits": []
+   },
+   {
+    "check": "accounts: the header names the own account and its type",
+    "ok": true,
+    "t": 2.96,
+    "text": "Back\nSettings\nMinimise\nMaximise\nClose\nR\nrobin\nLocal account\nFind a setting\nSearch\nHome\nSystem\nBluetooth & devices\nNetwork & internet\nPersonalisation\nApps\nAccounts\nTime & language\nAccessibility\nPrivacy & security\nUpdate & recovery\nAccounts\nAM\nAlex Morgan\nLocal account\nAdministrator\nAccount settings\nYour info\nYour picture and your name\nEmail & accounts\nOnline accounts for email, calendar and contacts\nSign-in options\nPassword, fingerprint, automatic sign-in, lock\nOther users\nAccounts of other users on this PC\nLock\nLock the screen when you step away (Windows logo key + L)\nLock now\nLock now\nYour ac"
+   },
+   {
+    "check": "accounts: Accountinstellingen links to the four pages",
+    "ok": true,
+    "t": 3.78,
+    "missing": []
+   },
+   {
+    "check": "accounts: Nu vergrendelen is there",
+    "ok": true,
+    "t": 3.89
+   },
+   {
+    "check": "yourinfo: the breadcrumb is Accounts > Your info",
+    "ok": true,
+    "t": 5.77,
+    "current": [
+     "Your info"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "yourinfo: built, no placeholder",
+    "ok": true,
+    "t": 5.89
+   },
+   {
+    "check": "yourinfo: no Dutch words in en",
+    "ok": true,
+    "t": 5.89,
+    "hits": []
+   },
+   {
+    "check": "dialogs: a real pointer click on a kit dialog’s button (Annuleren) closes it",
+    "ok": false,
+    "t": 11.3,
+    "known": "kit-dialog-gesture",
+    "click": {
+     "input": "clutter",
+     "x": 814,
+     "y": 511,
+     "rect": [
+      554,
+      439,
+      181,
+      32
+     ],
+     "name": "w11-dialog-close",
+     "window": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "shell": {
+      "pointer": [
+       814,
+       511
+      ],
+      "focusPid": 1363
+     }
+    }
+   },
+   {
+    "check": "yourinfo: Naam wijzigen sends SetRealName to the own user, interactive",
+    "ok": true,
+    "t": 13.51,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetRealName",
+     "args": "('Alex Morgan-Reed',)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "yourinfo: the dialog closes after the change",
+    "ok": true,
+    "t": 13.61
+   },
+   {
+    "check": "wait_text settings: 'Alex Morgan-Reed'",
+    "ok": true,
+    "t": 14.16,
+    "seconds": 0.56
+   },
+   {
+    "check": "yourinfo: the page follows AccountsService (Changed): the new name",
+    "ok": true,
+    "t": 14.17
+   },
+   {
+    "check": "yourinfo: GNOME’s gallery (Een standaardafbeelding kiezen)",
+    "ok": true,
+    "t": 14.26
+   },
+   {
+    "check": "yourinfo: the default pictures are drawn at their own size (a 64 px picture in its button)",
+    "ok": true,
+    "t": 17.73,
+    "size": [
+     70,
+     70
+    ]
+   },
+   {
+    "check": "yourinfo: a default picture (a real click) sends SetIconFile with GNOME’s stock file, interactive",
+    "ok": true,
+    "t": 19.91,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetIconFile",
+     "args": "('/usr/share/pixmaps/faces/bicycle.jpg',)",
+     "interactive": true
+    },
+    "input": "clutter"
+   },
+   {
+    "check": "yourinfo: Foto verwijderen once the account has a picture",
+    "ok": true,
+    "t": 20.3
+   },
+   {
+    "check": "yourinfo: Foto verwijderen sends SetIconFile(''), interactive",
+    "ok": true,
+    "t": 21.82,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetIconFile",
+     "args": "('',)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "email-accounts: the breadcrumb is Accounts > Email & accounts",
+    "ok": true,
+    "t": 23.92,
+    "current": [
+     "Email & accounts"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "email-accounts: built, no placeholder",
+    "ok": true,
+    "t": 24.13
+   },
+   {
+    "check": "email-accounts: no Dutch words in en",
+    "ok": true,
+    "t": 24.13,
+    "hits": []
+   },
+   {
+    "check": "email-accounts: without goa-daemon nothing can be added",
+    "ok": true,
+    "t": 24.34,
+    "add": {
+     "children": [
+      {
+       "children": [],
+       "classes": [],
+       "label": "Add account",
+       "name": "GtkLabel",
+       "rect": [
+        946,
+        238,
+        84,
+        30
+       ],
+       "sensitive": false,
+       "type": "GtkLabel",
+       "visible": true
+      }
+     ],
+     "classes": [
+      "text-button",
+      "w11-button"
+     ],
+     "label": "Add account",
+     "name": "st-email-accounts-add",
+     "rect": [
+      934,
+      237,
+      108,
+      32
+     ],
+     "sensitive": false,
+     "type": "GtkButton",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "email-accounts: the breadcrumb is Accounts > Email & accounts",
+    "ok": true,
+    "t": 26.93,
+    "current": [
+     "Email & accounts"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "email-accounts: built, no placeholder",
+    "ok": true,
+    "t": 27.15
+   },
+   {
+    "check": "email-accounts: no Dutch words in en",
+    "ok": true,
+    "t": 27.15,
+    "hits": []
+   },
+   {
+    "check": "wait_text settings: 'alex@example.org'",
+    "ok": true,
+    "t": 27.4,
+    "seconds": 0.13
+   },
+   {
+    "check": "email-accounts: the GOA account is listed with its address",
+    "ok": true,
+    "t": 27.4
+   },
+   {
+    "check": "email-accounts: Beheren shows GOA’s services (mail and contacts on, calendar off)",
+    "ok": true,
+    "t": 34.62,
+    "states": {
+     "mail": true,
+     "calendar": false,
+     "contacts": true
+    }
+   },
+   {
+    "check": "email-accounts: the calendar switch sets CalendarDisabled false on the account",
+    "ok": true,
+    "t": 39.39,
+    "call": {
+     "path": "/org/gnome/OnlineAccounts/Accounts/account_1_0",
+     "iface": "org.gnome.OnlineAccounts.Account",
+     "method": "Set:CalendarDisabled",
+     "args": "false",
+     "interactive": null
+    }
+   },
+   {
+    "check": "email-accounts: Verwijderen calls the account’s Remove, interactive",
+    "ok": true,
+    "t": 46.71,
+    "call": {
+     "path": "/org/gnome/OnlineAccounts/Accounts/account_1_0",
+     "iface": "org.gnome.OnlineAccounts.Account",
+     "method": "Remove",
+     "args": "()",
+     "interactive": true
+    }
+   },
+   {
+    "check": "email-accounts: the removed account is no longer listed",
+    "ok": true,
+    "t": 47.46
+   },
+   {
+    "check": "email-accounts: with goa-daemon Account toevoegen can be clicked",
+    "ok": true,
+    "t": 47.63,
+    "add": {
+     "children": [
+      {
+       "children": [],
+       "classes": [],
+       "label": "Add account",
+       "name": "GtkLabel",
+       "rect": [
+        946,
+        164,
+        84,
+        30
+       ],
+       "sensitive": true,
+       "type": "GtkLabel",
+       "visible": true
+      }
+     ],
+     "classes": [
+      "text-button",
+      "w11-button"
+     ],
+     "label": "Add account",
+     "name": "st-email-accounts-add",
+     "rect": [
+      934,
+      163,
+      108,
+      32
+     ],
+     "sensitive": true,
+     "type": "GtkButton",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "email-accounts: Account toevoegen lists GOA’s providers (Google, Microsoft 365, Nextcloud, IMAP and SMTP)",
+    "ok": true,
+    "t": 49.0,
+    "names": [
+     "google",
+     "ms_graph",
+     "exchange",
+     "owncloud",
+     "imap_smtp",
+     "webdav",
+     "kerberos"
+    ]
+   },
+   {
+    "check": "email-accounts: a provider starts win11-gtk-settings --goa-add google (GOA’s own dialog)",
+    "ok": true,
+    "t": 50.31,
+    "helper": [
+     [
+      1752,
+      [
+       "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run/prefix/bin/win11-gtk-settings",
+       "--goa-add",
+       "google"
+      ]
+     ]
+    ]
+   },
+   {
+    "check": "signin: the breadcrumb is Accounts > Sign-in options",
+    "ok": true,
+    "t": 55.5,
+    "current": [
+     "Sign-in options"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "signin: built, no placeholder",
+    "ok": true,
+    "t": 55.69
+   },
+   {
+    "check": "signin: no Dutch words in en",
+    "ok": true,
+    "t": 55.69,
+    "hits": []
+   },
+   {
+    "check": "signin: no fingerprint row without fprintd",
+    "ok": true,
+    "t": 56.08
+   },
+   {
+    "check": "signin: no USB row without usbguard (caps)",
+    "ok": true,
+    "t": 56.45
+   },
+   {
+    "check": "signin: Na 5 minuten (real clicks) writes lock-enabled true and lock-delay 300",
+    "ok": true,
+    "t": 59.66,
+    "keys": [
+     "true",
+     "300"
+    ],
+    "input": "clutter"
+   },
+   {
+    "check": "signin: Nooit writes lock-enabled false and keeps the delay, as GNOME",
+    "ok": true,
+    "t": 62.82,
+    "keys": [
+     "false",
+     "300"
+    ]
+   },
+   {
+    "check": "signin: the lock question follows lock-enabled and lock-delay written from outside (Na 1 minuut)",
+    "ok": true,
+    "t": 63.25,
+    "label": "After 1 minute"
+   },
+   {
+    "check": "signin: ... and Nooit when lock-enabled goes false",
+    "ok": true,
+    "t": 63.67,
+    "label": "Never"
+   },
+   {
+    "check": "signin: a real click on st-signin-ubuntu-lock-on-suspend writes ubuntu-lock-on-suspend false",
+    "ok": true,
+    "t": 65.8,
+    "before": "true",
+    "after": "false",
+    "input": "clutter"
+   },
+   {
+    "check": "signin: st-signin-ubuntu-lock-on-suspend follows ubuntu-lock-on-suspend = true written from outside",
+    "ok": true,
+    "t": 66.23,
+    "active": true
+   },
+   {
+    "check": "signin: Automatisch aanmelden (a real click) sends SetAutomaticLogin(true) for the own account, interactive",
+    "ok": true,
+    "t": 67.62,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetAutomaticLogin",
+     "args": "(true,)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "signin: the switch is on after the page reads AccountsService again",
+    "ok": true,
+    "t": 67.85
+   },
+   {
+    "check": "harness: run/stubs is private, so system_tool takes its stubs (note 16 for I)",
+    "ok": false,
+    "t": 67.85,
+    "known": "harness-stub-dir-mode",
+    "mode": "0o775"
+   },
+   {
+    "check": "signin: Wijzigen is enabled once the new password is typed twice and strong enough (libpwquality)",
+    "ok": false,
+    "t": 85.37,
+    "known": "sandbox-cracklib",
+    "hint": "Try to avoid common words.",
+    "cracklibInSandbox": false
+   },
+   {
+    "check": "signin: Wachtwoord wijzigen runs passwd for the own account (the run/stubs passwd, no arguments)",
+    "ok": true,
+    "t": 87.45,
+    "calls": [
+     "21:53:39\tpasswd\t"
+    ]
+   },
+   {
+    "check": "signin: passwd’s refusal comes back as an error, not as a lost connection (the stub exits 97)",
+    "ok": true,
+    "t": 87.45,
+    "answer": {
+     "error": {
+      "code": "failed",
+      "message": "The password wasn’t changed.",
+      "key": "users.passwd.unchanged",
+      "params": {}
+     }
+    }
+   },
+   {
+    "check": "signin: the breadcrumb is Accounts > Sign-in options",
+    "ok": true,
+    "t": 92.09,
+    "current": [
+     "Sign-in options"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "signin: built, no placeholder",
+    "ok": true,
+    "t": 92.36
+   },
+   {
+    "check": "signin: no Dutch words in en",
+    "ok": true,
+    "t": 92.36,
+    "hits": []
+   },
+   {
+    "check": "signin: with fprintd and a reader, Vingerafdrukherkenning is a way to sign in",
+    "ok": true,
+    "t": 92.65
+   },
+   {
+    "check": "wait_text settings: '1 fingerprint has been set up.'",
+    "ok": true,
+    "t": 99.24,
+    "seconds": 0.3
+   },
+   {
+    "check": "signin: one finger set up: Nog een vinger toevoegen and Verwijderen",
+    "ok": true,
+    "t": 99.24
+   },
+   {
+    "check": "signin: the enrolment follows EnrollStatus to the end and the dialog closes",
+    "ok": true,
+    "t": 104.48
+   },
+   {
+    "check": "signin: an enrolment is Claim, EnrollStart(right index finger), EnrollStop, Release; the writes interactive",
+    "ok": true,
+    "t": 104.81,
+    "calls": [
+     [
+      "Claim",
+      "('',)",
+      true
+     ],
+     [
+      "EnrollStart",
+      "('right-index-finger',)",
+      true
+     ],
+     [
+      "EnrollStop",
+      "()",
+      false
+     ],
+     [
+      "Release",
+      "()",
+      false
+     ]
+    ]
+   },
+   {
+    "check": "wait_text settings: '2 fingerprints have been set up.'",
+    "ok": true,
+    "t": 110.97,
+    "seconds": 0.34
+   },
+   {
+    "check": "signin: then two fingers are set up",
+    "ok": true,
+    "t": 110.97
+   },
+   {
+    "check": "signin: Vingerafdrukken verwijderen is Claim, DeleteEnrolledFingers2, Release; interactive",
+    "ok": true,
+    "t": 116.77,
+    "calls": [
+     [
+      "Claim",
+      "('',)",
+      true
+     ],
+     [
+      "DeleteEnrolledFingers2",
+      "()",
+      true
+     ],
+     [
+      "Release",
+      "()",
+      false
+     ]
+    ]
+   },
+   {
+    "check": "otherusers: the breadcrumb is Accounts > Other users",
+    "ok": true,
+    "t": 119.69,
+    "current": [
+     "Other users"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "otherusers: built, no placeholder",
+    "ok": true,
+    "t": 120.02
+   },
+   {
+    "check": "otherusers: no Dutch words in en",
+    "ok": true,
+    "t": 120.02,
+    "hits": []
+   },
+   {
+    "check": "otherusers: the other user is listed, not the own one",
+    "ok": true,
+    "t": 121.07
+   },
+   {
+    "check": "otherusers: Automatisch aanmelden of another user (a real click) sends SetAutomaticLogin(true) to that user, interactive",
+    "ok": true,
+    "t": 130.2,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1001",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetAutomaticLogin",
+     "args": "(true,)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "otherusers: Accounttype wijzigen > Administrator sends SetAccountType(1) to that user, interactive",
+    "ok": true,
+    "t": 143.67,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1001",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetAccountType",
+     "args": "(1,)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "otherusers: Wachtwoord opnieuw instellen (at the next sign-in) sends SetPasswordMode(1) to that user, interactive",
+    "ok": true,
+    "t": 155.62,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1001",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetPasswordMode",
+     "args": "(1,)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "otherusers: Account toevoegen sends CreateUser(kim, Kim Lee, standard), then SetPasswordMode(1) (a password at the first sign-in); interactive",
+    "ok": true,
+    "t": 161.79,
+    "calls": [
+     [
+      "CreateUser",
+      "('kim', 'Kim Lee', 0)",
+      true
+     ],
+     [
+      "SetPasswordMode",
+      "(1,)",
+      true
+     ]
+    ]
+   },
+   {
+    "check": "otherusers: the new user is listed",
+    "ok": true,
+    "t": 162.22
+   },
+   {
+    "check": "otherusers: Bestanden verwijderen sends DeleteUser(uid, true), interactive",
+    "ok": true,
+    "t": 174.95,
+    "call": {
+     "path": "/org/freedesktop/Accounts",
+     "iface": "org.freedesktop.Accounts",
+     "method": "DeleteUser",
+     "args": "(int64 1002, true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "otherusers: the deleted user is no longer listed",
+    "ok": true,
+    "t": 175.87
+   },
+   {
+    "check": "accounts: the title is Accounts",
+    "ok": true,
+    "t": 178.85,
+    "heads": [
+     "Accounts"
+    ]
+   },
+   {
+    "check": "accounts: built, no placeholder",
+    "ok": true,
+    "t": 179.33
+   },
+   {
+    "check": "accounts: no Dutch words in en",
+    "ok": true,
+    "t": 179.33,
+    "hits": []
+   },
+   {
+    "check": "otherusers: the breadcrumb is Accounts > Other users",
+    "ok": true,
+    "t": 182.66,
+    "current": [
+     "Other users"
+    ],
+    "crumbs": [
+     [
+      "accounts",
+      "Accounts"
+     ]
+    ]
+   },
+   {
+    "check": "otherusers: built, no placeholder",
+    "ok": true,
+    "t": 183.13
+   },
+   {
+    "check": "otherusers: no Dutch words in en",
+    "ok": true,
+    "t": 183.13,
+    "hits": []
+   },
+   {
+    "check": "wait_text settings: 'Sam Taylor is still signed in'",
+    "ok": true,
+    "t": 194.21,
+    "seconds": 0.5
+   },
+   {
+    "check": "otherusers: a user who is still signed in gets GNOME’s “is nog aangemeld” with only Annuleren",
+    "ok": true,
+    "t": 196.65,
+    "opened": true,
+    "shown": true,
+    "only_cancel": true
+   },
+   {
+    "check": "otherusers: users.delete refuses the signed-in user (denied users.loggedIn)",
+    "ok": true,
+    "t": 198.65,
+    "answer": {
+     "error": {
+      "code": "denied",
+      "message": "This user is still signed in. Deleting a user while they’re signed in can leave the system in an inconsistent state.",
+      "key": "users.loggedIn",
+      "params": {}
+     }
+    }
+   },
+   {
+    "check": "otherusers: and no DeleteUser reached AccountsService",
+    "ok": true,
+    "t": 198.65
+   },
+   {
+    "check": "otherusers: logind was asked (ListSessions)",
+    "ok": true,
+    "t": 198.65
+   }
+  ],
+  "records": {
+   "standin.accounts": {
+    "pid": 1359,
+    "bus": "system",
+    "name": "org.freedesktop.Accounts",
+    "objects": [
+     "/org/freedesktop/Accounts",
+     "/org/freedesktop/Accounts/User1000",
+     "/org/freedesktop/Accounts/User1001",
+     "/org/freedesktop/Accounts/User1002"
+    ]
+   },
+   "dialog probe: real click on Annuleren": {
+    "input": "clutter",
+    "closed": false
+   },
+   "yourinfo faces": [
+    "st-yourinfo-face-bicycle",
+    "st-yourinfo-face-book",
+    "st-yourinfo-face-calculator",
+    "st-yourinfo-face-cat",
+    "st-yourinfo-face-coffee2",
+    "st-yourinfo-face-flower2",
+    "st-yourinfo-face-gamepad",
+    "st-yourinfo-face-guitar2",
+    "st-yourinfo-face-headphones",
+    "st-yourinfo-face-hummingbird",
+    "st-yourinfo-face-mountain",
+    "st-yourinfo-face-plane",
+    "st-yourinfo-face-surfer",
+    "st-yourinfo-face-tomatoes",
+    "st-yourinfo-face-tree"
+   ],
+   "standin.goa": {
+    "pid": 1615,
+    "bus": "session",
+    "name": "org.gnome.OnlineAccounts",
+    "objects": [
+     "/org/gnome/OnlineAccounts",
+     "/org/gnome/OnlineAccounts/Accounts/account_1_0"
+    ]
+   },
+   "dialog probe: real click on a switch in a dialog": {
+    "input": "clutter",
+    "reached": false
+   },
+   "email-accounts providers": [
+    "google",
+    "ms_graph",
+    "exchange",
+    "owncloud",
+    "imap_smtp",
+    "webdav",
+    "kerberos"
+   ],
+   "goa.calls": [
+    {
+     "path": "/org/gnome/OnlineAccounts/Accounts/account_1_0",
+     "method": "Set:CalendarDisabled",
+     "args": "false",
+     "interactive": null
+    },
+    {
+     "path": "/org/gnome/OnlineAccounts/Accounts/account_1_0",
+     "method": "Remove",
+     "args": "()",
+     "interactive": true
+    }
+   ],
+   "lock-enabled at start": "false",
+   "lock-delay at start": null,
+   "run/stubs mode": "0o775",
+   "users.changePassword through the backend": {
+    "error": {
+     "code": "failed",
+     "message": "The password wasn’t changed.",
+     "key": "users.passwd.unchanged",
+     "params": {}
+    }
+   },
+   "standin.fprintd": {
+    "pid": 1967,
+    "bus": "system",
+    "name": "net.reactivated.Fprint",
+    "objects": [
+     "/net/reactivated/Fprint/Device/0",
+     "/net/reactivated/Fprint/Manager"
+    ]
+   },
+   "fprintd.calls": [
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "ListEnrolledFingers",
+     "args": "('',)",
+     "interactive": false
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "ListEnrolledFingers",
+     "args": "('',)",
+     "interactive": false
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "Claim",
+     "args": "('',)",
+     "interactive": true
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "EnrollStart",
+     "args": "('right-index-finger',)",
+     "interactive": true
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "EnrollStop",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "Release",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "ListEnrolledFingers",
+     "args": "('',)",
+     "interactive": false
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "Claim",
+     "args": "('',)",
+     "interactive": true
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "DeleteEnrolledFingers2",
+     "args": "()",
+     "interactive": true
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "Release",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/net/reactivated/Fprint/Device/0",
+     "method": "ListEnrolledFingers",
+     "args": "('',)",
+     "interactive": false
+    }
+   ],
+   "otherusers: Administrator picked in the dialog": true,
+   "otherusers: the suggested user name": "kim",
+   "standin.logind": {
+    "pid": 2421,
+    "bus": "system",
+    "name": "org.freedesktop.login1",
+    "objects": [
+     "/org/freedesktop/login1",
+     "/org/freedesktop/login1/session/_30"
+    ]
+   },
+   "otherusers: users.delete of the signed-in user": {
+    "error": {
+     "code": "denied",
+     "message": "This user is still signed in. Deleting a user while they’re signed in can leave the system in an inconsistent state.",
+     "key": "users.loggedIn",
+     "params": {}
+    }
+   },
+   "logind.calls": [
+    {
+     "path": "/org/freedesktop/login1",
+     "method": "ListSessions",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/login1",
+     "method": "ListSessions",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/login1",
+     "method": "ListSessions",
+     "args": "()",
+     "interactive": false
+    }
+   ],
+   "scenario seconds": 197.8,
+   "accounts.calls": [
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetRealName",
+     "args": "('Alex Morgan-Reed',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetIconFile",
+     "args": "('/usr/share/pixmaps/faces/bicycle.jpg',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetIconFile",
+     "args": "('',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetAutomaticLogin",
+     "args": "(true,)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1001,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1001",
+     "method": "SetAutomaticLogin",
+     "args": "(true,)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1001,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1001",
+     "method": "SetAccountType",
+     "args": "(1,)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1001,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1001",
+     "method": "SetPasswordMode",
+     "args": "(1,)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "CreateUser",
+     "args": "('kim', 'Kim Lee', 0)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1002",
+     "method": "SetPasswordMode",
+     "args": "(1,)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1002,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "DeleteUser",
+     "args": "(int64 1002, true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "ListCachedUsers",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    }
+   ]
+  },
+  "shots": [
+   "accounts.en.png",
+   "yourinfo.en.png",
+   "yourinfo-rename.en.png",
+   "yourinfo-gallery.en.png",
+   "yourinfo-picture.en.png",
+   "email-accounts.en.png",
+   "email-accounts-goa.en.png",
+   "email-accounts-open.en.png",
+   "email-accounts-manage.en.png",
+   "email-accounts-remove.en.png",
+   "email-accounts-add.en.png",
+   "email-accounts-goa-helper.en.png",
+   "signin.en.png",
+   "signin-never.en.png",
+   "signin-password.en.png",
+   "signin-password-refused.en.png",
+   "signin-fprintd.en.png",
+   "signin-fingerprint.en.png",
+   "signin-enroll.en.png",
+   "otherusers.en.png",
+   "otherusers-open.en.png",
+   "otherusers-type.en.png",
+   "otherusers-password.en.png",
+   "otherusers-add.en.png",
+   "otherusers-remove.en.png",
+   "accounts-again.en.png",
+   "otherusers-signed-in-page.en.png",
+   "otherusers-signed-in.en.png"
+  ],
+  "error": null,
+  "seconds": 198.66,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 522,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 522,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 522,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "native-settings",
+    "pid": 1978,
+    "page": "otherusers",
+    "alive": true
+   }
+  },
+  "failedChecks": [
+   "dialogs: a real pointer click on a kit dialog’s button (Annuleren) closes it",
+   "harness: run/stubs is private, so system_tool takes its stubs (note 16 for I)",
+   "signin: Wijzigen is enabled once the new password is typed twice and strong enough (libpwquality)"
+  ],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=d4e1455bc5ed73efcc03f6686afb6cf6",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 522,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 522
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "yourinfo",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "email-accounts",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "accounts",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "email-accounts",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "signin",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "otherusers",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "accounts",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "otherusers",
+     "exit": 0,
+     "seconds": 0.03
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "accounts.en.png",
+    "group": "scenario",
+    "bytes": 218959,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "yourinfo.en.png",
+    "group": "scenario",
+    "bytes": 203310,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "yourinfo-rename.en.png",
+    "group": "scenario",
+    "bytes": 154216,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "yourinfo-gallery.en.png",
+    "group": "scenario",
+    "bytes": 304092,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "yourinfo-picture.en.png",
+    "group": "scenario",
+    "bytes": 257093,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts.en.png",
+    "group": "scenario",
+    "bytes": 189279,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts-goa.en.png",
+    "group": "scenario",
+    "bytes": 188411,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts-open.en.png",
+    "group": "scenario",
+    "bytes": 196795,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts-manage.en.png",
+    "group": "scenario",
+    "bytes": 145370,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts-remove.en.png",
+    "group": "scenario",
+    "bytes": 157012,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts-add.en.png",
+    "group": "scenario",
+    "bytes": 112916,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "email-accounts-goa-helper.en.png",
+    "group": "scenario",
+    "bytes": 400034,
+    "area": null
+   },
+   {
+    "file": "signin.en.png",
+    "group": "scenario",
+    "bytes": 211193,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "signin-never.en.png",
+    "group": "scenario",
+    "bytes": 204475,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "signin-password.en.png",
+    "group": "scenario",
+    "bytes": 138305,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "signin-password-refused.en.png",
+    "group": "scenario",
+    "bytes": 208104,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "signin-fprintd.en.png",
+    "group": "scenario",
+    "bytes": 219047,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "signin-fingerprint.en.png",
+    "group": "scenario",
+    "bytes": 217834,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "signin-enroll.en.png",
+    "group": "scenario",
+    "bytes": 163836,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers.en.png",
+    "group": "scenario",
+    "bytes": 181215,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-open.en.png",
+    "group": "scenario",
+    "bytes": 208447,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-type.en.png",
+    "group": "scenario",
+    "bytes": 159085,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-password.en.png",
+    "group": "scenario",
+    "bytes": 165049,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-add.en.png",
+    "group": "scenario",
+    "bytes": 123824,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-remove.en.png",
+    "group": "scenario",
+    "bytes": 163792,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "accounts-again.en.png",
+    "group": "scenario",
+    "bytes": 211279,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-signed-in-page.en.png",
+    "group": "scenario",
+    "bytes": 181498,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "otherusers-signed-in.en.png",
+    "group": "scenario",
+    "bytes": 166285,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   }
+  ],
+  "attentionNotifications": [
+   {
+    "app": "settings",
+    "source": "Win11 Settings",
+    "title": "Win11 Settings",
+    "body": "“Sign-in options – Settings” is ready"
+   }
+  ]
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-accounts.en.out/accounts.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/yourinfo.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/yourinfo-rename.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/yourinfo-gallery.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/yourinfo-picture.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts-goa.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts-open.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts-manage.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts-remove.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts-add.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/email-accounts-goa-helper.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin-never.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin-password.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin-password-refused.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin-fprintd.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin-fingerprint.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/signin-enroll.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-open.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-type.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-password.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-add.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-remove.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/accounts-again.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-signed-in-page.en.png",
+  "tests/gnome/scenarios/settings-accounts.en.out/otherusers-signed-in.en.png"
+ ]
+}

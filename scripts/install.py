@@ -1,20 +1,41 @@
 #!/usr/bin/env python3
 """Install only this project's files; do not change the current desktop session.
 
-Usage: scripts/install.sh [--lang nl|en] [--no-session]   (install.sh runs: install.py ROOT [...])
+Usage: scripts/install.sh [--lang nl|en]   (install.sh runs: /usr/bin/python3 -E -s -B install.py ROOT [...])
 
-WinPoint's own choice at the login screen (Robin, 13-11): when the four system files of scripts/install-session.py
-are missing and this runs in a terminal, it runs that script first (pkexec asks the password once; --no-session or
-WIN11_NO_SESSION=1 skips it). With the session the extension runs in the WinPoint session only (its shell mode turns
-it on), the FileChooser portal choice goes to winpoint-portals.conf, and the autostart entry GnomeLook
-(NotShowIn=WinPoint) gives GNOME and Ubuntu their own look back at every login (host/src/gnome_look.rs). Without the
-session everything stays as before: the extension is turned on by hand and runs in every GNOME session.
+WinPoint's own choice at the login screen (Robin, 13-11), and since 0.9.1 the default one with one password (Robin,
+16-11: "zolang de originele gnome blijft mag je doen wat je wil"). A terminal install (a tty on stdin, no
+--no-session, WIN11_NO_SESSION not 1) always goes through WinPoint's own login session:
+  * when one of the eight root files (scripts/install-session.py's four, install-system.py's four from host/data) is
+    missing or differs from what this tree writes (winpoint.json by meaning, install-session.py stale()), root_step()
+    runs install-session.py --system once, after every check and before the first change: one pkexec, one password.
+    Without the session files afterwards it refuses (sessionNeeded) and nothing has changed; when only some of the
+    rest did not make it, one warning line, and the install goes on. apply()'s rollback cannot take those files
+    back, so a failure after this step says so and names install-session.py --remove (rolledBackRoot);
+  * after the commit it makes WinPoint this user's choice at the next sign-in (AccountsService SetSession, busctl;
+    polkit allows it without a password, and busctl never lets it ask for one; when it fails the gear instruction
+    follows) and takes WinPoint's UUID out of org.gnome.shell enabled-extensions (an in-GNOME install of 0.9.0: the
+    extension would also run in the normal session; one line says so) and then disabled-extensions (the WinPoint
+    session's mode skips an extension listed there);
+  * not on a terminal it refuses (sessionTerminal), without gnome-session or pkexec too (missingParts); as root
+    always (noRoot).
+The user's normal GNOME and Ubuntu sessions stay as they were: the extension runs in the WinPoint session only (its
+shell mode turns it on), the FileChooser portal choice goes to winpoint-portals.conf, and the autostart entry
+GnomeLook (NotShowIn=WinPoint) gives them their own look back at every login (host/src/gnome_look.rs). --no-session
+and WIN11_NO_SESSION=1 (WinPoint's updater, below) keep 0.9.0's behaviour exactly: no root step, no AccountsService,
+no GSettings; the session counts when its four files are installed, else the extension is turned on by hand and runs
+in every GNOME session.
+The payload carries the scripts the uninstaller needs (UNINSTALL_SCRIPTS) and <prefix>/bin/winpoint-uninstall runs
+that copy: one command removes WinPoint, the root files with one password included (scripts/uninstall.py). Without
+that copy (0.9.0's uninstall.sh removed the payload, or 0.9.0's installer replaced it) it names a release's
+uninstall.sh in nl and en.
 
 Win11's language (notes/claude/contracts.md C1, C6): an existing win11-gnome settings.json always decides; without
 one, --lang; on an update of an existing install without a stored choice, nl (H D13); on a first install, the
 language of Win11 Shell for Hyprland (~/.config/win11shell/settings.json), else one guess from the locale (H D4).
 A first install stores that choice in a complete settings.json (the defaults of host/src/settings-defaults.json).
-Messages follow --lang when it is given, else that language.
+Messages follow --lang when it is given, else that language, also the refusals before prepare() (busy): locate()
+reads it the same way, and as root or for a path it refuses (noRoot, notAbsolute) it takes the locale guess.
 
 An install is prepare() (every check, nothing written) and apply() (every change in one Transaction): an error,
 SIGTERM, SIGHUP or Ctrl+C puts everything back, the binaries' original inodes included (before any change they stop
@@ -118,8 +139,8 @@ T = {
                           "en": "Note: update-desktop-database is missing (package desktop-file-utils); GNOME’s app database is not updated."},
     "configNotOwn": {"nl": "Niet overschreven: {path} moet een gewone map van deze gebruiker zijn.", "en": "Not overwritten: {path} must be a plain folder of this user."},
     "badLang": {"nl": "Onbekende taal ‘{lang}’: kies nl of en.", "en": "Unknown language ‘{lang}’: choose nl or en."},
-    "usage": {"nl": "Gebruik: scripts/install.sh [--lang nl|en] [--no-session]\n  --lang nl|en  de taal van Win11 bij een eerste installatie; een keuze die al in settings.json staat, blijft gelden\n  --no-session  WinPoint niet als eigen keuze bij het inloggen toevoegen (dan geen wachtwoord nodig)",
-              "en": "Usage: scripts/install.sh [--lang nl|en] [--no-session]\n  --lang nl|en  Win11’s language on a first install; a choice already in settings.json is kept\n  --no-session  don’t add WinPoint as its own choice at the login screen (no password needed then)"},
+    "usage": {"nl": "Gebruik: scripts/install.sh [--lang nl|en]\n  --lang nl|en  de taal van Win11 bij een eerste installatie; een keuze die al in settings.json staat, blijft gelden",
+              "en": "Usage: scripts/install.sh [--lang nl|en]\n  --lang nl|en  Win11’s language on a first install; a choice already in settings.json is kept"},
     "badOption": {"nl": "Onbekende optie: {option}", "en": "Unknown option: {option}"},
     "langChosen": {"nl": "Taal: Nederlands. In English: choose English in Instellingen › Tijd en taal › Taal en regio.",
                    "en": "Language: English. In het Nederlands: kies Nederlands in Settings › Time & language › Language & region."},
@@ -144,13 +165,34 @@ T = {
     "done3": {"nl": "De taakbalk is geïnstalleerd, maar nog niet aangezet.", "en": "The taskbar is installed, but not turned on yet."},
     "done4": {"nl": "Meld je aan bij Ubuntu/GNOME; na eerste installatie zo nodig af- en aanmelden.", "en": "Sign in to Ubuntu/GNOME; after a first installation, sign out and back in if needed."},
     "done5": {"nl": "Taakbalk aan: gnome-extensions enable {uuid}", "en": "Turn the taskbar on: gnome-extensions enable {uuid}"},
-    "session1": {"nl": "WinPoint is een eigen keuze bij het inloggen. GNOME en Ubuntu blijven zoals ze waren.", "en": "WinPoint is its own choice at the login screen. GNOME and Ubuntu stay as they were."},
+    "session1": {"nl": "WinPoint is een eigen keuze bij het inloggen. Je gewone Ubuntu-sessie blijft zoals hij was.", "en": "WinPoint is its own choice at the login screen. Your normal Ubuntu session stays as it was."},
     "session2": {"nl": "Meld je af en kies WinPoint bij het inloggen: klik op je naam en daarna op het tandwiel rechtsonder.", "en": "Sign out and choose WinPoint at the login screen: click your name, then the gear at the bottom right."},
-    "sessionAsk": {"nl": "WinPoint krijgt een eigen keuze bij het inloggen, naast GNOME en Ubuntu (overslaan: --no-session).", "en": "WinPoint gets its own choice at the login screen, next to GNOME and Ubuntu (skip it: --no-session)."},
-    "sessionSkipped": {"nl": "WinPoint is geen eigen keuze bij het inloggen geworden; dat kan later met: python3 {command}", "en": "WinPoint didn’t become its own choice at the login screen; you can do that later with: python3 {command}"},
+    # 0.9.1 (Robin, 16-11): the terminal install's one password, its refusals and the choice at the next sign-in
+    "sessionNext": {"nl": "Meld je af: bij de volgende keer aanmelden start WinPoint. Ubuntu kies je bij het inloggen met het tandwiel rechtsonder, na je naam.",
+                    "en": "Sign out: WinPoint starts the next time you sign in. To use Ubuntu, choose it with the gear at the bottom right of the login screen, after your name."},
+    "sessionTerminal": {"nl": "Start de installatie in een terminal: scripts/install.sh vraagt daar één keer om je wachtwoord. Er is niets veranderd.",
+                        "en": "Run the installation in a terminal: scripts/install.sh asks for your password there, once. Nothing was changed."},
+    # after install-session.py's own lines (what it did install is listed there): nothing of the user's side changed
+    "sessionNeeded": {"nl": "WinPoint is geen keuze bij het inloggen geworden, dus de installatie is gestopt; er is niets in je thuismap veranderd. Start haar opnieuw en vul het wachtwoord in.",
+                      "en": "WinPoint didn’t become a choice at the login screen, so the installation stopped; nothing in your home folder was changed. Run it again and enter the password."},
+    "rootPartly": {"nl": "Let op: niet alle systeembestanden zijn bijgewerkt; de installatie gaat door. Start haar later opnieuw om ze bij te werken.",
+                   "en": "Note: not all system files were updated; the installation goes on. Run it again later to update them."},
+    "noRoot": {"nl": "Start de installatie niet als root of met sudo: WinPoint hoort bij je eigen account, en pkexec vraagt zelf om het wachtwoord.",
+               "en": "Don’t run the installation as root or with sudo: WinPoint belongs to your own account, and pkexec asks for the password itself."},
+    # after the commit, when the UUID was in enabled-extensions (an in-GNOME install of 0.9.0): it is out now
+    "sessionMoved": {"nl": "De taakbalk van WinPoint draait voortaan alleen in de WinPoint-sessie; in je gewone Ubuntu-sessie staat hij nu uit.",
+                     "en": "From now on WinPoint’s taskbar runs only in the WinPoint session; in your normal Ubuntu session it’s off now."},
+    # rolledBack after root_step installed files: apply()'s Transaction cannot take them back
+    "rolledBackRoot": {"nl": "De installatie is mislukt; je thuismap is teruggezet zoals hij was, maar de systeembestanden van WinPoint blijven staan en WinPoint is een keuze bij het inloggen. Start de installatie opnieuw om haar af te ronden, of verwijder ze met: {command}",
+                       "en": "The installation failed; your home folder was put back as it was, but WinPoint’s system files stay and WinPoint is a choice at the login screen. Run the installation again to finish it, or remove them with: {command}"},
+    # <prefix>/bin/winpoint-uninstall without the payload's uninstall.py (uninstaller_text prints both): the payload is
+    # gone (0.9.0's uninstall.sh) or is 0.9.0's (installed by hand over 0.9.1), and a release's uninstall.sh takes both
+    "uninstallerGone": {"nl": "{script} ontbreekt, dus dit verwijderprogramma werkt niet meer. Voer ./scripts/uninstall.sh uit in de map van een uitgepakte WinPoint-uitgave (0.9.1 of nieuwer): dat verwijdert wat er nog van WinPoint is.",
+                        "en": "{script} is missing, so this uninstaller no longer works. Run ./scripts/uninstall.sh in the folder of an unpacked WinPoint release (0.9.1 or newer): it removes what is left of WinPoint."},
     "gnomeLookName": {"nl": "GNOME-uiterlijk terugzetten (WinPoint)", "en": "Restore the GNOME look (WinPoint)"},
     "done6": {"nl": "Je huidige Win11Shell, standaardbestandsbeheerder en desktopinstellingen zijn niet gewijzigd.", "en": "Your current Win11Shell, default file manager and desktop settings have not been changed."},
-    # GW5: the one hint line about scripts/install-system.py (install: the files are missing; uninstall: still there)
+    # GW5: the one hint line about scripts/install-system.py (install: the files are missing; uninstall: still there).
+    # 0.9.1: the terminal install's root step installs them, so only --no-session or a tree without host/data prints it
     "systemHint": {"nl": "Optioneel, één keer met je wachtwoord: {command} installeert de systeembestanden voor ‘Nieuwe Ubuntu-versies’ en ‘Venster weer openen’.",
                    "en": "Optional, once with your password: {command} installs the system files for ‘New Ubuntu versions’ and ‘Show the upgrade window’."},
     "systemHintRemove": {"nl": "De systeembestanden van Win11 staan er nog; verwijder ze met: {command}",
@@ -164,6 +206,8 @@ T = {
                       "en": "This version of WinPoint is made for GNOME {needs}; this PC has GNOME {running}."},
     "abi": {"nl": "{binary} werkt niet met de systeembibliotheken van deze pc: {detail}",
             "en": "{binary} doesn’t work with this PC’s system libraries: {detail}"},
+    # abi's {detail} for a bundle of another architecture (check_abi; the code stays abi for 0.9.0's job.rs)
+    "abiMachine": {"nl": "gemaakt voor {needs}, deze pc is {running}", "en": "made for {needs}, this PC is {running}"},
     "interrupted": {"nl": "De installatie is onderbroken.", "en": "The installation was interrupted."},
     "rolledBack": {"nl": "De installatie is mislukt; alles is teruggezet zoals het was.",
                    "en": "The installation failed; everything was put back as it was."},
@@ -218,10 +262,11 @@ def desktop_exec(path: Path) -> str:
     return '"' + value + '"'
 
 
-# The system files of scripts/install-system.py (GW5, notes/claude/windows-update-gnome.md §7): installed and removed
-# only by that separate command, never by this installer or uninstall.py. Both only name the command in one line, and
-# only on a terminal: the line is advice for the person at the keyboard, so captured output (the installer tests'
-# byte-for-byte comparison with 3b898e6) stays as it was.
+# The system files of scripts/install-system.py (GW5, notes/claude/windows-update-gnome.md §7). Since 0.9.1 a terminal
+# install puts them in place with the login session's four in one password (root_step, install-session.py --system)
+# and uninstall.py removes all eight in one; install-system.py still does it on its own. Without that step (--no-session)
+# this installer names the command in one line, only on a terminal: the line is advice for the person at the
+# keyboard, so captured output (the installer tests' byte-for-byte comparison with 3b898e6) stays as it was.
 SYSTEM_FILES = ("usr/libexec/win11-gnome/release-upgrades-helper", "usr/libexec/win11-gnome/release-upgrade-attach",
                 "usr/share/polkit-1/actions/io.github.win11shell.gnome.release-upgrades.policy",
                 "usr/share/polkit-1/actions/io.github.win11shell.gnome.release-upgrade-attach.policy")
@@ -252,33 +297,203 @@ def gnome_look_entry(prefix: Path, language: str) -> str:
             "NotShowIn=WinPoint;\nNoDisplay=true\n")
 
 
-def session_script():
-    spec = importlib.util.spec_from_file_location("install_session", Path(__file__).with_name("install-session.py"))
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+# Uninstall with one command (0.9.1): the payload's scripts/ holds what uninstall.py needs (stage_payload), and
+# <prefix>/bin/winpoint-uninstall runs that copy. The line after its #! marks it as ours (own_uninstaller): an update
+# rewrites only that file, a first install refuses another one at its path (conflicts), uninstall.py removes only it.
+# apply() writes it as the binaries: a temporary UNINSTALLER_NEW first, then one rename (repair() removes a leftover).
+UNINSTALLER = "winpoint-uninstall"
+UNINSTALLER_NEW = f".{UNINSTALLER}.new"
+UNINSTALL_SCRIPTS = ("uninstall.py", "install.py", "install-session.py", "install-system.py", "file_portal.py",
+                     "icon_bundle.py")
+UNINSTALLER_MARK = "# WinPoint's uninstaller (scripts/install.py UNINSTALLER); your settings stay.\n"
 
 
-def session_ready(offer: bool = True) -> bool:
-    """The WinPoint login session is installed, after running install-session.py when it is missing and allowed
-    (offer: not for --check; a terminal, no --no-session or WIN11_NO_SESSION=1, gnome-session and pkexec present)."""
-    session = session_script()
-    if session.installed():
-        return True
-    if (not offer or NO_SESSION or os.environ.get("WIN11_NO_SESSION") == "1" or not sys.stdin.isatty()
-            or not Path("/usr/bin/gnome-session").is_file() or not shutil.which("pkexec")):
+def uninstaller_text(payload: Path) -> str:
+    """A small sh wrapper; the paths and texts are quoted for sh (a prefix may hold spaces, $ or quotes). Without the
+    payload's uninstall.py (0.9.0's uninstall.sh removes the payload and leaves this file; 0.9.0's installer writes a
+    payload without scripts/) it prints uninstallerGone in both languages, as the language of that install is
+    unknown, and exits 1 (uninstall.py of a release takes the rest: this file, the root files)."""
+    script = shlex.quote(str(payload/"scripts/uninstall.py"))
+    gone = " ".join(shlex.quote(t("uninstallerGone", language, script=payload/"scripts/uninstall.py"))
+                    for language in LANGUAGES)
+    return ("#!/bin/sh\n" + UNINSTALLER_MARK + f"[ -f {script} ] || {{ printf '%s\\n' {gone} >&2; exit 1; }}\n"
+            f"exec /usr/bin/python3 -E -s -B {script} {shlex.quote(str(payload))} \"$@\"\n")
+
+
+def own_uninstaller(path: Path) -> bool:
+    """`path` is a plain file of this user (no link) with UNINSTALLER_MARK as its second line, or empty: what a power
+    cut right after apply()'s rename can leave of a new one (its data not on disk yet), so a rerun rewrites it and
+    uninstall.py removes it."""
+    if not own_entry(path, stat.S_ISREG):
         return False
-    print(t("sessionAsk"))
+    try:
+        with open(path, encoding="utf-8") as stream:
+            first = stream.readline()
+            return first == "" or (first == "#!/bin/sh\n" and stream.readline() == UNINSTALLER_MARK)
+    except (OSError, UnicodeError):
+        return False
+
+
+_SESSION = []
+
+
+def session_script():
+    """scripts/install-session.py next to this file, loaded once (uninstall.py loads it before it removes the payload
+    it may run from)."""
+    if not _SESSION:
+        spec = importlib.util.spec_from_file_location("install_session", Path(__file__).with_name("install-session.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        _SESSION.append(module)
+    return _SESSION[0]
+
+
+def system_root() -> Path:
+    """Where the root files are read: / (WIN11_SYSTEM_ROOT in tests only, install-session.py system_root)."""
+    return session_script().system_root()
+
+
+def terminal_install(check: bool = False) -> bool:
+    """The terminal path (module docstring): a tty on stdin, no --no-session, WIN11_NO_SESSION not 1, not --check.
+    --no-session and WIN11_NO_SESSION=1 are 0.9.0's path (False); no tty refuses (sessionTerminal), and so does a
+    system without gnome-session or pkexec (missingParts, with their packages)."""
+    if check or NO_SESSION or os.environ.get("WIN11_NO_SESSION") == "1":
+        return False
+    if not sys.stdin.isatty():
+        refuse("sessionTerminal")
+    parts = [(name, package) for name, package, present in (
+        ("gnome-session", "gnome-session-bin", Path("/usr/bin/gnome-session").is_file()),
+        ("pkexec", "pkexec", shutil.which("pkexec") is not None)) if not present]
+    if parts:
+        missing, packages = ", ".join(name for name, _ in parts), " ".join(package for _, package in parts)
+        raise Refusal("missingParts", {"missing": missing, "packages": packages},
+                      t("missingParts", missing=missing) + "\n" + t("installParts", packages=packages))
+    return True
+
+
+def root_step(plan: Plan) -> None:
+    """The terminal path's one password (Robin, 16-11), after every check of prepare() and before apply()'s first
+    change: when one of the eight root files is missing or differs (install-session.py stale() and system_stale(); the
+    system files only when the tree has host/data), install-session.py --system [--lang] installs all of them in one
+    pkexec. Without the session's files afterwards: sessionNeeded, and nothing was changed (a cancelled password
+    writes nothing). When some of the rest still differs: one warning line (rootPartly), and the install goes on. Once
+    it ran, plan.root_changed: apply()'s Transaction cannot undo it, so its failure ends with rolledBackRoot. The
+    systemHint line is for a tree without host/data only. install-session.py says what it does before the password
+    (the files, /bin/sh in the dialog, an administrator's password), so this prints nothing of its own first."""
+    if not plan.terminal:
+        return
+    session, system = session_script(), system_root()
+    sources = session.system_sources()
+    plan.hint = not sources
+    if not session.stale(system) and not (sources and session.system_stale(system)):
+        return
     sys.stdout.flush()
-    subprocess.run([sys.executable, str(Path(__file__).with_name("install-session.py"))])
-    if session.installed():
-        return True
-    print(t("sessionSkipped", command=Path(__file__).with_name("install-session.py")))
-    return False
+    subprocess.run([sys.executable, "-E", "-s", "-B", str(Path(__file__).with_name("install-session.py")),
+                    "--lang", LANGUAGE, *(["--system"] if sources else [])])
+    if not session.installed(system):
+        refuse("sessionNeeded")
+    # from here on apply()'s rollback leaves root files behind: its last line says so (rolledBackRoot)
+    plan.root_changed = True
+    if session.stale(system) or (sources and session.system_stale(system)):
+        print(t("rootPartly"), file=sys.stderr)
 
 
-def system_hint(remove: bool, root: Path = Path("/")) -> str | None:
-    """install (remove=False): the hint when any system file is missing; uninstall: when any is still there."""
+# AccountsService (D-Bus, system bus) through busctl: short, and a failure is no error (install: the gear
+# instruction follows; uninstall: the login screen falls back to its default once the session's files are gone)
+ACCOUNTS = ("org.freedesktop.Accounts", "/org/freedesktop/Accounts", "org.freedesktop.Accounts")
+ACCOUNTS_USER = "org.freedesktop.Accounts.User"
+
+
+# Never a second password prompt (Robin, 16-11: one password): a polkit policy that wants one for
+# change-own-user-data (not Ubuntu's: allow_active=yes) makes the call fail at once instead, and the fallback follows.
+# busctl's own timeout ends a slow call cleanly, before the subprocess timeout would kill it.
+BUSCTL_OPTIONS = ("--system", "--allow-interactive-authorization=no", "--timeout=5")
+
+
+def busctl(*args: str) -> str | None:
+    """busctl BUSCTL_OPTIONS ARGS (stdout), or None when it is missing, fails or takes longer than 5 s (10 s at the
+    most)."""
+    tool = shutil.which("busctl")
+    if not tool:
+        return None
+    try:
+        proc = subprocess.run([tool, *BUSCTL_OPTIONS, *args], stdin=subprocess.DEVNULL, capture_output=True, text=True,
+                              errors="replace", timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return proc.stdout if proc.returncode == 0 else None
+
+
+def accounts_user() -> str | None:
+    """This user's AccountsService object (FindUserById)."""
+    out = busctl("call", *ACCOUNTS, "FindUserById", "x", str(os.getuid()))
+    match = re.fullmatch(r'o "(/org/freedesktop/Accounts/[A-Za-z0-9_]+)"', (out or "").strip())
+    return match.group(1) if match else None
+
+
+def accounts_session(user: str) -> str | None:
+    """The Session property of `user` (GDM preselects it at the login screen)."""
+    out = busctl("get-property", ACCOUNTS[0], user, ACCOUNTS_USER, "Session")
+    match = re.fullmatch(r's "([^"\\]*)"', (out or "").strip())
+    return match.group(1) if match else None
+
+
+def preselect() -> bool:
+    """Decision 1 (Robin, 16-11): WinPoint (Wayland) is this user's session at the next sign-in, no gear step.
+    polkit's change-own-user-data allows it without a password in the active session."""
+    user = accounts_user()
+    return bool(user) and all(busctl("call", ACCOUNTS[0], user, ACCOUNTS_USER, method, "s", value) is not None
+                              for method, value in (("SetSession", "winpoint"), ("SetSessionType", "wayland")))
+
+
+def shell_settings():
+    """org.gnome.shell through GSettings (as host/src/gnome_look.rs: the default schema source, the user's backend),
+    or None without GSettings or that schema."""
+    try:
+        from gi.repository import Gio
+        source = Gio.SettingsSchemaSource.get_default()
+        schema = source.lookup("org.gnome.shell", True) if source else None
+        return Gio.Settings.new_full(schema, None, None) if schema else None
+    except (ImportError, ValueError, RuntimeError, TypeError):
+        return None
+
+
+def drop_uuid(keys: tuple[str, ...], settings=None) -> None:
+    """WinPoint's UUID out of org.gnome.shell's lists `keys`; every other value and key stays as it is."""
+    settings = settings or shell_settings()
+    if settings is None:
+        return
+    changed = False
+    for key in keys:
+        if settings.props.settings_schema.has_key(key) and UUID in settings.get_strv(key):
+            settings.set_strv(key, [uuid for uuid in settings.get_strv(key) if uuid != UUID])
+            changed = True
+    if changed:
+        from gi.repository import Gio
+        Gio.Settings.sync()
+
+
+def allow_mode_extension() -> bool:
+    """The terminal path after the commit (decision 2, Robin 16-11: the normal sessions stay as they are): WinPoint's
+    UUID out of enabled-extensions, where an in-GNOME install of 0.9.0 has it (the extension would load in the next
+    Ubuntu session before GnomeLook could take it out; in the WinPoint session its mode turns it on all the same),
+    then out of disabled-extensions (an earlier in-GNOME install that was turned off: GNOME's mode skips the
+    extensions listed there, so the WinPoint session would lack its taskbar). In that order, so the extension is
+    never on in the normal session that runs now; that session turns it off at once. Only those values go. True when
+    it was in enabled-extensions (sessionMoved)."""
+    try:
+        settings = shell_settings()
+        moved = settings is not None and UUID in settings.get_strv("enabled-extensions")
+        drop_uuid(("enabled-extensions", "disabled-extensions"), settings)
+        return moved
+    except Exception:                   # after the commit: a GSettings failure is no failed install
+        return False
+
+
+def system_hint(remove: bool, root: Path | None = None) -> str | None:
+    """install (remove=False): the hint when any system file is missing; remove: when any is still there (0.9.1's
+    uninstall.py removes them with the session's and names install-session.py instead; tests/update keeps both)."""
+    root = system_root() if root is None else root
     present = [(root/name).is_file() for name in SYSTEM_FILES]
     if (remove and not any(present)) or (not remove and all(present)):
         return None
@@ -389,7 +604,7 @@ def resolve_language(explicit: str | None, config: Path, data: Path, payload: Pa
     return {"lang": lang, "source": source, "detail": signal, "store": True}
 
 
-NO_SESSION = False   # --no-session (or WIN11_NO_SESSION=1): never run install-session.py from here
+NO_SESSION = False   # --no-session (or WIN11_NO_SESSION=1): 0.9.0's path, never the terminal one (terminal_install)
 
 
 @dataclass
@@ -415,8 +630,9 @@ def option_value(argv: list[str], name: str) -> str | None:
 
 
 def parse_arguments(argv: list[str]) -> Options:
-    """--lang nl|en (also --lang=X, any case), --no-session, and the updater's --check, --status FILE and --log FILE
-    (module docstring); -h/--help prints the usage. Exit 2 on a bad value or option."""
+    """--lang nl|en (also --lang=X, any case), the updater's --no-session (no advice in the usage since 0.9.1, still
+    accepted), --check, --status FILE and --log FILE (module docstring); -h/--help prints the usage. Exit 2 on a bad
+    value or option."""
     global NO_SESSION
     options = Options()
     explicit = None
@@ -901,9 +1117,10 @@ def leftovers(share: Path) -> list[Path]:
 
 def repair(payload: Path, prefix: Path) -> bool:
     """Inside the lock, what a killed install (SIGKILL, a power cut) left: an own previous payload is removed next to
-    an own payload and renamed back without one; stage and Transaction folders and the binaries' .new copies go.
-    Running the same tree again then rolls forward. True when an install was killed after its first visible change
-    (a previous payload or a Transaction folder), so --check cannot tell which extension GNOME Shell runs."""
+    an own payload and renamed back without one; stage and Transaction folders and the binaries' and the uninstaller
+    wrapper's .new copies go (remove_new_copies). Running the same tree again then rolls forward. True when an install
+    was killed after its first visible change (a previous payload or a Transaction folder), so --check cannot tell
+    which extension GNOME Shell runs."""
     share = payload.parent
     previous = share/PREVIOUS
     killed = False
@@ -916,11 +1133,17 @@ def repair(payload: Path, prefix: Path) -> bool:
     for folder in leftovers(share):
         killed = killed or folder.name.startswith(TX)
         shutil.rmtree(folder, ignore_errors=True)
-    for name in BINS:
-        temporary = prefix/"bin"/f".{name}.new"
+    remove_new_copies(prefix)
+    return killed
+
+
+def remove_new_copies(prefix: Path) -> None:
+    """The binaries' and the uninstaller wrapper's temporary copies (apply()) that a killed install left, only plain
+    files of this user (repair(), uninstall.py)."""
+    for name in (*(f".{name}.new" for name in BINS), UNINSTALLER_NEW):
+        temporary = prefix/"bin"/name
         if own_entry(temporary, stat.S_ISREG):
             temporary.unlink()
-    return killed
 
 
 GNOME_SHELL = "/usr/bin/gnome-shell"
@@ -953,12 +1176,33 @@ def check_gnome(root: Path) -> None:
         refuse("gnomeMismatch", needs=", ".join(shells), running=running)
 
 
-ABI_PROBLEM = re.compile(r"not found|undefined symbol")
+ABI_PROBLEM = re.compile(r"not found|undefined symbol|not a dynamic executable")
+MACHINES = {3: "i386", 40: "arm", 62: "x86_64", 183: "aarch64", 243: "riscv64"}     # ELF e_machine
+
+
+def elf_machine(path: Path) -> int | None:
+    """e_machine of an ELF file of either class and byte order (None: no ELF)."""
+    try:
+        with open(path, "rb") as stream:
+            head = stream.read(20)
+    except OSError:
+        return None
+    if len(head) < 20 or head[:4] != b"\x7fELF" or head[5] not in (1, 2):
+        return None
+    return struct.unpack_from("<H" if head[5] == 1 else ">H", head, 18)[0]
 
 
 def check_abi(build: Path) -> None:
-    """`LC_ALL=C /usr/bin/ldd -r` on every binary that is ELF (the installer tests' stubs are not): a library, symbol
-    version or symbol that this system lacks, e.g. a build made on a newer Ubuntu, refuses before any change."""
+    """Every binary that is ELF (the installer tests' stubs are not) must be made for this PC's machine, the e_machine
+    of the python3 running this (a bundle of another architecture: abi), and `LC_ALL=C /usr/bin/ldd -r` must load it:
+    a library, symbol version or symbol that this system lacks, e.g. a build made on a newer Ubuntu, or ldd's "not a
+    dynamic executable", refuses before any change."""
+    own = elf_machine(Path(os.path.realpath(sys.executable)))
+    for name in BINS:
+        machine = elf_machine(binary_source(build, name))
+        if machine is not None and own is not None and machine != own:
+            refuse("abi", binary=name, detail=t("abiMachine", needs=MACHINES.get(machine, f"e_machine {machine}"),
+                                                running=MACHINES.get(own, f"e_machine {own}")))
     if not os.access("/usr/bin/ldd", os.X_OK):
         return
     for name in BINS:
@@ -982,17 +1226,17 @@ def read_bytes(path: Path) -> bytes | None:
         return None
 
 
-def system_files(root: Path, system: Path = Path("/")) -> list[str]:
+def system_files(root: Path, system: Path | None = None) -> list[str]:
     """--check's report of root-owned files that only a password installs: "session" when the four files of
-    install-session.py are there and one differs from what this tree's would write, "system" when one of
-    install-system.py's (SYSTEM_FILES) is there and differs from root/host/data. No refusal: a terminal install
-    leaves them to those commands, and the updater sends the user to the terminal."""
+    install-session.py are there and one differs from what this tree's would write (stale(): winpoint.json by
+    meaning, so an Ubuntu update of its own ubuntu.json is no difference), "system" when one of install-system.py's
+    (SYSTEM_FILES) is there and differs from root/host/data. No refusal: a terminal install puts them right with one
+    password (root_step), and the updater sends the user to the terminal."""
     found = []
     session = session_script()
-    if session.installed(system):
-        wanted = session.contents(system)
-        if any(read_bytes(system/directory.lstrip("/")/name) != wanted[name] for name, directory in session.FILES):
-            found.append("session")
+    system = system_root() if system is None else system
+    if session.installed(system) and session.stale(system):
+        found.append("session")
     if any((system/rel).is_file() and read_bytes(system/rel) != read_bytes(root/"host/data"/Path(rel).name)
            for rel in SYSTEM_FILES):
         found.append("system")
@@ -1230,19 +1474,35 @@ class Plan:
     previous_icons: dict | None = None
     session: bool = False
     portal: dict | None = None
+    terminal: bool = False          # the terminal path (terminal_install): root_step, preselect, the two lists
+    hint: bool = True               # the systemHint line may follow (root_step: not when it saw to the system files)
+    root_changed: bool = False      # root_step ran install-session.py: a rollback leaves its files (rolledBackRoot)
+    uninstaller: bool = True        # <prefix>/bin/winpoint-uninstall is written (not over another one on an update)
 
 
 def locate(root: Path, options: Options) -> Plan:
+    """Where everything goes; as root nothing at all (noRoot): WinPoint belongs to the user's own account, and even
+    repair() would leave root-owned files in it. Without --lang the messages until prepare() are in the language it
+    will pick (module docstring; README: "picks Dutch or English from your system's language"): first the locale
+    guess, which reads no home folder (sudo's is root's), then, once the paths are known, resolve_language's choice,
+    read only."""
+    if options.explicit is None:
+        set_language(guess_language(os.environ)[0])
+    if os.geteuid() == 0:
+        refuse("noRoot")
     prefix = absolute_path(os.environ.get("WIN11_INSTALL_PREFIX", str(Path.home()/".local")), t("labelPrefix"))
     data = absolute_path(os.environ.get("XDG_DATA_HOME", str(Path.home()/".local/share")), "XDG_DATA_HOME")
     config = absolute_path(os.environ.get("XDG_CONFIG_HOME", str(Path.home()/".config")), "XDG_CONFIG_HOME")
-    return Plan(root, options.explicit, prefix, data, config, cache_home(), prefix/"share/win11-gnome")
+    payload = prefix/"share/win11-gnome"
+    if options.explicit is None:
+        set_language(resolve_language(None, config, data, payload)["lang"])
+    return Plan(root, options.explicit, prefix, data, config, cache_home(), payload)
 
 
 def prepare(plan: Plan, check: bool = False) -> Plan:
     """Every check of an install, nothing written; the order and messages of 3b898e6's are kept, the new checks
-    (GNOME, ABI, previousCopy) sit where they refuse least surprisingly. Only a terminal install may first add the
-    login session (session_ready), as before. check: --check (no session offer)."""
+    (GNOME, ABI, previousCopy) sit where they refuse least surprisingly. The terminal path's own checks come last
+    (terminal_install); its one password follows in root_step(), before apply(). check: --check (never that path)."""
     root, payload, data, config = plan.root, plan.payload, plan.data, plan.config
     plan.choice = resolve_language(plan.explicit, config, data, payload)
     plan.language = plan.choice["lang"]
@@ -1264,18 +1524,23 @@ def prepare(plan: Plan, check: bool = False) -> Plan:
     plan.updating = payload.exists()
     if plan.updating and os.path.lexists(payload.with_name(PREVIOUS)):
         refuse("previousCopy", backup=payload.with_name(PREVIOUS))
+    uninstaller = plan.prefix/"bin"/UNINSTALLER
+    foreign = os.path.lexists(uninstaller) and not own_uninstaller(uninstaller)
+    # an update over its own payload never refuses for it (the updater's path stays 0.9.0's): it leaves that file
+    plan.uninstaller = not (plan.updating and foreign)
     if not plan.updating:
         conflicts = [plan.prefix/"bin"/name for name in BINS]
         conflicts += [plan.applications/f"io.github.win11shell.{name}.desktop" for name in ENTRIES]
         conflicts += [plan.extension, config/"autostart"/AUTOSTART]
-        existing = [str(path) for path in conflicts if path.exists()]
+        existing = [str(path) for path in conflicts if path.exists()] + ([str(uninstaller)] if foreign else [])
         if existing:
             raise Refusal("conflicts", {"paths": existing}, t("conflicts") + "\n" + "\n".join(existing))
     if plan.choice["store"]:
         check_config_dir(config/"win11-gnome")
     icon_bundle.validate(root/"vendor")
     plan.previous_icons = icon_bundle.preflight_aliases(payload, data)
-    plan.session = session_ready(offer=not check)
+    plan.terminal = terminal_install(check)
+    plan.session = plan.terminal or session_script().installed(system_root())
     plan.portal = file_portal.preflight(payload, plan.prefix, data, config, plan.session)
     return plan
 
@@ -1303,6 +1568,11 @@ def stage_payload(plan: Plan, stage: Path) -> None:
     version = bundle_version(root)
     if version:
         (stage/VERSION_FILE).write_text(version + "\n")
+    # 0.9.1: what <prefix>/bin/winpoint-uninstall runs, from this installer's own folder (also when ROOT holds no
+    # scripts/, as the installer tests' trees)
+    (stage/"scripts").mkdir()
+    for name in UNINSTALL_SCRIPTS:
+        shutil.copy2(Path(__file__).resolve().with_name(name), stage/"scripts"/name)
 
 
 def write_entries(plan: Plan, tx: Transaction) -> None:
@@ -1377,6 +1647,13 @@ def apply(plan: Plan) -> int:
             tx.binary(bindir/f".{binary}.new", bindir/binary)
             if index == 0:
                 test_point("binary")
+        if plan.uninstaller:
+            # as the binaries: the whole file first, then one rename, so a kill never leaves half a wrapper
+            uninstaller, temporary = bindir/UNINSTALLER, tx.track(bindir/UNINSTALLER_NEW)
+            temporary.write_text(uninstaller_text(payload), encoding="utf-8")
+            temporary.chmod(0o755)
+            tx.save(uninstaller)
+            os.replace(temporary, uninstaller)
         test_point("binaries")
         icon_bundle.register_aliases(payload, data, plan.previous_icons, tx)
         test_point("aliases")
@@ -1422,7 +1699,14 @@ def apply(plan: Plan) -> int:
                 traceback.print_exception(error)
             for path, problem in tx.problems:
                 print(t("notRestored", path=path, error=problem), file=sys.stderr)
-            print(t("rolledBack") if complete else t("rollbackIncomplete"), file=sys.stderr)
+            if not complete:
+                print(t("rollbackIncomplete"), file=sys.stderr)
+            elif plan.root_changed:
+                # the root step's files stay (WinPoint at the login screen): never "everything was put back"
+                command = "python3 " + shlex.quote(str(Path(__file__).resolve().with_name("install-session.py")))
+                print(t("rolledBackRoot", command=command + " --remove"), file=sys.stderr)
+            else:
+                print(t("rolledBack"), file=sys.stderr)
         except OSError:
             pass
         return 3 if complete else 4
@@ -1433,17 +1717,22 @@ def apply(plan: Plan) -> int:
         # now, so a rollback finds that version's own files still there
         remove_legacy(prefix, plan.applications)
         remove_webkit_state(data, plan.cache, runtime_dir(plan.cache))
+    # the terminal path (module docstring): WinPoint at the next sign-in, and its UUID out of the two lists
+    preselected = plan.terminal and preselect()
+    moved = plan.terminal and allow_mode_extension()
     print(t("done1", prefix=prefix))
     print(t("done2"))
     if plan.session:
         print(t("session1"))
-        print(t("session2"))
+        if moved:
+            print(t("sessionMoved"))
+        print(t("sessionNext") if preselected else t("session2"))
     else:
         print(t("done3"))
         print(t("done4"))
         print(t("done5", uuid=UUID))
     print(t("done6"))
-    hint = system_hint(False)
+    hint = system_hint(False) if plan.hint else None
     if hint and sys.stdout.isatty():
         print(hint)
     return 0
@@ -1491,7 +1780,9 @@ def main(root: Path, argv: list[str] | None = None) -> int:
     lock_share(plan.payload.parent)
     if plan.payload.parent.is_dir():
         repair(plan.payload, plan.prefix)
-    return apply(prepare(plan))
+    plan = prepare(plan)
+    root_step(plan)
+    return apply(plan)
 
 
 def redirect_output(path: Path) -> None:

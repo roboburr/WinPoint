@@ -226,7 +226,11 @@ impl Shell {
     }
 
     pub fn lang(&self) -> &'static str {
-        if self.setting("language").as_str() == Some("en") { "en" } else { "nl" }
+        match self.setting("language").as_str() {
+            Some("en") => "en",
+            Some("system") => system_lang(|k| std::env::var(k).ok()),
+            _ => "nl",
+        }
     }
 
     /// Dutch or English text by the shell's language.
@@ -245,6 +249,17 @@ impl Shell {
     pub fn flyouts(&self) -> Rc<crate::flyouts::FlyoutHost> {
         self.flyouts.borrow().clone().expect("panel not installed")
     }
+}
+
+/// settings.language "system" (settings parity, amendment 18): the session's messages language as gettext picks it
+/// (LC_ALL, LC_MESSAGES or LANG, LANGUAGE's first entry unless that is C): "nl" for Dutch, else "en". The kit's
+/// `kit::i18n::system_language` and the host's `i18n::system_code` read the same way (the shell does not link the kit).
+fn system_lang(var: impl Fn(&str) -> Option<String>) -> &'static str {
+    let locale = ["LC_ALL", "LC_MESSAGES", "LANG"].iter().find_map(|k| var(k).filter(|v| !v.is_empty())).unwrap_or_default();
+    let c = locale.is_empty() || locale == "C" || locale == "POSIX" || locale.starts_with("C.");
+    let first = if c { None } else { var("LANGUAGE").and_then(|l| l.split(':').find(|s| !s.is_empty()).map(str::to_owned)) };
+    let pick = first.unwrap_or(locale);
+    if pick.split(['_', '.', '@']).next() == Some("nl") { "nl" } else { "en" }
 }
 
 #[cfg(test)]
@@ -291,5 +306,15 @@ mod tests {
         assert!(!relayed_copy("notifications.closed", &closed, &mut awaited));
         assert!(!relayed_copy("tray.changed", &json!({"items": []}), &mut awaited));
         assert!(!relayed_copy("settings.changed", &json!({"changed": []}), &mut awaited));
+    }
+
+    #[test]
+    fn the_system_language_is_the_sessions() {
+        let env = |pairs: &'static [(&'static str, &'static str)]| move |k: &str| pairs.iter().find(|(n, _)| *n == k).map(|(_, v)| (*v).to_owned());
+        assert_eq!(system_lang(env(&[("LANG", "nl_NL.UTF-8")])), "nl");
+        assert_eq!(system_lang(env(&[("LANG", "en_GB.UTF-8")])), "en");
+        assert_eq!(system_lang(env(&[("LANG", "fr_FR.UTF-8")])), "en");
+        assert_eq!(system_lang(env(&[("LANG", "en_US.UTF-8"), ("LANGUAGE", "nl")])), "nl");
+        assert_eq!(system_lang(env(&[("LC_ALL", "C"), ("LANGUAGE", "nl")])), "en");
     }
 }

@@ -1,0 +1,55 @@
+# host/i18n/printers.tsv: host texts of services/printers.rs.
+# Owner: batch B (settings parity, §5.3).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/printers.rs and printers/*.rs (notes/claude/settings-parity.md §5.3)
+# printers.*: an argument of the wrong kind
+#@ new
+printers.badArgs	Ongeldige invoer.	Invalid input.
+# printers.add / rename: a queue name CUPS does not take (scheduler/ipp.c validate_name)
+#@ new
+printers.badName	Een printernaam mag geen spaties, tabs, slashes, hekjes of aanhalingstekens bevatten.	A printer name can’t contain spaces, tabs, slashes, hash signs or quotation marks.
+# printers.discover {address}: not a host name, an IP address or a printer URI
+#@ new
+printers.badAddress	Dit is geen geldig adres van een printer.	This isn’t a valid printer address.
+# printers.add {ppdFile}: the file is not there, not readable or no PPD
+#@ new
+printers.badFile	Dit is geen PPD-bestand dat je kunt openen.	This isn’t a PPD file that you can open.
+# printers.*: cupsd does not answer (GNOME's "No Print Service")
+#@ new
+printers.noCups	De afdrukservice is niet beschikbaar.	The print service isn’t available.
+# printers.*: libcups.so.2 is not installed
+#@ new
+printers.noLibcups	Afdrukken is op deze computer niet beschikbaar.	Printing isn’t available on this computer.
+# printers.* writes: cups-pk-helper is not installed
+#@ new
+printers.noHelper	Printers beheren is op deze computer niet beschikbaar.	Managing printers isn’t available on this computer.
+# printers.*: the queue is not there (any more)
+#@ new
+printers.notFound	Deze printer is niet gevonden.	This printer wasn’t found.
+# printers.job.*: the job is not there (any more)
+#@ new
+printers.jobNotFound	Deze afdruktaak is niet gevonden.	This print job wasn’t found.
+# printers.* writes: CUPS refused, {error} is its own text
+#@ new
+printers.failed	De afdrukservice weigerde dit: {error}	The print service refused this: {error}
+# printers.testPage: /usr/share/cups/data/testprint is missing
+#@ new
+printers.noTestPage	Er is op deze computer geen testpagina gevonden.	No test page was found on this computer.
+# printers.cleanHeads: the printer has no Clean command
+#@ new
+printers.noCleaning	Deze printer kan zijn printkoppen niet reinigen.	This printer can’t clean its print heads.
+# printers.testPage: the job's name in the queue (GNOME: "Test Page")
+#@ new
+printers.testPageTitle	Testpagina	Test page
+# printers.cleanHeads: the job's name in the queue (GNOME: "Clean print heads")
+#@ new
+printers.cleanHeadsTitle	Printkoppen reinigen	Clean print heads

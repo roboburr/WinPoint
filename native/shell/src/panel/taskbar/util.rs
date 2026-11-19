@@ -184,6 +184,9 @@ pub fn set_icon(shell: &Shell, image: &gtk::Image, name: &str, px: i32, themed: 
 
 const NL_DAYS: [&str; 7] = ["maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag", "zondag"];
 const EN_DAYS: [&str; 7] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+// glib's %a in nl_NL and en_GB, Monday first (the process locale may be another one)
+const NL_DAYS_SHORT: [&str; 7] = ["ma", "di", "wo", "do", "vr", "za", "zo"];
+const EN_DAYS_SHORT: [&str; 7] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const NL_MONTHS: [&str; 12] = [
     "januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november",
     "december",
@@ -215,6 +218,18 @@ pub fn fmt_time(now: &glib::DateTime, lang: &str, seconds: bool, h24: bool) -> S
 pub fn fmt_date_short(now: &glib::DateTime, lang: &str) -> String {
     let sep = if lang == "en" { "/" } else { "-" };
     format!("{:02}{sep}{:02}{sep}{}", now.day_of_month(), now.month(), now.year())
+}
+
+/// The abbreviated weekday in the language's own names: "di" (nl-NL) / "Tue" (en-GB).
+pub fn fmt_weekday_short(now: &glib::DateTime, lang: &str) -> &'static str {
+    let wd = (now.day_of_week().clamp(1, 7) - 1) as usize;
+    if lang == "en" { EN_DAYS_SHORT[wd] } else { NL_DAYS_SHORT[wd] }
+}
+
+/// The short date with the weekday (time.showWeekday, Windows' "ddd" short date): "di 17-11-2026" (nl-NL) /
+/// "Tue 17/11/2026" (en-GB).
+pub fn fmt_date_short_weekday(now: &glib::DateTime, lang: &str) -> String {
+    format!("{} {}", fmt_weekday_short(now, lang), fmt_date_short(now, lang))
 }
 
 /// date(ms, 'long'): "zaterdag 25 oktober 2026" / "Saturday 25 October 2026".
@@ -373,5 +388,31 @@ impl GlyphSlot {
             self.holder.remove(&c);
         }
         self.holder.append(&crate::icons::glyph(name, px));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn at(y: i32, mo: i32, d: i32, h: i32, mi: i32) -> glib::DateTime {
+        glib::DateTime::new(&glib::TimeZone::utc(), y, mo, d, h, mi, 0.0).unwrap()
+    }
+
+    #[test]
+    fn the_tray_date_carries_the_weekday_in_the_language_of_winpoint() {
+        // Tuesday 17 November 2026
+        let now = at(2026, 11, 17, 9, 5);
+        assert_eq!(fmt_date_short(&now, "nl"), "17-11-2026");
+        assert_eq!(fmt_date_short_weekday(&now, "nl"), "di 17-11-2026");
+        assert_eq!(fmt_date_short_weekday(&now, "en"), "Tue 17/11/2026");
+        // every day of one week, Monday 16 to Sunday 22 November
+        let nl: Vec<&str> = (16..=22).map(|d| fmt_weekday_short(&at(2026, 11, d, 12, 0), "nl")).collect();
+        assert_eq!(nl, ["ma", "di", "wo", "do", "vr", "za", "zo"]);
+        let en: Vec<&str> = (16..=22).map(|d| fmt_weekday_short(&at(2026, 11, d, 12, 0), "en")).collect();
+        assert_eq!(en, ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
+        // the long date of the tooltip stays as it was
+        assert_eq!(fmt_date_long(&now, "nl"), "dinsdag 17 november 2026");
+        assert_eq!(fmt_date_long(&now, "en"), "Tuesday 17 November 2026");
     }
 }

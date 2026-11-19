@@ -11,6 +11,8 @@ export async function resolve(specifier, context, next) {
         return {url: `${STUB}gi/${specifier.slice(5)}`, shortCircuit: true};
     if (specifier === 'resource:///org/gnome/shell/ui/main.js')
         return {url: `${STUB}main`, shortCircuit: true};
+    if (specifier === 'resource:///org/gnome/shell/ui/status/keyboard.js')
+        return {url: `${STUB}keyboard`, shortCircuit: true};
     if (specifier === 'resource:///org/gnome/shell/ui/messageTray.js')
         return {url: `${STUB}messageTray`, shortCircuit: true};
     if (specifier === 'resource:///org/gnome/shell/extensions/extension.js')
@@ -26,6 +28,8 @@ export async function load(url, context, next) {
             source = `export default globalThis.__ge1c.gi[${JSON.stringify(what.slice(3))}];`;
         else if (what === 'main')
             source = MAIN.map(n => `export const ${n} = globalThis.__ge1c.Main.${n};`).join('\n');
+        else if (what === 'keyboard')
+            source = 'export const getInputSourceManager = () => globalThis.__ge1c.inputSourceManager;';
         else if (what === 'messageTray')
             source = TRAY.map(n => `export const ${n} = globalThis.__ge1c.MessageTray.${n};`).join('\n');
         else

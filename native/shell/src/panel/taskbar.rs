@@ -4,6 +4,7 @@
 //! clock with the bell (-> notifications) and the show-desktop sliver. panel/mod.rs toggles "w11-glass" on the
 //! strip while the extension blurs it (then the 70 % tint, else the solid colour).
 mod apps;
+mod input;
 mod system;
 mod tray;
 mod util;
@@ -16,6 +17,8 @@ use std::rc::Rc;
 
 #[allow(unused_imports)]
 pub use apps::own_app;
+/// The desktop in use and which windows show on it (taskbar.allDesktops here, taskView.allDesktops in Taakweergave).
+pub(crate) use apps::{desktop_in_use, shows_on_desktop};
 
 struct Bar {
     shell: Rc<Shell>,
@@ -27,6 +30,7 @@ struct Bar {
     search_mode: RefCell<String>,
     taskview_btn: gtk::Button,
     sys: Rc<system::System>,
+    _input: Rc<input::Input>,
     align: RefCell<String>,
     lang: RefCell<String>,
     hooked: Cell<bool>,
@@ -119,7 +123,8 @@ pub fn build(shell: &Rc<Shell>) -> gtk::Widget {
     tray_box.set_valign(gtk::Align::Fill);
     let area = tray::build(shell, &strip);
     let sys = system::build(shell, &strip);
-    for w in [area.upcast_ref::<gtk::Widget>(), sys.sys_btn.upcast_ref(), sys.clock_btn.upcast_ref()] {
+    let input = input::build(shell, &strip);
+    for w in [area.upcast_ref::<gtk::Widget>(), input.button.upcast_ref(), sys.sys_btn.upcast_ref(), sys.clock_btn.upcast_ref()] {
         w.set_valign(gtk::Align::Center);
         tray_box.append(w);
     }
@@ -144,6 +149,7 @@ pub fn build(shell: &Rc<Shell>) -> gtk::Widget {
         search_mode: RefCell::new(String::new()),
         taskview_btn,
         sys,
+        _input: input,
         align: RefCell::new(String::new()),
         lang: RefCell::new(shell.lang().to_owned()),
         hooked: Cell::new(false),
@@ -181,6 +187,87 @@ pub fn build(shell: &Rc<Shell>) -> gtk::Widget {
         with(|b| b.hook_flyouts());
     });
     root.upcast()
+}
+
+/// The taskbar of another monitor (panel/strips.rs): the strip of the main taskbar with only its app buttons, those of
+/// the windows on that monitor (apps.rs `shows`), aligned by taskbar.alignment as the main one. A right click on
+/// empty space opens the taskbar's own menu above it, and any press closes the flyout the main taskbar may have open
+/// (a click on a dock takes no focus, so the flyout's light dismiss would not see it).
+pub fn build_secondary(shell: &Rc<Shell>, monitor: i64) -> gtk::Widget {
+    let root = gtk::Overlay::new();
+    root.add_css_class("w11-taskbar");
+    root.set_widget_name(&format!("tb-strip-m{monitor}"));
+    let center = gtk::CenterBox::new();
+    center.add_css_class("w11-tb-bar");
+    center.set_shrink_center_last(false);
+    root.set_child(Some(&center));
+    let strip: gtk::Widget = root.clone().upcast();
+    let group = gtk::Box::new(gtk::Orientation::Horizontal, 4);
+    group.add_css_class("w11-tb-center");
+    group.set_valign(gtk::Align::Center);
+    let (apps_box, apps) = apps::build_for(shell, &strip, apps::Role::Secondary(monitor));
+    group.append(&apps_box);
+    let sizer = gtk::DrawingArea::new();
+    sizer.set_can_target(false);
+    let weak = Rc::downgrade(&apps);
+    sizer.connect_resize(move |_, _, _| {
+        if let Some(a) = weak.upgrade() {
+            a.queue_layout();
+        }
+    });
+    root.add_overlay(&sizer);
+    apps.set_bar(&center, &group);
+
+    let press = gtk::GestureClick::new();
+    press.set_button(0);
+    press.set_propagation_phase(gtk::PropagationPhase::Capture);
+    press.connect_pressed(|_, _, _, _| {
+        let host = crate::core::shell().flyouts.borrow().clone();
+        if let Some(host) = host.filter(|h| h.current().is_some()) {
+            host.close();
+        }
+    });
+    root.add_controller(press);
+    let right = gtk::GestureClick::new();
+    right.set_button(gdk::BUTTON_SECONDARY);
+    let weak = Rc::downgrade(&apps);
+    right.connect_pressed(move |g, _, x, y| {
+        let Some(w) = g.widget() else { return };
+        if let Some(hit) = w.pick(x, y, gtk::PickFlags::DEFAULT) {
+            let mut n = Some(hit);
+            while let Some(c) = n {
+                if c.has_css_class("w11-tb-hit") {
+                    return; // a button's own menu
+                }
+                n = c.parent();
+            }
+        }
+        g.set_state(gtk::EventSequenceState::Claimed);
+        apps::flyout_opened();
+        let menu = crate::flyouts::menus::taskbar_menu_popover(&crate::core::shell(), &w, x.round() as i32);
+        // no window list over it while it is open (the main taskbar's menu is a flyout, which does the same)
+        if let Some(a) = weak.upgrade() {
+            a.hold_previews(&menu);
+        }
+    });
+    root.add_controller(right);
+    strip
+}
+
+/// The extension adopted the panel again (after the lock screen): every taskbar tells it where its buttons are.
+pub fn resend_icon_rects() {
+    apps::resend_icon_rects();
+}
+
+/// Every taskbar's app buttons again (the taskbars of the other monitors came or went, or the setting of which
+/// windows they show changed).
+pub fn render_all_apps() {
+    apps::render_all();
+}
+
+/// The taskbar of `monitor` went: its buttons are no longer kept up to date.
+pub fn drop_secondary(monitor: i64) {
+    apps::unregister(monitor);
 }
 
 /// Before a flyout, Start or a menu opens: the window list goes away.

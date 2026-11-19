@@ -1,7 +1,9 @@
 //! Instellingen › Apps › Geïnstalleerde apps (6ebf169f:vendor/ui/js/apps/settings/pages/installed.js): a searchable,
-//! sortable, filterable list (apps.list) with an "…" menu per app: Openen, Vastmaken aan Start / taakbalk, and
-//! Verwijderen with the reviewed plan of core/software.js (software.uninstallInfo, software.prepare,
-//! software.execute, software.status), ported in `software` below.
+//! sortable, filterable list (apps.list) with an "…" menu per app: Geavanceerde opties (the app's page,
+//! app_advanced.rs: GNOME Settings' per-app Apps page), Openen, Vastmaken aan Start / taakbalk, Openen in App Center
+//! (GNOME's App Details: App Center for a snap, GNOME Software for the rest) and Verwijderen with the reviewed plan
+//! of core/software.js (software.uninstallInfo, software.prepare, software.execute, software.status), ported in
+//! `software` below. An empty list offers "Zoeken in App Center" (amendment 7).
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;
 use kit::controls::{self as c, Dropdown, MenuItem, SearchBox, SettingsCard, SettingsGroup, Toast};
@@ -113,9 +115,71 @@ fn toggle_pin(p: &Page, path: &str, id: &str, on_msg: &str, off_msg: &str) {
     });
 }
 
+/// GNOME Software's and Ubuntu's App Center desktop ids (GNOME's App Details: snap-store on Ubuntu, otherwise
+/// gnome-software).
+const GNOME_SOFTWARE: &str = "org.gnome.Software.desktop";
+const APP_CENTER: &str = "snap-store_snap-store.desktop";
+
+/// The store app that shows an app's details, and the link it opens there: App Center with `snap://<name>` for a
+/// snap, GNOME Software with `appstream://<id>` for a Flatpak or system app (privacy.app's kind, snapName,
+/// flatpakId). None when that store is not installed.
+pub(super) fn store_target(info: &Value, installed: &[String]) -> Option<(String, String)> {
+    let has = |id: &str| installed.iter().any(|i| i == id);
+    match info["kind"].as_str() {
+        Some("snap") if has(APP_CENTER) => info["snapName"].as_str().map(|n| (APP_CENTER.to_owned(), format!("snap://{n}"))),
+        Some("flatpak") if has(GNOME_SOFTWARE) => info["flatpakId"].as_str().map(|n| (GNOME_SOFTWARE.to_owned(), format!("appstream://{n}"))),
+        Some("host") if has(GNOME_SOFTWARE) => {
+            info["id"].as_str().map(|id| (GNOME_SOFTWARE.to_owned(), format!("appstream://{}", id.trim_end_matches(".desktop"))))
+        }
+        _ => None,
+    }
+}
+
+/// The store app to search in for "Zoeken in App Center": App Center, else GNOME Software.
+pub(super) fn store_app(installed: &[String]) -> Option<&'static str> {
+    [APP_CENTER, GNOME_SOFTWARE].into_iter().find(|s| installed.iter().any(|i| i == s))
+}
+
+/// The "…" menu's "Openen in {store}" for one app: its label and whether it can be chosen, from privacy.app's
+/// answer (None while it is not known, or when it failed). The store [`store_target`] opens for this app (App
+/// Center for a snap, GNOME Software for a Flatpak or system app), so the label names the store that opens; without
+/// one, greyed with the installed store's name, as GNOME shows App Details only for an app its store can show.
+pub(super) fn store_item(info: Option<&Value>, installed: &[String]) -> (String, bool) {
+    let label = |store: &str| common::fill(t("Openen in {store}", "Open in {store}"), &[("store", store_name(store))]);
+    match info.and_then(|i| store_target(i, installed)) {
+        Some((store, _)) => (label(&store), true),
+        None => (label(store_app(installed).unwrap_or(APP_CENTER)), false),
+    }
+}
+
+/// A store's name, a product name in both languages (the `{store}` of "Openen in {store}").
+pub(super) fn store_name(store: &str) -> &'static str {
+    if store == GNOME_SOFTWARE { "GNOME Software" } else { "App Center" }
+}
+
+/// Open the app's details in the store (privacy.app without the disk walk, then apps.launch with the link).
+pub(super) fn open_in_store(p: &Page, id: &str, installed: Rc<Vec<String>>) {
+    let fut = p.call("privacy.app", json!({ "id": id, "sizes": false }));
+    let pp = p.clone();
+    p.spawn(async move {
+        let target = fut.await.ok().and_then(|info| store_target(&info, &installed));
+        match target {
+            Some((store, uri)) => {
+                let _ = pp.run("apps.launch", json!({ "id": store, "uris": [uri] })).await;
+            }
+            None => {
+                let store = store_name(store_app(&installed).unwrap_or(APP_CENTER));
+                pp.toast(Toast::new(&common::fill(t("{store} kan deze app niet weergeven.", "{store} can’t show this app."), &[("store", store)])).timeout(4000))
+            }
+        }
+    });
+}
+
 struct State {
     p: Page,
     apps: RefCell<Vec<Value>>,
+    /// Every app id apps.list gave, also the hidden ones (the stores).
+    all: RefCell<Rc<Vec<String>>>,
     query: RefCell<String>,
     sort: RefCell<String>,
     filter: RefCell<String>,
@@ -126,6 +190,11 @@ struct State {
 
 fn visible(apps: Vec<Value>) -> Vec<Value> {
     apps.into_iter().filter(|a| a["noDisplay"] != true).collect()
+}
+
+/// The ids of an apps.list answer.
+pub(super) fn ids(apps: &[Value]) -> Vec<String> {
+    apps.iter().map(|a| common::value_key(&a["id"])).collect()
 }
 
 fn matches(app: &Value, q: &str) -> bool {
@@ -150,17 +219,35 @@ fn paint(st: &Rc<State>) {
     if filter == "taskbar" {
         items.retain(|a| pins_t.contains(&id_of(a)));
     }
-    let az = st.sort.borrow().as_str() == "az";
+    let sort = st.sort.borrow().clone();
     items.sort_by(|a, b| {
         let o = kit::format::compare_natural(common::s(&a["name"]), common::s(&b["name"]));
-        if az { o } else { o.reverse() }
+        match sort.as_str() {
+            "za" => o.reverse(),
+            // Installatiedatum: the newest first (apps.list installedAt, seconds; 0 when unknown)
+            "date" => b["installedAt"].as_f64().unwrap_or(0.0).total_cmp(&a["installedAt"].as_f64().unwrap_or(0.0)).then(o),
+            _ => o,
+        }
     });
     st.count.set_label(&match items.len() {
         0 => t("Geen apps gevonden", "No apps found").to_owned(),
         n => common::plural(n as i64, t("1 app gevonden", "1 app found"), t("{n} apps gevonden", "{n} apps found")),
     });
     if items.is_empty() {
-        st.list.append(&c::empty_state("apps", t("Geen apps gevonden", "No apps found"), t("Probeer een andere naam.", "Try another name."), None));
+        // GNOME's empty list: "Zoeken in App Center" (amendment 7)
+        let store = store_app(&st.all.borrow()).map(|store| {
+            let b = c::button(&common::fill(t("Zoeken in {store}", "Search in {store}"), &[("store", store_name(store))]), c::Variant::Standard);
+            b.set_widget_name("installed-find-in-store");
+            let pp = st.p.clone();
+            b.connect_clicked(move |_| {
+                let fut = pp.run("apps.launch", json!({ "id": store }));
+                pp.spawn(async move {
+                    let _ = fut.await;
+                });
+            });
+            b.upcast::<gtk::Widget>()
+        });
+        st.list.append(&c::empty_state("apps", t("Geen apps gevonden", "No apps found"), t("Probeer een andere naam.", "Try another name."), store.as_ref()));
         return;
     }
     for app in &items {
@@ -212,6 +299,21 @@ fn menu(st: &Rc<State>, app: &Value, anchor: &gtk::Button) {
     let in_start = pins("start.pinned").contains(&id);
     let in_bar = pins("taskbar.pinned").contains(&id);
     let p = st.p.clone();
+    // Windows' "Geavanceerde opties" (GNOME's per-app page); not for WinPoint's own apps, which have no desktop
+    // file of their own to describe
+    let own = id.starts_with("win11shell-");
+    let (pp, id2) = (p.clone(), id.clone());
+    let advanced = MenuItem::new(t("Geavanceerde opties", "Advanced options"), move || pp.go_with("app-advanced", json!({ "id": id2 })))
+        .glyph("settings")
+        .enabled(!own)
+        .name("installed-advanced");
+    // Openen in {store}: greyed until privacy.app says which store can show this app (filled in place below)
+    let (pp, id2, all) = (p.clone(), id.clone(), st.all.borrow().clone());
+    let (store_label, _) = store_item(None, &all);
+    let in_store = MenuItem::new(&store_label, move || open_in_store(&pp, &id2, all.clone()))
+        .glyph("apps")
+        .enabled(false)
+        .name("installed-store");
     let (pp, id2, name2) = (p.clone(), id.clone(), name.clone());
     let open = MenuItem::new(t("Openen", "Open"), move || {
         let fut = pp.run("apps.launch", json!({ "id": id2 }));
@@ -256,9 +358,21 @@ fn menu(st: &Rc<State>, app: &Value, anchor: &gtk::Button) {
     .description(&software::sw("checking"))
     .enabled(false)
     .name("installed-uninstall");
-    let items = vec![open, MenuItem::separator(), start, bar, MenuItem::separator(), remove];
+    let items = vec![advanced, open, MenuItem::separator(), start, bar, MenuItem::separator(), in_store, remove];
     let popover = c::show_menu_for(anchor, items);
     popover.set_halign(gtk::Align::End);
+    if !own && store_app(&st.all.borrow()).is_some() {
+        let (pw, all) = (popover.downgrade(), st.all.borrow().clone());
+        kit::ctx().call("privacy.app", json!({ "id": id, "sizes": false }), move |r| {
+            let (label, enabled) = store_item(r.ok().as_ref(), &all);
+            let Some(popover) = pw.upgrade().filter(|p| p.is_visible()) else { return };
+            let Some(item) = find_named(popover.upcast_ref(), "installed-store") else { return };
+            if let Some(l) = find_class(&item, "w11-menu-label").and_downcast::<gtk::Label>() {
+                l.set_label(&label);
+            }
+            item.set_sensitive(enabled);
+        });
+    }
     let pw = popover.downgrade();
     let anchor_w: gtk::Widget = p.anchor();
     kit::ctx().call("software.uninstallInfo", json!({ "id": id }), move |r| {
@@ -329,9 +443,11 @@ fn installed(p: Page) -> PageFuture {
         if !p.alive() {
             return Content::new();
         }
-        let Some(apps) = r.ok().and_then(|v| v.as_array().cloned()).map(visible) else {
+        let Some(full) = r.ok().and_then(|v| v.as_array().cloned()) else {
             return vec![common::notice(t("De lijst met apps is niet beschikbaar.", "The list of apps isn’t available.")).widget().clone().upcast()];
         };
+        let all = Rc::new(ids(&full));
+        let apps = visible(full);
         let list = gtk::Box::new(gtk::Orientation::Vertical, 4);
         list.add_css_class("st-app-list");
         list.set_widget_name("installed-list");
@@ -339,6 +455,7 @@ fn installed(p: Page) -> PageFuture {
         let st = Rc::new(State {
             p: p.clone(),
             apps: RefCell::new(apps),
+            all: RefCell::new(all),
             query: RefCell::new(String::new()),
             sort: RefCell::new("az".into()),
             filter: RefCell::new("all".into()),
@@ -364,7 +481,10 @@ fn installed(p: Page) -> PageFuture {
                 search.connect_changed(f);
             }
         }
-        let sort = Dropdown::simple(&[("az", t("Naam (A-Z)", "Name (A-Z)")), ("za", t("Naam (Z-A)", "Name (Z-A)"))], Some("az"));
+        let sort = Dropdown::simple(
+            &[("az", t("Naam (A-Z)", "Name (A-Z)")), ("za", t("Naam (Z-A)", "Name (Z-A)")), ("date", t("Installatiedatum", "Install date"))],
+            Some("az"),
+        );
         sort.widget().set_widget_name("installed-sort");
         let weak = Rc::downgrade(&st);
         sort.connect_changed(move |v| {
@@ -401,6 +521,7 @@ fn installed(p: Page) -> PageFuture {
                     let r = fut.await;
                     let Some(st) = w2.upgrade().filter(|s| s.p.alive()) else { return };
                     if let Some(list) = r.ok().and_then(|v| v.as_array().cloned()) {
+                        *st.all.borrow_mut() = Rc::new(ids(&list));
                         *st.apps.borrow_mut() = visible(list);
                         // names and icons may have changed: the rows are built again
                         st.cards.borrow_mut().clear();
@@ -433,8 +554,9 @@ fn installed(p: Page) -> PageFuture {
 }
 
 /// 6ebf169f:vendor/ui/js/core/software.js: the review of a plan (software.prepare; software.execute only from the
-/// reviewed plan's own button) and the job view that follows software.status until the job is finished.
-mod software {
+/// reviewed plan's own button) and the job view that follows software.status until the job is finished. Also the
+/// Verwijderen of app_advanced.rs.
+pub(super) mod software {
     use kit::controls::{self as c, Dialog, DialogResult, InfoBar, ProgressState, Severity, Toast, Variant};
     use kit::prelude::*;
     use kit::t;
@@ -936,5 +1058,33 @@ mod software {
             });
             *self.timer.borrow_mut() = Some(id);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn openen_in_store_names_the_store_that_opens_the_app() {
+        let only_app_center = vec![APP_CENTER.to_owned(), "org.gnome.Nautilus.desktop".to_owned()];
+        let both = vec![APP_CENTER.to_owned(), GNOME_SOFTWARE.to_owned()];
+        let host = json!({"id": "org.gnome.Nautilus.desktop", "kind": "host"});
+        let flatpak = json!({"id": "org.gnome.Maps.desktop", "kind": "flatpak", "flatpakId": "org.gnome.Maps"});
+        let snap = json!({"id": "firefox_firefox.desktop", "kind": "snap", "snapName": "firefox"});
+        // stock Ubuntu (App Center only): a system package cannot be shown there, so the item is greyed
+        let (label, enabled) = store_item(Some(&host), &only_app_center);
+        assert!(!enabled && label.contains("App Center"), "{label}");
+        let (label, enabled) = store_item(Some(&snap), &only_app_center);
+        assert!(enabled && label.contains("App Center"), "{label}");
+        // both stores: a Flatpak opens in GNOME Software, and the label says so
+        let (label, enabled) = store_item(Some(&flatpak), &both);
+        assert!(enabled && label.contains("GNOME Software"), "{label}");
+        assert_eq!(store_target(&flatpak, &both).map(|(s, _)| s).as_deref(), Some(GNOME_SOFTWARE));
+        let (label, enabled) = store_item(Some(&snap), &both);
+        assert!(enabled && label.contains("App Center"), "{label}");
+        // not known yet (privacy.app still on its way, or it failed): greyed
+        assert!(!store_item(None, &both).1);
+        assert!(!store_item(Some(&host), &[]).1, "no store at all");
     }
 }

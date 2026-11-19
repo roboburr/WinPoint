@@ -1,0 +1,272 @@
+00:30:23 GE0c run lang=en switch=False seed=defaults MemAvailable=6589264 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/scenarios/settings-system.py
+00:31:41 private install: exit 0 in 63.0 s, 87327 mutated paths, 0 outside the run dir, ok=True
+00:31:44 GNOME Shell 50.1 up (mode user, unsafe True)
+00:31:49 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-d/tests/gnome/scenarios/settings-system.py
+00:31:51   check PASS: wait_text settings: 'Brightness & colour'
+00:31:51   check PASS: display: title and breadcrumb System > Display
+00:31:51   check PASS: display.state reads Mutter DisplayConfig
+00:31:51   check PASS: wait_text settings: 'Scale & layout'
+00:31:54   check PASS: display: st-display-scale
+00:31:54   check PASS: display: st-display-resolution
+00:31:54   check PASS: display: st-display-orientation
+00:31:54   check PASS: display: st-display-multiple
+00:31:54   check PASS: display: no placeholder
+00:31:54   check PASS: display: Geavanceerd beeldscherm under Gerelateerde instellingen
+00:31:55   check PASS: display: Kleurprofiel is a row of Helderheid en kleur (amendment 19)
+00:31:55   check PASS: display: no Dutch in en
+00:31:55   check PASS: display: Helderheid without a backlight: the "only built-in screens" row, no slider
+00:31:55   check PASS: display: no Privacyscherm without a privacy-screen panel
+00:31:55   check PASS: display: no Draaivergrendeling without an accelerometer (caps)
+00:31:55   check PASS: display: no automatic brightness without a light sensor
+00:31:55   check PASS: display: Nachtlampje says it is not available (mutter: NightLightSupported false), no switch
+00:31:57   check PASS: display: Meerdere beeldschermen holds Dit mijn hoofdbeeldscherm maken (on, insensitive: the only display) and Detecteren
+00:31:58   check PASS: wait_text settings: 'Didn’t detect another display'
+00:31:58   check PASS: display: Meerdere beeldschermen stays open after Detecteren (the reload builds it again)
+00:31:59   check PASS: display: a new DisplayBridge (after a screen lock) never gives a keep-question id again
+00:32:02   check PASS: keep: the Schaal drop-down applies 125% persistently (display.apply)
+00:32:02   check PASS: keep: GNOME Shell asks (displayBridge.js not routed until step I), Settings does not
+00:32:20   check PASS: keep: without an answer the previous scale comes back
+00:32:21   check PASS: keep: the Schaal drop-down shows 100% again
+00:32:21   check PASS: wait_text settings: 'Brightness & colour'
+00:32:22   check PASS: nightlight: title and breadcrumb System > Display > Night light
+00:32:22   check PASS: wait_text settings: 'Night light isn’t available'
+00:32:23   check PASS: nightlight: no Dutch in en
+00:32:23   check PASS: nightlight: Night Light Unavailable (mutter NightLightSupported false: GNOME Settings shows the same)
+00:32:24   check PASS: wait_text settings: 'Display information'
+00:32:24   check PASS: display-advanced: title and breadcrumb System > Display > Advanced display
+00:32:27   check PASS: display-advanced: no Dutch in en
+00:32:27   check PASS: display-advanced: st-display-advanced-select
+00:32:27   check PASS: display-advanced: st-display-advanced-info
+00:32:28   check PASS: display-advanced: st-display-advanced-refresh
+00:32:28   check PASS: display-advanced: no Dynamische vernieuwingsfrequentie (the virtual monitor has no variable mode)
+00:32:28   check PASS: display-advanced: no Aanpassen voor tv (mutter reports no underscanning)
+00:32:28   check PASS: display-advanced: one refresh rate (60 Hz), its drop-down insensitive
+00:32:29   check PASS: display-advanced: Schaal voor apps herstellen writes xwayland-scaling-factor GNOME's way (on 0, off 1)
+00:32:29   check PASS: wait_text settings: 'Restart apps for the new scaling to take effect'
+00:32:29   check PASS: display-advanced: Schaal voor apps herstellen follows an outside xwayland-scaling-factor=0.0
+00:32:29   check PASS: sound.state reads pipewire-pulse through libpulse
+00:32:30   check PASS: wait_text settings: 'Choose where to play sound'
+00:32:30   check PASS: sound: title and breadcrumb System > Sound
+00:32:33   check PASS: sound: st-sound-outputs
+00:32:33   check PASS: sound: st-sound-inputs
+00:32:34   check PASS: sound: st-sound-volume
+00:32:34   check PASS: sound: st-sound-volume-mute
+00:32:34   check PASS: sound: st-sound-input-volume
+00:32:34   check PASS: sound: st-sound-input-level
+00:32:34   check PASS: sound: st-sound-out-0
+00:32:34   check PASS: sound: st-sound-out-1
+00:32:35   check PASS: sound: st-sound-out-0-props
+00:32:35   check PASS: sound: st-sound-in-0
+00:32:35   check PASS: sound: st-sound-pair-output
+00:32:35   check PASS: sound: st-sound-pair-input
+00:32:35   check PASS: sound: st-sound-more
+00:32:35   check PASS: sound: no placeholder and not the wpctl page
+00:32:36   check PASS: sound: link-sound-devices under Geavanceerd
+00:32:36   check PASS: sound: link-volume-mixer under Geavanceerd
+00:32:36   check PASS: sound: no Dutch in en
+00:32:37   check PASS: sound: picking an output makes it the default
+00:32:38   check PASS: sound: the volume slider writes the sink volume
+00:32:39   check PASS: sound: the mute button mutes the sink
+00:32:42   check PASS: sound: the input volume slider writes the source volume
+00:32:42   check PASS: sound: system.audio.get is the pulse client with PipeWire object ids
+00:32:43   check PASS: alerts: Meer geluidsinstellingen opens the Geluiden tab
+00:32:44   check PASS: alerts: Opstartgeluid afspelen (Ubuntu)
+00:32:45   check PASS: alerts: Opstartgeluid afspelen writes startup-sound warty-startup
+00:32:45   check PASS: alerts: Klik writes GNOME's __custom theme
+00:32:45   check PASS: alerts: Standaard puts the theme back
+00:32:47   check PASS: wait_text settings: 'WinPoint Test Speakers'
+00:32:48   check PASS: sound-device: title and breadcrumb System > Sound > WinPoint Test Speakers
+00:32:51   check PASS: device: st-sound-device-default
+00:32:51   check PASS: device: st-sound-device-volume
+00:32:51   check PASS: device: st-sound-device-left
+00:32:51   check PASS: device: st-sound-device-right
+00:32:52   check PASS: device: st-sound-device-allow-volume-above-100-percent
+00:32:52   check PASS: sound-device: no Dutch in en
+00:32:53   check PASS: device: Instellen als standaard makes it the default
+00:32:55   check PASS: device: Volume writes the sink volume
+00:32:58   check PASS: device: Rechterkanaal at half reaches the sink as GNOME's balance towards the left
+00:33:01   check PASS: device: after a volume change Rechterkanaal leaves Linkerkanaal at the new volume
+00:33:03   check PASS: device: Volume boven 100% toestaan writes allow-volume-above-100-percent
+00:33:03   check PASS: device: Volume boven 100% toestaan follows an outside allow-volume-above-100-percent=false
+00:33:04   check PASS: wait_text settings: 'Output devices'
+00:33:04   check PASS: sound-devices: title and breadcrumb System > Sound > All sound devices
+00:33:05   check PASS: devices: Alle geluidsapparaten lists outputs and inputs
+00:33:05   check PASS: sound-devices: no Dutch in en
+00:33:06   check PASS: wait_text settings: 'Input settings'
+00:33:06   check PASS: sound-device: title and breadcrumb System > Sound > WinPoint Test Microphone
+00:33:07   check PASS: devices: the input's Eigenschappen has Je microfoon testen
+00:33:08   check PASS: wait_text settings: 'System sounds'
+00:33:08   check PASS: volume-mixer: title and breadcrumb System > Sound > Volume mixer
+00:33:12   check PASS: mixer: st-volume-mixer-output
+00:33:13   check PASS: mixer: st-volume-mixer-input
+00:33:13   check PASS: mixer: st-volume-mixer-volume
+00:33:13   check PASS: mixer: st-volume-mixer-event
+00:33:13   check PASS: volume-mixer: no Dutch in en
+00:33:15   check PASS: mixer: the Uitvoerapparaat drop-down sets the default output
+00:33:17   check PASS: mixer: the master volume writes the default output
+00:33:20   check PASS: mixer: Systeemgeluiden writes the event role (ext-stream-restore)
+00:33:20   check PASS: mixer: the app row with its volume slider and its Uitvoerapparaat
+00:33:22   check PASS: mixer: the app's volume slider writes its stream
+00:33:25   check PASS: mixer: the app's Uitvoerapparaat drop-down moves its stream (moveStream)
+00:33:28   check PASS: mixer: a sink that comes while the app plays is in its Uitvoerapparaat drop-down
+00:33:29   check PASS: wait_text settings: 'Lid & power button controls'
+00:33:29   check PASS: power: title and breadcrumb System > Power & battery
+00:33:34   check PASS: power: no Dutch in en
+00:33:34   check PASS: power: no placeholder
+00:33:34   check PASS: power: st-power-screen-sleep
+00:33:35   check PASS: power: st-power-lid-button
+00:33:35   check PASS: power: power-mode
+00:33:35   check PASS: power: without UPower no Batterij group, the Netstroom card instead
+00:33:36   check PASS: power: without power-profiles-daemon Energiestand is "Niet beschikbaar", insensitive
+00:33:36   check PASS: power: no Energiebesparing without a power-saver profile
+00:33:40   check PASS: power: Scherm uitschakelen na 1 uur writes idle-delay 3600
+00:33:40   check PASS: power: Scherm uitschakelen na follows an outside idle-delay (10 minuten)
+00:33:42   check PASS: power: Scherm dimmen bij inactiviteit writes idle-dim
+00:33:43   check PASS: power: without logind automatic sleep is insensitive, with GNOME's reason
+00:33:43   check PASS: power: no "Als je automatisch slapen uitschakelt" warning where the pc cannot sleep (GNOME hides that row)
+00:33:48   check PASS: power: Niets doen writes power-button-action nothing
+00:33:49   check PASS: power: the power-button drop-down follows an outside power-button-action (Slaapstand)
+00:33:51   check PASS: power: Slaapstand runs systemctl suspend (the run's stub, logs/guard-calls.log)
+00:33:52   check PASS: wait_text settings: 'Restart?'
+00:33:55   check PASS: power: Opnieuw opstarten asks first; Escape runs nothing
+00:33:59   check FAIL (known kit): kit: a switch in an expander header takes a real pointer click
+00:34:03   check PASS: wait_text settings: 'Battery charging'
+00:34:03   check PASS: power: title and breadcrumb System > Power & battery
+00:34:04   check PASS: power: system.battery.get and battery.charging.get read the UPower stand-in
+00:34:08   check PASS: power: with UPower the battery hero shows (76 %)
+00:34:09   check PASS: power: with UPower and power-profiles-daemon st-power-battery shows
+00:34:09   check PASS: power: with UPower and power-profiles-daemon st-power-energy-saver shows
+00:34:09   check PASS: power: with UPower and power-profiles-daemon st-power-show-battery-percentage shows
+00:34:10   check PASS: power: with UPower and power-profiles-daemon st-power-charging shows
+00:34:10   check PASS: power: with UPower and power-profiles-daemon st-power-levels shows
+00:34:10   check PASS: power: no Netstroom card with a battery
+00:34:11   check PASS: power: Energiestand with power-profiles-daemon (Gebalanceerd)
+00:34:13   check PASS: power: Beste prestaties sets ActiveProfile performance (Properties.Set)
+00:34:16   check PASS: power: Altijd energiebesparing gebruiken sets ActiveProfile power-saver
+00:34:16   check PASS: power: Energiestand follows: Beste energie-efficiëntie
+00:34:18   check PASS: power: Energiebesparing automatisch inschakelen bij een laag batterijniveau writes power-saver-profile-on-low-battery
+00:34:21   check PASS: power: Batterijpercentage writes show-battery-percentage
+00:34:21   check PASS: mirror: show-battery-percentage reaches settings.json taskbar.batteryPercent
+00:34:22   check FAIL (known I): mirror: the tray shows 76% next to the battery (taskbar/system.rs, section 8.2: step I)
+00:34:22   check PASS: power: Batterijpercentage follows an outside show-battery-percentage=false
+00:34:28   check PASS: power: Batterijgezondheid behouden sends EnableChargeThreshold(true), interactive
+00:34:30   check PASS: power: battery.history reads GetHistory, oldest first
+00:34:31   check PASS: power: Batterijniveaus draws the chart
+00:34:34   check PASS: power: Afgelopen 7 dagen asks UPower GetHistory over 604800 s
+00:34:34   check PASS: caps: the sensor stand-in gives accelerometer and ambientLight
+00:34:36   check PASS: wait_text settings: 'Brightness & colour'
+00:34:36   check PASS: display: title and breadcrumb System > Display
+00:34:37   check PASS: display: Draaivergrendeling shows with an accelerometer
+00:34:39   check PASS: display: Draaivergrendeling writes orientation-lock
+00:34:40   check PASS: display: Draaivergrendeling follows an outside orientation-lock=false
+00:34:41   check PASS: display: automatic brightness also needs a backlight (the virtual monitor has none)
+00:34:42   check PASS: wait_text settings: 'Storage management'
+00:34:43   check PASS: storage: title and breadcrumb System > Storage
+00:34:47   check PASS: storage: no Dutch in en
+00:34:48   check PASS: storage: Opslaginzicht with its chevron
+00:34:49   check PASS: storage: the Opslaginzicht switch turns both purges on
+00:34:49   check PASS: storage: the switch follows an outside write
+00:34:51   check PASS: wait_text settings: 'Configure cleanup schedules'
+00:34:51   check PASS: storagesense: title and breadcrumb System > Storage > Storage Sense
+00:34:56   check PASS: storagesense: no Dutch in en
+00:34:56   check PASS: storagesense: no placeholder
+00:34:56   check PASS: storagesense: st-storagesense-remove-old-temp-files
+00:34:57   check PASS: storagesense: st-storagesense-storage-sense
+00:34:57   check PASS: storagesense: st-storagesense-old-files-age
+00:34:58   check PASS: storagesense: st-storagesense-run
+00:34:58   check PASS: storagesense: st-storagesense-empty-trash
+00:34:59   check PASS: storagesense: st-storagesense-delete-temp
+00:34:59   check PASS: storagesense: Opslaginzicht nu uitvoeren is off while both purges are off
+00:35:01   check PASS: storagesense: Tijdelijke bestanden opschonen writes remove-old-temp-files
+00:35:01   check PASS: storagesense: Tijdelijke bestanden opschonen follows an outside remove-old-temp-files=false
+00:35:02   check PASS: storagesense: the Opslaginzicht switch on its page turns both purges on
+00:35:06   check PASS: storagesense: 14 dagen writes remove-old-trash-files true and old-files-age 14
+00:35:06   check PASS: storagesense: an outside age of 7 days is an option of its own, selected
+00:35:08   check PASS: wait_text settings: 'Storage Sense has run'
+00:35:08   check PASS: storagesense: Opslaginzicht nu uitvoeren runs gsd's purge with the keys (nothing old enough here)
+00:35:11   check PASS: storagesense: Nooit writes remove-old-trash-files false (the age stays)
+00:35:20   check FAIL (known kit): kit: a real pointer click on a kit dialog's button (Leegmaken)
+00:35:22   check PASS: storagesense: Prullenbak nu leegmaken asks first, then empties the Prullenbak
+00:35:23   check PASS: wait_text settings: 'Snap windows'
+00:35:24   check PASS: multitasking: title and breadcrumb System > Multitasking
+00:35:24   check PASS: multitasking: no placeholder
+00:35:31   check PASS: multitasking: no Dutch in en
+00:35:31   check PASS: multitasking: st-multitasking-edge-tiling
+00:35:32   check PASS: multitasking: st-multitasking-taskbar-all-desktops
+00:35:32   check PASS: multitasking: st-multitasking-app-switcher-current-workspace-only
+00:35:33   check PASS: multitasking: st-multitasking-dynamic-workspaces
+00:35:33   check PASS: multitasking: st-multitasking-workspaces-only-on-primary
+00:35:34   check PASS: multitasking: st-multitasking-enable-hot-corners
+00:35:36   check PASS: multitasking: Vensters uitlijnen writes edge-tiling
+00:35:37   check PASS: multitasking: Vensters uitlijnen follows an outside edge-tiling=true
+00:35:40   check PASS: multitasking: Op de taakbalk ... Op alle bureaubladen writes taskbar.allDesktops (amendment 12)
+00:35:44   check PASS: multitasking: Alt+Tab on all desktops writes taskView.allDesktops and both GNOME switchers (amendment 12)
+00:35:44   check PASS: multitasking: an outside current-workspace-only true shows "Only on the desktop I’m using" and sets taskView.allDesktops false
+00:35:45   check PASS: multitasking: an outside current-workspace-only false shows "On all desktops" and sets taskView.allDesktops true
+00:35:47   check PASS: multitasking: Vast aantal bureaubladen writes dynamic-workspaces false
+00:35:47   check PASS: multitasking: Aantal bureaubladen shows for a fixed number
+00:35:49   check PASS: multitasking: Aantal bureaubladen + writes num-workspaces 5
+00:35:49   check PASS: multitasking: an outside dynamic-workspaces true selects Lege bureaubladen automatisch verwijderen and hides the number
+00:35:51   check PASS: multitasking: Bureaubladen op alle beeldschermen writes workspaces-only-on-primary false
+00:35:54   check PASS: multitasking: Actieve hoek writes enable-hot-corners
+00:35:55   check PASS: multitasking: Actieve hoek follows an outside enable-hot-corners=true
+00:35:55   check PASS: screentime: wellbeing.history reads gnome-shell's record
+00:35:56   check PASS: wait_text settings: 'Break reminders'
+00:35:57   check PASS: screentime: title and breadcrumb System > Screen time
+00:36:02   check PASS: screentime: no Dutch in en
+00:36:02   check PASS: screentime: no placeholder
+00:36:03   check PASS: screentime: the chart with gnome-shell's record, else Screen Time Unavailable
+00:36:04   check PASS: screentime: Schermtijd vastleggen writes history-enabled
+00:36:05   check PASS: screentime: recording off shows GNOME's Screen Time Recording Disabled
+00:36:05   check PASS: screentime: Schermtijd vastleggen follows an outside history-enabled=true
+00:36:07   check PASS: screentime: Herinneringen voor je ogen adds eyesight to selected-breaks
+00:36:09   check PASS: screentime: Herinneringen om te bewegen adds movement to selected-breaks
+00:36:13   check PASS: screentime: the movement schedule writes 180 s every 1800 s
+00:36:17   check PASS: screentime: Geluiden writes play-sound of both breaks
+00:36:20   check PASS: screentime: Limiet voor schermtijd writes daily-limit-enabled
+00:36:21   check PASS: screentime: Dagelijkse limiet + 1 uur writes daily-limit-seconds (0.5 s after the last change)
+00:36:24   check PASS: screentime: Grijswaarden writes grayscale
+00:36:25   check PASS: screentime: Limiet voor schermtijd follows an outside daily-limit-enabled=false
+00:36:26   check PASS: screentime: Grijswaarden is insensitive while the limit is off
+00:36:26   check PASS: owned: no key of Systeem's pages is WinPoint-owned (no pointer card instead of a control)
+00:36:26   check PASS: owned: every bound key is available and writable here (allow/system.rs)
+00:36:26   check PASS: owned: show-battery-percentage is Mirrored to taskbar.batteryPercent
+00:36:28   check PASS: notifications: title and breadcrumb System > Notifications
+00:36:28   check PASS: mirror: show-banners true is notifications.dnd false
+00:36:30   check PASS: mirror: Niet storen in Settings sets show-banners false
+00:36:32   check PASS: mirror: the Snelle instellingen tile Niet storen is on
+00:36:33   check PASS: mirror: the tile in Snelle instellingen sets show-banners true again
+00:36:35   check PASS: mirror: an outside show-banners false reaches settings.json notifications.dnd
+00:36:36   check PASS: mirror: the Settings switch Niet storen follows
+00:36:36 shutdown app: signalled own descendants 1349:pipewire
+00:36:36 shutdown app: signalled own descendants 1353:pipewire-pulse
+00:36:37 shutdown shell clients: signalled own descendants 184:ibus-daemon, 505:win11-shell, 1455:glycin-image-rs, 634:win11-panel, 2794:glycin-svg, 208:ibus-memconf, 211:ibus-extension-, 526:ibus-engine-sim
+00:36:37 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+00:36:37 shutdown system bus: signalled own descendants 163:dbus-daemon
+00:36:37 inner sweep: signalled own descendants 1466:glycin-image-rs
+00:36:37 inner done: 0 surfaces, 0 failed []
+00:36:39 strace connect:    276 x AF_INET 127.0.0.1 -> EINPROGRESS
+00:36:39 strace connect:     47 x AF_INET 127.0.0.1 -> UNFINISHED
+00:36:39 strace connect:      4 x AF_INET 127.0.0.1 -> ok
+00:36:39 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+00:36:39 strace connect:      1 x AF_UNIX /run/snapd.socket -> ENOENT
+00:36:39 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+00:36:39 strace connect:      4 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+00:36:39 strace connect:      3 x AF_UNIX /tmp/w11-rt/bus -> UNFINISHED
+00:36:39 strace connect:     46 x AF_UNIX /tmp/w11-rt/bus -> ok
+00:36:39 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+00:36:39 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> UNFINISHED
+00:36:39 strace connect:      7 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ok
+00:36:39 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0-manager -> UNFINISHED
+00:36:39 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0-manager -> ok
+00:36:39 strace connect:      4 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+00:36:39 strace connect:      1 x AF_UNIX /tmp/w11-rt/pulse/native -> UNFINISHED
+00:36:39 strace connect:      3 x AF_UNIX /tmp/w11-rt/pulse/native -> ok
+00:36:39 strace connect:     20 x AF_UNIX /tmp/w11-rt/sbus -> ok
+00:36:39 strace connect:      4 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+00:36:39 strace connect:     12 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+00:36:39 strace connect:     43 x AF_UNIX /var/run/nscd/socket -> ENOENT
+00:36:39 strace connect:      3 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+00:36:39 strace connect:      5 x AF_UNIX /var/run/pulse/native -> ENOENT
+00:36:39 strace connect check: 542 connect() calls, OK
+00:36:44 strace exec check: 233 execve() calls, OK

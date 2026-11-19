@@ -1,0 +1,1641 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 06:35:52",
+ "seconds": 102.5,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 44,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 783343,
+   "rss_kb": 1050588,
+   "processes": 21,
+   "t": 20.4
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 591024,
+   "rss_kb": 824908
+  },
+  "minMemAvailableKb": 3396676,
+  "abortedForMemory": false,
+  "peakByName": {
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 314639,
+    "rss_kb": 366248
+   },
+   "python3": {
+    "count": 2,
+    "pss_kb": 191856,
+    "rss_kb": 221780
+   },
+   "glycin-svg": {
+    "count": 3,
+    "pss_kb": 85897,
+    "rss_kb": 125232
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 85607,
+    "rss_kb": 122632
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 32917,
+    "rss_kb": 64304
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 19215,
+    "rss_kb": 34364
+   },
+   "glycin-image-rs": {
+    "count": 3,
+    "pss_kb": 17002,
+    "rss_kb": 31020
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 15224,
+    "rss_kb": 23500
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 13028,
+    "rss_kb": 21176
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4184,
+    "rss_kb": 11368
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1567,
+    "rss_kb": 9588
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 900,
+    "rss_kb": 7812
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 844,
+    "rss_kb": 7664
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 245,
+    "rss_kb": 1356
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 218,
+    "rss_kb": 2544
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 314639,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 155426,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 88503,
+    "first": 1.0
+   },
+   "glycin-svg": {
+    "pss_kb": 46266,
+    "first": 1.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 33319,
+    "first": 8.3
+   },
+   "ibus-extension-": {
+    "pss_kb": 19597,
+    "first": 1.0
+   },
+   "win11-panel": {
+    "pss_kb": 15245,
+    "first": 1.6
+   },
+   "win11-app": {
+    "pss_kb": 13028,
+    "first": 8.3
+   },
+   "glycin-image-rs": {
+    "pss_kb": 11957,
+    "first": 1.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4334,
+    "first": 1.0
+   },
+   "ibus-memconf": {
+    "pss_kb": 991,
+    "first": 1.0
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 943,
+    "first": 1.6
+   },
+   "dbus-daemon": {
+    "pss_kb": 838,
+    "first": 0.5
+   },
+   "bwrap": {
+    "pss_kb": 251,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 233,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release",
+  "exit": 0,
+  "seconds": 63.9,
+  "mutatingSyscallPaths": 87318,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g"
+  }
+ },
+ "guardStubCalls": [
+  "06:37:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:13\tpw-dump\t--monitor --no-colors",
+  "06:37:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:15\tpw-dump\t--monitor --no-colors",
+  "06:37:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:19\tpw-dump\t--monitor --no-colors",
+  "06:37:19\tpw-dump\t--monitor --no-colors",
+  "06:37:19\tapt\tlist --upgradable",
+  "06:37:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:21\tpw-dump\t--monitor --no-colors",
+  "06:37:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:25\tpw-dump\t--monitor --no-colors",
+  "06:37:27\tpw-dump\t--monitor --no-colors",
+  "06:37:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "06:37:34\tpw-dump\t--monitor --no-colors"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 12,
+  "maxScanSeconds": 0.054,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/frosted-glass.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 1.37,
+    "args": {
+     "name": "a-taskbar"
+    },
+    "result": {
+     "png": "a-taskbar.png",
+     "area": [
+      0,
+      780,
+      1440,
+      120
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       120
+      ],
+      "distinctColours": 337,
+      "meanLevel": 36.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.97,
+    "args": {
+     "spec": "settings"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1481,
+     "page": "home",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1481,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.97,
+    "args": {
+     "key": "E.configureOff"
+    }
+   },
+   {
+    "step": "record",
+    "t": 3.79,
+    "args": {
+     "key": "E.configureOn"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.52,
+    "args": {
+     "name": "b-settings-focused"
+    },
+    "result": {
+     "png": "b-settings-focused.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1067,
+      "meanLevel": 38.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 6.54,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "native",
+     "pid": 513,
+     "page": null,
+     "alive": true,
+     "shell": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 7.19,
+    "args": {
+     "name": "c-start-open"
+    },
+    "result": {
+     "png": "c-start-open.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 943,
+      "meanLevel": 35.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "close",
+    "t": 9.21,
+    "args": {
+     "name": "start"
+    }
+   },
+   {
+    "step": "open",
+    "t": 10.42,
+    "args": {
+     "spec": "start"
+    },
+    "result": {
+     "name": "start",
+     "kind": "start",
+     "window": "native",
+     "pid": 513,
+     "page": null,
+     "alive": true,
+     "shell": true,
+     "rect": [
+      399,
+      114,
+      642,
+      726
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.06,
+    "args": {
+     "name": "d2-start-reopened"
+    },
+    "result": {
+     "png": "d2-start-reopened.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 943,
+      "meanLevel": 35.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "close",
+    "t": 11.26,
+    "args": {
+     "name": "start"
+    }
+   },
+   {
+    "step": "record",
+    "t": 11.75,
+    "args": {
+     "key": "F.drag"
+    }
+   },
+   {
+    "step": "record",
+    "t": 15.35,
+    "args": {
+     "key": "G.real"
+    }
+   },
+   {
+    "step": "record",
+    "t": 15.4,
+    "args": {
+     "key": "G.captions"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 16.07,
+    "args": {
+     "name": "g-after-real-drag"
+    },
+    "result": {
+     "png": "g-after-real-drag.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1216,
+      "meanLevel": 39.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 16.07,
+    "args": {
+     "key": "E.memory"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "A: the native shell runs",
+    "ok": true,
+    "t": 0.8,
+    "pid": 513
+   },
+   {
+    "check": "A: one taskbar blur for the 48 px strip",
+    "ok": true,
+    "t": 0.81,
+    "entries": [
+     {
+      "kind": "taskbar",
+      "focused": false,
+      "rect": {
+       "x": 0,
+       "y": 852,
+       "w": 1440,
+       "h": 48
+      },
+      "blurRect": {
+       "x": 0,
+       "y": 0,
+       "w": 1440,
+       "h": 48
+      },
+      "effect": true,
+      "shadow": false,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "A: the extension holds the native pid as Panel",
+    "ok": true,
+    "t": 0.81,
+    "hosts": {
+     "513": [
+      "io.github.win11shell.Panel",
+      "io.github.win11shell.Start"
+     ]
+    }
+   },
+   {
+    "check": "A: capabilities() list the native taskbar with blur",
+    "ok": true,
+    "t": 0.81,
+    "windows": [
+     {
+      "pid": 513,
+      "kind": "taskbar",
+      "blur": true,
+      "shadow": false,
+      "focused": false
+     }
+    ]
+   },
+   {
+    "check": "B: the focused Settings window has one blur",
+    "ok": true,
+    "t": 3.79,
+    "entries": [
+     {
+      "kind": "window",
+      "focused": true,
+      "rect": {
+       "x": 170,
+       "y": 56,
+       "w": 1100,
+       "h": 740
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 1094,
+       "h": 734
+      },
+      "effect": true,
+      "shadow": true,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "B: the unblurred rim is 3 px (corner on the 8 px arc)",
+    "ok": true,
+    "t": 3.79,
+    "rim": [
+     3,
+     3
+    ]
+   },
+   {
+    "check": "B: the window wears the kit's glass class (w11-glass)",
+    "ok": true,
+    "t": 3.84,
+    "classes": [
+     "background",
+     "w11",
+     "w11-app-window",
+     "w11-glass",
+     "w11-dark",
+     "w11-transparent",
+     "settings-window",
+     "st-app"
+    ]
+   },
+   {
+    "check": "C: open Start has one blur",
+    "ok": true,
+    "t": 6.54,
+    "entries": [
+     {
+      "kind": "start",
+      "focused": true,
+      "rect": {
+       "x": 399,
+       "y": 114,
+       "w": 642,
+       "h": 726
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 636,
+       "h": 720
+      },
+      "effect": true,
+      "shadow": false,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "C: Settings lost its blur with the focus",
+    "ok": true,
+    "t": 6.54,
+    "entries": [
+     {
+      "kind": "window",
+      "focused": false,
+      "rect": {
+       "x": 170,
+       "y": 56,
+       "w": 1100,
+       "h": 740
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 1094,
+       "h": 734
+      },
+      "effect": false,
+      "shadow": true,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "C: one window blur in all (Start)",
+    "ok": true,
+    "t": 6.54,
+    "status": {
+     "experimental": true,
+     "enabled": true,
+     "options": {
+      "blur": true,
+      "windowBlur": true,
+      "shadows": true,
+      "taskbarAutoHide": false,
+      "radius": 14
+     },
+     "created": 3,
+     "entries": [
+      {
+       "kind": "taskbar",
+       "focused": false,
+       "rect": {
+        "x": 0,
+        "y": 852,
+        "w": 1440,
+        "h": 48
+       },
+       "blurRect": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 48
+       },
+       "effect": true,
+       "shadow": false,
+       "reactive": false,
+       "clips": true
+      },
+      {
+       "kind": "window",
+       "focused": false,
+       "rect": {
+        "x": 170,
+        "y": 56,
+        "w": 1100,
+        "h": 740
+       },
+       "blurRect": {
+        "x": 3,
+        "y": 3,
+        "w": 1094,
+        "h": 734
+       },
+       "effect": false,
+       "shadow": true,
+       "reactive": false,
+       "clips": true
+      },
+      {
+       "kind": "start",
+       "focused": true,
+       "rect": {
+        "x": 399,
+        "y": 114,
+        "w": 642,
+        "h": 726
+       },
+       "blurRect": {
+        "x": 3,
+        "y": 3,
+        "w": 636,
+        "h": 720
+       },
+       "effect": true,
+       "shadow": false,
+       "reactive": false,
+       "clips": true
+      }
+     ]
+    }
+   },
+   {
+    "check": "C: the extension holds Panel and Start under the native pid",
+    "ok": true,
+    "t": 6.54,
+    "hosts": {
+     "513": [
+      "io.github.win11shell.Panel",
+      "io.github.win11shell.Start"
+     ],
+     "1481": [
+      "io.github.win11shell.Settings"
+     ]
+    }
+   },
+   {
+    "check": "C: capabilities() list the open Start with blur",
+    "ok": true,
+    "t": 6.54,
+    "windows": [
+     {
+      "pid": 513,
+      "kind": "start",
+      "blur": true,
+      "shadow": false,
+      "focused": true
+     }
+    ]
+   },
+   {
+    "check": "D: closing Start releases its blur",
+    "ok": true,
+    "t": 9.21
+   },
+   {
+    "check": "D: Settings has its blur again",
+    "ok": true,
+    "t": 9.21,
+    "entries": [
+     {
+      "kind": "window",
+      "focused": true,
+      "rect": {
+       "x": 170,
+       "y": 56,
+       "w": 1100,
+       "h": 740
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 1094,
+       "h": 734
+      },
+      "effect": true,
+      "shadow": true,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "D: the extension keeps the hidden Start registration of the native pid",
+    "ok": true,
+    "t": 10.21,
+    "hosts": {
+     "513": [
+      "io.github.win11shell.Panel",
+      "io.github.win11shell.Start"
+     ],
+     "1481": [
+      "io.github.win11shell.Settings"
+     ]
+    }
+   },
+   {
+    "check": "D2: reopened Start has its blur again",
+    "ok": true,
+    "t": 10.42,
+    "entries": [
+     {
+      "kind": "start",
+      "focused": true,
+      "rect": {
+       "x": 399,
+       "y": 114,
+       "w": 642,
+       "h": 726
+      },
+      "blurRect": {
+       "x": 3,
+       "y": 3,
+       "w": 636,
+       "h": 720
+      },
+      "effect": true,
+      "shadow": false,
+      "reactive": false,
+      "clips": true
+     }
+    ]
+   },
+   {
+    "check": "D2: capabilities() list the reopened Start with blur",
+    "ok": true,
+    "t": 10.42,
+    "windows": [
+     {
+      "pid": 513,
+      "kind": "start",
+      "blur": true,
+      "shadow": false,
+      "focused": true
+     }
+    ]
+   },
+   {
+    "check": "F: the blur stays during the whole drag",
+    "ok": true,
+    "t": 11.75,
+    "drag": {
+     "steps": [
+      {
+       "x": 185,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 200,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 215,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 230,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 245,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 260,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 275,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 290,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 305,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 320,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 335,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 350,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      }
+     ],
+     "rebuilt": 0,
+     "back": [
+      170,
+      56
+     ]
+    }
+   },
+   {
+    "check": "F: no blur entry was rebuilt during the drag",
+    "ok": true,
+    "t": 11.75,
+    "drag": {
+     "steps": [
+      {
+       "x": 185,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 200,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 215,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 230,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 245,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 260,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 275,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 290,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 305,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 320,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 335,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 350,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      }
+     ],
+     "rebuilt": 0,
+     "back": [
+      170,
+      56
+     ]
+    }
+   },
+   {
+    "check": "F: the backdrop follows the drawn window",
+    "ok": true,
+    "t": 11.76,
+    "drag": {
+     "steps": [
+      {
+       "x": 185,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 200,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 215,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 230,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 245,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 260,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 275,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 290,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 305,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 320,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 335,
+       "y": 62,
+       "blur": true,
+       "follows": true
+      },
+      {
+       "x": 350,
+       "y": 56,
+       "blur": true,
+       "follows": true
+      }
+     ],
+     "rebuilt": 0,
+     "back": [
+      170,
+      56
+     ]
+    }
+   },
+   {
+    "check": "F: after the drag the blur is on the frame again",
+    "ok": true,
+    "t": 11.76,
+    "settled": {
+     "frame": [
+      170,
+      56
+     ],
+     "actor": [
+      170,
+      56
+     ],
+     "blur": [
+      170,
+      56
+     ],
+     "drawn": true,
+     "ok": true
+    }
+   },
+   {
+    "check": "G: the title bar drag moves the window",
+    "ok": true,
+    "t": 15.35,
+    "real": {
+     "moved": {
+      "dx": 96,
+      "dy": 56
+     },
+     "resized": {
+      "dw": 74
+     },
+     "frame": {
+      "w": 1174,
+      "h": 740
+     },
+     "buffer": {
+      "w": 1174,
+      "h": 740
+     },
+     "actor": {
+      "w": 1174,
+      "h": 740
+     }
+    }
+   },
+   {
+    "check": "G: the right edge resizes the window",
+    "ok": true,
+    "t": 15.35,
+    "real": {
+     "moved": {
+      "dx": 96,
+      "dy": 56
+     },
+     "resized": {
+      "dw": 74
+     },
+     "frame": {
+      "w": 1174,
+      "h": 740
+     },
+     "buffer": {
+      "w": 1174,
+      "h": 740
+     },
+     "actor": {
+      "w": 1174,
+      "h": 740
+     }
+    }
+   },
+   {
+    "check": "G: the drawn window is its buffer (no stretch)",
+    "ok": true,
+    "t": 15.35,
+    "real": {
+     "moved": {
+      "dx": 96,
+      "dy": 56
+     },
+     "resized": {
+      "dw": 74
+     },
+     "frame": {
+      "w": 1174,
+      "h": 740
+     },
+     "buffer": {
+      "w": 1174,
+      "h": 740
+     },
+     "actor": {
+      "w": 1174,
+      "h": 740
+     }
+    }
+   },
+   {
+    "check": "G: the app's window has the new width",
+    "ok": true,
+    "t": 15.4,
+    "caps": {
+     "visible": 3,
+     "width": 1174,
+     "height": 740,
+     "rects": [
+      [
+       1035,
+       1,
+       46,
+       32
+      ],
+      [
+       1081,
+       1,
+       46,
+       32
+      ],
+      [
+       1127,
+       1,
+       46,
+       32
+      ]
+     ]
+    },
+    "real": {
+     "moved": {
+      "dx": 96,
+      "dy": 56
+     },
+     "resized": {
+      "dw": 74
+     },
+     "frame": {
+      "w": 1174,
+      "h": 740
+     },
+     "buffer": {
+      "w": 1174,
+      "h": 740
+     },
+     "actor": {
+      "w": 1174,
+      "h": 740
+     }
+    }
+   },
+   {
+    "check": "G: the three caption buttons are inside the window",
+    "ok": true,
+    "t": 15.4,
+    "caps": {
+     "visible": 3,
+     "width": 1174,
+     "height": 740,
+     "rects": [
+      [
+       1035,
+       1,
+       46,
+       32
+      ],
+      [
+       1081,
+       1,
+       46,
+       32
+      ],
+      [
+       1127,
+       1,
+       46,
+       32
+      ]
+     ]
+    }
+   },
+   {
+    "check": "E: the window blur costs gnome-shell less than 64 MiB PSS",
+    "ok": true,
+    "t": 16.07,
+    "withoutWindowBlurMiB": 291.9,
+    "settingsFocusedMiB": 290.6,
+    "startOpenMiB": 307.2,
+    "extraMiB": 15.300000000000011
+   },
+   {
+    "check": "every check passed",
+    "ok": true,
+    "t": 16.07,
+    "failed": []
+   }
+  ],
+  "records": {
+   "E.configureOff": "{\"experimental\":true,\"enabled\":true,\"options\":{\"blur\":true,\"windowBlur\":false,\"shadows\":true,\"taskbarAutoHide\":false,\"radius\":14},\"created\":2,\"entries\":[{\"kind\":\"taskbar\",\"focused\":false,\"rect\":{\"x\":0,\"y\":852,\"w\":1440,\"h\":48},\"blurRect\":{\"x\":0,\"y\":0,\"w\":1440,\"h\":48},\"effect\":true,\"shadow\":false,\"reactive\":false,\"clips\":true},{\"kind\":\"window\",\"focused\":true,\"rect\":{\"x\":170,\"y\":56,\"w\":1100,\"h\":740},\"blurRect\":{\"x\":3,\"y\":3,\"w\":1094,\"h\":734},\"effect\":false,\"shadow\":true,\"reactive\":false,\"clips\":true}]}",
+   "E.configureOn": "{\"experimental\":true,\"enabled\":true,\"options\":{\"blur\":true,\"windowBlur\":true,\"shadows\":true,\"taskbarAutoHide\":false,\"radius\":14},\"created\":2,\"entries\":[{\"kind\":\"taskbar\",\"focused\":false,\"rect\":{\"x\":0,\"y\":852,\"w\":1440,\"h\":48},\"blurRect\":{\"x\":0,\"y\":0,\"w\":1440,\"h\":48},\"effect\":true,\"shadow\":false,\"reactive\":false,\"clips\":true},{\"kind\":\"window\",\"focused\":true,\"rect\":{\"x\":170,\"y\":56,\"w\":1100,\"h\":740},\"blurRect\":{\"x\":3,\"y\":3,\"w\":1094,\"h\":734},\"effect\":true,\"shadow\":true,\"reactive\":false,\"clips\":true}]}",
+   "F.drag": {
+    "steps": [
+     {
+      "x": 185,
+      "y": 62,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 200,
+      "y": 56,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 215,
+      "y": 62,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 230,
+      "y": 56,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 245,
+      "y": 62,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 260,
+      "y": 56,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 275,
+      "y": 62,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 290,
+      "y": 56,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 305,
+      "y": 62,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 320,
+      "y": 56,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 335,
+      "y": 62,
+      "blur": true,
+      "follows": true
+     },
+     {
+      "x": 350,
+      "y": 56,
+      "blur": true,
+      "follows": true
+     }
+    ],
+    "rebuilt": 0,
+    "back": [
+     170,
+     56
+    ]
+   },
+   "G.real": {
+    "moved": {
+     "dx": 96,
+     "dy": 56
+    },
+    "resized": {
+     "dw": 74
+    },
+    "frame": {
+     "w": 1174,
+     "h": 740
+    },
+    "buffer": {
+     "w": 1174,
+     "h": 740
+    },
+    "actor": {
+     "w": 1174,
+     "h": 740
+    }
+   },
+   "G.captions": {
+    "visible": 3,
+    "width": 1174,
+    "height": 740,
+    "rects": [
+     [
+      1035,
+      1,
+      46,
+      32
+     ],
+     [
+      1081,
+      1,
+      46,
+      32
+     ],
+     [
+      1127,
+      1,
+      46,
+      32
+     ]
+    ]
+   },
+   "E.memory": {
+    "withoutWindowBlurMiB": 291.9,
+    "settingsFocusedMiB": 290.6,
+    "startOpenMiB": 307.2,
+    "extraMiB": 15.300000000000011
+   }
+  },
+  "shots": [
+   "a-taskbar.png",
+   "b-settings-focused.png",
+   "c-start-open.png",
+   "d2-start-reopened.png",
+   "g-after-real-drag.png"
+  ],
+  "error": null,
+  "seconds": 16.07,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 513,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 513,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 513,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "native-settings",
+    "pid": 1481,
+    "page": "home",
+    "alive": true
+   }
+  },
+  "failedChecks": [],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=e144e122a24c2f3d13ff8bee6afa9688",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 513,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 513
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "a-taskbar.png",
+    "group": "scenario",
+    "bytes": 83284,
+    "area": [
+     0,
+     780,
+     1440,
+     120
+    ]
+   },
+   {
+    "file": "b-settings-focused.png",
+    "group": "scenario",
+    "bytes": 565461,
+    "area": null
+   },
+   {
+    "file": "c-start-open.png",
+    "group": "scenario",
+    "bytes": 391076,
+    "area": null
+   },
+   {
+    "file": "d2-start-reopened.png",
+    "group": "scenario",
+    "bytes": 391076,
+    "area": null
+   },
+   {
+    "file": "g-after-real-drag.png",
+    "group": "scenario",
+    "bytes": 547604,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/frosted-glass.mm/a-taskbar.png",
+  "tests/gnome/scenarios/frosted-glass.mm/b-settings-focused.png",
+  "tests/gnome/scenarios/frosted-glass.mm/c-start-open.png",
+  "tests/gnome/scenarios/frosted-glass.mm/d2-start-reopened.png",
+  "tests/gnome/scenarios/frosted-glass.mm/g-after-real-drag.png"
+ ]
+}

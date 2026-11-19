@@ -1,0 +1,39 @@
+# host/i18n/goa.tsv: host texts of services/goa.rs.
+# Owner: batch E (settings parity, §5.6).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/goa.rs (notes/claude/settings-parity.md §5.6)
+# goa-daemon (org.gnome.OnlineAccounts) is not on the session bus
+#@ new
+goa.unavailable	Onlineaccounts zijn op deze computer niet beschikbaar.	Online accounts aren’t available on this computer.
+# libgoa-backend or win11-gtk-settings (the add dialog's process) is missing
+#@ new
+goa.noHelper	Accounts toevoegen is op deze computer niet beschikbaar.	Adding accounts isn’t available on this computer.
+# goa.add with a provider type GNOME Settings does not offer
+#@ new
+goa.badProvider	Dit soort account wordt niet ondersteund.	This type of account isn’t supported.
+# the account id is not among goa-daemon's accounts (removed meanwhile)
+#@ new
+goa.noSuchAccount	Dit account bestaat niet meer.	This account no longer exists.
+# goa.setService for a feature the account's provider has not
+#@ new
+goa.badService	Dit account kan hier niet voor worden gebruikt.	This account can’t be used for this.
+# an account the organisation set up (IsLocked): GNOME Settings does not let it be changed or removed
+#@ new
+goa.locked	Dit account wordt beheerd door je organisatie.	This account is managed by your organisation.
+# the add or sign-in dialog's process could not be started
+#@ new
+goa.helperFailed	Het venster voor het account kan niet worden geopend.	The account window couldn’t be opened.
+# provider names GOA translates (GOA 3.58's own nl and en-GB names)
+#@ new
+goa.provider.imapSmtp	IMAP en SMTP	IMAP and SMTP
+#@ new
+goa.provider.kerberos	Zakelijke aanmelding (Kerberos)	Enterprise Login (Kerberos)

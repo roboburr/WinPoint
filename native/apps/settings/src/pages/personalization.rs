@@ -6,7 +6,7 @@ use super::{Builder, Page, PageFuture};
 use crate::common;
 use crate::preview::{DesktopPreview, PreviewOpts};
 use crate::widgets::{Clamp, Wrap};
-use kit::controls::{self as c, SettingsGroup};
+use kit::controls as c;
 use kit::prelude::*;
 use kit::t;
 
@@ -37,10 +37,7 @@ fn page(p: Page) -> PageFuture {
         right.append(&theme_grid(&p, true));
         hero.append(&right);
 
-        let links = SettingsGroup::new("", "");
-        for id in ["background", "colors", "themes", "start", "taskbar", "desktopicons"] {
-            links.add(common::link_card(&p, id).widget());
-        }
+        let links = common::child_links(&p, "personalization");
         vec![hero.upcast(), links.widget().clone().upcast()]
     })
 }

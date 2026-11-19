@@ -37,8 +37,108 @@ impl Info {
                 .and_then(|s| s.split_whitespace().next()?.parse::<f64>().ok())
                 .map(|v| v as u64)
         );
+        // the names are read again every time: "Naam van deze pc wijzigen" (machine.setName) changes them
+        let (host, pretty) = host_names();
+        data["hostname"] = json!(host);
+        data["prettyHostname"] = json!(pretty);
         data
     }
+}
+/// The kernel's host name (uname) and the pretty name as GNOME Settings shows it: hostname1's PrettyHostname
+/// ([`PRETTY`], as machine.info reads it), else /etc/machine-info's PRETTY_HOSTNAME, else the host name.
+fn host_names() -> (String, String) {
+    let uname = unsafe {
+        let mut u = std::mem::zeroed::<libc::utsname>();
+        libc::uname(&mut u);
+        u
+    };
+    let host = unsafe { CStr::from_ptr(uname.nodename.as_ptr()) }
+        .to_string_lossy()
+        .into_owned();
+    watch_hostname1();
+    let hostnamed = PRETTY.get(hostname1_pretty);
+    let machine_info = read("/etc/machine-info")
+        .map(|s| key_values(&s))
+        .and_then(|m| m.get("PRETTY_HOSTNAME").cloned());
+    let pretty = pretty_name(hostnamed.as_deref(), machine_info.as_deref(), &host);
+    (host, pretty)
+}
+/// The pretty name: hostname1's, else /etc/machine-info's, else the host name (empty ones do not count).
+fn pretty_name(hostnamed: Option<&str>, machine_info: Option<&str>, host: &str) -> String {
+    [hostnamed, machine_info]
+        .into_iter()
+        .flatten()
+        .map(str::trim)
+        .find(|s| !s.is_empty())
+        .unwrap_or(host)
+        .to_owned()
+}
+const HOSTNAME1: &str = "org.freedesktop.hostname1";
+const HOSTNAME1_PATH: &str = "/org/freedesktop/hostname1";
+/// A value read once and again only after [`Cached::invalidate`] (hostname1's PropertiesChanged).
+struct Cached {
+    value: Mutex<Option<Option<String>>>,
+}
+impl Cached {
+    const fn new() -> Self {
+        Self {
+            value: Mutex::new(None),
+        }
+    }
+    fn get(&self, read: impl FnOnce() -> Option<String>) -> Option<String> {
+        let mut value = self.value.lock().unwrap_or_else(|e| e.into_inner());
+        value.get_or_insert_with(read).clone()
+    }
+    fn invalidate(&self) {
+        *self.value.lock().unwrap_or_else(|e| e.into_inner()) = None;
+    }
+}
+/// hostname1's PrettyHostname, so `system.info` makes no D-Bus call each time: read at the first call, then again
+/// after hostname1's PropertiesChanged ([`watch_hostname1`]). None: hostname1 is not there or has no pretty name.
+static PRETTY: Cached = Cached::new();
+fn hostname1_pretty() -> Option<String> {
+    if cfg!(test) {
+        return None; // unit tests never ask the system bus (machine/tests.rs has hostname1's fake)
+    }
+    let bus = system().ok()?;
+    let props = getall(&bus, HOSTNAME1, HOSTNAME1_PATH, HOSTNAME1).ok()?;
+    props["PrettyHostname"]
+        .as_str()
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+}
+/// A thread of its own (started at the first `system.info`, for the host's life) that follows hostname1's
+/// PropertiesChanged: a rename (machine.setName, GNOME Settings, hostnamectl) is read at the next `system.info`.
+fn watch_hostname1() {
+    static STARTED: std::sync::Once = std::sync::Once::new();
+    if cfg!(test) {
+        return;
+    }
+    STARTED.call_once(|| {
+        let _ = thread::Builder::new()
+            .name("win11-hostname1".into())
+            .spawn(|| {
+                let context = glib::MainContext::new();
+                let _ = context.with_thread_default(|| {
+                    let Ok(bus) = system() else { return };
+                    let _subscription = bus.signal_subscribe(
+                        Some(HOSTNAME1),
+                        Some("org.freedesktop.DBus.Properties"),
+                        Some("PropertiesChanged"),
+                        Some(HOSTNAME1_PATH),
+                        Some(HOSTNAME1),
+                        gio::DBusSignalFlags::NONE,
+                        |_, _, _, _, _, _| PRETTY.invalidate(),
+                    );
+                    // a change between the first read and the subscription
+                    PRETTY.invalidate();
+                    loop {
+                        context.iteration(true);
+                    }
+                });
+            });
+    });
 }
 fn read(p: impl AsRef<std::path::Path>) -> Option<String> {
     fs::read(p)
@@ -217,12 +317,7 @@ fn collect_info() -> Value {
         u
     };
     let cstr = |p: *const libc::c_char| unsafe { CStr::from_ptr(p).to_string_lossy().into_owned() };
-    let host = cstr(uname.nodename.as_ptr());
-    let pretty = read("/etc/machine-info")
-        .map(|s| key_values(&s))
-        .and_then(|m| m.get("PRETTY_HOSTNAME").cloned())
-        .filter(|s| !s.is_empty())
-        .unwrap_or_else(|| host.clone());
+    let (host, pretty) = host_names();
     let (username, real) = unsafe {
         let pw = libc::getpwuid(libc::geteuid());
         if pw.is_null() {
@@ -369,6 +464,30 @@ mod tests {
             "Ubuntu Test"
         );
         assert_eq!(shell_value("''"), "");
+    }
+    #[test]
+    fn the_pretty_name_is_hostname1s_then_machine_infos_then_the_host_name() {
+        assert_eq!(pretty_name(Some("Robins pc"), Some("Oud"), "robin-pc"), "Robins pc");
+        assert_eq!(pretty_name(None, Some("Oud"), "robin-pc"), "Oud");
+        assert_eq!(pretty_name(Some(" "), Some(""), "robin-pc"), "robin-pc");
+        assert_eq!(pretty_name(None, None, "robin-pc"), "robin-pc");
+        // read once, again only after hostname1's PropertiesChanged
+        let cache = Cached::new();
+        let reads = std::cell::Cell::new(0);
+        let read = |name: &str| {
+            reads.set(reads.get() + 1);
+            Some(name.to_owned())
+        };
+        assert_eq!(cache.get(|| read("Eerste")), Some("Eerste".into()));
+        assert_eq!(cache.get(|| read("Tweede")), Some("Eerste".into()));
+        assert_eq!(reads.get(), 1, "no D-Bus call for each system.info");
+        cache.invalidate();
+        assert_eq!(cache.get(|| read("Tweede")), Some("Tweede".into()));
+        assert_eq!(reads.get(), 2);
+        // no hostname1: remembered too, until a change
+        let none = Cached::new();
+        assert_eq!(none.get(|| None), None);
+        assert_eq!(none.get(|| Some("x".into())), None);
     }
     #[test]
     fn dmi_rejects_placeholders() {

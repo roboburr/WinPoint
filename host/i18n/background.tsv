@@ -1,0 +1,32 @@
+# host/i18n/background.tsv: host texts of services/background.rs.
+# Owner: batch F (settings parity, §5.7).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+# background.add / background.remove: no absolute path, or one without a file name
+#@ new
+background.badArgs	Ongeldige afbeelding.	Invalid picture.
+# background.add / background.remove: the file is not there (any more)
+#@ new
+background.notFound	De afbeelding bestaat niet meer.	The picture no longer exists.
+# background.add: GIO does not take the file for a picture
+#@ new
+background.notAnImage	Dit bestand is geen afbeelding.	This file isn’t a picture.
+# background.add: the picture is larger than 256 MB
+#@ new
+background.tooLarge	Deze afbeelding is te groot.	This picture is too large.
+# background.add: the copy in ~/.local/share/backgrounds could not be made
+#@ new
+background.copyFailed	De afbeelding is niet gekopieerd.	The picture wasn’t copied.
+# background.remove: the file is not one of the user's own pictures in ~/.local/share/backgrounds
+#@ new
+background.notOwn	Alleen je eigen afbeeldingen kunnen worden verwijderd.	Only your own pictures can be removed.
+# background.remove: GIO could not move the copy to the trash
+#@ new
+background.removeFailed	De afbeelding is niet verwijderd.	The picture wasn’t removed.

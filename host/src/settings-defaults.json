@@ -14,6 +14,7 @@
   "wallpaper": {
     "type": "image",
     "path": "builtin:lotus-dark",
+    "pathDark": "",
     "color": "#0b2a4a",
     "fit": "fill",
     "followTheme": true
@@ -24,7 +25,11 @@
     "taskView": true,
     "widgets": false,
     "autoHide": false,
+    "allDisplays": true,
+    "multiDisplayApps": "window",
     "showSeconds": false,
+    "batteryPercent": false,
+    "allDesktops": false,
     "pinned": [
       "win11shell-explorer.desktop",
       "firefox_firefox.desktop",
@@ -42,6 +47,7 @@
     "pinned": [],
     "showRecommended": true,
     "showRecentApps": true,
+    "windowsKey": true,
     "layout": "default",
     "folders": [
       "settings",
@@ -70,11 +76,17 @@
     "h24": true,
     "showSeconds": false,
     "showDate": true,
-    "firstDayOfWeek": 1
+    "showWeekday": false,
+    "weekNumbers": false,
+    "firstDayOfWeek": -1
+  },
+  "taskView": {
+    "allDesktops": false
   },
   "accessibility": {
     "textScale": 100,
-    "reduceMotion": false
+    "reduceMotion": false,
+    "highContrast": false
   },
   "nightLight": {
     "enabled": false,

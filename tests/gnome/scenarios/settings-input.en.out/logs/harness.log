@@ -1,0 +1,196 @@
+01:41:11 GE0c run lang=en switch=False seed=defaults MemAvailable=7890164 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-input.py
+01:42:27 private install: exit 0 in 61.5 s, 87327 mutated paths, 0 outside the run dir, ok=True
+01:42:30 GNOME Shell 50.1 up (mode user, unsafe True)
+01:42:35 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/scenarios/settings-input.py
+01:42:35   check PASS: the tool seam run/stubs is private (no group or world write), so system_tool uses the stubs
+01:42:36   check PASS: wait_text settings: 'Primary mouse button'
+01:42:37   check PASS: the search finds Muis first, before Toegankelijkheid > Muis (amendment 65)
+01:42:39   check PASS: Touchpad is in the search exactly while caps has a touchpad
+01:42:41   check PASS: Pen en tablet is in the search exactly while caps has a tablet
+01:42:42   check PASS: Sneltoetsen (needs gnome) is in the search while caps.gnome
+01:42:43   check PASS: mouse: st-mouse-left-handed is on the page
+01:42:43   check PASS: mouse: title and breadcrumb "Bluetooth & devices > Mouse"
+01:42:44   check PASS: Muis has st-mouse-left-handed
+01:42:44   check PASS: Muis has st-mouse-mouse-speed
+01:42:44   check PASS: Muis has st-mouse-mouse-accel-profile
+01:42:44   check PASS: Muis has st-mouse-natural-scroll
+01:42:44   check PASS: Muis has st-mouse-gtk-enable-primary-paste
+01:42:44   check PASS: Muis has st-mouse-more
+01:42:45   check PASS: Muis has st-mouse-test
+01:42:45   check PASS: the pointing-stick group shows exactly while caps has one
+01:42:45   check PASS: Inactieve vensters schuiven is on and fixed (GNOME always scrolls the window under the pointer)
+01:42:47   check PASS: Primaire muisknop Rechts writes left-handed true
+01:42:48   check PASS: Snelheid van muisaanwijzer at position 15 writes speed 0.5 ((n - 10) / 10)
+01:42:49   check PASS: Nauwkeurigheid van aanwijzer verbeteren off writes accel-profile flat
+01:42:51   check PASS: Schuifrichting "down motion scrolls up" writes natural-scroll true
+01:42:51   check PASS: Plakken met de middelste muisknop: a click writes gtk-enable-primary-paste true
+01:42:51   check PASS: Plakken met de middelste muisknop: the control shows the new value
+01:42:52   check PASS: Plakken met de middelste muisknop: gtk-enable-primary-paste false written from outside moves the control back (gsettings.changed)
+01:42:52   check PASS: an outside write of accel-profile moves the switch (gsettings.changed)
+01:42:52   check PASS: left-handed false written from outside shows Primaire muisknop Links
+01:42:53   check PASS: mouse: every switch and check box on the page was flipped by a click
+01:42:53   check PASS: Muis: no Dutch words in English
+01:42:55   check PASS: Aanvullende muisinstellingen opens Eigenschappen voor Muis
+01:42:55   check PASS: its swap box follows the page (left-handed true)
+01:42:56   check PASS: Middelste klik nabootsen: a click writes middle-click-emulation true
+01:42:56   check PASS: Middelste klik nabootsen: the control shows the new value
+01:42:56   check PASS: Middelste klik nabootsen: middle-click-emulation false written from outside moves the control back (gsettings.changed)
+01:42:57   check PASS: Dubbelkliksnelheid at step 4 writes double-click 700 ms (1000 - 100 (n - 1))
+01:42:57   check PASS: Eigenschappen voor Muis has the tab Opties voor aanwijzer
+01:42:58   check PASS: the tab Opties voor aanwijzer is selected
+01:42:59   check PASS: Locatie van aanwijzer weergeven: a click writes locate-pointer true
+01:42:59   check PASS: Locatie van aanwijzer weergeven: the control shows the new value
+01:42:59   check PASS: Locatie van aanwijzer weergeven: locate-pointer false written from outside moves the control back (gsettings.changed)
+01:43:00   check PASS: Nauwkeurigheid van aanwijzer verbeteren (Eigenschappen): a click writes accel-profile 'default'
+01:43:00   check PASS: Nauwkeurigheid van aanwijzer verbeteren (Eigenschappen): the control shows the new value
+01:43:00   check PASS: Nauwkeurigheid van aanwijzer verbeteren (Eigenschappen): accel-profile 'flat' written from outside moves the control back (gsettings.changed)
+01:43:02   check FAIL (known kit-dialog-claims-presses): a real pointer click on a kit Dialog button registers
+01:43:03   check PASS: Instellingen testen opens the test dialog
+01:43:05   check PASS: a click in the test area ticks Primaire klik
+01:43:06   check PASS: Muis: no key the page binds is Owned (no pointer to a WinPoint page)
+01:43:06   check PASS: touchpad: st-touchpad-expander is on the page
+01:43:07   check PASS: touchpad: title and breadcrumb "Bluetooth & devices > Touchpad"
+01:43:08   check PASS: without a touchpad the page says so
+01:43:09   check PASS: the Touchpad switch off writes send-events disabled
+01:43:09   check PASS: a click on the header switch leaves the expander open (w11-expanded)
+01:43:09   check PASS: ... and makes the mouse box insensitive
+01:43:09   check PASS: send-events 'enabled' written from outside turns the switch on
+01:43:10   check PASS: Touchpad ingeschakeld laten wanneer er een muis is aangesloten: a click writes send-events 'disabled-on-external-mouse'
+01:43:10   check PASS: Touchpad ingeschakeld laten wanneer er een muis is aangesloten: the control shows the new value
+01:43:10   check PASS: Touchpad ingeschakeld laten wanneer er een muis is aangesloten: send-events 'enabled' written from outside moves the control back (gsettings.changed)
+01:43:12   check PASS: Cursorsnelheid: a click at 8 writes speed near 0.6
+01:43:13   check PASS: Tikken has no sensitivity drop-down (amendment 67)
+01:43:14   check PASS: Touchpad uitschakelen tijdens het typen: a click writes disable-while-typing false
+01:43:14   check PASS: Touchpad uitschakelen tijdens het typen: the control shows the new value
+01:43:15   check PASS: Touchpad uitschakelen tijdens het typen: disable-while-typing true written from outside moves the control back (gsettings.changed)
+01:43:16   check PASS: Met één vinger tikken: a click writes tap-to-click false
+01:43:16   check PASS: Met één vinger tikken: the control shows the new value
+01:43:16   check PASS: Met één vinger tikken: tap-to-click true written from outside moves the control back (gsettings.changed)
+01:43:18   check PASS: Rechterbenedenhoek: a click writes click-method 'areas'
+01:43:18   check PASS: Rechterbenedenhoek: the control shows the new value
+01:43:18   check PASS: Rechterbenedenhoek: click-method 'fingers' written from outside moves the control back (gsettings.changed)
+01:43:19   check PASS: Twee keer tikken en slepen: a click writes tap-and-drag false
+01:43:19   check PASS: Twee keer tikken en slepen: the control shows the new value
+01:43:20   check PASS: Twee keer tikken en slepen: tap-and-drag true written from outside moves the control back (gsettings.changed)
+01:43:20   check PASS: without tap-to-click, tapping and dragging is insensitive and the fixed two-finger box unticked
+01:43:20   check PASS: with tap-to-click the fixed two-finger box is ticked
+01:43:23   check PASS: Schuiven langs de rand writes edge-scrolling-enabled true
+01:43:23   check PASS: ... and two-finger-scrolling-enabled false in the same write
+01:43:26   check PASS: Schuifrichting 'Down motion scrolls down' writes natural-scroll false
+01:43:30   check PASS: Bewegingen met drie vingers says what a three-finger tap does (tap-button-map)
+01:43:30   check PASS: touchpad: every switch and check box on the page was flipped by a click
+01:43:34   check PASS: Opnieuw instellen resets send-events
+01:43:34   check PASS: Opnieuw instellen resets edge-scrolling-enabled
+01:43:34   check PASS: Opnieuw instellen resets two-finger-scrolling-enabled
+01:43:34   check PASS: Opnieuw instellen resets speed
+01:43:34   check PASS: Opnieuw instellen resets tap-to-click
+01:43:34   check PASS: Opnieuw instellen resets disable-while-typing
+01:43:34   check PASS: Opnieuw instellen resets click-method
+01:43:34   check PASS: Opnieuw instellen resets natural-scroll
+01:43:35   check PASS: after Opnieuw instellen the Touchpad switch is on again
+01:43:35   check PASS: Touchpad: no key the page binds is Owned (no pointer to a WinPoint page)
+01:43:35   check PASS: Touchpad: no Dutch words in English
+01:43:36   check PASS: pen: title and breadcrumb "Bluetooth & devices > Pen & tablet"
+01:43:37   check PASS: Pen en tablet without a tablet says so
+01:43:37   check PASS: Pen: no Dutch words in English
+01:43:38   check PASS: typing: st-typing-screen-keyboard-enabled is on the page
+01:43:39   check PASS: typing: title and breadcrumb "Time & language > Typing"
+01:43:40   check PASS: Typen links to Geavanceerde toetsenbordinstellingen
+01:43:40   check PASS: Typen links to Sneltoetsen while caps.gnome
+01:43:43   check PASS: Aanraaktoetsenbord Altijd writes screen-keyboard-enabled true
+01:43:46   check PASS: ... and its other choice writes false
+01:43:46   check PASS: screen-keyboard-enabled true written from outside shows Altijd
+01:43:46   check PASS: Typen: no Dutch words in English
+01:43:47   check PASS: language-options: st-language-options-add is on the page
+01:43:48   check PASS: language-options: title and breadcrumb "Time & language > Language & region > Language options"
+01:43:49   check PASS: without sources it says the system layout is used
+01:43:50   check PASS: Een toetsenbord toevoegen opens its dialog with the search
+01:43:52   check PASS: the search finds the Dutch layout
+01:43:52   check PASS: choosing Dutch writes sources [(xkb, nl)] (input.sources.set)
+01:43:52   check PASS: the keyboard write asks polkit for org.gnome.controlcenter.set-keyboard once
+01:43:52   check PASS: ... for this process (unix-process), with flags 0 and no interactive authorization (GNOME Settings never prompts for the system keyboard)
+01:43:53   check PASS: polkit would ask: no pkexec runs (the session setting only)
+01:43:54   check PASS: the page shows the new keyboard
+01:43:54   check PASS: polkit says yes: pkexec runs GNOME's helper with the sources' layouts and variants (/usr/libexec/gnome-control-center-set-debian-keyboard nl,us ,intl)
+01:43:57   check PASS: the ⋯ menu has Omhoog
+01:43:57   check PASS: Omhoog moves the second keyboard first
+01:43:57   check PASS: ... and the system keyboard follows the new order (us,nl intl,)
+01:43:57   check PASS: every keyboard write asked polkit without interactive authorization
+01:43:57   check PASS: Taalopties: no key the page binds is Owned (no pointer to a WinPoint page)
+01:43:58   check PASS: Taalopties: no Dutch words in English
+01:43:59   check PASS: keyboard-advanced: st-keyboard-advanced-default is on the page
+01:44:00   check PASS: keyboard-advanced: title and breadcrumb "Time & language > Typing > Advanced keyboard settings"
+01:44:00   check PASS: the advanced page has st-keyboard-advanced-per-window
+01:44:01   check PASS: the advanced page has st-keyboard-advanced-lv3
+01:44:01   check PASS: the advanced page has st-keyboard-advanced-compose
+01:44:01   check PASS: the advanced page has st-keyboard-advanced-repeat
+01:44:02   check PASS: the advanced page has st-keyboard-advanced-delay
+01:44:02   check PASS: the advanced page has st-keyboard-advanced-repeat-interval
+01:44:02   check PASS: the advanced page has st-keyboard-advanced-windows-key
+01:44:02   check PASS: the advanced page has st-keyboard-advanced-overlay-key
+01:44:03   check PASS: the advanced page has st-keyboard-advanced-hotkeys
+01:44:06   check PASS: Standaardinvoermethode overschrijven moves Dutch first
+01:44:07   check PASS: Voor elk app-venster een andere invoermethode: a click writes per-window true
+01:44:07   check PASS: Voor elk app-venster een andere invoermethode: the control shows the new value
+01:44:07   check PASS: Voor elk app-venster een andere invoermethode: per-window false written from outside moves the control back (gsettings.changed)
+01:44:10   check PASS: Samenstellingstoets Rechter Ctrl writes compose:rctrl
+01:44:13   check PASS: Toets voor alternatieve tekens Menutoets adds lv3:menu_switch and keeps compose:rctrl
+01:44:14   check PASS: Toetsen herhalen: a click writes repeat false
+01:44:14   check PASS: Toetsen herhalen: the control shows the new value
+01:44:15   check PASS: Toetsen herhalen: repeat true written from outside moves the control back (gsettings.changed)
+01:44:17   check PASS: Vertraging voor herhalen: a click at 15 writes delay near 600
+01:44:20   check PASS: Herhalingssnelheid: a click at 5 writes repeat-interval near 90
+01:44:21   check PASS: Windows-toets opent het activiteitenoverzicht: a click writes overlay-key ''
+01:44:21   check PASS: Windows-toets opent het activiteitenoverzicht: the control shows the new value
+01:44:21   check PASS: Windows-toets opent het activiteitenoverzicht: overlay-key 'Super' written from outside moves the control back (gsettings.changed)
+01:44:23   check PASS: Windows-toets opent Start off writes start.windowsKey false (amendment 58)
+01:44:25   check PASS: ... and on again true
+01:44:26   check PASS: keyboard-advanced: every switch and check box on the page was flipped by a click
+01:44:26   check PASS: Geavanceerde toetsenbordinstellingen: no key the page binds is Owned (no pointer to a WinPoint page)
+01:44:26   check PASS: Geavanceerde toetsenbordinstellingen: no Dutch words in English
+01:44:28   check PASS: a real click on the breadcrumb's Typen shows Typen
+01:44:29   check PASS: shortcuts: st-shortcuts-section-windows is on the page
+01:44:30   check PASS: shortcuts: title and breadcrumb "Time & language > Typing > Keyboard shortcuts"
+01:44:31   check PASS: Sneltoetsen has the section winpoint
+01:44:31   check PASS: Sneltoetsen has the section accessibility
+01:44:32   check PASS: Sneltoetsen has the section launchers
+01:44:32   check PASS: Sneltoetsen has the section navigation
+01:44:33   check PASS: Sneltoetsen has the section screenshots
+01:44:33   check PASS: Sneltoetsen has the section media
+01:44:33   check PASS: Sneltoetsen has the section system
+01:44:34   check PASS: Sneltoetsen has the section typing
+01:44:34   check PASS: Sneltoetsen has the section windows
+01:44:35   check PASS: Sneltoetsen has the section custom
+01:44:37   check PASS: Schakelen tussen apps names the Alt+Tab WinPoint holds (amendment 13)
+01:44:48   check PASS: Venster sluiten by real keys Super+Q writes close [<Super>q]
+01:44:48   check PASS: Super+L, the lock screen's, is a conflict and nothing is written
+01:44:50   check PASS: close [<Alt>F4] written from outside shows on Venster sluiten (gsettings.changed)
+01:45:05   check PASS: Toevoegen lists the custom shortcut
+01:45:05   check PASS: ... with its command at custom0
+01:45:19   check PASS: Alles opnieuw instellen asks first
+01:45:22   check PASS: Alles opnieuw instellen resets Venster sluiten
+01:45:22   check PASS: ... and keeps the custom shortcut
+01:45:23   check PASS: Sneltoetsen: no Dutch words in English
+01:45:24 shutdown shell clients: signalled own descendants 190:ibus-daemon, 474:win11-shell, 1436:glycin-image-rs, 633:win11-panel, 207:ibus-memconf, 208:ibus-extension-, 484:ibus-engine-sim
+01:45:24 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+01:45:24 shutdown system bus: signalled own descendants 163:dbus-daemon
+01:45:24 inner sweep: signalled own descendants 1451:glycin-image-rs
+01:45:24 inner done: 0 surfaces, 0 failed []
+01:45:26 strace connect:    107 x AF_INET 127.0.0.1 -> EINPROGRESS
+01:45:26 strace connect:     22 x AF_INET 127.0.0.1 -> UNFINISHED
+01:45:26 strace connect:      3 x AF_INET 127.0.0.1 -> ok
+01:45:26 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+01:45:26 strace connect:      4 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+01:45:26 strace connect:     26 x AF_UNIX /tmp/w11-rt/bus -> ok
+01:45:26 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+01:45:26 strace connect:      1 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+01:45:26 strace connect:      1 x AF_UNIX /tmp/w11-rt/pulse/native -> UNFINISHED
+01:45:26 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+01:45:26 strace connect:      7 x AF_UNIX /tmp/w11-rt/sbus -> ok
+01:45:26 strace connect:      3 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+01:45:26 strace connect:      8 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+01:45:26 strace connect:     30 x AF_UNIX /var/run/nscd/socket -> ENOENT
+01:45:26 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+01:45:26 strace connect check: 246 connect() calls, OK
+01:45:31 strace exec:      2 x /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-a/tests/gnome/run/stubs/pkexec (stub) -> ran
+01:45:31 strace exec check: 474 execve() calls, OK

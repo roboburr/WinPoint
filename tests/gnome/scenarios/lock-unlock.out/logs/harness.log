@@ -1,0 +1,14 @@
+03:32:12 GE0c run lang=nl switch=False seed=defaults MemAvailable=7633680 kB; heavy lock held by an ancestor heavy.sh; run dir /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/run; build /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/build/native-release; source worktree ; scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/lock-unlock.py
+03:33:35 private install: exit 0 in 68.7 s, 87318 mutated paths, 0 outside the run dir, ok=True
+03:33:39 GNOME Shell 50.1 up (mode user, unsafe True)
+03:33:44 scenario /home/robin/Documents/Codex/2026-11-01/chat/outputs/win11-gnome/tests/gnome/scenarios/lock-unlock.py
+03:33:49   check PASS: the taskbar is shown before the lock
+03:34:02   check PASS: the taskbar is shown after unlock
+03:34:02   check PASS: the taskbar covers the whole monitor again (the extension took it, not the desktop)
+03:34:02   check PASS: the taskbar strip is frosted after unlock
+03:34:05   check PASS: Start is frosted after unlock
+03:34:06 shutdown shell clients: signalled own descendants 180:ibus-daemon, 198:glycin-svg, 307:glycin-image-rs, 516:win11-shell, 1476:glycin-image-rs, 629:win11-panel, 712:glycin-svg, 347:ibus-memconf, 349:ibus-extension-, 359:ibus-engine-sim
+03:34:06 shutdown gnome-shell: signalled own descendants 160:gnome-shell
+03:34:06 shutdown system bus: signalled own descendants 159:dbus-daemon
+03:34:06 inner sweep: signalled own descendants 1486:glycin-image-rs
+03:34:06 inner done: 0 surfaces, 0 failed []

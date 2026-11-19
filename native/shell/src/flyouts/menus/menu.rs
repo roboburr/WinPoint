@@ -396,6 +396,85 @@ pub fn show(shell: &Rc<Shell>, items: Vec<Item>, x: i32, center: bool, on_close:
     shell.flyouts().open("jumplist");
 }
 
+/// `items` as the same menu in a popover of `parent` (a taskbar of another monitor, panel/strips.rs, which has no
+/// flyout host): above it, centred over `x` or starting at it (`parent`'s coordinates). A row closes the menu and runs
+/// its action; Up, Down, Home and End move between the rows, Escape or a click elsewhere closes it. Submenus are not
+/// needed there (jump lists and the taskbar menu have none).
+pub fn popup(shell: &Rc<Shell>, parent: &gtk::Widget, items: Vec<Item>, x: i32, center: bool) -> gtk::Popover {
+    let popover = gtk::Popover::new();
+    popover.add_css_class("w11-strip-menu");
+    popover.set_autohide(true);
+    popover.set_has_arrow(false);
+    popover.set_position(gtk::PositionType::Top);
+    let frame = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    frame.add_css_class("w11-flyout");
+    frame.add_css_class("w11-flyout-jumplist");
+    let root = gtk::Box::new(gtk::Orientation::Vertical, 0);
+    root.add_css_class("w11-mn");
+    root.set_widget_name("menus-strip-menu");
+    root.set_focusable(true);
+    frame.append(&root);
+    let has_icons = items.iter().any(|x| !matches!(x.icon, Icon::None));
+    let has_state = items.iter().any(|x| x.check.is_some());
+    if has_state {
+        root.add_css_class("has-state");
+    }
+    let mut rows: Vec<gtk::Button> = Vec::new();
+    let mut last_sep = true;
+    let count = items.len();
+    for (i, item) in items.iter().enumerate() {
+        if item.separator {
+            if !last_sep && i + 1 < count {
+                root.append(&separator());
+                last_sep = true;
+            }
+            continue;
+        }
+        last_sep = false;
+        let button = row(shell, item, has_icons, has_state, None);
+        let (weak, action) = (popover.downgrade(), item.action.clone());
+        button.connect_clicked(move |_| {
+            if let Some(p) = weak.upgrade() {
+                p.popdown();
+            }
+            if let Some(action) = &action {
+                action();
+            }
+        });
+        root.append(&button);
+        rows.push(button);
+    }
+    let keys = gtk::EventControllerKey::new();
+    keys.set_propagation_phase(gtk::PropagationPhase::Capture);
+    let focusable = rows.clone();
+    keys.connect_key_pressed(move |_, key, _, _| {
+        use gtk::gdk::Key;
+        if matches!(key, Key::Up | Key::Down | Key::Home | Key::End) && move_focus(&focusable, key) {
+            return glib::Propagation::Stop;
+        }
+        glib::Propagation::Proceed
+    });
+    root.add_controller(keys);
+    popover.set_child(Some(&frame));
+    popover.set_parent(parent);
+    // centred over x by GTK; a menu that starts at x points at its middle
+    let (_, natural, _, _) = frame.measure(gtk::Orientation::Horizontal, -1);
+    let at = if center { x } else { x + natural / 2 };
+    popover.set_pointing_to(Some(&gtk::gdk::Rectangle::new(at, 0, 1, 1)));
+    popover.connect_closed(|p| {
+        let p = p.clone();
+        glib::idle_add_local_once(move || p.unparent());
+    });
+    popover.popup();
+    let first = rows.into_iter().find(|b| b.is_sensitive());
+    glib::idle_add_local_once(move || {
+        if let Some(b) = first {
+            b.grab_focus();
+        }
+    });
+    popover
+}
+
 /// Replace the items of the open menu (a tray app rebuilt its menu), keeping it where it is.
 pub fn update(items: Vec<Item>) {
     let Some(menu) = MENU.with(|m| m.borrow().clone()) else { return };

@@ -1,0 +1,1216 @@
+{
+ "summary": "I inventoried the 13 requested GNOME Settings 50 panels as installed here (gnome-control-center 1:50.3-0ubuntu0.2). Method, all read-only: I unpacked the panels' embedded .ui files with gresource into the scratchpad. I also read the libgnome-bluetooth-ui-3.0 resources, the installed gschemas and overrides, the polkit .policy and rules.d files, the D-Bus interface XMLs, the keybinding XMLs in /usr/share/gnome-control-center/keybindings and the strings in the binary. Nothing talked to the live session.\n\nPoints that matter for the WinPoint design:\n\n1. **Which defaults apply.** The WinPoint session file /usr/share/wayland-sessions/winpoint.desktop has DesktopNames=WinPoint;GNOME. So the ':ubuntu' overrides do not apply in that session: tap-to-click, click-method=default, enable-hot-corners=false and the Super+Tab / Alt+Tab keybindings. The ':GNOME' overrides do apply: mutter edge-tiling, dynamic-workspaces and workspaces-only-on-primary are true, and experimental-features is ['scale-monitor-framebuffer','xwayland-native-scaling']. Overrides that name no desktop always apply:\n   - accent-color='orange'\n   - 20_ubuntu-desktop-installer-wm sets wm.keybindings maximize=[] and unmaximize=[], so Super+Up and Super+Down are unbound. This looks like a leftover from the installer.\n2. **Password prompts.** Ubuntu's polkit rules let active local sudo users pass several actions without a prompt: hostname1 set-hostname and set-static-hostname, timedate1 set-*, org.gnome.controlcenter.datetime.configure, locale1 and set-keyboard, NetworkManager settings.modify.system (also the netdev group), and the two ModemManager actions. The other polkit actions keep their defaults: NM network-control, wifi.scan and wifi.share are yes; ModemManager Device.Control and SetPrimarySimSlot are yes; colord install-system-wide and snapd manage-interfaces are auth_admin_keep.\n3. **GTK 4 helpers already installed.** libnma-gtk4 (Wi-Fi security, EAP and hidden-network dialogs), the GTK 4 OpenVPN and PPTP editor plugins (libnm-gtk4-vpn-plugin-*-editor.so), libgnome-bluetooth-ui-3.0 and tecla (keyboard layout viewer) are all present. The rest is plain D-Bus or GSettings that WinPoint's host can reach with gio:\n   - Mutter DisplayConfig\n   - gsd Rfkill and gsd Color\n   - BlueZ and obexd\n   - NetworkManager and ModemManager\n   - timedate1 and hostname1\n   - colord and ColorHelper (colord-session)\n   - xdg PermissionStore\n   - GlobalShortcutsRebind\n4. **Nothing behind Robin's example exists yet.** No WinPoint .rs file uses peripherals.mouse or .touchpad, input-sources, xkb-options, custom-keybindings, the multitasking keys, system.proxy, wireguard, ModemManager, colord, timedate1, hostname1, PermissionStore, overlay-key or search-providers. Display, night light, Bluetooth, Wi-Fi, default apps and wallpaper do have host methods or keys.\n5. **Windows 11 settings GNOME stores but does not show.** These have no control in GNOME's UI:\n   - touchpad send-events 'disabled-on-external-mouse' (Win11 'Leave touchpad on when a mouse is connected')\n   - tap-and-drag (Win11 'Tap twice and drag to multi-select')\n   - tap-button-map, disable-while-typing-timeout, touchpad accel-profile, middle-click-emulation\n   - mutter switch-monitor Super+P (Win11 Win+P)\n   - mouse double-click is in Accessibility, not the Mouse panel\n6. **Odd installed defaults.** media-handling autorun-never defaults to true here, while upstream defaults to false. The About panel's .desktop keywords still mention default apps and removable media, which GNOME 50 shows in Apps. Bluetooth file receiving would need gnome-user-share, which is not installed.\n7. **Ubuntu-only behaviour.** Changing input sources also syncs the system keyboard to /etc/default/keyboard through pkexec /usr/libexec/gnome-control-center-set-debian-keyboard. The App Switching radios also write tiling-assistant tiling-popup-all-workspace, and a monitor-isolation group writes dash-to-dock isolate-monitors. Each item's notes give the likely Windows 11 page and wording.\n\n**Inferred or unchecked:**\n- The input-source sync to /etc/default/keyboard is inferred from binary strings.\n- The App Switching and monitor-isolation writes are inferred from binary strings.\n- 'Built-in Scaling for Legacy Apps' maps to org.gnome.mutter.wayland xwayland-scaling-factor. Only that key is referenced; the on/off values are a guess.\n- Some row labels are set only in code (orientation names, the per-display enable switch, security combo order). They are given from strings and upstream knowledge.\n\nThe extracted .ui files, kept for the next step, are in /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/ui and /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/bt.",
+ "items": [
+  {
+   "area": "about",
+   "function": "Device Name (rename this computer)",
+   "control": "dialog (entry row)",
+   "backing": "D-Bus system org.freedesktop.hostname1 /org/freedesktop/hostname1: SetPrettyHostname(s name, b interactive=true) + SetStaticHostname(s ascii-derived, b interactive); props PrettyHostname/StaticHostname/Hostname. polkit org.freedesktop.hostname1.set-static-hostname (allow_active auth_admin_keep, implies set-hostname + set-machine-info); /usr/share/polkit-1/rules.d/gnome-control-center.rules returns YES for local active sudo users",
+   "notes": "Win11: System > About, 'Rename this PC' button opening a dialog. The Bluetooth adapter alias follows PrettyHostname, and the Bluetooth panel links here."
+  },
+  {
+   "area": "about",
+   "function": "OS logo + Operating System name",
+   "control": "info",
+   "backing": "/etc/os-release (/usr/lib/os-release): LOGO= icon, PRETTY_NAME; 64-bit/32-bit from sizeof(void*)",
+   "notes": "Win11: 'Windows specifications' card (Edition/Version). WinPoint system.info already exists."
+  },
+  {
+   "area": "about",
+   "function": "Hardware Model",
+   "control": "info",
+   "backing": "hostname1 properties HardwareVendor + HardwareModel (row hidden when empty)",
+   "notes": "Win11: header card under the device name."
+  },
+  {
+   "area": "about",
+   "function": "Processor",
+   "control": "info",
+   "backing": "libgtop glibtop_get_sysinfo (/proc/cpuinfo model name, with xN count)",
+   "notes": "Win11 'Device specifications' > Processor."
+  },
+  {
+   "area": "about",
+   "function": "Memory",
+   "control": "info",
+   "backing": "libgtop glibtop_get_mem total RAM (formatted)",
+   "notes": "Win11 'Installed RAM'."
+  },
+  {
+   "area": "about",
+   "function": "Disk Capacity",
+   "control": "info",
+   "backing": "UDisks2 (system bus org.freedesktop.UDisks2): sum of Drive.Size over non-removable drives; shows 'Calculating...' first",
+   "notes": "Win11: 'Storage' row in Device specifications."
+  },
+  {
+   "area": "about",
+   "function": "System Details dialog (Hardware/Software information + Copy)",
+   "control": "dialog",
+   "backing": "Model (hostname1 HardwareVendor/Model); Memory; Processor; Graphics (system bus net.hadess.SwitcherooControl /net/hadess/SwitcherooControl property GPUs, fallback GL renderer); Disk Capacity; Firmware Version (hostname1 FirmwareVersion); OS Name; OS Build (os-release BUILD_ID); OS Type; GNOME Version (/usr/share/gnome/gnome-version.xml); Windowing System (Wayland/X11); Virtualization (org.freedesktop.systemd1 Manager.Virtualization); Kernel Version (uname). Copy button puts plain text on GdkClipboard",
+   "notes": "Win11: 'Copy' buttons on the Device and Windows specification cards; 'Related links' row."
+  },
+  {
+   "area": "about",
+   "function": "Software Updates link (System hub row)",
+   "control": "button",
+   "backing": "Spawns update-manager on Ubuntu, otherwise gnome-software --mode=updates; the group is hidden if neither exists",
+   "notes": "WinPoint already has its own Update page (update.*). Map to Windows Update instead of spawning update-manager."
+  },
+  {
+   "area": "about",
+   "function": "Support GNOME / Donate",
+   "control": "button (hidden by default)",
+   "backing": "visible=false in cc-about-page.ui; opens https://donate.gnome.org/",
+   "notes": "Can be skipped. The .desktop keywords also mention default apps and removable media, which GNOME 50 shows in Apps."
+  },
+  {
+   "area": "applications",
+   "function": "App list with search, per-app App Settings page",
+   "control": "list",
+   "backing": "GIO GAppInfo (desktop files that should be shown), filtered by malcontent AppFilter (com.endlessm.ParentalControls.AppFilter on the Accounts user object; error page if malcontent is missing); 'Find in Software' button when empty; header Open (g_app_info_launch) and App Details (snap-store <id> on Ubuntu, otherwise gnome-software --details)",
+   "notes": "Win11: Apps > Installed apps; '...' > Advanced options holds per-app permissions. WinPoint has installed.rs and apps.list."
+  },
+  {
+   "area": "applications",
+   "function": "Default Apps: Web, Mail, Calendar, Music, Video, Photos (Calls, SMS hidden unless a handler exists)",
+   "control": "dropdown",
+   "backing": "g_app_info_set_as_default_for_type writes ~/.config/mimeapps.list [Default Applications]. Web: x-scheme-handler/http, https, text/html, application/xhtml+xml, x-scheme-handler/about, x-scheme-handler/unknown. Mail: x-scheme-handler/mailto. Calendar: text/calendar. Music: audio/x-vorbis+ogg plus every audio/* the app lists. Video: video/x-ogm+ogg plus video/*. Photos: image/jpeg plus image/*. Calls: x-scheme-handler/tel. SMS: x-scheme-handler/sms",
+   "notes": "Win11: Apps > Default apps (search by type or link, per-app page). WinPoint has apps.defaults/apps.setDefault/apps.setDefaultForType."
+  },
+  {
+   "area": "applications",
+   "function": "Removable Media: Media Autostart",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.media-handling autorun-never (b) inverted; installed schema default TRUE (autostart off)",
+   "notes": "Win11: Bluetooth & devices > AutoPlay, 'Use AutoPlay for all media and devices'."
+  },
+  {
+   "area": "applications",
+   "function": "Removable media actions: CD Audio, DVD Video, Music Player, Photos, Software",
+   "control": "dropdown",
+   "backing": "x-content/audio-cdda, x-content/video-dvd, x-content/audio-player, x-content/image-dcf, x-content/unix-software. Choices are 'Ask what to do', 'Do nothing', 'Open folder' or an app. Keys: media-handling autorun-x-content-start-app (as, default ['x-content/unix-software','x-content/ostree-repository']), autorun-x-content-ignore (as, []), autorun-x-content-open-folder (as, []); the app choice is g_app_info_set_as_default_for_type(x-content/*)",
+   "notes": "Win11 AutoPlay: 'Removable drive' and 'Memory card' dropdowns."
+  },
+  {
+   "area": "applications",
+   "function": "Other Media Types dialog (Type + Action)",
+   "control": "dialog",
+   "backing": "Same three media-handling keys. Types: x-content/audio-dvd, blank-bd, blank-cd, blank-dvd, blank-hddvd, video-bluray, ebook-reader, video-hddvd, image-picturecd, video-svcd, video-vcd, win32-software",
+   "notes": "Win11 shows these as extra AutoPlay rows."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Search",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.search-providers disabled (as) or enabled (as), depending on DefaultDisabled in /usr/share/gnome-shell/search-providers/<app>.ini; disable-external (b,false) greys it out ('Disabled' label)",
+   "notes": "Win11: Privacy & security > Search permissions. Shown only when the app ships a search provider."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Notifications",
+   "control": "toggle",
+   "backing": "Relocatable org.gnome.desktop.notifications.application at /org/gnome/desktop/notifications/application/<app-id lowercased, '.' to '-'>/ key enable (b, true); the id is added to org.gnome.desktop.notifications application-children (as)",
+   "notes": "Win11: System > Notifications per app. WinPoint has a notifications page."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Run in Background (Flatpak)",
+   "control": "toggle",
+   "backing": "Session D-Bus org.freedesktop.impl.portal.PermissionStore /org/freedesktop/impl/portal/PermissionStore: Lookup/SetPermission table 'background', id 'background', app_id -> ['yes'|'no']",
+   "notes": "Win11: Installed apps > Advanced options > 'Background apps permissions'."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Autostart",
+   "control": "toggle (enabled only when background is allowed)",
+   "backing": "~/.config/autostart/<app-id>.desktop: copy of the app's .desktop with X-GNOME-Autostart-enabled=true or false (X-Flatpak for flatpaks)",
+   "notes": "Win11: Apps > Startup and the per-app 'Runs at log-in' toggle. WinPoint has startup.rs and sysmon.setStartup."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Screenshots",
+   "control": "toggle",
+   "backing": "PermissionStore table 'screenshot', id 'screenshot' -> ['yes'|'no']",
+   "notes": "Win11: Privacy & security > Screenshot access."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Change Wallpaper",
+   "control": "toggle",
+   "backing": "PermissionStore table 'wallpaper', id 'wallpaper' -> ['yes'|'no']",
+   "notes": "Win11 has no matching setting; put it under per-app Advanced options."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Sounds",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.notifications.application enable-sound-alerts (b, true); 'Disabled' row when notifications are off",
+   "notes": "Win11: per-app notification 'Play a sound when a notification arrives'."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Inhibit Shortcuts",
+   "control": "toggle",
+   "backing": "PermissionStore table 'gnome', id 'shortcuts-inhibit' -> ['GRANTED'|'DENIED']",
+   "notes": "Shown only for apps that requested it."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Camera / Microphone",
+   "control": "toggle",
+   "backing": "PermissionStore table 'devices', ids 'camera' and 'microphone' -> ['yes'|'no']. Shown as 'Disabled' when the global org.gnome.desktop.privacy disable-camera or disable-microphone is set",
+   "notes": "Win11: Privacy & security > Camera and Microphone (global switch plus per-app list)."
+  },
+  {
+   "area": "applications",
+   "function": "Permission: Location Services",
+   "control": "toggle",
+   "backing": "PermissionStore table 'location', id 'location' -> ['EXACT'|'NONE', '<timestamp>']; global org.gnome.system.location enabled (b, false)",
+   "notes": "Win11: Privacy & security > Location."
+  },
+  {
+   "area": "applications",
+   "function": "Required Permissions page (sandbox static permissions; Snap interfaces)",
+   "control": "list (snap: toggle + slot dropdown per plug)",
+   "backing": "Flatpak: metadata [Context] (shared, sockets, devices, filesystems) and bus policy, read-only. Snap: snapd-glib over /run/snapd.socket (/v2/connections connect/disconnect); polkit io.snapcraft.snapd.manage-interfaces (auth_admin_keep)",
+   "notes": "Win11 has no matching page; put it in per-app Advanced options."
+  },
+  {
+   "area": "applications",
+   "function": "Global Shortcuts dialog (view, rebind or remove an app's registered portal shortcuts)",
+   "control": "dialog",
+   "backing": "org.gnome.settings-daemon.global-shortcuts applications (as, []) plus relocatable org.gnome.settings-daemon.global-shortcuts.application shortcuts (a(sa{sv})). Changes are sent through D-Bus org.gnome.GlobalShortcutsRebind.RebindShortcuts(s app_id, a(sa{sv})), served by org.gnome.Settings.GlobalShortcutsProvider (/usr/libexec/gnome-control-center-global-shortcuts-provider). Remove-all confirm text: 'All actions from %s that have been registered for global shortcuts will be removed'",
+   "notes": "New in GNOME 50; Win11 has no equivalent."
+  },
+  {
+   "area": "applications",
+   "function": "Files & Links page (file types and link types handled; remove; Reset)",
+   "control": "list + button",
+   "backing": "MimeType= of the GAppInfo; remove a type via g_app_info_remove_supports_type or by unsetting the default in mimeapps.list; link types are x-scheme-handler/*; Reset calls g_app_info_reset_type_associations",
+   "notes": "Win11: Default apps > <app> page, one row per extension or link type."
+  },
+  {
+   "area": "applications",
+   "function": "Storage page (App, Data, Cache, Total; Clear Cache)",
+   "control": "info + button",
+   "backing": "Flatpak installed size or snap size; ~/.var/app/<id> (data) and ~/.var/app/<id>/cache (cache) by directory walk; Clear Cache deletes the cache directory contents",
+   "notes": "Win11: Installed apps > Advanced options > Storage usage / Reset."
+  },
+  {
+   "area": "background",
+   "function": "Style: Default / Dark",
+   "control": "toggle (two preview cards)",
+   "backing": "org.gnome.desktop.interface color-scheme enum {default, prefer-dark, prefer-light}, default 'default'; the UI writes 'default' or 'prefer-dark' (prefer-light is not offered)",
+   "notes": "GNOME panel name is Appearance. Win11: Personalisation > Colours > 'Choose your mode' (Light/Dark/Custom). WinPoint colors.rs already uses color-scheme."
+  },
+  {
+   "area": "background",
+   "function": "Accent Color",
+   "control": "toggle (swatch row)",
+   "backing": "org.gnome.desktop.interface accent-color enum {blue, teal, green, yellow, orange, red, pink, purple, slate, brown}; schema default 'blue'; installed override 10_ubuntu-settings sets 'orange' for every desktop, including WinPoint",
+   "notes": "Win11: Colours > Accent colour (Manual/Automatic grid). Windows allows any RGB; GNOME accepts only these 10 names."
+  },
+  {
+   "area": "background",
+   "function": "Background picture chooser (light and dark pairs, timed slideshows, solid colours)",
+   "control": "list (thumbnail grid)",
+   "backing": "org.gnome.desktop.background picture-uri (s, schema 'file:///usr/share/backgrounds/gnome/adwaita-l.jxl'; ':ubuntu' override warty-final-ubuntu.png), picture-uri-dark (s, adwaita-d.jxl), picture-options enum {none, wallpaper, centered, scaled, stretched, zoom, spanned} (default 'zoom'), primary-color '#023c88', secondary-color '#5789ca', color-shading-type {solid, vertical, horizontal}. The lock screen copy goes to org.gnome.desktop.screensaver picture-uri / picture-options / primary-color. Thumbnails come from /usr/share/gnome-background-properties/*.xml (installed: resolute-wallpapers.xml, ubuntu-wallpapers.xml) and ~/.local/share/gnome-background-properties; timed .xml slideshows",
+   "notes": "Win11: Personalisation > Background ('Personalise your background' Picture/Solid colour/Slideshow; 'Choose a fit for your desktop image' maps to picture-options). WinPoint wallpaper.rs exists."
+  },
+  {
+   "area": "background",
+   "function": "Add Picture... / remove a user-added picture",
+   "control": "button (file dialog) + remove on thumbnail",
+   "backing": "File dialog with image filter; the file is copied into ~/.local/share/backgrounds/, then the keys above are set; 'Recent' flowbox lists added items, and remove deletes the copy",
+   "notes": "Win11: 'Browse photos' and the recent images row."
+  },
+  {
+   "area": "background",
+   "function": "OLED hint label",
+   "control": "info (hidden by default)",
+   "backing": "Label 'OLED screen detected. Dark style may save power.' (visible=false)",
+   "notes": "Optional."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Bluetooth on/off",
+   "control": "toggle (header switch)",
+   "backing": "Session D-Bus org.gnome.SettingsDaemon.Rfkill /org/gnome/SettingsDaemon/Rfkill property BluetoothAirplaneMode (b, rw; on means false); also BluetoothHasAirplaneMode and BluetoothHardwareAirplaneMode; BlueZ Adapter1.Powered follows. Status pages: No Bluetooth Found, Bluetooth Turned Off, Airplane Mode is On, Hardware Airplane Mode is On",
+   "notes": "Win11: Bluetooth & devices top card toggle. WinPoint has system.bluetooth.setPowered."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Turn Off Airplane Mode (from Bluetooth page)",
+   "control": "button",
+   "backing": "Rfkill AirplaneMode=false (rw); HardwareAirplaneMode is read-only",
+   "notes": "Win11: Network & internet > Airplane mode."
+  },
+  {
+   "area": "bluetooth",
+   "function": "'Visible as <name>' while the panel is open",
+   "control": "info",
+   "backing": "BlueZ org.bluez Adapter1: Alias (follows hostname1 PrettyHostname), Discoverable=true and Pairable=true while shown; rename goes through About > Device Name",
+   "notes": "Win11: 'Discoverable as <PC name>' line."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Device discovery and device list (name, type icon, status, battery)",
+   "control": "list",
+   "backing": "Adapter1.StartDiscovery / StopDiscovery / SetDiscoveryFilter; ObjectManager org.bluez Device1 objects (Name/Alias, Icon/Class/Appearance, Paired, Connected, Trusted, LegacyPairing). Status labels 'Not Set Up' / Connected / Disconnected. Battery from UPower org.freedesktop.UPower.Device for Bluetooth devices",
+   "notes": "Win11: 'Add device' dialog plus the device cards. WinPoint has system.bluetooth.discover/get."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Pair a new device (with PIN / passkey / confirm dialog)",
+   "control": "dialog",
+   "backing": "AgentManager1.RegisterAgent(o, 'DisplayYesNo') + RequestDefaultAgent; Device1.Pair(), then Trusted=true and Device1.Connect(); CancelPairing. Agent1 methods RequestPinCode, RequestPasskey, DisplayPinCode, DisplayPasskey, RequestConfirmation, RequestAuthorization, AuthorizeService (dialog has entry_pin, Accept/Cancel)",
+   "notes": "WinPoint has system.bluetooth.pair/pairReply/cancelPair."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Device dialog: Connection switch",
+   "control": "toggle",
+   "backing": "Device1.Connect() / Device1.Disconnect()",
+   "notes": "Win11: device card '...' > Connect/Disconnect."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Device dialog: Paired / Type / Address",
+   "control": "info",
+   "backing": "Device1 Paired, Icon/Class (type), Address",
+   "notes": "Win11: Devices > device properties."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Device dialog: Mouse & Touchpad / Sound / Keyboard Settings shortcuts",
+   "control": "button",
+   "backing": "Navigates to the mouse, sound or keyboard panel by device type",
+   "notes": "Link to WinPoint's Mouse, Sound and Keyboard pages."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Send Files...",
+   "control": "button",
+   "backing": "Spawns /usr/bin/bluetooth-sendto --device=<addr> --name=<alias> (obexd org.bluez.obex Client1.CreateSession + ObjectPush1.SendFile); bluez-obexd 5.85 installed",
+   "notes": "Win11: 'Send or receive files via Bluetooth'. Receiving needs gnome-user-share, which is NOT installed."
+  },
+  {
+   "area": "bluetooth",
+   "function": "Forget Device... (confirm 'Forget Device?')",
+   "control": "button",
+   "backing": "Adapter1.RemoveDevice(o device)",
+   "notes": "Win11: 'Remove device'. WinPoint has system.bluetooth.remove."
+  },
+  {
+   "area": "color",
+   "function": "Colour-managed device list (displays, printers, scanners, cameras, webcams; 'Not Calibrated' label)",
+   "control": "list",
+   "backing": "System D-Bus org.freedesktop.ColorManager (colord 1.4.8): GetDevices, DeviceAdded/Removed/Changed; Device props Kind, Model, Vendor, Profiles, Enabled; 'No Devices' status page",
+   "notes": "GNOME panel name is Color Management. Win11 still uses the legacy Colour Management dialog; Display > Colour profile in 24H2."
+  },
+  {
+   "area": "color",
+   "function": "Enable colour management for a device",
+   "control": "toggle",
+   "backing": "org.freedesktop.ColorManager.Device.SetEnabled(b); polkit org.freedesktop.color-manager.modify-device (allow_active yes)",
+   "notes": ""
+  },
+  {
+   "area": "color",
+   "function": "Choose the device's default profile",
+   "control": "toggle (radio per profile)",
+   "backing": "Device.MakeProfileDefault(o); profile rows show Profile.Title / Created / Warnings (info button); polkit modify-device",
+   "notes": ""
+  },
+  {
+   "area": "color",
+   "function": "Add Profile dialog (compatible profiles; Import File...)",
+   "control": "dialog",
+   "backing": "Lists GetProfiles filtered by Kind/Colorspace, then Device.AddProfile('hard', o). Import copies the ICC to ~/.local/share/icc/ and calls CreateProfileWithFd (polkit create-profile yes); warning text 'Problems detected...'",
+   "notes": ""
+  },
+  {
+   "area": "color",
+   "function": "Remove Profile",
+   "control": "button",
+   "backing": "Device.RemoveProfile(o)",
+   "notes": ""
+  },
+  {
+   "area": "color",
+   "function": "Set for All Users",
+   "control": "button",
+   "backing": "Profile.InstallSystemWide() (polkit org.freedesktop.color-manager.install-system-wide, auth_admin_keep) + MakeProfileDefault",
+   "notes": "Writes system state; asks for a password."
+  },
+  {
+   "area": "color",
+   "function": "Calibrate... wizard (Quality, Calibration Device, Display Type, Profile Whitepoint, Display Brightness, Profile Name, Summary/Copy Profile)",
+   "control": "dialog (assistant + fullscreen calibration window)",
+   "backing": "Session D-Bus org.freedesktop.ColorHelper (/usr/libexec/colord-session): Start/Cancel/Resume, signals UpdateSample/UpdateGamma/InteractionRequired/Finished, prop Progress. Sensors via ColorManager GetSensors (polkit sensor-lock yes). Gamma via org.gnome.Mutter.ColorManager.Calibration. Needs a colorimeter",
+   "notes": "Shown only with a sensor. Printer calibration and 'View Details' (gcm-viewer) need gnome-color-manager, which is not installed, so those buttons stay hidden."
+  },
+  {
+   "area": "datetime",
+   "function": "Permission infobar (unlock to change)",
+   "control": "info + button",
+   "backing": "polkit org.gnome.controlcenter.datetime.configure (auth_admin_keep; implies timedate1 set-time, set-timezone, set-local-rtc, set-ntp). Time zone uses its own permission org.freedesktop.timedate1.set-timezone. Ubuntu rules (gnome-control-center.rules, com.ubuntu.desktop.rules) return YES for local active sudo users",
+   "notes": "Win11: Time & language > Date & time (admin shield)."
+  },
+  {
+   "area": "datetime",
+   "function": "Automatic Date & Time",
+   "control": "toggle",
+   "backing": "System D-Bus org.freedesktop.timedate1 /org/freedesktop/timedate1: property NTP (b), CanNTP; SetNTP(b use_ntp, b interactive); polkit org.freedesktop.timedate1.set-ntp",
+   "notes": "Win11: 'Set time automatically' + 'Sync now'."
+  },
+  {
+   "area": "datetime",
+   "function": "Date & Time manual dialog (time HH:MM with AM/PM in 12h, Year spin, Month popover, Day spin)",
+   "control": "dialog",
+   "backing": "timedate1 SetTime(x usec_utc, b relative=false, b interactive=true); polkit org.freedesktop.timedate1.set-time; only when NTP is off",
+   "notes": "Win11: 'Set the date and time manually' > Change."
+  },
+  {
+   "area": "datetime",
+   "function": "Automatic Time Zone",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.datetime automatic-timezone (b, false). Row visible only when geoclue exists; needs org.gnome.system.location enabled (b, false). gsd-datetime then calls timedate1 SetTimezone",
+   "notes": "Win11: 'Set time zone automatically'."
+  },
+  {
+   "area": "datetime",
+   "function": "Time Zone dialog ('Search cities')",
+   "control": "dialog (searchable list)",
+   "backing": "libgweather4 location database; timedate1 property Timezone and SetTimezone(s tz, b interactive); polkit org.freedesktop.timedate1.set-timezone",
+   "notes": "Win11: 'Time zone' dropdown ('(UTC+01:00) Amsterdam...')."
+  },
+  {
+   "area": "datetime",
+   "function": "Time Format 24-hour / AM-PM",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-format enum {24h, 12h}, default '24h'; also written to org.gtk.Settings.FileChooser clock-format",
+   "notes": "Win11 keeps this in Language & region > Regional format > Change formats ('Short time')."
+  },
+  {
+   "area": "datetime",
+   "function": "First Day of the Week",
+   "control": "dropdown",
+   "backing": "org.gnome.desktop.calendar week-start-day enum {default, monday, tuesday, wednesday, thursday, friday, saturday, sunday}, default 'default' (follows locale)",
+   "notes": "Win11: Regional format > 'First day of week'."
+  },
+  {
+   "area": "datetime",
+   "function": "Top-bar clock: Week Day",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-weekday (b, false)",
+   "notes": "Win11: Date & time > 'Show time and date in the System tray' plus taskbar clock options. Map to the WinPoint taskbar clock."
+  },
+  {
+   "area": "datetime",
+   "function": "Top-bar clock: Date",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-date (b, true)",
+   "notes": ""
+  },
+  {
+   "area": "datetime",
+   "function": "Top-bar clock: Seconds",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.interface clock-show-seconds (b, false)",
+   "notes": "Win11: Taskbar behaviours > 'Show seconds in system tray clock'."
+  },
+  {
+   "area": "datetime",
+   "function": "Calendar: Week Numbers",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.calendar show-weekdate (b, false)",
+   "notes": ""
+  },
+  {
+   "area": "display",
+   "function": "Display configuration backend, Apply/Cancel bar, 'Keep changes?' revert",
+   "control": "button (Apply / Cancel)",
+   "backing": "Session D-Bus org.gnome.Mutter.DisplayConfig /org/gnome/Mutter/DisplayConfig: GetCurrentState() returns (serial, monitors, logical_monitors, properties), and ApplyMonitorsConfig(u serial, u method 0 verify / 1 temporary / 2 persistent, a(iiduba(ssa{sv})) logical_monitors, a{sv} props). Also ApplyMonitorsConfigAllowed ('Display Settings Disabled' page when false), the MonitorsChanged signal, and ~/.config/monitors.xml for the persistent copy. GNOME Shell shows the 'Keep these display settings?' timeout-revert prompt",
+   "notes": "Win11: System > Display, with a 'Keep changes / Revert' dialog. WinPoint has display.list/display.set."
+  },
+  {
+   "area": "display",
+   "function": "Multiple Displays: Join / Mirror",
+   "control": "toggle",
+   "backing": "Join = one logical monitor per monitor; Mirror = a single logical monitor containing every monitor at a common mode (clone)",
+   "notes": "Win11: 'Extend these displays' / 'Duplicate these displays' dropdown. Mutter keybinding switch-monitor ['<Super>p','XF86Display'] exists but has no GNOME UI (Win11 Win+P)."
+  },
+  {
+   "area": "display",
+   "function": "Arrangement (drag monitors)",
+   "control": "list (drag canvas)",
+   "backing": "Logical monitor x,y in ApplyMonitorsConfig; GetCurrentState props layout-mode (1 logical, 2 physical), supports-changing-layout-mode, global-scale-required",
+   "notes": "Win11: 'Rearrange your displays' with Identify/Detect."
+  },
+  {
+   "area": "display",
+   "function": "Primary Display ('Contains top bar and Activities')",
+   "control": "dropdown",
+   "backing": "Logical monitor 'primary' (b) in ApplyMonitorsConfig",
+   "notes": "Win11: 'Make this my main display' checkbox."
+  },
+  {
+   "area": "display",
+   "function": "Per-display on/off (multi-monitor subpage switch)",
+   "control": "toggle",
+   "backing": "Include or omit the monitor's connector from logical_monitors",
+   "notes": "Win11: 'Disconnect this display' option in the Multiple displays dropdown."
+  },
+  {
+   "area": "display",
+   "function": "Orientation",
+   "control": "dropdown",
+   "backing": "Logical monitor transform (u): 0 Landscape, 1 Portrait Right (90), 3 Portrait Left (270), 2 Landscape flipped (180); flipped-mirror transforms 4-7 are not offered",
+   "notes": "Win11: 'Display orientation'. GNOME has no rotation-lock toggle here (mutter rotate-monitor key and iio-sensor-proxy instead)."
+  },
+  {
+   "area": "display",
+   "function": "Resolution",
+   "control": "dropdown",
+   "backing": "Mode id from monitor modes (width x height, aspect label); mode props is-preferred, is-current",
+   "notes": "Win11: 'Display resolution' marked '(Recommended)'."
+  },
+  {
+   "area": "display",
+   "function": "Refresh Rate",
+   "control": "dropdown",
+   "backing": "Mode refresh rate (d) for the chosen resolution, shown as '%.2lf Hz'",
+   "notes": "Win11: Advanced display > 'Choose a refresh rate'."
+  },
+  {
+   "area": "display",
+   "function": "Variable Refresh Rate (with preferred rate)",
+   "control": "toggle (inside refresh-rate expander)",
+   "backing": "Mode property refresh-rate-mode 'variable' vs 'fixed'; monitor prop min-refresh-rate; preferred refresh rate combo",
+   "notes": "Win11: 'Dynamic refresh rate' / VRR."
+  },
+  {
+   "area": "display",
+   "function": "HDR (High Dynamic Range)",
+   "control": "toggle",
+   "backing": "Monitor property color-mode (u: 0 default, 1 BT.2100) in ApplyMonitorsConfig; monitor supported-color-modes",
+   "notes": "Win11: 'Use HDR'."
+  },
+  {
+   "area": "display",
+   "function": "Adjust for TV (underscanning)",
+   "control": "toggle",
+   "backing": "Monitor property underscanning (b) (read back as is-underscanning); only on outputs that support it",
+   "notes": "Not a native Win11 setting (driver panels)."
+  },
+  {
+   "area": "display",
+   "function": "Scale",
+   "control": "toggle group (few values) or dropdown (many)",
+   "backing": "Logical monitor scale (d) from mode supported-scales / preferred-scale. Fractional scales need org.gnome.mutter experimental-features 'scale-monitor-framebuffer' (flags; the installed 10_mutter-common [org.gnome.mutter:GNOME] override sets ['scale-monitor-framebuffer','xwayland-native-scaling'] and applies to the WinPoint session)",
+   "notes": "Win11: 'Scale' (100%, 125%... Recommended) + Custom scaling."
+  },
+  {
+   "area": "display",
+   "function": "Built-in Scaling for Legacy Apps",
+   "control": "toggle",
+   "backing": "org.gnome.mutter.wayland xwayland-scaling-factor (d, default 0 = automatic). Mapping inferred from binary strings: on means X11 apps scale themselves (factor auto), off means factor 1 with compositor upscaling. Needs xwayland-native-scaling",
+   "notes": "Win11: Display > Graphics/'Fix scaling for apps'. Verify the exact on/off values before writing."
+  },
+  {
+   "area": "display",
+   "function": "Night Light on/off",
+   "control": "toggle",
+   "backing": "org.gnome.settings-daemon.plugins.color night-light-enabled (b, false); 'Night Light Unavailable' page when gamma is unsupported",
+   "notes": "Win11: Display > Night light. WinPoint has system.nightLight.get/set."
+  },
+  {
+   "area": "display",
+   "function": "Night Light Schedule: Sunset to Sunrise / Manual Schedule",
+   "control": "dropdown",
+   "backing": "night-light-schedule-automatic (b, true); sunset needs location (org.gnome.system.location enabled + geoclue) or night-light-last-coordinates (dd)(91,181 = unknown)",
+   "notes": "Win11: 'Schedule night light' with 'Sunset to sunrise' / 'Set hours'."
+  },
+  {
+   "area": "display",
+   "function": "Night Light Times From / To",
+   "control": "slider (hour and minute spinners, AM/PM in 12h)",
+   "backing": "night-light-schedule-from (d, 20.00), night-light-schedule-to (d, 6.00) as fractional hours",
+   "notes": "Win11: 'Turn on' / 'Turn off' time pickers."
+  },
+  {
+   "area": "display",
+   "function": "Night Light Color Temperature",
+   "control": "slider (1700-4700 K, step 100)",
+   "backing": "night-light-temperature (u, default 2700)",
+   "notes": "Win11: 'Strength' slider (invert the direction)."
+  },
+  {
+   "area": "display",
+   "function": "Restart Filter (Temporarily Disabled Until Tomorrow)",
+   "control": "button",
+   "backing": "Session D-Bus org.gnome.SettingsDaemon.Color /org/gnome/SettingsDaemon/Color property DisabledUntilTomorrow (b rw) set to false; also reads NightLightActive, Temperature, Sunrise, Sunset",
+   "notes": "Win11: 'Turn on now' / 'Turn off now'."
+  },
+  {
+   "area": "keyboard",
+   "function": "Input Sources list (layouts and input methods)",
+   "control": "list",
+   "backing": "org.gnome.desktop.input-sources sources a(ss) (default []; empty means taken from the system keyboard), current (u, 0), mru-sources a(ss), xkb-model (s, 'pc105+inet'); entries ('xkb','us+intl') or ('ibus','<engine>'). Ubuntu 50.3 (inferred from strings) also syncs to the system keyboard: org.freedesktop.locale1 + pkexec /usr/libexec/gnome-control-center-set-debian-keyboard <layouts> <variants> [options], which writes /etc/default/keyboard and runs dpkg-reconfigure keyboard-configuration. polkit org.gnome.controlcenter.set-keyboard (auth_admin_keep; YES for sudo via gnome-control-center.rules)",
+   "notes": "Win11: Time & language > Language & region > <language> '...' > Language options > Keyboards. Mouse settings are missing in WinPoint, and so is everything on this panel."
+  },
+  {
+   "area": "keyboard",
+   "function": "Add Input Source dialog ('Search languages and countries', Other)",
+   "control": "dialog",
+   "backing": "gnome-desktop GnomeXkbInfo (xkeyboard-config evdev.xml) + IBus engines (session org.freedesktop.IBus, list engines), grouped by language; input-sources show-all-sources (b, false) widens the list but has no UI",
+   "notes": "Win11: 'Add a keyboard'."
+  },
+  {
+   "area": "keyboard",
+   "function": "Input source row menu: Move Up, Move Down, drag to reorder, Remove",
+   "control": "list (row menu)",
+   "backing": "Rewrites input-sources sources order or removes the entry",
+   "notes": "Win11: keyboard row '...' > Remove; order follows the language list."
+  },
+  {
+   "area": "keyboard",
+   "function": "Input source Preferences (IBus engine) / View Keyboard Layout",
+   "control": "button",
+   "backing": "Preferences launches the engine's setup (ibus-setup-<engine>.desktop / engine SetupExec). View Keyboard Layout spawns /usr/bin/tecla <layout[+variant]>",
+   "notes": "Win11: per-keyboard 'Options' / layout preview."
+  },
+  {
+   "area": "keyboard",
+   "function": "Input Source Switching: same source for all windows / per window",
+   "control": "toggle (radio pair)",
+   "backing": "org.gnome.desktop.input-sources per-window (b, false); group visible only with 2 or more sources",
+   "notes": "Win11: Typing > Advanced keyboard settings > 'Let me use a different input method for each app window'."
+  },
+  {
+   "area": "keyboard",
+   "function": "Alternate Characters Key (AltGr / third level)",
+   "control": "dialog (switch + radio list)",
+   "backing": "org.gnome.desktop.input-sources xkb-options (as, []). Options: 'Layout Default' (no lv3:*), Left Alt lv3:lalt_switch, Right Alt lv3:ralt_switch, Left Super lv3:lwin_switch, Right Super lv3:rwin_switch, Menu key lv3:menu_switch, Right Ctrl lv3:switch. Off writes lv3:ralt_alt",
+   "notes": "No Win11 page; put it under Typing > Advanced keyboard settings."
+  },
+  {
+   "area": "keyboard",
+   "function": "Compose Key",
+   "control": "dialog (switch + radio list)",
+   "backing": "xkb-options compose:ralt, compose:lwin, compose:rwin, compose:menu, compose:lctrl, compose:rctrl, compose:caps, compose:sclk, compose:prsc, compose:ins; off means no compose:* option",
+   "notes": ""
+  },
+  {
+   "area": "keyboard",
+   "function": "View and Customize Shortcuts dialog (section list, 'Search shortcuts')",
+   "control": "dialog",
+   "backing": "Sections defined by /usr/share/gnome-control-center/keybindings/*.xml (00-multimedia, 01-input-sources, 01-launchers, 01-system, 50-accessibility, 50-gnome-shell-{launchers,screenshots,system}, 50-mutter-{navigation,system,wayland,windows}); keys are 'as' accelerator lists",
+   "notes": "Win11 has no shortcut editor; this is an extra page, for example 'Keyboard shortcuts' under Typing or Accessibility > Keyboard."
+  },
+  {
+   "area": "keyboard",
+   "function": "Activities Overview Shortcut (Super opens overview)",
+   "control": "toggle",
+   "backing": "org.gnome.mutter overlay-key (s, default 'Super'); off writes ''",
+   "notes": "In WinPoint this decides whether the Super key opens Start."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Accessibility",
+   "control": "list (shortcut rows)",
+   "backing": "org.gnome.settings-daemon.plugins.media-keys: magnifier ['<Alt><Super>8'], magnifier-zoom-in ['<Alt><Super>equal'], magnifier-zoom-out ['<Alt><Super>minus'], screenreader ['<Alt><Super>s'], on-screen-keyboard [''], increase-text-size [''], decrease-text-size [''], toggle-contrast ['']",
+   "notes": ""
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Launchers",
+   "control": "list",
+   "backing": "media-keys help ['','<Super>F1'], control-center [''], calculator [''], email [''], terminal ['<Primary><Alt>t'], www [''], home [''], search ['']; org.gnome.shell.keybindings switch-to-application-1..9 ['<Super>1'..'<Super>9'], open-new-window-application-1..9 ['<Super><Control>1'..]",
+   "notes": "Win11 Win+1..9 launch pinned taskbar apps; same meaning."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Navigation",
+   "control": "list",
+   "backing": "org.gnome.desktop.wm.keybindings. Workspaces: switch-to-workspace-1 ['<Super>Home'], -2..4 [], -last ['<Super>End'], -left ['<Super>Page_Up','<Super>KP_Prior','<Super><Alt>Left','<Control><Alt>Left'], -right (Page_Down equivalents), -up ['<Control><Alt>Up'], -down ['<Control><Alt>Down']. Moving windows: move-to-workspace-1 ['<Super><Shift>Home'], -2..4 [], -last ['<Super><Shift>End'], -left/-right (Super+Shift+PgUp/PgDn, Super+Shift+Alt+arrow, Ctrl+Shift+Alt+arrow), -up/-down (Ctrl+Shift+Alt+Up/Down); move-to-monitor-left/right/up/down ['<Super><Shift>arrow']. Switchers: switch-applications ['<Super>Tab','<Alt>Tab'] (+backward), switch-windows [] (+backward), switch-group ['<Super>Above_Tab','<Alt>Above_Tab'] (+backward), switch-panels ['<Control><Alt>Tab'] (+backward), cycle-windows ['<Alt>Escape'], cycle-group ['<Alt>F6'], cycle-panels ['<Control><Alt>Escape'] (each +backward). show-desktop []",
+   "notes": "':ubuntu' overrides (switch-windows=Alt+Tab, show-desktop=Super+D) do NOT apply in the WinPoint session (DesktopNames=WinPoint;GNOME)."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Screenshots",
+   "control": "list",
+   "backing": "org.gnome.shell.keybindings show-screenshot-ui ['Print'], screenshot ['<Shift>Print'], screenshot-window ['<Alt>Print'], show-screen-recording-ui ['<Ctrl><Shift><Alt>R']",
+   "notes": "Win11 Win+Shift+S has no GNOME default."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Sound and Media",
+   "control": "list",
+   "backing": "media-keys volume-mute, volume-down, volume-up, mic-mute, media, play, pause, stop, previous, next, eject, all default [''] (hardware XF86 keys are handled by the static keys); volume-step (i 1..20, 6) has no UI",
+   "notes": ""
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: System",
+   "control": "list",
+   "backing": "media-keys logout ['<Control><Alt>Delete'], reboot [''], shutdown [''], screensaver ['<Super>l']; org.gnome.shell.keybindings toggle-message-tray ['<Super>v','<Super>m'], toggle-quick-settings ['<Super>s'], focus-active-notification ['<Super>n'], toggle-overview [], toggle-application-view ['<Super>a']; wm.keybindings panel-run-dialog ['<Alt>F2']; org.gnome.mutter.wayland.keybindings restore-shortcuts ['<Super>Escape']",
+   "notes": "Win11 Win+L lock matches."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Typing",
+   "control": "list",
+   "backing": "wm.keybindings switch-input-source ['<Super>space','XF86Keyboard'], switch-input-source-backward ['<Shift><Super>space','<Shift>XF86Keyboard']",
+   "notes": "Win11 Win+Space matches."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcuts: Windows",
+   "control": "list",
+   "backing": "wm.keybindings activate-window-menu ['<Alt>space'], toggle-fullscreen [], toggle-maximized ['<Alt>F10'], maximize (schema ['<Super>Up'] but installed override 20_ubuntu-desktop-installer-wm sets [] for every desktop), unmaximize (schema ['<Super>Down','<Alt>F5'], override []), close ['<Alt>F4'], minimize ['<Super>h'], begin-move ['<Alt>F7'], begin-resize ['<Alt>F8'], toggle-on-all-workspaces [], raise-or-lower [], raise [], lower [], maximize-vertically [], maximize-horizontally []; org.gnome.mutter.keybindings toggle-tiled-left ['<Super>Left'], toggle-tiled-right ['<Super>Right']",
+   "notes": "The empty maximize/unmaximize override looks like an installer leftover; Win11 expects Win+Up/Down."
+  },
+  {
+   "area": "keyboard",
+   "function": "Shortcut editor (set, disable, replace on conflict, reset)",
+   "control": "dialog",
+   "backing": "Captures a key combination: Esc cancels, Backspace disables (writes []), a conflict offers Replace (clears the other key), Reset Shortcut calls g_settings_reset; writes a single-element 'as'",
+   "notes": ""
+  },
+  {
+   "area": "keyboard",
+   "function": "Custom Shortcuts (Add Shortcut...: Name, Command, Shortcut; Remove)",
+   "control": "dialog",
+   "backing": "org.gnome.settings-daemon.plugins.media-keys custom-keybindings (as of paths /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/customN/) + relocatable org.gnome.settings-daemon.plugins.media-keys.custom-keybinding: name (s), command (s), binding (s); enable-in-lockscreen (b, false) has no UI",
+   "notes": ""
+  },
+  {
+   "area": "keyboard",
+   "function": "Reset All... ('Reset All Shortcuts?')",
+   "control": "button + confirm",
+   "backing": "g_settings_reset on every key listed in the keybinding XMLs",
+   "notes": ""
+  },
+  {
+   "area": "mouse",
+   "function": "Primary Button: Left / Right (mice and touchpads)",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.mouse left-handed (b, false); the touchpad follows through org.gnome.desktop.peripherals.touchpad left-handed enum {right, left, mouse} (default 'mouse')",
+   "notes": "GNOME panel name is Mouse & Touchpad (this is Robin's example). Win11: Bluetooth & devices > Mouse > 'Primary mouse button' (Left/Right)."
+  },
+  {
+   "area": "mouse",
+   "function": "Mouse Pointer Speed",
+   "control": "slider (-1..1, step 0.1)",
+   "backing": "org.gnome.desktop.peripherals.mouse speed (d, range [-1,1], 0)",
+   "notes": "Win11: 'Mouse pointer speed' (slider 1-20; map it linearly)."
+  },
+  {
+   "area": "mouse",
+   "function": "Mouse Acceleration",
+   "control": "toggle (+ info button)",
+   "backing": "mouse accel-profile enum {default, flat, adaptive}, default 'default'; switch on = not 'flat' (writes 'default'), off writes 'flat'",
+   "notes": "Win11: 'Enhance pointer precision'."
+  },
+  {
+   "area": "mouse",
+   "function": "Mouse Scroll Direction: Traditional / Natural",
+   "control": "toggle (split row with two illustrated choices)",
+   "backing": "mouse natural-scroll (b, false)",
+   "notes": "Win11 Mouse has no matching row (the touchpad does). Win11 Mouse rows GNOME lacks: wheel lines per scroll, 'Scroll inactive windows when hovering' (no GNOME key)."
+  },
+  {
+   "area": "mouse",
+   "function": "Test Settings dialog (Clicking: primary, secondary, double click; Scrolling)",
+   "control": "dialog",
+   "backing": "Local test only; the double-click detection uses org.gnome.desktop.peripherals.mouse double-click (i, 400 ms)",
+   "notes": "Double-click time is set in Accessibility > Pointing & Clicking. Win11 keeps it under 'Additional mouse settings'."
+  },
+  {
+   "area": "mouse",
+   "function": "Touchpad on/off",
+   "control": "toggle",
+   "backing": "org.gnome.desktop.peripherals.touchpad send-events enum {enabled, disabled, disabled-on-external-mouse}, default 'enabled'; GNOME writes only 'enabled' or 'disabled'",
+   "notes": "Win11: Bluetooth & devices > Touchpad toggle. Its sub-option 'Leave touchpad on when a mouse is connected' unchecked equals 'disabled-on-external-mouse' (in the schema, not shown by GNOME)."
+  },
+  {
+   "area": "mouse",
+   "function": "Disable Touchpad While Typing",
+   "control": "toggle",
+   "backing": "touchpad disable-while-typing (b, true); disable-while-typing-timeout (u, 100..5000, 500 ms) has no UI",
+   "notes": "Win11: Taps > 'Touchpad sensitivity' (closest match)."
+  },
+  {
+   "area": "mouse",
+   "function": "Touchpad Pointer Speed",
+   "control": "slider (-1..1, step 0.1)",
+   "backing": "touchpad speed (d, [-1,1], 0)",
+   "notes": "Win11: 'Cursor speed'."
+  },
+  {
+   "area": "mouse",
+   "function": "Secondary Click: Two Finger Push / Corner Push",
+   "control": "toggle (split row)",
+   "backing": "touchpad click-method enum {default, none, areas, fingers}; schema default 'fingers' (WinPoint session); the ':ubuntu'-only override 'default' does not apply; Two Finger Push = 'fingers', Corner Push = 'areas'",
+   "notes": "Win11: 'Press the lower right corner of the touchpad to right-click' (areas) and two-finger tap/click."
+  },
+  {
+   "area": "mouse",
+   "function": "Tap to Click",
+   "control": "toggle (illustrated row)",
+   "backing": "touchpad tap-to-click (b, true); row shown only if the device supports tapping",
+   "notes": "Win11: 'Tap with a single finger to single-click'."
+  },
+  {
+   "area": "mouse",
+   "function": "Touchpad Scroll Method: Two Finger / Edge",
+   "control": "toggle (split row)",
+   "backing": "touchpad two-finger-scrolling-enabled (b, true) and edge-scrolling-enabled (b, false), written as an exclusive pair",
+   "notes": "Win11: 'Drag two fingers to scroll'."
+  },
+  {
+   "area": "mouse",
+   "function": "Touchpad Scroll Direction: Traditional / Natural",
+   "control": "toggle (split row)",
+   "backing": "touchpad natural-scroll (b, true)",
+   "notes": "Win11: 'Scrolling direction': 'Down motion scrolls up' = natural."
+  },
+  {
+   "area": "mouse",
+   "function": "Touchpad keys in the schema but not in GNOME's UI (Windows parity)",
+   "control": "info (not in GNOME UI)",
+   "backing": "touchpad tap-and-drag (b, true), tap-and-drag-lock (b, false), tap-button-map enum {default, lrm, lmr} ('default'), accel-profile {default, flat, adaptive} ('default'), middle-click-emulation (b, false); mouse middle-click-emulation (b, false), drag-threshold (i, 8); trackball scroll-wheel-emulation-button (i 0..24, 0), accel-profile, middle-click-emulation",
+   "notes": "Win11 rows that map to these: 'Tap twice and drag to multi-select' = tap-and-drag; 'Tap with two fingers to right-click' = tap-button-map lrm. Three- and four-finger gestures have no GSettings key (fixed in GNOME Shell)."
+  },
+  {
+   "area": "mouse",
+   "function": "Pointing Stick: Pointer Speed",
+   "control": "slider (-1..1)",
+   "backing": "org.gnome.desktop.peripherals.pointingstick speed (d, [-1,1], 0); page shown only when a pointing stick is detected",
+   "notes": "No Win11 page; put it under Touchpad or Mouse."
+  },
+  {
+   "area": "mouse",
+   "function": "Pointing Stick Acceleration",
+   "control": "toggle",
+   "backing": "pointingstick accel-profile {default, flat, adaptive}; on writes 'default', off writes 'flat'; scroll-method {default, none, on-button-down} has no UI",
+   "notes": ""
+  },
+  {
+   "area": "mouse",
+   "function": "Device-dependent page visibility (Mouse / Touchpad / Pointing Stick)",
+   "control": "info",
+   "backing": "gsd-device-manager / udev ID_INPUT_MOUSE, ID_INPUT_TOUCHPAD, ID_INPUT_POINTINGSTICK; Touchpad tab hidden without a touchpad",
+   "notes": "Win11 hides the Touchpad page without a touchpad; do the same."
+  },
+  {
+   "area": "multitasking",
+   "function": "Hot Corner (top-left opens overview)",
+   "control": "toggle (illustrated)",
+   "backing": "org.gnome.desktop.interface enable-hot-corners (b); schema default true (the ':ubuntu' override false does not apply in the WinPoint session)",
+   "notes": "Win11 has no hot corner. In WinPoint the shell decides what it does."
+  },
+  {
+   "area": "multitasking",
+   "function": "Window Resize (active screen edges / edge tiling)",
+   "control": "toggle (illustrated)",
+   "backing": "org.gnome.mutter edge-tiling (b); schema default false, but the [org.gnome.mutter:GNOME] override sets true in the WinPoint session",
+   "notes": "Win11: System > Multitasking > 'Snap windows' (+ sub-options)."
+  },
+  {
+   "area": "multitasking",
+   "function": "Reopen Windows After Login",
+   "control": "toggle (group hidden by default)",
+   "backing": "org.gnome.desktop.session save-restore (b, true); the 'System' group has visible=false",
+   "notes": "Win11: Accounts > Sign-in options > 'Automatically save my restartable apps...'."
+  },
+  {
+   "area": "multitasking",
+   "function": "Workspaces: Dynamic / Fixed Number",
+   "control": "toggle (radio pair)",
+   "backing": "org.gnome.mutter dynamic-workspaces (b); schema default false; the [org.gnome.mutter:GNOME] override sets true",
+   "notes": "Win11: virtual desktops are always dynamic (Task view)."
+  },
+  {
+   "area": "multitasking",
+   "function": "Number of Workspaces",
+   "control": "slider (spin 1..36)",
+   "backing": "org.gnome.desktop.wm.preferences num-workspaces (i, range [1,36], 4); only when fixed",
+   "notes": ""
+  },
+  {
+   "area": "multitasking",
+   "function": "Multi-Monitor: workspaces on primary display only / on all displays",
+   "control": "toggle (radio pair, illustrated)",
+   "backing": "org.gnome.mutter workspaces-only-on-primary (b); schema default false; the [org.gnome.mutter:GNOME] override sets true",
+   "notes": "Win11 desktops span all monitors."
+  },
+  {
+   "area": "multitasking",
+   "function": "App Switching: include apps from all workspaces / current workspace only",
+   "control": "toggle (radio pair)",
+   "backing": "org.gnome.shell.app-switcher current-workspace-only (b, false). Ubuntu patch (inferred from strings) also writes org.gnome.shell.extensions.tiling-assistant tiling-popup-all-workspace. Related org.gnome.shell.window-switcher current-workspace-only (b, true) and app-icon-mode have no UI",
+   "notes": "Win11: Multitasking > Desktops 'On the taskbar, show all open windows' and 'Show all open windows when I press Alt+Tab': On all desktops / Only on the desktop I'm using."
+  },
+  {
+   "area": "multitasking",
+   "function": "Monitor isolation: include apps from all monitors / each monitor only (Ubuntu Dock)",
+   "control": "toggle (radio pair)",
+   "backing": "org.gnome.shell.extensions.dash-to-dock isolate-monitors (b, false); group shown only when Ubuntu Dock runs (Ubuntu patch)",
+   "notes": "Win11: Multiple displays > 'Show my taskbar apps on'."
+  },
+  {
+   "area": "network",
+   "function": "Network panel availability ('Network Unavailable')",
+   "control": "info",
+   "backing": "System D-Bus org.freedesktop.NetworkManager via libnm (NMClient); error page if NM is not running",
+   "notes": "Win11: Network & internet landing page (status card, properties, data usage). WinPoint has system.network.get."
+  },
+  {
+   "area": "network",
+   "function": "Wired device on/off and status (e.g. 'Connected - 1000 Mb/s')",
+   "control": "toggle + button (gear)",
+   "backing": "NM ActivateConnection(o conn, o device, o '/') / Device.Disconnect(); Device.Wired Speed; polkit org.freedesktop.NetworkManager.network-control (allow_active yes)",
+   "notes": "Win11: Network & internet > Ethernet."
+  },
+  {
+   "area": "network",
+   "function": "Wired profiles list + Add Ethernet Connection",
+   "control": "list + button",
+   "backing": "NM Settings.AddConnection2 (type 802-3-ethernet); pick the active profile with ActivateConnection; polkit settings.modify.own (yes) or settings.modify.system (auth_admin_keep; org.freedesktop.NetworkManager.rules returns YES for sudo/netdev)",
+   "notes": ""
+  },
+  {
+   "area": "network",
+   "function": "Bluetooth network devices (PAN/DUN) on/off + options",
+   "control": "toggle + button",
+   "backing": "NM bluetooth connections (bluetooth.type panu/dun), Activate/Deactivate; group hidden without such devices",
+   "notes": "Win11 has no separate page; keep it as a card under Ethernet or Bluetooth."
+  },
+  {
+   "area": "network",
+   "function": "VPN list: connect switch + options per VPN",
+   "control": "toggle + button",
+   "backing": "NM ActivateConnection / DeactivateConnection for vpn and wireguard connections; ActiveConnection State",
+   "notes": "Win11: Network & internet > VPN (Connect/Disconnect, Advanced options)."
+  },
+  {
+   "area": "network",
+   "function": "Add VPN dialog (choose type; Import from file...)",
+   "control": "dialog",
+   "backing": "VPN plugin list from /usr/lib/NetworkManager/VPN/*.name (installed: OpenVPN, PPTP with GTK 4 editors libnm-gtk4-vpn-plugin-openvpn-editor.so / -pptp-editor.so) + native WireGuard. Import uses nm_vpn_editor_plugin_import (.ovpn) or the WireGuard .conf import; then Settings.AddConnection2. Errors 'Cannot Import VPN Connection', 'Invalid VPN configuration file'",
+   "notes": "Win11: 'Add VPN' dialog (VPN provider, Connection name, Server, VPN type, Sign-in info). The GTK 4 editor plugins can be embedded in WinPoint."
+  },
+  {
+   "area": "network",
+   "function": "Proxy: Network Proxy on/off",
+   "control": "toggle",
+   "backing": "org.gnome.system.proxy mode enum {none, manual, auto}, default 'none'; off writes 'none'",
+   "notes": "Win11: Network & internet > Proxy."
+  },
+  {
+   "area": "network",
+   "function": "Proxy Configuration: Automatic / Manual",
+   "control": "dropdown",
+   "backing": "org.gnome.system.proxy mode 'auto' or 'manual'",
+   "notes": "Win11 splits this into 'Automatic proxy setup' and 'Manual proxy setup' cards."
+  },
+  {
+   "area": "network",
+   "function": "Proxy Configuration URL (automatic)",
+   "control": "info (entry)",
+   "backing": "org.gnome.system.proxy autoconfig-url (s, ''); empty means WPAD (warning label shown)",
+   "notes": "Win11: 'Use setup script' + 'Automatically detect settings'."
+  },
+  {
+   "area": "network",
+   "function": "Manual proxy: HTTP, HTTPS, FTP, SOCKS host + port",
+   "control": "info (entry + spin 0..65535 per protocol)",
+   "backing": "org.gnome.system.proxy.http host (s, '') port (i, 8080); .https host/port (0); .ftp host/port (0); .socks host/port (0). use-same-proxy (b, true) and http use-authentication / authentication-user / authentication-password have no UI",
+   "notes": "Win11 manual proxy has one address+port; map it to http plus 'same for all'."
+  },
+  {
+   "area": "network",
+   "function": "Proxy Ignored Hosts",
+   "control": "info (entry, comma separated)",
+   "backing": "org.gnome.system.proxy ignore-hosts (as, ['localhost','127.0.0.0/8','::1'])",
+   "notes": "Win11: 'Use the proxy server except for addresses that start with...' (semicolons)."
+  },
+  {
+   "area": "network",
+   "function": "Proxy page Save / Cancel",
+   "control": "button",
+   "backing": "Writes the keys only on Save",
+   "notes": "Win11 manual proxy has a Save button too."
+  },
+  {
+   "area": "network",
+   "function": "Connection editor (gear): tabs Details / Identity / Security / IPv4 / IPv6 (per type), Apply",
+   "control": "dialog",
+   "backing": "NM Settings.Connection.GetSettings / Update2 (or AddConnection2 for new); polkit settings.modify.own or settings.modify.system",
+   "notes": "Win11: per-network properties page (IP assignment Edit, DNS server assignment Edit, Metered, Random hardware address)."
+  },
+  {
+   "area": "network",
+   "function": "Details tab info (Signal Strength, Link speed, Security, IPv4/IPv6 Address, Hardware Address, Supported Frequencies, Default Route, DNS, Last Used)",
+   "control": "info",
+   "backing": "NM ActiveConnection Ip4Config/Ip6Config (AddressData, Gateway, NameserverData), AccessPoint Strength/Frequency/Flags, Device.Wireless Bitrate / Device.Wired Speed, HwAddress, connection.timestamp",
+   "notes": "Win11: 'Properties' section with a Copy button."
+  },
+  {
+   "area": "network",
+   "function": "Connect automatically",
+   "control": "toggle (check)",
+   "backing": "connection.autoconnect (b, default true)",
+   "notes": "Win11: 'Connect automatically when in range'."
+  },
+  {
+   "area": "network",
+   "function": "Make available to other users",
+   "control": "toggle (check)",
+   "backing": "connection.permissions: [] = all users (needs settings.modify.system), ['user:<name>:'] = private (settings.modify.own)",
+   "notes": ""
+  },
+  {
+   "area": "network",
+   "function": "Metered connection ('has data limits or can incur charges')",
+   "control": "toggle (check)",
+   "backing": "connection.metered (NMMetered: yes / no / unknown)",
+   "notes": "Win11: 'Metered connection'."
+  },
+  {
+   "area": "network",
+   "function": "Forget Connection / Remove Connection Profile / Remove VPN",
+   "control": "button (destructive, confirm)",
+   "backing": "NM Settings.Connection.Delete()",
+   "notes": "Win11: 'Forget' and 'Remove'."
+  },
+  {
+   "area": "network",
+   "function": "Ethernet Identity tab: Name, MAC Address, Cloned Address, MTU",
+   "control": "dialog fields",
+   "backing": "connection.id; 802-3-ethernet.mac-address (device MAC dropdown); 802-3-ethernet.cloned-mac-address ('preserve' / 'permanent' / 'random' / 'stable' or an explicit MAC); 802-3-ethernet.mtu (u, 0 = automatic, spin 0..65536 bytes)",
+   "notes": "Win11 Ethernet page has no MAC options; Wi-Fi has 'Random hardware addresses'."
+  },
+  {
+   "area": "network",
+   "function": "Ethernet 802.1x Security tab",
+   "control": "toggle + EAP fields",
+   "backing": "Presence of the 802-1x setting; libnma EAP widgets: TLS, LEAP, PWD, FAST, Tunneled TLS, Protected EAP (PEAP), with identity, CA certificate, password and inner method (802-1x.eap, identity, ca-cert, phase2-auth, password)",
+   "notes": ""
+  },
+  {
+   "area": "network",
+   "function": "IPv4 tab: Method, Addresses, DNS, Routes, only-local-resources",
+   "control": "dialog fields (radios, rows, switches)",
+   "backing": "ipv4.method: Automatic (DHCP) 'auto' / Link-Local Only 'link-local' / Manual 'manual' / Disable 'disabled' / Shared to other computers 'shared'. Addresses (address, netmask, gateway) in ipv4.address-data + ipv4.gateway. DNS 'Automatic' switch (ipv4.ignore-auto-dns, inverted) + comma-separated entry ipv4.dns. Routes 'Automatic' switch (ipv4.ignore-auto-routes, inverted) + rows (address, netmask, gateway, metric) in ipv4.route-data. 'Use this connection only for resources on its network' = ipv4.never-default",
+   "notes": "Win11: 'IP assignment: Automatic (DHCP)/Manual' and 'DNS server assignment' with DNS over HTTPS (GNOME has no DoH UI; NM 1.54 needs systemd-resolved for it)."
+  },
+  {
+   "area": "network",
+   "function": "IPv6 tab: Method, Addresses, DNS, Routes, only-local-resources",
+   "control": "dialog fields",
+   "backing": "ipv6.method: Automatic 'auto' / Automatic, DHCP only 'dhcp' / Link-Local Only 'link-local' / Manual 'manual' / Disable 'disabled' / Shared to other devices 'shared'. Addresses (address, prefix, gateway); ipv6.dns + ignore-auto-dns; routes (address, prefix, gateway, metric) + ignore-auto-routes; ipv6.never-default",
+   "notes": ""
+  },
+  {
+   "area": "network",
+   "function": "VPN tab (Name + plugin editor: OpenVPN / PPTP settings, Advanced...)",
+   "control": "dialog (embedded plugin widget)",
+   "backing": "connection.id; vpn.service-type (org.freedesktop.NetworkManager.openvpn or .pptp), vpn.data and vpn.secrets dictionaries edited by the plugin's NMVpnEditor GTK 4 widget; '(Error: unable to load VPN connection editor)' fallback",
+   "notes": ""
+  },
+  {
+   "area": "network",
+   "function": "WireGuard tab: Connection Name, Interface Name, Private Key, Listen Port, fwmark, MTU, Add peer routes, Peers",
+   "control": "dialog fields + peer list (add / configure popover / delete)",
+   "backing": "connection.id; connection.interface-name; wireguard.private-key (base64, show/hide); wireguard.listen-port (u, 0 = automatic, spin default 51820); wireguard.fwmark (u32, 0 = off); wireguard.mtu; wireguard.peer-routes (b). wireguard.peers entries: Endpoint (host:port), Public key, Pre-shared key (optional), Allowed IP addresses (comma CIDR list), Persistent keepalive (s, 0..65535)",
+   "notes": "Win11 VPN 'Add' has no WireGuard; add it as a VPN type."
+  },
+  {
+   "area": "network",
+   "function": "Bluetooth connection tab: Name",
+   "control": "dialog field",
+   "backing": "connection.id",
+   "notes": ""
+  },
+  {
+   "area": "wifi",
+   "function": "Wi-Fi on/off",
+   "control": "toggle",
+   "backing": "NM property WirelessEnabled (b, rw through org.freedesktop.DBus.Properties.Set); WirelessHardwareEnabled read-only; polkit org.freedesktop.NetworkManager.enable-disable-wifi (yes). Status pages Wi-Fi Off, No Wi-Fi Adapter Found, Airplane Mode On, Wi-Fi Unavailable",
+   "notes": "Win11: Network & internet > Wi-Fi toggle. WinPoint has system.network.setWifi."
+  },
+  {
+   "area": "wifi",
+   "function": "Airplane Mode ('Disables Wi-Fi, Bluetooth and mobile broadband')",
+   "control": "toggle",
+   "backing": "Session D-Bus org.gnome.SettingsDaemon.Rfkill /org/gnome/SettingsDaemon/Rfkill: AirplaneMode (b rw), HardwareAirplaneMode (ro), HasAirplaneMode / ShouldShowAirplaneMode for visibility",
+   "notes": "Win11: Network & internet > Airplane mode (with per-radio Wi-Fi/Bluetooth toggles = NM WirelessEnabled + Rfkill BluetoothAirplaneMode). WinPoint has system.network.setAirplane."
+  },
+  {
+   "area": "wifi",
+   "function": "Visible Networks list (scan, strength, lock icon, connected tick, connecting spinner)",
+   "control": "list",
+   "backing": "NM Device.Wireless GetAllAccessPoints / AccessPoints, RequestScan(a{sv}) (polkit org.freedesktop.NetworkManager.wifi.scan, yes), LastScan; AccessPoint Ssid/Strength/Flags/WpaFlags/RsnFlags/Frequency",
+   "notes": "Win11: 'Show available networks'. WinPoint has system.network.wifiList."
+  },
+  {
+   "area": "wifi",
+   "function": "Connect to a network (password prompt)",
+   "control": "list row click",
+   "backing": "Known network: ActivateConnection. New network: AddAndActivateConnection2 with the AP's security; secrets come from GNOME Shell's NM secret agent prompt; enterprise uses the libnma-gtk4 NMAWifiDialog",
+   "notes": "WinPoint has system.network.connect/disconnect. WinPoint must provide its own secret agent or keep GNOME Shell's."
+  },
+  {
+   "area": "wifi",
+   "function": "Share Network (QR code: 'Scan to Connect', Network Name, Password)",
+   "control": "dialog",
+   "backing": "Settings.Connection.GetSecrets('802-11-wireless-security'), rendered as a QR with text WIFI:S:<ssid>;T:<WPA|WEP|SAE|nopass>;P:<psk>;;",
+   "notes": "Win11: Wi-Fi network properties > 'View Wi-Fi security key' / share QR."
+  },
+  {
+   "area": "wifi",
+   "function": "Network Options (gear) per network",
+   "control": "button",
+   "backing": "Opens the connection editor: Wi-Fi Details / Identity / Security / IPv4 / IPv6",
+   "notes": ""
+  },
+  {
+   "area": "wifi",
+   "function": "Wi-Fi Identity tab: SSID, BSSID, MAC Address, Cloned Address",
+   "control": "dialog fields",
+   "backing": "802-11-wireless.ssid; 802-11-wireless.bssid (dropdown of seen BSSIDs); 802-11-wireless.mac-address; 802-11-wireless.cloned-mac-address ('preserve' / 'permanent' / 'random' / 'stable' or explicit)",
+   "notes": "Win11: 'Random hardware addresses' per network (Off / On / Change daily) maps to cloned-mac-address random/stable."
+  },
+  {
+   "area": "wifi",
+   "function": "Wi-Fi Security tab",
+   "control": "dropdown + password/EAP fields",
+   "backing": "Security choices None / WEP 40/128-bit Key (Hex or ASCII) / WEP 128-bit Passphrase / LEAP / Dynamic WEP (802.1x) / WPA & WPA2 Personal / WPA & WPA2 Enterprise / WPA3 Personal / Enhanced Open. Written to 802-11-wireless-security.key-mgmt (none / ieee8021x / wpa-psk / wpa-eap / sae / owe), wep-key0 + wep-key-type, psk, leap-username / leap-password, auth-alg; Enterprise uses the 802-1x setting through libnma EAP widgets; secret flags (store for this user / all users / ask every time)",
+   "notes": "Win11: 'Security type' read-only plus 'Edit' for the key."
+  },
+  {
+   "area": "wifi",
+   "function": "Forget Network (trash button on row)",
+   "control": "button",
+   "backing": "NM Settings.Connection.Delete()",
+   "notes": "Win11: 'Forget'."
+  },
+  {
+   "area": "wifi",
+   "function": "Saved Networks dialog (list, forget with undo toast)",
+   "control": "dialog",
+   "backing": "NM ListConnections filtered to type 802-11-wireless; Delete()",
+   "notes": "Win11: 'Manage known networks'."
+  },
+  {
+   "area": "wifi",
+   "function": "Connect to Hidden Network...",
+   "control": "dialog",
+   "backing": "libnma-gtk4 NMAWifiDialog for hidden networks (Network name, Security, credentials), then AddAndActivateConnection2 with 802-11-wireless.hidden=true",
+   "notes": "Win11: 'Hidden network' entry in the available list, or 'Add network'."
+  },
+  {
+   "area": "wifi",
+   "function": "Turn On Wi-Fi Hotspot... (Network Name, Password with 'Generate Random Password')",
+   "control": "dialog",
+   "backing": "Reuses or updates an NM 'Hotspot' connection, or AddAndActivateConnection2: 802-11-wireless.mode='ap' (band chosen automatically), 802-11-wireless-security key-mgmt 'wpa-psk' (or 'sae') + psk, ipv4.method='shared', connection.autoconnect=false. polkit org.freedesktop.NetworkManager.wifi.share.protected (yes) + settings.modify.system (YES for sudo/netdev); needs another internet uplink",
+   "notes": "Win11: Network & internet > Mobile hotspot (Share my internet connection from, Share over Wi-Fi/Bluetooth, Properties: name, password, band, Power saving). WinPoint host mentions hotspot in 4 files."
+  },
+  {
+   "area": "wifi",
+   "function": "Hotspot active view (QR, Network Name, Security Type, Password; Turn Off Hotspot... confirm)",
+   "control": "info + button",
+   "backing": "Reads the active AP connection plus GetSecrets; turning off calls DeactivateConnection ('Turning off will disconnect any devices that are using the hotspot')",
+   "notes": ""
+  },
+  {
+   "area": "wifi",
+   "function": "Multiple Wi-Fi adapters switcher",
+   "control": "toggle (stack switcher)",
+   "backing": "One NM Device.Wireless per page",
+   "notes": ""
+  },
+  {
+   "area": "wwan",
+   "function": "Mobile broadband on/off + status pages (No WWAN Adapter Found, Airplane Mode On + Turn Off Airplane Mode, Loading Devices)",
+   "control": "toggle (header switch) + button",
+   "backing": "NM property WwanEnabled (b rw), polkit org.freedesktop.NetworkManager.enable-disable-wwan (yes); airplane via Rfkill AirplaneMode=false; modems via system D-Bus org.freedesktop.ModemManager1 (ObjectManager)",
+   "notes": "GNOME panel name is Mobile Network. Win11: Network & internet > Cellular. Shown only when a modem exists."
+  },
+  {
+   "area": "wwan",
+   "function": "Data Connection: SIM used for internet (2+ modems) + per-modem switcher",
+   "control": "dropdown + stack switcher",
+   "backing": "Chooses which modem's NM gsm connection autoconnects (connection.autoconnect, gsm.sim-id)",
+   "notes": "Win11: 'Use this SIM for cellular data'."
+  },
+  {
+   "area": "wwan",
+   "function": "SIM missing / SIM locked: Unlock (PIN / PUK)",
+   "control": "dialog",
+   "backing": "ModemManager1.Modem UnlockRequired / UnlockRetries; ModemManager1.Sim SendPin(s) / SendPuk(s puk, s new_pin); polkit org.freedesktop.ModemManager1.Device.Control (yes; YES for sudo via gnome-control-center.rules); gsd-wwan login prompt key org.gnome.settings-daemon.plugins.wwan unlock-sim (b, false) has no UI",
+   "notes": ""
+  },
+  {
+   "area": "wwan",
+   "function": "Mobile Data ('Access data using mobile network')",
+   "control": "toggle",
+   "backing": "NM gsm connection for the modem: autoconnect + Activate/Deactivate",
+   "notes": "Win11: 'Cellular' toggle / 'Let Windows keep me connected'."
+  },
+  {
+   "area": "wwan",
+   "function": "Data Roaming",
+   "control": "toggle",
+   "backing": "NM gsm.home-only (b), inverted",
+   "notes": "Win11: 'Roaming' (Don't roam / Roam)."
+  },
+  {
+   "area": "wwan",
+   "function": "Network Mode dialog (allowed / preferred 2G/3G/4G/5G combinations)",
+   "control": "dialog (radio list)",
+   "backing": "ModemManager1.Modem SupportedModes / CurrentModes; SetCurrentModes((u allowed, u preferred)); polkit ModemManager1.Device.Control",
+   "notes": "Win11: 'Preferred network type'."
+  },
+  {
+   "area": "wwan",
+   "function": "Network (operator) dialog: Automatic, Choose Network, refresh",
+   "control": "dialog",
+   "backing": "ModemManager1.Modem.Modem3gpp Scan() returns aa{sv}; Register(s operator_id), where '' means automatic; OperatorName / OperatorCode",
+   "notes": "Win11: Cellular > Mobile operator settings > 'Select network'."
+  },
+  {
+   "area": "wwan",
+   "function": "Access Point Names dialog (list, add/edit: Name, APN, Username, Password, APN Type Internet/Attach, Auth Type None/PAP/CHAP/EAP/MSCHAP/MSCHAPV2)",
+   "control": "dialog",
+   "backing": "NM gsm setting apn, username, password (+ ppp refuse-* flags for auth). APN type Attach maps to gsm.initial-eps-bearer-configure / initial-eps-bearer-apn / -username / -password / -refuse-*. Presets from mobile-broadband-provider-info serviceproviders.xml",
+   "notes": "Win11: 'APN settings' > Add APN (Profile name, APN, User name, Password, Sign-in info type, IP type, APN type Internet/Attach)."
+  },
+  {
+   "area": "wwan",
+   "function": "SIM Lock dialog (Lock SIM with PIN, Change PIN: New PIN / Confirm; current PIN required)",
+   "control": "dialog",
+   "backing": "ModemManager1.Sim EnablePin(s pin, b enabled), ChangePin(s old, s new)",
+   "notes": "Win11: Cellular > Security > 'Use a SIM PIN' / 'Change SIM PIN'."
+  },
+  {
+   "area": "wwan",
+   "function": "Modem Details dialog (Carrier, Network Type, Signal Strength, Network Status, Own Number; Manufacturer, Model, Firmware Version, IMEI)",
+   "control": "dialog (info)",
+   "backing": "Modem3gpp OperatorName, RegistrationState, Imei; Modem AccessTechnologies, SignalQuality, OwnNumbers, Manufacturer, Model, Revision, EquipmentIdentifier",
+   "notes": "Win11: Cellular > 'Properties' with a Copy button."
+  },
+  {
+   "area": "wwan",
+   "function": "Primary SIM Slot",
+   "control": "dropdown",
+   "backing": "ModemManager1.Modem SimSlots / PrimarySimSlot; SetPrimarySimSlot(u); polkit org.freedesktop.ModemManager1.Modem.SetPrimarySimSlot (yes; YES for sudo via gnome-control-center.rules)",
+   "notes": "Win11: 'Use this SIM' (SIM 1 / eSIM)."
+  }
+ ]
+}

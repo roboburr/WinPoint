@@ -1,22 +1,56 @@
-//! Display contract: Mutter's real monitor state in GNOME, native Hyprland IPC elsewhere.
+//! Display contract: Mutter's DisplayConfig in GNOME (display.state, display.apply, the keep-changes question and the
+//! night light, notes/claude/settings-parity.md §5.5, display/mutter.rs), native Hyprland IPC elsewhere
+//! (display.list, display.set).
+#[cfg(test)]
+pub(crate) mod fake;
+pub(crate) mod mutter;
+#[cfg(test)]
+mod tests;
 use super::{ServiceContext, system::common::*};
 use crate::files::{ApiError, ApiResult};
+use glib::variant::ToVariant;
 use serde_json::{Value, json};
 use std::{
     io::{Read, Write},
     os::unix::net::UnixStream,
     path::PathBuf,
     sync::{
-        Arc, Mutex,
+        Arc, Mutex, Weak,
         atomic::{AtomicBool, Ordering},
     },
     thread,
     time::Duration,
 };
+/// The methods (name, dangerous), as the api-methods files list them (notes/claude/settings-parity.md §5.5;
+/// services/mod.rs `method_tables`, api-methods/system.json).
+#[cfg_attr(not(test), allow(dead_code))] // the dispatch tests compare it with the api-methods files
+pub(crate) const METHODS: &[(&str, bool)] = &[
+    ("display.list", false),
+    ("display.set", true),
+    ("display.state", false),
+    ("display.apply", true),
+    ("display.identify", false),
+    ("display.confirm", true),
+    ("display.nightLight.status", false),
+    ("display.nightLight.disableUntilTomorrow", true),
+];
+/// A call into extension/displayBridge.js (method, args) → its result, or why it failed (no extension, the bridge
+/// not routed yet, an error of its own). Tests pass their own.
+pub(crate) type Bridge<'a> = &'a dyn Fn(&str, &Value) -> Result<Value, String>;
+/// The extension's bridge (gnome.rs `call_api`, 3 s).
+fn shell_bridge(method: &str, args: &Value) -> Result<Value, String> {
+    match crate::gnome::call_api(method, args) {
+        Ok(Ok(value)) => Ok(value),
+        Ok(Err(error)) => Err(error.message),
+        Err(error) => Err(error),
+    }
+}
 pub(crate) struct Display {
     ctx: Arc<ServiceContext>,
     stopped: AtomicBool,
     last: Mutex<Value>,
+    /// The GNOME watcher's context (MonitorsChanged, gsd-color's properties), woken by `shutdown`.
+    context: Mutex<Option<glib::MainContext>>,
 }
 impl Display {
     pub(crate) fn new(ctx: Arc<ServiceContext>) -> Result<Arc<Self>, String> {
@@ -24,8 +58,12 @@ impl Display {
             ctx,
             stopped: AtomicBool::new(false),
             last: Mutex::new(Value::Null),
+            context: Mutex::new(None),
         });
         let weak = Arc::downgrade(&s);
+        if !hypr_available() {
+            watch_gnome(weak.clone());
+        }
         thread::spawn(move || {
             loop {
                 thread::sleep(Duration::from_millis(500));
@@ -49,8 +87,17 @@ impl Display {
     }
     pub(crate) fn shutdown(&self) {
         self.stopped.store(true, Ordering::Relaxed);
+        if let Some(context) = self
+            .context
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .as_ref()
+        {
+            context.wakeup();
+        }
     }
     pub(crate) fn call(&self, method: &str, args: &Value) -> Option<ApiResult> {
+        let ep = mutter::Endpoints::gnome();
         match method {
             "display.list" => Some(Ok(self.list())),
             "display.set" => Some(if self.ctx.dry_run {
@@ -58,8 +105,168 @@ impl Display {
             } else {
                 self.set(args)
             }),
+            "display.state" => Some(Ok(self.state(&ep))),
+            "display.apply" => Some(self.apply(&ep, args, &shell_bridge)),
+            "display.identify" => Some(self.identify(&ep, &shell_bridge)),
+            "display.confirm" => Some(self.confirm(args, &shell_bridge)),
+            "display.nightLight.status" => Some(Ok(self.night_light(&ep))),
+            "display.nightLight.disableUntilTomorrow" => {
+                Some(self.disable_until_tomorrow(&ep, args))
+            }
             _ => None,
         }
+    }
+    fn bus(&self) -> Result<gio::DBusConnection, ApiError> {
+        session().map_err(|_| mutter::unavailable(self.ctx.lang()))
+    }
+    /// display.state: GetCurrentState decoded (mutter.rs `decode_state`), or `{supported: false, backend}` without
+    /// DisplayConfig (Hyprland: display.list; anything else: nothing to set).
+    fn state(&self, ep: &mutter::Endpoints) -> Value {
+        if let Some(state) = session().ok().and_then(|bus| mutter::read_state(&bus, ep)) {
+            return state;
+        }
+        let backend = if hypr_available() { "hyprland" } else { "none" };
+        json!({"supported": false, "backend": backend, "monitors": [], "logical": []})
+    }
+    /// display.apply: ApplyMonitorsConfig as GNOME Settings sends it. A persistent change is verified first, then
+    /// the extension is asked to hold back GNOME Shell's own "Keep these display settings?" for this one change
+    /// (amendment 32): `confirm` "settings" means the bridge relays it to Settings (event display.confirmChange
+    /// {timeout, id}) and Settings answers with display.confirm; "shell" means the extension could not (not
+    /// running, not routed yet) and GNOME Shell asks itself. Either way exactly one dialog asks (amendment 64), and
+    /// mutter reverts by itself when nobody answers.
+    fn apply(&self, ep: &mutter::Endpoints, args: &Value, bridge: Bridge) -> ApiResult {
+        let lang = self.ctx.lang();
+        let plan = mutter::parse_apply(args, lang)?;
+        let method = match plan.method {
+            mutter::VERIFY => "verify",
+            mutter::TEMPORARY => "temporary",
+            _ => "persistent",
+        };
+        if self.ctx.dry_run {
+            return Ok(json!({"ok": true, "dryRun": true, "method": method, "confirm": "none"}));
+        }
+        let bus = self.bus()?;
+        if plan.method != mutter::PERSISTENT {
+            mutter::apply(&bus, ep, &plan, plan.method, lang)?;
+            return Ok(json!({"ok": true, "method": method, "confirm": "none"}));
+        }
+        // a layout mutter refuses never reaches the keep question
+        mutter::apply(&bus, ep, &plan, mutter::VERIFY, lang)?;
+        let armed = bridge(
+            "display.expectConfirm",
+            &json!({"timeout": mutter::KEEP_SECONDS}),
+        )
+        .ok()
+        .and_then(|v| v.get("id").cloned())
+        .filter(|id| !id.is_null());
+        if let Err(error) = mutter::apply(&bus, ep, &plan, mutter::PERSISTENT, lang) {
+            if let Some(id) = &armed {
+                let _ = bridge("display.release", &json!({"id": id}));
+            }
+            return Err(error);
+        }
+        Ok(match armed {
+            Some(id) => json!({"ok": true, "method": method, "confirm": "settings", "id": id,
+                "timeout": mutter::KEEP_SECONDS}),
+            None => json!({"ok": true, "method": method, "confirm": "shell"}),
+        })
+    }
+    /// display.identify: GNOME's monitor labels (Main.osdMonitorLabeler, as GNOME Settings' ShowMonitorLabels) with
+    /// display.state's numbers, for a few seconds.
+    fn identify(&self, ep: &mutter::Endpoints, bridge: Bridge) -> ApiResult {
+        let lang = self.ctx.lang();
+        let bus = self.bus()?;
+        let state = mutter::read_state(&bus, ep).ok_or_else(|| mutter::unavailable(lang))?;
+        let labels = mutter::labels(&state);
+        bridge("display.identify", &json!({"labels": labels, "seconds": 3}))
+            .map(|_| json!({"ok": true, "labels": labels}))
+            .map_err(|_| {
+                ApiError::tr(
+                    "unsupported",
+                    lang,
+                    "display.identifyUnavailable",
+                    crate::i18n::NO_PARAMS,
+                )
+            })
+    }
+    /// display.confirm {keep, id?}: Settings' answer to the keep-changes question (GNOME Shell's
+    /// complete_display_change through the bridge); `pending` false when there was no question (any more).
+    fn confirm(&self, args: &Value, bridge: Bridge) -> ApiResult {
+        let lang = self.ctx.lang();
+        let keep = args["keep"].as_bool().ok_or_else(|| {
+            ApiError::tr("bad_args", lang, "core.badArgs", crate::i18n::NO_PARAMS)
+        })?;
+        if self.ctx.dry_run {
+            return Ok(json!({"ok": true, "dryRun": true, "pending": false}));
+        }
+        let mut call = json!({"keep": keep});
+        if let Some(id) = args.get("id").filter(|id| id.is_number()) {
+            call["id"] = id.clone();
+        }
+        bridge("display.confirm", &call)
+            .map(|v| json!({"ok": true, "kept": keep, "pending": v["pending"] == true}))
+            .map_err(|_| {
+                ApiError::tr(
+                    "failed",
+                    lang,
+                    "display.confirmFailed",
+                    crate::i18n::NO_PARAMS,
+                )
+            })
+    }
+    /// display.nightLight.status: gsd-color's NightLightActive, DisabledUntilTomorrow, Temperature, Sunrise and
+    /// Sunset, and mutter's NightLightSupported.
+    fn night_light(&self, ep: &mutter::Endpoints) -> Value {
+        match session() {
+            Ok(bus) => mutter::read_night_light(&bus, ep),
+            Err(_) => mutter::night_light(None, None),
+        }
+    }
+    /// display.nightLight.disableUntilTomorrow {on}: Nu uitschakelen (true) and Nu inschakelen (false, amendment 25:
+    /// only while it is disabled), as GNOME's "Temporarily Disabled Until Tomorrow" / "Restart Filter". The schedule
+    /// is never rewritten.
+    fn disable_until_tomorrow(&self, ep: &mutter::Endpoints, args: &Value) -> ApiResult {
+        let lang = self.ctx.lang();
+        let on = args["on"].as_bool().ok_or_else(|| {
+            ApiError::tr("bad_args", lang, "core.badArgs", crate::i18n::NO_PARAMS)
+        })?;
+        if self.ctx.dry_run {
+            return Ok(json!({"ok": true, "dryRun": true}));
+        }
+        let unavailable = || {
+            ApiError::tr(
+                "unsupported",
+                lang,
+                "display.nightLightUnavailable",
+                crate::i18n::NO_PARAMS,
+            )
+        };
+        let bus = session().map_err(|_| unavailable())?;
+        setprop(
+            &bus,
+            &ep.color,
+            mutter::COLOR_PATH,
+            mutter::COLOR_IFACE,
+            "DisabledUntilTomorrow",
+            on.to_variant(),
+            3000,
+        )
+        .map_err(|e| {
+            let name = remote_error_name(&e).unwrap_or("");
+            if name.ends_with(".ServiceUnknown") || name.ends_with(".NameHasNoOwner") {
+                unavailable()
+            } else {
+                ApiError::tr(
+                    "failed",
+                    lang,
+                    "display.nightLightFailed",
+                    crate::i18n::NO_PARAMS,
+                )
+            }
+        })?;
+        let status = mutter::read_night_light(&bus, ep);
+        self.ctx.emit("display.nightLight.changed", status.clone());
+        Ok(status)
     }
     fn list(&self) -> Value {
         if hypr_available() {
@@ -181,6 +388,89 @@ impl Display {
             json!({"ok":true,"previous":{"mode":current["mode"],"scale":current["scale"]},"applied":applied}),
         )
     }
+}
+/// GNOME's display events on the Display service's own context: display.changed {what: "monitors"} for
+/// MonitorsChanged (a monitor plugged in or out, a configuration applied anywhere) and {what: "properties"} when
+/// ApplyMonitorsConfigAllowed, NightLightSupported or PanelOrientationManaged change; display.nightLight.changed
+/// (display.nightLight.status's answer) when gsd-color's properties change.
+fn watch_gnome(weak: Weak<Display>) {
+    thread::spawn(move || {
+        let context = glib::MainContext::new();
+        let _ = context.with_thread_default(|| {
+            let Some(display) = weak.upgrade() else {
+                return;
+            };
+            *display.context.lock().unwrap_or_else(|e| e.into_inner()) = Some(context.clone());
+            drop(display);
+            let Ok(bus) = session() else { return };
+            let w = weak.clone();
+            let monitors = bus.signal_subscribe(
+                Some(mutter::NAME),
+                Some(mutter::IFACE),
+                Some("MonitorsChanged"),
+                Some(mutter::PATH),
+                None,
+                gio::DBusSignalFlags::NONE,
+                move |_, _, _, _, _, _| {
+                    if let Some(s) = w.upgrade() {
+                        s.ctx.emit("display.changed", json!({"what": "monitors"}));
+                    }
+                },
+            );
+            let w = weak.clone();
+            let properties = bus.signal_subscribe(
+                Some(mutter::NAME),
+                Some("org.freedesktop.DBus.Properties"),
+                Some("PropertiesChanged"),
+                Some(mutter::PATH),
+                Some(mutter::IFACE),
+                gio::DBusSignalFlags::NONE,
+                move |_, _, _, _, _, params| {
+                    let changed = variant_json(&params.child_value(1));
+                    let invalidated = variant_json(&params.child_value(2));
+                    let ours = [
+                        "ApplyMonitorsConfigAllowed",
+                        "NightLightSupported",
+                        "PanelOrientationManaged",
+                    ];
+                    let hit = ours.iter().any(|k| {
+                        changed.get(*k).is_some()
+                            || invalidated
+                                .as_array()
+                                .is_some_and(|a| a.iter().any(|v| v == *k))
+                    });
+                    if hit && let Some(s) = w.upgrade() {
+                        s.ctx.emit("display.changed", json!({"what": "properties"}));
+                    }
+                },
+            );
+            let w = weak.clone();
+            let color = bus.signal_subscribe(
+                Some(mutter::COLOR_NAME),
+                Some("org.freedesktop.DBus.Properties"),
+                Some("PropertiesChanged"),
+                Some(mutter::COLOR_PATH),
+                Some(mutter::COLOR_IFACE),
+                gio::DBusSignalFlags::NONE,
+                move |bus, _, _, _, _, _| {
+                    if let Some(s) = w.upgrade() {
+                        let status = mutter::read_night_light(bus, &mutter::Endpoints::gnome());
+                        s.ctx.emit("display.nightLight.changed", status);
+                    }
+                },
+            );
+            while let Some(s) = weak.upgrade() {
+                if s.stopped.load(Ordering::Relaxed) {
+                    break;
+                }
+                drop(s);
+                context.iteration(true);
+            }
+            for id in [monitors, properties, color] {
+                bus.signal_unsubscribe(id);
+            }
+        });
+    });
 }
 fn hypr_path() -> Option<PathBuf> {
     let sig = std::env::var("HYPRLAND_INSTANCE_SIGNATURE").ok()?;
@@ -432,7 +722,7 @@ fn persist(ctx: &ServiceContext, name: &str, value: &str) {
     }
 }
 #[cfg(test)]
-mod tests {
+mod hypr_tests {
     use super::*;
     #[test]
     fn mode_normalization() {
@@ -474,6 +764,7 @@ mod tests {
                 ctx: lc.ctx.clone(),
                 stopped: AtomicBool::new(true),
                 last: Mutex::new(Value::Null),
+                context: Mutex::new(None),
             };
             let e = display
                 .call("display.set", &json!({"name":"bad name"}))

@@ -1,0 +1,165 @@
+22:59:02 GE0c run lang=nl switch=False seed=defaults MemAvailable=8046472 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-apps.py
+23:00:18 private install: exit 0 in 61.1 s, 87327 mutated paths, 0 outside the run dir, ok=True
+23:00:20 GNOME Shell 50.1 up (mode user, unsafe True)
+23:00:25 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-apps.py
+23:00:26   check PASS: apps: title and breadcrumb "Apps"
+23:00:27   check PASS: apps: a link to installed
+23:00:27   check PASS: apps: a link to defaultapps
+23:00:27   check PASS: apps: a link to startup
+23:00:28   check PASS: installed: title and breadcrumb "Apps › Geïnstalleerde apps"
+23:00:29   check PASS: installed: Bestanden (Nautilus) is installed in the session
+23:00:30   check PASS: installed: Sorteren op Naam (Z-A) turns the list round
+23:00:32   check PASS: installed: the "…" menu has Geavanceerde opties and Openen in App Center
+23:00:32   check PASS: installed: Openen in … for Bestanden (host) follows its store: greyed (org.gnome.Software.desktop is not installed)
+23:00:34   check PASS: app-advanced: the page of Bestanden is shown
+23:00:34   check PASS: app-advanced: title and breadcrumb "Apps › Geïnstalleerde apps › Bestanden"
+23:00:34   check PASS: app-advanced: st-app-advanced-open
+23:00:34   check PASS: app-advanced: st-app-advanced-uninstall
+23:00:35   check PASS: app-advanced: st-app-advanced-notifications
+23:00:35   check PASS: app-advanced: st-app-advanced-handlers-reset
+23:00:35   check PASS: app-advanced: st-app-advanced-autostart
+23:00:37   check PASS: app-advanced: App-machtigingen of a desktop app: Meldingen and Zoeken, no PermissionStore rows (GNOME)
+23:00:37   check PASS: app-advanced: Zoeken is bound to search-providers disabled
+23:00:37   check PASS: app-advanced: Zoeken starts on (Nautilus is not in disabled)
+23:00:38   check PASS: app-advanced: a click writes org.gnome.Nautilus.desktop into disabled
+23:00:38   check PASS: app-advanced: the switch follows the key written from outside
+23:00:39   check PASS: app-advanced: Zoeken greys (with its line) when disable-external is written from outside
+23:00:39   check PASS: app-advanced: and usable again when disable-external is false
+23:00:40   check PASS: app-advanced: the sections in Windows 11's order, WinPoint's additions after Verwijderen
+23:00:40   check PASS: app-advanced: no Opnieuw instellen for a system package (no cache the host can empty)
+23:00:41   check PASS: app-advanced: Wordt uitgevoerd bij aanmelden writes ~/.config/autostart/org.gnome.Nautilus.desktop (X-GNOME-Autostart-enabled=true)
+23:00:41   check PASS: app-advanced: and off again X-GNOME-Autostart-enabled=false
+23:00:45   check PASS: app-advanced: Als standaard instellen writes application/x-tar=org.gnome.Nautilus.desktop under Default Applications
+23:00:49   check PASS: app-advanced: Type verwijderen writes application/zstd under Removed Associations
+23:00:54   check PASS: app-advanced: Opnieuw instellen takes both out of mimeapps.list
+23:00:55   check PASS: app-advanced: Beëindigen says the app is not running (sysmon.processes has no Bestanden)
+23:00:57   check PASS: app-advanced: Meldingen opens Meldingen van app for Bestanden
+23:00:57   check PASS: app-notifications: title and breadcrumb "Systeem › Meldingen › Bestanden"
+23:00:59   check PASS: defaultapps: title and breadcrumb "Apps › Standaard-apps"
+23:01:00   check PASS: defaultapps: the two Windows searches are there
+23:01:01   check PASS: defaultapps: no drop-down above the searches (amendment 22)
+23:01:02   check PASS: defaultapps: the type search finds text/html
+23:01:04   check PASS: defaultapps: the chooser lists the apps of text/html
+23:01:09   scenario: timeout: the radio of another app (after 3 s; last error: None)
+23:01:15   scenario: timeout: Standaard instellen (pointer) (after 4 s; last error: None)
+23:01:16   check PASS: defaultapps: Standaard instellen writes text/html=firefox.desktop into mimeapps.list
+23:01:26   check PASS: defaultapps: Standaard-apps per soort holds Webbrowser and Agenda
+23:01:29   check PASS: defaultapps: Teksteditor writes text/plain=libreoffice-writer.desktop
+23:01:30   check PASS: defaultapps: defaultapps-view-file
+23:01:30   check PASS: defaultapps: defaultapps-view-link
+23:01:31   check PASS: defaultapps: defaultapps-reset-all
+23:01:40   scenario: timeout: Opnieuw instellen (pointer) (after 4 s; last error: None)
+23:01:42   check PASS: defaultapps: Alle standaard-apps opnieuw instellen asks, then takes text/html and text/plain out
+23:01:52   check PASS: defaultapps: Standaardwaarden kiezen op bestandstype lists file types
+23:01:53   check PASS: defaultapps: title and breadcrumb "Apps › Standaard-apps"
+23:01:55   check PASS: defaultapps: an app view shows its Files & Links and links to its Geavanceerde opties
+23:01:56   check PASS: defaultapps: title and breadcrumb "Apps › Standaard-apps"
+23:02:01   check PASS: notifications: title and breadcrumb "Systeem › Meldingen"
+23:02:02   check PASS: notifications: st-notifications-show-in-lock-screen
+23:02:03   check PASS: notifications: notifications-sounds
+23:02:03   check PASS: notifications: st-notifications-show-banners
+23:02:04   check PASS: notifications: notifications-sort
+23:02:05   check PASS: notifications: notifications-test
+23:02:07   check PASS: notifications: a click writes show-in-lock-screen false
+23:02:07   check PASS: notifications: the checkbox follows the key written from outside
+23:02:08   check PASS: notifications: Niet storen starts off
+23:02:10   check PASS: notifications: Niet storen writes show-banners false
+23:02:10   check PASS: notifications: the mirror sets notifications.dnd
+23:02:12   check PASS: notifications: Niet storen off again on both sides
+23:02:13   check PASS: notifications: Bestanden is in the app list
+23:02:13   check PASS: notifications: its switch is bound to the app's enable
+23:02:16   check PASS: notifications: the switch writes enable false at the app's path
+23:02:16   check PASS: notifications: the first write records application-id (amendment 6)
+23:02:16   check PASS: notifications: and the app in application-children
+23:02:17   check PASS: notifications: the app switch follows the key written from outside
+23:02:21   check PASS: notifications: Sorteren op Naam sorts the apps by name
+23:02:29   check PASS: notifications: Toestaan dat meldingen geluiden afspelen writes notifications.sounds (off, on)
+23:02:32   check PASS: notifications: the Meldingen switch writes notifications.showToasts (off, on)
+23:02:36   check PASS: app-notifications: the page of Bestanden is shown
+23:02:38   check PASS: app-notifications: title and breadcrumb "Systeem › Meldingen › Bestanden"
+23:02:38   check PASS: app-notifications: st-app-notifications-enable
+23:02:39   check PASS: app-notifications: st-app-notifications-show-banners
+23:02:40   check PASS: app-notifications: st-app-notifications-force-expanded
+23:02:40   check PASS: app-notifications: st-app-notifications-show-in-lock-screen
+23:02:41   check PASS: app-notifications: st-app-notifications-details-in-lock-screen
+23:02:42   check PASS: app-notifications: st-app-notifications-enable-sound-alerts
+23:02:42   check PASS: app-notifications: the related link to Geavanceerde opties
+23:02:44   check PASS: app-notifications: show-banners starts on
+23:02:46   check PASS: app-notifications: a click writes show-banners false at the app's path
+23:02:47   check PASS: app-notifications: force-expanded greyed meanwhile (GNOME)
+23:02:49   check PASS: app-notifications: show-banners follows true written from outside
+23:02:50   check PASS: app-notifications: force-expanded starts off
+23:02:52   check PASS: app-notifications: a click writes force-expanded true at the app's path
+23:02:52   check PASS: app-notifications: force-expanded follows false written from outside
+23:02:53   check PASS: app-notifications: show-in-lock-screen starts on
+23:02:55   check PASS: app-notifications: a click writes show-in-lock-screen false at the app's path
+23:02:55   check PASS: app-notifications: details-in-lock-screen greyed meanwhile (GNOME)
+23:02:57   check PASS: app-notifications: show-in-lock-screen follows true written from outside
+23:02:57   check PASS: app-notifications: details-in-lock-screen starts on
+23:02:59   check PASS: app-notifications: a click writes details-in-lock-screen true at the app's path
+23:03:00   check PASS: app-notifications: details-in-lock-screen follows false written from outside
+23:03:01   check PASS: app-notifications: enable-sound-alerts starts on
+23:03:02   check PASS: app-notifications: a click writes enable-sound-alerts false at the app's path
+23:03:03   check PASS: app-notifications: enable-sound-alerts follows true written from outside
+23:03:04   check PASS: app-notifications: enable starts on
+23:03:05   check PASS: app-notifications: a click writes enable false at the app's path
+23:03:08   check PASS: app-notifications: show-banners, show-in-lock-screen, enable-sound-alerts greyed meanwhile (GNOME)
+23:03:10   check PASS: app-notifications: enable follows true written from outside
+23:03:12   check PASS: app-notifications: the lock-screen rows grey while show-in-lock-screen is off for all apps
+23:03:14   check PASS: app-notifications (refused write): the test app is installed in the session
+23:03:16   check PASS: app-notifications (refused write): the page of the test app is shown
+23:03:21   check PASS: app-notifications (refused write): Meldingen is put back after the refusal
+23:03:28   check PASS: app-notifications (refused write): the other rows stay usable (the old value counts again)
+23:03:28   check PASS: app-notifications (refused write): nothing was written at the app's path
+23:03:33   check PASS: sound (on): the WinPoint toast shows
+23:03:33   check PASS: sound (on): exactly one sound
+23:03:39   check PASS: sound (sounds-off): the WinPoint toast shows
+23:03:39   check PASS: sound (sounds-off): no sound
+23:03:44   check PASS: sound (dnd): no sound
+23:03:50   check PASS: sound (app-sound-off): the WinPoint toast shows
+23:03:50   check PASS: sound (app-sound-off): no sound
+23:03:54   check PASS: personalization: title and breadcrumb "Persoonlijke instellingen"
+23:03:55   check PASS: wait_text settings: 'Achtergrond'
+23:04:00   check PASS: background: title and breadcrumb "Persoonlijke instellingen › Achtergrond"
+23:04:02   check PASS: background: GNOME's catalogue is shown
+23:04:06   check PASS: background: a click on an Ubuntu picture sets wallpaper.path
+23:04:06   check PASS: background: WinPoint's look writes GNOME's picture-uri
+23:04:12   check PASS: background: Uitrekken sets wallpaper.fit and GNOME's picture-options 'stretched'
+23:04:16   check PASS: org.gnome.desktop.background picture-uri is owned by WinPoint's wallpaper
+23:04:16   check PASS: gsettings.set refuses picture-uri (denied gsettings.ownedByWinPoint)
+23:04:16   check PASS: background: background.add copies into the data dir's backgrounds folder
+23:04:16   check PASS: background: the copy is a recent image with a remove button
+23:04:20   check PASS: background: the remove click moves the copy to the trash
+23:04:24   check PASS: colors: title and breadcrumb "Persoonlijke instellingen › Kleuren"
+23:04:26   check PASS: colors: GNOME's accent-color is shown
+23:04:30   check PASS: colors: the swatch #E81123 sets theme.accent, the mirror GNOME's accent-color 'red', the row shows it
+23:04:34   check PASS: colors: the row follows accent-color written from outside
+23:04:34   check PASS: org.gnome.desktop.interface accent-color is owned by WinPoint's theme.accent
+23:04:34   check PASS: gsettings.set refuses accent-color (denied gsettings.ownedByWinPoint)
+23:04:34   check PASS: every control click (47) was a real pointer click
+23:04:34   check FAIL (known settings-b note 9 (kit Dialog smoke layer)): a pointer click reaches a kit dialog's button (2 pressed)
+23:04:34   check PASS: no pkexec, apt or pkcon was called by a page of this run
+23:04:34 shutdown app: signalled own descendants 1345:win11-gtk-setti, 1354:win11-app, 3050:glycin-image-rs, 2915:glycin-image-rs, 3046:glycin-image-rs
+23:04:34 shutdown shell clients: signalled own descendants 186:ibus-daemon, 517:win11-shell, 1411:glycin-image-rs, 3167:glycin-image-rs, 631:win11-panel, 3165:glycin-image-rs, 206:ibus-memconf, 207:ibus-extension-, 366:ibus-engine-sim
+23:04:34 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+23:04:34 shutdown system bus: signalled own descendants 163:dbus-daemon
+23:04:34 inner sweep: signalled own descendants 2881:glycin-image-rs
+23:04:34 inner done: 0 surfaces, 0 failed []
+23:04:37 strace connect:    143 x AF_INET 127.0.0.1 -> EINPROGRESS
+23:04:37 strace connect:     50 x AF_INET 127.0.0.1 -> UNFINISHED
+23:04:37 strace connect:      3 x AF_INET 127.0.0.1 -> ok
+23:04:37 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+23:04:37 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> UNFINISHED
+23:04:37 strace connect:      4 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+23:04:37 strace connect:     30 x AF_UNIX /tmp/w11-rt/bus -> ok
+23:04:37 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+23:04:37 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+23:04:37 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+23:04:37 strace connect:      5 x AF_UNIX /tmp/w11-rt/sbus -> ok
+23:04:37 strace connect:      3 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+23:04:37 strace connect:     18 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+23:04:37 strace connect:     34 x AF_UNIX /var/run/nscd/socket -> ENOENT
+23:04:37 strace connect:      1 x AF_UNIX /var/run/nscd/socket -> UNFINISHED
+23:04:37 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+23:04:37 strace connect check: 364 connect() calls, OK
+23:04:41 strace exec check: 621 execve() calls, OK

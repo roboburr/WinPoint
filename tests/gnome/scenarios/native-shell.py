@@ -222,5 +222,115 @@ def run(h):
     h.check('N: the native tree was measured', mem['pssMiB'] > 0 and bool(mem['processes']),
             pssMiB=mem['pssMiB'], anonMiB=mem['anonMiB'])
 
+    integrated_parity(h)
+
     failed = [c['check'] for c in h.results['checks'] if not c['ok']]
     h.require('every check passed', not failed, failed=failed)
+
+
+
+def integrated_parity(h):
+    """Explicit S2/S4/S6 practical acceptance from the integration handoff, all in the private session."""
+    import cairo
+    h.open('settings:home')
+    old = h.backend('settings', 'settings.get')
+    def put(path, value):
+        reply = h.backend('settings', 'settings.set', {'path': path, 'value': value})
+        h.require(f'parity: {path} accepted', not (isinstance(reply, dict) and reply.get('error')), reply=reply)
+    def task_buttons():
+        return sorted({n['name'] for n in h.hm.tree_nodes(h.native_state())
+                       if str(n.get('name', '')).startswith('tb-app-')
+                       and 'taskmgr' in str(n['name']).lower()})
+    manager = None
+    app_path = '/org/gnome/desktop/notifications/application/org-gnome-nautilus/'
+    notify_schema = 'org.gnome.desktop.notifications.application'
+    expanded_before = h.gsettings_get(notify_schema, 'force-expanded', app_path)
+    base_workspace = h.eval('global.workspace_manager.get_active_workspace_index()')
+    try:
+        # S2: an unpinned window really moves between desktops; no synthetic window list is substituted.
+        put('taskbar.allDesktops', False)
+        manager = h.open('taskmgr')
+        shown = h.until(task_buttons, 'task manager on the current desktop', 15)
+        h.check('S2: an unpinned Task Manager appears on the current desktop taskbar', bool(shown), buttons=shown)
+        target = base_workspace + 1
+        moved = h.eval('(()=>{const m=global.workspace_manager;'
+                       f'while(m.n_workspaces<={target})m.append_new_workspace(false,global.get_current_time());'
+                       f'const w=global.get_window_actors().map(a=>a.meta_window).find(w=>w.get_pid()==={manager.pid});'
+                       f'if(!w)return false;w.change_workspace(m.get_workspace_by_index({target}));'
+                       f'm.get_workspace_by_index({base_workspace}).activate(global.get_current_time());'
+                       'return w.get_workspace().index();})()')
+        h.check('S2: the real Task Manager window moved to the other desktop', moved == target, workspace=moved)
+        h.until(lambda: not task_buttons(), 'other desktop window absent from taskbar', 15)
+        h.check('S2: current-desktop mode hides the other desktop window', not task_buttons())
+        put('taskbar.allDesktops', True)
+        h.until(task_buttons, 'all-desktops mode shows the window', 15)
+        h.check('S2: all-desktops mode shows the other desktop window', bool(task_buttons()))
+        put('taskbar.allDesktops', False)
+        h.until(lambda: not task_buttons(), 'current-desktop mode hides it again', 15)
+        h.eval(f'global.workspace_manager.get_workspace_by_index({target}).activate(global.get_current_time())||true')
+        h.until(task_buttons, 'taskbar follows the active desktop', 15)
+        h.check('S2: changing to that desktop shows its Task Manager button', bool(task_buttons()))
+        h.screenshot(f's2-current-desktop.{h.lang}')
+        h.eval(f'global.workspace_manager.get_workspace_by_index({base_workspace}).activate(global.get_current_time())||true')
+        h.close('taskmgr')
+        manager = None
+
+        # S4: GNOME policy -> expanded payload -> actual GTK body allocation beyond three lines.
+        h.gsettings_set(notify_schema, 'force-expanded', 'true', app_path)
+        h.sleep(.5)
+        body = '\n'.join(f'Expanded notification line {i}' for i in range(1, 9))
+        code = """(async()=>{const MT=await import('resource:///org/gnome/shell/ui/messageTray.js');
+const Shell=(await import('gi://Shell')).default;
+const app=Shell.AppSystem.get_default().lookup_app('org.gnome.Nautilus.desktop');
+if(!app)return {error:'missing private fixture app'};
+const source=new MT.Source({title:app.get_name(),policy:MT.NotificationPolicy.newForApp(app)});
+Main.messageTray.add(source);
+const n=new MT.Notification({source,title:'Expanded integration test',body:BODY});source.addNotification(n);
+return {expanded:source.policy.forceExpanded};})()"""
+        sent = h.eval(code.replace('BODY', json.dumps(body)))
+        h.require('S4: GNOME app policy requests expanded banners', sent.get('expanded') is True, sent=sent)
+        def body_node():
+            return next((n for n in h.hm.tree_nodes([top for top in h.native_state() if top.get('visible')])
+                         if n.get('type') == 'GtkLabel' and n.get('visible', True) and n.get('label') == body and n.get('rect', [0,0,0,0])[3] > 0), None)
+        label = h.until(body_node, 'the expanded toast body', 8)
+        h.check('S4: expanded toast actually allocates more than three lines', label['rect'][3] >= 90, rect=label['rect'])
+        h.screenshot(f's4-expanded-toast.{h.lang}', settle=.2)
+
+        # S6: inspect the actual private desktop pixels, not only the resolver's unit result.
+        light = h.hm.RUN / 'home' / 'parity-light.png'
+        dark = h.hm.RUN / 'home' / 'parity-dark.png'
+        for path, level in ((light, .8), (dark, .12)):
+            surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 32, 32)
+            cr = cairo.Context(surface); cr.set_source_rgb(level, level, level); cr.paint()
+            surface.write_to_png(str(path))
+        put('wallpaper', {'type':'image','path':str(light),'pathDark':str(dark),
+                          'fit':'fill','followTheme':True,'color':'#000000'})
+        settings_pid = h.surface('settings').pid
+        h.eval(f'global.get_window_actors().map(a=>a.meta_window).filter(w=>w.get_pid()==={settings_pid}).forEach(w=>w.minimize())||true')
+        for mode, expected_light in (('light', True), ('dark', False)):
+            put('theme.mode', mode)
+            h.sleep(2)
+            shot = h.screenshot(f's6-wallpaper-{mode}.{h.lang}', settle=.3)
+            pixels = h.s.pixel_stats(shot, (h.hm.WIDTH//2, h.hm.HEIGHT//3, 20, 20))
+            h.check(f'S6: {mode} mode paints the matching image of the pair',
+                    190 <= pixels['meanLevel'] <= 220 if expected_light else 20 <= pixels['meanLevel'] <= 45, pixels=pixels)
+        # S3: both the native toplevel and Mutter's actual title follow a live language change.
+        for language in (('en' if h.lang == 'nl' else 'nl'), h.lang):
+            put('language', language)
+            expected_title = 'Taskbar' if language == 'en' else 'Taakbalk'
+            def titles_match():
+                bar = next((top for top in h.native_state() if set(WIDGETS) <= names(top.get('tree'))), {})
+                wm = gnome_window(h, PANEL, h.s.facts['nativeBoot']['pid']) or {}
+                return bar.get('title') == expected_title and wm.get('title') == expected_title
+            h.until(titles_match, 'taskbar title follows live language', 15)
+            h.check(f'S3: native and compositor taskbar titles follow live {language}', titles_match())
+    finally:
+        h.eval(f'global.workspace_manager.get_workspace_by_index({base_workspace}).activate(global.get_current_time())||true')
+        if manager:
+            h.close('taskmgr')
+        h.gsettings_set(notify_schema, 'force-expanded', expanded_before or 'false', app_path)
+        put('taskbar.allDesktops', old['taskbar']['allDesktops'])
+        put('wallpaper', old['wallpaper'])
+        put('theme.mode', old['theme']['mode'])
+        put('language', old['language'])
+        h.close('settings')

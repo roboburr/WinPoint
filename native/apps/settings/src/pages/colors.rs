@@ -2,9 +2,14 @@
 //! mode, transparency, the accent colour (manual or automatic from the wallpaper, Windows’ 48 swatches, recent and
 //! custom colours), the accent on Start and the taskbar, the GTK theme of other apps (theme.gtkFamily) and the
 //! Windows 11 caption buttons in other apps (theme.captionButtons).
+//!
+//! GNOME Settings 50's Appearance (settings parity, batch F): Kies je modus is GNOME's Style (theme.mode, written to
+//! `color-scheme` by WinPoint's look); the accent goes to GNOME's `accent-color` as the nearest of GNOME's names
+//! (B0's mirror, while theme.syncSystem), which the row "Accentkleur in Ubuntu- en GNOME-apps" shows and follows.
 use super::background::{color_block, remember, remembered};
 use super::{Builder, Page, PageFuture};
 use crate::common;
+use crate::gs::{self, GKey, Gs};
 use kit::controls::{self as c, ColorSwatches, Dropdown, DropdownOption, SettingsCard, SettingsExpander, SettingsGroup, Variant};
 use kit::prelude::*;
 use kit::t;
@@ -13,6 +18,38 @@ use std::rc::Rc;
 
 pub const PAGES: &[(&str, Builder)] = &[("colors", page)];
 pub const CSS: &str = "";
+
+const GNOME_ACCENT: GKey = gs::key("org.gnome.desktop.interface", "accent-color");
+
+/// GNOME's accent colour names (and Ubuntu's brown) as Settings shows them.
+pub(super) fn gnome_accent_name(name: &str) -> String {
+    match name {
+        "blue" => t("Blauw", "Blue"),
+        "teal" => t("Groenblauw", "Teal"),
+        "green" => t("Groen", "Green"),
+        "yellow" => t("Geel", "Yellow"),
+        "orange" => t("Oranje", "Orange"),
+        "red" => t("Rood", "Red"),
+        "pink" => t("Roze", "Pink"),
+        "purple" => t("Paars", "Purple"),
+        "slate" => t("Leigrijs", "Slate"),
+        "brown" => t("Bruin", "Brown"),
+        other => other,
+    }
+    .to_owned()
+}
+
+/// The line under "Accentkleur in Ubuntu- en GNOME-apps": WinPoint passes its accent on (theme.syncSystem) or not.
+fn gnome_accent_text(sync: bool) -> &'static str {
+    if sync {
+        t(
+            "Ubuntu- en GNOME-apps gebruiken de dichtstbijzijnde GNOME-accentkleur",
+            "Ubuntu and GNOME apps use the nearest GNOME accent colour",
+        )
+    } else {
+        t("Ubuntu- en GNOME-apps houden hun eigen accentkleur", "Ubuntu and GNOME apps keep their own accent colour")
+    }
+}
 
 fn recent_colors() -> Vec<String> {
     let mut l: Vec<String> = remembered("recentColors").into_iter().filter(|c| kit::theme::normalize_hex(c).is_some()).collect();
@@ -97,6 +134,13 @@ impl Recent {
 
 fn page(p: Page) -> PageFuture {
     Box::pin(async move {
+        let gs = Gs::load(&p, &[GNOME_ACCENT]).await;
+        if !p.alive() {
+            return Vec::new();
+        }
+        // Gs follows gsettings.changed through a weak reference: the page keeps it while it is shown
+        let keep = gs.clone();
+        p.on_cleanup(move || drop(keep));
         let mode_dd = common::setting_dropdown(
             &p,
             "theme.mode",
@@ -162,6 +206,21 @@ fn page(p: Page) -> PageFuture {
         exp.add(&recent_block);
         exp.add(&preset_block);
         exp.add(custom_card.widget());
+        // GNOME's accent-color: WinPoint's look sets it, so here it is only shown (and followed)
+        let gnome_card = gs.available(&GNOME_ACCENT).then(|| {
+            // a row of the expander, as Aangepaste kleuren: no icon of its own
+            let card = SettingsCard::new(
+                "",
+                t("Accentkleur in Ubuntu- en GNOME-apps", "Accent colour in Ubuntu and GNOME apps"),
+                gnome_accent_text(common::setting_bool("theme.syncSystem", true)),
+            );
+            let value = common::value_label(&gnome_accent_name(common::s(&gs.value(&GNOME_ACCENT))));
+            value.set_widget_name("st-colors-accent-color");
+            card.set_control(&value);
+            gs.follow(&GNOME_ACCENT, move |v| value.set_label(&gnome_accent_name(common::s(v))));
+            exp.add(card.widget());
+            card
+        });
 
         // the recent colours: rebuilt only when the list changes (a swatch grid owns a style sheet)
         let recent = Rc::new(Recent { p: p.clone(), slot: recent_slot.clone(), block: recent_block.clone(), shown: RefCell::new(None), grid: RefCell::new(None) });
@@ -226,6 +285,7 @@ fn page(p: Page) -> PageFuture {
 
         let sync = {
             let (how, presets, auto_note, pr) = (how.clone(), presets.clone(), auto_note.clone(), paint_recent.clone());
+            let gnome_card = gnome_card.clone();
             let dimmed: Vec<gtk::Widget> = vec![recent_block.clone().upcast(), preset_block.clone().upcast(), custom_card.widget().clone()];
             let (tb_card, tb_sw) = (tb_card.clone(), tb_sw.clone());
             move || {
@@ -239,6 +299,9 @@ fn page(p: Page) -> PageFuture {
                     w.set_can_focus(!a);
                 }
                 auto_note.set_visible(a);
+                if let Some(card) = &gnome_card {
+                    card.set_description(gnome_accent_text(common::setting_bool("theme.syncSystem", true)));
+                }
                 pr();
                 let light = !kit::theme::dark();
                 tb_card.set_sensitive(!light);
@@ -266,4 +329,21 @@ fn page(p: Page) -> PageFuture {
         related.add(common::link_card(&p, "themes").widget());
         vec![main.widget().clone().upcast(), related.widget().clone().upcast()]
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gnome_accent_names_read_in_both_languages() {
+        kit::i18n::set_forced_lang(Some("nl"));
+        assert_eq!(gnome_accent_name("teal"), "Groenblauw");
+        assert_eq!(gnome_accent_name("brown"), "Bruin");
+        assert_eq!(gnome_accent_name("magenta"), "magenta", "a name GNOME may add later stays readable");
+        kit::i18n::set_forced_lang(Some("en"));
+        assert_eq!(gnome_accent_name("slate"), "Slate");
+        assert_eq!(gnome_accent_text(false), "Ubuntu and GNOME apps keep their own accent colour");
+        kit::i18n::set_forced_lang(None);
+    }
 }

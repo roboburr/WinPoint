@@ -1,0 +1,5196 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 22:39:01",
+ "seconds": 366.6,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 548,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 1020864,
+   "rss_kb": 1377820,
+   "processes": 22,
+   "t": 278.3
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 582799,
+   "rss_kb": 912792
+  },
+  "minMemAvailableKb": 6361176,
+  "abortedForMemory": false,
+  "peakByName": {
+   "python3": {
+    "count": 7,
+    "pss_kb": 527934,
+    "rss_kb": 639720
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 283489,
+    "rss_kb": 374120
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 82936,
+    "rss_kb": 122348
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 42187,
+    "rss_kb": 79060
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 30657,
+    "rss_kb": 39636
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17187,
+    "rss_kb": 35116
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 16983,
+    "rss_kb": 25964
+   },
+   "glycin-image-rs": {
+    "count": 2,
+    "pss_kb": 11576,
+    "rss_kb": 19836
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4219,
+    "rss_kb": 11780
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1607,
+    "rss_kb": 10240
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 852,
+    "rss_kb": 8012
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 787,
+    "rss_kb": 7872
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 253,
+    "rss_kb": 1464
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 197,
+    "rss_kb": 2652
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 288025,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 273738,
+    "first": 0.0
+   },
+   "win11-shell": {
+    "pss_kb": 84852,
+    "first": 1.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 42472,
+    "first": 7.8
+   },
+   "win11-app": {
+    "pss_kb": 30806,
+    "first": 7.8
+   },
+   "glycin-svg": {
+    "pss_kb": 18953,
+    "first": 1.0
+   },
+   "win11-panel": {
+    "pss_kb": 18683,
+    "first": 1.0
+   },
+   "ibus-extension-": {
+    "pss_kb": 17279,
+    "first": 1.0
+   },
+   "glycin-image-rs": {
+    "pss_kb": 10499,
+    "first": 1.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4257,
+    "first": 1.0
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 884,
+    "first": 1.0
+   },
+   "dbus-daemon": {
+    "pss_kb": 843,
+    "first": 0.5
+   },
+   "ibus-memconf": {
+    "pss_kb": 825,
+    "first": 1.0
+   },
+   "bwrap": {
+    "pss_kb": 256,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 205,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/build/native-release",
+  "exit": 0,
+  "seconds": 62.4,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e"
+  }
+ },
+ "guardStubCalls": [
+  "22:40:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:20\tpw-dump\t--monitor --no-colors",
+  "22:40:22\tpw-dump\t--monitor --no-colors",
+  "22:40:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:26\tpw-dump\t--monitor --no-colors",
+  "22:40:26\tpw-dump\t--monitor --no-colors",
+  "22:40:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:28\tpw-dump\t--monitor --no-colors",
+  "22:40:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:32\tpw-dump\t--monitor --no-colors",
+  "22:40:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:34\tpw-dump\t--monitor --no-colors",
+  "22:40:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:40\tpw-dump\t--monitor --no-colors",
+  "22:40:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:50\tpw-dump\t--monitor --no-colors",
+  "22:40:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:56\tpw-dump\t--monitor --no-colors",
+  "22:40:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:40:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:20\tpw-dump\t--monitor --no-colors",
+  "22:41:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:26\tpw-dump\t--monitor --no-colors",
+  "22:41:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:41:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:42:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:43\tapt\tlist --upgradable",
+  "22:43:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:43:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:44:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "22:45:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 142,
+  "maxScanSeconds": 0.053,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/scenarios/settings-time.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.88,
+    "args": {
+     "key": "standin.timedate1"
+    }
+   },
+   {
+    "step": "record",
+    "t": 0.94,
+    "args": {
+     "key": "standin.hostname1"
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.01,
+    "args": {
+     "key": "standin.locale1"
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.08,
+    "args": {
+     "key": "standin.accounts"
+    }
+   },
+   {
+    "step": "record",
+    "t": 1.15,
+    "args": {
+     "key": "standin.packagekit"
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.75,
+    "args": {
+     "spec": "settings:time"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "time",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1487,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 2.95,
+    "args": {
+     "name": "time.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "time.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 251,
+      "meanLevel": 39.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 3.05,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Tijd en taal – Instellingen",
+     "dutchWordHits": [
+      "apparaten",
+      "beveiliging",
+      "dag",
+      "een",
+      "eerste",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "lokaal",
+      "maandag",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "persoonlijke",
+      "regio",
+      "seconden",
+      "sluiten",
+      "sneltoetsen",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "tijdzone",
+      "toegankelijkheid",
+      "typen",
+      "uursnotatie",
+      "van",
+      "weergavetaal",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 559
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Tijd en taal – Instellingen",
+     "titles": [
+      "Tijd en taal – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\n22:40\nmaandag 16 november 2026\nTijdzone: (UTC+01:00) Amsterdam\nTaal: Nederlands\nDatum en tijd\nTijdzone, 24-uursnotatie, seconden, eerste dag van de week\nTaal en regio\nWeergavetaal: Nederlands of English\nTypen\nAanraaktoetsenbord, toetsenbordinstellingen en sneltoetsen",
+     "dutchWordHits": [
+      "apparaten",
+      "beveiliging",
+      "dag",
+      "een",
+      "eerste",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "lokaal",
+      "maandag",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "persoonlijke",
+      "regio",
+      "seconden",
+      "sluiten",
+      "sneltoetsen",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "tijdzone",
+      "toegankelijkheid",
+      "typen",
+      "uursnotatie",
+      "van",
+      "weergavetaal",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "open",
+    "t": 4.24,
+    "args": {
+     "spec": "settings:datetime"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "datetime",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 5.42,
+    "args": {
+     "name": "datetime.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "datetime.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 275,
+      "meanLevel": 42.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 5.53,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Datum en tijd – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "aanpassen",
+      "apparaten",
+      "automatisch",
+      "beveiliging",
+      "dag",
+      "datums",
+      "een",
+      "eerste",
+      "gerelateerde",
+      "handmatig",
+      "herstel",
+      "het",
+      "hiervoor",
+      "ingeschakeld",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "klok",
+      "lokaal",
+      "maandag",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "moeten",
+      "netwerk",
+      "persoonlijke",
+      "regio",
+      "seconden",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "systeemvak",
+      "taal",
+      "terug",
+      "tijd",
+      "tijdzone",
+      "toegankelijkheid",
+      "uit",
+      "uursnotatie",
+      "van",
+      "weergavetaal",
+      "weergeven",
+      "wijzigen",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1131
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Datum en tijd – Instellingen",
+     "titles": [
+      "Datum en tijd – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTijd en taal\nDatum en tijd\n22:40\nmaandag 16 november 2026\nTijdzone: (UTC+01:00) Amsterdam\nTijd automatisch instellen\nAan\nTijdzone automatisch instellen\nHiervoor moeten locatievoorzieningen zijn ingeschakeld.\nUit\nDe datum en tijd handmatig instellen\nWijzigen\nWijzigen\nTijdzone\n(UTC+01:00) Amsterdam\nAutomatisch aanpassen aan zomertijd\nAan\nTijd en datum weergeven in het systeemvak\nAan\nSeconden weergeven in de klok in het systeemvak\nUit\nWeekdag weergeven in de klok in het systeemvak\nUit\nWeeknummers weergeven in de agenda\nUit\nAanvullende instellingen\nNu synchroniseren\nDe tijd is gesynchroniseerd met een tijdserver.\nTijdserver: 1.ntp.ubuntu.com\nNu synchroniseren\nNu synchroniseren\nGerelateerde instellingen\nRegionale notatie\n24-uursnotatie, eerste dag van de week en de notatie van datums\nTaal en regio\nWeergavetaal: Nederlands of English",
+     "dutchWordHits": [
+      "aan",
+      "aanpassen",
+      "apparaten",
+      "automatisch",
+      "beveiliging",
+      "dag",
+      "datums",
+      "een",
+      "eerste",
+      "gerelateerde",
+      "handmatig",
+      "herstel",
+      "het",
+      "hiervoor",
+      "ingeschakeld",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "klok",
+      "lokaal",
+      "maandag",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "moeten",
+      "netwerk",
+      "persoonlijke",
+      "regio",
+      "seconden",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "systeemvak",
+      "taal",
+      "terug",
+      "tijd",
+      "tijdzone",
+      "toegankelijkheid",
+      "uit",
+      "uursnotatie",
+      "van",
+      "weergavetaal",
+      "weergeven",
+      "wijzigen",
+      "zijn",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 10.69,
+    "args": {
+     "name": "datetime-synced.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "datetime-synced.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 297,
+      "meanLevel": 43.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 10.7,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-date",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 12.51,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-date",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 12.51,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-date",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 12.51,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-date",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 13.04,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "show-weekdate",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 14.04,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "show-weekdate",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 14.04,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "show-weekdate",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 14.04,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "show-weekdate",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 14.53,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-seconds",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 15.41,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-seconds",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 15.41,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-seconds",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "screenshot",
+    "t": 16.37,
+    "args": {
+     "name": "datetime-tray-seconds.nl",
+     "surface": "panel"
+    },
+    "result": {
+     "png": "datetime-tray-seconds.nl.png",
+     "area": [
+      0,
+      852,
+      1440,
+      48
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       48
+      ],
+      "distinctColours": 153,
+      "meanLevel": 36.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 16.37,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-seconds",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 18.37,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-weekday",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 18.38,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-weekday",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 26.14,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-show-weekday",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 26.82,
+    "args": {
+     "surface": "settings",
+     "method": "caps.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 26.82,
+    "args": {
+     "key": "caps.geoclue"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 26.83,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null
+    }
+   },
+   {
+    "step": "record",
+    "t": 26.83,
+    "args": {
+     "key": "location enabled at start"
+    }
+   },
+   {
+    "step": "record",
+    "t": 26.83,
+    "args": {
+     "key": "automatic time zone switch at start"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 26.96,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 27.52,
+    "args": {
+     "schema": "org.gnome.desktop.datetime",
+     "key": "automatic-timezone",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 29.76,
+    "args": {
+     "schema": "org.gnome.desktop.datetime",
+     "key": "automatic-timezone",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 29.76,
+    "args": {
+     "schema": "org.gnome.desktop.datetime",
+     "key": "automatic-timezone",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 29.76,
+    "args": {
+     "schema": "org.gnome.desktop.datetime",
+     "key": "automatic-timezone",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 30.04,
+    "args": {
+     "schema": "org.gnome.desktop.datetime",
+     "key": "automatic-timezone",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 30.76,
+    "args": {
+     "name": "datetime-autozone.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "datetime-autozone.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 287,
+      "meanLevel": 42.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 30.76,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 30.91,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 31.06,
+    "args": {
+     "schema": "org.gnome.desktop.datetime",
+     "key": "automatic-timezone",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 31.21,
+    "args": {
+     "schema": "org.gnome.system.location",
+     "key": "enabled",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 35.29,
+    "args": {
+     "name": "datetime-manual.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "datetime-manual.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 235,
+      "meanLevel": 32.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 35.79,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 36.0,
+    "args": {
+     "surface": "settings",
+     "method": "machine.time.zones"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 36.0,
+    "args": {
+     "key": "machine.time.zones"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 41.08,
+    "args": {
+     "name": "datetime-zone.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "datetime-zone.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 297,
+      "meanLevel": 44.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 41.08,
+    "args": {
+     "surface": "settings",
+     "method": "machine.time.setTimezone"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 44.51,
+    "args": {
+     "spec": "settings:formats"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "formats",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 45.67,
+    "args": {
+     "name": "formats.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "formats.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 308,
+      "meanLevel": 43.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 45.93,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Regionale notatie – Instellingen",
+     "dutchWordHits": [
+      "aanbevolen",
+      "apparaten",
+      "beveiliging",
+      "dag",
+      "datums",
+      "deze",
+      "een",
+      "eerste",
+      "engels",
+      "gerelateerde",
+      "getallen",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "kalender",
+      "korte",
+      "lange",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "notaties",
+      "persoonlijke",
+      "regio",
+      "seconden",
+      "sluiten",
+      "standaard",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "tijdzone",
+      "toegankelijkheid",
+      "tonen",
+      "uursnotatie",
+      "van",
+      "weergavetaal",
+      "wijzigen",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 924
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Regionale notatie – Instellingen",
+     "titles": [
+      "Regionale notatie – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTijd en taal\nTaal en regio\nTaal en regio\nRegionale notatie\nRegionale notatie\nApps tonen datums, tijden en getallen in deze notatie\nAanbevolen [Engels (Verenigde Staten)]\nDatums\n11/16/2026\nTijden\n10:41:09 PM\nDatums en tijden\nMon 16 Nov 2026 10:41:09 PM CET\nGetallen\n123,456,789.00\nMaatsysteem\nImperiaal\nPapier\nUS Letter\nNotaties wijzigen\nAgenda\nGregoriaanse kalender\nEerste dag van de week\nStandaard (regio)\nKorte datum\n11/16/2026\nKorte tijd\n14:35 (24-uursnotatie)\nLange tijd\n14:35:12\nGerelateerde instellingen\nDatum en tijd\nTijdzone, 24-uursnotatie, seconden, eerste dag van de week\nTaal en regio\nWeergavetaal: Nederlands of English",
+     "dutchWordHits": [
+      "aanbevolen",
+      "apparaten",
+      "beveiliging",
+      "dag",
+      "datums",
+      "deze",
+      "een",
+      "eerste",
+      "engels",
+      "gerelateerde",
+      "getallen",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "kalender",
+      "korte",
+      "lange",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "notaties",
+      "persoonlijke",
+      "regio",
+      "seconden",
+      "sluiten",
+      "standaard",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "tijdzone",
+      "toegankelijkheid",
+      "tonen",
+      "uursnotatie",
+      "van",
+      "weergavetaal",
+      "wijzigen",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "backend",
+    "t": 47.94,
+    "args": {
+     "surface": "settings",
+     "method": "machine.locales"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 47.94,
+    "args": {
+     "key": "machine.locales"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 47.95,
+    "args": {
+     "schema": "org.gnome.system.locale",
+     "key": "region",
+     "path": null
+    }
+   },
+   {
+    "step": "dev",
+    "t": 74.1,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-formats-region"
+    },
+    "result": {
+     "clicked": "st-formats-region"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 76.73,
+    "args": {
+     "schema": "org.gnome.system.locale",
+     "key": "region",
+     "path": null
+    },
+    "result": "'en_AG.UTF-8'"
+   },
+   {
+    "step": "screenshot",
+    "t": 77.61,
+    "args": {
+     "name": "formats-region.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "formats-region.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 371,
+      "meanLevel": 44.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 85.3,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-formats-region"
+    },
+    "result": {
+     "clicked": "st-formats-region"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 88.15,
+    "args": {
+     "schema": "org.gnome.system.locale",
+     "key": "region",
+     "path": null
+    },
+    "result": "''"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 88.15,
+    "args": {
+     "schema": "org.gnome.system.locale",
+     "key": "region",
+     "path": null
+    },
+    "result": "''"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 88.82,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 95.39,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 95.49,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 95.6,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 95.7,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 95.8,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 95.9,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.0,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.1,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.2,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.3,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.4,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.5,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.6,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.71,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.81,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 96.91,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.01,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.11,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.21,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.31,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.41,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.51,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.61,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.71,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.82,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 97.92,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.02,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.12,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.22,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.32,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "record",
+    "t": 98.42,
+    "args": {
+     "key": "formats: week-start-day and time.firstDayOfWeek after the click"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 98.42,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 98.42,
+    "args": {
+     "key": "formats: GSettings’ week-start-day after the click"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 98.99,
+    "args": {
+     "name": "formats-weekstart.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "formats-weekstart.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 286,
+      "meanLevel": 42.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 98.99,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null
+    },
+    "result": "'monday'"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 99.71,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null,
+     "value": "'sunday'"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 100.42,
+    "args": {
+     "schema": "org.gnome.desktop.calendar",
+     "key": "week-start-day",
+     "path": null,
+     "value": "'default'"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 129.27,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-format",
+     "path": null
+    },
+    "result": "'12h'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 129.28,
+    "args": {
+     "schema": "org.gtk.gtk4.Settings.FileChooser",
+     "key": "clock-format",
+     "path": null
+    },
+    "result": "'12h'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 129.29,
+    "args": {
+     "schema": "org.gtk.Settings.FileChooser",
+     "key": "clock-format",
+     "path": null
+    },
+    "result": "'12h'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 129.29,
+    "args": {
+     "schema": "org.gtk.gtk4.Settings.FileChooser",
+     "key": "clock-format",
+     "path": null
+    },
+    "result": "'12h'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 129.29,
+    "args": {
+     "schema": "org.gtk.Settings.FileChooser",
+     "key": "clock-format",
+     "path": null
+    },
+    "result": "'12h'"
+   },
+   {
+    "step": "screenshot",
+    "t": 131.98,
+    "args": {
+     "name": "formats-12h.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "formats-12h.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 283,
+      "meanLevel": 42.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 131.98,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "clock-format",
+     "path": null,
+     "value": "'24h'"
+    }
+   },
+   {
+    "step": "open",
+    "t": 133.67,
+    "args": {
+     "spec": "settings:language"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "language",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 134.84,
+    "args": {
+     "name": "language.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 307,
+      "meanLevel": 43.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 135.3,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Taal en regio – Instellingen",
+     "dutchWordHits": [
+      "aanbevolen",
+      "andere",
+      "apparaten",
+      "beveiliging",
+      "dag",
+      "datums",
+      "deze",
+      "een",
+      "eerste",
+      "engels",
+      "gerelateerde",
+      "getallen",
+      "geïnstalleerd",
+      "herstel",
+      "het",
+      "hiervoor",
+      "installeren",
+      "instelling",
+      "instellingen",
+      "je",
+      "kalender",
+      "korte",
+      "lange",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "minimaliseren",
+      "netwerk",
+      "nodig",
+      "notaties",
+      "onderdelen",
+      "opties",
+      "persoonlijke",
+      "regio",
+      "sluiten",
+      "sneltoetsen",
+      "standaard",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "toevoegen",
+      "tonen",
+      "typen",
+      "van",
+      "voor",
+      "weergavetaal",
+      "weergegeven",
+      "wijzigen",
+      "worden",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1231
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Taal en regio – Instellingen",
+     "titles": [
+      "Taal en regio – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTijd en taal\nTaal en regio\nTaal\nWeergavetaal\nUbuntu en je apps worden in deze taal weergegeven\nEnglish (United States)\nTaal van WinPoint\nStart, de taakbalk, Instellingen en de andere onderdelen van WinPoint (in het Nederlands of het Engels)\nNederlands\nVoorkeurstalen\nEen taal toevoegen\nDe taalondersteuning installeren: vertalingen, woordenboeken en lettertypen\nHiervoor is een beheerderswachtwoord nodig.\nEen taal toevoegen\nEnglish\nTaalpakket geïnstalleerd\nMeer opties\nRegio\nRegionale notatie\nApps tonen datums, tijden en getallen in deze notatie\nAanbevolen [Engels (Verenigde Staten)]\nAgenda\nGregoriaanse kalender\nEerste dag van de week\nStandaard (regio)\nKorte datum\n11/16/2026\nKorte tijd\n14:35\nLange tijd\n14:35:12\nGetallen\n123,456,789.00\nNotaties wijzigen\nNotaties wijzigen\nGerelateerde instellingen\nBeheerinstellingen voor taal\nTaal en notaties van het aanmeldingsscherm\nTypen\nAanraaktoetsenbord, toetsenbordinstellingen en sneltoetsen",
+     "dutchWordHits": [
+      "aanbevolen",
+      "andere",
+      "apparaten",
+      "beveiliging",
+      "dag",
+      "datums",
+      "deze",
+      "een",
+      "eerste",
+      "engels",
+      "gerelateerde",
+      "getallen",
+      "geïnstalleerd",
+      "herstel",
+      "het",
+      "hiervoor",
+      "installeren",
+      "instelling",
+      "instellingen",
+      "je",
+      "kalender",
+      "korte",
+      "lange",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "minimaliseren",
+      "netwerk",
+      "nodig",
+      "notaties",
+      "onderdelen",
+      "opties",
+      "persoonlijke",
+      "regio",
+      "sluiten",
+      "sneltoetsen",
+      "standaard",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "toevoegen",
+      "tonen",
+      "typen",
+      "van",
+      "voor",
+      "weergavetaal",
+      "weergegeven",
+      "wijzigen",
+      "worden",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "dev",
+    "t": 142.53,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "record",
+    "t": 145.8,
+    "args": {
+     "key": "language: display languages"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 154.51,
+    "args": {
+     "name": "language-signout.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-signout.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 360,
+      "meanLevel": 43.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 154.51,
+    "args": {
+     "surface": "settings",
+     "method": "users.setLanguage"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 158.6,
+    "args": {
+     "key": "language: languages to add"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 161.26,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "st-language-add-de"
+    },
+    "result": {
+     "clicked": "st-language-add-de"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 162.21,
+    "args": {
+     "name": "language-add.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-add.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 231,
+      "meanLevel": 35.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 164.04,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 165.84,
+    "args": {
+     "name": "language-installing.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-installing.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 300,
+      "meanLevel": 43.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "record",
+    "t": 169.34,
+    "args": {
+     "key": "language: PackageKit calls"
+    }
+   },
+   {
+    "step": "open",
+    "t": 172.28,
+    "args": {
+     "spec": "settings:language-admin"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "language-admin",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 173.45,
+    "args": {
+     "name": "language-admin.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-admin.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 292,
+      "meanLevel": 43.0,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 174.11,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Beheerinstellingen voor taal – Instellingen",
+     "dutchWordHits": [
+      "als",
+      "andere",
+      "apparaten",
+      "beveiliging",
+      "deze",
+      "een",
+      "engels",
+      "gebruiken",
+      "gebruikers",
+      "gerelateerde",
+      "herstel",
+      "het",
+      "hetzelfde",
+      "hiervoor",
+      "instelling",
+      "instellingen",
+      "je",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "nieuwe",
+      "nodig",
+      "notaties",
+      "persoonlijke",
+      "regio",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "voor",
+      "weergavetaal",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 983
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Beheerinstellingen voor taal – Instellingen",
+     "titles": [
+      "Beheerinstellingen voor taal – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\nTijd en taal\nTaal en regio\nTaal en regio\nBeheerinstellingen voor taal\nWelkomstscherm en nieuwe gebruikersaccounts\nHet aanmeldingsscherm, de systeemaccounts en nieuwe gebruikersaccounts gebruiken deze taal en notaties.\nTaal van het aanmeldingsscherm\nEngels (Verenigde Staten)\nNotaties van het aanmeldingsscherm\nHetzelfde als de taal\nMijn instellingen kopiëren\nJe weergavetaal (Engels (Verenigde Staten)) en regionale notatie gebruiken voor het aanmeldingsscherm en nieuwe gebruikersaccounts\nHiervoor is een beheerderswachtwoord nodig.\nInstellingen kopiëren\nGerelateerde instellingen\nTaal en regio\nWeergavetaal: Nederlands of English\nAndere gebruikers\nAccounts van andere gebruikers op deze pc",
+     "dutchWordHits": [
+      "als",
+      "andere",
+      "apparaten",
+      "beveiliging",
+      "deze",
+      "een",
+      "engels",
+      "gebruiken",
+      "gebruikers",
+      "gerelateerde",
+      "herstel",
+      "het",
+      "hetzelfde",
+      "hiervoor",
+      "instelling",
+      "instellingen",
+      "je",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "netwerk",
+      "nieuwe",
+      "nodig",
+      "notaties",
+      "persoonlijke",
+      "regio",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "voor",
+      "weergavetaal",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "dev",
+    "t": 181.05,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "record",
+    "t": 185.28,
+    "args": {
+     "key": "language-admin: sign-in screen languages"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 198.19,
+    "args": {
+     "name": "language-admin-copied.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-admin-copied.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 301,
+      "meanLevel": 42.7,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 199.23,
+    "args": {
+     "spec": "settings:about"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "about",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 200.4,
+    "args": {
+     "name": "about.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "about.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 490,
+      "meanLevel": 42.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 201.11,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Info – Instellingen",
+     "dutchWordHits": [
+      "apparaatnaam",
+      "apparaatspecificaties",
+      "apparaten",
+      "bekijken",
+      "besturingssysteem",
+      "beveiliging",
+      "deze",
+      "editie",
+      "een",
+      "geheugen",
+      "gerelateerde",
+      "geïnstalleerd",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "kaart",
+      "kernen",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "naam",
+      "netwerk",
+      "opslag",
+      "opslagruimte",
+      "persoonlijke",
+      "prestaties",
+      "ruimte",
+      "schijven",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taakbeheer",
+      "taal",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "venster",
+      "versie",
+      "vrijmaken",
+      "wijzigen",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1460
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Info – Instellingen",
+     "titles": [
+      "Info – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nSysteem\nInfo\nWinPoint Test\nQEMU Standard PC\nNaam van deze pc wijzigen\nNaam van deze pc wijzigen\nProcessor\nAMD Ryzen 7 5700X 8-Core Processor (8 kernen, 16 threads)\nGeïnstalleerd RAM\n16 GB (15 GB bruikbaar)\nOpslag\n25,7 TB\nGrafische kaart\nNVIDIA GeForce RTX 3080\nApparaatspecificaties\nKopiëren\nKopiëren\nApparaatnaam\nWinPoint Test\nModel\nQEMU Standard PC\nProcessor\nAMD Ryzen 7 5700X 8-Core Processor (8 kernen, 16 threads)\nGeïnstalleerd RAM\n16 GB (15 GB bruikbaar)\nGrafische kaart\nNVIDIA GeForce RTX 3080\nOpslag\n25,7 TB: ST24000DM001-3Y7103 (21,8 TB), ST3000VX009-2AY10G (2,7 TB), Lexar SSD NM620 1TB (954 GB), GIGABYTE GP-GSM2NE8256GNTD (238 GB)\nFirmwareversie\n1.16.3\nSysteemtype\n64-bits besturingssysteem, x64-processor\nUbuntu-specificaties\nKopiëren\nKopiëren\nEditie\nUbuntu 26.04.1 LTS\nVersie\n26.04.1 LTS (Resolute Raccoon)\nGeïnstalleerd op\n06-07-2026\nGNOME-versie\n50.1\nVenstersysteem\nWayland\nKernel\nLinux 7.0.0-43-generic\nErvaring\nWinPoint 0.9.1 · los venster\nGerelateerde instellingen\nOpslag\nOpslagruimte, stations, ruimte vrijmaken\nPrestaties bekijken\nProcessor, geheugen en schijven live in Taakbeheer\nUpdate en herstel\nUpdates, back-up van instellingen, alles terugzetten",
+     "dutchWordHits": [
+      "apparaatnaam",
+      "apparaatspecificaties",
+      "apparaten",
+      "bekijken",
+      "besturingssysteem",
+      "beveiliging",
+      "deze",
+      "editie",
+      "een",
+      "geheugen",
+      "gerelateerde",
+      "geïnstalleerd",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "kaart",
+      "kernen",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "naam",
+      "netwerk",
+      "opslag",
+      "opslagruimte",
+      "persoonlijke",
+      "prestaties",
+      "ruimte",
+      "schijven",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taakbeheer",
+      "taal",
+      "terug",
+      "terugzetten",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "venster",
+      "versie",
+      "vrijmaken",
+      "wijzigen",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 248.38,
+    "args": {
+     "name": "about-rename.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "about-rename.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 379,
+      "meanLevel": 31.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "dev",
+    "t": 249.19,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "st-system-rename-entry",
+     "text": "Robins Laptop"
+    },
+    "result": {
+     "typed": "st-system-rename-entry"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 251.56,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "open",
+    "t": 255.07,
+    "args": {
+     "spec": "settings:system"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "system",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 256.24,
+    "args": {
+     "name": "system.nl",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "system.nl.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 618,
+      "meanLevel": 41.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 257.08,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Systeem – Instellingen",
+     "dutchWordHits": [
+      "apparaatspecificaties",
+      "apparaten",
+      "automatisch",
+      "batterij",
+      "beeldscherm",
+      "beeldschermen",
+      "beveiliging",
+      "bureaublad",
+      "deze",
+      "een",
+      "energie",
+      "gebruikt",
+      "gecontroleerd",
+      "geheugen",
+      "geleden",
+      "geluid",
+      "geluidsapparaten",
+      "helderheid",
+      "herstel",
+      "hoe",
+      "instelling",
+      "instellingen",
+      "je",
+      "klembord",
+      "klembordgeschiedenis",
+      "knippen",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "meldingen",
+      "minimaliseren",
+      "naam",
+      "nachtlampje",
+      "netwerk",
+      "niet",
+      "opslag",
+      "opslagruimte",
+      "persoonlijke",
+      "resolutie",
+      "ruimte",
+      "schaal",
+      "scherm",
+      "seconden",
+      "slapen",
+      "sluiten",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uitlijnen",
+      "uitschakelen",
+      "uitvoer",
+      "van",
+      "vensters",
+      "verbonden",
+      "versie",
+      "virtuele",
+      "voor",
+      "vrijmaken",
+      "waarschuwingen",
+      "wijzigen",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1050
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Systeem – Instellingen",
+     "titles": [
+      "Systeem – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nrobin\nGigabyte B550 GAMING X V2\nNaam wijzigen\nNetwerk\nNiet verbonden\nUpdates\nGecontroleerd 56 seconden geleden\nBeeldscherm\nBeeldschermen, helderheid, nachtlampje, schaal en resolutie\nGeluid\nVolume, uitvoer en geluidsapparaten\nMeldingen\nWaarschuwingen van apps en systeem, niet storen\nSchermtijd\nHoe lang je deze pc gebruikt, limieten en pauzes\nEnergie en batterij\nEnergiestand, scherm uitschakelen, automatisch slapen en batterij\nOpslag\nOpslagruimte, stations, ruimte vrijmaken\nMultitasking\nVensters uitlijnen, virtuele bureaubladen, Alt+Tab\nGeavanceerd\nVoor ontwikkelaars: OpenSSH-server en optionele functies\nExtern bureaublad\nDeze pc op afstand bedienen\nKlembord\nKnippen en kopiëren, klembordgeschiedenis\nInfo\nApparaatspecificaties, processor, geheugen, versie",
+     "dutchWordHits": [
+      "apparaatspecificaties",
+      "apparaten",
+      "automatisch",
+      "batterij",
+      "beeldscherm",
+      "beeldschermen",
+      "beveiliging",
+      "bureaublad",
+      "deze",
+      "een",
+      "energie",
+      "gebruikt",
+      "gecontroleerd",
+      "geheugen",
+      "geleden",
+      "geluid",
+      "geluidsapparaten",
+      "helderheid",
+      "herstel",
+      "hoe",
+      "instelling",
+      "instellingen",
+      "je",
+      "klembord",
+      "klembordgeschiedenis",
+      "knippen",
+      "kopiëren",
+      "lokaal",
+      "maximaliseren",
+      "meldingen",
+      "minimaliseren",
+      "naam",
+      "nachtlampje",
+      "netwerk",
+      "niet",
+      "opslag",
+      "opslagruimte",
+      "persoonlijke",
+      "resolutie",
+      "ruimte",
+      "schaal",
+      "scherm",
+      "seconden",
+      "slapen",
+      "sluiten",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "uitlijnen",
+      "uitschakelen",
+      "uitvoer",
+      "van",
+      "vensters",
+      "verbonden",
+      "versie",
+      "virtuele",
+      "voor",
+      "vrijmaken",
+      "waarschuwingen",
+      "wijzigen",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "backend",
+    "t": 259.47,
+    "args": {
+     "surface": "settings",
+     "method": "system.info"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "dev",
+    "t": 265.63,
+    "args": {
+     "surface": "settings",
+     "native": "key",
+     "key": "Escape"
+    },
+    "result": {
+     "handled": true,
+     "key": "Escape"
+    }
+   },
+   {
+    "step": "open",
+    "t": 267.6,
+    "args": {
+     "spec": "settings:language"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "language",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "set_language",
+    "t": 273.21,
+    "args": {
+     "lang": "en",
+     "via": "dropdown"
+    },
+    "result": {
+     "lang": "en",
+     "via": "dropdown",
+     "input": "clutter",
+     "clicks": [
+      {
+       "input": "clutter",
+       "x": 1072,
+       "y": 315,
+       "rect": [
+        762,
+        243,
+        280,
+        32
+       ],
+       "name": "language-display",
+       "window": [
+        170,
+        56,
+        1100,
+        740
+       ],
+       "shell": {
+        "pointer": [
+         1072,
+         315
+        ],
+        "focusPid": 1487
+       }
+      },
+      {
+       "input": "clutter",
+       "x": 1060,
+       "y": 424,
+       "rect": [
+        767,
+        352,
+        246,
+        32
+       ],
+       "name": null,
+       "window": [
+        170,
+        56,
+        1100,
+        740
+       ],
+       "shell": {
+        "pointer": [
+         1060,
+         424
+        ],
+        "focusPid": 1487
+       }
+      }
+     ],
+     "seconds": {
+      "settings": 2.76,
+      "settingsTitle": 3.7
+     },
+     "fileBefore": {
+      "language": "nl",
+      "inode": 13144032,
+      "mtime": 1794865357.4297304,
+      "keys": 19
+     },
+     "fileAfter": {
+      "language": "en",
+      "inode": 13144190,
+      "mtime": 1794865496.6994345,
+      "keys": 19
+     },
+     "fileLanguageOk": true,
+     "sameInode": false
+    }
+   },
+   {
+    "step": "record",
+    "t": 273.21,
+    "args": {
+     "key": "switch to the other language"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 275.43,
+    "args": {
+     "name": "language-switched.en",
+     "surface": "settings"
+    },
+    "result": {
+     "png": "language-switched.en.png",
+     "area": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1100,
+       740
+      ],
+      "distinctColours": 297,
+      "meanLevel": 43.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 275.74,
+    "args": {
+     "spec": "settings:language"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1487,
+     "page": "language",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "set_language",
+    "t": 281.45,
+    "args": {
+     "lang": "nl",
+     "via": "dropdown"
+    },
+    "result": {
+     "lang": "nl",
+     "via": "dropdown",
+     "input": "clutter",
+     "clicks": [
+      {
+       "input": "clutter",
+       "x": 1072,
+       "y": 315,
+       "rect": [
+        762,
+        243,
+        280,
+        32
+       ],
+       "name": "language-display",
+       "window": [
+        170,
+        56,
+        1100,
+        740
+       ],
+       "shell": {
+        "pointer": [
+         1072,
+         315
+        ],
+        "focusPid": 1487
+       }
+      },
+      {
+       "input": "clutter",
+       "x": 1060,
+       "y": 388,
+       "rect": [
+        767,
+        316,
+        246,
+        32
+       ],
+       "name": null,
+       "window": [
+        170,
+        56,
+        1100,
+        740
+       ],
+       "shell": {
+        "pointer": [
+         1060,
+         388
+        ],
+        "focusPid": 1487
+       }
+      }
+     ],
+     "seconds": {
+      "settings": 2.85,
+      "settingsTitle": 3.74
+     },
+     "fileBefore": {
+      "language": "en",
+      "inode": 13144190,
+      "mtime": 1794865496.6994345,
+      "keys": 19
+     },
+     "fileAfter": {
+      "language": "nl",
+      "inode": 13144213,
+      "mtime": 1794865504.9565856,
+      "keys": 19
+     },
+     "fileLanguageOk": true,
+     "sameInode": false
+    }
+   },
+   {
+    "step": "record",
+    "t": 281.45,
+    "args": {
+     "key": "switch back"
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.34,
+    "args": {
+     "key": "scenario seconds"
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.34,
+    "args": {
+     "key": "timedate1.calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.34,
+    "args": {
+     "key": "hostname1.calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.35,
+    "args": {
+     "key": "locale1.calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.35,
+    "args": {
+     "key": "accounts.calls"
+    }
+   },
+   {
+    "step": "record",
+    "t": 282.36,
+    "args": {
+     "key": "packagekit.calls"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "time: the title is Tijd en taal",
+    "ok": true,
+    "t": 3.16,
+    "heads": [
+     "Tijd en taal"
+    ]
+   },
+   {
+    "check": "time: built, no placeholder",
+    "ok": true,
+    "t": 3.26
+   },
+   {
+    "check": "time: the clock shows the stand-in’s zone",
+    "ok": true,
+    "t": 3.26,
+    "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nTijd en taal\n22:40\nmaandag 16 november 2026\nTijdzone: (UTC+01:00) Amsterdam\nTaal: Nederlands\nDatum en tijd\nTijdzone, 24-u"
+   },
+   {
+    "check": "time: Datum en tijd, Taal en regio and Typen are linked",
+    "ok": true,
+    "t": 3.85,
+    "missing": []
+   },
+   {
+    "check": "datetime: the breadcrumb is Tijd en taal > Datum en tijd",
+    "ok": true,
+    "t": 5.76,
+    "current": [
+     "Datum en tijd"
+    ],
+    "crumbs": [
+     [
+      "time",
+      "Tijd en taal"
+     ]
+    ]
+   },
+   {
+    "check": "datetime: built, no placeholder",
+    "ok": true,
+    "t": 5.88
+   },
+   {
+    "check": "datetime: Tijd automatisch instellen follows timedated’s NTP",
+    "ok": true,
+    "t": 5.94
+   },
+   {
+    "check": "datetime: the manual time only while NTP is off",
+    "ok": true,
+    "t": 6.06
+   },
+   {
+    "check": "datetime: the time zone in Windows’ label",
+    "ok": true,
+    "t": 6.29,
+    "label": "(UTC+01:00) Amsterdam"
+   },
+   {
+    "check": "datetime: Automatisch aanpassen aan zomertijd on and fixed (tzdata does it)",
+    "ok": true,
+    "t": 6.36
+   },
+   {
+    "check": "datetime: no 24-hour row here (amendment 16)",
+    "ok": true,
+    "t": 6.54
+   },
+   {
+    "check": "datetime: Nu synchroniseren (a real click) is SetNTP(false) then SetNTP(true), interactive, nothing else",
+    "ok": true,
+    "t": 9.98,
+    "writes": [
+     [
+      "SetNTP",
+      "(false, true)",
+      true
+     ],
+     [
+      "SetNTP",
+      "(true, true)",
+      true
+     ]
+    ],
+    "input": "clutter"
+   },
+   {
+    "check": "datetime: no toast after Nu synchroniseren (amendment 68)",
+    "ok": true,
+    "t": 10.11
+   },
+   {
+    "check": "datetime: a real click on st-datetime-clock-show-date writes clock-show-date false",
+    "ok": true,
+    "t": 12.51,
+    "before": "true",
+    "after": "false",
+    "input": "clutter"
+   },
+   {
+    "check": "datetime: st-datetime-clock-show-date follows clock-show-date = true written from outside",
+    "ok": true,
+    "t": 13.03,
+    "active": true
+   },
+   {
+    "check": "datetime: a real click on st-datetime-show-weekdate writes show-weekdate true",
+    "ok": true,
+    "t": 14.04,
+    "before": "false",
+    "after": "true",
+    "input": "clutter"
+   },
+   {
+    "check": "datetime: st-datetime-show-weekdate follows show-weekdate = false written from outside",
+    "ok": true,
+    "t": 14.53,
+    "active": false
+   },
+   {
+    "check": "datetime: a real click on Seconden weergeven writes clock-show-seconds true",
+    "ok": true,
+    "t": 15.41,
+    "before": "false",
+    "after": "true"
+   },
+   {
+    "check": "datetime: the mirror sets WinPoint’s time.showSeconds and taskbar.showSeconds",
+    "ok": true,
+    "t": 15.41,
+    "time": {
+     "h24": true,
+     "showSeconds": true,
+     "showDate": true,
+     "showWeekday": false,
+     "weekNumbers": false,
+     "firstDayOfWeek": -1
+    }
+   },
+   {
+    "check": "datetime: the taskbar clock shows the seconds",
+    "ok": true,
+    "t": 15.85,
+    "tray": "22:40:41 | 16-11-2026"
+   },
+   {
+    "check": "datetime: Seconden weergeven follows clock-show-seconds written from outside",
+    "ok": true,
+    "t": 16.56
+   },
+   {
+    "check": "datetime: and the taskbar clock drops the seconds",
+    "ok": true,
+    "t": 17.26,
+    "tray": "22:40 | 16-11-2026"
+   },
+   {
+    "check": "datetime: a real click on Weekdag weergeven writes clock-show-weekday true",
+    "ok": true,
+    "t": 18.38,
+    "after": "true"
+   },
+   {
+    "check": "datetime: the mirror sets WinPoint’s time.showWeekday",
+    "ok": true,
+    "t": 18.38
+   },
+   {
+    "check": "datetime: the taskbar clock shows the weekday (contract §8 note 2, for I)",
+    "ok": false,
+    "t": 26.14,
+    "known": "I-note-2",
+    "tray": "22:40 | 16-11-2026"
+   },
+   {
+    "check": "datetime: Weekdag weergeven follows clock-show-weekday written from outside",
+    "ok": true,
+    "t": 26.59
+   },
+   {
+    "check": "wait_text settings: 'Hiervoor moeten locatievoorzieningen zijn ingeschakeld.'",
+    "ok": true,
+    "t": 26.96,
+    "seconds": 0.13
+   },
+   {
+    "check": "datetime: Tijdzone automatisch instellen waits for location services (insensitive, with the hint)",
+    "ok": true,
+    "t": 26.96,
+    "located": null
+   },
+   {
+    "check": "datetime: it follows location services turned on from outside",
+    "ok": true,
+    "t": 27.52
+   },
+   {
+    "check": "datetime: a real click on st-datetime-automatic-timezone writes automatic-timezone true",
+    "ok": true,
+    "t": 29.76,
+    "before": "false",
+    "after": "true",
+    "input": "clutter"
+   },
+   {
+    "check": "datetime: st-datetime-automatic-timezone follows automatic-timezone = false written from outside",
+    "ok": true,
+    "t": 30.04,
+    "active": false
+   },
+   {
+    "check": "datetime: with the automatic time zone on, the time zone can’t be chosen",
+    "ok": true,
+    "t": 30.19
+   },
+   {
+    "check": "datetime: with location services off the time zone can be chosen, the automatic time zone on or not",
+    "ok": true,
+    "t": 30.91
+   },
+   {
+    "check": "datetime: and with location services on again it can’t",
+    "ok": true,
+    "t": 31.06
+   },
+   {
+    "check": "datetime: and with it off again, the drop-down is there again",
+    "ok": true,
+    "t": 31.21
+   },
+   {
+    "check": "datetime: Tijd automatisch instellen off (a real click) sends SetNTP(false, true), interactive",
+    "ok": true,
+    "t": 32.28,
+    "call": {
+     "path": "/org/freedesktop/timedate1",
+     "iface": "org.freedesktop.timedate1",
+     "method": "SetNTP",
+     "args": "(false, true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "datetime: the page follows timedated: De datum en tijd handmatig instellen can be used, Nu synchroniseren not",
+    "ok": true,
+    "t": 33.05
+   },
+   {
+    "check": "datetime: Wijzigen sends SetTime(the picked local time in µs, false, true), interactive",
+    "ok": true,
+    "t": 35.96,
+    "call": {
+     "path": "/org/freedesktop/timedate1",
+     "iface": "org.freedesktop.timedate1",
+     "method": "SetTime",
+     "args": "(int64 1794865200000000, false, true)",
+     "interactive": true
+    },
+    "now": 1794865260.7375984
+   },
+   {
+    "check": "datetime: Tijdzone (UTC-11:00) Niue (real clicks) sends SetTimezone(Pacific/Niue, true), interactive",
+    "ok": true,
+    "t": 40.27,
+    "call": {
+     "path": "/org/freedesktop/timedate1",
+     "iface": "org.freedesktop.timedate1",
+     "method": "SetTimezone",
+     "args": "('Pacific/Niue', true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "datetime: the page shows timedated’s new zone",
+    "ok": true,
+    "t": 40.51
+   },
+   {
+    "check": "datetime: Tijd automatisch instellen back on sends SetNTP(true, true)",
+    "ok": true,
+    "t": 43.9,
+    "call": {
+     "path": "/org/freedesktop/timedate1",
+     "iface": "org.freedesktop.timedate1",
+     "method": "SetNTP",
+     "args": "(true, true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "formats: the breadcrumb is Tijd en taal > Taal en regio > Regionale notatie",
+    "ok": true,
+    "t": 46.7,
+    "current": [
+     "Regionale notatie"
+    ],
+    "crumbs": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      "language",
+      "Taal en regio"
+     ]
+    ]
+   },
+   {
+    "check": "formats: built, no placeholder",
+    "ok": true,
+    "t": 46.94
+   },
+   {
+    "check": "formats: st-formats-region",
+    "ok": true,
+    "t": 47.19
+   },
+   {
+    "check": "formats: st-formats-week-start-day",
+    "ok": true,
+    "t": 47.45
+   },
+   {
+    "check": "formats: st-formats-interface-clock-format",
+    "ok": true,
+    "t": 47.69
+   },
+   {
+    "check": "formats: st-formats-preview",
+    "ok": true,
+    "t": 47.94
+   },
+   {
+    "check": "formats: Regionale notatie Engels (Antigua en Barbuda) (real clicks) writes region and AccountsService’s FormatsLocale, interactive",
+    "ok": true,
+    "t": 76.73,
+    "got": "'en_AG.UTF-8'",
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetFormatsLocale",
+     "args": "('en_AG.UTF-8',)",
+     "interactive": true
+    },
+    "want": "en_AG.UTF-8"
+   },
+   {
+    "check": "formats: Windows’ sign-out banner: the session keeps its formats until the next sign-in",
+    "ok": true,
+    "t": 77.03
+   },
+   {
+    "check": "formats: Aanbevolen writes region '' (the display language’s formats)",
+    "ok": true,
+    "t": 88.15,
+    "region": "''"
+   },
+   {
+    "check": "formats: and FormatsLocale gets the display language’s locale (en_US.UTF-8), not ''",
+    "ok": true,
+    "t": 88.15,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetFormatsLocale",
+     "args": "('en_US.UTF-8',)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "formats: and the banner goes",
+    "ok": true,
+    "t": 88.82
+   },
+   {
+    "check": "formats: Eerste dag van de week Maandag (real clicks) writes week-start-day monday",
+    "ok": true,
+    "t": 99.71,
+    "got": "'monday'",
+    "click": {
+     "input": "clutter",
+     "x": 1118,
+     "y": 460,
+     "rect": [
+      884,
+      388,
+      129,
+      32
+     ],
+     "name": null,
+     "window": [
+      170,
+      56,
+      1100,
+      740
+     ],
+     "shell": {
+      "pointer": [
+       1118,
+       460
+      ],
+      "focusPid": 1487
+     },
+     "text": "Maandag"
+    },
+    "label": "Maandag",
+    "toast": []
+   },
+   {
+    "check": "formats: the drop-down follows week-start-day written from outside",
+    "ok": true,
+    "t": 100.42,
+    "label": "Zondag"
+   },
+   {
+    "check": "formats: Korte tijd 12-uurs (real clicks) writes clock-format 12h",
+    "ok": true,
+    "t": 129.27,
+    "got": "'12h'"
+   },
+   {
+    "check": "formats: and the file choosers’ copies (GTK 3 and GTK 4), in the same write",
+    "ok": true,
+    "t": 129.29,
+    "gtk4": "'12h'",
+    "gtk3": "'12h'"
+   },
+   {
+    "check": "formats: Lange tijd follows (2:35:12 PM)",
+    "ok": true,
+    "t": 129.72
+   },
+   {
+    "check": "formats: the mirror takes the 12-hour clock to the taskbar clock (time.h24)",
+    "ok": true,
+    "t": 131.4,
+    "tray": "10:42 p.m. | 16-11-2026",
+    "time": {
+     "h24": false,
+     "showSeconds": false,
+     "showDate": true,
+     "showWeekday": false,
+     "weekNumbers": false,
+     "firstDayOfWeek": -1
+    }
+   },
+   {
+    "check": "formats: Korte tijd follows clock-format written from outside",
+    "ok": true,
+    "t": 132.89,
+    "label": "14:35 (24-uursnotatie)"
+   },
+   {
+    "check": "language: the breadcrumb is Tijd en taal > Taal en regio",
+    "ok": true,
+    "t": 136.19,
+    "current": [
+     "Taal en regio"
+    ],
+    "crumbs": [
+     [
+      "time",
+      "Tijd en taal"
+     ]
+    ]
+   },
+   {
+    "check": "language: built, no placeholder",
+    "ok": true,
+    "t": 136.64
+   },
+   {
+    "check": "language: st-language-display",
+    "ok": true,
+    "t": 137.08
+   },
+   {
+    "check": "language: language-display",
+    "ok": true,
+    "t": 137.51
+   },
+   {
+    "check": "language: st-language-add",
+    "ok": true,
+    "t": 137.96
+   },
+   {
+    "check": "language: st-language-region-samples",
+    "ok": true,
+    "t": 138.42
+   },
+   {
+    "check": "language: st-language-region",
+    "ok": true,
+    "t": 138.88
+   },
+   {
+    "check": "language: st-language-change-formats",
+    "ok": true,
+    "t": 139.31
+   },
+   {
+    "check": "language: Weergavetaal offers only languages that are installed (by their own names)",
+    "ok": true,
+    "t": 145.81
+   },
+   {
+    "check": "language: Weergavetaal shows the account’s language by its own name",
+    "ok": true,
+    "t": 146.25,
+    "label": "English (United States)"
+   },
+   {
+    "check": "language: no sign-out banner while the account’s language is the session’s",
+    "ok": true,
+    "t": 147.23
+   },
+   {
+    "check": "language: Weergavetaal English (Antigua and Barbuda) (real clicks) sends SetLanguage, interactive",
+    "ok": true,
+    "t": 153.45,
+    "call": {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "iface": "org.freedesktop.Accounts.User",
+     "method": "SetLanguage",
+     "args": "('en_AG.UTF-8',)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "language: Windows’ sign-out banner for the new display language",
+    "ok": true,
+    "t": 153.94
+   },
+   {
+    "check": "language: Een taal toevoegen can be clicked with PackageKit",
+    "ok": true,
+    "t": 155.01,
+    "add": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [],
+         "classes": [
+          "w11-glyph"
+         ],
+         "label": null,
+         "name": "GtkImage",
+         "rect": [
+          878,
+          446,
+          16,
+          30
+         ],
+         "sensitive": true,
+         "type": "GtkImage",
+         "visible": true
+        },
+        {
+         "children": [],
+         "classes": [],
+         "label": "Een taal toevoegen",
+         "name": "GtkLabel",
+         "rect": [
+          902,
+          446,
+          128,
+          30
+         ],
+         "sensitive": true,
+         "type": "GtkLabel",
+         "visible": true
+        }
+       ],
+       "classes": [
+        "horizontal"
+       ],
+       "label": null,
+       "name": "GtkBox",
+       "rect": [
+        878,
+        446,
+        152,
+        30
+       ],
+       "sensitive": true,
+       "type": "GtkBox",
+       "visible": true
+      }
+     ],
+     "classes": [
+      "w11-button"
+     ],
+     "label": "Hiervoor is een beheerderswachtwoord nodig.",
+     "name": "st-language-add",
+     "rect": [
+      866,
+      445,
+      176,
+      32
+     ],
+     "sensitive": true,
+     "type": "GtkButton",
+     "visible": true,
+     "top": 0
+    }
+   },
+   {
+    "check": "language: the install shows its progress card",
+    "ok": true,
+    "t": 165.27
+   },
+   {
+    "check": "language: installing de is Resolve (not installed, newest, native architecture) of its packages, then InstallPackages ONLY_TRUSTED of what PackageKit found for this architecture, with interactive authorization",
+    "ok": true,
+    "t": 169.34,
+    "calls": [
+     [
+      "CreateTransaction",
+      "()",
+      false
+     ],
+     [
+      "SetHints",
+      "(['interactive=false', 'background=false'],)",
+      false
+     ],
+     [
+      "Resolve",
+      "(uint64 327688, ['language-pack-de', 'hunspell-de', 'hunspell-de-at-frami', 'hunspell-de-ch-frami', 'hunspell-de-de-frami', 'wngerman', 'wogerman', 'wswiss'])",
+      false
+     ],
+     [
+      "CreateTransaction",
+      "()",
+      false
+     ],
+     [
+      "SetHints",
+      "(['interactive=true', 'background=false'],)",
+      false
+     ],
+     [
+      "InstallPackages",
+      "(uint64 2, ['language-pack-de;1:26.04+20260401;all;ubuntu'])",
+      true
+     ]
+    ]
+   },
+   {
+    "check": "language: the install transaction carries PackageKit’s interactive hint",
+    "ok": true,
+    "t": 169.34,
+    "hints": [
+     "(['interactive=false', 'background=false'],)",
+     "(['interactive=true', 'background=false'],)"
+    ]
+   },
+   {
+    "check": "language: the page is read again after the install (no error)",
+    "ok": true,
+    "t": 171.28
+   },
+   {
+    "check": "language-admin: the breadcrumb is Tijd en taal > Taal en regio > Beheerinstellingen voor taal",
+    "ok": true,
+    "t": 176.03,
+    "current": [
+     "Beheerinstellingen voor taal"
+    ],
+    "crumbs": [
+     [
+      "time",
+      "Tijd en taal"
+     ],
+     [
+      "language",
+      "Taal en regio"
+     ]
+    ]
+   },
+   {
+    "check": "language-admin: built, no placeholder",
+    "ok": true,
+    "t": 176.67
+   },
+   {
+    "check": "language-admin: Taal van het aanmeldingsscherm Engels (Antigua en Barbuda) (real clicks) sends locale1 SetLocale, interactive",
+    "ok": true,
+    "t": 194.36,
+    "call": {
+     "path": "/org/freedesktop/locale1",
+     "iface": "org.freedesktop.locale1",
+     "method": "SetLocale",
+     "args": "(['LANG=en_AG.UTF-8'], true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "language-admin: Instellingen kopiëren sends the own language to locale1, interactive",
+    "ok": true,
+    "t": 197.62,
+    "call": {
+     "path": "/org/freedesktop/locale1",
+     "iface": "org.freedesktop.locale1",
+     "method": "SetLocale",
+     "args": "(['LANG=en_US.UTF-8', 'LC_TIME=en_US.UTF-8', 'LC_NUMERIC=en_US.UTF-8', 'LC_MONETARY=en_US.UTF-8', 'LC_MEASUREMENT=en_US.UTF-8', 'LC_PAPER=en_US.UTF-8'], true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "about: the breadcrumb is Systeem > Info",
+    "ok": true,
+    "t": 202.49,
+    "current": [
+     "Info"
+    ],
+    "crumbs": [
+     [
+      "system",
+      "Systeem"
+     ]
+    ]
+   },
+   {
+    "check": "about: built, no placeholder",
+    "ok": true,
+    "t": 203.19
+   },
+   {
+    "check": "about: the name from hostname1",
+    "ok": true,
+    "t": 203.19,
+    "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nSysteem\nInfo\n"
+   },
+   {
+    "check": "about: GNOME’s version from GNOME Shell",
+    "ok": true,
+    "t": 203.19
+   },
+   {
+    "check": "about: Apparaatspecificaties and the OS specifications",
+    "ok": true,
+    "t": 204.61
+   },
+   {
+    "check": "about: the new name goes to hostname1 as GNOME sends it, interactive",
+    "ok": true,
+    "t": 252.34,
+    "pretty": {
+     "path": "/org/freedesktop/hostname1",
+     "iface": "org.freedesktop.hostname1",
+     "method": "SetPrettyHostname",
+     "args": "('Robins Laptop', true)",
+     "interactive": true
+    },
+    "fixed": {
+     "path": "/org/freedesktop/hostname1",
+     "iface": "org.freedesktop.hostname1",
+     "method": "SetStaticHostname",
+     "args": "('robins-laptop', true)",
+     "interactive": true
+    }
+   },
+   {
+    "check": "about: the page shows hostnamed’s new name (machine.changed)",
+    "ok": true,
+    "t": 253.93,
+    "label": "Robins Laptop"
+   },
+   {
+    "check": "system: the title is Systeem",
+    "ok": true,
+    "t": 257.91,
+    "heads": [
+     "Systeem"
+    ]
+   },
+   {
+    "check": "system: built, no placeholder",
+    "ok": true,
+    "t": 258.67
+   },
+   {
+    "check": "system: the device card with Naam wijzigen",
+    "ok": true,
+    "t": 259.47
+   },
+   {
+    "check": "system: the device card shows system.info’s name (the /etc/machine-info hostnamed writes)",
+    "ok": true,
+    "t": 259.47,
+    "pretty": "robin"
+   },
+   {
+    "check": "system: Naam wijzigen opens Windows’ rename dialog",
+    "ok": true,
+    "t": 264.82
+   },
+   {
+    "check": "switch: Taal van WinPoint en switches Settings",
+    "ok": true,
+    "t": 274.02
+   },
+   {
+    "check": "wait_text settings: 'Language & region'",
+    "ok": true,
+    "t": 274.86,
+    "seconds": 0.84
+   },
+   {
+    "check": "switch: the page title in the other language",
+    "ok": true,
+    "t": 274.86
+   },
+   {
+    "check": "switch: and back to nl",
+    "ok": true,
+    "t": 282.34
+   }
+  ],
+  "records": {
+   "standin.timedate1": {
+    "pid": 1467,
+    "bus": "system",
+    "name": "org.freedesktop.timedate1",
+    "objects": [
+     "/org/freedesktop/timedate1"
+    ]
+   },
+   "standin.hostname1": {
+    "pid": 1471,
+    "bus": "system",
+    "name": "org.freedesktop.hostname1",
+    "objects": [
+     "/org/freedesktop/hostname1"
+    ]
+   },
+   "standin.locale1": {
+    "pid": 1475,
+    "bus": "system",
+    "name": "org.freedesktop.locale1",
+    "objects": [
+     "/org/freedesktop/locale1"
+    ]
+   },
+   "standin.accounts": {
+    "pid": 1479,
+    "bus": "system",
+    "name": "org.freedesktop.Accounts",
+    "objects": [
+     "/org/freedesktop/Accounts",
+     "/org/freedesktop/Accounts/User1000",
+     "/org/freedesktop/Accounts/User1001",
+     "/org/freedesktop/Accounts/User1002"
+    ]
+   },
+   "standin.packagekit": {
+    "pid": 1483,
+    "bus": "system",
+    "name": "org.freedesktop.PackageKit",
+    "objects": [
+     "/1_winpoint",
+     "/org/freedesktop/PackageKit"
+    ]
+   },
+   "caps.geoclue": true,
+   "location enabled at start": null,
+   "automatic time zone switch at start": {
+    "sensitive": false,
+    "active": false
+   },
+   "machine.time.zones": 314,
+   "machine.locales": [
+    "en_AG.UTF-8",
+    "en_AU.UTF-8",
+    "en_BW.UTF-8",
+    "en_CA.UTF-8",
+    "en_DK.UTF-8",
+    "en_PH.UTF-8",
+    "en_HK.UTF-8",
+    "en_IE.UTF-8",
+    "en_IN.UTF-8",
+    "en_IL.UTF-8",
+    "en_NZ.UTF-8",
+    "en_NG.UTF-8",
+    "en_SG.UTF-8",
+    "en_GB.UTF-8",
+    "en_US.UTF-8",
+    "en_ZM.UTF-8",
+    "en_ZW.UTF-8",
+    "en_ZA.UTF-8"
+   ],
+   "formats: week-start-day and time.firstDayOfWeek after the click": [
+    [
+     "'monday'",
+     1
+    ]
+   ],
+   "formats: GSettings’ week-start-day after the click": {
+    "items": [
+     {
+      "schema": "org.gnome.desktop.calendar",
+      "path": "/org/gnome/desktop/calendar/",
+      "key": "week-start-day",
+      "allowed": true,
+      "available": true,
+      "writable": true,
+      "mode": "mirrored",
+      "setting": "time.firstDayOfWeek",
+      "method": null,
+      "value": "monday",
+      "default": "default",
+      "isDefault": false,
+      "type": "enum",
+      "range": {
+       "choices": [
+        "default",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+       ]
+      }
+     }
+    ]
+   },
+   "language: display languages": [
+    "English (Antigua and Barbuda)",
+    "English (Australia)",
+    "English (Botswana)",
+    "English (Canada)",
+    "English (Denmark)",
+    "English (Hong Kong)",
+    "English (India)",
+    "English (Ireland)",
+    "English (Israel)",
+    "English (New Zealand)",
+    "English (Nigeria)",
+    "English (Philippines)",
+    "English (Singapore)",
+    "English (South Africa)",
+    "English (United Kingdom)",
+    "English (United States)",
+    "English (Zambia)",
+    "English (Zimbabwe)"
+   ],
+   "language: languages to add": [
+    "sq",
+    "ar",
+    "bn",
+    "eu",
+    "bs",
+    "bg",
+    "ca",
+    "zh-hans",
+    "zh-hant",
+    "da",
+    "de",
+    "dz",
+    "eo",
+    "et",
+    "fi",
+    "fr",
+    "fy",
+    "gl",
+    "el",
+    "he",
+    "hi",
+    "hu",
+    "is",
+    "id",
+    "it",
+    "ja",
+    "kk",
+    "ku",
+    "ko",
+    "hr",
+    "lv",
+    "lt",
+    "mk",
+    "mg",
+    "nds",
+    "nl",
+    "se",
+    "nb",
+    "nn",
+    "uk",
+    "pa",
+    "fa",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "sr",
+    "sk",
+    "sl",
+    "es",
+    "tl",
+    "cs",
+    "tr",
+    "vi",
+    "cy",
+    "be",
+    "be@latin",
+    "wo",
+    "xh",
+    "sv"
+   ],
+   "language: PackageKit calls": [
+    [
+     "CreateTransaction",
+     "()",
+     false
+    ],
+    [
+     "SetHints",
+     "(['interactive=false', 'background=false'],)",
+     false
+    ],
+    [
+     "Resolve",
+     "(uint64 327688, ['language-pack-de', 'hunspell-de', 'hunspell-de-at-frami', 'hunspell-de-ch-frami', 'hunspell-de-de-frami', 'wngerman', 'wogerman', 'wswiss'])",
+     false
+    ],
+    [
+     "CreateTransaction",
+     "()",
+     false
+    ],
+    [
+     "SetHints",
+     "(['interactive=true', 'background=false'],)",
+     false
+    ],
+    [
+     "InstallPackages",
+     "(uint64 2, ['language-pack-de;1:26.04+20260401;all;ubuntu'])",
+     true
+    ]
+   ],
+   "language-admin: sign-in screen languages": [
+    "Engels (Antigua en Barbuda)",
+    "Engels (Australië)",
+    "Engels (Botswana)",
+    "Engels (Canada)",
+    "Engels (Denemarken)",
+    "Engels (Filipijnen)",
+    "Engels (Hongkong)",
+    "Engels (Ierland)",
+    "Engels (India)",
+    "Engels (Israël)",
+    "Engels (Nieuw-Zeeland)",
+    "Engels (Nigeria)",
+    "Engels (Singapore)",
+    "Engels (Verenigd Koninkrijk)",
+    "Engels (Verenigde Staten)",
+    "Engels (Zambia)",
+    "Engels (Zimbabwe)",
+    "Engels (Zuid-Afrika)"
+   ],
+   "switch to the other language": {
+    "lang": "en",
+    "via": "dropdown",
+    "input": "clutter",
+    "clicks": [
+     {
+      "input": "clutter",
+      "x": 1072,
+      "y": 315,
+      "rect": [
+       762,
+       243,
+       280,
+       32
+      ],
+      "name": "language-display",
+      "window": [
+       170,
+       56,
+       1100,
+       740
+      ],
+      "shell": {
+       "pointer": [
+        1072,
+        315
+       ],
+       "focusPid": 1487
+      }
+     },
+     {
+      "input": "clutter",
+      "x": 1060,
+      "y": 424,
+      "rect": [
+       767,
+       352,
+       246,
+       32
+      ],
+      "name": null,
+      "window": [
+       170,
+       56,
+       1100,
+       740
+      ],
+      "shell": {
+       "pointer": [
+        1060,
+        424
+       ],
+       "focusPid": 1487
+      }
+     }
+    ],
+    "seconds": {
+     "settings": 2.76,
+     "settingsTitle": 3.7
+    },
+    "fileBefore": {
+     "language": "nl",
+     "inode": 13144032,
+     "mtime": 1794865357.4297304,
+     "keys": 19
+    },
+    "fileAfter": {
+     "language": "en",
+     "inode": 13144190,
+     "mtime": 1794865496.6994345,
+     "keys": 19
+    },
+    "fileLanguageOk": true,
+    "sameInode": false
+   },
+   "switch back": {
+    "lang": "nl",
+    "via": "dropdown",
+    "input": "clutter",
+    "clicks": [
+     {
+      "input": "clutter",
+      "x": 1072,
+      "y": 315,
+      "rect": [
+       762,
+       243,
+       280,
+       32
+      ],
+      "name": "language-display",
+      "window": [
+       170,
+       56,
+       1100,
+       740
+      ],
+      "shell": {
+       "pointer": [
+        1072,
+        315
+       ],
+       "focusPid": 1487
+      }
+     },
+     {
+      "input": "clutter",
+      "x": 1060,
+      "y": 388,
+      "rect": [
+       767,
+       316,
+       246,
+       32
+      ],
+      "name": null,
+      "window": [
+       170,
+       56,
+       1100,
+       740
+      ],
+      "shell": {
+       "pointer": [
+        1060,
+        388
+       ],
+       "focusPid": 1487
+      }
+     }
+    ],
+    "seconds": {
+     "settings": 2.85,
+     "settingsTitle": 3.74
+    },
+    "fileBefore": {
+     "language": "en",
+     "inode": 13144190,
+     "mtime": 1794865496.6994345,
+     "keys": 19
+    },
+    "fileAfter": {
+     "language": "nl",
+     "inode": 13144213,
+     "mtime": 1794865504.9565856,
+     "keys": 19
+    },
+    "fileLanguageOk": true,
+    "sameInode": false
+   },
+   "scenario seconds": 281.5,
+   "timedate1.calls": [
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetNTP",
+     "args": "(false, true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetNTP",
+     "args": "(true, true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetNTP",
+     "args": "(false, true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetTime",
+     "args": "(int64 1794865200000000, false, true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetTimezone",
+     "args": "('Pacific/Niue', true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetTimezone",
+     "args": "('Europe/Amsterdam', true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/timedate1",
+     "method": "SetNTP",
+     "args": "(true, true)",
+     "interactive": true
+    }
+   ],
+   "hostname1.calls": [
+    {
+     "path": "/org/freedesktop/hostname1",
+     "method": "SetPrettyHostname",
+     "args": "('Robins Laptop', true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/hostname1",
+     "method": "SetStaticHostname",
+     "args": "('robins-laptop', true)",
+     "interactive": true
+    }
+   ],
+   "locale1.calls": [
+    {
+     "path": "/org/freedesktop/locale1",
+     "method": "SetLocale",
+     "args": "(['LANG=en_AG.UTF-8'], true)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/locale1",
+     "method": "SetLocale",
+     "args": "(['LANG=en_US.UTF-8', 'LC_TIME=en_US.UTF-8', 'LC_NUMERIC=en_US.UTF-8', 'LC_MONETARY=en_US.UTF-8', 'LC_MEASUREMENT=en_US.UTF-8', 'LC_PAPER=en_US.UTF-8'], true)",
+     "interactive": true
+    }
+   ],
+   "accounts.calls": [
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetFormatsLocale",
+     "args": "('en_AG.UTF-8',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetFormatsLocale",
+     "args": "('en_US.UTF-8',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetLanguage",
+     "args": "('en_AG.UTF-8',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts/User1000",
+     "method": "SetLanguage",
+     "args": "('en_US',)",
+     "interactive": true
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/Accounts",
+     "method": "FindUserById",
+     "args": "(int64 1000,)",
+     "interactive": false
+    }
+   ],
+   "packagekit.calls": [
+    {
+     "path": "/org/freedesktop/PackageKit",
+     "method": "CreateTransaction",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/1_winpoint",
+     "method": "SetHints",
+     "args": "(['interactive=false', 'background=false'],)",
+     "interactive": false
+    },
+    {
+     "path": "/1_winpoint",
+     "method": "Resolve",
+     "args": "(uint64 327688, ['language-pack-de', 'hunspell-de', 'hunspell-de-at-frami', 'hunspell-de-ch-frami', 'hunspell-de-de-frami', 'wngerman', 'wogerman', 'wswiss'])",
+     "interactive": false
+    },
+    {
+     "path": "/org/freedesktop/PackageKit",
+     "method": "CreateTransaction",
+     "args": "()",
+     "interactive": false
+    },
+    {
+     "path": "/1_winpoint",
+     "method": "SetHints",
+     "args": "(['interactive=true', 'background=false'],)",
+     "interactive": false
+    },
+    {
+     "path": "/1_winpoint",
+     "method": "InstallPackages",
+     "args": "(uint64 2, ['language-pack-de;1:26.04+20260401;all;ubuntu'])",
+     "interactive": true
+    }
+   ]
+  },
+  "shots": [
+   "time.nl.png",
+   "datetime.nl.png",
+   "datetime-synced.nl.png",
+   "datetime-tray-seconds.nl.png",
+   "datetime-autozone.nl.png",
+   "datetime-manual.nl.png",
+   "datetime-zone.nl.png",
+   "formats.nl.png",
+   "formats-region.nl.png",
+   "formats-weekstart.nl.png",
+   "formats-12h.nl.png",
+   "language.nl.png",
+   "language-signout.nl.png",
+   "language-add.nl.png",
+   "language-installing.nl.png",
+   "language-admin.nl.png",
+   "language-admin-copied.nl.png",
+   "about.nl.png",
+   "about-rename.nl.png",
+   "system.nl.png",
+   "language-switched.en.png"
+  ],
+  "error": null,
+  "seconds": 282.36,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 511,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 511,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 511,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "native-settings",
+    "pid": 1487,
+    "page": "language",
+    "alive": true
+   }
+  },
+  "failedChecks": [
+   "datetime: the taskbar clock shows the weekday (contract §8 note 2, for I)"
+  ],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=ac2a3cde71f17d48814cb2786afb7843",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-e/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 511,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 511
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "datetime",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "formats",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "language",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "language-admin",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "about",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "system",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "language",
+     "exit": 0,
+     "seconds": 0.03
+    }
+   ],
+   "notificationsAtEnd": [],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "time.nl.png",
+    "group": "scenario",
+    "bytes": 198613,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "datetime.nl.png",
+    "group": "scenario",
+    "bytes": 216482,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "datetime-synced.nl.png",
+    "group": "scenario",
+    "bytes": 219504,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "datetime-tray-seconds.nl.png",
+    "group": "scenario",
+    "bytes": 22385,
+    "area": [
+     0,
+     852,
+     1440,
+     48
+    ]
+   },
+   {
+    "file": "datetime-autozone.nl.png",
+    "group": "scenario",
+    "bytes": 205884,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "datetime-manual.nl.png",
+    "group": "scenario",
+    "bytes": 157762,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "datetime-zone.nl.png",
+    "group": "scenario",
+    "bytes": 221022,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "formats.nl.png",
+    "group": "scenario",
+    "bytes": 215391,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "formats-region.nl.png",
+    "group": "scenario",
+    "bytes": 214159,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "formats-weekstart.nl.png",
+    "group": "scenario",
+    "bytes": 205152,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "formats-12h.nl.png",
+    "group": "scenario",
+    "bytes": 206950,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language.nl.png",
+    "group": "scenario",
+    "bytes": 221709,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-signout.nl.png",
+    "group": "scenario",
+    "bytes": 221397,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-add.nl.png",
+    "group": "scenario",
+    "bytes": 145547,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-installing.nl.png",
+    "group": "scenario",
+    "bytes": 217703,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-admin.nl.png",
+    "group": "scenario",
+    "bytes": 223399,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-admin-copied.nl.png",
+    "group": "scenario",
+    "bytes": 221987,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "about.nl.png",
+    "group": "scenario",
+    "bytes": 258562,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "about-rename.nl.png",
+    "group": "scenario",
+    "bytes": 201957,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "system.nl.png",
+    "group": "scenario",
+    "bytes": 242008,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   },
+   {
+    "file": "language-switched.en.png",
+    "group": "scenario",
+    "bytes": 224813,
+    "area": [
+     170,
+     56,
+     1100,
+     740
+    ]
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-time.out/time.nl.png",
+  "tests/gnome/scenarios/settings-time.out/datetime.nl.png",
+  "tests/gnome/scenarios/settings-time.out/datetime-synced.nl.png",
+  "tests/gnome/scenarios/settings-time.out/datetime-tray-seconds.nl.png",
+  "tests/gnome/scenarios/settings-time.out/datetime-autozone.nl.png",
+  "tests/gnome/scenarios/settings-time.out/datetime-manual.nl.png",
+  "tests/gnome/scenarios/settings-time.out/datetime-zone.nl.png",
+  "tests/gnome/scenarios/settings-time.out/formats.nl.png",
+  "tests/gnome/scenarios/settings-time.out/formats-region.nl.png",
+  "tests/gnome/scenarios/settings-time.out/formats-weekstart.nl.png",
+  "tests/gnome/scenarios/settings-time.out/formats-12h.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language-signout.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language-add.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language-installing.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language-admin.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language-admin-copied.nl.png",
+  "tests/gnome/scenarios/settings-time.out/about.nl.png",
+  "tests/gnome/scenarios/settings-time.out/about-rename.nl.png",
+  "tests/gnome/scenarios/settings-time.out/system.nl.png",
+  "tests/gnome/scenarios/settings-time.out/language-switched.en.png"
+ ]
+}

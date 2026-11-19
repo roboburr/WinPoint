@@ -10,6 +10,10 @@ import Meta from 'gi://Meta';
 import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+// The taskbars of the other monitors (win11-shell's io.github.win11shell.SecondaryTaskbar.Monitor<N> windows): one
+// identity for all of them, a surface of the native shell like the panel.
+const STRIP = 'io.github.win11shell.SecondaryTaskbar';
+const STRIP_ID = /^io\.github\.win11shell\.SecondaryTaskbar\.Monitor\d{1,2}$/;
 // A transient Picker retains its parent's GTK application ID but has its own
 // Wayland protocol role. Prefer that role so it never inherits the main app effect.
 const windowIdentity = window => {
@@ -17,6 +21,11 @@ const windowIdentity = window => {
     const gtk = window.get_gtk_application_id() || '';
     if (protocol === 'io.github.win11shell.FilePicker' || gtk === 'io.github.win11shell.FilePicker')
         return 'io.github.win11shell.FilePicker';
+    if (STRIP_ID.test(protocol))
+        return STRIP;
+    // the desktop windows of the other monitors are the desktop's (desktopBridge.js)
+    if (/^io\.github\.win11shell\.SecondaryDesktop\.Monitor\d{1,2}$/.test(protocol))
+        return 'io.github.win11shell.Desktop';
     return protocol || gtk;
 };
 // i18n: pairs (tools/i18n/check_pairs.py): texts in Win11's language (contracts C1, C3).
@@ -33,7 +42,7 @@ const OWN_APPS = new Set([
 const START = 'io.github.win11shell.Start';
 const PANEL = 'io.github.win11shell.Panel';
 // The surfaces one native shell process draws (D-G63): each may share the pid of the others.
-const SHELL_SURFACES = new Set([PANEL, START, 'io.github.win11shell.Desktop']);
+const SHELL_SURFACES = new Set([PANEL, START, 'io.github.win11shell.Desktop', STRIP]);
 const START_PHASES = ['open', 'closing', 'hidden'];
 // Start's own entrance (core/flyouts.js, START_ADAPTER): the glass rises 40 px in 250 ms, decelerating.
 const START_RISE = 40, START_RISE_MS = 250;
@@ -48,8 +57,11 @@ const live = actor => {
 export class NativeFrostedBridge {
     constructor({panel = () => null, geometry = () => null,
         windows = () => [], available = () => false, taskbarAutoHide = () => false,
-        onChanged = () => {}, registeredOnly = false, language = () => 'nl'} = {}) {
+        onChanged = () => {}, registeredOnly = false, language = () => 'nl', strips = () => []} = {}) {
         this._panel = panel;
+        // The shown taskbars of the other monitors: [{window, monitor}]. Their glass follows the panel's
+        // registration (same pid, the panel's options); none means every path below is as it was.
+        this._strips = strips;
         this._language = language;
         this._geometry = geometry;
         this._windows = windows;
@@ -167,6 +179,12 @@ export class NativeFrostedBridge {
             windows.push({pid, kind, blur: Boolean(available && blur), shadow: Boolean(available && entry?.shadowOption),
                 focused: global.display.focus_window === window});
         }
+        for (const {window, monitor} of this._strips()) {
+            const pid = window.get_pid();
+            if (!this._has(pid, PANEL)) continue;
+            windows.push({pid, kind: 'taskbar-secondary', monitor,
+                blur: Boolean(available && this._entries.get(window)?.effect), shadow: false, focused: false});
+        }
         // Hidden resident Start has no window, but its page keeps the translucent glass for the next open.
         for (const [pid, ids] of this._hosts) {
             if (ids.has(START) && !windows.some(w => w.pid === pid && w.kind === 'start'))
@@ -253,6 +271,16 @@ export class NativeFrostedBridge {
             desired.set(panel, {window: panel, actor: panelActor, kind: 'taskbar',
                 rect: {x: geometry.x, y: geometry.y + geometry.h - h, w: geometry.w, h}});
         }
+        if (this._options.blur && !this._options.taskbarAutoHide && !this._taskbarAutoHide() && !this._userAutoHide) {
+            // A taskbar of another monitor is its whole window: the backdrop is its frame.
+            for (const {window} of this._strips()) {
+                const actor = window.get_compositor_private();
+                const r = window.get_frame_rect();
+                if (!actor?.mapped || !actor.visible || r.width <= 1 || r.height <= 1 ||
+                    (this._registeredOnly && !this._has(window.get_pid(), PANEL))) continue;
+                desired.set(window, {window, actor, kind: 'strip', rect: {x: r.x, y: r.y, w: r.width, h: r.height}});
+            }
+        }
         if (this._startEligible()) {
             for (const window of this._windows()) {
                 if (windowIdentity(window) !== START || !this._has(window.get_pid(), START) ||
@@ -289,9 +317,10 @@ export class NativeFrostedBridge {
 
     _new(item) {
         const outer = new St.Widget({reactive: false, can_focus: false,
-            name: item.kind === 'taskbar' ? 'win11-frosted-taskbar'
+            name: item.kind === 'taskbar' ? 'win11-frosted-taskbar' : item.kind === 'strip' ? 'win11-frosted-strip'
                 : item.kind === 'start' ? 'win11-frosted-start' : 'win11-frosted-own-window'});
-        const backdrop = item.kind === 'taskbar' ? outer : new St.Widget({reactive: false, can_focus: false});
+        const bar = item.kind === 'taskbar' || item.kind === 'strip';
+        const backdrop = bar ? outer : new St.Widget({reactive: false, can_focus: false});
         if (backdrop !== outer) outer.add_child(backdrop);
         const entry = {outer, backdrop, effect: null, focused: null, kind: item.kind, rect: null};
         this._entries.set(item.window, entry);
@@ -325,11 +354,12 @@ export class NativeFrostedBridge {
             if (entry.focused !== focused || entry.shadowOption !== shadowOn) {
                 const shadow = shadowOn
                     ? (focused ? '0 8px 26px 0 rgba(0,0,0,0.34)' : '0 4px 14px 0 rgba(0,0,0,0.20)') : 'none';
-                entry.outer.set_style(`background-color: rgba(28,28,28,0.01); border-radius: ${item.kind === 'taskbar' ? 0 : 8}px; box-shadow: ${shadow};`);
+                const radius = item.kind === 'taskbar' || item.kind === 'strip' ? 0 : 8;
+                entry.outer.set_style(`background-color: rgba(28,28,28,0.01); border-radius: ${radius}px; box-shadow: ${shadow};`);
                 entry.focused = focused;
                 entry.shadowOption = shadowOn;
             }
-            const blurOn = this._options.blur && (item.kind === 'taskbar' || item.kind === 'start' ||
+            const blurOn = this._options.blur && (item.kind === 'taskbar' || item.kind === 'strip' || item.kind === 'start' ||
                 (this._options.windowBlur && focused && !(windowIdentity(item.window)).endsWith('.Search')));
             if (blurOn && !entry.effect) {
                 entry.effect = new Shell.BlurEffect({mode: Shell.BlurMode.BACKGROUND,

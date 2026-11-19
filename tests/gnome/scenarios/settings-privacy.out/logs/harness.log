@@ -1,0 +1,136 @@
+23:46:00 GE0c run lang=nl switch=False seed=defaults MemAvailable=6123880 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-privacy.py
+23:47:17 private install: exit 0 in 61.8 s, 87327 mutated paths, 0 outside the run dir, ok=True
+23:47:19 GNOME Shell 50.1 up (mode user, unsafe True)
+23:47:24 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-privacy.py
+23:47:25   check PASS: privacy: title and breadcrumb "Privacy en beveiliging"
+23:47:26   check PASS: privacy: a link to security
+23:47:26   check PASS: privacy: a link to diagnostics
+23:47:26   check PASS: privacy: a link to activity
+23:47:26   check PASS: privacy: a link to searchpermissions
+23:47:27   check PASS: privacy: a link to location
+23:47:27   check PASS: privacy: a link to camera
+23:47:27   check PASS: privacy: a link to microphone
+23:47:27   check PASS: privacy: a link to notifications
+23:47:27   check PASS: privacy: Deze pc doorzoeken is shown exactly when caps.tracker (its registry needs)
+23:47:27   check PASS: privacy: the recent-files rows moved to Activiteitengeschiedenis
+23:47:28   check PASS: camera: without a PermissionStore the apps are "not available" and none is listed
+23:47:29   check PASS: security: without fwupd "Controles niet beschikbaar" and no security level
+23:47:30   check PASS: diagnostics: without whoopsie-preferences there is no Foutrapporten row
+23:47:31   check PASS: activity: title and breadcrumb "Privacy en beveiliging › Activiteitengeschiedenis"
+23:47:32   check PASS: activity: Mijn activiteitengeschiedenis ... is bound to remember-recent-files
+23:47:32   check PASS: activity: st-activity-recent-files-max-age
+23:47:32   check PASS: activity: activity-clear
+23:47:32   check PASS: activity: the switch starts on
+23:47:33   check PASS: activity: a click writes remember-recent-files false
+23:47:33   check PASS: activity: the mirror sets privacy.recentFiles
+23:47:33   check PASS: activity: the duration is greyed while history is off
+23:47:33   check PASS: activity: the switch follows the key written from outside
+23:47:34   check PASS: activity: "7 dagen" writes recent-files-max-age 7
+23:47:35   check PASS: activity: the duration follows recent-files-max-age 30 written from outside
+23:47:40   scenario: timeout: Wissen (pointer) (after 4 s; last error: None)
+23:47:40   check PASS: activity: Geschiedenis wissen asks first, then empties recently-used.xbel (a .bak kept)
+23:47:41   check PASS: searchpermissions: title and breadcrumb "Privacy en beveiliging › Zoekmachtigingen"
+23:47:42   check PASS: searchpermissions: Zoekresultaten van apps opnemen is bound to disable-external
+23:47:42   check PASS: searchpermissions: Bestanden (its search provider) is in the list
+23:47:42   check PASS: searchpermissions: Bestanden starts on
+23:47:43   check PASS: searchpermissions: a click writes org.gnome.Nautilus.desktop into disabled
+23:47:43   check PASS: searchpermissions: the switch follows the key written from outside
+23:47:43   check PASS: searchpermissions: Omhoog writes sort-order with Bestanden first
+23:47:44   check PASS: searchpermissions: the first row has no Omhoog
+23:47:44   check PASS: searchpermissions: Omlaag puts Bestanden second
+23:47:45   check PASS: searchpermissions: App search off writes disable-external true
+23:47:45   check PASS: searchpermissions: the provider list is greyed while app search is off
+23:47:46   check PASS: searchpermissions: an outside disable-external false turns app search and the list back on
+23:47:47   check PASS: searching: title and breadcrumb "Privacy en beveiliging › Deze pc doorzoeken"
+23:47:48   check PASS: searching: Mijn bestanden zoeken with Klassiek and Uitgebreid
+23:47:48   check PASS: searching: Uitgebreid while the index covers every drive (alles.roots auto)
+23:47:48   check PASS: searching: Zoeklocaties aanpassen is there
+23:47:49   check PASS: searching: Klassiek gives WinPoint's index the search locations (index.setRoots first)
+23:47:49   check PASS: searching: and Tracker the same places, without $HOME recursive
+23:47:51   check PASS: searching: the Muziek switch takes it out of Tracker and the index
+23:47:51   check PASS: searching: a Tracker write from outside shows
+23:47:53   check PASS: searching: Uitgebreid sets WinPoint's index to every drive
+23:47:53   check PASS: searching: and Tracker the whole home folder
+23:47:54   check PASS: location: title and breadcrumb "Privacy en beveiliging › Locatie"
+23:47:56   check PASS: location: the device switch is bound to org.gnome.system.location enabled
+23:47:56   check PASS: location: the PermissionStore's Bestanden is listed by its name
+23:47:56   check PASS: location: the device switch and the apps follow enabled written from outside (on)
+23:47:56   check PASS: location: Bestanden shows the stored value (allowed)
+23:47:57   check PASS: location: the switch sends SetPermission(location, location, org.gnome.Nautilus, ['NONE', '1763280000'])
+23:47:57   check PASS: location: the PermissionStore needs no password
+23:47:57   check PASS: location: after the store's own Changed the switch keeps the clicked value
+23:47:58   check PASS: location: the switch follows a SetPermission made elsewhere (the store's Changed, privacy.changed)
+23:47:58   check PASS: location: the device switch off writes enabled false
+23:47:59   check PASS: location: the apps are greyed while the device is off
+23:47:59   check PASS: location: the switch and the apps follow the key written from outside
+23:48:00   check PASS: location: Bestanden shows "Laatst geopend op" from the stored time
+23:48:01   check PASS: camera: title and breadcrumb "Privacy en beveiliging › Camera"
+23:48:02   check PASS: camera: the device switch is bound to org.gnome.desktop.privacy disable-camera
+23:48:02   check PASS: camera: the PermissionStore's Bestanden is listed by its name
+23:48:02   check PASS: camera: Bestanden shows the stored value (allowed)
+23:48:03   check PASS: camera: the switch sends SetPermission(devices, camera, org.gnome.Nautilus, ['no'])
+23:48:03   check PASS: camera: the PermissionStore needs no password
+23:48:03   check PASS: camera: after the store's own Changed the switch keeps the clicked value
+23:48:04   check PASS: camera: the switch follows a SetPermission made elsewhere (the store's Changed, privacy.changed)
+23:48:04   check PASS: camera: the device switch off writes disable-camera true
+23:48:05   check PASS: camera: the apps are greyed while the device is off
+23:48:05   check PASS: camera: the switch and the apps follow the key written from outside
+23:48:06   check PASS: microphone: title and breadcrumb "Privacy en beveiliging › Microfoon"
+23:48:08   check PASS: microphone: the device switch is bound to org.gnome.desktop.privacy disable-microphone
+23:48:08   check PASS: microphone: the PermissionStore's Bestanden is listed by its name
+23:48:08   check PASS: microphone: Bestanden shows the stored value (not allowed)
+23:48:09   check PASS: microphone: the switch sends SetPermission(devices, microphone, org.gnome.Nautilus, ['yes'])
+23:48:09   check PASS: microphone: the PermissionStore needs no password
+23:48:09   check PASS: microphone: after the store's own Changed the switch keeps the clicked value
+23:48:10   check PASS: microphone: the switch follows a SetPermission made elsewhere (the store's Changed, privacy.changed)
+23:48:11   check PASS: microphone: the device switch off writes disable-microphone true
+23:48:11   check PASS: microphone: the apps are greyed while the device is off
+23:48:11   check PASS: microphone: the switch and the apps follow the key written from outside
+23:48:13   check PASS: security: title and breadcrumb "Privacy en beveiliging › Apparaatbeveiliging"
+23:48:13   check PASS: security: with fwupd's stand-in the security level
+23:48:14   check PASS: security: HSI:1 is "Controles geslaagd" with "Niveau 1"
+23:48:14   check PASS: security: the runtime issue is named
+23:48:14   check PASS: security: Beveiligd opstarten is on (UEFI Secure Boot enabled)
+23:48:14   check PASS: security: the security processor (TPM 2.0 found)
+23:48:14   check PASS: security: Beveiligingsgebeurtenissen with the Secure Boot event
+23:48:16   check PASS: security: every check under its level, the running ones last
+23:48:17   check PASS: security: a check with its verdict and fwupd's result
+23:48:19   check PASS: security: Technisch rapport kopiëren puts GNOME's report on the clipboard
+23:48:20   check PASS: security: Beveiligingscentrum shown exactly when caps.securityCenter
+23:48:20   check PASS: security: the USB4 and Thunderbolt link shown exactly when caps.thunderbolt
+23:48:20   check PASS: security: fwupd read (attributes and the last 10 events), no password
+23:48:22   check PASS: diagnostics: title and breadcrumb "Privacy en beveiliging › Diagnostische gegevens en feedback"
+23:48:23   check PASS: diagnostics: with whoopsie-preferences' stand-in, Foutrapporten naar Canonical verzenden
+23:48:23   check PASS: diagnostics: it shows the daemon's mode (Handmatig)
+23:48:24   check PASS: diagnostics: the two system reports
+23:48:26   check PASS: diagnostics: Automatisch sends SetReportCrashes(true), SetAutomaticallyReportCrashes(true), each with interactive authorization
+23:48:26   check PASS: diagnostics: the switch runs ubuntu-insights consent linux --state true (through system_tool)
+23:48:27   check PASS: diagnostics: the stub fails, so the switch goes back
+23:48:28   check PASS: diagnostics: Rapport weergeven runs ubuntu-insights collect --dry-run
+23:48:29   check PASS: diagnostics: no pkexec, systemctl or apt was called (only the daemon and the tool)
+23:48:29   check PASS: every control click (24) was a real pointer click
+23:48:29   check FAIL (known settings-b note 9 (kit Dialog smoke layer)): a pointer click reaches a kit dialog's button (1 pressed)
+23:48:29 shutdown app: signalled own descendants 1347:win11-gtk-setti, 1356:win11-app
+23:48:29 shutdown shell clients: signalled own descendants 191:ibus-daemon, 522:win11-shell, 1409:glycin-image-rs, 635:win11-panel, 210:ibus-memconf, 212:ibus-extension-, 527:ibus-engine-sim
+23:48:29 shutdown gnome-shell: signalled own descendants 164:gnome-shell
+23:48:29 shutdown system bus: signalled own descendants 163:dbus-daemon
+23:48:29 inner sweep: signalled own descendants 1424:glycin-image-rs
+23:48:29 inner done: 0 surfaces, 0 failed []
+23:48:32 strace connect:     61 x AF_INET 127.0.0.1 -> EINPROGRESS
+23:48:32 strace connect:     20 x AF_INET 127.0.0.1 -> UNFINISHED
+23:48:32 strace connect:      5 x AF_INET 127.0.0.1 -> ok
+23:48:32 strace connect:      1 x AF_UNIX /run/pipewire/pipewire-0 -> ENOENT
+23:48:32 strace connect:      1 x AF_UNIX /run/systemd/journal/stdout -> ENOENT
+23:48:32 strace connect:      1 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> UNFINISHED
+23:48:32 strace connect:      3 x AF_UNIX /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96 -> ok
+23:48:32 strace connect:     35 x AF_UNIX /tmp/w11-rt/bus -> ok
+23:48:32 strace connect:      1 x AF_UNIX /tmp/w11-rt/pipewire-0 -> ENOENT
+23:48:32 strace connect:      2 x AF_UNIX /tmp/w11-rt/pulse/native -> ENOENT
+23:48:32 strace connect:      1 x AF_UNIX /tmp/w11-rt/sbus -> UNFINISHED
+23:48:32 strace connect:      7 x AF_UNIX /tmp/w11-rt/sbus -> ok
+23:48:32 strace connect:      3 x AF_UNIX /tmp/w11-rt/w11-wl -> ok
+23:48:32 strace connect:      7 x AF_UNIX /var/lib/sss/pipes/nss -> ENOENT
+23:48:32 strace connect:     30 x AF_UNIX /var/run/nscd/socket -> ENOENT
+23:48:32 strace connect:      2 x AF_UNIX /var/run/pulse/native -> ENOENT
+23:48:32 strace connect check: 226 connect() calls, OK
+23:48:36 strace exec check: 328 execve() calls, OK

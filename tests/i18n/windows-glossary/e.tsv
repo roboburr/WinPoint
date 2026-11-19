@@ -1,0 +1,293 @@
+# tests/i18n/windows-glossary/e.tsv: the Windows 11 UI strings settings-parity batch E uses (notes/claude/settings-parity.md,
+# amendment 28): one row per string, tab-separated: en (en-GB), nl (nl-NL), source, verified.
+#   source: glossary (tools/i18n/glossary.tsv, WinPoint's checked Windows 11 terms), windows (the windows.json inventory,
+#   from memory), rename (a deliberate WinPoint rename; the Windows string is in the comment above the row), winpoint
+#   (WinPoint's own wording where Windows has no such text)
+#   verified: yes (checked against Windows 11 25H2 nl-NL / en-GB or glossary.tsv) or no (to check on a real machine)
+# Batches take their UI strings from these files; step I fails on a new UI string that no file lists. Only batch E
+# edits this file.
+
+# --- slice 1: Accounts, Je info, E-mail en accounts, Aanmeldingsopties, Andere gebruikers (native/apps/settings/src/pages/{accounts,yourinfo,email_accounts,signin,otherusers}.rs)
+Administrator	Administrator	windows	no
+Standard user	Standaardgebruiker	winpoint	no
+Local account	Lokaal account	windows	no
+Current password	Huidig wachtwoord	windows	no
+New password	Nieuw wachtwoord	windows	no
+Confirm password	Wachtwoord bevestigen	windows	no
+Generate a password	Een wachtwoord genereren	winpoint	no
+Account settings	Accountinstellingen	winpoint	no
+Lock now	Nu vergrendelen	winpoint	no
+Lock	Vergrendelen	glossary	yes
+Lock the screen when you step away (Windows logo key + L)	Het scherm vergrendelen als je even weggaat (Windows-logotoets + L)	winpoint	no
+Your account stays on this computer. WinPoint doesn’t send any data about you to the internet; only the daily update check asks GitHub for WinPoint’s latest version.	Je account blijft op deze computer. WinPoint stuurt geen gegevens over jou naar internet; alleen de dagelijkse updatecontrole vraagt GitHub naar de nieuwste versie van WinPoint.	winpoint	no
+Email	E-mail	winpoint	no
+Calendar	Agenda	windows	no
+Contacts	Contactpersonen	winpoint	no
+Files	Bestanden	winpoint	no
+Photos	Foto's	winpoint	no
+Documents	Documenten	glossary	yes
+Printers	Printers	winpoint	no
+Maps	Kaarten	winpoint	no
+Music	Muziek	glossary	yes
+To Do	Taken	winpoint	no
+Chat	Chat	winpoint	no
+# GNOME Online Accounts: "Network _Resources" (nl "Netwerk_bronnen"), the ticketing service; Windows has none
+Network Resources	Netwerkbronnen	winpoint	no
+Read Later	Later lezen	winpoint	no
+Use this account for:	Dit account gebruiken voor:	winpoint	no
+Account settings for {name}	Accountinstellingen voor {name}	winpoint	no
+Done	Gereed	windows	no
+Remove this account?	Dit account verwijderen?	winpoint	no
+{name} will be removed from this PC. Email, calendar, contacts and files of this account will then no longer be available in your apps.	{name} wordt van deze pc verwijderd. E-mail, agenda, contactpersonen en bestanden van dit account zijn dan niet meer beschikbaar in je apps.	winpoint	no
+Remove	Verwijderen	windows	no
+Add an account	Een account toevoegen	winpoint	no
+Follow the steps in the {name} window.	Volg de stappen in het venster van {name}.	winpoint	no
+Cancel	Annuleren	glossary	yes
+Online accounts aren’t available on this computer.	Onlineaccounts zijn op deze computer niet beschikbaar.	winpoint	no
+No internet connection	Geen internetverbinding	winpoint	no
+Accounts can only be added once you’re connected again.	Accounts kunnen pas worden toegevoegd als je weer verbinding hebt.	winpoint	no
+Accounts used by email, calendar and contacts	Accounts die worden gebruikt door e-mail, agenda en contactpersonen	windows	no
+Google, Microsoft 365, Nextcloud, IMAP and more	Google, Microsoft 365, Nextcloud, IMAP en meer	winpoint	no
+Add account	Account toevoegen	windows	no
+Sign-in required	Aanmelden vereist	winpoint	no
+Sign in again to keep using this account.	Meld je opnieuw aan om dit account te blijven gebruiken.	winpoint	no
+Sign in again	Opnieuw aanmelden	winpoint	no
+Choose what you use this account for	Kies waarvoor je dit account gebruikt	winpoint	no
+Manage	Beheren	windows	no
+Remove this account	Dit account verwijderen	winpoint	no
+This account is managed by your organisation.	Dit account wordt beheerd door je organisatie.	winpoint	no
+No accounts have been added yet.	Er zijn nog geen accounts toegevoegd.	winpoint	no
+Full name	Volledige naam	winpoint	no
+User name	Gebruikersnaam	windows	no
+Lowercase letters, digits, - and _	Kleine letters, cijfers, - en _	winpoint	no
+Account type	Accounttype	winpoint	no
+The user sets a password at the first sign-in	De gebruiker stelt een wachtwoord in bij de eerste aanmelding	winpoint	no
+Set a password now	Nu een wachtwoord instellen	winpoint	no
+Password	Wachtwoord	windows	no
+Create a user for this PC	Een gebruiker voor deze pc maken	windows	no
+Add	Toevoegen	winpoint	no
+Change account type	Accounttype wijzigen	windows	no
+The user sets a password at the next sign-in	De gebruiker stelt een wachtwoord in bij de volgende aanmelding	winpoint	no
+Reset the password of {name}	Wachtwoord van {name} opnieuw instellen	winpoint	no
+Save	Opslaan	glossary	yes
+Delete account and data?	Account en gegevens verwijderen?	windows	no
+# GNOME Settings' "%s is still logged in" and its body (cc-user-page.c), in Windows' "aanmelden" wording
+{name} is still signed in	{name} is nog aangemeld	winpoint	no
+Deleting a user while they’re signed in can leave the system in an inconsistent state.	Een gebruiker verwijderen terwijl die is aangemeld, kan het systeem in een inconsistente toestand achterlaten.	winpoint	no
+The account of {name} will be removed from this PC. Delete files also removes the home folder, documents, photos, music and other files of {name}. This can’t be undone.	Het account van {name} wordt van deze pc verwijderd. Met Bestanden verwijderen gaan ook de persoonlijke map, de documenten, foto’s, muziek en andere bestanden van {name} verloren. Dit kan niet ongedaan worden gemaakt.	winpoint	no
+Delete files	Bestanden verwijderen	winpoint	no
+Keep files	Bestanden bewaren	winpoint	no
+Account options	Accountopties	windows	no
+Set at the next sign-in	Wordt ingesteld bij de volgende aanmelding	winpoint	no
+Reset password	Wachtwoord opnieuw instellen	winpoint	no
+Automatic sign-in	Automatisch aanmelden	windows	no
+This user is signed in without a password when the PC starts	Deze gebruiker wordt aangemeld zonder wachtwoord wanneer de pc opstart	winpoint	no
+System default	Systeemstandaard	winpoint	no
+Language	Taal	windows	no
+Applies from this user’s next sign-in	Geldt vanaf de volgende aanmelding van deze gebruiker	winpoint	no
+Account and data	Account en gegevens	windows	no
+User accounts aren’t available on this computer.	Gebruikersaccounts zijn op deze computer niet beschikbaar.	winpoint	no
+Other users	Andere gebruikers	windows	no
+Add other user	Een andere gebruiker toevoegen	windows	no
+There are no other users on this PC.	Er zijn geen andere gebruikers op deze pc.	winpoint	no
+When the screen turns off	Wanneer het scherm wordt uitgeschakeld	winpoint	no
+After {n} seconds	Na {n} seconden	winpoint	no
+After 1 hour	Na 1 uur	winpoint	no
+After 1 minute	Na 1 minuut	winpoint	no
+After {n} minutes	Na {n} minuten	winpoint	no
+Never	Nooit	windows	no
+Change your password	Je wachtwoord wijzigen	winpoint	no
+Change	Wijzigen	windows	no
+Your password has been changed	Je wachtwoord is gewijzigd	winpoint	no
+Right index finger	Rechterwijsvinger	winpoint	no
+Left index finger	Linkerwijsvinger	winpoint	no
+Right thumb	Rechterduim	winpoint	no
+Right middle finger	Rechtermiddelvinger	winpoint	no
+Right ring finger	Rechterringvinger	winpoint	no
+Right little finger	Rechterpink	winpoint	no
+Left thumb	Linkerduim	winpoint	no
+Left middle finger	Linkermiddelvinger	winpoint	no
+Left ring finger	Linkerringvinger	winpoint	no
+Left little finger	Linkerpink	winpoint	no
+Your fingerprint has been set up.	Je vingerafdruk is ingesteld.	winpoint	no
+Swipe the same finger over the reader again.	Veeg nog een keer met dezelfde vinger over de lezer.	winpoint	no
+Lift your finger and place it on the reader again.	Til je vinger op en leg hem opnieuw op de lezer.	winpoint	no
+The swipe was too short. Try again.	Je veegde te kort. Probeer het opnieuw.	winpoint	no
+Place your finger in the middle of the reader.	Leg je vinger in het midden van de lezer.	winpoint	no
+Lift your finger and try again.	Til je vinger op en probeer het opnieuw.	winpoint	no
+This fingerprint is already set up.	Deze vingerafdruk is al ingesteld.	winpoint	no
+The reader has no room for more fingerprints.	De lezer heeft geen ruimte meer voor vingerafdrukken.	winpoint	no
+The fingerprint reader was disconnected.	De vingerafdruklezer is losgekoppeld.	winpoint	no
+Swipe your finger over the reader.	Veeg met je vinger over de lezer.	winpoint	no
+Place your finger on the fingerprint reader.	Leg je vinger op de vingerafdruklezer.	winpoint	no
+Finger	Vinger	winpoint	no
+Set up fingerprint recognition	Vingerafdrukherkenning instellen	winpoint	no
+Start	Beginnen	winpoint	no
+Remove fingerprints?	Vingerafdrukken verwijderen?	winpoint	no
+Try again	Opnieuw proberen	glossary	yes
+You will no longer be able to sign in with your fingerprint.	Je kunt je dan niet meer met je vingerafdruk aanmelden.	winpoint	no
+Ways to sign in	Manieren om je aan te melden	windows	no
+# Windows: “Vingerafdrukherkenning (Windows Hello)” / “Fingerprint recognition (Windows Hello)”; WinPoint has no Windows Hello
+Fingerprint recognition	Vingerafdrukherkenning	rename	no
+Sign in with your fingerprint reader	Aanmelden met je vingerafdruklezer	winpoint	no
+No fingerprint has been set up yet.	Er is nog geen vingerafdruk ingesteld.	winpoint	no
+{n} fingerprint has been set up.	Er is {n} vingerafdruk ingesteld.	winpoint	no
+{n} fingerprints have been set up.	Er zijn {n} vingerafdrukken ingesteld.	winpoint	no
+Set up	Instellen	windows	no
+Add another finger	Nog een vinger toevoegen	winpoint	no
+Remove fingerprints	Vingerafdrukken verwijderen	winpoint	no
+Sign in with your account password	Aanmelden met het wachtwoord van je account	winpoint	no
+You can sign in with your account password.	Je kunt je aanmelden met het wachtwoord van je account.	winpoint	no
+Additional settings	Aanvullende instellingen	windows	no
+# Windows: “Als je weg bent geweest, wanneer moet Windows vereisen dat je je opnieuw aanmeldt?” (amendment 23: Windows → WinPoint)
+If you’ve been away, when should WinPoint require you to sign in again?	Als je weg bent geweest, wanneer moet WinPoint vereisen dat je je opnieuw aanmeldt?	rename	no
+Also lock when the PC goes to sleep	Ook vergrendelen wanneer de pc in slaapstand gaat	winpoint	no
+Block new USB devices while the PC is locked	Nieuwe USB-apparaten blokkeren wanneer de pc is vergrendeld	winpoint	no
+New USB devices only work after you sign in	Nieuwe USB-apparaten werken pas nadat je je hebt aangemeld	winpoint	no
+Sign in without a password when the PC starts	Aanmelden zonder wachtwoord wanneer de pc opstart	winpoint	no
+This needs an administrator password.	Hiervoor is een beheerderswachtwoord nodig.	winpoint	no
+When the screen turns off and the PC goes to sleep	Wanneer het scherm wordt uitgeschakeld en de pc in slaapstand gaat	winpoint	no
+Pictures	Afbeeldingen	glossary	yes
+Choose a picture for your account	Een afbeelding kiezen voor je account	winpoint	no
+This name appears on the sign-in screen and in Start.	Deze naam staat op het aanmeldingsscherm en in Start.	winpoint	no
+Change your name	Je naam wijzigen	winpoint	no
+Adjust your photo	Je foto aanpassen	windows	no
+Choose a file	Een bestand kiezen	windows	no
+Browse files	Bladeren door bestanden	windows	no
+Choose a default picture	Een standaardafbeelding kiezen	winpoint	no
+The pictures that come with Ubuntu	De afbeeldingen die bij Ubuntu horen	winpoint	no
+Remove picture	Foto verwijderen	winpoint	no
+Use your initials instead of a picture	Je initialen gebruiken in plaats van een foto	winpoint	no
+Change name	Naam wijzigen	windows	no
+
+# --- slice 2: Systeem (the rename dialog), Info, Tijd en taal, Datum en tijd, Taal en regio, Regionale notatie, Beheerinstellingen voor taal
+# (native/apps/settings/src/pages/{system,about,time,formats,language_admin}.rs)
+Time zone: {tz}	Tijdzone: {tz}	winpoint	no
+Language: {l}	Taal: {l}	winpoint	no
+Date	Datum	windows	no
+Time	Tijd	windows	no
+Change date and time	Datum en tijd wijzigen	windows	no
+Last successful time synchronisation: {when}	Laatste geslaagde tijdsynchronisatie: {when}	windows	no
+The time is synchronised with a time server.	De tijd is gesynchroniseerd met een tijdserver.	winpoint	no
+The time hasn’t been synchronised yet.	De tijd is nog niet gesynchroniseerd.	winpoint	no
+Time server: {server}	Tijdserver: {server}	windows	no
+The system clock can’t be set here.	De systeemklok kan hier niet worden ingesteld.	winpoint	no
+Set time automatically	Tijd automatisch instellen	windows	no
+Set time zone automatically	Tijdzone automatisch instellen	windows	no
+Location services need to be turned on for this.	Hiervoor moeten locatievoorzieningen zijn ingeschakeld.	winpoint	no
+Set the date and time manually	De datum en tijd handmatig instellen	windows	no
+Time zone	Tijdzone	windows	no
+Adjust for daylight saving time automatically	Automatisch aanpassen aan zomertijd	windows	no
+Sync now	Nu synchroniseren	windows	no
+24-hour clock, first day of week and how dates are written	24-uursnotatie, eerste dag van de week en de notatie van datums	winpoint	no
+Use the display language (recommended)	Weergavetaal gebruiken (aanbevolen)	winpoint	no
+Type a language name	Een taalnaam typen	winpoint	no
+Choose a language to install	Een taal kiezen om te installeren	windows	no
+Install	Installeren	windows	no
+WinPoint needs to sign you out to apply your new display language.	WinPoint moet je afmelden om je nieuwe weergavetaal toe te passen.	windows	no
+Your new regional format applies when you sign in again.	Je nieuwe regionale notatie wordt toegepast wanneer je je opnieuw aanmeldt.	winpoint	no
+Display language	Weergavetaal	glossary	yes
+Ubuntu and your apps will appear in this language	Ubuntu en je apps worden in deze taal weergegeven	winpoint	no
+WinPoint language	Taal van WinPoint	winpoint	no
+Start, the taskbar, Settings and the other parts of WinPoint (in Dutch or English)	Start, de taakbalk, Instellingen en de andere onderdelen van WinPoint (in het Nederlands of het Engels)	winpoint	no
+Preferred languages	Voorkeurstalen	windows	no
+Add a language	Een taal toevoegen	windows	no
+Install the language support: translations, dictionaries and fonts	De taalondersteuning installeren: vertalingen, woordenboeken en lettertypen	winpoint	no
+Installing {name}	{name} installeren	winpoint	no
+{n}% complete	{n}% voltooid	winpoint	no
+Just a moment…	Even geduld…	winpoint	no
+Language pack installed	Taalpakket geïnstalleerd	winpoint	no
+The language support isn’t completely installed	De taalondersteuning is niet volledig geïnstalleerd	winpoint	no
+More options	Meer opties	glossary	yes
+The language can’t be installed	De taal kan niet worden geïnstalleerd	winpoint	no
+Region	Regio	windows	no
+Apps show dates, times and numbers in this format	Apps tonen datums, tijden en getallen in deze notatie	winpoint	no
+Gregorian calendar	Gregoriaanse kalender	winpoint	no
+First day of week	Eerste dag van de week	windows	no
+Short date	Korte datum	windows	no
+Short time	Korte tijd	windows	no
+Long time	Lange tijd	windows	no
+Numbers	Getallen	winpoint	no
+Change formats	Notaties wijzigen	windows	no
+Show time and date in the System tray	Tijd en datum weergeven in het systeemvak	windows	no
+Show seconds in System tray clock	Seconden weergeven in de klok in het systeemvak	windows	no
+Show the weekday in System tray clock	Weekdag weergeven in de klok in het systeemvak	winpoint	no
+Show week numbers in the calendar	Weeknummers weergeven in de agenda	windows	no
+Recommended [{name}]	Aanbevolen [{name}]	windows	no
+Imperial	Imperiaal	winpoint	no
+Metric	Metrisch	winpoint	no
+Dates	Datums	winpoint	no
+Times	Tijden	winpoint	no
+Dates and times	Datums en tijden	winpoint	no
+Measurement system	Maatsysteem	winpoint	no
+Paper	Papier	winpoint	no
+Sign out	Afmelden	glossary	yes
+Monday	Maandag	windows	no
+Saturday	Zaterdag	windows	no
+Sunday	Zondag	windows	no
+24-hour clock	24-uursnotatie	winpoint	no
+12-hour clock	12-uursnotatie	winpoint	no
+There’s no preview of this format: the locale isn’t generated on this computer.	Er is geen voorbeeld van deze notatie: de landinstelling is niet op deze computer gegenereerd.	winpoint	no
+Not set	Niet ingesteld	winpoint	no
+The sign-in screen’s language can’t be changed here.	De taal van het aanmeldingsscherm kan hier niet worden gewijzigd.	winpoint	no
+Welcome screen and new user accounts	Welkomstscherm en nieuwe gebruikersaccounts	windows	no
+The sign-in screen, the system accounts and new user accounts use this language and these formats.	Het aanmeldingsscherm, de systeemaccounts en nieuwe gebruikersaccounts gebruiken deze taal en notaties.	winpoint	no
+Sign-in screen language	Taal van het aanmeldingsscherm	winpoint	no
+Sign-in screen formats	Notaties van het aanmeldingsscherm	winpoint	no
+Same as the language	Hetzelfde als de taal	winpoint	no
+Copy my settings	Mijn instellingen kopiëren	winpoint	no
+Use your display language ({language}) and regional format for the sign-in screen and new user accounts	Je weergavetaal ({language}) en regionale notatie gebruiken voor het aanmeldingsscherm en nieuwe gebruikersaccounts	winpoint	no
+Copy settings	Instellingen kopiëren	windows	no
+Copy	Kopiëren	windows	no
+desktop	bureaublad	winpoint	no
+preview window	voorbeeldvenster	winpoint	no
+browser	browser	winpoint	no
+separate window	los venster	winpoint	no
+{bits}-bit operating system, {arch}-based processor	{bits}-bits besturingssysteem, {arch}-processor	windows	no
+{total} ({usable} usable)	{total} ({usable} bruikbaar)	windows	no
+Not all information is available on this computer.	Niet alle informatie is beschikbaar op deze computer.	winpoint	no
+Rename this PC	Naam van deze pc wijzigen	windows	no
+{n} core	{n} kern	winpoint	no
+{n} cores	{n} kernen	winpoint	no
+{n} thread	{n} thread	winpoint	no
+{n} threads	{n} threads	winpoint	no
+{cores}, {threads}	{cores}, {threads}	winpoint	no
+Device name	Apparaatnaam	windows	no
+Model	Model	winpoint	no
+Processor	Processor	windows	no
+Installed RAM	Geïnstalleerd RAM	windows	no
+Graphics card	Grafische kaart	windows	no
+Storage	Opslag	windows	no
+Firmware version	Firmwareversie	winpoint	no
+System type	Systeemtype	windows	no
+test mode	testmodus	winpoint	no
+Edition	Editie	windows	no
+Version	Versie	windows	no
+Installed on	Geïnstalleerd op	windows	no
+OS build	Build van besturingssysteem	windows	no
+GNOME version	GNOME-versie	winpoint	no
+Windowing system	Venstersysteem	winpoint	no
+Virtualisation	Virtualisatie	winpoint	no
+Kernel	Kernel	winpoint	no
+Experience	Ervaring	windows	no
+Device specifications	Apparaatspecificaties	windows	no
+# Windows: Windows specifications / Windows-specificaties: the OS is named ({os} = os-release NAME)
+{os} specifications	{os}-specificaties	rename	no
+Operating system	Besturingssysteem	winpoint	no
+View performance	Prestaties bekijken	winpoint	no
+Processor, memory and disks live in Task Manager	Processor, geheugen en schijven live in Taakbeheer	winpoint	no
+This PC	Deze pc	glossary	yes
+Current PC name: {name}	Huidige pc-naam: {name}	windows	no
+A new name for your PC	Een nieuwe naam voor je pc	winpoint	no
+You can use a combination of letters, hyphens and numbers.	Je kunt een combinatie van letters, koppeltekens en cijfers gebruiken.	windows	no
+Rename your PC	De naam van je pc wijzigen	windows	no
+Next	Volgende	windows	no
+Network	Netwerk	winpoint	no
+Not connected	Niet verbonden	winpoint	no
+Connected	Verbonden	winpoint	no
+1 update available	1 update beschikbaar	winpoint	no
+{n} updates available	{n} updates beschikbaar	winpoint	no
+Up to date	Up-to-date	winpoint	no
+Checked {when}	Gecontroleerd {when}	winpoint	no
+Updates	Updates	winpoint	no
+Rename	Naam wijzigen	glossary	yes

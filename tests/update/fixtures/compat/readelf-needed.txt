@@ -1,9 +1,9 @@
 # readelf -d on the BINS of scripts/install.py in a build directory (NEEDED, in order), recorded by tests/update/test_compat.sh --record-readelf from tests/build/native-release; test_compat.sh checks it again on every run, elf.rs's unit test compares the parser with it
-win11-app: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libc.so.6
+win11-app: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6
 win11-calendar: libgtk-4.so.1 libcairo.so.2 libgraphene-1.0.so.0 libgio-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6 ld-linux-x86-64.so.2
-win11-default-apps: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libc.so.6
-win11-explorer: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libc.so.6
-win11-file-portal: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libc.so.6
+win11-default-apps: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6
+win11-explorer: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6
+win11-file-portal: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6
 win11-gtk-alles: libgtk-4.so.1 libpango-1.0.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libgraphene-1.0.so.0 libgio-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6 ld-linux-x86-64.so.2
 win11-gtk-defaultapps: libgtk-4.so.1 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libgraphene-1.0.so.0 libgio-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6 ld-linux-x86-64.so.2
 win11-gtk-disks: libgtk-4.so.1 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libgraphene-1.0.so.0 libgio-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6 ld-linux-x86-64.so.2
@@ -13,8 +13,8 @@ win11-gtk-settings: libgtk-4.so.1 libpango-1.0.so.0 libgdk_pixbuf-2.0.so.0 libca
 win11-gtk-taskmgr: libgtk-4.so.1 libpango-1.0.so.0 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libgraphene-1.0.so.0 libgio-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6 ld-linux-x86-64.so.2
 win11-image-worker: libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6
 win11-index-worker: libglib-2.0.so.0 libgcc_s.so.1 libc.so.6
-win11-installer: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libc.so.6
+win11-installer: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6
 win11-launch: libgobject-2.0.so.0 libgio-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libc.so.6
-win11-panel: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libc.so.6
+win11-panel: libz.so.1 libgdk_pixbuf-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgio-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6
 win11-shell: libgtk-4.so.1 libgdk_pixbuf-2.0.so.0 libcairo.so.2 libgraphene-1.0.so.0 libgio-2.0.so.0 libgobject-2.0.so.0 libglib-2.0.so.0 libgcc_s.so.1 libm.so.6 libc.so.6 ld-linux-x86-64.so.2
 win11-software-worker: libgcc_s.so.1 libc.so.6

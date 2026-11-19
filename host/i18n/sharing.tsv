@@ -1,0 +1,58 @@
+# host/i18n/sharing.tsv: host texts of services/sharing.rs.
+# Owner: batch C (settings parity, §5.4).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/sharing.rs, sharing/{rdp,ssh,media,systemd,tls}.rs (notes/claude/settings-parity.md §5.4)
+# the session or system bus does not answer (no bus in this session)
+#@ new
+sharing.unavailable	Delen is hier niet beschikbaar.	Sharing isn’t available here.
+# the call's arguments are malformed (a switch that is no true/false, a bad uuid)
+#@ new
+sharing.badArgs	Ongeldige invoer.	Invalid input.
+# sharing.rdp.credentials.set / .system.credentials.set: an empty or malformed user name or password
+#@ new
+sharing.badCredentials	Vul een gebruikersnaam en een wachtwoord in, zonder regeleinden. De gebruikersnaam mag niet met een streepje beginnen.	Enter a user name and a password, without line breaks. The user name can’t start with a hyphen.
+# sharing.media.folders.set: a folder that is no full path
+#@ new
+sharing.badFolder	Een map moet een volledig pad zijn.	A folder must be a full path.
+# gnome-remote-desktop (its schema or grdctl) is not installed
+#@ new
+sharing.noRemoteDesktop	Extern bureaublad is niet beschikbaar: gnome-remote-desktop is niet geïnstalleerd.	Remote Desktop isn’t available: gnome-remote-desktop isn’t installed.
+# the system daemon org.gnome.RemoteDesktop.Configuration is not there
+#@ new
+sharing.noRemoteLogin	Extern aanmelden is niet beschikbaar op deze pc.	Remote login isn’t available on this PC.
+# libgnutls.so.30 cannot be loaded, or it could not make the RDP certificate (amendment 34)
+#@ new
+sharing.noTls	Het certificaat voor Extern bureaublad kan niet worden gemaakt: GnuTLS (libgnutls.so.30) ontbreekt of werkt niet.	The Remote Desktop certificate can’t be created: GnuTLS (libgnutls.so.30) is missing or doesn’t work.
+# the certificate files could not be written; {error} is the system's message
+#@ new
+sharing.certificateFailed	Het certificaat voor Extern bureaublad kon niet worden opgeslagen: {error}	The Remote Desktop certificate couldn’t be saved: {error}
+# grdctl could not read or store the credentials in the keyring; {error} is grdctl's own (English) message
+#@ new
+sharing.credentialsFailed	De aanmeldingsgegevens voor Extern bureaublad konden niet worden gelezen of opgeslagen: {error}	The Remote Desktop sign-in details couldn’t be read or saved: {error}
+# sharing.ssh.set without openssh-server
+#@ new
+sharing.noSsh	OpenSSH-server is niet geïnstalleerd.	OpenSSH Server isn’t installed.
+# sharing.ssh.install: PackageKit knows no openssh-server package to install
+#@ new
+sharing.noPackage	Het pakket openssh-server is niet gevonden in de softwarebronnen.	The openssh-server package wasn’t found in the software sources.
+# sharing.ssh.install: PackageKit's transaction failed; {error} is PackageKit's own (English) message
+#@ new
+sharing.installFailed	De installatie is mislukt: {error}	The installation failed: {error}
+# sharing.ssh.install while another install runs
+#@ new
+sharing.installRunning	Er wordt al een optionele functie geïnstalleerd.	An optional feature is already being installed.
+# gsd Sharing does not answer, or the computer is not connected to a network
+#@ new
+sharing.noSharing	Delen in het netwerk is niet beschikbaar: gnome-settings-daemon wordt niet uitgevoerd of deze pc is niet verbonden met een netwerk.	Network sharing isn’t available: gnome-settings-daemon isn’t running or this PC isn’t connected to a network.
+# sharing.media.folders.set: rygel.conf could not be written; {error} is the system's message
+#@ new
+sharing.saveFailed	De instellingen voor mediastreaming konden niet worden opgeslagen: {error}	The media streaming settings couldn’t be saved: {error}

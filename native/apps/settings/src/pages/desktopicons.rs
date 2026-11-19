@@ -99,6 +99,18 @@ fn page(p: Page) -> PageFuture {
             )
             .widget(),
         );
-        vec![show.widget().clone().upcast(), which.widget().clone().upcast(), layout.widget().clone().upcast()]
+        // the Ubuntu Desktop panel's icons have their place here (settings parity, amendment 27): WinPoint's desktop
+        // replaces DING, which the WinPoint session never loads
+        let ubuntu = common::notice(t(
+            "De bureaubladpictogrammen van Ubuntu worden in WinPoint niet gebruikt. Deze instellingen gelden voor het bureaublad van WinPoint.",
+            "Ubuntu’s desktop icons aren’t used in WinPoint. These settings apply to WinPoint’s desktop.",
+        ));
+        ubuntu.widget().set_widget_name("desktopicons-ubuntu");
+        vec![
+            show.widget().clone().upcast(),
+            which.widget().clone().upcast(),
+            layout.widget().clone().upcast(),
+            ubuntu.widget().clone().upcast(),
+        ]
     })
 }

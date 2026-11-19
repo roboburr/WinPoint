@@ -95,6 +95,19 @@ impl Bluetooth {
     fn unavailable(blocked: bool) -> Value {
         json!({"available":false,"powered":false,"powerState":"off","stuck":false,"discovering":false,"name":"","blocked":blocked,"devices":[],"nearby":[]})
     }
+    /// A state of [`Self::get`] with gsd's flight mode (amendment 57): `airplane` (Rfkill AirplaneMode, the
+    /// "Vliegtuigmodus staat aan" of the page) and `hardwareAirplane` (BluetoothHardwareAirplaneMode, the switch on
+    /// the computer), both null without gsd's Rfkill.
+    fn with_gsd(mut state: Value) -> Value {
+        let gsd = session().ok().and_then(|bus| gsd_rfkill(&bus, RFKILL));
+        state["airplane"] = gsd
+            .as_ref()
+            .map_or(Value::Null, |p| json!(truth(&p["AirplaneMode"])));
+        state["hardwareAirplane"] = gsd.as_ref().map_or(Value::Null, |p| {
+            json!(truth(&p["BluetoothHardwareAirplaneMode"]))
+        });
+        state
+    }
     fn objects() -> Result<Value, String> {
         let bus = system()?;
         call(
@@ -133,10 +146,10 @@ impl Bluetooth {
     pub fn get(&self) -> Value {
         let (blocked, _) = Self::blocked();
         let Ok(objects) = Self::objects() else {
-            return Self::unavailable(blocked);
+            return Self::with_gsd(Self::unavailable(blocked));
         };
         let Some((path, props)) = Self::adapter(&objects) else {
-            return Self::unavailable(blocked);
+            return Self::with_gsd(Self::unavailable(blocked));
         };
         let now = Instant::now();
         let powered = truth(&props["Powered"]);
@@ -239,7 +252,9 @@ impl Bluetooth {
                         .cmp(&string(&b["name"]).to_lowercase())
                 })
         });
-        json!({"available":true,"powered":powered,"powerState":power_state,"stuck":stuck,"discovering":discovering,"name":props["Alias"].as_str().filter(|s|!s.is_empty()).or_else(||props["Name"].as_str()).unwrap_or(""),"blocked":blocked,"devices":devices,"nearby":found})
+        Self::with_gsd(
+            json!({"available":true,"powered":powered,"powerState":power_state,"stuck":stuck,"discovering":discovering,"name":props["Alias"].as_str().filter(|s|!s.is_empty()).or_else(||props["Name"].as_str()).unwrap_or(""),"blocked":blocked,"devices":devices,"nearby":found}),
+        )
     }
     fn adapter_or_error(&self) -> Result<(String, Value), ApiError> {
         let objs =
@@ -320,6 +335,10 @@ impl Bluetooth {
         setprop(&system()?, BZ, path, iface, key, value, timeout)
     }
     pub fn set_powered(&self, on: bool) -> ApiResult {
+        if self.set_powered_gsd(on)? {
+            thread::sleep(Duration::from_millis(200));
+            return Ok(self.get());
+        }
         let (path, props) = self.adapter_or_error()?;
         if !on {
             self.stop_discovery()
@@ -351,6 +370,37 @@ impl Bluetooth {
         self.note_ok();
         thread::sleep(Duration::from_millis(200));
         Ok(self.get())
+    }
+    /// Amendment 57: Bluetooth on or off as GNOME Settings switches it, through gsd's Rfkill (BluetoothAirplaneMode
+    /// = !on), so the state is GNOME's own after the next login too. Ok(true) when that did it all; Ok(false) to go on
+    /// with BlueZ's Powered and rfkill as before: no gsd (Hyprland, the sandboxes), Bluetooth not blocked by gsd (the
+    /// adapter was only powered off), gsd refused the write, or the adapter stayed off after gsd unblocked it.
+    fn set_powered_gsd(&self, on: bool) -> Result<bool, ApiError> {
+        let Ok(bus) = session() else {
+            return Ok(false);
+        };
+        let props = gsd_rfkill(&bus, RFKILL);
+        let step = gsd_step(props.as_ref(), on);
+        if !on && step != GsdStep::None {
+            self.stop_discovery()
+        }
+        match step {
+            GsdStep::None => Ok(false),
+            GsdStep::HardBlocked => Err(text_error(&self.ctx, "blocked", "bt_hard_blocked")),
+            GsdStep::Already => Ok(!on
+                && Self::objects()
+                    .ok()
+                    .and_then(|o| Self::adapter(&o))
+                    .is_none_or(|(_, p)| !truth(&p["Powered"]))),
+            GsdStep::Write(airplane) => {
+                if gsd_write(&bus, RFKILL, airplane).is_err() {
+                    return Ok(false);
+                }
+                // gsd blocks or unblocks the radio; BlueZ follows (an unblocked adapter is powered when BlueZ
+                // does not do it by itself)
+                Ok(self.wait_power(4, on))
+            }
+        }
     }
     fn start_session(&self, path: &str, props: &Value) -> Result<(), String> {
         let bus = system()?;
@@ -1260,6 +1310,57 @@ pub(super) fn error_code(key: &str) -> &'static str {
         _ => "failed",
     }
 }
+/// gsd's rfkill plugin on the session bus (GNOME's flight mode and Bluetooth switch, amendment 57).
+const RFKILL: &str = "org.gnome.SettingsDaemon.Rfkill";
+const RFKILL_PATH: &str = "/org/gnome/SettingsDaemon/Rfkill";
+/// What switching Bluetooth asks of gsd's Rfkill ([`gsd_step`]).
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub(super) enum GsdStep {
+    /// gsd has no Bluetooth rfkill here: BlueZ and rfkill as before.
+    None,
+    /// On asked while the hardware switch blocks Bluetooth.
+    HardBlocked,
+    /// gsd's BluetoothAirplaneMode is the wanted one already.
+    Already,
+    /// Write BluetoothAirplaneMode = this (!on).
+    Write(bool),
+}
+/// GNOME Settings' Bluetooth switch (cc-bluetooth-panel.c): with BluetoothHasAirplaneMode it writes
+/// BluetoothAirplaneMode = !on; the hardware switch (BluetoothHardwareAirplaneMode) leaves on impossible.
+pub(super) fn gsd_step(props: Option<&Value>, on: bool) -> GsdStep {
+    let Some(p) = props.filter(|p| truth(&p["BluetoothHasAirplaneMode"])) else {
+        return GsdStep::None;
+    };
+    if on && truth(&p["BluetoothHardwareAirplaneMode"]) {
+        return GsdStep::HardBlocked;
+    }
+    if truth(&p["BluetoothAirplaneMode"]) == !on {
+        GsdStep::Already
+    } else {
+        GsdStep::Write(!on)
+    }
+}
+/// gsd's Rfkill properties, None without gsd's rfkill plugin.
+pub(super) fn gsd_rfkill(bus: &gio::DBusConnection, name: &str) -> Option<Value> {
+    getall(bus, name, RFKILL_PATH, RFKILL)
+        .ok()
+        .filter(|v| v.is_object() && !v["BluetoothAirplaneMode"].is_null())
+}
+pub(super) fn gsd_write(
+    bus: &gio::DBusConnection,
+    name: &str,
+    airplane: bool,
+) -> Result<(), String> {
+    setprop(
+        bus,
+        name,
+        RFKILL_PATH,
+        RFKILL,
+        "BluetoothAirplaneMode",
+        airplane.to_variant(),
+        3000,
+    )
+}
 fn rfkill(block: bool) -> bool {
     if available("rfkill")
         && run(
@@ -1311,5 +1412,83 @@ mod tests {
             error_code(error_key("org.bluez.Error.NotSupported", "connect", true)),
             "unsupported"
         );
+    }
+    #[test]
+    fn the_switch_goes_through_gsd_as_gnome_settings_does() {
+        let gsd = |airplane: bool, hardware: bool| {
+            json!({"BluetoothHasAirplaneMode": true, "BluetoothAirplaneMode": airplane,
+                "BluetoothHardwareAirplaneMode": hardware, "AirplaneMode": airplane})
+        };
+        assert_eq!(
+            gsd_step(None, true),
+            GsdStep::None,
+            "no gsd: BlueZ as before"
+        );
+        assert_eq!(
+            gsd_step(Some(&json!({"BluetoothHasAirplaneMode": false})), false),
+            GsdStep::None
+        );
+        assert_eq!(
+            gsd_step(Some(&gsd(false, false)), false),
+            GsdStep::Write(true)
+        );
+        assert_eq!(
+            gsd_step(Some(&gsd(true, false)), true),
+            GsdStep::Write(false)
+        );
+        assert_eq!(gsd_step(Some(&gsd(false, false)), true), GsdStep::Already);
+        assert_eq!(gsd_step(Some(&gsd(true, true)), true), GsdStep::HardBlocked);
+        assert_eq!(gsd_step(Some(&gsd(true, true)), false), GsdStep::Already);
+    }
+    #[test]
+    fn gsd_rfkill_is_read_and_written_on_the_session_bus() {
+        use crate::services::devices::fake_bus::{Fake, Object};
+        const XML: &str = r#"<node><interface name="org.gnome.SettingsDaemon.Rfkill">
+          <property name="AirplaneMode" type="b" access="readwrite"/>
+          <property name="BluetoothAirplaneMode" type="b" access="readwrite"/>
+          <property name="BluetoothHasAirplaneMode" type="b" access="read"/>
+          <property name="BluetoothHardwareAirplaneMode" type="b" access="read"/>
+        </interface></node>"#;
+        let p = "/org/gnome/SettingsDaemon/Rfkill";
+        let Some(fake) = Fake::start(
+            vec![Object {
+                path: p.into(),
+                xml: XML.into(),
+                handler: std::sync::Arc::new(|_, _, _| Ok(None)),
+            }],
+            vec![
+                (p, RFKILL, "AirplaneMode", false.to_variant()),
+                (p, RFKILL, "BluetoothAirplaneMode", false.to_variant()),
+                (p, RFKILL, "BluetoothHasAirplaneMode", true.to_variant()),
+                (
+                    p,
+                    RFKILL,
+                    "BluetoothHardwareAirplaneMode",
+                    false.to_variant(),
+                ),
+            ],
+        ) else {
+            eprintln!(
+                "skipped: no private session bus (run through tests/rust-sandbox/run-tests.sh)"
+            );
+            return;
+        };
+        let bus = session().unwrap();
+        let props = gsd_rfkill(&bus, &fake.name).unwrap();
+        assert_eq!(gsd_step(Some(&props), false), GsdStep::Write(true));
+        gsd_write(&bus, &fake.name, true).unwrap();
+        let set = fake.calls_of("Set");
+        assert_eq!(set.len(), 1);
+        assert_eq!(
+            set[0].args,
+            "('org.gnome.SettingsDaemon.Rfkill', 'BluetoothAirplaneMode', <true>)"
+        );
+        assert_eq!(
+            fake.prop(p, RFKILL, "BluetoothAirplaneMode")
+                .unwrap()
+                .get::<bool>(),
+            Some(true)
+        );
+        assert!(gsd_rfkill(&bus, "org.example.NoGsd").is_none());
     }
 }

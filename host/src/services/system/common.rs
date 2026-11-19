@@ -80,6 +80,76 @@ pub(crate) fn setprop(
     )
     .map(|_| ())
 }
+/// How long a call that may show GNOME's password dialog waits: the user types the password meanwhile.
+pub(crate) const INTERACTIVE_TIMEOUT_MS: i32 = 600_000;
+/// A call to a system daemon that checks polkit itself (notes/claude/settings-parity.md §5.8): GNOME Shell's polkit
+/// agent shows the password dialog where the policy asks for one (ALLOW_INTERACTIVE_AUTHORIZATION, up to 10 minutes),
+/// as GNOME Settings does. A daemon method with its own `interactive` argument gets `true` from the caller. A refusal
+/// is `denied core.notAuthorized`, a dismissed dialog `denied core.authCancelled`, anything else `failed
+/// core.callFailed` with the daemon's message.
+#[allow(dead_code)] // the batches' system writes (hostname1, timedate1, AccountsService, NetworkManager, ...)
+pub(crate) fn call_interactive(
+    bus: &gio::DBusConnection,
+    name: &str,
+    path: &str,
+    iface: &str,
+    method: &str,
+    args: Option<&glib::Variant>,
+    lang: crate::i18n::Lang,
+) -> Result<glib::Variant, crate::files::ApiError> {
+    bus.call_sync(
+        Some(name),
+        path,
+        iface,
+        method,
+        args,
+        None,
+        gio::DBusCallFlags::ALLOW_INTERACTIVE_AUTHORIZATION,
+        INTERACTIVE_TIMEOUT_MS,
+        gio::Cancellable::NONE,
+    )
+    .map_err(|error| interactive_error(&error.to_string(), lang))
+}
+/// The D-Bus error name in a GDBus error text ("GDBus.Error:<name>: <message>"), if it has one.
+pub(crate) fn remote_error_name(text: &str) -> Option<&str> {
+    let rest = text.strip_prefix("GDBus.Error:")?;
+    let name = rest.split(':').next()?.trim();
+    (!name.is_empty() && !name.contains(' ')).then_some(name)
+}
+/// The ApiError of a failed interactive call (see [`call_interactive`]).
+pub(crate) fn interactive_error(text: &str, lang: crate::i18n::Lang) -> crate::files::ApiError {
+    use crate::files::ApiError;
+    let name = remote_error_name(text).unwrap_or("").to_ascii_lowercase();
+    let lower = text.to_ascii_lowercase();
+    if name.ends_with(".cancelled")
+        || name.ends_with(".canceled")
+        || lower.contains("dismissed")
+        || lower.contains("cancelled by user")
+    {
+        return ApiError::tr("denied", lang, "core.authCancelled", crate::i18n::NO_PARAMS);
+    }
+    if [
+        "notauthorized",
+        "accessdenied",
+        "permissiondenied",
+        "interactiveauthorizationrequired",
+        "authfailed",
+    ]
+    .iter()
+    .any(|needle| name.contains(needle))
+    {
+        return ApiError::tr("denied", lang, "core.notAuthorized", crate::i18n::NO_PARAMS);
+    }
+    let message = text.strip_prefix("GDBus.Error:").map_or(text, |rest| {
+        rest.split_once(": ").map_or(rest, |(_, message)| message)
+    });
+    ApiError::tr(
+        "failed",
+        lang,
+        "core.callFailed",
+        &json!({"error": message.chars().take(300).collect::<String>()}),
+    )
+}
 pub(crate) fn variant_json(v: &glib::Variant) -> Value {
     match v.type_().as_str().as_bytes()[0] {
         b'v' => v
@@ -406,4 +476,144 @@ pub(crate) fn native_display_text(nl: &str) -> String {
         "display.rs t({quoted}, …): one English text, found {english:?}"
     );
     english[0].to_owned()
+}
+
+#[cfg(test)]
+mod interactive_tests {
+    use super::*;
+    use crate::i18n::Lang;
+    use std::sync::{Arc, Mutex, atomic::AtomicBool, atomic::Ordering, mpsc};
+
+    #[test]
+    fn interactive_errors_map_to_denied_cancelled_or_failed() {
+        let key = |text: &str| interactive_error(text, Lang::Nl).key.unwrap();
+        for text in [
+            "GDBus.Error:org.freedesktop.PolicyKit1.Error.NotAuthorized: no",
+            "GDBus.Error:org.freedesktop.DBus.Error.AccessDenied: Access denied",
+            "GDBus.Error:org.freedesktop.Accounts.Error.PermissionDenied: Not authorized",
+            "GDBus.Error:org.freedesktop.NetworkManager.PermissionDenied: Insufficient privileges",
+            "GDBus.Error:org.freedesktop.DBus.Error.InteractiveAuthorizationRequired: Interactive authentication required.",
+        ] {
+            assert_eq!(key(text), "core.notAuthorized", "{text}");
+        }
+        assert_eq!(
+            key(
+                "GDBus.Error:org.freedesktop.PolicyKit1.Error.Cancelled: Authentication dialog was dismissed by the user"
+            ),
+            "core.authCancelled"
+        );
+        let other = interactive_error(
+            "GDBus.Error:org.example.Error.Boom: the disk is full",
+            Lang::En,
+        );
+        assert_eq!(
+            (other.code.as_str(), other.key.as_deref()),
+            ("failed", Some("core.callFailed"))
+        );
+        assert_eq!(other.message, "That didn’t work: the disk is full");
+        assert_eq!(remote_error_name("Timeout was reached"), None);
+    }
+
+    /// A private session bus only: tests/rust-sandbox/run-tests.sh's (never the live one under /run/user).
+    fn private_bus_address() -> Option<String> {
+        let address = std::env::var("DBUS_SESSION_BUS_ADDRESS").ok()?;
+        (std::env::var("GSETTINGS_BACKEND").as_deref() == Ok("keyfile")
+            && !address.contains("/run/user/"))
+        .then_some(address)
+    }
+
+    const XML: &str = r#"<node><interface name="io.github.win11shell.Test">
+        <method name="Ok"><arg type="s" direction="out"/></method>
+        <method name="Deny"/><method name="Cancel"/><method name="Boom"/>
+    </interface></node>"#;
+
+    #[test]
+    fn call_interactive_asks_for_the_password_dialog_and_maps_the_answer() {
+        let Some(address) = private_bus_address() else {
+            eprintln!(
+                "skipped: no private session bus (run through tests/rust-sandbox/run-tests.sh)"
+            );
+            return;
+        };
+        let flags: Arc<Mutex<Vec<bool>>> = Arc::new(Mutex::new(Vec::new()));
+        let stop = Arc::new(AtomicBool::new(false));
+        let (ready, started) = mpsc::channel();
+        let (seen, thread_stop) = (flags.clone(), stop.clone());
+        let server = std::thread::spawn(move || {
+            let context = glib::MainContext::new();
+            let _ = context.with_thread_default(|| {
+                let connection = gio::DBusConnection::for_address_sync(
+                    &address,
+                    gio::DBusConnectionFlags::AUTHENTICATION_CLIENT
+                        | gio::DBusConnectionFlags::MESSAGE_BUS_CONNECTION,
+                    None,
+                    gio::Cancellable::NONE,
+                )
+                .unwrap();
+                let node = gio::DBusNodeInfo::for_xml(XML).unwrap();
+                let iface = node.lookup_interface("io.github.win11shell.Test").unwrap();
+                let id = connection
+                    .register_object(
+                        "/io/github/win11shell/Test",
+                        &iface,
+                        move |_, _, _, _, method, _, invocation| {
+                            let interactive = invocation
+                                .message()
+                                .flags()
+                                .contains(gio::DBusMessageFlags::ALLOW_INTERACTIVE_AUTHORIZATION);
+                            seen.lock().unwrap().push(interactive);
+                            match method {
+                                "Ok" => invocation.return_value(Some(&("done",).to_variant())),
+                                "Deny" => invocation.return_dbus_error(
+                                    "org.freedesktop.PolicyKit1.Error.NotAuthorized",
+                                    "no",
+                                ),
+                                "Cancel" => invocation.return_dbus_error(
+                                    "org.freedesktop.PolicyKit1.Error.Cancelled",
+                                    "Authentication dialog was dismissed by the user",
+                                ),
+                                _ => invocation.return_dbus_error("org.example.Error.Boom", "boom"),
+                            }
+                        },
+                        |_, _, _, _, _| ().to_variant(),
+                        |_, _, _, _, _, _| false,
+                    )
+                    .unwrap();
+                ready
+                    .send((
+                        connection.unique_name().unwrap().to_string(),
+                        context.clone(),
+                    ))
+                    .unwrap();
+                while !thread_stop.load(Ordering::Acquire) {
+                    context.iteration(true);
+                }
+                connection.unregister_object(id).unwrap();
+            });
+        });
+        let (name, context) = started.recv().unwrap();
+        let bus = session().unwrap();
+        let path = "/io/github/win11shell/Test";
+        let iface = "io.github.win11shell.Test";
+        let ok = call_interactive(&bus, &name, path, iface, "Ok", None, Lang::Nl).unwrap();
+        assert_eq!(ok.child_value(0).str(), Some("done"));
+        let deny = call_interactive(&bus, &name, path, iface, "Deny", None, Lang::Nl).unwrap_err();
+        assert_eq!(
+            (deny.code.as_str(), deny.key.as_deref()),
+            ("denied", Some("core.notAuthorized"))
+        );
+        let cancel =
+            call_interactive(&bus, &name, path, iface, "Cancel", None, Lang::Nl).unwrap_err();
+        assert_eq!(cancel.key.as_deref(), Some("core.authCancelled"));
+        let boom = call_interactive(&bus, &name, path, iface, "Boom", None, Lang::En).unwrap_err();
+        assert_eq!(boom.message, "That didn’t work: boom");
+        assert_eq!(
+            *flags.lock().unwrap(),
+            vec![true; 4],
+            "every call allows the password dialog"
+        );
+        stop.store(true, Ordering::Release);
+        context.wakeup();
+        server.join().unwrap();
+    }
 }

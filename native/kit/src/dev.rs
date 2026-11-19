@@ -6,10 +6,14 @@
 //! and runs commands with a "native" key whose "app" is this app's kind (the shell and the other apps share
 //! the command file: a command without "app" is the shell's, native/shell/src/dev.rs):
 //!   {"native":"state","tag":t}                    the widget trees of all windows (name, type, css classes,
-//!                                                  label/text, allocation rect, visible, sensitive)
+//!                                                  label/text, allocation rect, visible, sensitive); a widget
+//!                                                  GTK does not show (hidden, or not child-visible: the rows of
+//!                                                  a closed expander's revealer, a stack's other pages) is left
+//!                                                  out with everything under it
 //!   {"native":"click","name":n,"tag":t}           activate the widget with that name (button click, toggle,
-//!                                                  switch, check, or the widget's activate); "click", "type"
-//!                                                  and "key" take a visible widget of that name first
+//!                                                  switch, check, a clickable SettingsCard's button, or the
+//!                                                  widget's activate); "click", "type" and "key" take a widget
+//!                                                  of that name that is shown first
 //!   {"native":"type","name":n,"text":s,"tag":t}   set the text of an entry / text / text view by name
 //!   {"native":"key","name":n,"key":k,"tag":t}     a key ("Return", "Escape", "<Control>f", "Down", "Tab"):
 //!                                                  the window's AppWindow shortcuts first, then Return
@@ -188,9 +192,21 @@ fn activate(widget: &gtk::Widget) {
         s.set_active(!s.is_active());
     } else if let Some(b) = widget.downcast_ref::<gtk::MenuButton>() {
         b.popup();
+    } else if let Some(o) = widget.downcast_ref::<gtk::Overlay>()
+        && o.has_css_class(crate::controls::cards::CARD_HOST_CLASS)
+        && let Some(button) = o.child()
+    {
+        // a clickable SettingsCard named through `card.widget()`: its button (the control lies beside it)
+        activate(&button);
     } else {
         widget.activate();
     }
+}
+
+/// Whether GTK shows `widget` as far as its parent goes: visible, and child-visible (a GtkRevealer that is closed
+/// and a GtkStack's other pages keep their children visible but not child-visible).
+fn shown(widget: &gtk::Widget) -> bool {
+    widget.is_visible() && widget.is_child_visible()
 }
 
 fn press(widget: Option<&gtk::Widget>, key: &str) -> bool {
@@ -253,9 +269,10 @@ fn find(widget: &gtk::Widget, name: &str) -> Option<gtk::Widget> {
     find_in(widget, name, true).or_else(|| find_in(widget, name, false))
 }
 
-/// Depth first; with `visible`, only through widgets that are visible themselves (hidden subtrees are skipped).
+/// Depth first; with `visible`, only through widgets that are shown themselves (hidden subtrees and the content of
+/// a closed expander are skipped; the second pass without `visible` still finds them by name).
 fn find_in(widget: &gtk::Widget, name: &str, visible: bool) -> Option<gtk::Widget> {
-    if visible && !widget.is_visible() {
+    if visible && !shown(widget) {
         return None;
     }
     if widget.widget_name() == name {
@@ -275,7 +292,7 @@ fn tree(widget: &gtk::Widget) -> Value {
     let mut children = Vec::new();
     let mut child = widget.first_child();
     while let Some(c) = child {
-        if c.is_visible() {
+        if shown(&c) {
             children.push(tree(&c));
         }
         child = c.next_sibling();
@@ -290,7 +307,7 @@ fn tree(widget: &gtk::Widget) -> Value {
     let mut v = json!({"type": widget.type_().name(), "name": widget.widget_name().to_string(),
         "classes": widget.css_classes().iter().map(|c| c.to_string()).collect::<Vec<_>>(),
         "label": label,
-        "visible": widget.is_visible(),
+        "visible": shown(widget),
         "sensitive": widget.is_sensitive(),
         "rect": bounds.map(|b| [b.x() as i32, b.y() as i32, b.width() as i32, b.height() as i32]),
         "children": children});
@@ -301,3 +318,7 @@ fn tree(widget: &gtk::Widget) -> Value {
     }
     v
 }
+
+#[cfg(test)]
+#[path = "dev_tests.rs"]
+mod tests;

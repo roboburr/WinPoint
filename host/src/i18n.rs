@@ -12,8 +12,9 @@
 //! i18n::join(lang, &["A", "B", "C"])                            // "A, B en C" / "A, B and C"
 //! ```
 //!
-//! * **Language** (C1): only Win11's own `settings.language`. `"en"` is English, anything else (no file, no key,
-//!   another string, the object form) is Dutch. [`current_language`] and [`language_in`] re-parse settings.json
+//! * **Language** (C1): only Win11's own `settings.language`. `"en"` is English, `"system"` the session's own
+//!   language (settings parity, amendment 18: Dutch for a Dutch session, else English), anything else (no file, no
+//!   key, another string, the object form) is Dutch. [`current_language`] and [`language_in`] re-parse settings.json
 //!   only when its (device, inode, size, mtime, ctime) changed, so a call costs one `stat`.
 //! * **Catalogues** (C3): `host/i18n/<stem>.tsv`, `key<TAB>nl<TAB>en`, escapes `\n`, `\t`, `\\`, `{name}`
 //!   placeholders, plurals `key.one` / `key.other` (optional `key.zero`), the first key segment is the stem. All
@@ -37,7 +38,8 @@ use std::{
 };
 
 /// Every catalogue, one per stem. Round 2 fills the files; nobody edits this table (round2-gate.md), except to
-/// drop the stem of removed code: `window` went with the WebKit windows (the native apps title their own).
+/// drop the stem of removed code: `window` went with the WebKit windows (the native apps title their own), and the
+/// settings-parity stems B0 added for itself and batches A-F (notes/claude/settings-parity.md §3).
 pub(crate) const STEMS: &[(&str, &str)] = &[
     ("core", include_str!("../i18n/core.tsv")),
     ("update", include_str!("../i18n/update.tsv")),
@@ -62,6 +64,22 @@ pub(crate) const STEMS: &[(&str, &str)] = &[
     ("launch", include_str!("../i18n/launch.tsv")),
     ("gnome", include_str!("../i18n/gnome.tsv")),
     ("wallpaper", include_str!("../i18n/wallpaper.tsv")),
+    // Settings parity (notes/claude/settings-parity.md §3): every stem of B0 and batches A-F
+    ("gsettings", include_str!("../i18n/gsettings.tsv")),
+    ("caps", include_str!("../i18n/caps.tsv")),
+    ("input", include_str!("../i18n/input.tsv")),
+    ("devices", include_str!("../i18n/devices.tsv")),
+    ("printers", include_str!("../i18n/printers.tsv")),
+    ("net", include_str!("../i18n/net.tsv")),
+    ("sharing", include_str!("../i18n/sharing.tsv")),
+    ("sound", include_str!("../i18n/sound.tsv")),
+    ("battery", include_str!("../i18n/battery.tsv")),
+    ("wellbeing", include_str!("../i18n/wellbeing.tsv")),
+    ("users", include_str!("../i18n/users.tsv")),
+    ("goa", include_str!("../i18n/goa.tsv")),
+    ("machine", include_str!("../i18n/machine.tsv")),
+    ("privacy", include_str!("../i18n/privacy.tsv")),
+    ("background", include_str!("../i18n/background.tsv")),
 ];
 
 // ------------------------------------------------------------------------------------------------ language
@@ -88,9 +106,20 @@ impl Lang {
         if value == "en" { Lang::En } else { Lang::Nl }
     }
 
-    /// The language of a `settings.language` JSON value (a string; anything else is Dutch).
+    /// The language of a `settings.language` JSON value (a string; anything else is Dutch). `"system"` (settings
+    /// parity, amendment 18) is the session's own language: [`Lang::system`].
     pub(crate) fn of(value: &Value) -> Lang {
-        value.as_str().map(Lang::parse).unwrap_or(Lang::Nl)
+        match value.as_str() {
+            Some("system") => Lang::system(),
+            Some(s) => Lang::parse(s),
+            None => Lang::Nl,
+        }
+    }
+
+    /// The session's language as `settings.language = "system"` reads it: Dutch when the session's messages are
+    /// Dutch, English for every other language (WinPoint has these two).
+    pub(crate) fn system() -> Lang {
+        Lang::parse(system_code(|k| std::env::var(k).ok()))
     }
 
     /// The language of a whole settings document.
@@ -107,6 +136,30 @@ impl Lang {
             Lang::Nl => 0,
             Lang::En => 1,
         }
+    }
+}
+
+/// The session's messages language as gettext picks it, from `var` (the environment): LC_ALL, LC_MESSAGES or LANG,
+/// and LANGUAGE's first entry before them unless that locale is C/POSIX (gettext ignores LANGUAGE then). `"nl"`
+/// when that is Dutch, else `"en"` (also for no locale at all: the C locale's messages are English). The kit
+/// (native/kit/src/i18n.rs), the shell (native/shell/src/core.rs) and Calendar (native/calendar/src/config.rs) read
+/// the same way.
+pub(crate) fn system_code(var: impl Fn(&str) -> Option<String>) -> &'static str {
+    let locale = ["LC_ALL", "LC_MESSAGES", "LANG"]
+        .iter()
+        .find_map(|k| var(k).filter(|v| !v.is_empty()))
+        .unwrap_or_default();
+    let c = locale.is_empty() || locale == "C" || locale == "POSIX" || locale.starts_with("C.");
+    let first = if c {
+        None
+    } else {
+        var("LANGUAGE").and_then(|l| l.split(':').find(|s| !s.is_empty()).map(str::to_owned))
+    };
+    let pick = first.unwrap_or(locale);
+    if pick.split(['_', '.', '@']).next() == Some("nl") {
+        "nl"
+    } else {
+        "en"
     }
 }
 
@@ -1071,5 +1124,84 @@ mod tests {
             assert_eq!(Lang::parse(lang.code()), lang);
             assert_eq!(Lang::from_u8(lang.as_u8()), lang);
         }
+    }
+}
+
+/// Settings parity, amendment 18 (batch E): `settings.language = "system"` reads as the session's language.
+#[cfg(test)]
+mod system_language_tests {
+    use super::*;
+
+    fn env<'a>(pairs: &'a [(&'a str, &'a str)]) -> impl Fn(&str) -> Option<String> + 'a {
+        move |k| {
+            pairs
+                .iter()
+                .find(|(n, _)| *n == k)
+                .map(|(_, v)| (*v).to_owned())
+        }
+    }
+
+    #[test]
+    fn the_session_language_is_gettexts_choice() {
+        assert_eq!(system_code(env(&[("LANG", "nl_NL.UTF-8")])), "nl");
+        assert_eq!(system_code(env(&[("LANG", "nl_BE.UTF-8")])), "nl");
+        assert_eq!(system_code(env(&[("LANG", "nl")])), "nl");
+        assert_eq!(system_code(env(&[("LANG", "en_GB.UTF-8")])), "en");
+        assert_eq!(
+            system_code(env(&[("LANG", "de_DE.UTF-8")])),
+            "en",
+            "WinPoint has nl and en"
+        );
+        assert_eq!(
+            system_code(env(&[])),
+            "en",
+            "no locale: C, whose messages are English"
+        );
+        assert_eq!(system_code(env(&[("LANG", "C.UTF-8")])), "en");
+        // LC_ALL before LC_MESSAGES before LANG
+        assert_eq!(
+            system_code(env(&[
+                ("LANG", "en_US.UTF-8"),
+                ("LC_MESSAGES", "nl_NL.UTF-8")
+            ])),
+            "nl"
+        );
+        assert_eq!(
+            system_code(env(&[
+                ("LC_MESSAGES", "nl_NL.UTF-8"),
+                ("LC_ALL", "en_US.UTF-8")
+            ])),
+            "en"
+        );
+        assert_eq!(
+            system_code(env(&[("LANG", "nl_NL.UTF-8"), ("LC_ALL", "")])),
+            "nl",
+            "an empty LC_ALL is unset"
+        );
+        // LANGUAGE's first entry, unless the locale is C
+        assert_eq!(
+            system_code(env(&[("LANG", "en_US.UTF-8"), ("LANGUAGE", "nl:en")])),
+            "nl"
+        );
+        assert_eq!(
+            system_code(env(&[("LANG", "nl_NL.UTF-8"), ("LANGUAGE", "en_GB:nl")])),
+            "en"
+        );
+        assert_eq!(system_code(env(&[("LANG", "C"), ("LANGUAGE", "nl")])), "en");
+        assert_eq!(
+            system_code(env(&[("LANG", "nl_NL.UTF-8"), ("LANGUAGE", ":")])),
+            "nl"
+        );
+    }
+
+    #[test]
+    fn system_reads_as_the_session_language_and_other_values_stay_c1() {
+        assert_eq!(Lang::of(&Value::String("system".into())), Lang::system());
+        assert_eq!(Lang::of(&Value::String("en".into())), Lang::En);
+        assert_eq!(Lang::of(&Value::String("nl".into())), Lang::Nl);
+        assert_eq!(Lang::of(&Value::String("System".into())), Lang::Nl);
+        assert_eq!(Lang::of(&Value::Null), Lang::Nl);
+        // the strings the services pass around are never "system"
+        assert_eq!(Lang::parse("system"), Lang::Nl);
     }
 }

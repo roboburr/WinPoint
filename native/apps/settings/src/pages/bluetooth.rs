@@ -10,6 +10,15 @@
 //!
 //! Shared with home.rs (keep the signatures): `device_glyph`, `device_status`, `is_not_responding`,
 //! `toggle_device`, `reset_bluetooth`, `open_add_device`.
+//!
+//! Settings parity (batch B, notes/claude/settings-parity.md §2, §5.3): as GNOME's Bluetooth panel the PC is
+//! discoverable while the page shows ("Detecteerbaar als" names BlueZ's Alias: devices.bluetooth.adapter, the lease
+//! devices.bluetooth.setDiscoverable renewed every minute and ended when the page goes or its window closes); the
+//! device tiles take the
+//! battery of UPower's Connected Devices (devices.batteries) where BlueZ has none; flight mode shows GNOME's "Airplane
+//! Mode is On" with "Vliegtuigmodus uitschakelen" (system.network.setAirplane); the sub-pages (Apparaten, Printers en
+//! scanners, Muis, Touchpad, Pen, Automatisch afspelen, USB) are Windows' rows under the Bluetooth card, also on a
+//! computer without Bluetooth. The on/off switch goes through gsd's Rfkill on the host (amendment 57).
 use super::background::FillGrid;
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;
@@ -121,7 +130,7 @@ fn s(v: &Value) -> &str {
 }
 
 /// A value as text (a passkey may come as a number), "" for none.
-fn text_of(v: &Value) -> String {
+pub(super) fn text_of(v: &Value) -> String {
     match v {
         Value::String(s) => s.clone(),
         Value::Number(n) => n.to_string(),
@@ -129,11 +138,11 @@ fn text_of(v: &Value) -> String {
     }
 }
 
-fn upper_addr(d: &Value) -> String {
+pub(super) fn upper_addr(d: &Value) -> String {
     text_of(&d["address"]).to_uppercase()
 }
 
-fn dev_name(d: &Value) -> String {
+pub(super) fn dev_name(d: &Value) -> String {
     let n = s(&d["name"]);
     if n.is_empty() { text_of(&d["address"]) } else { n.to_owned() }
 }
@@ -273,7 +282,7 @@ pub fn device_icon(d: &Value, px: i32) -> gtk::Widget {
 }
 
 /// The kind as words, "" for an unknown kind.
-fn kind_label(kind: &str) -> &'static str {
+pub(super) fn kind_label(kind: &str) -> &'static str {
     match kind {
         "headphones" => t("Koptelefoon", "Headphones"),
         "headset" => t("Headset", "Headset"),
@@ -311,6 +320,76 @@ pub fn device_status(d: &Value) -> String {
     }
 }
 
+/// The percentage of UPower's battery (devices.batteries) with this Bluetooth address, if any.
+pub(super) fn battery_for(address: &str, batteries: &[Value]) -> Option<i64> {
+    batteries
+        .iter()
+        .find(|b| b["address"].as_str().is_some_and(|a| !a.is_empty() && a.eq_ignore_ascii_case(address)))
+        .and_then(|b| b["percentage"].as_f64())
+        .map(|p| p.round() as i64)
+}
+
+/// A device with UPower's battery where BlueZ reports none (GNOME's Power › Connected Devices on the card).
+pub(super) fn with_battery(d: &Value, batteries: &[Value]) -> Value {
+    let mut d = d.clone();
+    if d["battery"].is_null()
+        && let Some(b) = battery_for(&upper_addr(&d), batteries)
+    {
+        d["battery"] = json!(b);
+    }
+    d
+}
+
+/// The batteries of devices.batteries (empty without UPower or an older host).
+pub(super) fn battery_list(v: Option<Value>) -> Vec<Value> {
+    v.and_then(|v| v["devices"].as_array().cloned()).unwrap_or_default()
+}
+
+/// The page's discoverable lease (devices.bluetooth.setDiscoverable): asked when the page opens and Bluetooth is on,
+/// renewed every minute, given up when the page goes or its window closes. The answers do not matter (an older host
+/// does not know the method).
+#[derive(Default)]
+struct Lease {
+    /// The page asked for it (and has not given it up).
+    held: Cell<bool>,
+    /// The window closed: no renewal any more (a keep-alive may hold the process without a window).
+    gone: Cell<bool>,
+}
+
+impl Lease {
+    fn ask(&self) {
+        if self.gone.get() {
+            return;
+        }
+        self.held.set(true);
+        kit::ctx().fire("devices.bluetooth.setDiscoverable", json!({ "on": true }));
+    }
+
+    /// The page goes (its cleanup).
+    fn give_up(&self) {
+        if self.held.replace(false) {
+            kit::ctx().fire("devices.bluetooth.setDiscoverable", json!({ "on": false }));
+        }
+    }
+
+    /// The window closes. The page's cleanups run only when another page is shown, and the app ends with its last
+    /// window, its backend with it (PR_SET_PDEATHSIG), so a fired call would never leave: this one runs on a thread
+    /// and is waited for, at most 3 s.
+    fn window_closed(&self) {
+        self.gone.set(true);
+        if !self.held.replace(false) {
+            return;
+        }
+        let backend = kit::ctx().backend();
+        let (done, wait) = std::sync::mpsc::channel();
+        std::thread::spawn(move || {
+            let _ = backend.call("devices.bluetooth.setDiscoverable", &json!({ "on": false }));
+            let _ = done.send(());
+        });
+        let _ = wait.recv_timeout(Duration::from_secs(3));
+    }
+}
+
 /// The host's NotReady answer ("Bluetooth reageert niet"): its code or catalog key, never its text
 /// (bluetooth.js isNotResponding).
 pub fn is_not_responding(e: &CallError) -> bool {
@@ -334,7 +413,7 @@ fn checked(r: Result<Value, CallError>) -> Result<Value, CallError> {
     Ok(if v.is_null() { json!({}) } else { v })
 }
 
-async fn attempt(p: &Page, method: &str, args: Value) -> Result<Value, CallError> {
+pub(super) async fn attempt(p: &Page, method: &str, args: Value) -> Result<Value, CallError> {
     checked(p.call(method, args).await)
 }
 
@@ -346,7 +425,7 @@ pub async fn toggle_device(p: &Page, d: &Value) -> Result<Value, CallError> {
 
 /// Win11 "Apparaat verwijderen": ask first, then forget the device and its pairing (bluetooth.js
 /// removeDevice). None when the user said "Nee"; `on_confirmed` runs after "Ja", before the host is asked.
-async fn remove_device(p: &Page, d: &Value, on_confirmed: impl FnOnce()) -> Option<Result<Value, CallError>> {
+pub(super) async fn remove_device(p: &Page, d: &Value, on_confirmed: impl FnOnce()) -> Option<Result<Value, CallError>> {
     let (fill, wait) = super::later::<bool>();
     Dialog::new(t("Weet je zeker dat je dit apparaat wilt verwijderen?", "Are you sure you want to remove this device?"))
         .text(&common::fill(
@@ -692,7 +771,7 @@ struct DevRow {
     code: RefCell<Option<CodeView>>,
 }
 
-type CloseFn = Box<dyn FnOnce()>;
+pub(super) type CloseFn = Box<dyn FnOnce()>;
 
 struct Wizard {
     st: RefCell<WState>,
@@ -732,7 +811,7 @@ pub fn open_add_device(p: &Page) {
 }
 
 /// `open_add_device`; `on_close` runs when the dialog closed.
-fn open_add_device_then(p: &Page, on_close: Option<CloseFn>) {
+pub(super) fn open_add_device_then(p: &Page, on_close: Option<CloseFn>) {
     if let Some(w) = WIZARD.with(|w| w.borrow().clone()) {
         if let Some(f) = on_close {
             w.on_close.borrow_mut().push(f);
@@ -2215,12 +2294,19 @@ struct BtPage {
     ok_gen: Cell<u64>,
     busy: RefCell<HashMap<String, &'static str>>,
     grid: FillGrid,
-    name: String,
+    /// The name others see ("Detecteerbaar als"): BlueZ's Alias, else the computer's name.
+    name: RefCell<String>,
+    /// UPower's batteries of connected devices.
+    batteries: RefCell<Vec<Value>>,
+    /// GNOME's flight mode states: 0 none, 1 flight mode, 2 the hardware switch.
+    air_mode: Cell<u8>,
+    air_bar: InfoBar,
     banner: Rc<StuckBar>,
     empty_note: InfoBar,
     toggle: ToggleSwitch,
     bt_card: SettingsCard,
     reset_btn: gtk::Button,
+    lease: Lease,
 }
 
 impl BtPage {
@@ -2399,6 +2485,54 @@ impl BtPage {
         tile.upcast()
     }
 
+    /// GNOME's "Airplane Mode is On" (with "Vliegtuigmodus uitschakelen") and "Hardware Airplane Mode is On".
+    fn paint_air(self: &Rc<Self>, mode: u8) {
+        self.air_bar.set_visible(mode != 0);
+        if self.air_mode.replace(mode) == mode {
+            return;
+        }
+        let b = &self.air_bar;
+        if mode == 2 {
+            b.set_title(t("De vliegtuigmodusschakelaar staat aan", "The flight mode switch is on"));
+            b.set_message(t(
+                "Zet de vliegtuigmodusschakelaar op de computer uit om Bluetooth in te schakelen.",
+                "Turn off the flight mode switch on the computer to turn on Bluetooth.",
+            ));
+            b.set_action(None);
+        } else if mode == 1 {
+            b.set_title(t("Vliegtuigmodus staat aan", "Flight mode is on"));
+            b.set_message(t("Bluetooth staat uit zolang de vliegtuigmodus aan staat.", "Bluetooth is off while flight mode is on."));
+            let p = self.p.clone();
+            b.set_action(Some((
+                t("Vliegtuigmodus uitschakelen", "Turn off flight mode"),
+                Rc::new(move || {
+                    let wait = p.run_with("system.network.setAirplane", json!({ "enabled": false }), None, false);
+                    p.spawn(async move {
+                        let _ = wait.await;
+                    });
+                }),
+            )));
+        }
+    }
+
+    async fn reload_batteries(self: &Rc<Self>) {
+        let bats = battery_list(self.p.get("devices.batteries", json!({})).await);
+        if self.p.alive() {
+            *self.batteries.borrow_mut() = bats;
+            self.paint();
+        }
+    }
+
+    async fn reload_name(self: &Rc<Self>) {
+        if let Some(a) = self.p.get("devices.bluetooth.adapter", json!({})).await
+            && let Some(alias) = a["alias"].as_str().filter(|s| !s.trim().is_empty())
+            && self.p.alive()
+        {
+            *self.name.borrow_mut() = alias.to_owned();
+            self.paint();
+        }
+    }
+
     fn paint(self: &Rc<Self>) {
         let st = self.state.borrow().clone();
         let stuck = st["stuck"] == true || self.not_ready.get();
@@ -2413,13 +2547,21 @@ impl BtPage {
         self.banner.set_mode(mode, &self.banner_error.borrow());
         let busy_reset = self.banner_mode.get() == Some("busy");
         let powered = st["powered"] == true;
+        let air = if st["hardwareAirplane"] == true {
+            2
+        } else if st["airplane"] == true {
+            1
+        } else {
+            0
+        };
+        self.paint_air(air);
         self.toggle.set_active(powered);
-        self.toggle.set_sensitive(!busy_reset);
+        self.toggle.set_sensitive(!busy_reset && air != 2);
         self.reset_btn.set_sensitive(!busy_reset);
         self.bt_card.set_description(&if stuck {
             t("Bluetooth reageert niet", "Bluetooth is not responding").to_owned()
         } else if powered {
-            common::fill(t("Detecteerbaar als “{name}”", "Discoverable as “{name}”"), &[("name", &self.name)])
+            common::fill(t("Detecteerbaar als “{name}”", "Discoverable as “{name}”"), &[("name", &self.name.borrow())])
         } else {
             t("Bluetooth staat uit", "Bluetooth is off").to_owned()
         });
@@ -2457,8 +2599,9 @@ impl BtPage {
         self.grid.append(&add);
         let mut devs: Vec<Value> = if powered { st["devices"].as_array().cloned().unwrap_or_default() } else { Vec::new() };
         devs.sort_by(|a, b| (b["connected"] == true).cmp(&(a["connected"] == true)).then_with(|| kit::format::compare_natural(&dev_name(a), &dev_name(b))));
+        let batteries = self.batteries.borrow().clone();
         for d in &devs {
-            let mut d = d.clone();
+            let mut d = with_battery(d, &batteries);
             if stuck {
                 d["connected"] = json!(false);
             }
@@ -2471,7 +2614,8 @@ impl BtPage {
 fn page(p: Page) -> PageFuture {
     Box::pin(async move {
         let (br, info) = (p.call("system.bluetooth.get", json!({})), p.get("system.info", json!({})));
-        let (br, info) = (br.await, info.await);
+        let (adapter, bats) = (p.get("devices.bluetooth.adapter", json!({})), p.get("devices.batteries", json!({})));
+        let (br, info, adapter, bats) = (br.await, info.await, adapter.await, bats.await);
         if !p.alive() {
             return Content::new();
         }
@@ -2504,9 +2648,23 @@ fn page(p: Page) -> PageFuture {
             card.connect_clicked(move || open_add_device(&pp));
             let group = SettingsGroup::new("", "");
             group.add(card.widget());
+            // the other devices of Bluetooth en apparaten (mouse, printers, ...) need no Bluetooth
+            for id in common::child_ids("bluetooth") {
+                group.add(common::link_card(&p, id).widget());
+            }
             return vec![empty.upcast(), group.widget().clone().upcast()];
         };
-        let name = info.as_ref().and_then(|i| i["hostname"].as_str()).filter(|s| !s.is_empty()).unwrap_or(t("deze pc", "this PC")).to_owned();
+        let name = adapter
+            .as_ref()
+            .and_then(|a| a["alias"].as_str())
+            .filter(|s| !s.trim().is_empty())
+            .or_else(|| info.as_ref().and_then(|i| i["hostname"].as_str()).filter(|s| !s.is_empty()))
+            .unwrap_or(t("deze pc", "this PC"))
+            .to_owned();
+        let air_bar = common::notice_full(Severity::Info, "", "");
+        air_bar.set_action_below(true);
+        air_bar.widget().set_widget_name("bt-airplane");
+        air_bar.set_visible(false);
 
         let toggle = ToggleSwitch::new(bt["powered"] == true);
         toggle.switch().set_widget_name("bt-toggle");
@@ -2541,12 +2699,16 @@ fn page(p: Page) -> PageFuture {
             ok_gen: Cell::new(0),
             busy: RefCell::new(HashMap::new()),
             grid: grid.clone(),
-            name,
+            name: RefCell::new(name),
+            batteries: RefCell::new(battery_list(bats)),
+            air_mode: Cell::new(0),
+            air_bar: air_bar.clone(),
             banner: StuckBar::new(false),
             empty_note: empty_note.clone(),
             toggle: toggle.clone(),
             bt_card: bt_card.clone(),
             reset_btn,
+            lease: Lease::default(),
         });
         {
             let pg = Rc::downgrade(&page);
@@ -2572,6 +2734,9 @@ fn page(p: Page) -> PageFuture {
                             st["powered"] = json!(on);
                             st["powerState"] = json!(if on { "on" } else { "off" });
                         }
+                    }
+                    if on {
+                        me.lease.ask();
                     }
                     me.paint();
                 });
@@ -2620,6 +2785,9 @@ fn page(p: Page) -> PageFuture {
                 if !d.is_object() || d["available"].is_null() {
                     return;
                 }
+                if d["powered"] == true && pg.state.borrow()["powered"] != true {
+                    pg.lease.ask();
+                }
                 *pg.state.borrow_mut() = d.clone();
                 if !d["stuck"].is_null() {
                     // the host's own verdict (it counts NotReady answers too)
@@ -2631,14 +2799,66 @@ fn page(p: Page) -> PageFuture {
                 pg.paint();
             });
         }
+        {
+            let pg = page.clone();
+            p.on("devices.changed", move |d| {
+                let me = pg.clone();
+                match d["what"].as_str() {
+                    Some("batteries") => pg.p.spawn(async move { me.reload_batteries().await }),
+                    Some("bluetooth") => pg.p.spawn(async move { me.reload_name().await }),
+                    _ => {}
+                }
+            });
+        }
+        // discoverable while the page shows (GNOME's "Visible as"): now, every minute, and given up when it goes or
+        // its window closes
+        if page.state.borrow()["powered"] == true {
+            page.lease.ask();
+        }
+        {
+            let weak: Weak<BtPage> = Rc::downgrade(&page);
+            p.interval(60_000, move || {
+                let Some(me) = weak.upgrade() else { return false };
+                if me.state.borrow()["powered"] == true {
+                    me.lease.ask();
+                }
+                true
+            });
+        }
+        {
+            let win = p.window().window().clone();
+            let weak: Weak<BtPage> = Rc::downgrade(&page);
+            let id = win.connect_close_request(move |_| {
+                if let Some(me) = weak.upgrade() {
+                    me.lease.window_closed();
+                }
+                glib::Propagation::Proceed
+            });
+            let weak: Weak<BtPage> = Rc::downgrade(&page);
+            p.on_cleanup(move || {
+                let gone = weak.upgrade().is_some_and(|me| {
+                    me.lease.give_up();
+                    me.lease.gone.get()
+                });
+                // a disposed window has no handlers left to disconnect
+                if !gone {
+                    win.disconnect(id);
+                }
+            });
+        }
         page.paint();
 
         let main = SettingsGroup::new("", "");
         main.add(bt_card.widget());
+        // Windows' rows under the Bluetooth card: Apparaten, Printers en scanners, Muis, Touchpad, Pen, ...
+        for id in common::child_ids("bluetooth") {
+            main.add(common::link_card(&p, id).widget());
+        }
         let related = SettingsGroup::new(common::ct::related(), "");
         related.add(common::link_card_with(&p, "sound", None, Some(t("Kies je koptelefoon of speaker als geluidsapparaat", "Choose your headphones or speaker as the sound device")), None).widget());
         related.add(reset_card.widget());
         vec![
+            air_bar.widget().clone().upcast(),
             page.banner.bar.widget().clone().upcast(),
             grid.upcast(),
             empty_note.widget().clone().upcast(),

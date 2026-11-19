@@ -418,6 +418,24 @@ fn label(text: &str, classes: &[&str]) -> gtk::Label {
     l
 }
 
+/// How many lines of a notification's body show: `lines`, or 12 for one GNOME shows expanded (its app's "Inhoud
+/// weergeven in banners", force-expanded, or a critical one: the bridge's `expanded`).
+fn body_lines(n: &Value, lines: i32) -> i32 {
+    if n["expanded"] == true { 12 } else { lines }
+}
+
+/// What the extension's bridge needs of WinPoint's notification settings with every call (amendment 4: no sound
+/// while notifications.sounds or notifications.showToasts is off), so it reads no settings file.
+fn bridge_settings(shell: &Shell) -> (bool, bool) {
+    bridge_flags(&shell.setting("notifications.sounds"), &shell.setting("notifications.showToasts"))
+}
+
+/// `sounds` and `toasts` for the bridge from notifications.sounds and notifications.showToasts: on unless false (a
+/// settings file without them has both on).
+fn bridge_flags(sounds: &Value, toasts: &Value) -> (bool, bool) {
+    (*sounds != false, *toasts != false)
+}
+
 fn wrapped(text: &str, classes: &[&str], lines: i32) -> gtk::Label {
     let l = label(text, classes);
     l.set_wrap(true);
@@ -660,9 +678,10 @@ impl Center {
 
     fn heartbeat(&self) {
         let shell = crate::core::shell();
+        let (sounds, toasts) = bridge_settings(&shell);
         shell.gnome.send(
             "notifications.consumerReady",
-            json!({"pid": std::process::id(), "ready": true, "dnd": self.dnd.get()}),
+            json!({"pid": std::process::id(), "ready": true, "dnd": self.dnd.get(), "sounds": sounds, "toasts": toasts}),
         );
     }
 
@@ -714,7 +733,11 @@ impl Center {
             items.push(n.clone());
         }
         if s(&n, "source") == "gnome" {
-            shell.gnome.send("notifications.delivered", json!({"id": n["id"], "pid": std::process::id()}));
+            let (sounds, toasts) = bridge_settings(&shell);
+            shell.gnome.send(
+                "notifications.delivered",
+                json!({"id": n["id"], "pid": std::process::id(), "sounds": sounds, "toasts": toasts}),
+            );
         }
         if self.is_open() {
             self.render_list(Some(&id));
@@ -979,7 +1002,7 @@ impl Center {
         self.stamps.borrow_mut().push((time, t));
         text.append(&top);
         if !body.is_empty() {
-            text.append(&wrapped(&body, &["nc-body", "nc-text-2", "fo-notif-body"], 4));
+            text.append(&wrapped(&body, &["nc-body", "nc-text-2", "fo-notif-body"], body_lines(n, 4)));
         }
         main.append(&text);
         inner.append(&main);
@@ -1470,7 +1493,7 @@ impl Toasts {
             text.append(&wrapped(&title, &["nc-body", "nc-strong"], 2));
         }
         if !body.is_empty() {
-            text.append(&wrapped(&body, &["nc-body", "nc-text-2"], 3));
+            text.append(&wrapped(&body, &["nc-body", "nc-text-2"], body_lines(n, 3)));
         }
         content.append(&text);
         toast.append(&content);
@@ -1569,5 +1592,31 @@ impl Toasts {
         });
         self.arm(&entry, TOAST_MS);
         self.update_input_soon();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn an_expanded_notification_shows_its_whole_body() {
+        // GNOME's "Inhoud weergeven in banners" (force-expanded) or a critical one: the bridge's expanded
+        let expanded = json!({"id": 1, "body": "x", "expanded": true});
+        assert_eq!(body_lines(&expanded, 3), 12, "the toast");
+        assert_eq!(body_lines(&expanded, 4), 12, "the centre's card");
+        for n in [json!({"id": 1, "body": "x", "expanded": false}), json!({"id": 1, "body": "x"}), json!({"expanded": "yes"})] {
+            assert_eq!(body_lines(&n, 3), 3);
+            assert_eq!(body_lines(&n, 4), 4);
+        }
+    }
+
+    #[test]
+    fn the_bridge_gets_the_sound_and_toast_settings_with_every_call() {
+        assert_eq!(bridge_flags(&Value::Null, &Value::Null), (true, true), "a settings file without them");
+        assert_eq!(bridge_flags(&json!(true), &json!(true)), (true, true));
+        assert_eq!(bridge_flags(&json!(false), &json!(true)), (false, true));
+        assert_eq!(bridge_flags(&json!(true), &json!(false)), (true, false));
+        assert_eq!(bridge_flags(&json!(false), &json!(false)), (false, false));
     }
 }

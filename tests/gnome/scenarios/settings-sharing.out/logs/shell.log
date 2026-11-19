@@ -1,0 +1,51 @@
+libmutter-Message: 01:31:16.642: Running GNOME Shell (using mutter 50.1) as a Wayland display server
+
+(gnome-shell:164): libmutter-WARNING **: 01:31:16.642: Unknown experimental feature 'scale-monitor-framebuffer'
+
+(gnome-shell:164): libmutter-WARNING **: 01:31:16.642: Unknown experimental feature 'xwayland-native-scaling'
+libmutter-Message: 01:31:16.787: Added device '/dev/dri/renderD128' (nvidia-drm) using no mode setting.
+libmutter-Message: 01:31:16.788: Created gbm renderer for '/dev/dri/renderD128'
+libmutter-Message: 01:31:16.788: Boot VGA GPU /dev/dri/renderD128 selected as primary
+** Message: 01:31:16.788: Obtained a high priority EGL context
+libmutter-Message: 01:31:16.824: Added virtual monitor Meta-0
+libmutter-Message: 01:31:16.828: Using Wayland display name 'w11-wl'
+GNOME Shell-Message: 01:31:17.151: Registering session with GDM
+
+(gnome-shell:164): libmutter-WARNING **: 01:31:17.161: There is no colord server available
+GNOME Shell-Message: 01:31:17.163: Error registering session with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+
+(gnome-shell:164): GNOME Shell-CRITICAL **: 01:31:17.248: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+
+(gnome-shell:164): GNOME Shell-CRITICAL **: 01:31:17.261: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.Shell.CalendarServer was not provided by any .service files
+
+Stack trace:
+  asyncCallback@resource:///org/gnome/gjs/modules/core/overrides/Gio.js:115:23
+  @resource:///org/gnome/shell/ui/init.js:20:20
+  
+GNOME Shell-Message: 01:31:17.261: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+WARNING: Glycin running without sandbox.
+portal is not running: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.portal.IBus was not provided by any .service files
+GNOME Shell-Message: 01:31:17.295: Failed to register AuthenticationAgent
+
+(gnome-shell:164): GnomeDesktop-WARNING **: 01:31:17.448: Could not create transient scope for PID 478: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.systemd1" does not exist
+GNOME Shell-Message: 01:31:17.448: Update check failed: Error resolving “extensions.gnome.org”: Temporary failure in name resolution
+** Message: 01:31:17.461: Failed to start camera monitor
+GNOME Shell-Message: 01:31:17.491: No permission to control network connections: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+GNOME Shell-Message: 01:31:17.491: Failed to get PolKit permission: Gio.DBusError: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.PolicyKit1 was not provided by any .service files
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 01:31:17.566: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.GeoClue2 was not provided by any .service files
+Win11 GNOME: geen systemd-gebruikersbeheerder; procesisolatie en de shell-geheugenlimiet zijn hier niet beschikbaar.
+
+(gnome-shell:164): accountsservice-WARNING **: 01:31:17.620: ActUserManager: user (null) has no username (uid: -1)
+WARNING: Glycin running without sandbox.
+GNOME Shell-Message: 01:31:18.578: GNOME Shell started at Tue Nov 17 2026 01:31:17 GMT+0100 (Central European Standard Time)
+GNOME Shell-Message: 01:31:18.578: Registering display with GDM
+GNOME Shell-Message: 01:31:18.585: Error registering display with GDM: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.DisplayManager was not provided by any .service files
+WARNING: Glycin running without sandbox.
+** Message: 01:32:10.203: Shutting down GNOME Shell
+libmutter-Message: 01:32:10.289: Removed virtual monitor Meta-0

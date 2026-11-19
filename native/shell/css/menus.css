@@ -46,6 +46,19 @@ window.w11.w11-light {
   padding: 0;
 }
 
+/* the same menus as a popover on the taskbar of another monitor (menus/menu.rs popup): the popover draws nothing
+   itself, the menu keeps its own surface; its margin is room for the menu's shadow (the popover clips to it) */
+popover.w11-strip-menu,
+popover.w11-strip-menu > contents {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+popover.w11-strip-menu .w11-mn { margin: 8px 16px 16px 16px; }
+
 /* ---- MenuFlyout (.fl-menu) ---- */
 .w11-mn {
   min-width: 200px;

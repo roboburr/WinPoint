@@ -40,10 +40,26 @@ const TEXT = {
     clockDate: {nl: '%d-%m-%Y', en: '%d/%m/%Y'},
 };
 
-/** Win11's language from the text of its settings.json: "en", or else "nl" (C1: missing, unknown, object form). */
-export function languageOf(text) {
+/** The session's messages language as gettext picks it, from `getenv`: LC_ALL, LC_MESSAGES or LANG, and LANGUAGE's
+ * first entry before them unless that locale is C/POSIX. "nl" when that is Dutch, else "en" (no locale at all is C,
+ * whose messages are English). The same rule as the kit's i18n.rs system_language and the host's i18n.rs
+ * system_code (settings parity amendment 18). */
+export function systemLanguage(getenv = name => GLib.getenv(name)) {
+    const locale = ['LC_ALL', 'LC_MESSAGES', 'LANG'].map(name => getenv(name)).find(value => value) ?? '';
+    const c = locale === '' || locale === 'C' || locale === 'POSIX' || locale.startsWith('C.');
+    const first = c ? undefined : (getenv('LANGUAGE') ?? '').split(':').find(entry => entry);
+    return (first ?? locale).split(/[_.@]/)[0] === 'nl' ? 'nl' : 'en';
+}
+
+/** Win11's language from the text of its settings.json: "en", "system" the session's own language (C1 as settings
+ * parity amendment 18 extends it: Settings' choice to use the display language), or else "nl" (missing, unknown,
+ * object form). */
+export function languageOf(text, system = systemLanguage) {
     try {
-        return JSON.parse(text)?.language === 'en' ? 'en' : 'nl';
+        const language = JSON.parse(text)?.language;
+        if (language === 'system')
+            return system();
+        return language === 'en' ? 'en' : 'nl';
     } catch {
         return 'nl';
     }
@@ -55,9 +71,10 @@ export function alwaysOnTopOf(settings) {
 }
 
 /** Win11's own language setting, followed live (C1). It reads only Win11's settings.json in the user's
- * config directory (never the GNOME locale, WIN11_REFERENCE_SETTINGS or H's ~/.config/win11shell) and creates
- * no files. The settings store replaces the file by rename, hence WATCH_MOVES. Until a first setting is saved
- * the directory may not exist: then the parent directory is watched for it. Every read also keeps the parsed
+ * config directory (never WIN11_REFERENCE_SETTINGS or H's ~/.config/win11shell; the session's locale only for
+ * "system", which follows the session) and creates no files. The settings store replaces the file by rename,
+ * hence WATCH_MOVES. Until a first setting is saved the directory may not exist: then the parent directory is
+ * watched for it. Every read also keeps the parsed
  * document (`settings`, {} when missing or unreadable) and hands it to `onSettings` (D-G21: Task Manager's
  * always-on-top follows the same file live). */
 export class LanguageWatch {

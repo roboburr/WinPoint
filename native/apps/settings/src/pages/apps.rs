@@ -3,7 +3,6 @@
 //! lists"), shared by installed.rs and startup.rs.
 use super::{Builder, Content, Page, PageFuture};
 use crate::common;
-use kit::controls::SettingsGroup;
 use kit::prelude::*;
 
 pub const PAGES: &[(&str, Builder)] = &[("apps", apps)];
@@ -19,10 +18,7 @@ pub const CSS: &str = r#"
 
 fn apps(p: Page) -> PageFuture {
     Box::pin(async move {
-        let g = SettingsGroup::new("", "");
-        for id in ["installed", "defaultapps", "startup"] {
-            g.add(common::link_card(&p, id).widget());
-        }
+        let g = common::child_links(&p, "apps");
         let out: Content = vec![g.widget().clone().upcast()];
         out
     })

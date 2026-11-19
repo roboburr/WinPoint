@@ -198,14 +198,14 @@ class DateTime {
 const GLib = withAuto({
     PRIORITY_DEFAULT: 0, PRIORITY_DEFAULT_IDLE: 200, SOURCE_REMOVE: false, SOURCE_CONTINUE: true,
     USEC_PER_SEC: 1000000,
-    get_user_config_dir: () => world.configDir, get_home_dir: () => world.home,
+    get_user_config_dir: () => world.configDir, get_user_runtime_dir: () => path.join(world.configDir, 'runtime'), get_home_dir: () => world.home,
     getenv: name => world.env[name] ?? null, build_filenamev: parts => path.join(...parts),
     timeout_add: (_prio, ms, fn) => addTimer(fn, ms, 'timeout'),
     timeout_add_seconds: (_prio, s, fn) => addTimer(fn, s * 1000, 'seconds'),
     idle_add: (_prio, fn) => addTimer(fn, 0, 'idle'),
     source_remove: id => world.timers.delete(id),
     get_monotonic_time: () => (world.now += 1000),
-    DateTime, Variant: class { constructor(sig, value) { this.sig = sig; this.value = value; } },
+    DateTime, Variant: class { constructor(sig, value) { this.sig = sig; this.value = value; } deep_unpack() { return this.value; } },
     VariantType: class {}, base64_encode: () => '',
 }, 'GLib');
 
@@ -246,6 +246,7 @@ globalThis.global = withAuto(Object.assign(new Signals(), {
         get_monitor_in_fullscreen: () => false, list_all_windows: () => [], unset_input_focus() {},
     }), 'global.display'),
     stage: {}, workspace_manager: Object.assign(new Signals(), {
+        get_active_workspace_index: () => 0,
         get_active_workspace: () => ({index: () => 0,
             get_work_area_for_monitor: () => new Rectangle({x: 0, y: 0, width: 1440, height: 852})}),
     }),
@@ -304,5 +305,6 @@ globalThis.__ge1c = {
     gi: {St, Clutter, Gio, GLib, Shell, Meta, Mtk, GObject},
     Main, MessageTray: {Notification, NotificationDestroyedReason: {EXPIRED: 1, DISMISSED: 2, SOURCE_CLOSED: 3}, Source, Urgency},
     Extension,
+    inputSourceManager: Object.assign(new Signals(), {inputSources: {}, currentSource: null}),
 };
 export {Main, Actor, Button, Label};

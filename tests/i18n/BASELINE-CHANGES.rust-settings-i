@@ -1,0 +1,7 @@
+# Integration package I: explicit records for centralised locale-code handling and new Chinese script labels.
+# The removed literals are technical language codes, now handled by Lang::of through context_language.
+host/src/files/mod.rs	18	dbd3a49d0d906b4e	-	H7: explicit en match moved to the shared Lang::of resolver; no displayed text removed
+host/src/files/mod.rs	19	dbd3a49d0d906b4e	-	H7: redundant en result centralised in Lang::of, which also resolves system
+host/src/files/mod.rs	20	1843653496800edf	-	H7: fallback nl result centralised in Lang::of; existing default remains Dutch
+key:machine.chineseSimplified	-	-	-	H22: Chinese script label extracted from the new inline pair into the nl/en catalogue
+key:machine.chineseTraditional	-	-	-	H22: Chinese script label extracted from the new inline pair into the nl/en catalogue

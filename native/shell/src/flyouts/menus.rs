@@ -28,6 +28,35 @@ pub fn jump_list(shell: &Rc<Shell>, app_id: Option<String>, windows: Vec<Value>,
     if host.is_open("jumplist") {
         host.close();
     }
+    let items = jump_items(shell, app_id, windows);
+    if items.is_empty() {
+        return;
+    }
+    menu::show(shell, items, x, true, None);
+}
+
+/// The jump list of an app button on the taskbar of another monitor: the same rows in a popover of `parent` (that
+/// taskbar's strip), centred over `x` in its coordinates (the popover, for its closing). Only the main taskbar has the
+/// flyout host.
+pub fn jump_list_popover(
+    shell: &Rc<Shell>,
+    parent: &gtk::Widget,
+    app_id: Option<String>,
+    windows: Vec<Value>,
+    x: i32,
+) -> Option<gtk::Popover> {
+    let items = jump_items(shell, app_id, windows);
+    (!items.is_empty()).then(|| menu::popup(shell, parent, items, x, true))
+}
+
+/// The taskbar's own menu on the taskbar of another monitor, starting at the pointer's `x` in `parent` (the popover,
+/// for its closing).
+pub fn taskbar_menu_popover(shell: &Rc<Shell>, parent: &gtk::Widget, x: i32) -> gtk::Popover {
+    menu::popup(shell, parent, taskbar_menu_items(shell), x, false)
+}
+
+/// The rows of an app button's jump list: the app (a new instance), pin or unpin, close its window(s).
+fn jump_items(shell: &Rc<Shell>, app_id: Option<String>, windows: Vec<Value>) -> Vec<Item> {
     let mut items = Vec::new();
     if let Some(id) = app_id.as_deref().filter(|s| !s.is_empty()) {
         let app = util::app(id);
@@ -81,19 +110,20 @@ pub fn jump_list(shell: &Rc<Shell>, app_id: Option<String>, windows: Vec<Value>,
             .named("menus-jump-close"),
         );
     }
-    if items.is_empty() {
-        return;
-    }
-    menu::show(shell, items, x, true, None);
+    items
 }
 
 /// The taskbar's own context menu (right click on empty space): Taakbeheer, Taakbalkinstellingen.
 pub fn taskbar_menu(shell: &Rc<Shell>, x: i32) {
+    menu::show(shell, taskbar_menu_items(shell), x, false, None);
+}
+
+fn taskbar_menu_items(shell: &Rc<Shell>) -> Vec<Item> {
     let tm_icon = util::app("win11shell-taskmgr.desktop")
         .map(|a| util::str_of(&a, "icon"))
         .filter(|i| !i.is_empty())
         .unwrap_or_else(|| "win11shell-taskmgr".into());
-    let items = vec![
+    vec![
         Item::new(shell.t("Taakbeheer", "Task Manager"), Icon::App(tm_icon), || {
             util::open_app(&crate::core::shell(), "taskmgr", json!({}))
         })
@@ -102,8 +132,7 @@ pub fn taskbar_menu(shell: &Rc<Shell>, x: i32) {
             util::open_settings(&crate::core::shell(), "taskbar")
         })
         .named("menus-taskbar-settings"),
-    ];
-    menu::show(shell, items, x, false, None);
+    ]
 }
 
 /// Win+X with its left edge at `x` (the Start button's left edge), `mouse` true for a right click on Start (no

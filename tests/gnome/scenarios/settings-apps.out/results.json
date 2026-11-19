@@ -1,0 +1,5592 @@
+{
+ "harness": "GE0c/GE1h tests/gnome/harness.py",
+ "lang": "nl",
+ "switch": false,
+ "seed": "defaults",
+ "commit": "?",
+ "startedAt": "2026-11-16 22:59:02",
+ "seconds": 339.2,
+ "innerExit": 0,
+ "innerTimedOut": false,
+ "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/build/native-release",
+ "source": {
+  "rev": "worktree",
+  "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f"
+ },
+ "lock": "held by an ancestor heavy.sh",
+ "memory": {
+  "samples": 486,
+  "intervalSeconds": 0.5,
+  "peak": {
+   "pss_kb": 1183297,
+   "rss_kb": 1506348,
+   "processes": 24,
+   "t": 232.3
+  },
+  "peakWithoutHarness": {
+   "pss_kb": 761708,
+   "rss_kb": 1048184
+  },
+  "minMemAvailableKb": 5690540,
+  "abortedForMemory": false,
+  "peakByName": {
+   "python3": {
+    "count": 2,
+    "pss_kb": 440000,
+    "rss_kb": 470116
+   },
+   "gnome-shell": {
+    "count": 1,
+    "pss_kb": 322240,
+    "rss_kb": 412688
+   },
+   "glycin-image-rs": {
+    "count": 7,
+    "pss_kb": 162272,
+    "rss_kb": 202164
+   },
+   "win11-gtk-setti": {
+    "count": 1,
+    "pss_kb": 73737,
+    "rss_kb": 109936
+   },
+   "win11-shell": {
+    "count": 1,
+    "pss_kb": 67728,
+    "rss_kb": 108272
+   },
+   "glycin-svg": {
+    "count": 1,
+    "pss_kb": 46807,
+    "rss_kb": 57140
+   },
+   "win11-app": {
+    "count": 1,
+    "pss_kb": 25716,
+    "rss_kb": 37844
+   },
+   "win11-panel": {
+    "count": 1,
+    "pss_kb": 17569,
+    "rss_kb": 26496
+   },
+   "ibus-extension-": {
+    "count": 1,
+    "pss_kb": 17253,
+    "rss_kb": 35308
+   },
+   "ibus-daemon": {
+    "count": 1,
+    "pss_kb": 4108,
+    "rss_kb": 11596
+   },
+   "strace": {
+    "count": 1,
+    "pss_kb": 2309,
+    "rss_kb": 4872
+   },
+   "dbus-daemon": {
+    "count": 2,
+    "pss_kb": 1452,
+    "rss_kb": 9968
+   },
+   "ibus-engine-sim": {
+    "count": 1,
+    "pss_kb": 851,
+    "rss_kb": 7980
+   },
+   "ibus-memconf": {
+    "count": 1,
+    "pss_kb": 794,
+    "rss_kb": 7824
+   },
+   "bwrap": {
+    "count": 1,
+    "pss_kb": 258,
+    "rss_kb": 1468
+   },
+   "dbus-run-sessio": {
+    "count": 1,
+    "pss_kb": 203,
+    "rss_kb": 2676
+   }
+  },
+  "seenByName": {
+   "gnome-shell": {
+    "pss_kb": 337663,
+    "first": 0.5
+   },
+   "python3": {
+    "pss_kb": 275196,
+    "first": 0.0
+   },
+   "glycin-image-rs": {
+    "pss_kb": 157615,
+    "first": 1.0
+   },
+   "win11-shell": {
+    "pss_kb": 81208,
+    "first": 1.0
+   },
+   "win11-gtk-setti": {
+    "pss_kb": 74220,
+    "first": 7.8
+   },
+   "glycin-svg": {
+    "pss_kb": 56865,
+    "first": 1.0
+   },
+   "win11-app": {
+    "pss_kb": 27170,
+    "first": 7.8
+   },
+   "win11-panel": {
+    "pss_kb": 17656,
+    "first": 1.6
+   },
+   "ibus-extension-": {
+    "pss_kb": 17404,
+    "first": 1.0
+   },
+   "ibus-daemon": {
+    "pss_kb": 4150,
+    "first": 1.0
+   },
+   "strace": {
+    "pss_kb": 2323,
+    "first": 0.5
+   },
+   "dbus-daemon": {
+    "pss_kb": 955,
+    "first": 0.5
+   },
+   "ibus-engine-sim": {
+    "pss_kb": 897,
+    "first": 1.0
+   },
+   "ibus-memconf": {
+    "pss_kb": 840,
+    "first": 1.0
+   },
+   "bwrap": {
+    "pss_kb": 262,
+    "first": 0.0
+   },
+   "dbus-run-sessio": {
+    "pss_kb": 214,
+    "first": 0.5
+   }
+  }
+ },
+ "install": {
+  "source": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f",
+  "buildDir": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/build/native-release",
+  "exit": 0,
+  "seconds": 61.1,
+  "mutatingSyscallPaths": 87327,
+  "writesOutsideRun": [],
+  "failedWritesOutsideRun": [],
+  "binaries": {
+   "win11-explorer": true,
+   "win11-panel": true,
+   "win11-app": true,
+   "win11-launch": true,
+   "win11-index-worker": true,
+   "win11-image-worker": true,
+   "win11-default-apps": true,
+   "win11-file-portal": true,
+   "win11-installer": true,
+   "win11-software-worker": true,
+   "win11-shell": true,
+   "win11-calendar": true,
+   "win11-gtk-explorer": true,
+   "win11-gtk-settings": true,
+   "win11-gtk-taskmgr": true,
+   "win11-gtk-alles": true,
+   "win11-gtk-disks": true,
+   "win11-gtk-defaultapps": true,
+   "win11-gtk-installer": true
+  },
+  "payloadMarker": true,
+  "extensionIdentical": {
+   "desktopBridge.js": true,
+   "displayBridge.js": true,
+   "extension.js": true,
+   "frostedBridge.js": true,
+   "inputBridge.js": true,
+   "launchBridge.js": true,
+   "metadata.json": true,
+   "notificationsBridge.js": true,
+   "panelBridge.js": true,
+   "shortcutBridge.js": true,
+   "start.svg": true,
+   "stylesheet.css": true
+  },
+  "desktopEntries": [
+   "io.github.win11shell.Calendar.desktop",
+   "io.github.win11shell.DefaultApps.desktop",
+   "io.github.win11shell.Disks.desktop",
+   "io.github.win11shell.Explorer.desktop",
+   "io.github.win11shell.Installer.desktop",
+   "io.github.win11shell.Panel.desktop",
+   "io.github.win11shell.Search.desktop",
+   "io.github.win11shell.Settings.desktop",
+   "io.github.win11shell.TaskManager.desktop"
+  ],
+  "legacyInstalled": [],
+  "desktopExecPrivate": true,
+  "schemasCompiled": true,
+  "portalFiles": [
+   "data/xdg-desktop-portal/portals/win11shell.portal",
+   "data/dbus-1/services/org.freedesktop.impl.portal.desktop.win11shell.service",
+   "config/systemd/user/app-win11-file-portal.service"
+  ],
+  "extensionCopyProblems": [],
+  "ok": true,
+  "sourceTree": {
+   "rev": "worktree",
+   "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f"
+  }
+ },
+ "guardStubCalls": [
+  "23:00:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:19\tpw-dump\t--monitor --no-colors",
+  "23:00:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:21\tpw-dump\t--monitor --no-colors",
+  "23:00:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:25\tpw-dump\t--monitor --no-colors",
+  "23:00:25\tpw-dump\t--monitor --no-colors",
+  "23:00:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:27\tpw-dump\t--monitor --no-colors",
+  "23:00:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:31\tpw-dump\t--monitor --no-colors",
+  "23:00:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:33\tpw-dump\t--monitor --no-colors",
+  "23:00:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:39\tpw-dump\t--monitor --no-colors",
+  "23:00:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:49\tpw-dump\t--monitor --no-colors",
+  "23:00:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:55\tsystemctl\t--user list-units --type=service --all --no-pager --output=json",
+  "23:00:55\tsystemctl\t--user list-units --type=service --all --no-pager --plain --no-legend",
+  "23:00:56\tpw-dump\t--monitor --no-colors",
+  "23:00:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:00:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:19\tpw-dump\t--monitor --no-colors",
+  "23:01:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:26\tpw-dump\t--monitor --no-colors",
+  "23:01:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:01:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:36\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:41\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:46\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:51\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:56\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:02:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:00\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:05\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:10\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:15\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:20\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:25\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:30\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:34\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:35\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:37\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:38\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:39\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:40\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:42\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:43\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:44\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:45\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:47\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:48\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:49\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:50\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:52\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:53\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:54\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:55\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:57\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:58\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:03:59\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:01\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:02\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:03\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:04\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:06\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:07\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:08\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:09\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:11\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:12\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:13\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:14\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:16\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:17\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:18\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:19\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:21\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:22\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:23\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:24\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:26\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:27\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:28\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:29\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:31\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:32\twpctl\tget-volume @DEFAULT_AUDIO_SINK@",
+  "23:04:33\twpctl\tget-volume @DEFAULT_AUDIO_SINK@"
+ ],
+ "updateToolCalls": [],
+ "leftoverProcessesAfterInner": [],
+ "socketCleanup": {
+  "removed": [],
+  "left": [],
+  "ok": true
+ },
+ "socketWatch": {
+  "intervalSeconds": 2.0,
+  "scans": 126,
+  "maxScanSeconds": 0.058,
+  "roots": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f",
+   "/etc",
+   "/run/udev",
+   "/var/cache/fontconfig"
+  ],
+  "appeared": [],
+  "ok": true,
+  "runSockets": [],
+  "runUnlisted": []
+ },
+ "straceConnect": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-apps.out/strace.txt"
+  ],
+  "connects": 364,
+  "ok": true,
+  "violations": [],
+  "byTarget": [
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "EINPROGRESS",
+    "count": 143
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "UNFINISHED",
+    "count": 50
+   },
+   {
+    "family": "AF_INET",
+    "target": "127.0.0.1",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/pipewire/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/run/systemd/journal/stdout",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-96",
+    "result": "ok",
+    "count": 4
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/bus",
+    "result": "ok",
+    "count": 30
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pipewire-0",
+    "result": "ENOENT",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/sbus",
+    "result": "ok",
+    "count": 5
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/tmp/w11-rt/w11-wl",
+    "result": "ok",
+    "count": 3
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/lib/sss/pipes/nss",
+    "result": "ENOENT",
+    "count": 18
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "ENOENT",
+    "count": 34
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/nscd/socket",
+    "result": "UNFINISHED",
+    "count": 1
+   },
+   {
+    "family": "AF_UNIX",
+    "target": "/var/run/pulse/native",
+    "result": "ENOENT",
+    "count": 2
+   }
+  ]
+ },
+ "straceExec": {
+  "files": [
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/logs/install.strace",
+   "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-apps.out/strace.txt"
+  ],
+  "execs": 621,
+  "ok": true,
+  "violations": [],
+  "forbidden": [
+   "pkexec",
+   "check-new-release",
+   "apt-get",
+   "apt-cache",
+   "do-release-upgrade",
+   "loginctl",
+   "apt",
+   "pkcon"
+  ],
+  "byProgram": [],
+  "winpointPython": {
+   "execs": [],
+   "clicks": 0,
+   "perClick": {}
+  }
+ },
+ "scenario": {
+  "scenario": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/scenarios/settings-apps.py",
+  "startLanguage": "nl",
+  "steps": [
+   {
+    "step": "pointer_prepare",
+    "t": 0.8,
+    "result": {
+     "pointer": [
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "step": "open",
+    "t": 1.42,
+    "args": {
+     "spec": "settings:apps"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "apps",
+     "alive": true,
+     "boot": {
+      "app": "settings",
+      "fontRendering": "manual",
+      "kind": "native-app",
+      "pid": 1345,
+      "renderer": "cairo",
+      "tag": "boot"
+     }
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 2.36,
+    "args": {
+     "name": "apps.nl"
+    },
+    "result": {
+     "png": "apps.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 842,
+      "meanLevel": 36.2,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 2.41,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Apps – Instellingen",
+     "dutchWordHits": [
+      "aanmeldt",
+      "alle",
+      "apparaten",
+      "beveiliging",
+      "deze",
+      "een",
+      "foto",
+      "geïnstalleerde",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "je",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "muziek",
+      "netwerk",
+      "openen",
+      "opent",
+      "opstarten",
+      "persoonlijke",
+      "sluiten",
+      "starten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "vastmaken",
+      "wanneer",
+      "webpagina",
+      "welke",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 459
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Apps – Instellingen",
+     "titles": [
+      "Apps – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nApps\nGeïnstalleerde apps\nAlle apps op deze pc, openen en vastmaken\nStandaard-apps\nWelke app opent je webpagina’s, muziek en foto’s\nOpstarten\nApps die starten wanneer je je aanmeldt",
+     "dutchWordHits": [
+      "aanmeldt",
+      "alle",
+      "apparaten",
+      "beveiliging",
+      "deze",
+      "een",
+      "foto",
+      "geïnstalleerde",
+      "herstel",
+      "instelling",
+      "instellingen",
+      "je",
+      "lokaal",
+      "maximaliseren",
+      "minimaliseren",
+      "muziek",
+      "netwerk",
+      "openen",
+      "opent",
+      "opstarten",
+      "persoonlijke",
+      "sluiten",
+      "starten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "vastmaken",
+      "wanneer",
+      "webpagina",
+      "welke",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "open",
+    "t": 3.24,
+    "args": {
+     "spec": "settings:installed"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "installed",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 4.19,
+    "args": {
+     "name": "installed.nl"
+    },
+    "result": {
+     "png": "installed.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 960,
+      "meanLevel": 39.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 4.32,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Geïnstalleerde apps – Instellingen",
+     "dutchWordHits": [
+      "afbeeldingen",
+      "alle",
+      "apparaten",
+      "beheren",
+      "bekijk",
+      "bekijken",
+      "beschikbare",
+      "bestanden",
+      "bestandsbeheer",
+      "beveiliging",
+      "bijhouden",
+      "bureaublad",
+      "delen",
+      "documenten",
+      "een",
+      "filteren",
+      "foto",
+      "gebruikte",
+      "gedrag",
+      "gevonden",
+      "gewoon",
+      "geïnstalleerde",
+      "groot",
+      "herstel",
+      "het",
+      "hoe",
+      "hoeveel",
+      "hulp",
+      "informatie",
+      "installeren",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "je",
+      "kwijtraakt",
+      "logboeken",
+      "lokaal",
+      "maak",
+      "maken",
+      "mappen",
+      "maximaliseren",
+      "meer",
+      "meerdere",
+      "met",
+      "minimaliseren",
+      "naam",
+      "netwerk",
+      "netwerkverbindingen",
+      "nooit",
+      "om",
+      "onderdeel",
+      "opdrachten",
+      "openen",
+      "opties",
+      "persoonlijke",
+      "presentatie",
+      "rapporten",
+      "ruimte",
+      "schijven",
+      "sluiten",
+      "sorteren",
+      "speciale",
+      "startpagina",
+      "systeem",
+      "taakbeheer",
+      "taal",
+      "te",
+      "tekens",
+      "tekst",
+      "tekstbestanden",
+      "teksteditor",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "typen",
+      "uit",
+      "uiterlijk",
+      "uitgebreide",
+      "uitpakken",
+      "van",
+      "verbinding",
+      "verkenner",
+      "virtuele",
+      "voer",
+      "volledige",
+      "voor",
+      "vrij",
+      "wachtwoorden",
+      "webbrowser",
+      "werkblad",
+      "zijn",
+      "zoals",
+      "zodat",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 4791
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Geïnstalleerde apps – Instellingen",
+     "titles": [
+      "Geïnstalleerde apps – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nApps\nApps\nGeïnstalleerde apps\nApps zoeken\nZoeken\nSorteren op\nNaam (A-Z)\nFilteren op\nAlle apps\n63 apps gevonden\nAfbeeldingenviewer\nGrafisch · Afbeeldingen bekijken en bewerken\nMeer opties\nAfstellingen\nInstellingen · Uitgebreide instellingen voor GNOME\nMeer opties\nAgenda\nKantoor · Je agenda's bekijken en bijhouden\nMeer opties\nAgenda\nKantoor\nMeer opties\nAlles\nOnderdeel van WinPoint\nMeer opties\nApp-installatie\nOnderdeel van WinPoint\nMeer opties\nArchiefbeheer\nHulpmiddel · Archieven (zoals zip-bestanden) maken en uitpakken\nMeer opties\nBackups\nHulpmiddel · Maak reservekopieën, zodat je nooit bestanden kwijtraakt\nMeer opties\nBestanden\nBestandsbeheer · Je bestanden en mappen bekijken en ordenen\nMeer opties\nBlender\n3D-modeller · 3d-modelleren, animeren, renderen en post-productie\nMeer opties\nBluetooth-beheerder\nInstellingen · Blueman Bluetooth-beheer\nMeer opties\nCamera\nVideo · Maak foto’s en video’s\nMeer opties\nChatGPT\nOntwikkeling\nMeer opties\nClaude\nOntwikkeling\nMeer opties\nDeskflow\nHulpmiddel\nMeer opties\nDocumentscanner\nGrafisch · Maak een digitale kopie van je foto's en documenten\nMeer opties\nDocumentviewer\nKantoor · Documenten en pdf-bestanden bekijken\nMeer opties\nDolphin\nBestandsbeheerder · Uw bestanden beheren\nMeer opties\nFirefox webbrowser\nWebbrowser · Verken het internet\nMeer opties\nGNOME-instellingen\nInstellingen · De instellingen van GNOME\nMeer opties\nGridline\nAudio\nMeer opties\nHulp\nHulpmiddel · Hulp en handleidingen\nMeer opties\nInfo\nHulpmiddel\nMeer opties\nInstellingen\nOnderdeel van WinPoint\nMeer opties\nKDE-systeeminstellingen\nInstellingen · Het gedrag en uiterlijk van KDE Plasma configureren\nMeer opties\nKlokken\nHulpmiddel · Wereldklokken, wekkers, stopwatch en timer\nMeer opties\nLettertypen\nHulpmiddel · De lettertypen op je computer bekijken\nMeer opties\nLibreOffice\nKantoor · Start applicaties om tekstdocumenten, werkbladen, presentaties, tekeningen, formules en databases te maken of recent gebruikte documenten te openen.\nMeer opties\nLibreOffice Calc\nWerkblad · Voer berekeningen uit, analyseer informatie en beheer lijsten in werkbladen.\nMeer opties\nLibreOffice Draw\nTekenprogramma · Maak en bewerk tekeningen, stroomschema's en logo's.\nMeer opties\nLibreOffice Impress\nPresentatie · Maak en bewerk presentaties voor diavoorstellingen, vergaderingen en internetpagina's.\nMeer opties\nLibreOffice Math\nFormule-bewerker · Maak en bewerk wetenschappelijke formules en vergelijkingen.\nMeer opties\nLibreOffice Writer\nTekstverwerker · Maak en bewerk tekst en afbeeldingen in brieven, rapporten, documenten en internetpagina's.\nMeer opties\nLogboeken\nHulpmiddel · Gebeurtenissen van het systeem bekijken\nMeer opties\nNetwerkverbindingen\nInstellingen · Je netwerkverbindingen beheren\nMeer opties\nNVIDIA X Server Settings\nSysteem · Instellingen van je NVIDIA-videokaart\nMeer opties\nPeaZip\nHulpmiddel\nMeer opties\nRekenmachine\nHulpmiddel · Rekenen: gewoon, wetenschappelijk of financieel\nMeer opties\nRemmina\nClient voor verbinding met extern bureaublad · Verbinding maken met bureaubladen op afstand\nMeer opties\nResources\nSysteem\nMeer opties\nSchijfgebruik\nHulpmiddel · Bekijk hoe groot mappen zijn en hoeveel ruimte er vrij is\nMeer opties\nSchijven\nOnderdeel van WinPoint\nMeer opties\nSchijven (GNOME)\nHulpmiddel · Schijven en USB-sticks beheren\nMeer opties\nShotwell\nFotobeheerder · Je foto's ordenen\nMeer opties\nSoftware-updater\nSysteem · Beschikbare updates bekijken en installeren\nMeer opties\nStandaard-apps\nOnderdeel van WinPoint\nMeer opties\nStartup Disk Creator\nSysteem · Een opstart-USB-stick maken\nMeer opties\nSteam\nSpel · Applicatie voor het beheer en het spelen van games op Steam\nMeer opties\nSunshine\nInternet\nMeer opties\nSysprof\nOntwikkeling · Profileer een toepassing of het volledige systeem.\nMeer opties\nTaakbeheer\nOnderdeel van WinPoint\nMeer opties\nTaalondersteuning\nInstellingen · Instellen van ondersteuning voor meerdere talen op uw systeem\nMeer opties\nTekens\nHulpmiddel · Speciale tekens en emoji zoeken\nMeer opties\nTeksteditor\nTekstbestanden bewerken\nMeer opties\nTerminal\nOpdrachten typen in een terminal\nMeer opties\nTransmission\nBitTorrent-cliënt · Bestanden downloaden en delen via BitTorrent\nMeer opties\nUitbreidings­beheer\nHulpmiddel · Beheer GNOME Shell-uitbreidingen\nMeer opties\nUXTerm\nTerminal\nMeer opties\nVerkenner\nOnderdeel van WinPoint\nMeer opties\nVirtuele machine beheerder\nSysteem · Beheer virtuele machines\nMeer opties\nWachtwoorden en sleutels\nHulpmiddel · Wachtwoorden en sleutels beheren\nMeer opties\nWinetricks\nHulpmiddel\nMeer opties\nXTerm\nTerminal\nMeer opties",
+     "dutchWordHits": [
+      "afbeeldingen",
+      "alle",
+      "apparaten",
+      "beheren",
+      "bekijk",
+      "bekijken",
+      "beschikbare",
+      "bestanden",
+      "bestandsbeheer",
+      "beveiliging",
+      "bijhouden",
+      "bureaublad",
+      "delen",
+      "documenten",
+      "een",
+      "filteren",
+      "foto",
+      "gebruikte",
+      "gedrag",
+      "gevonden",
+      "gewoon",
+      "geïnstalleerde",
+      "groot",
+      "herstel",
+      "het",
+      "hoe",
+      "hoeveel",
+      "hulp",
+      "informatie",
+      "installeren",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "je",
+      "kwijtraakt",
+      "logboeken",
+      "lokaal",
+      "maak",
+      "maken",
+      "mappen",
+      "maximaliseren",
+      "meer",
+      "meerdere",
+      "met",
+      "minimaliseren",
+      "naam",
+      "netwerk",
+      "netwerkverbindingen",
+      "nooit",
+      "om",
+      "onderdeel",
+      "opdrachten",
+      "openen",
+      "opties",
+      "persoonlijke",
+      "presentatie",
+      "rapporten",
+      "ruimte",
+      "schijven",
+      "sluiten",
+      "sorteren",
+      "speciale",
+      "startpagina",
+      "systeem",
+      "taakbeheer",
+      "taal",
+      "te",
+      "tekens",
+      "tekst",
+      "tekstbestanden",
+      "teksteditor",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "typen",
+      "uit",
+      "uiterlijk",
+      "uitgebreide",
+      "uitpakken",
+      "van",
+      "verbinding",
+      "verkenner",
+      "virtuele",
+      "voer",
+      "volledige",
+      "voor",
+      "vrij",
+      "wachtwoorden",
+      "webbrowser",
+      "werkblad",
+      "zijn",
+      "zoals",
+      "zodat",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "backend",
+    "t": 4.33,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 4.33,
+    "args": {
+     "key": "apps"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 6.82,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "installed-search",
+     "text": "Bestanden"
+    },
+    "result": {
+     "typed": "installed-search"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 7.63,
+    "args": {
+     "surface": "settings",
+     "method": "privacy.app"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 7.92,
+    "args": {
+     "key": "store item"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 8.56,
+    "args": {
+     "name": "installed-menu.nl"
+    },
+    "result": {
+     "png": "installed-menu.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 944,
+      "meanLevel": 38.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 9.18,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 11.25,
+    "args": {
+     "name": "app-advanced.nl"
+    },
+    "result": {
+     "png": "app-advanced.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 890,
+      "meanLevel": 38.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 11.37,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Geavanceerde opties – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "aanmelden",
+      "aanmeldt",
+      "als",
+      "apparaten",
+      "archief",
+      "bestand",
+      "bestanden",
+      "beveiliging",
+      "beëindigen",
+      "bij",
+      "deze",
+      "een",
+      "eigen",
+      "gebruik",
+      "gebruikt",
+      "geen",
+      "geluiden",
+      "geïnstalleerde",
+      "herstel",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "je",
+      "koppelingen",
+      "lokaal",
+      "maximaliseren",
+      "meldingen",
+      "met",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "om",
+      "oorspronkelijke",
+      "openen",
+      "opnieuw",
+      "persoonlijke",
+      "processen",
+      "resultaten",
+      "sluiten",
+      "specificaties",
+      "standaard",
+      "starten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "typen",
+      "uit",
+      "uitgevoerd",
+      "van",
+      "verwijderen",
+      "volgende",
+      "voor",
+      "wanneer",
+      "wordt",
+      "zijn",
+      "zoek",
+      "zoeken",
+      "zoekresultaten"
+     ],
+     "chars": 2529
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Geavanceerde opties – Instellingen",
+     "titles": [
+      "Geavanceerde opties – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nApps\nApps\nGeïnstalleerde apps\nGeïnstalleerde apps\nBestanden\nBestanden\nSysteempakket\nOpenen\nOpenen\nSpecificaties\nEr zijn geen specificaties van deze app bekend.\nApp-machtigingen\nMeldingen\nMeldingen en geluiden van deze app\nZoeken\nResultaten van deze app opnemen in de zoekresultaten\nAan\nWordt uitgevoerd bij aanmelden\nBestanden starten wanneer je je aanmeldt\nUit\nBeëindigen\nBeëindigen\nDeze app en de bijbehorende processen onmiddellijk beëindigen.\nBeëindigen\nBeëindigen\nVerwijderen\nVerwijderen\nDe installatiebron is niet betrouwbaar vast te stellen. Gebruik de oorspronkelijke pakketbeheerder.\nVerwijderen\nVerwijderen\nStandaardkoppelingen\nBestanden wordt gebruikt om de volgende typen bestanden en koppelingen te openen\nBestandstypen\n.7z, .7z.001\n7-zip-archief\nStandaard\nType verwijderen\napplication/x-7z-compressed-tar type\napplication/x-7z-compressed-tar\nStandaard\nType verwijderen\n.bz2\nBzip2 archive\nStandaard\nType verwijderen\n.cpio\nCPIO-archief\nStandaard\nType verwijderen\nFolder\ninode/directory\nStandaard\nType verwijderen\n.gz\nGzip-archief\nStandaard\nType verwijderen\n.lha, .lzh\nLHA-archief\nStandaard\nType verwijderen\n.lz\nLzip-archief\nStandaard\nType verwijderen\n.lzma\nLZMA-archief\nStandaard\nType verwijderen\n.rar\nRAR-archief\nStandaard\nType verwijderen\n.txz, .tar.xz\nTar archief (XZ-compressed)\nStandaard\nType verwijderen\n.tar.bz2, .tb2, .tbz2\nTar archive (bzip2-compressed)\nStandaard\nType verwijderen\n.tar, .gtar, .gem\nTar-archief\nAls standaard instellen\nAls standaard instellen\nType verwijderen\n.tar.lz\nTar-archief (gecomprimeerd met lzip)\nStandaard\nType verwijderen\n.tlz, .tar.lzma\nTar-archief (gecomprimeerd met LZMA)\nStandaard\nType verwijderen\n.tzst, .tar.zst\nTar-archief (gecomprimeerd met Zstandard)\nStandaard\nType verwijderen\n.tgz, .tar.gz\nTar-archief (ingepakt met gzip)\nStandaard\nType verwijderen\n.taz, .tar.z\nTar-archief (ingepakt)\nStandaard\nType verwijderen\n.z\nUNIX-ingepakt bestand\nStandaard\nType verwijderen\n.pkg, .xar\nXAR-archief\nStandaard\nType verwijderen\n.xz\nXZ archief\nStandaard\nType verwijderen\n.zip, .zipx\nZip-archief\nAls standaard instellen\nAls standaard instellen\nType verwijderen\n.zst\nZstandard-archief\nStandaard\nType verwijderen\nOpnieuw instellen\nJe eigen keuzes voor deze typen verwijderen\nOpnieuw instellen\nOpnieuw instellen",
+     "dutchWordHits": [
+      "aan",
+      "aanmelden",
+      "aanmeldt",
+      "als",
+      "apparaten",
+      "archief",
+      "bestand",
+      "bestanden",
+      "beveiliging",
+      "beëindigen",
+      "bij",
+      "deze",
+      "een",
+      "eigen",
+      "gebruik",
+      "gebruikt",
+      "geen",
+      "geluiden",
+      "geïnstalleerde",
+      "herstel",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "je",
+      "koppelingen",
+      "lokaal",
+      "maximaliseren",
+      "meldingen",
+      "met",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "om",
+      "oorspronkelijke",
+      "openen",
+      "opnieuw",
+      "persoonlijke",
+      "processen",
+      "resultaten",
+      "sluiten",
+      "specificaties",
+      "standaard",
+      "starten",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "typen",
+      "uit",
+      "uitgevoerd",
+      "van",
+      "verwijderen",
+      "volgende",
+      "voor",
+      "wanneer",
+      "wordt",
+      "zijn",
+      "zoek",
+      "zoeken",
+      "zoekresultaten"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 13.18,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disabled",
+     "path": null
+    },
+    "result": "['org.gnome.Nautilus.desktop']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 13.18,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disabled",
+     "path": null
+    },
+    "result": "['org.gnome.Nautilus.desktop']"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 13.18,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disabled",
+     "path": null,
+     "value": "@as []"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 13.34,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disable-external",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 14.11,
+    "args": {
+     "schema": "org.gnome.desktop.search-providers",
+     "key": "disable-external",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "record",
+    "t": 15.27,
+    "args": {
+     "key": "section order"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 17.02,
+    "args": {
+     "surface": "settings",
+     "method": "privacy.app"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 17.02,
+    "args": {
+     "key": "handlers"
+    }
+   },
+   {
+    "step": "record",
+    "t": 30.68,
+    "args": {
+     "key": "uninstall"
+    }
+   },
+   {
+    "step": "open",
+    "t": 33.42,
+    "args": {
+     "spec": "settings:defaultapps"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "defaultapps",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 34.87,
+    "args": {
+     "name": "defaultapps.nl"
+    },
+    "result": {
+     "png": "defaultapps.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 928,
+      "meanLevel": 39.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 35.15,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Standaard-apps – Instellingen",
+     "dutchWordHits": [
+      "afbeeldingen",
+      "alle",
+      "apparaten",
+      "bestanden",
+      "bestandsbeheer",
+      "beveiliging",
+      "een",
+      "eigen",
+      "foto",
+      "fotoviewer",
+      "geen",
+      "gekozen",
+      "geluidsbestanden",
+      "gerelateerde",
+      "herstel",
+      "hulp",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "internetkoppelingen",
+      "je",
+      "kiezen",
+      "liedjes",
+      "logboeken",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "meer",
+      "minimaliseren",
+      "muziek",
+      "muziekspeler",
+      "netwerk",
+      "netwerkverbindingen",
+      "opdrachtregel",
+      "openen",
+      "opnieuw",
+      "persoonlijke",
+      "schijven",
+      "sluiten",
+      "soort",
+      "standaardwaarden",
+      "startpagina",
+      "systeem",
+      "taal",
+      "tekens",
+      "tekstbestanden",
+      "teksteditor",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "toepassingen",
+      "verwijderen",
+      "videospeler",
+      "virtuele",
+      "voer",
+      "voor",
+      "wachtwoorden",
+      "webbrowser",
+      "webpagina",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 2004
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Standaard-apps – Instellingen",
+     "titles": [
+      "Standaard-apps – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nApps\nApps\nStandaard-apps\nEen standaardwaarde instellen voor een bestandstype of koppelingstype\nVoer een bestandstype of koppelingstype in\nZoeken\nStandaardwaarden instellen voor toepassingen\nApps zoeken\nZoeken\nAfbeeldingenviewer\nAfstellingen\nAgenda\nAgenda\nArchiefbeheer\nBackups\nBestanden\nBlender\nBluetooth-beheerder\nCamera\nChatGPT\nClaude\nDeskflow\nDocumentscanner\nDocumentviewer\nDolphin\nFirefox webbrowser\nGNOME-instellingen\nGridline\nHulp\nInfo\nKDE-systeeminstellingen\nKlokken\nLettertypen\nLibreOffice\nLibreOffice Calc\nLibreOffice Draw\nLibreOffice Impress\nLibreOffice Math\nLibreOffice Writer\nLogboeken\nNetwerkverbindingen\nNVIDIA X Server Settings\nPeaZip\nRekenmachine\nRemmina\nResources\nSchijfgebruik\nSchijven (GNOME)\nShotwell\nSoftware-updater\nStartup Disk Creator\nSteam\nSunshine\nSysprof\nTaalondersteuning\nTekens\nTeksteditor\nTerminal\nTransmission\nUitbreidings­beheer\nUXTerm\nVirtuele machine beheerder\nWachtwoorden en sleutels\nWinetricks\nXTerm\nStandaard-apps per soort\nWebbrowser, e-mail, agenda, muziek, video, foto’s en meer\nWebbrowser\nWebpagina’s en internetkoppelingen\nFirefox webbrowser\nE-mail\nE-mailadressen (mailto-koppelingen)\nGeen app gekozen\nAgenda\nAgenda-uitnodigingen en afspraken (.ics)\nAgenda\nMuziekspeler\nLiedjes en geluidsbestanden\nFirefox webbrowser\nVideospeler\nFilms en video’s\nFirefox webbrowser\nFotoviewer\nFoto’s en afbeeldingen\nAfbeeldingenviewer\nBestandsbeheer\nMappen openen\nBestanden\nTeksteditor\nTekstbestanden (.txt)\nTeksteditor\nTerminal\nOpdrachtregel\nTerminal\nGerelateerde instellingen\nStandaardwaarden kiezen op bestandstype\nStandaardwaarden kiezen op koppelingstype\nAlle standaard-apps opnieuw instellen\nJe eigen keuzes voor bestandstypen en koppelingstypen verwijderen\nOpnieuw instellen\nOpnieuw instellen",
+     "dutchWordHits": [
+      "afbeeldingen",
+      "alle",
+      "apparaten",
+      "bestanden",
+      "bestandsbeheer",
+      "beveiliging",
+      "een",
+      "eigen",
+      "foto",
+      "fotoviewer",
+      "geen",
+      "gekozen",
+      "geluidsbestanden",
+      "gerelateerde",
+      "herstel",
+      "hulp",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "internetkoppelingen",
+      "je",
+      "kiezen",
+      "liedjes",
+      "logboeken",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "meer",
+      "minimaliseren",
+      "muziek",
+      "muziekspeler",
+      "netwerk",
+      "netwerkverbindingen",
+      "opdrachtregel",
+      "openen",
+      "opnieuw",
+      "persoonlijke",
+      "schijven",
+      "sluiten",
+      "soort",
+      "standaardwaarden",
+      "startpagina",
+      "systeem",
+      "taal",
+      "tekens",
+      "tekstbestanden",
+      "teksteditor",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "toepassingen",
+      "verwijderen",
+      "videospeler",
+      "virtuele",
+      "voer",
+      "voor",
+      "wachtwoorden",
+      "webbrowser",
+      "webpagina",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "dev",
+    "t": 36.64,
+    "args": {
+     "surface": "settings",
+     "native": "type",
+     "name": "defaultapps-type-search",
+     "text": "html"
+    },
+    "result": {
+     "typed": "defaultapps-type-search"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 38.18,
+    "args": {
+     "name": "defaultapps-types.nl"
+    },
+    "result": {
+     "png": "defaultapps-types.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 921,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 38.19,
+    "args": {
+     "surface": "settings",
+     "method": "apps.forType"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 38.19,
+    "args": {
+     "key": "text/html apps"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 40.38,
+    "args": {
+     "name": "defaultapps-chooser.nl"
+    },
+    "result": {
+     "png": "defaultapps-chooser.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 913,
+      "meanLevel": 33.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "log",
+    "t": 44.46,
+    "args": {
+     "msg": "timeout: the radio of another app (after 3 s; last error: None)"
+    }
+   },
+   {
+    "step": "record",
+    "t": 44.81,
+    "args": {
+     "key": "chooser radio"
+    }
+   },
+   {
+    "step": "log",
+    "t": 50.07,
+    "args": {
+     "msg": "timeout: Standaard instellen (pointer) (after 4 s; last error: None)"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 50.79,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 61.45,
+    "args": {
+     "surface": "settings",
+     "method": "apps.defaults"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 61.46,
+    "args": {
+     "key": "text candidates"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 66.83,
+    "args": {
+     "name": "defaultapps-kinds.nl"
+    },
+    "result": {
+     "png": "defaultapps-kinds.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 939,
+      "meanLevel": 39.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "log",
+    "t": 75.2,
+    "args": {
+     "msg": "timeout: Opnieuw instellen (pointer) (after 4 s; last error: None)"
+    }
+   },
+   {
+    "step": "dev",
+    "t": 76.17,
+    "args": {
+     "surface": "settings",
+     "native": "click",
+     "name": "w11-dialog-primary"
+    },
+    "result": {
+     "clicked": "w11-dialog-primary"
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 89.41,
+    "args": {
+     "name": "defaultapps-files.nl"
+    },
+    "result": {
+     "png": "defaultapps-files.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 908,
+      "meanLevel": 40.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 89.41,
+    "args": {
+     "name": "relay-defaultapps",
+     "argv": [
+      "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/prefix/bin/win11-app",
+      "--app",
+      "settings",
+      "--params"
+     ]
+    },
+    "result": {
+     "pid": 2154
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 92.25,
+    "args": {
+     "name": "defaultapps-app.nl"
+    },
+    "result": {
+     "png": "defaultapps-app.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 879,
+      "meanLevel": 38.4,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 92.78,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Standaard-apps – Instellingen",
+     "dutchWordHits": [
+      "als",
+      "apparaten",
+      "archief",
+      "bestand",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "een",
+      "eigen",
+      "gebruikt",
+      "herstel",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "je",
+      "koppelingen",
+      "lokaal",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "netwerk",
+      "om",
+      "openen",
+      "opnieuw",
+      "opties",
+      "persoonlijke",
+      "sluiten",
+      "standaard",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "typen",
+      "verwijderen",
+      "volgende",
+      "voor",
+      "wordt",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1967
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Standaard-apps – Instellingen",
+     "titles": [
+      "Standaard-apps – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nApps\nApps\nStandaard-apps\nBestanden\nStandaardkoppelingen\nBestanden wordt gebruikt om de volgende typen bestanden en koppelingen te openen\nBestandstypen\n.7z, .7z.001\n7-zip-archief\nStandaard\nType verwijderen\napplication/x-7z-compressed-tar type\napplication/x-7z-compressed-tar\nStandaard\nType verwijderen\n.bz2\nBzip2 archive\nStandaard\nType verwijderen\n.cpio\nCPIO-archief\nStandaard\nType verwijderen\nFolder\ninode/directory\nStandaard\nType verwijderen\n.gz\nGzip-archief\nStandaard\nType verwijderen\n.lha, .lzh\nLHA-archief\nStandaard\nType verwijderen\n.lz\nLzip-archief\nStandaard\nType verwijderen\n.lzma\nLZMA-archief\nStandaard\nType verwijderen\n.rar\nRAR-archief\nStandaard\nType verwijderen\n.txz, .tar.xz\nTar archief (XZ-compressed)\nStandaard\nType verwijderen\n.tar.bz2, .tb2, .tbz2\nTar archive (bzip2-compressed)\nStandaard\nType verwijderen\n.tar, .gtar, .gem\nTar-archief\nAls standaard instellen\nAls standaard instellen\nType verwijderen\n.tar.lz\nTar-archief (gecomprimeerd met lzip)\nStandaard\nType verwijderen\n.tlz, .tar.lzma\nTar-archief (gecomprimeerd met LZMA)\nStandaard\nType verwijderen\n.tzst, .tar.zst\nTar-archief (gecomprimeerd met Zstandard)\nStandaard\nType verwijderen\n.tgz, .tar.gz\nTar-archief (ingepakt met gzip)\nStandaard\nType verwijderen\n.taz, .tar.z\nTar-archief (ingepakt)\nStandaard\nType verwijderen\n.z\nUNIX-ingepakt bestand\nStandaard\nType verwijderen\n.pkg, .xar\nXAR-archief\nStandaard\nType verwijderen\n.xz\nXZ archief\nStandaard\nType verwijderen\n.zip, .zipx\nZip-archief\nAls standaard instellen\nAls standaard instellen\nType verwijderen\n.zst\nZstandard-archief\nStandaard\nType verwijderen\nOpnieuw instellen\nJe eigen keuzes voor deze typen verwijderen\nOpnieuw instellen\nOpnieuw instellen\nGeavanceerde opties",
+     "dutchWordHits": [
+      "als",
+      "apparaten",
+      "archief",
+      "bestand",
+      "bestanden",
+      "beveiliging",
+      "deze",
+      "een",
+      "eigen",
+      "gebruikt",
+      "herstel",
+      "instellen",
+      "instelling",
+      "instellingen",
+      "je",
+      "koppelingen",
+      "lokaal",
+      "maximaliseren",
+      "met",
+      "minimaliseren",
+      "netwerk",
+      "om",
+      "openen",
+      "opnieuw",
+      "opties",
+      "persoonlijke",
+      "sluiten",
+      "standaard",
+      "startpagina",
+      "systeem",
+      "taal",
+      "te",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "typen",
+      "verwijderen",
+      "volgende",
+      "voor",
+      "wordt",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "open",
+    "t": 94.34,
+    "args": {
+     "spec": "settings:notifications"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "notifications",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 96.67,
+    "args": {
+     "name": "notifications.nl"
+    },
+    "result": {
+     "png": "notifications.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 898,
+      "meanLevel": 39.9,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 97.23,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Meldingen – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "afspelen",
+      "afzenders",
+      "andere",
+      "apparaten",
+      "bekijk",
+      "bestanden",
+      "beveiliging",
+      "dat",
+      "een",
+      "eruitziet",
+      "geluiden",
+      "herstel",
+      "het",
+      "hoe",
+      "instelling",
+      "instellingen",
+      "lokaal",
+      "maximaliseren",
+      "meest",
+      "melding",
+      "meldingen",
+      "meldingencentrum",
+      "minimaliseren",
+      "naar",
+      "netwerk",
+      "niet",
+      "ontvangen",
+      "persoonlijke",
+      "rechtstreeks",
+      "schijven",
+      "sluiten",
+      "sorteren",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taal",
+      "terug",
+      "testmelding",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "versturen",
+      "weergeven",
+      "worden",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 1174
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Meldingen – Instellingen",
+     "titles": [
+      "Meldingen – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nSysteem\nMeldingen\nMeldingen\nMeldingen ontvangen van apps en andere afzenders\nAan\nMeldingen weergeven op het vergrendelingsscherm\nToestaan dat meldingen geluiden afspelen\nNiet storen\nMeldingen worden rechtstreeks naar het meldingencentrum gestuurd\nUit\nMeldingen van apps en andere afzenders\nSorteren op\nMeest recent\nArchiefbeheer\nBanners, Geluiden\nAan\nBackups\nBanners, Geluiden\nAan\nBestanden\nBanners, Geluiden\nAan\nColor Management\nBanners, Geluiden\nAan\nDate & Time\nBanners, Geluiden\nAan\nEvents and Tasks Reminders\nBanners, Geluiden\nAan\nKlokken\nBanners, Geluiden\nAan\nOnline Accounts\nBanners, Geluiden\nAan\nPower\nBanners, Geluiden\nAan\nPrinters\nBanners, Geluiden\nAan\nSchijfgebruik\nBanners, Geluiden\nAan\nSchijven (GNOME)\nBanners, Geluiden\nAan\nSnapd User Session Agent\nBanners, Geluiden\nAan\nZenity\nBanners, Geluiden\nAan\nTestmelding versturen\nBekijk hoe een melding eruitziet\nVersturen\nVersturen",
+     "dutchWordHits": [
+      "aan",
+      "afspelen",
+      "afzenders",
+      "andere",
+      "apparaten",
+      "bekijk",
+      "bestanden",
+      "beveiliging",
+      "dat",
+      "een",
+      "eruitziet",
+      "geluiden",
+      "herstel",
+      "het",
+      "hoe",
+      "instelling",
+      "instellingen",
+      "lokaal",
+      "maximaliseren",
+      "meest",
+      "melding",
+      "meldingen",
+      "meldingencentrum",
+      "minimaliseren",
+      "naar",
+      "netwerk",
+      "niet",
+      "ontvangen",
+      "persoonlijke",
+      "rechtstreeks",
+      "schijven",
+      "sluiten",
+      "sorteren",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taal",
+      "terug",
+      "testmelding",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "versturen",
+      "weergeven",
+      "worden",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 102.19,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-in-lock-screen",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 102.19,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-in-lock-screen",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 105.5,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "backend",
+    "t": 105.51,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 106.16,
+    "args": {
+     "name": "notifications-dnd.nl"
+    },
+    "result": {
+     "png": "notifications-dnd.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 909,
+      "meanLevel": 39.8,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 107.71,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "backend",
+    "t": 107.71,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.08,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.08,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "application-id",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "'org.gnome.Nautilus.desktop'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.08,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "application-id",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "'org.gnome.Nautilus.desktop'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.08,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "application-children",
+     "path": null
+    },
+    "result": "['org-gnome-nautilus']"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 111.08,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "application-children",
+     "path": null
+    },
+    "result": "['org-gnome-nautilus']"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 111.08,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 122.45,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 124.06,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 126.32,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 127.94,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 127.95,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 128.94,
+    "args": {
+     "spec": "settings:notifications"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "notifications",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 138.62,
+    "args": {
+     "name": "app-notifications.nl"
+    },
+    "result": {
+     "png": "app-notifications.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 892,
+      "meanLevel": 40.5,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 139.32,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Meldingen van app – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "afspelen",
+      "apparaten",
+      "beeld",
+      "bestanden",
+      "beveiliging",
+      "boven",
+      "deze",
+      "een",
+      "geluid",
+      "gerelateerde",
+      "herstel",
+      "het",
+      "inhoud",
+      "instelling",
+      "instellingen",
+      "lokaal",
+      "machtigingen",
+      "maximaliseren",
+      "melding",
+      "meldingen",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "ontvangen",
+      "opslag",
+      "opties",
+      "persoonlijke",
+      "rechtsonder",
+      "sluiten",
+      "staan",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "verbergen",
+      "waarschuwingen",
+      "wanneer",
+      "weergeven",
+      "zoek",
+      "zoeken"
+     ],
+     "chars": 836
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Meldingen van app – Instellingen",
+     "titles": [
+      "Meldingen van app – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nSysteem\nSysteem\nMeldingen\nMeldingen\nBestanden\nMeldingen\nMeldingen van deze app ontvangen\nAan\nMeldingsbanners\nMeldingen rechtsonder in beeld, boven de taakbalk\nMeldingsbanners weergeven\nInhoud weergeven in banners\nMeldingen weergeven op het vergrendelingsscherm\nAan\nInhoud verbergen wanneer meldingen op het vergrendelingsscherm staan\nAan\nEen geluid afspelen wanneer er een melding binnenkomt\nAan\nGerelateerde instellingen\nMeldingen\nWaarschuwingen van apps en systeem, niet storen\nGeavanceerde opties\nMachtigingen, opslag en standaardkoppelingen van deze app",
+     "dutchWordHits": [
+      "aan",
+      "afspelen",
+      "apparaten",
+      "beeld",
+      "bestanden",
+      "beveiliging",
+      "boven",
+      "deze",
+      "een",
+      "geluid",
+      "gerelateerde",
+      "herstel",
+      "het",
+      "inhoud",
+      "instelling",
+      "instellingen",
+      "lokaal",
+      "machtigingen",
+      "maximaliseren",
+      "melding",
+      "meldingen",
+      "minimaliseren",
+      "netwerk",
+      "niet",
+      "ontvangen",
+      "opslag",
+      "opties",
+      "persoonlijke",
+      "rechtsonder",
+      "sluiten",
+      "staan",
+      "startpagina",
+      "storen",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "terug",
+      "tijd",
+      "toegankelijkheid",
+      "van",
+      "verbergen",
+      "waarschuwingen",
+      "wanneer",
+      "weergeven",
+      "zoek",
+      "zoeken"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 141.65,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "show-banners",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 141.65,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "show-banners",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 142.37,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "show-banners",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 147.07,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "force-expanded",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 147.07,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "force-expanded",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 147.07,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "force-expanded",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 150.2,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "show-in-lock-screen",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 150.2,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "show-in-lock-screen",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 150.85,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "show-in-lock-screen",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 154.59,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "details-in-lock-screen",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 154.59,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "details-in-lock-screen",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 154.59,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "details-in-lock-screen",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 157.84,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable-sound-alerts",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 157.84,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable-sound-alerts",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 157.84,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable-sound-alerts",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 160.99,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 160.99,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/"
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 163.15,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 165.95,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-in-lock-screen",
+     "path": null,
+     "value": "false"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 167.38,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-in-lock-screen",
+     "path": null,
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 168.12,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 168.42,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 168.73,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 169.03,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 169.38,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "spawn",
+    "t": 169.38,
+    "args": {
+     "name": "relay-app-notifications",
+     "argv": [
+      "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/prefix/bin/win11-app",
+      "--app",
+      "settings",
+      "--params"
+     ]
+    },
+    "result": {
+     "pid": 2526
+    }
+   },
+   {
+    "step": "backend",
+    "t": 171.95,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 172.26,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 172.56,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 172.86,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 173.22,
+    "args": {
+     "surface": "settings",
+     "method": "apps.list"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 183.18,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable",
+     "path": "/org/gnome/desktop/notifications/application/win11-test-revert/"
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 183.18,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable-sound-alerts",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 183.18,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 183.19,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 183.19,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "record",
+    "t": 185.7,
+    "args": {
+     "key": "sound-on"
+    }
+   },
+   {
+    "step": "native",
+    "t": 186.49,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "backend",
+    "t": 189.0,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 191.5,
+    "args": {
+     "key": "sound-sounds-off"
+    }
+   },
+   {
+    "step": "native",
+    "t": 191.84,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "backend",
+    "t": 194.35,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 194.35,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 194.36,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 194.66,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "record",
+    "t": 197.17,
+    "args": {
+     "key": "sound-dnd"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 199.67,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 199.67,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "false"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 199.97,
+    "args": {
+     "schema": "org.gnome.desktop.notifications",
+     "key": "show-banners",
+     "path": null
+    },
+    "result": "true"
+   },
+   {
+    "step": "gsettings_set",
+    "t": 199.98,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable-sound-alerts",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "false"
+    }
+   },
+   {
+    "step": "record",
+    "t": 202.48,
+    "args": {
+     "key": "sound-app-sound-off"
+    }
+   },
+   {
+    "step": "native",
+    "t": 203.25,
+    "args": {
+     "native": "state"
+    },
+    "result": {
+     "toplevels": 3
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 205.76,
+    "args": {
+     "schema": "org.gnome.desktop.notifications.application",
+     "key": "enable-sound-alerts",
+     "path": "/org/gnome/desktop/notifications/application/org-gnome-nautilus/",
+     "value": "true"
+    }
+   },
+   {
+    "step": "open",
+    "t": 207.67,
+    "args": {
+     "spec": "settings:personalization"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "personalization",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 209.97,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Persoonlijke instellingen – Instellingen",
+     "dutchWordHits": [
+      "accentkleur",
+      "achtergrond",
+      "apparaten",
+      "automatisch",
+      "beveiliging",
+      "bureaublad",
+      "bureaubladachtergrond",
+      "bureaubladpictogrammen",
+      "deze",
+      "donker",
+      "een",
+      "effen",
+      "foto",
+      "gloed",
+      "herstel",
+      "het",
+      "indeling",
+      "instelling",
+      "instellingen",
+      "keer",
+      "kleur",
+      "kleuren",
+      "licht",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "noorderlicht",
+      "om",
+      "passen",
+      "persoonlijke",
+      "prullenbak",
+      "recente",
+      "selecteer",
+      "sluiten",
+      "startpagina",
+      "stroming",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "te",
+      "terug",
+      "thema",
+      "tijd",
+      "toe",
+      "toegankelijkheid",
+      "transparantie",
+      "uitlijning",
+      "van",
+      "verbergen",
+      "zoek",
+      "zoeken",
+      "zonsopgang",
+      "één"
+     ],
+     "chars": 752
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Persoonlijke instellingen – Instellingen",
+     "titles": [
+      "Persoonlijke instellingen – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPersoonlijke instellingen\nSelecteer een thema om toe te passen\nLotus (licht)\nLotus (donker)\nStroming\nGloed\nZonsopgang\nNoorderlicht\nAchtergrond\nBureaubladachtergrond, foto of effen kleur\nKleuren\nLicht of donker, accentkleur, transparantie\nThema’s\nAchtergrond, kleur en modus in één keer\nStart\nIndeling van Start, recente apps, mappen\nTaakbalk\nUitlijning, zoeken, widgets, automatisch verbergen\nBureaubladpictogrammen\nDeze pc, Prullenbak en Persoonlijke map op het bureaublad",
+     "dutchWordHits": [
+      "accentkleur",
+      "achtergrond",
+      "apparaten",
+      "automatisch",
+      "beveiliging",
+      "bureaublad",
+      "bureaubladachtergrond",
+      "bureaubladpictogrammen",
+      "deze",
+      "donker",
+      "een",
+      "effen",
+      "foto",
+      "gloed",
+      "herstel",
+      "het",
+      "indeling",
+      "instelling",
+      "instellingen",
+      "keer",
+      "kleur",
+      "kleuren",
+      "licht",
+      "lokaal",
+      "mappen",
+      "maximaliseren",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "noorderlicht",
+      "om",
+      "passen",
+      "persoonlijke",
+      "prullenbak",
+      "recente",
+      "selecteer",
+      "sluiten",
+      "startpagina",
+      "stroming",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "te",
+      "terug",
+      "thema",
+      "tijd",
+      "toe",
+      "toegankelijkheid",
+      "transparantie",
+      "uitlijning",
+      "van",
+      "verbergen",
+      "zoek",
+      "zoeken",
+      "zonsopgang",
+      "één"
+     ]
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 211.39,
+    "args": {
+     "name": "personalization.nl"
+    },
+    "result": {
+     "png": "personalization.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1836,
+      "meanLevel": 40.3,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "open",
+    "t": 213.41,
+    "args": {
+     "spec": "settings:background"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "background",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 216.48,
+    "args": {
+     "name": "background.nl"
+    },
+    "result": {
+     "png": "background.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1847,
+      "meanLevel": 39.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 217.28,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Achtergrond – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "aanpassen",
+      "accentkleur",
+      "achtergrond",
+      "afbeelding",
+      "afbeeldingen",
+      "apparaten",
+      "beveiliging",
+      "bureaublad",
+      "donker",
+      "donkere",
+      "duinen",
+      "een",
+      "effen",
+      "foto",
+      "gerelateerde",
+      "gloed",
+      "hebben",
+      "herstel",
+      "het",
+      "hoe",
+      "instelling",
+      "instellingen",
+      "je",
+      "keer",
+      "kies",
+      "kiezen",
+      "kleur",
+      "kleuren",
+      "licht",
+      "lichte",
+      "lokaal",
+      "maximaliseren",
+      "meewisselt",
+      "met",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "noorderlicht",
+      "opvullen",
+      "persoonlijke",
+      "scherm",
+      "sluiten",
+      "startpagina",
+      "stroming",
+      "systeem",
+      "taal",
+      "terug",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "transparantie",
+      "van",
+      "versie",
+      "vult",
+      "zoek",
+      "zoeken",
+      "zonsopgang",
+      "één"
+     ],
+     "chars": 1161
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Achtergrond – Instellingen",
+     "titles": [
+      "Achtergrond – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPersoonlijke instellingen\nPersoonlijke instellingen\nAchtergrond\nJe achtergrond aanpassen\nEen afbeelding of een effen kleur op je bureaublad\nAfbeelding\nEen foto kiezen\nDoor foto’s bladeren\nDoor foto’s bladeren\nKies hoe de afbeelding het scherm vult\nOpvullen\nAfbeeldingen\nLotus\nStroming\nGloed\nZonsopgang\nNoorderlicht\nDuinen\nAfbeeldingen van Ubuntu en GNOME\nSimple Raccoon\nFlying Boxes\nUbuntu Coffee Mug\nLow Poly Raccoon\nSnowy Ubuntu\nAnomaly\nVor\nBluebells Suspended In Time\nRed Acer\nBig Dipper\nWinter Grand Triangle\nRaccoon1\nAsk a Friend\nTwin Brothers\nElectric Veins of the Storm\nUbuntu\nUbuntu Light\nUbuntu Dark\nUbuntu Greyscale\nAfbeelding aanpassen aan licht en donker\nLotus en Stroming hebben een lichte en een donkere versie die meewisselt met je modus\nAan\nGerelateerde instellingen\nKleuren\nLicht of donker, accentkleur, transparantie\nThema’s\nAchtergrond, kleur en modus in één keer",
+     "dutchWordHits": [
+      "aan",
+      "aanpassen",
+      "accentkleur",
+      "achtergrond",
+      "afbeelding",
+      "afbeeldingen",
+      "apparaten",
+      "beveiliging",
+      "bureaublad",
+      "donker",
+      "donkere",
+      "duinen",
+      "een",
+      "effen",
+      "foto",
+      "gerelateerde",
+      "gloed",
+      "hebben",
+      "herstel",
+      "het",
+      "hoe",
+      "instelling",
+      "instellingen",
+      "je",
+      "keer",
+      "kies",
+      "kiezen",
+      "kleur",
+      "kleuren",
+      "licht",
+      "lichte",
+      "lokaal",
+      "maximaliseren",
+      "meewisselt",
+      "met",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "noorderlicht",
+      "opvullen",
+      "persoonlijke",
+      "scherm",
+      "sluiten",
+      "startpagina",
+      "stroming",
+      "systeem",
+      "taal",
+      "terug",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "transparantie",
+      "van",
+      "versie",
+      "vult",
+      "zoek",
+      "zoeken",
+      "zonsopgang",
+      "één"
+     ]
+    }
+   },
+   {
+    "step": "backend",
+    "t": 218.01,
+    "args": {
+     "surface": "settings",
+     "method": "background.catalog"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 218.01,
+    "args": {
+     "key": "catalog"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 221.19,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 221.19,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 221.2,
+    "args": {
+     "schema": "org.gnome.desktop.background",
+     "key": "picture-uri",
+     "path": null
+    },
+    "result": "'file:///usr/share/backgrounds/cnusr25-Simple_Raccoon_Dark.png'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 221.2,
+    "args": {
+     "schema": "org.gnome.desktop.background",
+     "key": "picture-uri",
+     "path": null
+    },
+    "result": "'file:///usr/share/backgrounds/cnusr25-Simple_Raccoon_Dark.png'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 221.2,
+    "args": {
+     "schema": "org.gnome.desktop.background",
+     "key": "picture-uri",
+     "path": null
+    },
+    "result": "'file:///usr/share/backgrounds/cnusr25-Simple_Raccoon_Dark.png'"
+   },
+   {
+    "step": "backend",
+    "t": 227.13,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 227.13,
+    "args": {
+     "schema": "org.gnome.desktop.background",
+     "key": "picture-options",
+     "path": null
+    },
+    "result": "'stretched'"
+   },
+   {
+    "step": "backend",
+    "t": 227.13,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 227.13,
+    "args": {
+     "schema": "org.gnome.desktop.background",
+     "key": "picture-options",
+     "path": null
+    },
+    "result": "'stretched'"
+   },
+   {
+    "step": "gsettings_get",
+    "t": 231.02,
+    "args": {
+     "schema": "org.gnome.desktop.background",
+     "key": "picture-options",
+     "path": null
+    },
+    "result": "'zoom'"
+   },
+   {
+    "step": "backend",
+    "t": 231.02,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 231.02,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.set"
+    },
+    "result": {
+     "ok": false
+    }
+   },
+   {
+    "step": "backend",
+    "t": 231.03,
+    "args": {
+     "surface": "settings",
+     "method": "background.add"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "screenshot",
+    "t": 233.34,
+    "args": {
+     "name": "background-own.nl"
+    },
+    "result": {
+     "png": "background-own.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 1372,
+      "meanLevel": 56.1,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "backend",
+    "t": 235.35,
+    "args": {
+     "surface": "settings",
+     "method": "background.catalog"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "open",
+    "t": 237.36,
+    "args": {
+     "spec": "settings:colors"
+    },
+    "result": {
+     "name": "settings",
+     "kind": "settings",
+     "window": "native-settings",
+     "pid": 1345,
+     "page": "colors",
+     "alive": true,
+     "reused": true
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 240.64,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Kleuren – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "aangepaste",
+      "accentkleur",
+      "achtergrond",
+      "andere",
+      "apparaten",
+      "beetje",
+      "beter",
+      "beveiliging",
+      "blauw",
+      "donker",
+      "doorschijnend",
+      "een",
+      "eigen",
+      "eruitzien",
+      "gebruiken",
+      "geldt",
+      "gerelateerde",
+      "handmatig",
+      "herstel",
+      "het",
+      "hierna",
+      "hoe",
+      "houden",
+      "hun",
+      "instelling",
+      "instellingen",
+      "je",
+      "keer",
+      "kies",
+      "kleur",
+      "kleuren",
+      "knoppen",
+      "krijgen",
+      "leesbare",
+      "licht",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "meldingencentrum",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "opent",
+      "oppervlakken",
+      "persoonlijke",
+      "schakelaars",
+      "selectie",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "tekst",
+      "terug",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "vensterknoppen",
+      "vensters",
+      "volgen",
+      "voor",
+      "weergeven",
+      "zijn",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zonder",
+      "één"
+     ],
+     "chars": 2009
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Kleuren – Instellingen",
+     "titles": [
+      "Kleuren – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPersoonlijke instellingen\nPersoonlijke instellingen\nKleuren\nKies je modus\nDe kleuren van WinPoint en je apps: licht of donker\nDonker\nTransparantie-effecten\nVensters en oppervlakken zijn een beetje doorschijnend\nAan\nAccentkleur\nDe kleur van knoppen, schakelaars en de selectie\nHandmatig\nKleuren\nKleur #FFB900\nKleur #FF8C00\nKleur #F7630C\nKleur #CA5010\nKleur #DA3B01\nKleur #EF6950\nKleur #D13438\nKleur #FF4343\nKleur #E74856\nKleur #E81123\nKleur #EA005E\nKleur #C30052\nKleur #E3008C\nKleur #BF0077\nKleur #C239B3\nKleur #9A0089\nKleur #0078D4\nKleur #0063B1\nKleur #8E8CD8\nKleur #6B69D6\nKleur #8764B8\nKleur #744DA9\nKleur #B146C2\nKleur #881798\nKleur #0099BC\nKleur #2D7D9A\nKleur #00B7C3\nKleur #038387\nKleur #00B294\nKleur #018574\nKleur #00CC6A\nKleur #10893E\nKleur #7A7574\nKleur #5D5A58\nKleur #68768A\nKleur #515C6B\nKleur #567C73\nKleur #486860\nKleur #498205\nKleur #107C10\nKleur #767676\nKleur #4C4A48\nKleur #69797E\nKleur #4A5459\nKleur #647C64\nKleur #525E54\nKleur #847545\nKleur #7E735F\nAangepaste kleuren\nKleuren weergeven\nKleuren weergeven\nAccentkleur in Ubuntu- en GNOME-apps\nUbuntu- en GNOME-apps gebruiken de dichtstbijzijnde GNOME-accentkleur\nBlauw\nAccentkleur weergeven op Start en taakbalk\nStart, de taakbalk en het meldingencentrum krijgen je accentkleur\nUit\nThema voor apps\nHoe andere apps eruitzien; licht en donker volgen je modus. Zonder Fluent-thema houden apps het Ubuntu-thema.\nUbuntu-standaard (Yaru)\nWindows 11-vensterknoppen in apps\nMinimaliseren, maximaliseren en sluiten zoals in Windows 11, in licht en donker. Geldt voor apps die je hierna opent; Snap- en Flatpak-apps houden hun eigen knoppen.\nAan\nGerelateerde instellingen\nContrastthema’s\nMeer contrast voor beter leesbare tekst\nThema’s\nAchtergrond, kleur en modus in één keer",
+     "dutchWordHits": [
+      "aan",
+      "aangepaste",
+      "accentkleur",
+      "achtergrond",
+      "andere",
+      "apparaten",
+      "beetje",
+      "beter",
+      "beveiliging",
+      "blauw",
+      "donker",
+      "doorschijnend",
+      "een",
+      "eigen",
+      "eruitzien",
+      "gebruiken",
+      "geldt",
+      "gerelateerde",
+      "handmatig",
+      "herstel",
+      "het",
+      "hierna",
+      "hoe",
+      "houden",
+      "hun",
+      "instelling",
+      "instellingen",
+      "je",
+      "keer",
+      "kies",
+      "kleur",
+      "kleuren",
+      "knoppen",
+      "krijgen",
+      "leesbare",
+      "licht",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "meldingencentrum",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "opent",
+      "oppervlakken",
+      "persoonlijke",
+      "schakelaars",
+      "selectie",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "tekst",
+      "terug",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "vensterknoppen",
+      "vensters",
+      "volgen",
+      "voor",
+      "weergeven",
+      "zijn",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zonder",
+      "één"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 241.45,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "accent-color",
+     "path": null
+    },
+    "result": "'blue'"
+   },
+   {
+    "step": "backend",
+    "t": 244.96,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 244.96,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "accent-color",
+     "path": null
+    },
+    "result": "'red'"
+   },
+   {
+    "step": "backend",
+    "t": 245.81,
+    "args": {
+     "surface": "settings",
+     "method": "settings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "gsettings_get",
+    "t": 245.81,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "accent-color",
+     "path": null
+    },
+    "result": "'red'"
+   },
+   {
+    "step": "screenshot",
+    "t": 246.37,
+    "args": {
+     "name": "colors.nl"
+    },
+    "result": {
+     "png": "colors.nl.png",
+     "area": null,
+     "pixels": {
+      "rect": [
+       0,
+       0,
+       1440,
+       900
+      ],
+      "distinctColours": 510,
+      "meanLevel": 58.6,
+      "looksBlank": false
+     }
+    }
+   },
+   {
+    "step": "page_text",
+    "t": 247.19,
+    "args": {
+     "surface": "settings"
+    },
+    "result": {
+     "lang": "nl",
+     "title": "Kleuren – Instellingen",
+     "dutchWordHits": [
+      "aan",
+      "aangepaste",
+      "accentkleur",
+      "achtergrond",
+      "andere",
+      "apparaten",
+      "beetje",
+      "beter",
+      "beveiliging",
+      "donker",
+      "doorschijnend",
+      "een",
+      "eigen",
+      "eruitzien",
+      "gebruiken",
+      "geldt",
+      "gerelateerde",
+      "handmatig",
+      "herstel",
+      "het",
+      "hierna",
+      "hoe",
+      "houden",
+      "hun",
+      "instelling",
+      "instellingen",
+      "je",
+      "keer",
+      "kies",
+      "kleur",
+      "kleuren",
+      "knoppen",
+      "krijgen",
+      "leesbare",
+      "licht",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "meldingencentrum",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "opent",
+      "oppervlakken",
+      "persoonlijke",
+      "recente",
+      "schakelaars",
+      "selectie",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "tekst",
+      "terug",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "vensterknoppen",
+      "vensters",
+      "volgen",
+      "voor",
+      "weergeven",
+      "zijn",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zonder",
+      "één"
+     ],
+     "chars": 2038
+    },
+    "text": {
+     "lang": "nl",
+     "title": "Kleuren – Instellingen",
+     "titles": [
+      "Kleuren – Instellingen"
+     ],
+     "text": "Terug\nInstellingen\nMinimaliseren\nMaximaliseren\nSluiten\nR\nrobin\nLokaal account\nZoek een instelling\nZoeken\nStartpagina\nSysteem\nBluetooth en apparaten\nNetwerk en internet\nPersoonlijke instellingen\nApps\nAccounts\nTijd en taal\nToegankelijkheid\nPrivacy en beveiliging\nUpdate en herstel\nPersoonlijke instellingen\nPersoonlijke instellingen\nKleuren\nKies je modus\nDe kleuren van WinPoint en je apps: licht of donker\nDonker\nTransparantie-effecten\nVensters en oppervlakken zijn een beetje doorschijnend\nAan\nAccentkleur\nDe kleur van knoppen, schakelaars en de selectie\nHandmatig\nRecente kleuren\nKleur #E81123\nKleuren\nKleur #FFB900\nKleur #FF8C00\nKleur #F7630C\nKleur #CA5010\nKleur #DA3B01\nKleur #EF6950\nKleur #D13438\nKleur #FF4343\nKleur #E74856\nKleur #E81123\nKleur #EA005E\nKleur #C30052\nKleur #E3008C\nKleur #BF0077\nKleur #C239B3\nKleur #9A0089\nKleur #0078D4\nKleur #0063B1\nKleur #8E8CD8\nKleur #6B69D6\nKleur #8764B8\nKleur #744DA9\nKleur #B146C2\nKleur #881798\nKleur #0099BC\nKleur #2D7D9A\nKleur #00B7C3\nKleur #038387\nKleur #00B294\nKleur #018574\nKleur #00CC6A\nKleur #10893E\nKleur #7A7574\nKleur #5D5A58\nKleur #68768A\nKleur #515C6B\nKleur #567C73\nKleur #486860\nKleur #498205\nKleur #107C10\nKleur #767676\nKleur #4C4A48\nKleur #69797E\nKleur #4A5459\nKleur #647C64\nKleur #525E54\nKleur #847545\nKleur #7E735F\nAangepaste kleuren\nKleuren weergeven\nKleuren weergeven\nAccentkleur in Ubuntu- en GNOME-apps\nUbuntu- en GNOME-apps gebruiken de dichtstbijzijnde GNOME-accentkleur\nRood\nAccentkleur weergeven op Start en taakbalk\nStart, de taakbalk en het meldingencentrum krijgen je accentkleur\nUit\nThema voor apps\nHoe andere apps eruitzien; licht en donker volgen je modus. Zonder Fluent-thema houden apps het Ubuntu-thema.\nUbuntu-standaard (Yaru)\nWindows 11-vensterknoppen in apps\nMinimaliseren, maximaliseren en sluiten zoals in Windows 11, in licht en donker. Geldt voor apps die je hierna opent; Snap- en Flatpak-apps houden hun eigen knoppen.\nAan\nGerelateerde instellingen\nContrastthema’s\nMeer contrast voor beter leesbare tekst\nThema’s\nAchtergrond, kleur en modus in één keer",
+     "dutchWordHits": [
+      "aan",
+      "aangepaste",
+      "accentkleur",
+      "achtergrond",
+      "andere",
+      "apparaten",
+      "beetje",
+      "beter",
+      "beveiliging",
+      "donker",
+      "doorschijnend",
+      "een",
+      "eigen",
+      "eruitzien",
+      "gebruiken",
+      "geldt",
+      "gerelateerde",
+      "handmatig",
+      "herstel",
+      "het",
+      "hierna",
+      "hoe",
+      "houden",
+      "hun",
+      "instelling",
+      "instellingen",
+      "je",
+      "keer",
+      "kies",
+      "kleur",
+      "kleuren",
+      "knoppen",
+      "krijgen",
+      "leesbare",
+      "licht",
+      "lokaal",
+      "maximaliseren",
+      "meer",
+      "meldingencentrum",
+      "minimaliseren",
+      "modus",
+      "netwerk",
+      "opent",
+      "oppervlakken",
+      "persoonlijke",
+      "recente",
+      "schakelaars",
+      "selectie",
+      "sluiten",
+      "startpagina",
+      "systeem",
+      "taakbalk",
+      "taal",
+      "tekst",
+      "terug",
+      "thema",
+      "tijd",
+      "toegankelijkheid",
+      "uit",
+      "van",
+      "vensterknoppen",
+      "vensters",
+      "volgen",
+      "voor",
+      "weergeven",
+      "zijn",
+      "zoals",
+      "zoek",
+      "zoeken",
+      "zonder",
+      "één"
+     ]
+    }
+   },
+   {
+    "step": "gsettings_set",
+    "t": 247.19,
+    "args": {
+     "schema": "org.gnome.desktop.interface",
+     "key": "accent-color",
+     "path": null,
+     "value": "'green'"
+    }
+   },
+   {
+    "step": "backend",
+    "t": 249.2,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.get"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "backend",
+    "t": 249.21,
+    "args": {
+     "surface": "settings",
+     "method": "gsettings.set"
+    },
+    "result": {
+     "ok": false
+    }
+   },
+   {
+    "step": "backend",
+    "t": 249.21,
+    "args": {
+     "surface": "settings",
+     "method": "settings.set"
+    },
+    "result": {
+     "ok": true
+    }
+   },
+   {
+    "step": "record",
+    "t": 249.21,
+    "args": {
+     "key": "clicks"
+    }
+   },
+   {
+    "step": "record",
+    "t": 249.21,
+    "args": {
+     "key": "dialog clicks"
+    }
+   },
+   {
+    "step": "record",
+    "t": 249.22,
+    "args": {
+     "key": "guard calls"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "check": "apps: title and breadcrumb \"Apps\"",
+    "ok": true,
+    "t": 1.68,
+    "want": [
+     "Apps"
+    ],
+    "got": [
+     "Apps"
+    ]
+   },
+   {
+    "check": "apps: a link to installed",
+    "ok": true,
+    "t": 2.52
+   },
+   {
+    "check": "apps: a link to defaultapps",
+    "ok": true,
+    "t": 2.62
+   },
+   {
+    "check": "apps: a link to startup",
+    "ok": true,
+    "t": 2.73
+   },
+   {
+    "check": "installed: title and breadcrumb \"Apps › Geïnstalleerde apps\"",
+    "ok": true,
+    "t": 3.54,
+    "want": [
+     "Apps",
+     "Geïnstalleerde apps"
+    ],
+    "got": [
+     "Apps",
+     "Geïnstalleerde apps"
+    ]
+   },
+   {
+    "check": "installed: Bestanden (Nautilus) is installed in the session",
+    "ok": true,
+    "t": 4.33
+   },
+   {
+    "check": "installed: Sorteren op Naam (Z-A) turns the list round",
+    "ok": true,
+    "t": 5.6,
+    "first": "installed-more-debian-xterm.desktop",
+    "last": "installed-more-debian-xterm.desktop"
+   },
+   {
+    "check": "installed: the \"…\" menu has Geavanceerde opties and Openen in App Center",
+    "ok": true,
+    "t": 7.62
+   },
+   {
+    "check": "installed: Openen in … for Bestanden (host) follows its store: greyed (org.gnome.Software.desktop is not installed)",
+    "ok": true,
+    "t": 7.92
+   },
+   {
+    "check": "app-advanced: the page of Bestanden is shown",
+    "ok": true,
+    "t": 9.18
+   },
+   {
+    "check": "app-advanced: title and breadcrumb \"Apps › Geïnstalleerde apps › Bestanden\"",
+    "ok": true,
+    "t": 9.57,
+    "want": [
+     "Apps",
+     "Geïnstalleerde apps",
+     "Bestanden"
+    ],
+    "got": [
+     "Apps",
+     "Geïnstalleerde apps",
+     "Bestanden"
+    ]
+   },
+   {
+    "check": "app-advanced: st-app-advanced-open",
+    "ok": true,
+    "t": 9.77
+   },
+   {
+    "check": "app-advanced: st-app-advanced-uninstall",
+    "ok": true,
+    "t": 9.98
+   },
+   {
+    "check": "app-advanced: st-app-advanced-notifications",
+    "ok": true,
+    "t": 10.19
+   },
+   {
+    "check": "app-advanced: st-app-advanced-handlers-reset",
+    "ok": true,
+    "t": 10.39
+   },
+   {
+    "check": "app-advanced: st-app-advanced-autostart",
+    "ok": true,
+    "t": 10.6
+   },
+   {
+    "check": "app-advanced: App-machtigingen of a desktop app: Meldingen and Zoeken, no PermissionStore rows (GNOME)",
+    "ok": true,
+    "t": 12.42
+   },
+   {
+    "check": "app-advanced: Zoeken is bound to search-providers disabled",
+    "ok": true,
+    "t": 12.56
+   },
+   {
+    "check": "app-advanced: Zoeken starts on (Nautilus is not in disabled)",
+    "ok": true,
+    "t": 12.56
+   },
+   {
+    "check": "app-advanced: a click writes org.gnome.Nautilus.desktop into disabled",
+    "ok": true,
+    "t": 13.18,
+    "value": "['org.gnome.Nautilus.desktop']"
+   },
+   {
+    "check": "app-advanced: the switch follows the key written from outside",
+    "ok": true,
+    "t": 13.34
+   },
+   {
+    "check": "app-advanced: Zoeken greys (with its line) when disable-external is written from outside",
+    "ok": true,
+    "t": 14.11
+   },
+   {
+    "check": "app-advanced: and usable again when disable-external is false",
+    "ok": true,
+    "t": 14.44
+   },
+   {
+    "check": "app-advanced: the sections in Windows 11's order, WinPoint's additions after Verwijderen",
+    "ok": true,
+    "t": 15.27,
+    "tops": [
+     420,
+     611,
+     727,
+     857,
+     2691
+    ]
+   },
+   {
+    "check": "app-advanced: no Opnieuw instellen for a system package (no cache the host can empty)",
+    "ok": true,
+    "t": 15.44
+   },
+   {
+    "check": "app-advanced: Wordt uitgevoerd bij aanmelden writes ~/.config/autostart/org.gnome.Nautilus.desktop (X-GNOME-Autostart-enabled=true)",
+    "ok": true,
+    "t": 16.29
+   },
+   {
+    "check": "app-advanced: and off again X-GNOME-Autostart-enabled=false",
+    "ok": true,
+    "t": 16.99
+   },
+   {
+    "check": "app-advanced: Als standaard instellen writes application/x-tar=org.gnome.Nautilus.desktop under Default Applications",
+    "ok": true,
+    "t": 20.22,
+    "value": "org.gnome.Nautilus.desktop"
+   },
+   {
+    "check": "app-advanced: Type verwijderen writes application/zstd under Removed Associations",
+    "ok": true,
+    "t": 24.65,
+    "value": "org.gnome.Nautilus.desktop;"
+   },
+   {
+    "check": "app-advanced: Opnieuw instellen takes both out of mimeapps.list",
+    "ok": true,
+    "t": 29.15
+   },
+   {
+    "check": "app-advanced: Beëindigen says the app is not running (sysmon.processes has no Bestanden)",
+    "ok": true,
+    "t": 30.44
+   },
+   {
+    "check": "app-advanced: Meldingen opens Meldingen van app for Bestanden",
+    "ok": true,
+    "t": 32.02
+   },
+   {
+    "check": "app-notifications: title and breadcrumb \"Systeem › Meldingen › Bestanden\"",
+    "ok": true,
+    "t": 32.55,
+    "want": [
+     "Systeem",
+     "Meldingen",
+     "Bestanden"
+    ],
+    "got": [
+     "Systeem",
+     "Meldingen",
+     "Bestanden"
+    ]
+   },
+   {
+    "check": "defaultapps: title and breadcrumb \"Apps › Standaard-apps\"",
+    "ok": true,
+    "t": 34.22,
+    "want": [
+     "Apps",
+     "Standaard-apps"
+    ],
+    "got": [
+     "Apps",
+     "Standaard-apps"
+    ]
+   },
+   {
+    "check": "defaultapps: the two Windows searches are there",
+    "ok": true,
+    "t": 35.76
+   },
+   {
+    "check": "defaultapps: no drop-down above the searches (amendment 22)",
+    "ok": true,
+    "t": 36.35,
+    "browser": [
+     309,
+     4061,
+     24,
+     2
+    ],
+    "search": [
+     321,
+     237,
+     738,
+     33
+    ]
+   },
+   {
+    "check": "defaultapps: the type search finds text/html",
+    "ok": true,
+    "t": 37.54
+   },
+   {
+    "check": "defaultapps: the chooser lists the apps of text/html",
+    "ok": true,
+    "t": 39.74
+   },
+   {
+    "check": "defaultapps: Standaard instellen writes text/html=firefox.desktop into mimeapps.list",
+    "ok": true,
+    "t": 51.55,
+    "value": "firefox.desktop"
+   },
+   {
+    "check": "defaultapps: Standaard-apps per soort holds Webbrowser and Agenda",
+    "ok": true,
+    "t": 61.36
+   },
+   {
+    "check": "defaultapps: Teksteditor writes text/plain=libreoffice-writer.desktop",
+    "ok": true,
+    "t": 64.87,
+    "value": "libreoffice-writer.desktop"
+   },
+   {
+    "check": "defaultapps: defaultapps-view-file",
+    "ok": true,
+    "t": 65.3
+   },
+   {
+    "check": "defaultapps: defaultapps-view-link",
+    "ok": true,
+    "t": 65.72
+   },
+   {
+    "check": "defaultapps: defaultapps-reset-all",
+    "ok": true,
+    "t": 66.19
+   },
+   {
+    "check": "defaultapps: Alle standaard-apps opnieuw instellen asks, then takes text/html and text/plain out",
+    "ok": true,
+    "t": 77.16,
+    "html": null,
+    "plain": null
+   },
+   {
+    "check": "defaultapps: Standaardwaarden kiezen op bestandstype lists file types",
+    "ok": true,
+    "t": 87.67
+   },
+   {
+    "check": "defaultapps: title and breadcrumb \"Apps › Standaard-apps\"",
+    "ok": true,
+    "t": 88.76,
+    "want": [
+     "Apps",
+     "Standaard-apps"
+    ],
+    "got": [
+     "Apps",
+     "Standaard-apps"
+    ]
+   },
+   {
+    "check": "defaultapps: an app view shows its Files & Links and links to its Geavanceerde opties",
+    "ok": true,
+    "t": 90.59
+   },
+   {
+    "check": "defaultapps: title and breadcrumb \"Apps › Standaard-apps\"",
+    "ok": true,
+    "t": 91.6,
+    "want": [
+     "Apps",
+     "Standaard-apps"
+    ],
+    "got": [
+     "Apps",
+     "Standaard-apps"
+    ]
+   },
+   {
+    "check": "notifications: title and breadcrumb \"Systeem › Meldingen\"",
+    "ok": true,
+    "t": 96.03,
+    "want": [
+     "Systeem",
+     "Meldingen"
+    ],
+    "got": [
+     "Systeem",
+     "Meldingen"
+    ]
+   },
+   {
+    "check": "notifications: st-notifications-show-in-lock-screen",
+    "ok": true,
+    "t": 97.81
+   },
+   {
+    "check": "notifications: notifications-sounds",
+    "ok": true,
+    "t": 98.41
+   },
+   {
+    "check": "notifications: st-notifications-show-banners",
+    "ok": true,
+    "t": 98.95
+   },
+   {
+    "check": "notifications: notifications-sort",
+    "ok": true,
+    "t": 99.54
+   },
+   {
+    "check": "notifications: notifications-test",
+    "ok": true,
+    "t": 100.1
+   },
+   {
+    "check": "notifications: a click writes show-in-lock-screen false",
+    "ok": true,
+    "t": 102.19
+   },
+   {
+    "check": "notifications: the checkbox follows the key written from outside",
+    "ok": true,
+    "t": 102.78
+   },
+   {
+    "check": "notifications: Niet storen starts off",
+    "ok": true,
+    "t": 103.97
+   },
+   {
+    "check": "notifications: Niet storen writes show-banners false",
+    "ok": true,
+    "t": 105.5
+   },
+   {
+    "check": "notifications: the mirror sets notifications.dnd",
+    "ok": true,
+    "t": 105.51
+   },
+   {
+    "check": "notifications: Niet storen off again on both sides",
+    "ok": true,
+    "t": 107.71
+   },
+   {
+    "check": "notifications: Bestanden is in the app list",
+    "ok": true,
+    "t": 108.3
+   },
+   {
+    "check": "notifications: its switch is bound to the app's enable",
+    "ok": true,
+    "t": 108.91
+   },
+   {
+    "check": "notifications: the switch writes enable false at the app's path",
+    "ok": true,
+    "t": 111.08
+   },
+   {
+    "check": "notifications: the first write records application-id (amendment 6)",
+    "ok": true,
+    "t": 111.08,
+    "value": "'org.gnome.Nautilus.desktop'"
+   },
+   {
+    "check": "notifications: and the app in application-children",
+    "ok": true,
+    "t": 111.08,
+    "value": "['org-gnome-nautilus']"
+   },
+   {
+    "check": "notifications: the app switch follows the key written from outside",
+    "ok": true,
+    "t": 112.63
+   },
+   {
+    "check": "notifications: Sorteren op Naam sorts the apps by name",
+    "ok": true,
+    "t": 117.01,
+    "names": [
+     "Archiefbeheer",
+     "Backups",
+     "Bestanden",
+     "Color Management",
+     "Date & Time",
+     "Events and Tasks Reminders",
+     "Klokken",
+     "Online Accounts",
+     "Power",
+     "Printers",
+     "Schijfgebruik",
+     "Schijven (GNOME)"
+    ]
+   },
+   {
+    "check": "notifications: Toestaan dat meldingen geluiden afspelen writes notifications.sounds (off, on)",
+    "ok": true,
+    "t": 124.06
+   },
+   {
+    "check": "notifications: the Meldingen switch writes notifications.showToasts (off, on)",
+    "ok": true,
+    "t": 127.94
+   },
+   {
+    "check": "app-notifications: the page of Bestanden is shown",
+    "ok": true,
+    "t": 131.96
+   },
+   {
+    "check": "app-notifications: title and breadcrumb \"Systeem › Meldingen › Bestanden\"",
+    "ok": true,
+    "t": 133.26,
+    "want": [
+     "Systeem",
+     "Meldingen",
+     "Bestanden"
+    ],
+    "got": [
+     "Systeem",
+     "Meldingen",
+     "Bestanden"
+    ]
+   },
+   {
+    "check": "app-notifications: st-app-notifications-enable",
+    "ok": true,
+    "t": 133.91
+   },
+   {
+    "check": "app-notifications: st-app-notifications-show-banners",
+    "ok": true,
+    "t": 134.57
+   },
+   {
+    "check": "app-notifications: st-app-notifications-force-expanded",
+    "ok": true,
+    "t": 135.25
+   },
+   {
+    "check": "app-notifications: st-app-notifications-show-in-lock-screen",
+    "ok": true,
+    "t": 135.92
+   },
+   {
+    "check": "app-notifications: st-app-notifications-details-in-lock-screen",
+    "ok": true,
+    "t": 136.57
+   },
+   {
+    "check": "app-notifications: st-app-notifications-enable-sound-alerts",
+    "ok": true,
+    "t": 137.27
+   },
+   {
+    "check": "app-notifications: the related link to Geavanceerde opties",
+    "ok": true,
+    "t": 137.95
+   },
+   {
+    "check": "app-notifications: show-banners starts on",
+    "ok": true,
+    "t": 139.99
+   },
+   {
+    "check": "app-notifications: a click writes show-banners false at the app's path",
+    "ok": true,
+    "t": 141.65,
+    "value": "false"
+   },
+   {
+    "check": "app-notifications: force-expanded greyed meanwhile (GNOME)",
+    "ok": true,
+    "t": 142.37
+   },
+   {
+    "check": "app-notifications: show-banners follows true written from outside",
+    "ok": true,
+    "t": 144.69
+   },
+   {
+    "check": "app-notifications: force-expanded starts off",
+    "ok": true,
+    "t": 145.38
+   },
+   {
+    "check": "app-notifications: a click writes force-expanded true at the app's path",
+    "ok": true,
+    "t": 147.07,
+    "value": "true"
+   },
+   {
+    "check": "app-notifications: force-expanded follows false written from outside",
+    "ok": true,
+    "t": 147.75
+   },
+   {
+    "check": "app-notifications: show-in-lock-screen starts on",
+    "ok": true,
+    "t": 148.46
+   },
+   {
+    "check": "app-notifications: a click writes show-in-lock-screen false at the app's path",
+    "ok": true,
+    "t": 150.2,
+    "value": "false"
+   },
+   {
+    "check": "app-notifications: details-in-lock-screen greyed meanwhile (GNOME)",
+    "ok": true,
+    "t": 150.85
+   },
+   {
+    "check": "app-notifications: show-in-lock-screen follows true written from outside",
+    "ok": true,
+    "t": 152.22
+   },
+   {
+    "check": "app-notifications: details-in-lock-screen starts on",
+    "ok": true,
+    "t": 152.9
+   },
+   {
+    "check": "app-notifications: a click writes details-in-lock-screen true at the app's path",
+    "ok": true,
+    "t": 154.59,
+    "value": "true"
+   },
+   {
+    "check": "app-notifications: details-in-lock-screen follows false written from outside",
+    "ok": true,
+    "t": 155.34
+   },
+   {
+    "check": "app-notifications: enable-sound-alerts starts on",
+    "ok": true,
+    "t": 156.04
+   },
+   {
+    "check": "app-notifications: a click writes enable-sound-alerts false at the app's path",
+    "ok": true,
+    "t": 157.84,
+    "value": "false"
+   },
+   {
+    "check": "app-notifications: enable-sound-alerts follows true written from outside",
+    "ok": true,
+    "t": 158.49
+   },
+   {
+    "check": "app-notifications: enable starts on",
+    "ok": true,
+    "t": 159.23
+   },
+   {
+    "check": "app-notifications: a click writes enable false at the app's path",
+    "ok": true,
+    "t": 160.99,
+    "value": "false"
+   },
+   {
+    "check": "app-notifications: show-banners, show-in-lock-screen, enable-sound-alerts greyed meanwhile (GNOME)",
+    "ok": true,
+    "t": 163.15
+   },
+   {
+    "check": "app-notifications: enable follows true written from outside",
+    "ok": true,
+    "t": 165.94
+   },
+   {
+    "check": "app-notifications: the lock-screen rows grey while show-in-lock-screen is off for all apps",
+    "ok": true,
+    "t": 167.38
+   },
+   {
+    "check": "app-notifications (refused write): the test app is installed in the session",
+    "ok": true,
+    "t": 169.38
+   },
+   {
+    "check": "app-notifications (refused write): the page of the test app is shown",
+    "ok": true,
+    "t": 171.95
+   },
+   {
+    "check": "app-notifications (refused write): Meldingen is put back after the refusal",
+    "ok": true,
+    "t": 176.52
+   },
+   {
+    "check": "app-notifications (refused write): the other rows stay usable (the old value counts again)",
+    "ok": true,
+    "t": 183.18,
+    "sensitive": {
+     "enable": true,
+     "show-banners": true,
+     "force-expanded": true,
+     "show-in-lock-screen": true,
+     "details-in-lock-screen": true,
+     "enable-sound-alerts": true
+    }
+   },
+   {
+    "check": "app-notifications (refused write): nothing was written at the app's path",
+    "ok": true,
+    "t": 183.18
+   },
+   {
+    "check": "sound (on): the WinPoint toast shows",
+    "ok": true,
+    "t": 188.99
+   },
+   {
+    "check": "sound (on): exactly one sound",
+    "ok": true,
+    "t": 188.99,
+    "count": 1,
+    "sent": {
+     "ok": true,
+     "enableSound": true
+    }
+   },
+   {
+    "check": "sound (sounds-off): the WinPoint toast shows",
+    "ok": true,
+    "t": 194.34
+   },
+   {
+    "check": "sound (sounds-off): no sound",
+    "ok": true,
+    "t": 194.35,
+    "count": 0,
+    "sent": {
+     "ok": true,
+     "enableSound": true
+    }
+   },
+   {
+    "check": "sound (dnd): no sound",
+    "ok": true,
+    "t": 199.67,
+    "count": 0,
+    "sent": {
+     "ok": true,
+     "enableSound": true
+    }
+   },
+   {
+    "check": "sound (app-sound-off): the WinPoint toast shows",
+    "ok": true,
+    "t": 205.75
+   },
+   {
+    "check": "sound (app-sound-off): no sound",
+    "ok": true,
+    "t": 205.76,
+    "count": 0,
+    "sent": {
+     "ok": true,
+     "enableSound": false
+    }
+   },
+   {
+    "check": "personalization: title and breadcrumb \"Persoonlijke instellingen\"",
+    "ok": true,
+    "t": 209.25,
+    "want": [
+     "Persoonlijke instellingen"
+    ],
+    "got": [
+     "Persoonlijke instellingen"
+    ]
+   },
+   {
+    "check": "wait_text settings: 'Achtergrond'",
+    "ok": true,
+    "t": 210.7,
+    "seconds": 0.74
+   },
+   {
+    "check": "background: title and breadcrumb \"Persoonlijke instellingen › Achtergrond\"",
+    "ok": true,
+    "t": 215.81,
+    "want": [
+     "Persoonlijke instellingen",
+     "Achtergrond"
+    ],
+    "got": [
+     "Persoonlijke instellingen",
+     "Achtergrond"
+    ]
+   },
+   {
+    "check": "background: GNOME's catalogue is shown",
+    "ok": true,
+    "t": 218.0
+   },
+   {
+    "check": "background: a click on an Ubuntu picture sets wallpaper.path",
+    "ok": true,
+    "t": 221.19,
+    "path": "/usr/share/backgrounds/cnusr25-Simple_Raccoon_Dark.png"
+   },
+   {
+    "check": "background: WinPoint's look writes GNOME's picture-uri",
+    "ok": true,
+    "t": 221.2,
+    "uri": "'file:///usr/share/backgrounds/cnusr25-Simple_Raccoon_Dark.png'"
+   },
+   {
+    "check": "background: Uitrekken sets wallpaper.fit and GNOME's picture-options 'stretched'",
+    "ok": true,
+    "t": 227.14,
+    "fit": "stretch",
+    "options": "'stretched'"
+   },
+   {
+    "check": "org.gnome.desktop.background picture-uri is owned by WinPoint's wallpaper",
+    "ok": true,
+    "t": 231.02,
+    "mode": "owned",
+    "setting": "wallpaper"
+   },
+   {
+    "check": "gsettings.set refuses picture-uri (denied gsettings.ownedByWinPoint)",
+    "ok": true,
+    "t": 231.02,
+    "error": {
+     "code": "denied",
+     "message": "WinPoint regelt deze instelling zelf.",
+     "key": "gsettings.ownedByWinPoint",
+     "params": {},
+     "data": {
+      "setting": "wallpaper"
+     }
+    }
+   },
+   {
+    "check": "background: background.add copies into the data dir's backgrounds folder",
+    "ok": true,
+    "t": 231.03,
+    "answer": {
+     "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/data/backgrounds/2026-11-16-23-04-16-warty-final-ubuntu.png",
+     "copied": true
+    }
+   },
+   {
+    "check": "background: the copy is a recent image with a remove button",
+    "ok": true,
+    "t": 231.93
+   },
+   {
+    "check": "background: the remove click moves the copy to the trash",
+    "ok": true,
+    "t": 235.35
+   },
+   {
+    "check": "colors: title and breadcrumb \"Persoonlijke instellingen › Kleuren\"",
+    "ok": true,
+    "t": 239.81,
+    "want": [
+     "Persoonlijke instellingen",
+     "Kleuren"
+    ],
+    "got": [
+     "Persoonlijke instellingen",
+     "Kleuren"
+    ]
+   },
+   {
+    "check": "colors: GNOME's accent-color is shown",
+    "ok": true,
+    "t": 241.45,
+    "label": "Blauw",
+    "key": "'blue'"
+   },
+   {
+    "check": "colors: the swatch #E81123 sets theme.accent, the mirror GNOME's accent-color 'red', the row shows it",
+    "ok": true,
+    "t": 245.81,
+    "accent": "#E81123",
+    "gnome": "'red'"
+   },
+   {
+    "check": "colors: the row follows accent-color written from outside",
+    "ok": true,
+    "t": 249.2
+   },
+   {
+    "check": "org.gnome.desktop.interface accent-color is owned by WinPoint's theme.accent",
+    "ok": true,
+    "t": 249.2,
+    "mode": "owned",
+    "setting": "theme.accent"
+   },
+   {
+    "check": "gsettings.set refuses accent-color (denied gsettings.ownedByWinPoint)",
+    "ok": true,
+    "t": 249.21,
+    "error": {
+     "code": "denied",
+     "message": "WinPoint regelt deze instelling zelf.",
+     "key": "gsettings.ownedByWinPoint",
+     "params": {},
+     "data": {
+      "setting": "theme.accent"
+     }
+    }
+   },
+   {
+    "check": "every control click (47) was a real pointer click",
+    "ok": true,
+    "t": 249.21,
+    "dev": []
+   },
+   {
+    "check": "a pointer click reaches a kit dialog's button (2 pressed)",
+    "ok": false,
+    "t": 249.21,
+    "known": "settings-b note 9 (kit Dialog smoke layer)",
+    "dialogs": [
+     {
+      "button": "w11-dialog-primary",
+      "action": "Standaard instellen",
+      "path": "dev",
+      "done": true,
+      "pointer": {
+       "input": "clutter",
+       "x": 601,
+       "y": 522,
+       "rect": [
+        317,
+        450,
+        229,
+        32
+       ]
+      }
+     },
+     {
+      "button": "w11-dialog-primary",
+      "action": "Opnieuw instellen",
+      "path": "dev",
+      "done": true,
+      "pointer": {
+       "input": "clutter",
+       "x": 599,
+       "y": 490,
+       "rect": [
+        312,
+        418,
+        234,
+        32
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "check": "no pkexec, apt or pkcon was called by a page of this run",
+    "ok": true,
+    "t": 249.22
+   }
+  ],
+  "records": {
+   "apps": 63,
+   "store item": {
+    "kind": "host",
+    "target": "org.gnome.Software.desktop",
+    "installed": false,
+    "sensitive": false,
+    "labels": [
+     "Openen in App Center"
+    ]
+   },
+   "section order": {
+    "st-app-advanced-notifications": 420,
+    "st-app-advanced-autostart": 611,
+    "st-app-advanced-terminate": 727,
+    "st-app-advanced-uninstall": 857,
+    "st-app-advanced-handlers-reset": 2691
+   },
+   "handlers": [
+    [
+     "application/x-7z-compressed",
+     true
+    ],
+    [
+     "application/x-7z-compressed-tar",
+     true
+    ],
+    [
+     "application/x-bzip2",
+     true
+    ],
+    [
+     "application/x-cpio",
+     true
+    ],
+    [
+     "inode/directory",
+     true
+    ],
+    [
+     "application/gzip",
+     true
+    ],
+    [
+     "application/x-lha",
+     true
+    ],
+    [
+     "application/x-lzip",
+     true
+    ],
+    [
+     "application/x-lzma",
+     true
+    ],
+    [
+     "application/vnd.rar",
+     true
+    ],
+    [
+     "application/x-xz-compressed-tar",
+     true
+    ],
+    [
+     "application/x-bzip2-compressed-tar",
+     true
+    ],
+    [
+     "application/x-tar",
+     false
+    ],
+    [
+     "application/x-lzip-compressed-tar",
+     true
+    ],
+    [
+     "application/x-lzma-compressed-tar",
+     true
+    ],
+    [
+     "application/x-zstd-compressed-tar",
+     true
+    ],
+    [
+     "application/x-compressed-tar",
+     true
+    ],
+    [
+     "application/x-tarz",
+     true
+    ],
+    [
+     "application/x-compress",
+     true
+    ],
+    [
+     "application/x-xar",
+     true
+    ],
+    [
+     "application/x-xz",
+     true
+    ],
+    [
+     "application/zip",
+     false
+    ],
+    [
+     "application/zstd",
+     true
+    ]
+   ],
+   "uninstall": {
+    "sensitive": false
+   },
+   "text/html apps": [
+    [
+     "firefox.desktop",
+     true
+    ],
+    [
+     "libreoffice-writer.desktop",
+     false
+    ],
+    [
+     "org.gnome.TextEditor.desktop",
+     false
+    ]
+   ],
+   "chooser radio": {
+    "pointer": false,
+    "target": "firefox.desktop"
+   },
+   "text candidates": [
+    "libreoffice-writer.desktop",
+    "org.gnome.TextEditor.desktop"
+   ],
+   "sound-on": {
+    "ok": true,
+    "enableSound": true
+   },
+   "sound-sounds-off": {
+    "ok": true,
+    "enableSound": true
+   },
+   "sound-dnd": {
+    "ok": true,
+    "enableSound": true
+   },
+   "sound-app-sound-off": {
+    "ok": true,
+    "enableSound": false
+   },
+   "catalog": 19,
+   "clicks": [
+    {
+     "name": "installed-sort",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "installed-sort",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "installed-more-org.gnome.Nautilus.desktop",
+     "input": "clutter"
+    },
+    {
+     "name": "installed-advanced",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-disabled",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-autostart",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-autostart",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-default-application-x-tar",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-remove-application-zstd",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-handlers-reset",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-terminate",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-advanced-notifications",
+     "input": "clutter"
+    },
+    {
+     "name": "defaultapps-type-text-html",
+     "input": "clutter"
+    },
+    {
+     "name": "defaultapps-kinds",
+     "input": "clutter"
+    },
+    {
+     "name": "defaultapps-text",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "defaultapps-reset-all",
+     "input": "clutter"
+    },
+    {
+     "name": "defaultapps-view-file",
+     "input": "clutter"
+    },
+    {
+     "name": "st-notifications-show-in-lock-screen",
+     "input": "clutter"
+    },
+    {
+     "name": "st-notifications-show-banners",
+     "input": "clutter"
+    },
+    {
+     "name": "st-notifications-show-banners",
+     "input": "clutter"
+    },
+    {
+     "name": "st-notifications-org-gnome-nautilus-enable",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-sort",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-sort",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-sounds",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-sounds",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-toggle",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-toggle",
+     "input": "clutter"
+    },
+    {
+     "name": "notifications-app-org-gnome-nautilus",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-show-banners",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-force-expanded",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-show-in-lock-screen",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-details-in-lock-screen",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-enable-sound-alerts",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-enable",
+     "input": "clutter"
+    },
+    {
+     "name": "st-app-notifications-enable",
+     "input": "clutter"
+    },
+    {
+     "name": "wp-gnome-0",
+     "input": "clutter"
+    },
+    {
+     "name": "background-fit",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "background-fit",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    },
+    {
+     "name": "background-remove-0",
+     "input": "clutter"
+    },
+    {
+     "name": "GtkButton",
+     "input": "clutter"
+    }
+   ],
+   "dialog clicks": [
+    {
+     "button": "w11-dialog-primary",
+     "action": "Standaard instellen",
+     "path": "dev",
+     "done": true,
+     "pointer": {
+      "input": "clutter",
+      "x": 601,
+      "y": 522,
+      "rect": [
+       317,
+       450,
+       229,
+       32
+      ]
+     }
+    },
+    {
+     "button": "w11-dialog-primary",
+     "action": "Opnieuw instellen",
+     "path": "dev",
+     "done": true,
+     "pointer": {
+      "input": "clutter",
+      "x": 599,
+      "y": 490,
+      "rect": [
+       312,
+       418,
+       234,
+       32
+      ]
+     }
+    }
+   ],
+   "guard calls": {
+    "pkexec": [],
+    "systemctl": [
+     "--user list-units --type=service --all --no-pager --output=json",
+     "--user list-units --type=service --all --no-pager --plain --no-legend"
+    ],
+    "apt": [],
+    "apt-get": [],
+    "pkcon": []
+   }
+  },
+  "shots": [
+   "apps.nl.png",
+   "installed.nl.png",
+   "installed-menu.nl.png",
+   "app-advanced.nl.png",
+   "defaultapps.nl.png",
+   "defaultapps-types.nl.png",
+   "defaultapps-chooser.nl.png",
+   "defaultapps-kinds.nl.png",
+   "defaultapps-files.nl.png",
+   "defaultapps-app.nl.png",
+   "notifications.nl.png",
+   "notifications-dnd.nl.png",
+   "app-notifications.nl.png",
+   "personalization.nl.png",
+   "background.nl.png",
+   "background-own.nl.png",
+   "colors.nl.png"
+  ],
+  "error": null,
+  "seconds": 249.22,
+  "surfaces": {
+   "panel": {
+    "name": "panel",
+    "kind": "panel",
+    "window": "native",
+    "pid": 517,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "desktop": {
+    "name": "desktop",
+    "kind": "desktop",
+    "window": "native",
+    "pid": 517,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "start": {
+    "name": "start",
+    "kind": "start",
+    "window": "native",
+    "pid": 517,
+    "page": null,
+    "alive": true,
+    "shell": true
+   },
+   "settings": {
+    "name": "settings",
+    "kind": "settings",
+    "window": "native-settings",
+    "pid": 1345,
+    "page": "colors",
+    "alive": true
+   }
+  },
+  "failedChecks": [
+   "a pointer click reaches a kit dialog's button (2 pressed)"
+  ],
+  "failedChecksUnknown": []
+ },
+ "inner": {
+  "facts": {
+   "systemBus": "unix:path=/tmp/w11-rt/sbus,guid=e1f1671fc776b720468bcb7f6afb7cf2",
+   "shellArgv": [
+    "gnome-shell",
+    "--headless",
+    "--unsafe-mode",
+    "--virtual-monitor=1440x900",
+    "--wayland-display=w11-wl",
+    "--no-x11"
+   ],
+   "unsafeMode": true,
+   "shellVersion": "50.1",
+   "sessionMode": "user",
+   "monitors": [
+    {
+     "index": 0,
+     "x": 0,
+     "y": 0,
+     "w": 1440,
+     "h": 900,
+     "primary": true
+    }
+   ],
+   "extension": {
+    "state": 1,
+    "active": true,
+    "path": "/tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/h-f/tests/gnome/run/data/gnome-shell/extensions/win11-gnome@win11shell.local",
+    "error": ""
+   },
+   "extensionCopyIdentical": true,
+   "nativeBoot": {
+    "kind": "native-shell",
+    "pid": 517,
+    "tag": "boot"
+   },
+   "windowIds": {
+    "native": 517
+   },
+   "notificationsAtStart": [
+    {
+     "source": "System",
+     "notifications": [
+      {
+       "title": "Screen Lock disabled",
+       "body": "Screen Locking requires the GNOME display manager"
+      }
+     ]
+    }
+   ],
+   "notificationsAfterDismiss": [],
+   "settingsRelays": [
+    {
+     "page": "installed",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "defaultapps",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "notifications",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "notifications",
+     "exit": 0,
+     "seconds": 0.03
+    },
+    {
+     "page": "personalization",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "background",
+     "exit": 0,
+     "seconds": 0.06
+    },
+    {
+     "page": "colors",
+     "exit": 0,
+     "seconds": 0.03
+    }
+   ],
+   "notificationsAtEnd": [
+    {
+     "source": "Files",
+     "notifications": [
+      {
+       "title": "WinPoint sound test on",
+       "body": "WinPoint settings parity F"
+      }
+     ]
+    },
+    {
+     "source": "Files",
+     "notifications": [
+      {
+       "title": "WinPoint sound test sounds-off",
+       "body": "WinPoint settings parity F"
+      }
+     ]
+    },
+    {
+     "source": "Files",
+     "notifications": [
+      {
+       "title": "WinPoint sound test dnd",
+       "body": "WinPoint settings parity F"
+      }
+     ]
+    },
+    {
+     "source": "Files",
+     "notifications": [
+      {
+       "title": "WinPoint sound test app-sound-off",
+       "body": "WinPoint settings parity F"
+      }
+     ]
+    }
+   ],
+   "shellAliveAtEnd": true
+  },
+  "surfaces": [],
+  "shots": [
+   {
+    "file": "apps.nl.png",
+    "group": "scenario",
+    "bytes": 415944,
+    "area": null
+   },
+   {
+    "file": "installed.nl.png",
+    "group": "scenario",
+    "bytes": 453368,
+    "area": null
+   },
+   {
+    "file": "installed-menu.nl.png",
+    "group": "scenario",
+    "bytes": 434608,
+    "area": null
+   },
+   {
+    "file": "app-advanced.nl.png",
+    "group": "scenario",
+    "bytes": 443562,
+    "area": null
+   },
+   {
+    "file": "defaultapps.nl.png",
+    "group": "scenario",
+    "bytes": 438889,
+    "area": null
+   },
+   {
+    "file": "defaultapps-types.nl.png",
+    "group": "scenario",
+    "bytes": 453230,
+    "area": null
+   },
+   {
+    "file": "defaultapps-chooser.nl.png",
+    "group": "scenario",
+    "bytes": 406630,
+    "area": null
+   },
+   {
+    "file": "defaultapps-kinds.nl.png",
+    "group": "scenario",
+    "bytes": 458536,
+    "area": null
+   },
+   {
+    "file": "defaultapps-files.nl.png",
+    "group": "scenario",
+    "bytes": 462365,
+    "area": null
+   },
+   {
+    "file": "defaultapps-app.nl.png",
+    "group": "scenario",
+    "bytes": 441499,
+    "area": null
+   },
+   {
+    "file": "notifications.nl.png",
+    "group": "scenario",
+    "bytes": 455967,
+    "area": null
+   },
+   {
+    "file": "notifications-dnd.nl.png",
+    "group": "scenario",
+    "bytes": 453858,
+    "area": null
+   },
+   {
+    "file": "app-notifications.nl.png",
+    "group": "scenario",
+    "bytes": 462816,
+    "area": null
+   },
+   {
+    "file": "personalization.nl.png",
+    "group": "scenario",
+    "bytes": 554274,
+    "area": null
+   },
+   {
+    "file": "background.nl.png",
+    "group": "scenario",
+    "bytes": 554390,
+    "area": null
+   },
+   {
+    "file": "background-own.nl.png",
+    "group": "scenario",
+    "bytes": 188817,
+    "area": null
+   },
+   {
+    "file": "colors.nl.png",
+    "group": "scenario",
+    "bytes": 118822,
+    "area": null
+   }
+  ],
+  "attentionNotifications": []
+ },
+ "copiedScreenshots": [
+  "tests/gnome/scenarios/settings-apps.out/apps.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/installed.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/installed-menu.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/app-advanced.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/defaultapps.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/defaultapps-types.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/defaultapps-chooser.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/defaultapps-kinds.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/defaultapps-files.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/defaultapps-app.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/notifications.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/notifications-dnd.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/app-notifications.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/personalization.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/background.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/background-own.nl.png",
+  "tests/gnome/scenarios/settings-apps.out/colors.nl.png"
+ ]
+}

@@ -1,5 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Observe GNOME's existing notification server. Never replace its D-Bus owner or DND settings.
+// Settings parity, batch F (notes/claude/settings-parity.md, amendments 4 and 63): GNOME plays a notification's
+// sound only when it shows its own banner (messageTray.js _updateShowingNotification), and this bridge hands the
+// banners to WinPoint's toasts. So when the WinPoint consumer takes a notification for a toast, the bridge plays
+// its sound once (Notification.playSound(), which checks the app's enable-sound-alerts), unless the host says
+// notifications.sounds or notifications.showToasts is off or Niet storen is on. The toast and the list honour the
+// source's policy: a disabled app (enable false) reaches neither, and forceExpanded (Inhoud weergeven in banners)
+// travels as `expanded`.
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -60,6 +67,8 @@ export class NativeNotificationsBridge {
         this._leaseUntil = 0;
         this._leasePid = 0;
         this._dnd = false;
+        this._sounds = true;
+        this._toasts = true;
         this._signals = [
             Main.messageTray.connect('source-added', (_tray, source) => this._source(source, true)),
             Main.messageTray.connect('source-removed', (_tray, source) => this._unwatchSource(source)),
@@ -102,6 +111,8 @@ export class NativeNotificationsBridge {
             record.idle = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
                 record.idle = 0;
                 if (!this._items.has(id)) return GLib.SOURCE_REMOVE;
+                // A source GNOME's policy turned off (Meldingen of the app) shows nothing in WinPoint either.
+                if (!this._enabledSource(record.source)) return GLib.SOURCE_REMOVE;
                 const item = this._serialize(record);
                 if (record.announced) item.replaced = true;
                 record.announced = true;
@@ -110,6 +121,8 @@ export class NativeNotificationsBridge {
                 // when this lease expires. Acknowledgement retains both histories.
                 if (this._block && this._active()) {
                     record.forwarded = true;
+                    // a toast to show: its sound plays when the consumer takes it (notifications.delivered)
+                    if (!item.silent) record.sound = true;
                     n.acknowledged = true;
                 }
                 this._emit('notifications.new', {notification: item});
@@ -147,6 +160,7 @@ export class NativeNotificationsBridge {
         if (icon?.startsWith('data:')) icon = 'preferences-system-notifications';
         const critical = n.urgency === MessageTray.Urgency.CRITICAL;
         // C5: a source without a name gets an empty appName; the UI shows its own localized label.
+        const expanded = critical || Boolean(source?.policy?.forceExpanded);
         return {id, appName: clean(source?.title || app?.get_name?.() || '', 100),
             appIcon: icon || 'preferences-system-notifications', summary: clean(n.title, 300),
             body: clean(n.body, 3000), actions: n.actions.slice(0, 3).map((a, i) => ({key: `action:${i}`, label: clean(a.label, 60)})),
@@ -155,7 +169,47 @@ export class NativeNotificationsBridge {
             image: image?.startsWith('/') || image?.startsWith('data:') ? image : null,
             desktopId: app?.get_id?.() ?? null, category: null, transient: n.isTransient,
             resident: n.resident, value: null, expireTimeout: -1,
-            silent: !this._block || !this._active() || n.acknowledged || (!critical && (this._dnd || n.urgency === MessageTray.Urgency.LOW || !source?.policy?.showBanners)), source: 'gnome'};
+            silent: !this._block || !this._active() || n.acknowledged || (!critical && (this._dnd || n.urgency === MessageTray.Urgency.LOW || !source?.policy?.showBanners)),
+            expanded, source: 'gnome'};
+    }
+
+    // GNOME's tray drops a source whose policy is turned off; a record made before that (or a source still being
+    // removed) is left out the same way.
+    _enabledSource(source) {
+        return source?.policy?.enable !== false;
+    }
+
+    // WinPoint's settings.json (the file extension.js's LanguageWatch follows), read only when a sound is due: the
+    // native shell acknowledges straight to this bridge, so its calls carry no settings; a host's call does.
+    _winpointNotifications() {
+        try {
+            const file = Gio.File.new_for_path(GLib.build_filenamev([GLib.get_user_config_dir(), 'win11-gnome',
+                'settings.json']));
+            const [ok, bytes] = file.load_contents(null);
+            const parsed = ok ? JSON.parse(new TextDecoder().decode(bytes)) : null;
+            const notifications = parsed?.notifications;
+            return notifications && typeof notifications === 'object' ? notifications : {};
+        } catch {
+            return {};
+        }
+    }
+
+    // Amendment 4: the sound of a notification the consumer took for a toast, at most once, never while
+    // notifications.sounds or notifications.showToasts is off or Niet storen is on. playSound() itself checks the
+    // app's enable-sound-alerts (policy.enableSound) and plays the sound the notification carries.
+    _playSound(record, args) {
+        if (!record.sound) return;
+        record.sound = false;
+        const own = this._winpointNotifications();
+        const sounds = args.sounds ?? own.sounds ?? this._sounds;
+        const toasts = args.toasts ?? own.showToasts ?? this._toasts;
+        const dnd = args.dnd ?? (typeof own.dnd === 'boolean' ? own.dnd : this._dnd);
+        if (sounds === false || toasts === false || dnd === true) return;
+        try {
+            record.n.playSound();
+        } catch (e) {
+            logError(e, 'WinPoint notifications: playSound');
+        }
     }
 
     _active() {
@@ -210,6 +264,8 @@ export class NativeNotificationsBridge {
             this._leasePid = args.pid;
             this._leaseUntil = GLib.get_monotonic_time() + LEASE_US;
             this._dnd = Boolean(args.dnd);
+            this._sounds = args.sounds !== false;
+            this._toasts = args.toasts !== false;
             this.sync();
             return {ready: Boolean(this._block), leaseMs: 6000};
         }
@@ -222,11 +278,13 @@ export class NativeNotificationsBridge {
             if (this._active() && args.pid === this._leasePid && r) {
                 r.delivered = true;
                 r.n.acknowledged = true;
+                this._playSound(r, args);
             }
             return {};
         }
         if (method === 'notifications.list')
-            return {supported: true, dnd: Boolean(args.dnd), items: [...this._items.values()].reverse().map(r => this._serialize(r))};
+            return {supported: true, dnd: Boolean(args.dnd), items: [...this._items.values()].reverse()
+                .filter(r => this._enabledSource(r.source)).map(r => this._serialize(r))};
         if (method === 'notifications.test') {
             // The host passes its own language; without one, Win11's language (C1).
             const language = args.language === 'en' || args.language === 'nl' ? args.language : this._language();

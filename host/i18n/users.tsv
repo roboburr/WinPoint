@@ -1,0 +1,116 @@
+# host/i18n/users.tsv: host texts of services/users.rs.
+# Owner: batch E (settings parity, §5.6).
+# Columns: key<TAB>nl<TAB>en, exactly one tab each, UTF-8, LF. Escapes: \n \t \\ only. Placeholders {name}
+# (ASCII letters, digits, _). Plurals: key.one / key.other (optional key.zero); one when the count is exactly 1.
+# The first key segment is the file stem. nl is G's own 3b898e6 literal byte for byte (never H's); en is en-GB in
+# Windows 11 wording (tools/i18n/glossary.tsv), taken from H only when H's nl is byte-identical.
+# Rows are written by tools/i18n/extract_rs.py, never by hand. Lines starting with # are comments; translator
+# context goes directly above its row. "#@ <path> <ordinal> <sha256[:16]> <fmt|plain|en|enfmt> [<spec>=<name> ...]"
+# and "#@ new" lines are machine records of the 3b898e6 literal a row replaced (en/enfmt: the English half of a
+# former inline pair) or of new Dutch text; tools/i18n/drift_rust.py checks them.
+# Checked by: python3 -B tools/i18n/check_rust.py and python3 -B tools/i18n/drift_rust.py (notes/claude/round2-gate.md).
+
+# --- host/src/services/users.rs (notes/claude/settings-parity.md §5.6)
+# AccountsService (org.freedesktop.Accounts) is not on the system bus
+#@ new
+users.unavailable	Gebruikersaccounts zijn op deze computer niet beschikbaar.	User accounts aren’t available on this computer.
+# FindUserById found no such uid (removed meanwhile)
+#@ new
+users.noSuchUser	Deze gebruiker bestaat niet meer.	This user no longer exists.
+# users.setRealName / users.create: empty, longer than 255 characters, or with : , or a control character
+#@ new
+users.badName	Voer een naam in van maximaal 255 tekens, zonder dubbele punt of komma.	Enter a name of up to 255 characters, without a colon or comma.
+# users.create: GNOME's rule (user-utils.c is_valid_username)
+#@ new
+users.badUserName	Een gebruikersnaam bestaat uit kleine letters, cijfers, - en _ en begint met een letter.	A user name consists of lowercase letters, digits, - and _ and starts with a letter.
+# users.create: getpwnam knows the name
+#@ new
+users.userNameTaken	Deze gebruikersnaam wordt al gebruikt.	This user name is already in use.
+# users.delete of the signed-in user (GNOME Settings refuses it too)
+#@ new
+users.deleteSelf	Je kunt je eigen account niet verwijderen terwijl je bent aangemeld.	You can’t remove your own account while you’re signed in.
+# users.delete of a user who still has a session (logind; GNOME Settings' "%s is still logged in" refuses it too)
+#@ new
+users.loggedIn	Deze gebruiker is nog aangemeld. Een gebruiker verwijderen terwijl die is aangemeld, kan het systeem in een inconsistente toestand achterlaten.	This user is still signed in. Deleting a user while they’re signed in can leave the system in an inconsistent state.
+# users.setAccountType would leave no administrator
+#@ new
+users.lastAdmin	Deze pc heeft minstens één administrator nodig.	This PC needs at least one administrator.
+# users.setIcon: no such file, or no picture gdk-pixbuf can read
+#@ new
+users.badPicture	Deze afbeelding kan niet als accountafbeelding worden gebruikt.	This picture can’t be used as an account picture.
+# users.setLanguage: not a locale such as nl_NL.UTF-8
+#@ new
+users.badLanguage	Deze taal is niet geldig.	This language isn’t valid.
+# users.create / users.setPassword / users.changePassword without a password
+#@ new
+users.passwordRequired	Voer een wachtwoord in.	Enter a password.
+# libcrypt.so.1 could not be loaded, so no password hash can be made
+#@ new
+users.cryptUnavailable	Het wachtwoord kan op deze computer niet worden ingesteld.	The password can’t be set on this computer.
+# users.changePassword: no passwd program, or no pseudo-terminal
+#@ new
+users.passwd.unavailable	Wachtwoorden wijzigen is op deze computer niet beschikbaar.	Changing passwords isn’t available on this computer.
+# PAM refused the current password
+#@ new
+users.passwd.wrongCurrent	Je huidige wachtwoord is onjuist. Probeer het opnieuw.	Your current password is incorrect. Try again.
+# PAM's quality rules refused the new password; {hint} is one of the users.quality rows
+#@ new
+users.passwd.tooWeak	Kies een sterker wachtwoord. {hint}	Choose a stronger password. {hint}
+# the minimum password age has not passed
+#@ new
+users.passwd.tooSoon	Je kunt je wachtwoord nog niet opnieuw wijzigen.	You can’t change your password again yet.
+# passwd ended without a change for another reason
+#@ new
+users.passwd.unchanged	Het wachtwoord is niet gewijzigd.	The password wasn’t changed.
+# fprintd has no reader (GetDefaultDevice: NoSuchDevice) or is not installed
+#@ new
+users.fingerprint.none	Er is geen vingerafdruklezer gevonden.	No fingerprint reader was found.
+# Claim: another program uses the reader
+#@ new
+users.fingerprint.busy	De vingerafdruklezer wordt al door een andere app gebruikt.	The fingerprint reader is already being used by another app.
+# libpwquality.so.1 could not be loaded (users.passwordQuality generate)
+#@ new
+users.quality.unavailable	Een wachtwoord genereren is op deze computer niet beschikbaar.	Generating a password isn’t available on this computer.
+# the password hints of GNOME Settings (pw-utils.c pw_error_hint and pw_strength), one per libpwquality result
+#@ new
+users.quality.same	Het nieuwe wachtwoord moet anders zijn dan het oude.	The new password needs to be different from the old one.
+#@ new
+users.quality.caseOnly	Probeer enkele letters en cijfers te wijzigen.	Try changing some letters and numbers.
+#@ new
+users.quality.similar	Probeer het wachtwoord iets meer te wijzigen.	Try changing the password a bit more.
+#@ new
+users.quality.userName	Een wachtwoord zonder je gebruikersnaam is sterker.	A password without your user name would be stronger.
+#@ new
+users.quality.realName	Vermijd je naam in het wachtwoord.	Try to avoid using your name in the password.
+#@ new
+users.quality.badWords	Vermijd enkele van de woorden in het wachtwoord.	Try to avoid some of the words included in the password.
+#@ new
+users.quality.dictionary	Vermijd veelgebruikte woorden.	Try to avoid common words.
+#@ new
+users.quality.palindrome	Vermijd het omdraaien van bestaande woorden.	Try to avoid reordering existing words.
+#@ new
+users.quality.digits	Gebruik meer cijfers.	Try to use more numbers.
+#@ new
+users.quality.uppers	Gebruik meer hoofdletters.	Try to use more uppercase letters.
+#@ new
+users.quality.lowers	Gebruik meer kleine letters.	Try to use more lowercase letters.
+#@ new
+users.quality.others	Gebruik meer speciale tekens, zoals leestekens.	Try to use more special characters, like punctuation.
+#@ new
+users.quality.classes	Gebruik een mix van letters, cijfers en leestekens.	Try to use a mixture of letters, numbers and punctuation.
+#@ new
+users.quality.consecutive	Vermijd hetzelfde teken meerdere keren achter elkaar.	Try to avoid repeating the same character.
+#@ new
+users.quality.classRepeat	Vermijd tekens van hetzelfde soort achter elkaar: wissel letters, cijfers en leestekens af.	Try to avoid repeating the same type of character: you need to mix up letters, numbers and punctuation.
+#@ new
+users.quality.sequence	Vermijd reeksen zoals 1234 of abcd.	Try to avoid sequences like 1234 or abcd.
+#@ new
+users.quality.short	Het wachtwoord moet langer zijn. Voeg meer letters, cijfers en leestekens toe.	Password needs to be longer. Try to add more letters, numbers and punctuation.
+#@ new
+users.quality.empty	Gebruik hoofdletters en kleine letters door elkaar en een paar cijfers.	Mix uppercase and lowercase and try to use a number or two.
+#@ new
+users.quality.mix	Kies een ander wachtwoord met hoofdletters, kleine letters en een paar cijfers.	Choose another password with uppercase and lowercase letters and a number or two.
+#@ new
+users.quality.strong	Uitstekend! Dit is een heel goed wachtwoord.	Great! This is a very good password.
+#@ new
+users.quality.stronger	Met meer letters, cijfers en leestekens wordt het wachtwoord sterker.	Adding more letters, numbers and punctuation will make the password stronger.

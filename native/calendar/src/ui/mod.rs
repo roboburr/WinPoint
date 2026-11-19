@@ -276,8 +276,8 @@ impl App {
     }
 
     pub fn first_dow(&self) -> u32 {
-        // Windows by locale: Monday in Dutch, Sunday in English (US).
-        if self.cfg.borrow().en { 0 } else { 1 }
+        // settings.time.firstDayOfWeek, shared with GNOME's week-start-day; -1 (Standaard) is the region's
+        self.cfg.borrow().first_dow.unwrap_or_else(config::region_first_day)
     }
 
     pub fn h24(&self) -> bool {

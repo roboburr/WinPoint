@@ -1,0 +1,17 @@
+# tests/i18n/BASELINE-CHANGES.rust-settings-b0: settings-parity batch B0's new host texts (notes/claude/settings-parity.md
+# §3), same format as tests/i18n/BASELINE-CHANGES.rust. Each batch keeps its own file
+# (BASELINE-CHANGES.rust-settings-<batch>), so parallel batches never edit the same one.
+key:core.notAuthorized	-	-	-	new: call_interactive's polkit refusal (services/system/common.rs, settings parity §5.8)
+key:core.authCancelled	-	-	-	new: call_interactive's dismissed password dialog (services/system/common.rs)
+key:core.callFailed	-	-	-	new: call_interactive's other daemon errors (services/system/common.rs)
+key:gsettings.notAllowed	-	-	-	new: gsettings.* refusal (services/gsettings.rs, settings parity §6.1)
+key:gsettings.readOnly	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.useMethod	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.ownedByWinPoint	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.heldByWinPoint	-	-	-	new: gsettings.* refusal, amendment 13 (services/gsettings.rs)
+key:gsettings.locked	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.badValue	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.badArgs	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.unavailable	-	-	-	new: gsettings.* refusal (services/gsettings.rs)
+key:gsettings.saveFailed	-	-	-	new: gsettings.* write error (services/gsettings.rs)
+key:gsettings.notTaken	-	-	-	new: gsettings.* read-back error (services/gsettings.rs)

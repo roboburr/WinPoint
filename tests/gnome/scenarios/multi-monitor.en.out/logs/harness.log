@@ -1,0 +1,84 @@
+08:00:21 GE0c run lang=en switch=False seed=defaults MemAvailable=5781200 kB; heavy lock held by an ancestor heavy.sh; run dir /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/run; build /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/build/native-release; source worktree ; scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/multi-monitor.py
+08:01:41 private install: exit 0 in 64.5 s, 87318 mutated paths, 0 outside the run dir, ok=True
+08:01:43 GNOME Shell 50.1 up (mode user, unsafe True)
+08:01:48 scenario /tmp/claude-1000/-home-robin-Documents-Codex-2026-11-01-chat-outputs-win11-gnome/b86efb11-6e95-47e6-8bcd-969df897e3ac/scratchpad/g/tests/gnome/scenarios/multi-monitor.py
+08:01:48   check PASS: two monitors, the first one primary
+08:01:48   check PASS: the second monitor lies right of the first
+08:01:48   check PASS: the taskbar of monitor 2 is a 48 px dock at its bottom, as wide as the monitor
+08:01:48   check PASS: it is on monitor 2, above the windows, on every workspace and out of the window list
+08:01:48   check PASS: one taskbar window per other monitor only
+08:01:50   check PASS: the panel window covers monitor 1 (the primary)
+08:01:50   check PASS: monitor 2 has a strut: its work area ends above its taskbar
+08:01:50   check PASS: monitor 1 keeps its own strut
+08:01:50   check PASS: the dev state has the taskbar of monitor 2 (tb-strip-m1)
+08:01:50   check PASS: its window is the monitor wide and 48 px high
+08:01:50   check PASS: it has no Start, search, Task View, tray or clock
+08:01:50   check PASS: the main taskbar keeps Start, Task View, the tray and the clock
+08:01:50   check PASS: the taskbar of monitor 2 is frosted like the main one (w11-glass, a strip backdrop)
+08:01:53   check PASS: the desktop window covers monitor 1 (the primary; Mutter keeps a desktop window in one work area)
+08:01:53   check PASS: monitor 2 has a desktop window of its own (SecondaryDesktop.Monitor1, a desktop window on monitor 2)
+08:01:53   check PASS: the desktop geometry lists both monitors with the primary marked
+08:01:57   check PASS: the desktop window of monitor 2 draws the wallpaper over all of it (desktop-wall-1)
+08:01:59   check PASS: monitor 1 shows the whole picture by itself (four colours at 25 %/75 %, in our desktop window there)
+08:01:59   check PASS: monitor 2 shows the whole picture by itself (four colours at 25 %/75 %, in our desktop window there)
+08:02:05   check PASS: span: monitor 1 shows its own part of one picture over both monitors
+08:02:05   check PASS: span: monitor 2 shows its own part of one picture over both monitors
+08:02:05   check PASS: every desktop icon lies on monitor 1 above its taskbar
+08:02:05   check PASS: a right click on the empty desktop of monitor 2 opens the desktop menu there (in its desktop window)
+08:02:06   check PASS: Escape closes the desktop menu
+08:02:08   check PASS: Nieuw > Map on monitor 2 makes the folder on the desktop of monitor 1, its name ready to type
+08:02:08   check PASS: the desktop of monitor 1 has the keyboard now, not the desktop window of monitor 2 that was clicked
+08:02:09   check PASS: the name typed right after goes into it: the folder is called "mmreis"
+08:02:11   check PASS: Task Manager is on monitor 2
+08:02:12   check PASS: by default ("Taskbar where window is open") Task Manager shows on the taskbar of monitor 2 only
+08:02:12   check PASS: Settings on monitor 2: running on its taskbar, the main taskbar keeps its pin without is-running
+08:02:12   check PASS: the taskbar of monitor 2 shows no pins by default
+08:02:14   check PASS: "All taskbars": Task Manager on both taskbars, the pins on monitor 2 too
+08:02:15   check PASS: "Main taskbar and taskbar where window is open": Task Manager on both, no pins on monitor 2
+08:02:15   check PASS: back to the default: on the taskbar of monitor 2 only
+08:02:15   check PASS: moved to monitor 1 it is on the main taskbar and leaves the other
+08:02:15   check PASS: moved back to monitor 2 it is on its taskbar again
+08:02:17   check PASS: the Task Manager button on the taskbar of monitor 2
+08:02:17   check PASS: a click on its button on the taskbar of monitor 2 focuses Task Manager
+08:02:18   check PASS: a second click minimizes it
+08:02:18   check PASS: it minimizes into its button on the taskbar of monitor 2 (icon geometry inside that taskbar)
+08:02:20   check PASS: a third click restores and focuses it
+08:02:21   check PASS: a right click on the button opens its jump list (menus-jump-launch, -pin, -close) on monitor 2
+08:02:22   check PASS: no window list opens over the jump list while the pointer stays on the button
+08:02:23   check PASS: Escape closes it
+08:02:24   check PASS: a right click on its empty space opens the taskbar menu (Taakbeheer, Taakbalkinstellingen)
+08:02:26   check PASS: no window list opens over the taskbar menu while the pointer rests on an app button
+08:02:26   check PASS: Settings has "Show my taskbar on all displays", on and enabled with two displays
+08:02:26   check PASS: and "When using multiple displays, show my taskbar apps on", enabled
+08:02:29   check PASS: "Show my taskbar on all displays" off: the taskbar of monitor 2 is gone
+08:02:29   check PASS: and its strut: the work area of monitor 2 is the whole monitor
+08:02:29   check PASS: the main taskbar shows Task Manager again (every window, as with one monitor)
+08:02:29   check PASS: the second row is greyed out while the first is off
+08:02:31   check PASS: on again: the taskbar of monitor 2 is back
+08:02:31   check PASS: and Task Manager is on it again
+08:02:35   check PASS: locked: no taskbar of monitor 2
+08:02:35   check PASS: after unlock the taskbar of monitor 2 is back at its place
+08:02:36   check PASS: after unlock Task Manager is on it again (and not on the main taskbar)
+08:02:36   check PASS: after unlock both taskbars tell GNOME again where their buttons are (windows.setIconRects; the main taskbar too, whose buttons did not move)
+08:02:37   check PASS: the windows of monitor 2 carry their en titles
+08:02:37   check PASS: after switching to nl the taskbar and desktop windows of monitor 2 have their nl titles
+08:02:37   check PASS: and back in en
+08:02:38   check PASS: the main taskbar moves to the new primary
+08:02:38   check PASS: the other taskbar is io.github.win11shell.SecondaryTaskbar.Monitor0 at the bottom of the other monitor
+08:02:38   check PASS: the desktop (with the icons) moves to the new primary, the other monitor gets its own desktop window
+08:02:39   check PASS: the desktop icons follow the primary
+08:02:40   check PASS: back: the taskbar of monitor 2 is there again
+08:02:41   check PASS: before: Settings minimizes into the main taskbar, Task Manager into the taskbar of monitor 2
+08:02:41   check PASS: monitor 2 left of monitor 1: Settings still minimizes into the main taskbar and Task Manager into the taskbar of its monitor, though neither taskbar changed size
+08:02:42   check PASS: back in the first order: the taskbar of monitor 2 is in its place again
+08:02:43   check PASS: monitor 2 off: no taskbar of another monitor
+08:02:43   check PASS: the desktop covers monitor 1 alone
+08:02:43   check PASS: and no desktop window of another monitor is left
+08:02:43   check PASS: Settings, left open on its Taskbar page, greys both rows out with one display
+08:02:44   check PASS: monitor 2 on again: its taskbar is back
+08:02:44   check PASS: and Settings enables both rows again with two displays
+08:02:46 shutdown shell clients: signalled own descendants 179:ibus-daemon, 472:win11-shell, 1620:glycin-image-rs, 2595:glycin-svg, 624:win11-panel, 708:glycin-svg, 307:ibus-memconf, 309:ibus-extension-, 580:ibus-engine-sim
+08:02:46 shutdown gnome-shell: signalled own descendants 160:gnome-shell
+08:02:46 shutdown system bus: signalled own descendants 159:dbus-daemon
+08:02:46 inner sweep: signalled own descendants 1630:glycin-image-rs, 1645:glycin-image-rs
+08:02:46 inner done: 0 surfaces, 0 failed []

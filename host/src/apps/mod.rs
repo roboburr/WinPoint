@@ -18,6 +18,33 @@ mod defaults;
 mod pertype;
 mod recent;
 
+/// The default-apps writers' lock (defaults.rs `ConfigLock`, `<config>/.apps-defaults.lock`) for the other writers
+/// of mimeapps.list: privacy.app.removeHandler and resetHandlers (services/privacy.rs), so their GIO writes never
+/// interleave with apps.setDefault or apps.setDefaultForType.
+pub(crate) struct ConfigLock {
+    _held: defaults::ConfigLock,
+}
+impl ConfigLock {
+    pub(crate) fn acquire(config: &std::path::Path) -> std::io::Result<Self> {
+        defaults::ConfigLock::acquire(config).map(|held| Self { _held: held })
+    }
+}
+
+/// The `apps.*` methods (name, dangerous), as host/src/api-methods.json lists them: the dispatch below and
+/// services/mod.rs `method_tables` (notes/claude/settings-parity.md §5.7) read it.
+pub(crate) const METHODS: &[(&str, bool)] = &[
+    ("apps.clearRecent", true),
+    ("apps.defaults", false),
+    ("apps.forFile", false),
+    ("apps.forType", false),
+    ("apps.launch", false),
+    ("apps.list", false),
+    ("apps.mimeTypes", false),
+    ("apps.openUri", false),
+    ("apps.recent", false),
+    ("apps.setDefault", true),
+    ("apps.setDefaultForType", true),
+];
 pub(crate) struct Apps {
     catalog: Arc<catalog::Catalog>,
     files: Arc<files::Files>,
@@ -46,20 +73,7 @@ impl Apps {
         })))
     }
     pub(crate) fn call(&self, method: &str, args: &Value) -> Option<ApiResult> {
-        if !matches!(
-            method,
-            "apps.list"
-                | "apps.launch"
-                | "apps.recent"
-                | "apps.clearRecent"
-                | "apps.forFile"
-                | "apps.defaults"
-                | "apps.setDefault"
-                | "apps.mimeTypes"
-                | "apps.forType"
-                | "apps.setDefaultForType"
-                | "apps.openUri"
-        ) {
+        if !METHODS.iter().any(|(name, _)| *name == method) {
             return None;
         }
         // C1: Win11's own settings language, by one cached stat (files::Context reads the whole file).

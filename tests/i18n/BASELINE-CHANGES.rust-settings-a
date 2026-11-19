@@ -1,0 +1,18 @@
+# tests/i18n/BASELINE-CHANGES.rust-settings-a: settings-parity batch A's new host texts (notes/claude/settings-parity.md §3),
+# same format as tests/i18n/BASELINE-CHANGES.rust. Only batch A edits this file.
+key:input.badTablet	-	-	-	new: input.tablet.mapButtons refuses a malformed vid:pid (services/input.rs, settings parity §5.2)
+key:input.tabletNotFound	-	-	-	new: input.tablet.mapButtons for a tablet that is not connected (services/input.rs)
+key:input.noPad	-	-	-	new: input.tablet.mapButtons for a tablet without pad buttons (services/input.rs)
+key:input.shellUnavailable	-	-	-	new: input.tablet.mapButtons without GNOME Shell's WinPoint extension (services/input.rs)
+key:input.badSources	-	-	-	new: input.sources.set refuses a source list that is not [type, id] pairs (services/input/sources.rs, settings parity §5.2)
+key:input.badOption	-	-	-	new: input.options.set refuses an lv3 or compose value GNOME Settings does not offer (services/input/sources.rs)
+key:input.badLayout	-	-	-	new: input.preview refuses a layout that is not layout or layout+variant (services/input/sources.rs)
+key:input.noTecla	-	-	-	new: input.preview without tecla installed (services/input/sources.rs)
+key:input.previewFailed	-	-	-	new: input.preview when tecla does not start (services/input/sources.rs)
+key:input.badEngine	-	-	-	new: input.engineSetup refuses a malformed IBus engine name (services/input/sources.rs)
+key:input.badShortcut	-	-	-	new: input.shortcuts.* refuse an accelerator that is not valid (services/input/shortcuts.rs)
+key:input.noShortcut	-	-	-	new: input.shortcuts.* for a shortcut that is not in the catalogue or a custom one that is gone (services/input/shortcuts.rs)
+key:input.badName	-	-	-	new: input.shortcuts.custom.* refuse an empty or invalid name (services/input/shortcuts.rs)
+key:input.badCommand	-	-	-	new: input.shortcuts.custom.* refuse an empty or invalid command (services/input/shortcuts.rs)
+key:input.orcaNotRunning	-	-	-	new: input.screenReader.preferences while no Orca owns org.gnome.Orca.Service (services/input/screen_reader.rs, amendment 36)
+key:input.orcaFailed	-	-	-	new: input.screenReader.preferences when Orca answers false or the call fails (services/input/screen_reader.rs)

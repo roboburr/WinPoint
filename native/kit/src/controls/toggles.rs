@@ -193,6 +193,15 @@ impl RadioGroup {
         super::own(&root, &inner);
         let me = RadioGroup { root, inner };
         me.set_options(options, selected);
+        let weak = Rc::downgrade(&me.inner);
+        me.root.connect_notify_local(Some("name"), move |root, _| {
+            let Some(inner) = weak.upgrade() else { return };
+            let name = root.widget_name();
+            if name.is_empty() || name == "GtkBox" { return; }
+            for (value, button) in inner.buttons.borrow().iter() {
+                button.set_widget_name(&format!("{name}-{value}"));
+            }
+        });
         me
     }
 
@@ -229,6 +238,10 @@ impl RadioGroup {
                 b.set_group(Some(f));
             } else {
                 first = Some(b.clone());
+            }
+            let name = root.widget_name();
+            if !name.is_empty() && name != "GtkBox" {
+                b.set_widget_name(&format!("{name}-{value}"));
             }
             b.set_active(selected == Some(*value));
             let v = value.to_string();
