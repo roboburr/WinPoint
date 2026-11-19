@@ -154,6 +154,7 @@ export class NativePanelBridge {
         this._desktopBridge.enable();
         this._signals = [];
         this._windows = new Map();
+        this._unmanagingWindows = new WeakSet();
         this._actorSignals = new Map();
         this._frostedId = 0;
         this._panel = null;
@@ -322,7 +323,7 @@ export class NativePanelBridge {
     }
 
     _considerStart(window, shown = false) {
-        if (!this._enabled || !this._isStart(window))
+        if (!this._enabled || this._unmanagingWindows.has(window) || !this._isStart(window))
             return;
         this._positionStart(window);
         const actor = window.get_compositor_private();
@@ -372,6 +373,12 @@ export class NativePanelBridge {
     }
 
     _positionStart(window) {
+        // Mutter clears the workspace and emits workspace-changed before unmanaged.
+        // Repositioning that closing window enters its work-area constraints with
+        // no workspace and aborts the whole compositor (meta_window_get_workspaces).
+        if (!this._enabled || !this._windows.has(window) || this._unmanagingWindows.has(window) ||
+            !window.get_workspace())
+            return;
         const monitor = Main.layoutManager.primaryMonitor;
         if (!monitor || this._positioningStarts.has(window))
             return;
@@ -759,7 +766,10 @@ export class NativePanelBridge {
         const signals = [];
         this._windows.set(window, signals);
         const connect = (name, fn) => signals.push(window.connect(name, fn));
+        connect('unmanaging', () => this._unmanagingWindows.add(window));
         const changed = () => {
+            if (this._unmanagingWindows.has(window))
+                return;
             this._watchActor(window);
             this._considerPanel(window);
             this._considerStrip(window);
@@ -780,6 +790,8 @@ export class NativePanelBridge {
         connect('position-changed', () => this._frostedBridge?.damage(window));
         connect('size-changed', () => this._frostedBridge?.damage(window));
         connect('shown', () => {
+            if (this._unmanagingWindows.has(window))
+                return;
             this._watchActor(window);
             this._considerPanel(window);
             this._considerStrip(window);

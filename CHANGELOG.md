@@ -3,6 +3,14 @@
 What changed in each release of WinPoint, newest first. `tools/release.py` takes a release’s notes from its
 section here.
 
+## 0.9.3
+
+- **Closing Start keeps the session running.** Fixed a GNOME/Mutter crash that could return you to the login
+  screen when Start closed while a layout change was pending. WinPoint now stops repositioning the window as soon
+  as Mutter starts removing it, and checks that it still belongs to a workspace before moving or resizing it.
+- **Repeated open and close.** A regression reproduces the original Mutter assertion on 0.9.2 and checks closing
+  with the Start button, Escape and a click outside while placement changes are pending.
+
 ## 0.9.2
 
 This release includes the Settings integration and fixes from the unpublished 0.9.1 development version.
