@@ -22,6 +22,28 @@ def nodes(h):
     return [n for t in h.native_state() if t.get('visible')
             for n in walk(t.get('tree')) if n.get('rect')]
 
+def move(h, x, y):
+    return h.eval("(async()=>{const C=(await import('gi://Clutter')).default;const G=(await import('gi://GLib')).default;"
+        "globalThis.__visualPointer??=C.get_default_backend().get_default_seat().create_virtual_device(C.InputDeviceType.POINTER_DEVICE);"
+        f"globalThis.__visualPointer.notify_absolute_motion(G.get_monotonic_time(),{int(x)},{int(y)});"
+        "return global.get_pointer().slice(0,2);})()")
+
+def changed_pixels(h, before, after, region, exclude=None):
+    images = [h.s.GdkPixbuf.Pixbuf.new_from_file(str(h.hm.RUN/'shots'/p)) for p in (before, after)]
+    a,b = images
+    da,db = a.get_pixels(),b.get_pixels()
+    x0,y0,w,ht = region
+    changed = 0
+    for y in range(y0,y0+ht):
+        for x in range(x0,x0+w):
+            if exclude and exclude[0]-2 <= x < exclude[0]+exclude[2]+2 and exclude[1]-2 <= y < exclude[1]+exclude[3]+2:
+                continue
+            ia=y*a.get_rowstride()+x*a.get_n_channels()
+            ib=y*b.get_rowstride()+x*b.get_n_channels()
+            if max(abs(da[ia+c]-db[ib+c]) for c in range(3)) > 2:
+                changed += 1
+    return changed
+
 def run(h):
     h.click('panel', 'tb-start')
     h.until(lambda: any(n.get('name') == 'start-search' for n in nodes(h)), 'Start opens', 8)
@@ -30,8 +52,32 @@ def run(h):
     flags = h.eval(FLAGS)
     h.check('Active background blur disables clipped redraws', bool(flags & 2), flags=flags)
     h.check('Blur does not enable continuous redraw', not bool(flags & 64), flags=flags)
-    h.screenshot('pinned-before')
-    # A tiny pointer/hover update must not capture the previous frame's icons into the blur.
+    before = h.screenshot('pinned-before')
+    frame = h.s.window_of('io.github.win11shell.Start', h.native_pid)
+    pins = [n for n in nodes(h) if str(n.get('name','')).startswith('start-pin-') and n['rect'][2]>0]
+    band = (frame['x']+32, frame['y']+124, 578, 300)
+    for key in ('settings','taskmgr','calculator','libreoffice'):
+        tile = next((n for n in pins if key in n['name'].lower()), None)
+        h.require('Hover target exists: '+key, bool(tile))
+        x,y,w,ht = tile['rect'];rect=(frame['x']+x,frame['y']+y,w,ht)
+        move(h,rect[0]+w//2,rect[1]+ht//2)
+        # Let both the hover transition and its tooltip settle before comparing frames.
+        h.sleep(0.6)
+        pointer=h.eval('global.get_pointer().slice(0,2)')
+        shot=h.screenshot('hover-'+key,settle=0.15)
+        inside=changed_pixels(h,before,shot,rect)
+        h.check('Real pointer hovers its tile: '+key,inside>10 and pointer==[rect[0]+w//2,rect[1]+ht//2],
+                changedInside=inside,pointer=pointer,rect=rect)
+        h.eval('global.stage.queue_redraw()')
+        reference=h.screenshot('hover-full-frame-'+key,settle=0.15)
+        changed=changed_pixels(h,shot,reference,band)
+        h.check('Hover matches full-frame reference: '+key,changed<=30,changedPixels=changed)
+        move(h,frame['x']+320,frame['y']+500)
+        h.sleep(0.3)
+    after=h.screenshot('pinned-after-hovers',settle=0.2)
+    changed=changed_pixels(h,before,after,band)
+    h.check('Pointer leaving removes every hover without trails',changed<=30,changedPixels=changed)
+    # Repeated menu changes must not capture the previous frame's foreground into the blur.
     for i in range(5):
         h.native({'native': 'click', 'name': 'start-power'})
         h.sleep(0.2)

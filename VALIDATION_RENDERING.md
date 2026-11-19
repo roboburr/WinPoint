@@ -2,6 +2,7 @@
 
 The user reported a vertically stretched web-search detail icon and best-result row, square coloured halos
 around pinned icons, and flickering when opening dropdowns. The mini-PC runs Ubuntu 26.04 at 100% display scale.
+The user clarified that the coloured haze appears only while the pointer hovers over an item.
 
 The published 0.9.3 binaries reproduce the search allocation defect in an isolated GNOME 50.1 session:
 the detail tile is 64 × 420 pixels and the best result is 489 pixels high. The glyph's vertical expansion was
@@ -27,6 +28,17 @@ seconds. Screenshots were inspected. Peak process-tree PSS is 512 MiB and minimu
 4,925 MiB. Both connection and execution isolation checks pass; no processes or checkout sockets remain.
 
 The physical mini-PC is not connected to this test environment. The coloured halos were reported in its photo
-and did not appear in the isolated baseline screenshot. The redraw correction is verified against the source
+and did not appear in the isolated baseline screenshots, including actual pointer hovers. The redraw correction is verified against the source
 mechanism and actual compositor state; confirmation on that mini-PC remains necessary after updating and signing
 out/in. The existing Start teardown crash guard is retained.
+
+The follow-up hover scenario uses a virtual pointer in the private compositor to point at Settings, Task Manager,
+Calculator and LibreOffice. It verifies the pointer coordinates and a visible change inside each target, then
+compares the settled hover (including its tooltip) to a forced full-frame reference. It also compares the pinned
+area after the pointer leaves. Tooltips can extend outside their tile; the first pixel-difference fixture counted
+those extensions as failures on both versions. The corrected comparison keeps the tooltip state unchanged.
+All 31 follow-up checks pass. Each of the four hover/reference comparisons has zero changed pixels; leaving the
+items removes the hover without a trail. Peak PSS is 509 MiB, minimum available memory 5,602 MiB, and both
+isolation checks pass. The actual 0.9.4 release binaries also pass all 74 Start-close lifecycle checks and all 28
+frosted-glass checks, including native window movement/resizing and the blur memory limit. Installer/release tests:
+120 passed, two skipped.
