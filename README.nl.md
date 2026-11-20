@@ -83,7 +83,7 @@ De installer kiest Nederlands of Engels op basis van de taal en regio van je sys
 
 ## Bijwerken
 
-De nieuwste uitgave is **[WinPoint 0.9.5](https://github.com/roboburr/WinPoint/releases/tag/v0.9.5)**. Deze houdt profielfoto’s in Start compact en gebruikt een stabiele desktopbron voor glasachtergronden, zonder het live voorgrondbeeld terug te lezen of het hele scherm opnieuw te laten tekenen. De eerdere oplossingen voor Start-zoeken en de sessiecrash zijn inbegrepen. De volledige lijst staat in het [wijzigingslog](CHANGELOG.md#095).
+De nieuwste uitgave is **[WinPoint 0.9.5](https://github.com/roboburr/WinPoint/releases/tag/v0.9.5)**. Deze houdt profielfoto’s in Start compact en gebruikt een stabiele desktopbron voor glasachtergronden, zonder het live voorgrondbeeld terug te lezen of het hele scherm opnieuw te laten tekenen. De eerdere oplossingen voor Start-zoeken en de sessiecrash zijn inbegrepen. Taakbeheer houdt hulpprocessen in een appdienst ook bij hun app. De volledige lijst staat in het [wijzigingslog](CHANGELOG.md#095).
 
 WinPoint kijkt één keer per dag op GitHub en meldt het als er een nieuwe uitgave is. Klik in **Instellingen › Update en herstel** op **Downloaden en installeren**: WinPoint downloadt de uitgave, controleert hem met het controlegetal van GitHub en installeert hem; je instellingen blijven bewaard. Start daarna WinPoint opnieuw of meld je af en weer aan, zoals de pagina aangeeft. Het automatisch controleren kun je uitzetten onder **Geavanceerde opties**; een nieuwere uitgave zelf installeren met de regel hierboven kan ook.
 

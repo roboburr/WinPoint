@@ -526,7 +526,7 @@ impl ProcessState {
         }
         let helpers = procs
             .iter()
-            .filter(|(pid, p)| p.uid == uid && **pid != mypid && !app_of.contains_key(pid))
+            .filter(|(pid, p)| p.uid == uid && !app_of.contains_key(pid))
             .filter_map(|(pid, _)| {
                 own_window_of(
                     *pid,
@@ -603,6 +603,7 @@ impl ProcessState {
             }
         }
         drop(app_meta);
+        let application_services = application_services(&app_of, &procs, &self.statics);
         let mut memo = HashMap::new();
         for (pid, p) in &procs {
             if p.uid == uid && !app_of.contains_key(pid) && *pid != mypid {
@@ -610,6 +611,7 @@ impl ProcessState {
                     *pid,
                     0,
                     &app_of,
+                    &application_services,
                     &mut memo,
                     &procs,
                     &self.statics,
@@ -662,7 +664,7 @@ impl ProcessState {
             let c = round(cpu.get(&key).copied().unwrap_or(0.), 2);
             let (rd, wr) = io_rate.get(pid).copied().unwrap_or((0., 0.));
             let kernel = *pid == 2 || p.ppid == 2;
-            let (group, gkey, name, icon, desk) = if *pid == mypid || host_children.contains(pid) {
+            let (group, gkey, name, icon, desk) = if (*pid == mypid || host_children.contains(pid)) && !app_of.contains_key(pid) {
                 (
                     "background",
                     "win11shell".into(),
@@ -876,10 +878,33 @@ impl ProcessState {
         json!({"cpu":round(cpu.clamp(0.,100.),1),"memoryUsed":total.saturating_sub(available),"memoryTotal":total,"processes":0,"threads":0,"diskRead":round(rd,0)as u64,"diskWrite":round(wr,0)as u64,"diskActive":round(active,1),"networkRx":round(rx,0)as u64,"networkTx":round(tx,0)as u64,"cpuCount":ncpu()})
     }
 }
+/// A dedicated application service owns its helpers even after they are reparented. Several window-bearing
+/// apps in one service are ambiguous: their descendants must follow their own parent tree instead.
+fn application_services(
+    app_of: &HashMap<u32, String>,
+    procs: &BTreeMap<u32, Proc>,
+    statics: &HashMap<(u32, u64), Static>,
+) -> HashMap<String, Option<String>> {
+    let uid = unsafe { libc::getuid() };
+    let mut owners = HashMap::<String, Option<String>>::new();
+    for (pid, app) in app_of {
+        let Some(p) = procs.get(pid).filter(|p| p.uid == uid) else { continue };
+        let Some(st) = statics.get(&(*pid, p.start)) else { continue };
+        if !st.unit.as_ref().is_some_and(|u| u.name.ends_with(".service") && !u.name.starts_with("session-")) {
+            continue;
+        }
+        owners.entry(st.cgroup.clone())
+            .and_modify(|owner| { if owner.as_ref() != Some(app) { *owner = None; } })
+            .or_insert_with(|| Some(app.clone()));
+    }
+    owners
+}
+
 fn resolve(
     pid: u32,
     depth: usize,
     app_of: &HashMap<u32, String>,
+    application_services: &HashMap<String, Option<String>>,
     memo: &mut HashMap<u32, Option<String>>,
     procs: &BTreeMap<u32, Proc>,
     statics: &HashMap<(u32, u64), Static>,
@@ -898,18 +923,34 @@ fn resolve(
         return None;
     }
     let st = &statics[&(pid, p.start)];
-    if st.unit.as_ref().is_some_and(|u| {
+    let service_boundary = st.unit.as_ref().is_some_and(|u| {
         (u.kind == "service" || u.kind == "unit") && !u.name.starts_with("session-")
-    }) {
-        memo.insert(pid, None);
-        return None;
+    });
+    if service_boundary {
+        match application_services.get(&st.cgroup) {
+            Some(Some(app)) if !critical.contains(&pid) => {
+                memo.insert(pid, Some(app.clone()));
+                return Some(app.clone());
+            }
+            Some(None) if !critical.contains(&pid) => {} // shared service: follow only this app's ancestors
+            _ => {
+                memo.insert(pid, None);
+                return None;
+            }
+        }
     }
     let mut res = None;
-    if p.ppid > 1 && p.ppid != std::process::id() && !critical.contains(&p.ppid) {
+    let same_service = !service_boundary || procs.get(&p.ppid)
+        .and_then(|parent| statics.get(&(parent.pid, parent.start)))
+        .is_some_and(|parent| parent.cgroup == st.cgroup);
+    let known_parent = app_of.contains_key(&p.ppid);
+    if same_service && p.ppid > 1 && (p.ppid != std::process::id() || known_parent)
+        && (!critical.contains(&p.ppid) || known_parent) {
         res = resolve(
             p.ppid,
             depth + 1,
             app_of,
+            application_services,
             memo,
             procs,
             statics,
@@ -1205,6 +1246,142 @@ mod tests {
     use super::*;
     fn args(argv: &[&str]) -> Vec<String> {
         argv.iter().map(|s| s.to_string()).collect()
+    }
+
+    fn service_fixture(rows: &[(u32, u32, &str)]) -> (BTreeMap<u32, Proc>, HashMap<(u32, u64), Static>) {
+        let uid = unsafe { libc::getuid() };
+        let mut procs = BTreeMap::new();
+        let mut statics = HashMap::new();
+        for &(pid, ppid, cgroup) in rows {
+            assert!(parse_cgroup(cgroup).is_some(), "invalid service fixture: {cgroup}");
+            procs.insert(pid, Proc { pid, ppid, comm: "worker".into(), state: "S".into(), ticks: 0,
+                nice: 0, threads: 1, start: u64::from(pid), private: 1024, uid });
+            statics.insert((pid, u64::from(pid)), Static { cmd: String::new(), argv: vec![], exe: None,
+                cgroup: cgroup.into(), unit: parse_cgroup(cgroup), user: String::new() });
+        }
+        (procs, statics)
+    }
+
+    fn classify_service(pid: u32, apps: &HashMap<u32, String>, procs: &BTreeMap<u32, Proc>,
+        statics: &HashMap<(u32, u64), Static>, critical: &HashSet<u32>) -> Option<String> {
+        let services = application_services(apps, procs, statics);
+        resolve(pid, 0, apps, &services, &mut HashMap::new(), procs, statics, critical,
+            &DesktopIndex::default(), &mut HashMap::new())
+    }
+
+    #[test]
+    fn every_application_service_keeps_its_helpers_in_one_app_group() {
+        let a = "/user.slice/user-1000.slice/user@1000.service/app.slice/one.service";
+        let b = "/user.slice/user-1000.slice/user@1000.service/app.slice/another.service";
+        let (mut procs, statics) = service_fixture(&[
+            (100, 1, a), (101, 100, a), (102, 1, a), // window, child and reparented helper
+            (200, 1, b), (201, 200, b),
+            (300, 100, "/user.slice/user-1000.slice/user@1000.service/app.slice/unrelated.service"),
+            (400, 100, "/other.slice/user@1000.service/app.slice/one.service"), // same unit name, different service instance
+            (500, 100, a), (600, 100, a),
+        ]);
+        procs.get_mut(&500).unwrap().uid += 1;
+        let apps = HashMap::from([(100, "browser.desktop".into()), (200, "editor.desktop".into())]);
+        let critical = HashSet::from([100, 600]); // known protected app owner still owns its ordinary workers
+        for pid in [100, 101, 102] {
+            assert_eq!(classify_service(pid, &apps, &procs, &statics, &critical).as_deref(), Some("browser.desktop"));
+        }
+        for pid in [200, 201] {
+            assert_eq!(classify_service(pid, &apps, &procs, &statics, &critical).as_deref(), Some("editor.desktop"));
+        }
+        for pid in [300, 400, 500, 600] {
+            assert_eq!(classify_service(pid, &apps, &procs, &statics, &critical), None, "{pid}");
+        }
+    }
+
+    #[test]
+    fn different_apps_in_one_service_keep_their_own_descendants() {
+        let unit = "/user.slice/user-1000.slice/user@1000.service/app.slice/shared-launcher.service";
+        let (procs, statics) = service_fixture(&[
+            (100, 1, unit), (101, 100, unit), (200, 1, unit), (201, 200, unit), (300, 1, unit),
+        ]);
+        let apps = HashMap::from([(100, "first.desktop".into()), (200, "second.desktop".into())]);
+        let critical = HashSet::new();
+        assert_eq!(classify_service(101, &apps, &procs, &statics, &critical).as_deref(), Some("first.desktop"));
+        assert_eq!(classify_service(201, &apps, &procs, &statics, &critical).as_deref(), Some("second.desktop"));
+        assert_eq!(classify_service(300, &apps, &procs, &statics, &critical), None);
+    }
+
+    #[test]
+    fn process_response_lists_service_app_and_worker_once_with_their_combined_memory() {
+        let app = tree::Tree::spawn("/nonexistent/browser-fixture",
+            "(exec -a /nonexistent/browser-worker sleep 30) & wait");
+        let worker = app.child(app.root(), "/nonexistent/browser-worker");
+        let root = std::env::temp_dir().join(format!("win11-sysmon-service-{}", crate::events::nonce()));
+        let config = root.join("config");
+        fs::create_dir_all(&config).unwrap();
+        fs::write(config.join("settings.json"), json!({"language":"en"}).to_string()).unwrap();
+        let ctx = ServiceContext::new(crate::events::Events::new(&root.join("events")).unwrap(),
+            config, root.join("cache"), root.join("ui"), "taskmgr".into(), false).unwrap();
+        let mut pm = ProcessState::default();
+        pm.units_desc = (now(), HashMap::from([("cached.service".into(), "fixture".into())]));
+        pm.windows = (now(), vec![json!({"pid":app.root(),"appId":"browser-fixture",
+            "desktopId":"","title":"Browser fixture"})]);
+        let procs = scan_proc();
+        for pid in [app.root(), worker] {
+            let p = &procs[&pid];
+            let mut st = static_of(p);
+            st.cgroup = "/user.slice/user-1000.slice/user@1000.service/app.slice/arbitrary-browser-launch.service".into();
+            st.unit = parse_cgroup(&st.cgroup);
+            assert!(st.unit.is_some());
+            pm.statics.insert((pid, p.start), st);
+        }
+        let data = pm.processes(&ctx, true);
+        ctx.events.shutdown();
+        let _ = fs::remove_dir_all(root);
+        let rows = data["processes"].as_array().unwrap();
+        let group = data["apps"].as_array().unwrap().iter()
+            .find(|g| g["pids"].as_array().unwrap().iter().any(|pid| *pid == app.root())).unwrap();
+        let pids = group["pids"].as_array().unwrap();
+        for pid in [app.root(), worker] {
+            assert!(pids.iter().any(|p| *p == pid), "missing {pid}");
+            let occurrences = ["apps", "background", "system"].iter()
+                .flat_map(|section| data[*section].as_array().unwrap())
+                .filter(|g| g["pids"].as_array().unwrap().iter().any(|p| *p == pid)).count();
+            assert_eq!(occurrences, 1, "{pid} must appear in exactly one group");
+        }
+        let combined: u64 = rows.iter().filter(|p| pids.contains(&p["pid"]))
+            .map(|p| p["memory"].as_u64().unwrap()).sum();
+        assert_eq!(group["memory"].as_u64(), Some(combined));
+    }
+
+    #[test]
+    fn current_native_app_backend_is_accounted_with_its_own_window() {
+        let worker = tree::Tree::spawn("/nonexistent/taskmgr-helper", "sleep 30");
+        let host = std::process::id();
+        let procs = scan_proc();
+        let parent = procs[&host].ppid;
+        let root = std::env::temp_dir().join(format!("win11-sysmon-self-{}", crate::events::nonce()));
+        let config = root.join("config");
+        fs::create_dir_all(&config).unwrap();
+        fs::write(config.join("settings.json"), json!({"language":"en"}).to_string()).unwrap();
+        let ctx = ServiceContext::new(crate::events::Events::new(&root.join("events")).unwrap(),
+            config, root.join("cache"), root.join("ui"), "taskmgr".into(), false).unwrap();
+        let mut pm = ProcessState::default();
+        pm.units_desc = (now(), HashMap::from([("cached.service".into(), "fixture".into())]));
+        pm.windows = (now(), vec![]);
+        for pid in [parent, host, worker.root()] {
+            let p = &procs[&pid];
+            let mut st = static_of(p);
+            st.cgroup = "/user.slice/user@1000.service/app.slice/app-win11-taskmgr-fixture.service".into();
+            st.unit = parse_cgroup(&st.cgroup);
+            if pid == parent { st.argv = args(&["/nonexistent/win11-gtk-taskmgr"]); }
+            if pid == host { st.argv = args(&["/nonexistent/win11-app", "--app", "taskmgr", "--http-only"]); }
+            pm.statics.insert((pid, p.start), st);
+        }
+        let data = pm.processes(&ctx, true);
+        ctx.events.shutdown();
+        let _ = fs::remove_dir_all(root);
+        for pid in [parent, host, worker.root()] {
+            let row = data["processes"].as_array().unwrap().iter().find(|p| p["pid"] == pid).unwrap();
+            assert_eq!(row["group"], "app", "{pid}");
+            assert_eq!(row["groupKey"], "win11shell-taskmgr.desktop", "{pid}");
+        }
     }
     #[test]
     fn own_app_knows_the_native_apps_and_their_launchers() {

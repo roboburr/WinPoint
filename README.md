@@ -83,7 +83,7 @@ The installer picks Dutch or English from your system's language and region. Cha
 
 ## Update
 
-The latest release is **[WinPoint 0.9.5](https://github.com/roboburr/WinPoint/releases/tag/v0.9.5)**. It keeps Start profile photos compact and uses a stable desktop source for glass backgrounds, avoiding live foreground feedback and global full-screen redraws. It includes the earlier Start search and session crash fixes. See the [changelog](CHANGELOG.md#095) for the full list.
+The latest release is **[WinPoint 0.9.5](https://github.com/roboburr/WinPoint/releases/tag/v0.9.5)**. It keeps Start profile photos compact and uses a stable desktop source for glass backgrounds, avoiding live foreground feedback and global full-screen redraws. It includes the earlier Start search and session crash fixes. Task Manager also keeps application service helpers together with their app. See the [changelog](CHANGELOG.md#095) for the full list.
 
 WinPoint checks GitHub once a day and tells you when a new release is out. Click **Download and install** in **Settings › Update & recovery**: WinPoint downloads it, checks it against GitHub's checksum and installs it, keeping your settings. Then restart WinPoint or sign out and back in, as the page says. Automatic checks can be turned off under **Advanced options**; installing a newer release by hand with the line above works too.
 

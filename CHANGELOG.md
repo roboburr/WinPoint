@@ -7,6 +7,9 @@ section here.
 
 - **Compact Start profile photos.** A large or rectangular account picture stays inside the 32-pixel circle in
   Start's footer, without increasing the footer height or squeezing the account name.
+- **Complete app groups in Task Manager.** Helpers in an application's service are included in that app's row
+  instead of a separate background launcher group. This applies to all identified apps, including reparented
+  helpers; different apps in a shared service follow their own process trees. Every process is counted once.
 - **Stable glass backgrounds.** Frosted surfaces use a shared snapshot of the desktop on their monitor instead
   of reading the live foreground framebuffer. Hover, Start and dropdown updates cannot feed their own contents
   back into the blur. Desktop changes refresh the source; clipping is bounded at the taskbar edge. The global
