@@ -3,6 +3,15 @@
 What changed in each release of WinPoint, newest first. `tools/release.py` takes a release’s notes from its
 section here.
 
+## 0.9.5
+
+- **Compact Start profile photos.** A large or rectangular account picture stays inside the 32-pixel circle in
+  Start's footer, without increasing the footer height or squeezing the account name.
+- **Stable glass backgrounds.** Frosted surfaces use a shared snapshot of the desktop on their monitor instead
+  of reading the live foreground framebuffer. Hover, Start and dropdown updates cannot feed their own contents
+  back into the blur. Desktop changes refresh the source; clipping is bounded at the taskbar edge. The global
+  full-screen redraw workaround from 0.9.4 is removed. Glass now reflects the desktop rather than other app windows.
+
 ## 0.9.4
 
 - **Clean glass around icons and menus.** While a frosted backdrop is active, redraw complete frames so the

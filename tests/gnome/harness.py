@@ -2005,7 +2005,10 @@ def prepare_update_seams() -> None:
             shutil.copyfile(UPDATE_SCHEMAS / name, schemas / name)
 
 
-def prepare(lang: str, seed: str = 'defaults') -> None:
+def prepare(lang: str, seed: str = 'defaults', profile_picture: str | None = None) -> None:
+    profile = Path(profile_picture).resolve() if profile_picture else None
+    if profile and (not profile.is_relative_to(G.resolve()) or not profile.is_file()):
+        raise Fatal('--profile-picture must be an image file inside the checkout')
     empty_run_dir()
     for sub in ('home', 'config', 'data', 'cache', 'prefix', 'tmp', 'logs', 'stubs', 'shots'):
         (RUN / sub).mkdir(parents=True, exist_ok=True)
@@ -2047,6 +2050,8 @@ def prepare(lang: str, seed: str = 'defaults') -> None:
         modes.mkdir(parents=True, exist_ok=True)
         (modes / f'{SESSION_MODE}.json').write_text(session.mode_json())
     home = RUN / 'home'
+    if profile:
+        shutil.copyfile(profile, home / '.face')
     dirs = {'DESKTOP': 'Desktop', 'DOCUMENTS': 'Documents', 'DOWNLOAD': 'Downloads', 'MUSIC': 'Music',
             'PICTURES': 'Pictures', 'VIDEOS': 'Videos', 'TEMPLATES': 'Templates', 'PUBLICSHARE': 'Public'}
     for name in dirs.values():
@@ -2512,7 +2517,7 @@ def cmd_run(args) -> int:
     started = time.time()
     global SRC
     SRC = G
-    prepare(args.lang, args.seed)            # wipes RUN (also RUN/src); seeds settings from G until --source is in
+    prepare(args.lang, args.seed, args.profile_picture)  # wipes RUN; seeds settings from G until --source is in
     source = {'rev': 'worktree', 'path': str(G)}
     if args.source != 'worktree':
         source = export_source(args.source)
@@ -3392,6 +3397,8 @@ def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
                    help='tree to install the assets, extension and scripts from: "worktree" (default) or a git '
                         'revision (exported with git archive into run/src)')
     p.add_argument('--scenario', help='Python file with def run(h), run inside the sandbox after the session is up')
+    p.add_argument('--profile-picture', metavar='FILE',
+                   help='account picture fixture inside the checkout, copied only to the private HOME/.face')
     p.add_argument('--winpoint-feed', action='store_true',
                    help="D-G74a: WinPoint's update check against a fake GitHub on loopback (tests/gnome/lib/"
                         'fake_github.py) through its test seam WIN11_WINPOINT_TEST; without it the daily check is off')

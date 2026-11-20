@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Native compositor backdrops: the taskbar strip, the focused own app window and the open Start window
 // (D-G59; before that app blur was an experiment and Start had none). At most one window blur exists at a time.
+// 0.9.5: actor-mode blur reads a shared per-monitor desktop snapshot, never the live screen framebuffer.
 // D-G60: Start's registration survives its hidden window; an app window's backdrop is bound to its actor.
 // D-G63: a pid holds a set of identities; the native shell (win11-shell) registers its taskbar and Start under one pid.
 import Clutter from 'gi://Clutter';
@@ -8,7 +9,6 @@ import Shell from 'gi://Shell';
 import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import St from 'gi://St';
-import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 // The taskbars of the other monitors (win11-shell's io.github.win11shell.SecondaryTaskbar.Monitor<N> windows): one
 // identity for all of them, a surface of the native shell like the panel.
@@ -80,8 +80,8 @@ export class NativeFrostedBridge {
         this._lastState = '';
         this._options = {blur: true, windowBlur: true, shadows: true, taskbarAutoHide: false, radius: 6};
         this._entries = new Map();
-        this._fullRedraws = false;
-        this._ownsRedrawFlag = false;
+        this._sources = new Map();
+        this._sourceCaptures = 0;
         // Start's window stays mapped while its glass slides out; the host reports when the menu opens and
         // starts closing (nativeBackdrop.start), so the blur exists only while the menu is really open.
         this._startPhase = new Map();
@@ -208,32 +208,10 @@ export class NativeFrostedBridge {
         // Actor notifications can arrive inside a compositor animation frame. Remove
         // synchronously; the coalesced sync may restore only a stable final frame.
         this._destroy(window);
-        this._syncRedraws();
         this._publish();
     }
 
-    /** Shell.BlurEffect copies its entire background from the stage framebuffer. With clipped redraws,
-     * unchanged pixels there still contain the previous foreground (icons, text or a closed menu). Blurring
-     * those pixels feeds square coloured halos back into the glass and makes dropdowns flicker. Require a
-     * complete frame only while a backdrop is active. This does not schedule continuous/idle repaints. */
-    _syncRedraws() {
-        const needed = [...this._entries.values()].some(entry => entry.effect !== null);
-        if (needed === this._fullRedraws) return;
-        const flag = Clutter.DrawDebugFlag.DISABLE_CLIPPED_REDRAWS;
-        if (needed) {
-            const [, drawFlags] = Clutter.get_debug_flags();
-            this._ownsRedrawFlag = !(drawFlags & flag);
-            if (this._ownsRedrawFlag) Clutter.add_debug_flags(0, flag, 0);
-        } else {
-            // Preserve a flag that was already enabled by another extension or Mutter's environment.
-            if (this._ownsRedrawFlag) Clutter.remove_debug_flags(0, flag, 0);
-            this._ownsRedrawFlag = false;
-        }
-        this._fullRedraws = needed;
-        global.stage.queue_redraw();
-    }
-
-    /** A window with a backdrop moved or changed size: redraw the whole stage. GNOME redraws only the damaged
+    /** A window with a backdrop moved or changed size: invalidate the old shadow bounds. GNOME redraws only the damaged
      *  rectangle around the moving window, but the shadow (box-shadow) and the blur reach beyond it, so on real
      *  hardware the old shadow stayed and the rectangle showed as a box around it (Robin, 13-11: "schaduw
      *  blijft hangen", "boxed effect rondom de schaduw"). Blur my Shell's "hack level" does the same. */
@@ -272,6 +250,7 @@ export class NativeFrostedBridge {
         const entry = this._entries.get(key);
         if (!entry) return;
         this._entries.delete(key);
+        this._disconnectWallpaper(entry);
         if (entry.effect) entry.backdrop.remove_effect(entry.effect);
         entry.effect = null;
         entry.outer.destroy();
@@ -350,15 +329,92 @@ export class NativeFrostedBridge {
         this._entries.set(item.window, entry);
         this._created = (this._created ?? 0) + 1;
         outer.connect('destroy', () => {
+            this._disconnectWallpaper(entry);
             // A compositor shutdown can dispose the containing window group before
             // the extension's disable callback; never revisit an already dead actor.
             if (this._entries.get(item.window) === entry) {
                 this._entries.delete(item.window);
-                this._syncRedraws();
             }
             entry.effect = null;
         });
         return entry;
+    }
+
+    _dropSource(source, destroyed = false) {
+        const record = this._sources.get(source);
+        if (!record) return;
+        this._sources.delete(source);
+        if (record.timer) GLib.Source.remove(record.timer);
+        if (!destroyed) {
+            source.disconnect(record.damageId);
+            source.disconnect(record.destroyId);
+        }
+    }
+
+    _pruneSources() {
+        const used = new Set([...this._entries.values()].map(entry => entry.wallpaperSource));
+        for (const source of this._sources.keys()) if (!used.has(source)) this._dropSource(source);
+    }
+
+    _disconnectWallpaper(entry) {
+        entry.wallpaperSource = null;
+        this._pruneSources();
+    }
+
+    _desktopContent(source) {
+        let record = this._sources.get(source);
+        if (record) return record.content;
+        record = {content: null, timer: 0};
+        this._sources.set(source, record);
+        const capture = () => {
+            record.timer = 0;
+            try { record.content = source.paint_to_content(null); } catch { record.content = null; }
+            if (record.content) {
+                this._sourceCaptures++;
+                for (const entry of this._entries.values())
+                    if (entry.wallpaperSource === source && entry.wallpaper)
+                        entry.wallpaper.set_content(record.content);
+            }
+            return GLib.SOURCE_REMOVE;
+        };
+        record.damageId = source.connect('damaged', () => {
+            if (!record.timer) record.timer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 150, capture);
+        });
+        record.destroyId = source.connect('destroy', () => this._dropSource(source, true));
+        capture();
+        return record.content;
+    }
+
+    /** Cache only the desktop actor, with its culling inhibited by Mutter's snapshot API. Live foreground
+     * framebuffers and their partially repainted pixels never enter the glass. One source per monitor. */
+    _wallpaper(entry, item) {
+        const desktop = this._windows().find(w => windowIdentity(w) === 'io.github.win11shell.Desktop' &&
+            w.get_monitor() === item.window.get_monitor() && w.get_compositor_private()?.mapped);
+        const source = desktop?.get_compositor_private();
+        if (!source || source.width <= 0 || source.height <= 0) return false;
+        const content = this._desktopContent(source);
+        if (!content) return false;
+        if (!entry.wallpaper) {
+            entry.wallpaper = new Clutter.Actor({reactive: false});
+            entry.backdrop.add_child(entry.wallpaper);
+        }
+        if (entry.wallpaperSource !== source) {
+            entry.wallpaper.set_content(content);
+            entry.wallpaperSource = source;
+        }
+        const [x, y] = source.get_transformed_position();
+        const rect = entry.blurRect;
+        // Mutter constrains desktop windows to the work area, above the taskbar. Clamp the sample to the
+        // desktop's edge instead of exposing transparent pixels below it; cover unusually large windows too.
+        const zoom = Math.max(1, rect.w / source.width, rect.h / source.height);
+        const width = source.width * zoom, height = source.height * zoom;
+        const sx = Math.max(0, Math.min(item.rect.x + rect.x - x, width - rect.w));
+        const sy = Math.max(0, Math.min(item.rect.y + rect.y - y, height - rect.h));
+        entry.wallpaper.set_position(-sx, -sy);
+        entry.wallpaper.set_size(width, height);
+        entry.wallpaper.show();
+        entry.wallpaperKind = 'desktop';
+        return true;
     }
 
     sync() {
@@ -386,10 +442,12 @@ export class NativeFrostedBridge {
                 entry.focused = focused;
                 entry.shadowOption = shadowOn;
             }
-            const blurOn = this._options.blur && (item.kind === 'taskbar' || item.kind === 'strip' || item.kind === 'start' ||
+            let blurOn = this._options.blur && (item.kind === 'taskbar' || item.kind === 'strip' || item.kind === 'start' ||
                 (this._options.windowBlur && focused && !(windowIdentity(item.window)).endsWith('.Search')));
+            blurOn = blurOn && this._wallpaper(entry, item);
+            if (!blurOn) entry.wallpaper?.hide();
             if (blurOn && !entry.effect) {
-                entry.effect = new Shell.BlurEffect({mode: Shell.BlurMode.BACKGROUND,
+                entry.effect = new Shell.BlurEffect({mode: Shell.BlurMode.ACTOR,
                     radius: this._options.radius * scale, brightness: 1});
                 entry.backdrop.add_effect_with_name('win11-frosted-backdrop', entry.effect);
                 if (item.kind === 'start') {
@@ -406,7 +464,7 @@ export class NativeFrostedBridge {
                 entry.effect.radius = this._options.radius * scale;
             entry.outer.show();
         }
-        this._syncRedraws();
+        this._pruneSources();
         this._publish();
     }
 
@@ -455,16 +513,15 @@ export class NativeFrostedBridge {
     }
 
     status() {
-        return {experimental: true, enabled: this._enabled, options: {...this._options}, created: this._created ?? 0,
+        return {experimental: true, enabled: this._enabled, sources: this._sources.size, sourceCaptures: this._sourceCaptures, options: {...this._options}, created: this._created ?? 0,
             entries: [...this._entries.values()].map(e => ({kind: e.kind, focused: e.focused,
-                rect: e.boundTo ? live(e.outer) : e.rect, blurRect: e.blurRect, effect: Boolean(e.effect), shadow: e.shadowOption,
+                rect: e.boundTo ? live(e.outer) : e.rect, blurRect: e.blurRect, effect: Boolean(e.effect), source: e.wallpaperKind ?? null, mode: e.effect?.mode ?? null, shadow: e.shadowOption,
                 reactive: e.outer.reactive, clips: e.backdrop.clip_to_allocation}))};
     }
 
     disable() {
         this._enabled = false;
         for (const key of [...this._entries.keys()]) this._destroy(key);
-        this._syncRedraws();
         this._publish();
         this._hosts.clear();
     }

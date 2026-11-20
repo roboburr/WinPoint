@@ -356,14 +356,29 @@ fn avatar(name: &str, image: Option<&str>, size: i32) -> gtk::Widget {
     b.add_css_class("w11-avatar");
     b.set_size_request(size, size);
     b.set_overflow(gtk::Overflow::Hidden);
+    b.set_hexpand(false);
+    b.set_vexpand(false);
+    b.set_halign(gtk::Align::Center);
     b.set_valign(gtk::Align::Center);
     if let Some(path) = image.filter(|p| std::path::Path::new(p).is_file()) {
         let p = gtk::Picture::for_filename(path);
         p.set_content_fit(gtk::ContentFit::Cover);
         p.set_can_shrink(true);
-        p.set_size_request(size, size);
-        b.append(&p);
-        return b.upcast();
+        // A Picture's natural size follows the source photo; size_request is only a minimum.
+        // Measure the empty fixed-size base, then cover-crop the photo into that allocation.
+        let frame = gtk::Overlay::new();
+        b.remove_css_class("w11-avatar");
+        frame.add_css_class("w11-avatar");
+        frame.set_overflow(gtk::Overflow::Hidden);
+        frame.set_halign(gtk::Align::Center);
+        frame.set_valign(gtk::Align::Center);
+        frame.set_hexpand(false);
+        frame.set_vexpand(false);
+        frame.set_child(Some(&b));
+        frame.add_overlay(&p);
+        frame.set_measure_overlay(&p, false);
+        frame.set_clip_overlay(&p, true);
+        return frame.upcast();
     }
     let initials: Vec<char> = name
         .split_whitespace()
