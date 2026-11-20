@@ -34,3 +34,10 @@ wallpaper and taskbar checks. Physical mini-PC confirmation after installing rem
 
 Implementation references: [Mutter's offscreen window content API](https://github.com/GNOME/mutter/blob/50.1/src/compositor/meta-window-actor.c#L1673)
 and [GTK Picture sizing](https://docs.gtk.org/gtk4/class.Picture.html).
+
+Final GUI validation of the 0.9.5 rendering build: **223 checks passed**: avatar/background 14, hover/search 32,
+Start-close lifecycle 74, frosted glass 28, and two-monitor behavior 75. The avatar test also verifies idle capture
+counts, releasing all cached sources on disable, and sharing one source after re-enabling. All connection and
+execution isolation checks pass, with no leftover processes or checkout sockets. Installer/release checks:
+120 passed, two skipped. The later Task Manager grouping change has its own API/process regressions and does not
+change the renderer or native binaries.
