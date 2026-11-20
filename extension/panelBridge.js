@@ -224,7 +224,7 @@ export class NativePanelBridge {
             });
         }
         this._frostedBridge = new NativeFrostedBridge({panel: () => this._panel,
-            geometry: () => this._geometry(), windows: () => [...this._windows.keys()], registeredOnly: true,
+            geometry: () => this._geometry(), startReady: window => this._actorSignals.get(window)?.ready === true, windows: () => [...this._windows.keys()], registeredOnly: true,
             strips: () => [...this._strips].filter(([, entry]) => !entry.inhibited)
                 .map(([window, entry]) => ({window, monitor: entry.monitor})),
             available: () => this._enabled && !this._hidden() && !this._highContrast,
@@ -297,7 +297,7 @@ export class NativePanelBridge {
         this._connect(global, 'shutdown', () => this.disable());
         for (const actor of global.get_window_actors()) {
             if (actor.meta_window)
-                this._watchWindow(actor.meta_window);
+                this._watchWindow(actor.meta_window, true);
         }
         this._queueWindows();
     }
@@ -732,7 +732,7 @@ export class NativePanelBridge {
         });
     }
 
-    _watchActor(window) {
+    _watchActor(window, alreadyDrawn = false) {
         const identity = window.get_wm_class() || window.get_gtk_application_id() || '';
         if (!/^io\.github\.win11shell\.(Explorer|Settings|TaskManager|Search|Disks|DefaultApps|Installer|Calendar|Start)$/.test(identity)) return;
         const actor = window.get_compositor_private();
@@ -750,7 +750,12 @@ export class NativePanelBridge {
             this._actorSignals.delete(window);
             this._queueFrosted();
         }));
-        this._actorSignals.set(window, {actor, signals});
+        const watched = {actor, signals, ready: identity !== 'io.github.win11shell.Start' || alreadyDrawn};
+        if (!watched.ready) signals.push(actor.connect('first-frame', () => {
+            watched.ready = true;
+            this._queueFrosted();
+        }));
+        this._actorSignals.set(window, watched);
     }
 
     _unwatchActor(window) {
@@ -760,7 +765,7 @@ export class NativePanelBridge {
         for (const id of watched.signals) watched.actor.disconnect(id);
     }
 
-    _watchWindow(window) {
+    _watchWindow(window, alreadyDrawn = false) {
         if (!this._enabled || this._windows.has(window))
             return;
         const signals = [];
@@ -815,7 +820,7 @@ export class NativePanelBridge {
                 this._syncVisibility();
             this._queueWindows();
         });
-        this._watchActor(window);
+        this._watchActor(window, alreadyDrawn);
         this._considerPanel(window);
         this._considerStrip(window);
         this._considerStart(window);

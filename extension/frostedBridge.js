@@ -56,7 +56,7 @@ const live = actor => {
 
 export class NativeFrostedBridge {
     constructor({panel = () => null, geometry = () => null,
-        windows = () => [], available = () => false, taskbarAutoHide = () => false,
+        windows = () => [], available = () => false, startReady = () => true, taskbarAutoHide = () => false,
         onChanged = () => {}, registeredOnly = false, language = () => 'nl', strips = () => []} = {}) {
         this._panel = panel;
         // The shown taskbars of the other monitors: [{window, monitor}]. Their glass follows the panel's
@@ -65,6 +65,7 @@ export class NativeFrostedBridge {
         this._language = language;
         this._geometry = geometry;
         this._windows = windows;
+        this._startReady = startReady;
         this._available = available;
         this._taskbarAutoHide = taskbarAutoHide;
         this._enabled = false;
@@ -291,7 +292,7 @@ export class NativeFrostedBridge {
                     window.get_window_type() !== Meta.WindowType.NORMAL) continue;
                 const actor = window.get_compositor_private();
                 const r = window.get_frame_rect();
-                if (!actor?.mapped || !actor.visible || !this._stable(actor) || r.width <= 1 || r.height <= 1) continue;
+                if (!actor?.mapped || !actor.visible || !this._startReady(window) || !this._stable(actor) || r.width <= 1 || r.height <= 1) continue;
                 desired.set(window, {window, actor, kind: 'start', rect: {x: r.x, y: r.y, w: r.width, h: r.height}});
             }
         }
