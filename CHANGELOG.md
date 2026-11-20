@@ -3,6 +3,16 @@
 What changed in each release of WinPoint, newest first. `tools/release.py` takes a release’s notes from its
 section here.
 
+## 0.9.6
+
+- **Glass shows the windows behind it.** Start, the taskbar and focused app glass compose cached window contents
+  in stacking order, instead of showing only the wallpaper as in 0.9.5. Only visible underlying windows on the
+  current desktop enter the source; the glass and its own client are excluded. Window updates refresh shared
+  snapshots on demand, without reading the foreground framebuffer or changing global redraw flags.
+- **No bare glass when Start opens or closes.** The native client enables the backdrop after painting its fresh
+  opening frame. Delayed opening callbacks are cancelled by a close or another open. Compositor fades, hides and
+  transforms suspend Start's independent backdrop immediately.
+
 ## 0.9.5
 
 - **Compact Start profile photos.** A large or rectangular account picture stays inside the 32-pixel circle in

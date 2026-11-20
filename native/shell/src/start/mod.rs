@@ -842,7 +842,7 @@ impl Start {
                 play(w, "w11-fadeup");
             }
             self.window.present();
-            self.glass_phase("open");
+            self.glass_after_paint();
             self.text.grab_focus();
         }
         if let Some(q) = query {
@@ -924,6 +924,30 @@ impl Start {
     }
 
     /* ---------------------------------------------------------- backdrop */
+
+    /// The last hidden buffer can still be fully transparent after the close animation.
+    /// Publish the glass only after GTK has painted and submitted this opening's new frame.
+    fn glass_after_paint(self: &Rc<Self>) {
+        let weak = Rc::downgrade(self);
+        let epoch = self.epoch.get();
+        self.window.add_tick_callback(move |_, clock| {
+            let handler = Rc::new(RefCell::new(None));
+            let once = handler.clone();
+            let weak = weak.clone();
+            *handler.borrow_mut() = Some(clock.connect_after_paint(move |clock| {
+                if let Some(id) = once.borrow_mut().take() {
+                    clock.disconnect(id);
+                }
+                if let Some(s) = weak.upgrade()
+                    && s.open.get() && s.epoch.get() == epoch
+                {
+                    s.glass_phase("open");
+                }
+            }));
+            glib::ControlFlow::Break
+        });
+        self.window.queue_draw();
+    }
 
     fn glass_phase(&self, phase: &str) {
         self.shell.gnome.send("nativeBackdrop.start", json!({"pid": std::process::id(), "phase": phase}));

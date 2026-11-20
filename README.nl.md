@@ -74,7 +74,7 @@ Instellingen bevat de GNOME-functies voor beeldscherm, geluid, muis, touchpad, t
 Download `winpoint-<versie>-linux-x86_64.tar.gz` van de [nieuwste uitgave](https://github.com/roboburr/WinPoint/releases/latest) naar je map Downloads, open een terminal en plak deze regel (de uitgavenotities geven hem voor die uitgave):
 
 ```bash
-cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.5-linux-x86_64.tar.gz && ./winpoint-0.9.5/scripts/install.sh
+cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.6-linux-x86_64.tar.gz && ./winpoint-0.9.6/scripts/install.sh
 ```
 
 De installer zet WinPoint in je thuismap (`~/.local`) en voegt **WinPoint** toe aan het inlogscherm, naast Ubuntu. Hij vraagt één keer om je wachtwoord; is je account geen beheerder, dan is het wachtwoord van een beheerder nodig. Meld je daarna af: WinPoint start bij de volgende keer aanmelden. Je Ubuntu-sessie houdt zijn eigen uiterlijk en dock; kies **Ubuntu** met het tandwiel rechtsonder op het inlogscherm om die te gebruiken.
@@ -83,11 +83,11 @@ De installer kiest Nederlands of Engels op basis van de taal en regio van je sys
 
 ## Bijwerken
 
-De nieuwste uitgave is **[WinPoint 0.9.5](https://github.com/roboburr/WinPoint/releases/tag/v0.9.5)**. Deze houdt profielfoto’s in Start compact en gebruikt een stabiele desktopbron voor glasachtergronden, zonder het live voorgrondbeeld terug te lezen of het hele scherm opnieuw te laten tekenen. De eerdere oplossingen voor Start-zoeken en de sessiecrash zijn inbegrepen. Taakbeheer houdt hulpprocessen in een appdienst ook bij hun app. De volledige lijst staat in het [wijzigingslog](CHANGELOG.md#095).
+De nieuwste uitgave is **[WinPoint 0.9.6](https://github.com/roboburr/WinPoint/releases/tag/v0.9.6)**. Glas toont weer de vensters erachter via afzonderlijke vensteropnamen, zonder terugkoppeling van de voorgrond of globale volledige schermredraws. Start schakelt de glaslaag pas na zijn nieuwe frame in en verbergt die tijdens compositoranimaties. De compacte profielfoto, appgroepering en eerdere oplossingen zijn inbegrepen. De volledige lijst staat in het [wijzigingslog](CHANGELOG.md#096).
 
 WinPoint kijkt één keer per dag op GitHub en meldt het als er een nieuwe uitgave is. Klik in **Instellingen › Update en herstel** op **Downloaden en installeren**: WinPoint downloadt de uitgave, controleert hem met het controlegetal van GitHub en installeert hem; je instellingen blijven bewaard. Start daarna WinPoint opnieuw of meld je af en weer aan, zoals de pagina aangeeft. Het automatisch controleren kun je uitzetten onder **Geavanceerde opties**; een nieuwere uitgave zelf installeren met de regel hierboven kan ook.
 
-Wil je nu controleren, open dan **Instellingen › Update en herstel › Controleren op updates**. Versie 0.9.5 wordt aangeboden aan eerdere uitgaven en de niet-gepubliceerde ontwikkelversie 0.9.1. De download bevat alle 19 programma’s en de GNOME-extensie. Tijdens het installeren blijven de programma’s draaien; de pagina geeft aan wanneer je WinPoint opnieuw moet starten of je moet afmelden om de nieuwe onderdelen te gebruiken.
+Wil je nu controleren, open dan **Instellingen › Update en herstel › Controleren op updates**. Versie 0.9.6 wordt aangeboden aan eerdere uitgaven en de niet-gepubliceerde ontwikkelversie 0.9.1. De download bevat alle 19 programma’s en de GNOME-extensie. Tijdens het installeren blijven de programma’s draaien; de pagina geeft aan wanneer je WinPoint opnieuw moet starten of je moet afmelden om de nieuwe onderdelen te gebruiken.
 
 ## Verwijderen
 
@@ -101,7 +101,7 @@ Dit vraagt één keer om je wachtwoord en verwijdert de bestanden van WinPoint e
 
 ## Bouwen vanuit de broncode
 
-De actuele broncode staat op **`main`**. Uitgaven hebben een tag zoals `v0.9.5`; tijdelijke werkbranches worden na samenvoegen opgeruimd.
+De actuele broncode staat op **`main`**. Uitgaven hebben een tag zoals `v0.9.6`; tijdelijke werkbranches worden na samenvoegen opgeruimd.
 
 Je hebt Rust 1.92 of nieuwer nodig (het `cargo`-pakket van Ubuntu is nieuw genoeg) en de ontwikkelbestanden van GTK 4:
 

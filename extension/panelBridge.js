@@ -734,14 +734,14 @@ export class NativePanelBridge {
 
     _watchActor(window) {
         const identity = window.get_wm_class() || window.get_gtk_application_id() || '';
-        if (!/^io\.github\.win11shell\.(Explorer|Settings|TaskManager|Search|Disks|DefaultApps|Installer|Calendar)$/.test(identity)) return;
+        if (!/^io\.github\.win11shell\.(Explorer|Settings|TaskManager|Search|Disks|DefaultApps|Installer|Calendar|Start)$/.test(identity)) return;
         const actor = window.get_compositor_private();
         if (!actor || this._actorSignals.get(window)?.actor === actor) return;
         this._unwatchActor(window);
         const signals = [];
         // A Mutter effect suspends the backdrop until the actor is stable again. Moves and resizes need nothing:
         // the backdrop is bound to the actor (frostedBridge.js _place).
-        for (const property of ['opacity', 'scale-x', 'scale-y', 'translation-x', 'translation-y', 'translation-z', 'rotation-angle-z'])
+        for (const property of ['visible', 'mapped', 'opacity', 'scale-x', 'scale-y', 'translation-x', 'translation-y', 'translation-z', 'rotation-angle-z'])
             signals.push(actor.connect(`notify::${property}`, () => {
                 this._frostedBridge?.suspend(window);
                 this._queueFrosted();

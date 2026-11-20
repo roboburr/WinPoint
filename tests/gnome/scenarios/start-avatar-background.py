@@ -55,7 +55,7 @@ def run(h):
         h.eval(helper.ESCAPE);h.sleep(0.4)
     h.screenshot('settings-dropdown-closed')
     entries=h.eval(f'{B}.status()')['entries']
-    h.check('Blur reads the WinPoint desktop actor',all(e.get('source')=='desktop' and e.get('mode')==0 for e in entries if e['effect']),entries=entries)
+    h.check('Blur composes isolated underlying window actors',all(e.get('source')=='windows' and e.get('mode')==0 for e in entries if e['effect']),entries=entries)
     entry=next(e for e in entries if e['kind']=='taskbar')
     r=entry['rect'];band=(r['x']+8,r['y']+3,r['w']-240,r['h']-6)
     before=h.screenshot('taskbar-before-background-probe')
@@ -83,4 +83,4 @@ def run(h):
     h.eval(f'{B}.configure({{enabled:false}})')
     h.check('Disabling glass releases every cached source',h.eval(f'{B}.status()')['sources']==0)
     h.eval(f'{B}.configure({json.dumps(options)})')
-    h.check('Re-enabled glass shares one desktop source',h.eval(f'{B}.status()')['sources']==1)
+    h.check('Re-enabled glass restores only used sources',1 <= h.eval(f'{B}.status()')['sources'] <= 3)

@@ -52,7 +52,7 @@ def run(h):
     flags = h.eval(FLAGS)
     h.check('Desktop blur leaves clipped redraws enabled', not bool(flags & 2), flags=flags)
     entries=h.eval(f'{BRIDGE}.status()')['entries']
-    h.check('Glass uses only the desktop actor source', all(e.get('source')=='desktop' and e.get('mode')==0 for e in entries if e['effect']), entries=entries)
+    h.check('Glass uses isolated underlying window sources', all(e.get('source')=='windows' and e.get('mode')==0 for e in entries if e['effect']), entries=entries)
     h.check('Blur does not enable continuous redraw', not bool(flags & 64), flags=flags)
     before = h.screenshot('pinned-before')
     frame = h.s.window_of('io.github.win11shell.Start', h.native_pid)

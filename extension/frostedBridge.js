@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Native compositor backdrops: the taskbar strip, the focused own app window and the open Start window
 // (D-G59; before that app blur was an experiment and Start had none). At most one window blur exists at a time.
-// 0.9.5: actor-mode blur reads a shared per-monitor desktop snapshot, never the live screen framebuffer.
+// Actor-mode blur composes only window snapshots below the glass, never the live screen framebuffer.
 // D-G60: Start's registration survives its hidden window; an app window's backdrop is bound to its actor.
 // D-G63: a pid holds a set of identities; the native shell (win11-shell) registers its taskbar and Start under one pid.
 import Clutter from 'gi://Clutter';
@@ -250,7 +250,7 @@ export class NativeFrostedBridge {
         const entry = this._entries.get(key);
         if (!entry) return;
         this._entries.delete(key);
-        this._disconnectWallpaper(entry);
+        this._disconnectScene(entry);
         if (entry.effect) entry.backdrop.remove_effect(entry.effect);
         entry.effect = null;
         entry.outer.destroy();
@@ -291,7 +291,7 @@ export class NativeFrostedBridge {
                     window.get_window_type() !== Meta.WindowType.NORMAL) continue;
                 const actor = window.get_compositor_private();
                 const r = window.get_frame_rect();
-                if (!actor?.mapped || !actor.visible || r.width <= 1 || r.height <= 1) continue;
+                if (!actor?.mapped || !actor.visible || !this._stable(actor) || r.width <= 1 || r.height <= 1) continue;
                 desired.set(window, {window, actor, kind: 'start', rect: {x: r.x, y: r.y, w: r.width, h: r.height}});
             }
         }
@@ -329,7 +329,7 @@ export class NativeFrostedBridge {
         this._entries.set(item.window, entry);
         this._created = (this._created ?? 0) + 1;
         outer.connect('destroy', () => {
-            this._disconnectWallpaper(entry);
+            this._disconnectScene(entry, false);
             // A compositor shutdown can dispose the containing window group before
             // the extension's disable callback; never revisit an already dead actor.
             if (this._entries.get(item.window) === entry) {
@@ -340,81 +340,130 @@ export class NativeFrostedBridge {
         return entry;
     }
 
+    _queueSceneSync() {
+        if (!this._enabled || this._sceneSyncId) return;
+        this._sceneSyncId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this._sceneSyncId = 0;
+            this.sync();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
     _dropSource(source, destroyed = false) {
         const record = this._sources.get(source);
         if (!record) return;
         this._sources.delete(source);
         if (record.timer) GLib.Source.remove(record.timer);
-        if (!destroyed) {
-            source.disconnect(record.damageId);
-            source.disconnect(record.destroyId);
-        }
+        if (!destroyed) for (const id of record.signals) source.disconnect(id);
+        record.content = null;
     }
 
     _pruneSources() {
-        const used = new Set([...this._entries.values()].map(entry => entry.wallpaperSource));
+        const used = new Set([...this._entries.values()].flatMap(entry => [...(entry.layers?.keys() ?? [])]));
         for (const source of this._sources.keys()) if (!used.has(source)) this._dropSource(source);
     }
 
-    _disconnectWallpaper(entry) {
-        entry.wallpaperSource = null;
+    _disconnectScene(entry, destroyLayers = true) {
+        if (destroyLayers) for (const layer of entry.layers?.values() ?? []) layer.destroy();
+        entry.layers?.clear();
         this._pruneSources();
     }
 
-    _desktopContent(source) {
+    _windowContent(source) {
         let record = this._sources.get(source);
         if (record) return record.content;
-        record = {content: null, timer: 0};
+        record = {content: null, timer: 0, signals: []};
         this._sources.set(source, record);
         const capture = () => {
             record.timer = 0;
-            try { record.content = source.paint_to_content(null); } catch { record.content = null; }
-            if (record.content) {
+            let content;
+            try { content = source.paint_to_content(null); } catch { content = null; }
+            if (content) {
+                record.content = content;
                 this._sourceCaptures++;
-                for (const entry of this._entries.values())
-                    if (entry.wallpaperSource === source && entry.wallpaper)
-                        entry.wallpaper.set_content(record.content);
+                for (const entry of this._entries.values()) {
+                    const layer = entry.layers?.get(source);
+                    if (layer) layer.set_content(content);
+                }
             }
             return GLib.SOURCE_REMOVE;
         };
-        record.damageId = source.connect('damaged', () => {
-            if (!record.timer) record.timer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 150, capture);
-        });
-        record.destroyId = source.connect('destroy', () => this._dropSource(source, true));
+        const damaged = () => {
+            if (!record.timer) record.timer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 33, capture);
+        };
+        record.signals.push(source.connect('damaged', damaged));
+        for (const prop of ['x', 'y', 'width', 'height', 'scale-x', 'scale-y',
+            'translation-x', 'translation-y', 'opacity', 'visible', 'mapped']) {
+            record.signals.push(source.connect(`notify::${prop}`, () => {
+                if (prop === 'width' || prop === 'height') damaged();
+                this._queueSceneSync();
+            }));
+        }
+        record.signals.push(source.connect('destroy', () => {
+            this._dropSource(source, true);
+            this._queueSceneSync();
+        }));
         capture();
         return record.content;
     }
 
-    /** Cache only the desktop actor, with its culling inhibited by Mutter's snapshot API. Live foreground
-     * framebuffers and their partially repainted pixels never enter the glass. One source per monitor. */
-    _wallpaper(entry, item) {
+    /** Compose desktop and visible windows below this client in their actual stacking order. Snapshots
+     * inhibit culling; a covered client still supplies its complete pixels. Sibling glass and this client's
+     * own pixels are never captured, so hover/dropdown redraws cannot feed back into their own blur. */
+    _scene(entry, item, parent) {
         const desktop = this._windows().find(w => windowIdentity(w) === 'io.github.win11shell.Desktop' &&
             w.get_monitor() === item.window.get_monitor() && w.get_compositor_private()?.mapped);
-        const source = desktop?.get_compositor_private();
-        if (!source || source.width <= 0 || source.height <= 0) return false;
-        const content = this._desktopContent(source);
-        if (!content) return false;
-        if (!entry.wallpaper) {
-            entry.wallpaper = new Clutter.Actor({reactive: false});
-            entry.backdrop.add_child(entry.wallpaper);
-        }
-        if (entry.wallpaperSource !== source) {
-            entry.wallpaper.set_content(content);
-            entry.wallpaperSource = source;
-        }
-        const [x, y] = source.get_transformed_position();
+        const base = desktop?.get_compositor_private();
+        if (!base || base.width <= 0 || base.height <= 0) return false;
         const rect = entry.blurRect;
-        // Mutter constrains desktop windows to the work area, above the taskbar. Clamp the sample to the
-        // desktop's edge instead of exposing transparent pixels below it; cover unusually large windows too.
-        const zoom = Math.max(1, rect.w / source.width, rect.h / source.height);
-        const width = source.width * zoom, height = source.height * zoom;
-        const sx = Math.max(0, Math.min(item.rect.x + rect.x - x, width - rect.w));
-        const sy = Math.max(0, Math.min(item.rect.y + rect.y - y, height - rect.h));
-        entry.wallpaper.set_position(-sx, -sy);
-        entry.wallpaper.set_size(width, height);
-        entry.wallpaper.show();
-        entry.wallpaperKind = 'desktop';
-        return true;
+        const x0 = item.rect.x + rect.x, y0 = item.rect.y + rect.y;
+        const children = parent.get_children();
+        const target = children.indexOf(item.actor);
+        if (target < 0) return false;
+        const sources = [base];
+        for (const actor of children.slice(0, target)) {
+            const w = actor.meta_window;
+            if (!w || actor === base || w === item.window || !actor.mapped || !actor.visible ||
+                !actor.opacity || w.minimized || !w.showing_on_its_workspace() ||
+                windowIdentity(w) === 'io.github.win11shell.Desktop') continue;
+            const [x, y] = actor.get_transformed_position();
+            const [width, height] = actor.get_transformed_size();
+            if (x + width <= x0 || y + height <= y0 || x >= x0 + rect.w || y >= y0 + rect.h) continue;
+            sources.push(actor);
+        }
+        entry.layers ??= new Map();
+        const used = new Set();
+        for (const source of sources) {
+            const content = this._windowContent(source);
+            if (!content) continue;
+            used.add(source);
+            let layer = entry.layers.get(source);
+            if (!layer) {
+                layer = new Clutter.Actor({reactive: false, content});
+                entry.layers.set(source, layer);
+                entry.backdrop.add_child(layer);
+            }
+            const [x, y] = source.get_transformed_position();
+            let [width, height] = source.get_transformed_size();
+            if (source === base) {
+                // Desktop actors stop at the workarea. Extend their edge under the taskbar.
+                const zoom = Math.max(1, rect.w / width, rect.h / height);
+                width *= zoom; height *= zoom;
+                layer.set_position(-Math.max(0, Math.min(x0 - x, width - rect.w)),
+                    -Math.max(0, Math.min(y0 - y, height - rect.h)));
+            } else layer.set_position(x - x0, y - y0);
+            layer.set_size(width, height);
+            layer.opacity = source.opacity;
+        }
+        for (const [source, layer] of entry.layers) if (!used.has(source)) {
+            layer.destroy(); entry.layers.delete(source);
+        }
+        const ordered = sources.filter(source => used.has(source)).map(source => entry.layers.get(source));
+        for (let i = 0; i < ordered.length; i++)
+            if (entry.backdrop.get_children()[i] !== ordered[i])
+                entry.backdrop.set_child_at_index(ordered[i], i);
+        entry.wallpaperKind = 'windows';
+        return used.has(base);
     }
 
     sync() {
@@ -444,8 +493,8 @@ export class NativeFrostedBridge {
             }
             let blurOn = this._options.blur && (item.kind === 'taskbar' || item.kind === 'strip' || item.kind === 'start' ||
                 (this._options.windowBlur && focused && !(windowIdentity(item.window)).endsWith('.Search')));
-            blurOn = blurOn && this._wallpaper(entry, item);
-            if (!blurOn) entry.wallpaper?.hide();
+            blurOn = blurOn && this._scene(entry, item, parent);
+            if (!blurOn) this._disconnectScene(entry);
             if (blurOn && !entry.effect) {
                 entry.effect = new Shell.BlurEffect({mode: Shell.BlurMode.ACTOR,
                     radius: this._options.radius * scale, brightness: 1});
@@ -515,12 +564,14 @@ export class NativeFrostedBridge {
     status() {
         return {experimental: true, enabled: this._enabled, sources: this._sources.size, sourceCaptures: this._sourceCaptures, options: {...this._options}, created: this._created ?? 0,
             entries: [...this._entries.values()].map(e => ({kind: e.kind, focused: e.focused,
-                rect: e.boundTo ? live(e.outer) : e.rect, blurRect: e.blurRect, effect: Boolean(e.effect), source: e.wallpaperKind ?? null, mode: e.effect?.mode ?? null, shadow: e.shadowOption,
+                rect: e.boundTo ? live(e.outer) : e.rect, blurRect: e.blurRect, effect: Boolean(e.effect), source: e.wallpaperKind ?? null, layers: e.layers?.size ?? 0, mode: e.effect?.mode ?? null, shadow: e.shadowOption,
                 reactive: e.outer.reactive, clips: e.backdrop.clip_to_allocation}))};
     }
 
     disable() {
         this._enabled = false;
+        if (this._sceneSyncId) GLib.Source.remove(this._sceneSyncId);
+        this._sceneSyncId = 0;
         for (const key of [...this._entries.keys()]) this._destroy(key);
         this._publish();
         this._hosts.clear();
