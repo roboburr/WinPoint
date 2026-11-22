@@ -28,6 +28,8 @@ struct Bar {
     start_btn: gtk::Button,
     search_slot: gtk::Box,
     search_mode: RefCell<String>,
+    search_text: RefCell<Option<gtk::Text>>,
+    search_sync: Cell<bool>,
     taskview_btn: gtk::Button,
     sys: Rc<system::System>,
     _input: Rc<input::Input>,
@@ -147,6 +149,8 @@ pub fn build(shell: &Rc<Shell>) -> gtk::Widget {
         start_btn,
         search_slot,
         search_mode: RefCell::new(String::new()),
+        search_text: RefCell::new(None),
+        search_sync: Cell::new(false),
         taskview_btn,
         sys,
         _input: input,
@@ -275,6 +279,35 @@ pub(crate) fn before_flyout() {
     apps::flyout_opened();
 }
 
+/// Query updates from Start never move the taskbar caret or feed the same change back into Start.
+pub(crate) fn mirror_search_query(query: &str) {
+    with(|bar| {
+        let text = bar.search_text.borrow().clone();
+        if let Some(text) = text && text.text() != query {
+            bar.search_sync.set(true);
+            text.set_text(query);
+            text.set_position(-1);
+            bar.search_sync.set(false);
+        }
+    });
+}
+
+/// Closing search must not leave GtkWindow's remembered focus on the editable: merely reactivating the dock
+/// for an unrelated button would otherwise emit focus-enter and open Search before that button is clicked.
+pub(crate) fn finish_search_input() {
+    mirror_search_query("");
+    with(|bar| {
+        let text = bar.search_text.borrow().clone();
+        if let Some(text) = text
+            && let Some(window) = text.root().and_then(|root| root.downcast::<gtk::Window>().ok())
+            && gtk::prelude::GtkWindowExt::focus(&window).is_some_and(|focus|
+                focus == text.clone().upcast::<gtk::Widget>() || focus.is_ancestor(text.upcast_ref::<gtk::Widget>()))
+        {
+            gtk::prelude::GtkWindowExt::set_focus(&window, None::<&gtk::Widget>);
+        }
+    });
+}
+
 /// The tray's icons changed: the app buttons may have more or less room. At once (the layout measures the tray),
 /// so the group changes in the same frame as the tray.
 pub(crate) fn tray_resized() {
@@ -320,6 +353,7 @@ impl Bar {
             system::notifications_opened();
         }
         if open {
+            crate::start::dismiss_taskbar_search(false);
             apps::flyout_opened();
         }
     }
@@ -374,6 +408,9 @@ impl Bar {
             return;
         }
         *self.search_mode.borrow_mut() = mode.clone();
+        // Rebuilding/removing an editable must not strand its keyboard role or a stale query.
+        crate::start::dismiss_taskbar_search(true);
+        *self.search_text.borrow_mut() = None;
         while let Some(c) = self.search_slot.first_child() {
             self.search_slot.remove(&c);
         }
@@ -383,6 +420,102 @@ impl Bar {
         }
         self.search_slot.set_visible(true);
         let label = self.shell.t("Zoeken", "Search");
+        if mode == "box" {
+            let row = gtk::Box::new(gtk::Orientation::Horizontal, 10);
+            row.add_css_class("w11-tb-searchbox");
+            row.add_css_class("w11-tb-hit");
+            row.set_widget_name("tb-search");
+            // Only GtkText expands inside the fixed pill; do not propagate that request to the centred group.
+            row.set_hexpand(false);
+            row.set_valign(gtk::Align::Center);
+            row.append(&crate::icons::glyph("search", 16));
+            let text = gtk::Text::new();
+            text.set_widget_name("tb-search-input");
+            text.add_css_class("w11-tb-searchbox-input");
+            text.set_placeholder_text(Some(&label));
+            text.set_hexpand(true);
+            text.set_width_chars(1);
+            text.set_max_width_chars(1);
+            row.append(&text);
+            let clear = gtk::Button::new();
+            clear.set_widget_name("tb-search-clear");
+            clear.add_css_class("w11-tb-searchbox-clear");
+            clear.set_focusable(false);
+            clear.set_tooltip_text(Some(&self.shell.t("Wissen", "Clear")));
+            clear.set_child(Some(&crate::icons::glyph("close", 12)));
+            clear.set_visible(false);
+            row.append(&clear);
+            *self.search_text.borrow_mut() = Some(text.clone());
+            // GtkText can claim its own pointer sequence before an ancestor's bubble gesture sees it.
+            // Observe the press in capture without consuming it: caret placement/selection stay native.
+            let press = gtk::EventControllerLegacy::new();
+            press.set_propagation_phase(gtk::PropagationPhase::Capture);
+            let editable = text.downgrade();
+            press.connect_event(move |_, event| {
+                let activates = event.event_type() == gdk::EventType::TouchBegin
+                    || event.event_type() == gdk::EventType::ButtonPress
+                        && event.downcast_ref::<gdk::ButtonEvent>().is_some_and(|event| event.button() == gdk::BUTTON_PRIMARY);
+                if activates && let Some(text) = editable.upgrade() {
+                    crate::start::activate_taskbar_search(text.text().as_str());
+                }
+                glib::Propagation::Proceed
+            });
+            text.add_controller(press);
+            let focus = gtk::EventControllerFocus::new();
+            focus.connect_enter(|_| {
+                with(|bar| {
+                    if let Some(text) = bar.search_text.borrow().clone() {
+                        before_flyout();
+                        crate::start::activate_taskbar_search(text.text().as_str());
+                    }
+                });
+            });
+            text.add_controller(focus);
+            let clear_visible = clear.clone();
+            text.connect_changed(move |text| {
+                clear_visible.set_visible(!text.text().is_empty());
+                with(|bar| {
+                    if !bar.search_sync.get() {
+                        crate::start::taskbar_search(text.text().as_str());
+                    }
+                });
+            });
+            let editable = text.clone();
+            clear.connect_clicked(move |_| {
+                editable.set_text("");
+                editable.grab_focus();
+            });
+            let editable = text.clone();
+            let editable_widget = text.clone().upcast::<gtk::Widget>();
+            let clear_widget = clear.clone().upcast::<gtk::Widget>();
+            let click = gtk::GestureClick::new();
+            click.set_button(gdk::BUTTON_PRIMARY);
+            click.connect_pressed(move |gesture, _, x, y| {
+                let hit = gesture.widget().and_then(|row| row.pick(x, y, gtk::PickFlags::DEFAULT));
+                if hit.as_ref().is_some_and(|hit| *hit == editable_widget || hit.is_ancestor(&editable_widget))
+                {
+                    gesture.set_state(gtk::EventSequenceState::Denied);
+                    return;
+                }
+                if hit.is_some_and(|hit| hit == clear_widget || hit.is_ancestor(&clear_widget)) {
+                    gesture.set_state(gtk::EventSequenceState::Denied);
+                    return;
+                }
+                gesture.set_state(gtk::EventSequenceState::Claimed);
+                editable.grab_focus();
+                crate::start::activate_taskbar_search(editable.text().as_str());
+            });
+            row.add_controller(click);
+            let keys = gtk::EventControllerKey::new();
+            keys.set_propagation_phase(gtk::PropagationPhase::Capture);
+            keys.connect_key_pressed(|_, key, _, state| {
+                if crate::start::taskbar_search_key(key, state) { glib::Propagation::Stop }
+                else { glib::Propagation::Proceed }
+            });
+            text.add_controller(keys);
+            self.search_slot.append(&row);
+            return;
+        }
         let button = gtk::Button::new();
         button.set_widget_name("tb-search");
         button.add_css_class("w11-tb-hit");

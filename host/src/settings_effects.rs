@@ -202,6 +202,16 @@ fn icon_installed(name: &str) -> bool {
         .chain(data_dirs().into_iter().map(|d| d.join("icons")))
         .any(|d| d.join(name).join("index.theme").is_file())
 }
+/// The installer exposes its private icon bundle as Win11Shell(-dark), without replacing a user's Win11 themes.
+/// Keep those separately installed themes as a fallback for older installs without the bundle's aliases.
+fn winpoint_icon_theme(dark: bool, installed: impl Fn(&str) -> bool) -> Option<&'static str> {
+    let candidates = if dark {
+        ["Win11Shell-dark", "Win11-dark"]
+    } else {
+        ["Win11Shell", "Win11"]
+    };
+    candidates.into_iter().find(|name| installed(name))
+}
 fn yaru_accent(name: &str) -> Option<&str> {
     let name = name.strip_suffix("-dark").unwrap_or(name);
     if name == "Yaru" {
@@ -263,8 +273,7 @@ pub(crate) fn theme_targets(
 ) -> Value {
     let dark = mode == "dark";
     let mut out = json!({"color-scheme":if dark{"prefer-dark"}else{"prefer-light"}});
-    let icon = if dark { "Win11-dark" } else { "Win11" };
-    if icon_installed(icon) {
+    if let Some(icon) = winpoint_icon_theme(dark, icon_installed) {
         out["icon-theme"] = json!(icon);
     }
     if family != "system"
@@ -825,6 +834,59 @@ mod tests {
 
     fn paths(list: &[&str]) -> Vec<String> {
         list.iter().map(|p| (*p).to_owned()).collect()
+    }
+
+    #[test]
+    fn clean_install_uses_the_bundled_light_icon_alias() {
+        assert_eq!(
+            winpoint_icon_theme(false, |name| name == "Win11Shell"),
+            Some("Win11Shell")
+        );
+    }
+
+    #[test]
+    fn clean_install_uses_the_bundled_dark_icon_alias() {
+        assert_eq!(
+            winpoint_icon_theme(true, |name| name == "Win11Shell-dark"),
+            Some("Win11Shell-dark")
+        );
+    }
+
+    #[test]
+    fn bundled_icon_aliases_take_precedence_over_separately_installed_win11_themes() {
+        let installed = ["Win11Shell", "Win11Shell-dark", "Win11", "Win11-dark"];
+        assert_eq!(
+            winpoint_icon_theme(false, |name| installed.contains(&name)),
+            Some("Win11Shell")
+        );
+        assert_eq!(
+            winpoint_icon_theme(true, |name| installed.contains(&name)),
+            Some("Win11Shell-dark")
+        );
+    }
+
+    #[test]
+    fn older_installs_can_still_use_separate_win11_icon_themes() {
+        let installed = ["Win11", "Win11-dark"];
+        assert_eq!(
+            winpoint_icon_theme(false, |name| installed.contains(&name)),
+            Some("Win11")
+        );
+        assert_eq!(
+            winpoint_icon_theme(true, |name| installed.contains(&name)),
+            Some("Win11-dark")
+        );
+    }
+
+    #[test]
+    fn unavailable_matching_icon_themes_leave_the_current_choice_alone() {
+        assert_eq!(winpoint_icon_theme(false, |_| false), None);
+        assert_eq!(winpoint_icon_theme(true, |_| false), None);
+        assert_eq!(
+            winpoint_icon_theme(false, |name| name == "Win11Shell-dark"),
+            None
+        );
+        assert_eq!(winpoint_icon_theme(true, |name| name == "Win11Shell"), None);
     }
 
     #[test]

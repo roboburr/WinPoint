@@ -3,6 +3,26 @@
 What changed in each release of WinPoint, newest first. `tools/release.py` takes a release’s notes from its
 section here.
 
+## Unreleased
+
+## 0.9.7
+
+- **Type in the taskbar, see results in Start.** The full search box is editable. Start mirrors the query while
+  the caret stays in the taskbar; clearing, keyboard selection, Escape and switching between both fields retain
+  the same search. Closing search releases the keyboard and preserves the chosen app's focus.
+- **A clearer volume slider.** Quick Settings uses a compact light thumb with an accent centre, a subtle border
+  and a thin track, with the existing keyboard controls and larger pointer target retained.
+- **Keep external app helpers with their app in Task Manager.** Recognize the application from its windows and
+  executable before using a launcher scope name. Helpers remain with the same app across launcher services;
+  different apps stay separate, and each process contributes its memory once. Unidentified external launcher
+  groups use “External apps” instead of “Win11 GNOME external”.
+- **Activate the bundled Windows icons on a fresh install.** Select the Win11Shell icon aliases installed by
+  WinPoint, with the matching light or dark variant. Separately installed Win11 themes remain a fallback.
+- **Keep the taskbar visible when Start opens or closes.** Restore the compositor glass layers below their
+  native windows before the next frame after GNOME restacks windows. Previously an idle callback could run
+  one frame late, briefly covering the taskbar icons and tint with the glass background. The correction only
+  restores layer order; it preserves the existing geometry, content snapshots and Start frame gates.
+
 ## 0.9.6
 
 - **Glass shows the windows behind it.** Start, the taskbar and focused app glass compose cached window contents

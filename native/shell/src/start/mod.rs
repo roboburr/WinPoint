@@ -30,12 +30,38 @@ const TILE_W: i32 = 96;
 const TILE_H: i32 = 84;
 const LETTERS: &str = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum View {
     Home,
     All,
     Rec,
     Search,
+}
+
+#[cfg(test)]
+mod query_tests {
+    use super::{View, query_view};
+
+    #[test]
+    fn taskbar_search_keeps_its_dedicated_view_with_an_empty_or_cleared_query() {
+        for current in [View::Home, View::All, View::Rec, View::Search] {
+            for query in ["", " ", "calculator"] {
+                assert_eq!(query_view(true, query, current), View::Search);
+            }
+        }
+    }
+
+    #[test]
+    fn normal_start_type_to_search_and_clear_keep_the_original_home_navigation() {
+        for current in [View::Home, View::All, View::Rec, View::Search] {
+            assert_eq!(query_view(false, "calculator", current), View::Search);
+        }
+        assert_eq!(query_view(false, "", View::Search), View::Home);
+        assert_eq!(query_view(false, " ", View::Search), View::Home);
+        for current in [View::Home, View::All, View::Rec] {
+            assert_eq!(query_view(false, "", current), current);
+        }
+    }
 }
 
 impl View {
@@ -46,6 +72,17 @@ impl View {
             View::Rec => "rec",
             View::Search => "search",
         }
+    }
+}
+
+/// Taskbar Search stays a search view when empty; clearing a type-to-search query returns to Start.
+fn query_view(dedicated: bool, query: &str, current: View) -> View {
+    if dedicated || !query.trim().is_empty() {
+        View::Search
+    } else if current == View::Search {
+        View::Home
+    } else {
+        current
     }
 }
 
@@ -61,6 +98,8 @@ pub struct Start {
     clear_btn: gtk::Button,
     stack: gtk::Stack,
     view: Cell<View>,
+    dedicated_search: Cell<bool>,
+    taskbar_search: Cell<bool>,
     texts: Texts,
     lang: RefCell<String>,
     // home
@@ -94,7 +133,9 @@ pub struct Start {
     // lifecycle
     open: Cell<bool>,
     epoch: Cell<u64>,
+    focus_generation: Cell<u64>,
     focused: Cell<bool>,
+    pending_search_focus: Cell<bool>,
     focus_hide_at: Cell<Option<Instant>>,
     glass_known: Cell<bool>,
     wheel_at: Cell<Option<Instant>>,
@@ -169,6 +210,53 @@ pub fn open_search(query: &str) {
     }
 }
 
+/// The taskbar owns the text input; Start only mirrors the query and shows its results.
+pub(crate) fn taskbar_search(query: &str) {
+    show_taskbar_query(query, false);
+}
+
+/// A deliberate taskbar click/focus transfer may take the keyboard back from Start; query mirroring never does.
+pub(crate) fn activate_taskbar_search(query: &str) {
+    show_taskbar_query(query, true);
+}
+
+fn show_taskbar_query(query: &str, activate: bool) {
+    if let Some(s) = get() {
+        let entering = !s.taskbar_search.replace(true);
+        if entering {
+            s.shell.flyouts().close();
+        }
+        if entering || activate {
+            let _ = s.shell.gnome.call("panel.keyboard", &json!({"exclusive": true, "search": true}));
+        }
+        s.show_query(Some(query), true);
+    }
+}
+
+pub(crate) fn dismiss_taskbar_search(restore_focus: bool) {
+    if let Some(s) = get() && s.taskbar_search.get() {
+        s.dismiss_with_restore(restore_focus);
+    }
+}
+
+/// Navigation keys operate the same result selection while ordinary editing stays in GtkText on the panel.
+pub(crate) fn taskbar_search_key(key: gdk::Key, state: gdk::ModifierType) -> bool {
+    let Some(s) = get().filter(|s| s.open.get() && s.taskbar_search.get()) else { return false };
+    if key == gdk::Key::Escape {
+        s.dismiss_with_restore(true);
+        return true;
+    }
+    if matches!(key, gdk::Key::Return | gdk::Key::KP_Enter) {
+        s.enter();
+        return true;
+    }
+    if key == gdk::Key::Tab && !state.contains(gdk::ModifierType::CONTROL_MASK) {
+        // Tab is an explicit handoff into Start's result actions, not a background focus request.
+        s.window.present();
+    }
+    s.search.handle_key(key, state, true)
+}
+
 /// Close Start (a launch, a result, a menu action).
 pub(crate) fn dismiss() {
     if let Some(s) = get() {
@@ -206,6 +294,12 @@ fn export_bus() {
     add("start-toggle", toggle);
     add("start-dismiss", || {
         if let Some(s) = get() {
+            s.dismiss_after_focus_loss();
+        }
+    });
+    add("start-search-dismiss", || {
+        if let Some(s) = get() && s.taskbar_search.get() {
+            // A delayed bridge request must not close a newer, valid taskbar search interaction.
             s.dismiss_after_focus_loss();
         }
     });
@@ -653,6 +747,8 @@ impl Start {
             clear_btn,
             stack,
             view: Cell::new(View::Home),
+            dedicated_search: Cell::new(false),
+            taskbar_search: Cell::new(false),
             texts,
             lang: RefCell::new(shell.lang().to_owned()),
             pin_grid,
@@ -684,7 +780,9 @@ impl Start {
             apps_timer: RefCell::new(None),
             open: Cell::new(false),
             epoch: Cell::new(0),
+            focus_generation: Cell::new(0),
             focused: Cell::new(false),
+            pending_search_focus: Cell::new(false),
             focus_hide_at: Cell::new(None),
             glass_known: Cell::new(false),
             wheel_at: Cell::new(None),
@@ -763,6 +861,7 @@ impl Start {
             let Some(s) = w.upgrade() else { return };
             if win.is_active() {
                 s.focused.set(true);
+                s.focus_search_when_ready();
             } else if s.focused.get() && s.open.get() {
                 s.dismiss_after_focus_loss();
             }
@@ -770,7 +869,7 @@ impl Start {
         let w = Rc::downgrade(self);
         self.window.connect_close_request(move |_| {
             if let Some(s) = w.upgrade() {
-                s.dismiss();
+                s.dismiss_with_restore(true);
             }
             glib::Propagation::Stop
         });
@@ -778,9 +877,11 @@ impl Start {
         self.window.connect_map(move |win| {
             if let Some(s) = w.upgrade()
                 && s.open.get()
-                && let Some(surface) = win.surface()
             {
-                surface.set_input_region(None);
+                if let Some(surface) = win.surface() {
+                    surface.set_input_region(None);
+                }
+                s.focus_search_when_ready();
             }
         });
 
@@ -808,7 +909,7 @@ impl Start {
 
     fn toggle(self: &Rc<Self>) {
         if self.open.get() {
-            self.dismiss();
+            self.dismiss_with_restore(true);
             return;
         }
         // The click on the Start button that took the focus away (and so closed Start) must not reopen it.
@@ -819,7 +920,17 @@ impl Start {
     }
 
     fn show(self: &Rc<Self>, query: Option<&str>) {
-        if !self.open.get() {
+        self.end_taskbar_search(false);
+        self.show_query(query, false);
+    }
+
+    fn show_query(self: &Rc<Self>, query: Option<&str>, preserve_taskbar: bool) {
+        let opening = !self.open.get();
+        // An explicit search activation also invalidates an older focus-loss close check.
+        self.focus_generation.set(self.focus_generation.get() + 1);
+        self.focus_hide_at.set(None);
+        if opening {
+            self.reset();
             self.open.set(true);
             self.epoch.set(self.epoch.get() + 1);
             self.focused.set(false);
@@ -841,25 +952,62 @@ impl Start {
             for w in [self.top.upcast_ref::<gtk::Widget>(), self.stack.upcast_ref(), self.footer.upcast_ref()] {
                 play(w, "w11-fadeup");
             }
-            self.window.present();
-            self.glass_after_paint();
-            self.text.grab_focus();
         }
         if let Some(q) = query {
-            if !q.is_empty() {
-                self.text.set_text(q);
-            }
+            self.dedicated_search.set(true);
+            self.menu.close();
+            self.text.set_text(q);
+            // GtkEditable::changed is not emitted if the empty query did not change.
+            self.on_query();
+        }
+        self.pending_search_focus.set(!preserve_taskbar);
+        if preserve_taskbar {
+            // Mapping the result surface must not request the keyboard on every keystroke.
+            self.window.set_visible(true);
+        } else {
             self.text.grab_focus();
+            self.text.set_position(-1);
+            self.window.present();
+            self.focus_search_when_ready();
+        }
+        if opening {
+            self.glass_after_paint();
+        }
+    }
+
+    /// Complete only an explicit opening/activation request, after GTK has mapped and activated the window.
+    /// Later focus notifications or result updates must not take focus away from another control.
+    fn focus_search_when_ready(&self) {
+        if self.pending_search_focus.get()
+            && self.open.get()
+            && self.window.is_mapped()
+            && self.window.is_active()
+            && self.text.grab_focus()
+        {
+            self.pending_search_focus.set(false);
             self.text.set_position(-1);
         }
     }
 
     fn dismiss(self: &Rc<Self>) {
+        self.dismiss_with_restore(false);
+    }
+
+    fn end_taskbar_search(&self, restore_focus: bool) {
+        if self.taskbar_search.replace(false) {
+            crate::panel::taskbar::finish_search_input();
+            self.shell.gnome.send("panel.keyboard", json!({"exclusive": false, "search": true, "restore": restore_focus}));
+        }
+    }
+
+    fn dismiss_with_restore(self: &Rc<Self>, restore_focus: bool) {
         if !self.open.replace(false) {
             return;
         }
+        self.end_taskbar_search(restore_focus);
         let epoch = self.epoch.get() + 1;
         self.epoch.set(epoch);
+        self.pending_search_focus.set(false);
         self.menu.close();
         self.search.cancel_pending();
         self.hide_letters();
@@ -884,7 +1032,9 @@ impl Start {
     }
 
     fn hide_now(self: &Rc<Self>) {
+        self.end_taskbar_search(false);
         self.open.set(false);
+        self.pending_search_focus.set(false);
         self.epoch.set(self.epoch.get() + 1);
         self.menu.close();
         self.window.set_visible(false);
@@ -894,6 +1044,8 @@ impl Start {
 
     /// After closing (startmenu.js onClose): empty box, home view, first page.
     fn reset(self: &Rc<Self>) {
+        self.dedicated_search.set(false);
+        self.pending_search_focus.set(false);
         self.text.set_text("");
         self.clear_btn.set_visible(false);
         self.search.reset();
@@ -908,15 +1060,20 @@ impl Start {
             return;
         }
         let epoch = self.epoch.get();
+        let focus_generation = self.focus_generation.get();
         let w = Rc::downgrade(self);
         glib::timeout_add_local_once(Duration::from_millis(120), move || {
             let Some(s) = w.upgrade() else { return };
-            if !s.open.get() || s.epoch.get() != epoch || !s.window.is_visible() || s.window.is_active() {
+            if !s.open.get() || s.epoch.get() != epoch || s.focus_generation.get() != focus_generation
+                || !s.window.is_visible() || s.window.is_active()
+            {
                 return;
             }
             // GTK's focus can lag the compositor during a quick remap: ask the extension first.
-            let focused = s.shell.gnome.call("shell.info", &json!({})).ok().is_some_and(|i| i["startFocused"] == true);
-            if !focused {
+            let info = s.shell.gnome.call("shell.info", &json!({})).unwrap_or(Value::Null);
+            let focused = info["startFocused"] == true;
+            let taskbar_focused = s.taskbar_search.get() && info["panelFocused"] == true && info["panelSearch"] == true;
+            if !focused && !taskbar_focused {
                 s.focus_hide_at.set(Some(Instant::now()));
                 s.dismiss();
             }
@@ -1207,15 +1364,18 @@ impl Start {
 
     fn on_query(self: &Rc<Self>) {
         let q = self.text.text().to_string();
+        if self.taskbar_search.get() {
+            crate::panel::taskbar::mirror_search_query(&q);
+        }
         self.clear_btn.set_visible(!q.is_empty());
-        if !q.trim().is_empty() {
-            if self.view.get() != View::Search {
-                self.show_view(View::Search, true);
-            }
+        let next = query_view(self.dedicated_search.get(), &q, self.view.get());
+        if next != self.view.get() {
+            self.show_view(next, true);
+        }
+        if next == View::Search {
             self.search.set_query(&q);
-        } else if self.view.get() == View::Search {
+        } else {
             self.search.set_query("");
-            self.show_view(View::Home, true);
         }
     }
 
@@ -1243,7 +1403,7 @@ impl Start {
                 }
                 return Stop;
             }
-            self.dismiss();
+            self.dismiss_with_restore(true);
             return Stop;
         }
         if self.menu.is_open() {

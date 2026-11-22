@@ -17,7 +17,10 @@ globalThis.__probePaintSignal=global.stage.connect('after-paint',()=>{
  const p=globalThis.__bgProbe,e=f._entries.get(panel.meta_window);
  const w=global.display.focus_window;
  const app=[...f._entries.values()].filter(e=>e.kind==='window').map(e=>({effect:!!e.effect,focused:e.focused}));
+ const siblings=panel.get_parent()?.get_children()??[];
+ const glassIndex=e?siblings.indexOf(e.outer):-1,clientIndex=siblings.indexOf(panel);
  const state={panelMapped:panel.mapped,panelVisible:panel.visible,panelOpacity:panel.opacity,
+ panelGlassBelow:glassIndex>=0&&clientIndex>=0&&glassIndex<clientIndex,
  panelBlur:!!e?.effect,samePanelEntry:e===globalThis.__probePanelEntry,samePanelEffect:e?.effect===globalThis.__probePanelEffect,
  focus:w?.get_wm_class()??'',app};
  const text=JSON.stringify(state);p.frames++;if(text!==p.last){p.changes.push(state);p.last=text;}
@@ -72,6 +75,7 @@ def run(h):
     trace=h.eval('(()=>{global.stage.disconnect(globalThis.__probePaintSignal);return globalThis.__bgProbe;})()')
     h.record('backgroundTrace',trace)
     h.check('Taskbar actor never hides or fades',all(x['panelMapped'] and x['panelVisible'] and x['panelOpacity']==255 for x in trace['changes']),trace=trace)
+    h.check('Taskbar glass never covers its native client after restacking',all(x['panelGlassBelow'] for x in trace['changes']),trace=trace)
     h.check('Taskbar blur is retained without recreation',all(x['panelBlur'] and x['samePanelEntry'] and x['samePanelEffect'] for x in trace['changes']),trace=trace)
 
     h.sleep(0.5)

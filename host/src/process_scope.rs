@@ -30,6 +30,13 @@ pub enum Role {
 fn shell(kind: &str) -> bool {
     kind == "panel"
 }
+fn description(tag: &str, lang: crate::i18n::Lang) -> String {
+    if tag == "external" {
+        crate::i18n::tr(lang, "sysmon.externalApps")
+    } else {
+        format!("Win11 GNOME {tag}")
+    }
+}
 fn managed(cgroup: &str, role: Role) -> bool {
     let own = cgroup.lines().any(|line| {
         line.split('/')
@@ -262,10 +269,7 @@ fn start_unit(
         NEXT.fetch_add(1, Ordering::Relaxed)
     );
     let mut properties: Vec<(String, glib::Variant)> = vec![
-        (
-            "Description".into(),
-            format!("Win11 GNOME {tag}").to_variant(),
-        ),
+        ("Description".into(), description(&tag, lang).to_variant()),
         ("Type".into(), "exec".to_variant()),
         ("ExitType".into(), "cgroup".to_variant()),
         ("CollectMode".into(), "inactive-or-failed".to_variant()),
@@ -468,6 +472,25 @@ pub(crate) fn spawn_pid_with_argv0(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn external_apps_do_not_use_the_shells_name() {
+        assert_eq!(
+            description("external", crate::i18n::Lang::Nl),
+            "Externe apps"
+        );
+        assert_eq!(
+            description("external", crate::i18n::Lang::En),
+            "External apps"
+        );
+        assert_eq!(
+            description("panel", crate::i18n::Lang::Nl),
+            "Win11 GNOME panel"
+        );
+        assert_eq!(
+            description("settings", crate::i18n::Lang::En),
+            "Win11 GNOME settings"
+        );
+    }
     #[test]
     fn only_own_correct_slice_counts_as_managed() {
         assert!(managed(

@@ -157,6 +157,7 @@ export class NativePanelBridge {
         this._unmanagingWindows = new WeakSet();
         this._actorSignals = new Map();
         this._frostedId = 0;
+        this._frostedRestackId = 0;
         this._panel = null;
         this._panelOriginal = null;
         this._panelInhibited = false;
@@ -195,6 +196,11 @@ export class NativePanelBridge {
         this._revealUntil = 0;
         this._revealId = 0;
         this._panelExclusive = false;
+        this._panelSearch = false;
+        this._panelSearchReturn = null;
+        this._panelSearchGeneration = 0;
+        this._panelSearchReturnId = 0;
+        this._lastUserFocus = null;
         this._returnArmed = 0;
         this._returnTo = null;
         this._returnId = 0;
@@ -232,7 +238,10 @@ export class NativePanelBridge {
         this._frostedBridge.configure({enabled: this._frostedEnabled, blur: true, windowBlur: this._frostedWindowBlur, shadows: true, radius: 14});
         this._launchGrants = new Map();
         this._takeAttention();
-        this._connect(global.display, 'restacked', () => this._queueWindows());
+        this._connect(global.display, 'restacked', () => {
+            this._queueFrostedRestack();
+            this._queueWindows();
+        });
         this._connect(global.display, 'window-created', (_display, window) => this._watchWindow(window));
         const dnd = global.backend?.get_dnd?.();
         if (dnd) {
@@ -260,6 +269,9 @@ export class NativePanelBridge {
             }
         }
         this._connect(global.display, 'notify::focus-window', () => {
+            const changedFocus = global.display.focus_window;
+            if (changedFocus && !this._unmanagingWindows.has(changedFocus) && this._userWindows(true).includes(changedFocus))
+                this._lastUserFocus = changedFocus;
             this._syncStartFocus();
             // A launch whose window got the focus by itself used its token: its grant ends (D-G61).
             const focus = global.display.focus_window;
@@ -299,6 +311,9 @@ export class NativePanelBridge {
             if (actor.meta_window)
                 this._watchWindow(actor.meta_window, true);
         }
+        const initialFocus = global.display.focus_window;
+        if (initialFocus && !this._unmanagingWindows.has(initialFocus) && this._userWindows(true).includes(initialFocus))
+            this._lastUserFocus = initialFocus;
         this._queueWindows();
     }
 
@@ -336,6 +351,13 @@ export class NativePanelBridge {
         this._startActivated.add(window);
         if (this._isUserSession()) {
             window.unminimize();
+            if (this._panelSearch && this._panel?.get_pid() === window.get_pid()) {
+                // This map is the results of a real taskbar edit, not a request to move the keyboard to Start.
+                const timestamp = global.display.get_current_time_roundtrip();
+                Main.activateWindow(this._panel, timestamp);
+                this._panel.focus(timestamp);
+                return;
+            }
             Main.activateWindow(window, global.get_current_time());
             this._syncStartFocus();
         }
@@ -343,6 +365,14 @@ export class NativePanelBridge {
 
     _syncStartFocus() {
         const focused = global.display.focus_window;
+        if (this._panelSearch) {
+            if (this._searchFocused(focused)) {
+                if (focused && this._isStart(focused)) this._startFocused.add(focused);
+                return;
+            }
+            this._endPanelSearch(false);
+            this._startAction('start-search-dismiss');
+        }
         if (focused && this._isStart(focused)) {
             this._startFocused.add(focused);
             return;
@@ -622,6 +652,35 @@ export class NativePanelBridge {
             return failure('session_unavailable', this._t('panelMissing'));
         if (typeof args.exclusive !== 'boolean')
             return failure('bad_args', this._t('keyboardMode'));
+        if ((args.search !== undefined && typeof args.search !== 'boolean') ||
+            (args.restore !== undefined && typeof args.restore !== 'boolean'))
+            return failure('bad_args', this._t('keyboardMode'));
+        const search = args.search === true;
+        // Each owner releases only its own role; an old flyout-close callback cannot release a newer search.
+        if (!args.exclusive && search !== this._panelSearch)
+            return {keyboard: this._panelExclusive ? 'exclusive' : 'on-demand', search: this._panelSearch};
+        if (search && !args.exclusive) {
+            this._endPanelSearch(args.restore === true);
+            this._syncVisibility();
+            return {keyboard: 'on-demand', search: false};
+        }
+        if (this._panelSearch && !search) {
+            this._endPanelSearch(false);
+            this._startAction('start-search-dismiss');
+        }
+        if (search && !this._panelSearch) {
+            this._panelSearchGeneration++;
+            // Search has its own return target; retire an older fullscreen-flyout handover.
+            this._returnArmed = 0;
+            this._returnTo = null;
+            if (this._returnId) GLib.source_remove(this._returnId);
+            this._returnId = 0;
+            if (this._panelSearchReturnId) GLib.source_remove(this._panelSearchReturnId);
+            this._panelSearchReturnId = 0;
+            const before = global.display.focus_window;
+            this._panelSearchReturn = this._userWindows(true).includes(before) ? before : this._lastUserFocus;
+            this._panelSearch = true;
+        }
         // 'exclusive' while a flyout or menu of the taskbar is open: it counts as an open surface of ours.
         this._panelExclusive = args.exclusive;
         if (args.exclusive) {
@@ -641,7 +700,38 @@ export class NativePanelBridge {
             }
             this._syncVisibility();
         }
-        return {keyboard: args.exclusive ? 'exclusive' : 'on-demand'};
+        return {keyboard: args.exclusive ? 'exclusive' : 'on-demand', search: this._panelSearch};
+    }
+
+    _searchFocused(focus = global.display.focus_window) {
+        if (!focus || !this._panel || this._unmanagingWindows.has(focus)) return false;
+        const parent = focus.get_transient_for();
+        const start = window => window && !this._unmanagingWindows.has(window) &&
+            window.get_pid() === this._panel.get_pid() && this._isStart(window);
+        return focus === this._panel || parent === this._panel || start(focus) || start(parent);
+    }
+
+    _endPanelSearch(restore) {
+        const target = this._panelSearchReturn;
+        this._panelSearchReturn = null;
+        this._panelSearch = false;
+        this._panelExclusive = false;
+        const generation = ++this._panelSearchGeneration;
+        if (this._panelSearchReturnId) GLib.source_remove(this._panelSearchReturnId);
+        this._panelSearchReturnId = 0;
+        if (!restore || !target) return;
+        this._panelSearchReturnId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, RETURN_MS, () => {
+            this._panelSearchReturnId = 0;
+            if (!this._enabled || !this._isUserSession() || this._inOverview || this._panelExclusive ||
+                this._panelSearch || generation !== this._panelSearchGeneration || !this._searchFocused() ||
+                this._unmanagingWindows.has(target) || !this._windows.has(target) || !this._userWindows(true).includes(target))
+                return GLib.SOURCE_REMOVE;
+            // Check the actor/managed guards first: never ask a dying Meta.Window about its workspace.
+            const actor = target.get_compositor_private();
+            if (actor?.mapped && !target.minimized && target.get_workspace() === global.workspace_manager.get_active_workspace())
+                Main.activateWindow(target, global.display.get_current_time_roundtrip());
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     /** The compositor focus is on the taskbar window or on one of its popups (win11-shell's light dismiss). */
@@ -723,6 +813,17 @@ export class NativePanelBridge {
         return Main.sessionMode.hasWindows && !Main.sessionMode.isLocked && !Main.sessionMode.isGreeter;
     }
 
+    // Mutter's stack sync moves window actors below unrelated sibling actors.
+    // Put existing glass back below its own client before this frame is painted.
+    _queueFrostedRestack() {
+        if (!this._enabled || this._frostedRestackId) return;
+        this._frostedRestackId = global.compositor.get_laters().add(Meta.LaterType.BEFORE_REDRAW, () => {
+            this._frostedRestackId = 0;
+            if (this._enabled) this._frostedBridge?.restack();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
     _queueFrosted() {
         if (!this._enabled || this._frostedId) return;
         this._frostedId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
@@ -771,7 +872,11 @@ export class NativePanelBridge {
         const signals = [];
         this._windows.set(window, signals);
         const connect = (name, fn) => signals.push(window.connect(name, fn));
-        connect('unmanaging', () => this._unmanagingWindows.add(window));
+        connect('unmanaging', () => {
+            this._unmanagingWindows.add(window);
+            if (this._lastUserFocus === window) this._lastUserFocus = null;
+            if (this._panelSearchReturn === window) this._panelSearchReturn = null;
+        });
         const changed = () => {
             if (this._unmanagingWindows.has(window))
                 return;
@@ -917,6 +1022,8 @@ export class NativePanelBridge {
     }
 
     _forgetPanel() {
+        this._endPanelSearch(false);
+        this._lastUserFocus = null;
         this._panel = null;
         this._panelOriginal = null;
         this._panelInhibited = false;
@@ -1461,7 +1568,7 @@ export class NativePanelBridge {
             return {mode: 'gnome', compositor: 'gnome', layerShell: false, nativeWindows: true,
                 nativePanel: this._panelPresent, panelAppId: PANEL_APP_ID,
                 startFocused: Boolean(global.display.focus_window && this._isStart(global.display.focus_window)),
-                panelFocused: this._panelFocused()};
+                panelFocused: this._panelFocused(), panelSearch: this._panelSearch};
         if (method === 'windows.list')
             return {supported: true, windows: this._userWindows().map(window => this._windowJSON(window)),
                 activeWorkspace: global.workspace_manager.get_active_workspace_index()};
@@ -1705,6 +1812,10 @@ export class NativePanelBridge {
         this._desktopBridge?.disable();
         this._desktopBridge = null;
         this._enabled = false;
+        if (this._frostedRestackId) {
+            global.compositor.get_laters().remove(this._frostedRestackId);
+            this._frostedRestackId = 0;
+        }
         for (const source of [this._updateId, this._geometryId, this._frostedId, this._revealId, this._returnId]) {
             if (source)
                 GLib.source_remove(source);

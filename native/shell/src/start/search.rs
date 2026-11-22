@@ -639,10 +639,8 @@ impl Search {
     /// Settings, language or apps changed: labels, results and the detail pane again.
     pub fn refresh(self: &Rc<Self>) {
         self.render_tabs();
-        if !self.qn.borrow().is_empty() {
-            *self.detail_key.borrow_mut() = None;
-            self.update(true);
-        }
+        *self.detail_key.borrow_mut() = None;
+        self.update(true);
     }
 
     fn set_tab(self: &Rc<Self>, i: usize) {
@@ -1006,7 +1004,16 @@ impl Search {
             self.rows.borrow_mut().clear();
             self.flat.borrow_mut().clear();
             *self.detail_key.borrow_mut() = None;
-            self.tabs.set_visible(false);
+            self.tabs.set_visible(true);
+            let hint = gtk::Label::new(Some(&self.shell.t(
+                "Zoek naar apps, instellingen en documenten",
+                "Search for apps, settings and documents",
+            )));
+            hint.set_widget_name("start-search-empty");
+            hint.add_css_class("w11-sr-empty");
+            hint.set_xalign(0.0);
+            hint.set_wrap(true);
+            self.list.append(&hint);
             return;
         }
         self.tabs.set_visible(true);

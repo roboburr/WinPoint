@@ -142,9 +142,30 @@ struct DesktopIndex {
     by_id: HashMap<String, Desktop>,
     by_wm: HashMap<String, Desktop>,
     by_exec: HashMap<String, Desktop>,
+    by_path: HashMap<String, Desktop>,
+    by_directory: HashMap<String, Desktop>,
+    ambiguous_exec: HashSet<String>,
+    ambiguous_path: HashSet<String>,
+    ambiguous_directory: HashSet<String>,
     autostart: HashSet<String>,
 }
 impl DesktopIndex {
+    // Runtime executables may be shared by several desktop entries. Never pick
+    // whichever GIO happened to enumerate last (notably Electron/web apps).
+    fn put_unique(table: &mut HashMap<String, Desktop>, ambiguous: &mut HashSet<String>, key: String, entry: &Desktop) {
+        if key.is_empty() || entry.hidden || entry.terminal || ambiguous.contains(&key) { return; }
+        if table.get(&key).is_some_and(|old| old.id != entry.id) {
+            table.remove(&key); ambiguous.insert(key);
+        } else { table.insert(key, entry.clone()); }
+    }
+    fn index_path(&mut self, executable: &Path, entry: &Desktop) {
+        if !executable.is_absolute() || entry.hidden || entry.terminal { return; }
+        let key=executable.to_string_lossy().into_owned();
+        Self::put_unique(&mut self.by_path,&mut self.ambiguous_path,key.clone(),entry);
+        if let Some(directory)=application_directory(&key) {
+            Self::put_unique(&mut self.by_directory,&mut self.ambiguous_directory,directory,entry);
+        }
+    }
     fn put(table: &mut HashMap<String, Desktop>, key: String, entry: &Desktop) {
         if key.is_empty() {
             return;
@@ -163,6 +184,8 @@ impl DesktopIndex {
         self.by_id.clear();
         self.by_wm.clear();
         self.by_exec.clear();
+        self.by_path.clear(); self.by_directory.clear();
+        self.ambiguous_exec.clear(); self.ambiguous_path.clear(); self.ambiguous_directory.clear();
         self.autostart.clear();
         for a in gio::AppInfo::all() {
             let Some(id) = a
@@ -218,14 +241,19 @@ impl DesktopIndex {
             };
             let exebase = basename(exe.trim().trim_matches('"')).to_lowercase();
             if !exebase.is_empty() && !generic(&exebase) && !entry.terminal {
-                Self::put(&mut self.by_exec, exebase.clone(), &entry);
+                Self::put_unique(&mut self.by_exec, &mut self.ambiguous_exec, exebase.clone(), &entry);
                 if let Some(s) = exebase.strip_suffix("-stable") {
-                    Self::put(&mut self.by_exec, s.into(), &entry)
+                    Self::put_unique(&mut self.by_exec, &mut self.ambiguous_exec, s.into(), &entry)
+                }
+                let executable=if Path::new(&exe).is_absolute() { Some(Path::new(&exe).to_owned()) } else { glib::find_program_in_path(&exe) };
+                if let Some(path)=executable {
+                    self.index_path(&path,&entry);
+                    if let Ok(real)=fs::canonicalize(path) { self.index_path(&real,&entry); }
                 }
             }
             if base.contains('.') {
-                Self::put(
-                    &mut self.by_exec,
+                Self::put_unique(
+                    &mut self.by_exec, &mut self.ambiguous_exec,
                     base.rsplit('.').next().unwrap_or("").into(),
                     &entry,
                 )
@@ -247,7 +275,7 @@ impl DesktopIndex {
             ("code", "code"),
             ("soffice.bin", "libreoffice-startcenter"),
         ] {
-            if !self.by_exec.contains_key(alias) {
+            if !self.by_exec.contains_key(alias) && !self.ambiguous_exec.contains(alias) {
                 if let Some(e) = self.by_id.get(target) {
                     self.by_exec.insert(alias.into(), e.clone());
                 }
@@ -283,6 +311,66 @@ impl DesktopIndex {
             .filter(|e| !e.hidden)
             .cloned()
     }
+    fn process(&self, st: &Static, comm: &str) -> Option<Desktop> {
+        let path=st.exe.as_deref().unwrap_or("").trim_end_matches(" (deleted)");
+        let name=basename(path).to_lowercase();
+        if !path.is_empty() && !generic(&name) {
+            if let Some(entry)=self.by_path.get(path) { return Some(entry.clone()); }
+            // A reparented crash reporter/helper can outlive its GUI. A unique,
+            // app-specific installation directory remains a durable identity;
+            // shared system bins and shared runtime directories are excluded.
+            if let Some(entry)=self.by_directory.iter()
+                .filter(|(directory,_)| Path::new(path).starts_with(directory.as_str()))
+                .max_by_key(|(directory,_)| directory.len()).map(|(_,entry)|entry) {
+                return Some(entry.clone());
+            }
+            if let Some(entry)=self.executable(&name) { return Some(entry); }
+        }
+        if !generic(&comm.to_lowercase()) { self.executable(comm) } else { None }
+    }
+    fn window(&self, st:&Static, window:&Value) -> Option<Desktop> {
+        // An installed window identity may intentionally launch a wrapper or
+        // share a runtime with another app. Executable mismatch alone cannot
+        // invalidate it. Only raw app-ID hints and scope IDs are weaker.
+        if let Some(entry)=self.lookup(window["desktopId"].as_str().unwrap_or("")) {return Some(entry);}
+        let path=st.exe.as_deref().unwrap_or("").trim_end_matches(" (deleted)");
+        self.by_path.get(path).filter(|_|!generic(&basename(path).to_lowercase())).cloned()
+            .or_else(||self.lookup(window["appId"].as_str().unwrap_or("")))
+    }
+}
+
+fn application_directory(executable: &str) -> Option<String> {
+    fn stem(name: &str) -> String {
+        let mut name=name.to_lowercase();
+        for _ in 0..2 {
+            let Some(suffix)=[".appimage",".appdir",".bin","-bin","-stable"].into_iter().find(|suffix|name.ends_with(*suffix)) else {break};
+            name.truncate(name.len()-suffix.len());
+        }
+        name
+    }
+    let path=Path::new(executable);
+    let mut directory=path.parent()?;
+    if directory.file_name().is_some_and(|part|part=="bin"||part=="lib"||part=="libexec") {
+        directory=directory.parent()?;
+    }
+    if !directory.is_absolute() { return None; }
+    // A sole desktop entry is not evidence that a shared directory belongs to
+    // that app. Require a positive app-named installation boundary as well.
+    if stem(directory.file_name()?.to_str()?)!=stem(path.file_name()?.to_str()?) {return None;}
+    let text=directory.to_string_lossy();
+    if ["/","/bin","/sbin","/usr/bin","/usr/sbin","/usr/local/bin","/usr/local/sbin",
+        "/lib","/lib64","/usr/lib","/usr/lib64","/usr/local/lib","/opt","/app","/app/bin","/app/lib","/snap/bin","/tmp","/var/tmp"]
+        .contains(&text.as_ref()) { return None; }
+    if let Some(home)=std::env::var_os("HOME") {
+        let home=Path::new(&home);
+        if directory==home || [".local",".local/bin",".cargo/bin","Downloads","Documents","Desktop"]
+            .iter().any(|part| directory==home.join(part)) { return None; }
+    }
+    Some(text.into_owned())
+}
+
+fn external_unit(unit: &Unit) -> bool {
+    unit.name.starts_with("app-win11-external-") && unit.name.ends_with(".service")
 }
 #[derive(Default)]
 pub(super) struct ProcessState {
@@ -541,44 +629,17 @@ impl ProcessState {
             })
             .collect::<Vec<_>>();
         app_of.extend(helpers);
+        let mut confirmed_apps=app_of.keys().copied().collect::<HashSet<_>>();
         for (pid, p) in &procs {
             if p.uid != uid || *pid == mypid || app_of.contains_key(pid) {
                 continue;
             }
             let st = &self.statics[&(*pid, p.start)];
-            if let Some(unit) = &st.unit {
-                if unit.kind == "scope" {
-                    if let Some(e) = self.desktop.lookup(&unit.id) {
-                        if !e.hidden {
-                            app_of.insert(*pid, app_meta(e.id.clone(), e.name, e.icon, Some(e.id)));
-                            continue;
-                        }
-                    } else if !self.desktop.autostart.contains(&unit.id.to_lowercase()) {
-                        let pretty = unit.id.rsplit('.').next().unwrap_or(&unit.id);
-                        let mut chars = pretty.chars();
-                        let name = chars
-                            .next()
-                            .map(|c| c.to_uppercase().collect::<String>() + chars.as_str())
-                            .unwrap_or_default();
-                        app_of.insert(
-                            *pid,
-                            app_meta(
-                                format!("scope:{}", unit.id),
-                                name,
-                                Some(unit.id.clone()),
-                                None,
-                            ),
-                        );
-                        continue;
-                    }
-                }
-            }
+            // A scope can name a generic runtime. A real window is stronger
+            // than the executable (shared runtimes/PWAs), and both beat scopes.
             if let Some(wins) = win_by_pid.get(pid) {
                 let w = &wins[0];
-                let entry = self
-                    .desktop
-                    .lookup(w["desktopId"].as_str().unwrap_or(""))
-                    .or_else(|| self.desktop.lookup(w["appId"].as_str().unwrap_or("")));
+                let entry = self.desktop.window(st,w);
                 let key = if let Some(e) = entry {
                     app_meta(e.id.clone(), e.name, e.icon, Some(e.id))
                 } else {
@@ -600,9 +661,34 @@ impl ProcessState {
                     )
                 };
                 app_of.insert(*pid, key);
+                confirmed_apps.insert(*pid);continue;
+            }
+            if let Some(e)=self.desktop.process(st,&p.comm) {
+                app_of.insert(*pid,app_meta(e.id.clone(),e.name,e.icon,Some(e.id)));
+                confirmed_apps.insert(*pid);continue;
+            }
+            if let Some(unit)=st.unit.as_ref().filter(|unit|unit.kind=="scope") {
+                if let Some(e)=self.desktop.lookup(&unit.id) {
+                    if !e.hidden {app_of.insert(*pid,app_meta(e.id.clone(),e.name,e.icon,Some(e.id)));}
+                } else if !self.desktop.autostart.contains(&unit.id.to_lowercase()) {
+                    let pretty=unit.id.rsplit('.').next().unwrap_or(&unit.id);
+                    let mut chars=pretty.chars();
+                    let name=chars.next().map(|c|c.to_uppercase().collect::<String>()+chars.as_str()).unwrap_or_default();
+                    app_of.insert(*pid,app_meta(format!("scope:{}",unit.id),name,Some(unit.id.clone()),None));
+                }
             }
         }
         drop(app_meta);
+        // An unregistered app still has a strong executable identity once its
+        // window is known. Apply that identity to workers in other launcher
+        // services and reparented helpers, without inheriting a generic scope.
+        let identities=runtime_app_identities(&app_of,&confirmed_apps,&procs,&self.statics,&meta);
+        for (pid,p) in &procs {
+            if p.uid!=uid || *pid==mypid || confirmed_apps.contains(pid) || self.critical.contains(pid) {continue;}
+            if let Some(entry)=identities.process(&self.statics[&(*pid,p.start)],&p.comm) {
+                app_of.insert(*pid,entry.id);
+            }
+        }
         let application_services = application_services(&app_of, &procs, &self.statics);
         let mut memo = HashMap::new();
         for (pid, p) in &procs {
@@ -684,7 +770,19 @@ impl ProcessState {
                 )
             } else if p.uid == uid && !kernel {
                 let label = exe_label(st, &p.comm);
-                let (key, name) = if let Some(u) = st.unit.as_ref().filter(|u| {
+                let (key, name) = if st.unit.as_ref().is_some_and(external_unit) {
+                    // Old launcher units retain their original Description.
+                    // Never present their apps as WinPoint-owned components or
+                    // lump unrelated unknown executables into one service row.
+                    let identity=st.exe.as_deref().unwrap_or("").trim_end_matches(" (deleted)");
+                    let key=if identity.is_empty()||generic(&basename(identity).to_lowercase()) {
+                        format!("external-pid:{pid}:{}",p.start)
+                    } else {format!("external-exe:{identity}")};
+                    let name=if label.is_empty()||label=="?" {
+                        crate::i18n::tr(&lang,"sysmon.externalApps")
+                    } else {friendly(&lang,&[&label,&p.comm]).unwrap_or_else(||label.clone())};
+                    (key,name)
+                } else if let Some(u) = st.unit.as_ref().filter(|u| {
                     (u.kind == "service" || u.kind == "unit") && u.name.ends_with(".service")
                 }) {
                     (
@@ -880,6 +978,30 @@ impl ProcessState {
 }
 /// A dedicated application service owns its helpers even after they are reparented. Several window-bearing
 /// apps in one service are ambiguous: their descendants must follow their own parent tree instead.
+fn runtime_app_identities(
+    app_of: &HashMap<u32,String>,
+    confirmed: &HashSet<u32>,
+    procs: &BTreeMap<u32,Proc>,
+    statics: &HashMap<(u32,u64),Static>,
+    meta: &HashMap<String,Value>,
+) -> DesktopIndex {
+    let uid=unsafe{libc::getuid()};
+    let mut index=DesktopIndex::default();
+    for pid in confirmed {
+        let Some(p)=procs.get(pid).filter(|p|p.uid==uid) else {continue};
+        let Some(key)=app_of.get(pid) else {continue};
+        let Some(st)=statics.get(&(*pid,p.start)) else {continue};
+        let Some(path)=st.exe.as_deref() else {continue};
+        let path=path.trim_end_matches(" (deleted)");
+        if generic(&basename(path).to_lowercase()) {continue;}
+        let Some(value)=meta.get(key) else {continue};
+        let entry=Desktop{id:key.clone(),name:value["name"].as_str().unwrap_or(key).into(),
+            icon:value["icon"].as_str().map(str::to_owned),hidden:false,terminal:false};
+        index.index_path(Path::new(path),&entry);
+    }
+    index
+}
+
 fn application_services(
     app_of: &HashMap<u32, String>,
     procs: &BTreeMap<u32, Proc>,
@@ -1244,6 +1366,87 @@ pub(super) mod tree {
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn desktop_entry(id:&str)->Desktop {
+        Desktop{id:id.into(),name:id.trim_end_matches(".desktop").into(),icon:None,hidden:false,terminal:false}
+    }
+    fn executable_static(path:&str)->Static {
+        Static{cmd:String::new(),argv:vec![],exe:Some(path.into()),cgroup:String::new(),unit:None,user:String::new()}
+    }
+    #[test]
+    fn installed_app_paths_and_private_helpers_have_one_identity() {
+        for executable in ["/usr/lib/notebird/NoteBird","/opt/Blue-Editor/blue-editor-bin","/opt/sketch.AppDir/sketch.bin"] {
+            let mut index=DesktopIndex::default();let app=desktop_entry("example.desktop");
+            index.index_path(Path::new(executable),&app);
+            assert_eq!(index.process(&executable_static(executable),"app").unwrap().id,app.id);
+            let directory=application_directory(executable).unwrap();
+            let helper=format!("{directory}/tools/crash-reporter");
+            assert_eq!(index.process(&executable_static(&helper),"reporter").unwrap().id,app.id);
+        }
+    }
+    #[test]
+    fn shared_binary_directories_do_not_claim_other_apps() {
+        for (executable,unrelated) in [
+            ("/usr/bin/first","/usr/bin/second"),
+            ("/usr/libexec/first","/usr/libexec/second"),
+            ("/usr/lib/x86_64-linux-gnu/first","/usr/lib/x86_64-linux-gnu/second"),
+            ("/home/example/Applications/First.AppImage","/home/example/Applications/Second.AppImage"),
+            ("/opt/shared/first","/opt/shared/second"),
+        ] {
+            let mut index=DesktopIndex::default();index.index_path(Path::new(executable),&desktop_entry("first.desktop"));
+            assert!(index.process(&executable_static(unrelated),"second").is_none(),"{unrelated}");
+        }
+    }
+    #[test]
+    fn shared_executables_and_installations_are_ambiguous_not_last_writer_wins() {
+        let mut index=DesktopIndex::default();
+        for id in ["first.desktop","second.desktop"] {
+            let entry=desktop_entry(id);index.index_path(Path::new("/opt/runtime/runtime"),&entry);
+            DesktopIndex::put_unique(&mut index.by_exec,&mut index.ambiguous_exec,"runtime".into(),&entry);
+        }
+        assert!(index.process(&executable_static("/opt/runtime/runtime"),"runtime").is_none());
+        assert!(index.process(&executable_static("/opt/runtime/crash-reporter"),"reporter").is_none());
+        assert!(index.executable("runtime").is_none());
+    }
+    #[test]
+    fn generic_interpreters_never_become_executable_owners() {
+        let mut index=DesktopIndex::default();
+        for path in ["/usr/bin/python3","/usr/bin/bash","/usr/bin/node"] {
+            index.index_path(Path::new(path),&desktop_entry("some-script.desktop"));
+            assert!(index.process(&executable_static(path),basename(path)).is_none(),"{path}");
+        }
+    }
+    #[test]
+    fn deleted_executable_path_keeps_its_actual_app_identity() {
+        let mut index=DesktopIndex::default();index.index_path(Path::new("/opt/notebird/notebird"),&desktop_entry("notebird.desktop"));
+        assert_eq!(index.process(&executable_static("/opt/notebird/notebird (deleted)"),"notebird").unwrap().id,"notebird.desktop");
+    }
+    #[test]
+    fn raw_runtime_app_id_does_not_override_a_different_known_app_executable() {
+        let mut index=DesktopIndex::default();
+        for (id,path) in [("runtime.desktop","/opt/runtime/runtime"),("notes.desktop","/opt/notes/notes")] {
+            let entry=desktop_entry(id);index.by_id.insert(id.trim_end_matches(".desktop").into(),entry.clone());index.index_path(Path::new(path),&entry);
+        }
+        let window=json!({"desktopId":"","appId":"runtime"});
+        assert_eq!(index.window(&executable_static("/opt/notes/notes"),&window).unwrap().id,"notes.desktop");
+    }
+    #[test]
+    fn explicit_pwa_window_survives_shared_executable_and_opaque_wrapper() {
+        let mut index=DesktopIndex::default();
+        for id in ["runtime.desktop","my-site.desktop"] {
+            let entry=desktop_entry(id);index.by_id.insert(id.trim_end_matches(".desktop").into(),entry.clone());index.index_path(Path::new("/opt/runtime/runtime"),&entry);
+        }
+        let window=json!({"desktopId":"my-site.desktop"});
+        assert_eq!(index.window(&executable_static("/opt/runtime/runtime"),&window).unwrap().id,"my-site.desktop");
+        let wrapper=desktop_entry("wrapper-app.desktop");index.by_id.insert("wrapper-app".into(),wrapper.clone());index.index_path(Path::new("/opt/wrapper/AppRun"),&wrapper);
+        let actual=desktop_entry("actual.desktop");index.index_path(Path::new("/opt/actual/actual"),&actual);
+        assert_eq!(index.window(&executable_static("/opt/actual/actual"),&json!({"desktopId":"wrapper-app.desktop"})).unwrap().id,"wrapper-app.desktop");
+    }
+    #[test]
+    fn only_old_external_launcher_units_get_the_external_fallback() {
+        for (name,wanted) in [("app-win11-external-123.service",true),("app-win11-panel-123.service",false),("other-external.service",false)] {
+            let unit=parse_cgroup(&format!("/user.slice/user-1000.slice/user@1000.service/app.slice/{name}")).unwrap();assert_eq!(external_unit(&unit),wanted);
+        }
+    }
     fn args(argv: &[&str]) -> Vec<String> {
         argv.iter().map(|s| s.to_string()).collect()
     }
@@ -1260,6 +1463,31 @@ mod tests {
                 cgroup: cgroup.into(), unit: parse_cgroup(cgroup), user: String::new() });
         }
         (procs, statics)
+    }
+
+    #[test]
+    fn window_runtime_identity_reaches_other_units_without_a_desktop_file() {
+        let (procs,mut statics)=service_fixture(&[(100,1,"/app.slice/app-generic-runtime.scope"),
+            (101,100,"/app.slice/app-win11-external-1.service"),(102,1,"/app.slice/app-win11-external-1.service")]);
+        for (pid,path) in [(100,"/opt/notebird/NoteBird"),(101,"/opt/notebird/NoteBird"),(102,"/opt/notebird/crash-reporter")] {
+            statics.get_mut(&(pid,u64::from(pid))).unwrap().exe=Some(path.into());
+        }
+        let apps=HashMap::from([(100,"win:notebird".into()),(101,"wrong-scope.desktop".into())]);
+        let meta=HashMap::from([("win:notebird".into(),json!({"name":"NoteBird"}))]);
+        let index=runtime_app_identities(&apps,&HashSet::from([100]),&procs,&statics,&meta);
+        for pid in [101,102] {assert_eq!(index.process(&statics[&(pid,u64::from(pid))],"helper").unwrap().id,"win:notebird");}
+    }
+    #[test]
+    fn runtime_identity_rejects_foreign_uids_recycled_pids_and_weak_scopes() {
+        let (mut procs,mut statics)=service_fixture(&[(100,1,"/app.slice/app-generic-runtime.scope")]);
+        statics.get_mut(&(100,100)).unwrap().exe=Some("/opt/notebird/NoteBird".into());
+        let apps=HashMap::from([(100,"note.desktop".into())]);let meta=HashMap::from([("note.desktop".into(),json!({"name":"Note"}))]);
+        let target=executable_static("/opt/notebird/NoteBird");
+        assert!(runtime_app_identities(&apps,&HashSet::new(),&procs,&statics,&meta).process(&target,"app").is_none());
+        procs.get_mut(&100).unwrap().uid+=1;
+        assert!(runtime_app_identities(&apps,&HashSet::from([100]),&procs,&statics,&meta).process(&target,"app").is_none());
+        procs.get_mut(&100).unwrap().uid-=1;procs.get_mut(&100).unwrap().start+=1;
+        assert!(runtime_app_identities(&apps,&HashSet::from([100]),&procs,&statics,&meta).process(&target,"app").is_none());
     }
 
     fn classify_service(pid: u32, apps: &HashMap<u32, String>, procs: &BTreeMap<u32, Proc>,
@@ -1348,6 +1576,48 @@ mod tests {
         let combined: u64 = rows.iter().filter(|p| pids.contains(&p["pid"]))
             .map(|p| p["memory"].as_u64().unwrap()).sum();
         assert_eq!(group["memory"].as_u64(), Some(combined));
+    }
+
+    #[test]
+    fn split_launcher_apps_and_reparented_helpers_keep_one_real_app_group() {
+        let main=tree::Tree::spawn("/nonexistent/app-main","sleep 30 & wait");
+        let child=tree::Tree::spawn("/nonexistent/app-worker","sleep 30 & wait");
+        let orphan=tree::Tree::spawn("/nonexistent/app-reporter","sleep 30 & wait");
+        let root=std::env::temp_dir().join(format!("win11-sysmon-split-{}",crate::events::nonce()));
+        let config=root.join("config");fs::create_dir_all(&config).unwrap();
+        fs::write(config.join("settings.json"),json!({"language":"en"}).to_string()).unwrap();
+        let ctx=ServiceContext::new(crate::events::Events::new(&root.join("events")).unwrap(),
+            config,root.join("cache"),root.join("ui"),"taskmgr".into(),false).unwrap();
+        let mut state=ProcessState::default();
+        state.desktop.built=now();state.desktop.lang="en".into();
+        let app=desktop_entry("notebird.desktop");let runtime=desktop_entry("generic-runtime.desktop");
+        state.desktop.by_id.insert("notebird".into(),app.clone());
+        state.desktop.by_id.insert("generic-runtime".into(),runtime.clone());
+        state.desktop.index_path(Path::new("/opt/notebird/NoteBird"),&app);
+        state.desktop.index_path(Path::new("/opt/generic-runtime/generic-runtime"),&runtime);
+        state.windows=(now(),vec![json!({"pid":main.root(),"desktopId":"","appId":"generic-runtime","title":"Actual application"})]);
+        state.units_desc=(now(),HashMap::from([("cached.service".into(),"fixture".into())]));
+        let processes=scan_proc();
+        for (pid,path,unit) in [
+            (main.root(),"/opt/notebird/NoteBird","/app.slice/app-generic-runtime-1.scope"),
+            (child.root(),"/opt/notebird/NoteBird","/app.slice/app-win11-external-1.service"),
+            (orphan.root(),"/opt/notebird/crash-reporter","/app.slice/app-win11-external-1.service"),
+        ] {
+            let p=&processes[&pid];let mut st=static_of(p);st.exe=Some(path.into());st.cgroup=unit.into();st.unit=parse_cgroup(unit);
+            state.statics.insert((pid,p.start),st);
+        }
+        let answer=state.processes(&ctx,true);ctx.events.shutdown();let _=fs::remove_dir_all(root);
+        let group=answer["apps"].as_array().unwrap().iter().find(|g|g["key"]=="notebird.desktop").unwrap();
+        for pid in [main.root(),child.root(),orphan.root()] {
+            assert!(group["pids"].as_array().unwrap().iter().any(|value|value.as_u64()==Some(pid.into())),"missing {pid}");
+            let occurrences=["apps","background","system"].iter().flat_map(|section|answer[*section].as_array().unwrap())
+                .filter(|g|g["pids"].as_array().unwrap().iter().any(|value|value.as_u64()==Some(pid.into()))).count();
+            assert_eq!(occurrences,1,"double counted {pid}");
+        }
+        let sum:u64=answer["processes"].as_array().unwrap().iter()
+            .filter(|p|group["pids"].as_array().unwrap().contains(&p["pid"]))
+            .map(|p|p["memory"].as_u64().unwrap()).sum();
+        assert_eq!(group["memory"].as_u64(),Some(sum));
     }
 
     #[test]

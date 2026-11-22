@@ -467,6 +467,19 @@ export class NativeFrostedBridge {
         return used.has(base);
     }
 
+    // Restore only sibling order after Mutter restacks. Scene contents, lifecycle,
+    // geometry and capability notifications remain the responsibility of sync().
+    restack() {
+        if (!this._enabled) return;
+        for (const [window, entry] of this._entries) {
+            const actor = window.get_compositor_private();
+            const parent = actor?.get_parent();
+            if (!parent || entry.outer.get_parent() !== parent) continue;
+            if (entry.outer.get_next_sibling() !== actor)
+                parent.set_child_below_sibling(entry.outer, actor);
+        }
+    }
+
     sync() {
         const desired = this._desired();
         for (const key of [...this._entries.keys()]) if (!desired.has(key)) this._destroy(key);

@@ -52,7 +52,23 @@ def run(h):
             for repeat in range(2):
                 label = f'{len(cycles)+1}: {method}, delay {delay}'
                 opened = h.click('panel', 'tb-start')
-                h.until(lambda: shown(h, pid), label+' opens', 8, 0.05)
+                try:
+                    h.until(lambda: shown(h, pid), label+' opens', 8, 0.05)
+                except TimeoutError:
+                    tops = h.native_state()
+                    h.record(label+' normal-open timeout', {
+                        'input': opened,
+                        'native': [{key: top.get(key) for key in ('title','visible','mapped','active','focus','width','height')}
+                                   for top in tops],
+                        'bridge': h.bridge('shell.info'),
+                        'meta': h.eval("(()=>{const b=" + BRIDGE.replace('._frostedBridge', '') + ";"
+                            "const f=global.display.focus_window;return {focus:f?{wm:f.get_wm_class(),pid:f.get_pid()}:null,"
+                            "search:b._panelSearch,exclusive:b._panelExclusive,phase:b._frostedBridge._startPhase.get("+str(pid)+"),"
+                            "windows:global.get_window_actors().map(a=>({wm:a.meta_window.get_wm_class(),"
+                            "gtkApp:a.meta_window.get_gtk_application_id(),pid:a.meta_window.get_pid(),"
+                            "type:a.meta_window.get_window_type(),mapped:a.mapped,visible:a.visible}))};})()"),
+                    })
+                    raise
                 h.until(lambda: any(e['kind'] == 'start' and e['effect']
                                     for e in h.eval(f'{BRIDGE}.status()')['entries']),
                         label+' has blur', 6, 0.05)

@@ -5,6 +5,7 @@
 //!   {"native":"state","tag":t}             the surfaces' widget trees (name, css classes, label, allocation; an
 //!                                           image's icon: its theme name or file, "paintable" for a fetched one)
 //!   {"native":"click","name":n,"tag":t}     activate the widget with this name (gtk::Widget::set_widget_name)
+//!       optional "repeat":2 activates twice in the same callback, before any frame, for lifecycle race checks
 //!   {"native":"type","name":n,"text":s,"tag":t}  set the text of the editable with this name (Start's
 //!                                           "start-search")
 //!   {"native":"flyout","name":n,"tag":t}    toggle a flyout
@@ -51,6 +52,8 @@ fn run(v: &Value) -> Value {
             .into_iter()
             .filter_map(|w| w.downcast::<gtk::Window>().ok())
             .map(|w| json!({"title": w.title().map(|t| t.to_string()), "visible": w.is_visible(),
+                "active": w.is_active(), "mapped": w.is_mapped(),
+                "focus": gtk::prelude::GtkWindowExt::focus(&w).map(|f| f.widget_name().to_string()),
                 "width": w.width(), "height": w.height(), "tree": tree(w.upcast_ref())}))
             .collect::<Vec<_>>()),
         "click" => {
@@ -60,10 +63,17 @@ fn run(v: &Value) -> Value {
                 .find_map(|w| find(&w, name));
             match found {
                 Some(widget) => {
-                    if let Some(b) = widget.downcast_ref::<gtk::Button>() {
-                        b.emit_clicked();
-                    } else {
-                        widget.activate();
+                    for _ in 0..v["repeat"].as_u64().unwrap_or(1).clamp(1, 2) {
+                        if let Some(b) = widget.downcast_ref::<gtk::Button>() {
+                            b.emit_clicked();
+                        } else if name == "tb-search"
+                            && let Some(text) = find(&widget, "tb-search-input").and_then(|w| w.downcast::<gtk::Text>().ok())
+                        {
+                            text.grab_focus();
+                            crate::start::activate_taskbar_search(text.text().as_str());
+                        } else {
+                            widget.activate();
+                        }
                     }
                     json!({"clicked": name})
                 }
@@ -128,6 +138,11 @@ fn tree(widget: &gtk::Widget) -> Value {
         "children": children});
     if let Some(icon) = icon {
         node["icon"] = json!(icon);
+    }
+    if let Some(editable) = widget.dynamic_cast_ref::<gtk::Editable>() {
+        node["text"] = json!(editable.text().to_string());
+        node["position"] = json!(editable.position());
+        node["hasFocus"] = json!(widget.has_focus());
     }
     node
 }
