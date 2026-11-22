@@ -2,6 +2,8 @@
 """WinPoint's releases on GitHub (D-G74a; the updater design §3): the version in its places, the checks, and the
 local half of a release. Standard library only; run it from the checkout.
 
+Publishing also includes updating winpoint.nl in the same release pass, every time; see docs/RELEASING.md.
+
     python3 -B tools/release.py bump X.Y.Z
     python3 -B tools/release.py check [X.Y.Z]
     python3 -B tools/release.py build X.Y.Z --build-dir DIR [--host-target T] [--native-target T] [--source REV]

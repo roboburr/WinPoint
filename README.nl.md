@@ -103,6 +103,8 @@ Dit vraagt één keer om je wachtwoord en verwijdert de bestanden van WinPoint e
 
 De actuele broncode staat op **`main`**. Uitgaven hebben een tag zoals `v0.9.7`; tijdelijke werkbranches worden na samenvoegen opgeruimd.
 
+Zie [de releaseprocedure](docs/RELEASING.md) voor publicatie en het gelijktijdig bijwerken van winpoint.nl.
+
 Je hebt Rust 1.92 of nieuwer nodig (het `cargo`-pakket van Ubuntu is nieuw genoeg) en de ontwikkelbestanden van GTK 4:
 
 ```bash

@@ -103,6 +103,8 @@ It asks for your password once and removes WinPoint's files and its choice at th
 
 The current source is on **`main`**. Releases use tags such as `v0.9.7`; temporary work branches are removed after integration.
 
+See [the release procedure](docs/RELEASING.md) for publishing and updating winpoint.nl in the same release.
+
 You need Rust 1.92 or newer (Ubuntu's `cargo` package is new enough) and the GTK 4 development files:
 
 ```bash
