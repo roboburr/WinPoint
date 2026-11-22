@@ -14,6 +14,7 @@ section here.
   pressing Escape requests cancellation; minimising it keeps the transfer running. Closing the source Explorer
   does not interrupt it. Cancellation preserves completed items and detects changed partial destinations;
   cross-filesystem moves validate the copied destination before removing the source.
+  Retried or discarded staging copies do not count twice toward completion; uncertain totals stay unknown.
 
 - **Choose what happens when files already exist.** Explorer asks whether to replace, skip or keep both, with an
   option to apply the choice to later conflicts. Existing folders merge their contents; unrelated files stay

@@ -325,6 +325,12 @@ fn c_path(path: &Path) -> io::Result<CString> {
         .map_err(|_| io::Error::from_raw_os_error(libc::EINVAL))
 }
 
+#[derive(Clone, Copy)]
+struct MetricMark {
+    done: u64,
+    entries_done: Option<u64>,
+}
+
 struct Progress<'a> {
     ctx: Option<&'a Context>,
     job: String,
@@ -350,6 +356,8 @@ struct Progress<'a> {
     before_commit: Option<Box<dyn FnMut() + Send>>,
     #[cfg(test)]
     before_stage: Option<Box<dyn FnMut() + Send>>,
+    #[cfg(test)]
+    fail_after_write: Option<u64>,
 }
 
 impl<'a> Progress<'a> {
@@ -380,6 +388,38 @@ impl<'a> Progress<'a> {
             hook(self.done);
         }
         self.emit(false, false);
+    }
+    fn metric_mark(&self) -> MetricMark {
+        MetricMark {
+            done: self.done,
+            entries_done: self.entries_done,
+        }
+    }
+    fn uncertain_metrics(&mut self) {
+        self.total = None;
+        self.entry_count = None;
+        self.entries_done = None;
+    }
+    fn discard_copy(
+        &mut self,
+        mark: MetricMark,
+        path: &Path,
+        cleanup: io::Result<()>,
+        source_changed: bool,
+    ) {
+        let discarded = cleanup.is_ok() && !lexists(path);
+        self.note_partial(path, cleanup);
+        if discarded {
+            self.done = mark.done;
+            self.entries_done = mark.entries_done;
+        } else {
+            self.uncertain_metrics();
+        }
+        if source_changed {
+            self.uncertain_metrics();
+        }
+        // Native speed samples are reset when done moves backwards; publish this before another attempt.
+        self.emit(false, true);
     }
     fn checkpoint(&mut self) -> io::Result<()> {
         if let Some(control) = self.control.clone() {
@@ -487,6 +527,8 @@ pub(super) fn transfer_with_options(
         before_commit: None,
         #[cfg(test)]
         before_stage: None,
+        #[cfg(test)]
+        fail_after_write: None,
     };
     progress.emit(false, true);
     // Register and emit first: a long directory pre-scan is itself pausable/cancellable.
@@ -742,6 +784,7 @@ fn copy_any(
     progress: &mut Progress<'_>,
     depth: usize,
 ) -> io::Result<Snapshot> {
+    let mark = progress.metric_mark();
     progress.checkpoint()?;
     if depth > 256 {
         return Err(io::Error::from_raw_os_error(libc::ELOOP));
@@ -761,7 +804,8 @@ fn copy_any(
         let owned = fs::symlink_metadata(target)?;
         snapshot.copied = owned.clone();
         if let Err(error) = progress.checkpoint() {
-            progress.note_partial(target, cleanup_owned(target, &owned));
+            let changed = !fs::symlink_metadata(source).is_ok_and(|now| unchanged(&metadata, &now));
+            progress.discard_copy(mark, target, cleanup_owned(target, &owned), changed);
             return Err(error);
         }
     } else if metadata.is_dir() {
@@ -807,7 +851,13 @@ fn copy_any(
             Ok(())
         })();
         if let Err(error) = result {
-            progress.note_partial(target, cleanup_tree(target, &owned, &snapshot.children));
+            let changed = !fs::symlink_metadata(source).is_ok_and(|now| unchanged(&metadata, &now));
+            progress.discard_copy(
+                mark,
+                target,
+                cleanup_tree(target, &owned, &snapshot.children),
+                changed,
+            );
             return Err(error);
         }
     } else if metadata.is_file() {
@@ -831,6 +881,14 @@ fn copy_any(
                 output.write_all(&buffer[..read])?;
                 owned = output.metadata()?;
                 progress.add(read as u64);
+                #[cfg(test)]
+                if progress
+                    .fail_after_write
+                    .is_some_and(|limit| progress.done.saturating_sub(mark.done) >= limit)
+                {
+                    progress.fail_after_write = None;
+                    return Err(io::Error::from_raw_os_error(libc::ENOSPC));
+                }
             }
             progress.checkpoint()?;
             verify_output(&output, target, &owned)?;
@@ -848,7 +906,8 @@ fn copy_any(
         })();
         if let Err(error) = result {
             drop(output);
-            progress.note_partial(target, cleanup_owned(target, &owned));
+            let changed = !fs::symlink_metadata(source).is_ok_and(|now| unchanged(&metadata, &now));
+            progress.discard_copy(mark, target, cleanup_owned(target, &owned), changed);
             return Err(error);
         }
     } else {
@@ -993,6 +1052,7 @@ fn preserve_metadata(source: &File, target: &File, metadata: &Metadata) {
 }
 
 fn copy_then_remove(source: &Path, target: &Path, progress: &mut Progress<'_>) -> io::Result<()> {
+    let mark = progress.metric_mark();
     let snapshot = copy_any(source, target, progress, 0)?;
     let prepared = (|| {
         loop {
@@ -1019,7 +1079,9 @@ fn copy_then_remove(source: &Path, target: &Path, progress: &mut Progress<'_>) -
                 } else {
                     cleanup_owned(target, &snapshot.copied)
                 };
-                progress.note_partial(target, cleanup);
+                let changed = !fs::symlink_metadata(source)
+                    .is_ok_and(|now| unchanged(&snapshot.metadata, &now));
+                progress.discard_copy(mark, target, cleanup, changed);
             }
             return Err(error);
         }
@@ -1067,6 +1129,8 @@ pub(super) fn move_noreplace_exact(source: &Path, target: &Path) -> io::Result<(
                 before_commit: None,
                 #[cfg(test)]
                 before_stage: None,
+                #[cfg(test)]
+                fail_after_write: None,
             };
             copy_then_remove(source, target, &mut progress)
         }
@@ -1219,6 +1283,7 @@ mod tests {
             after_write: None,
             before_commit: None,
             before_stage: None,
+            fail_after_write: None,
         }
     }
 

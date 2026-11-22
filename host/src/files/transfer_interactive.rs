@@ -425,6 +425,7 @@ fn replace(
     if let Some(hook) = &mut progress.before_stage {
         hook();
     }
+    let mark = progress.metric_mark();
     let mut snapshot = match copy_any(source, &new, progress, 0) {
         Ok(snapshot) => snapshot,
         Err(error) => {
@@ -489,7 +490,9 @@ fn replace(
         Ok(true)
     })();
     if !published {
-        progress.note_partial(&new, cleanup_snapshot(&new, &snapshot));
+        let changed = !unchanged(consent_source, &snapshot.metadata)
+            || !fs::symlink_metadata(source).is_ok_and(|now| unchanged(consent_source, &now));
+        progress.discard_copy(mark, &new, cleanup_snapshot(&new, &snapshot), changed);
         if captured && rename_noreplace(&old, target).is_ok() {
             captured = false;
         }
@@ -800,18 +803,21 @@ mod tests {
         let worker = std::thread::spawn(move || {
             let mut progress = super::super::tests::progress();
             progress.control = Some(gate.clone());
+            progress.total = Some(source_consent.len());
+            progress.entry_count = Some(1);
             progress.before_stage = Some(Box::new(move || {
                 gate.request("pause");
                 tx.send(()).unwrap();
             }));
-            replace(
+            let result = replace(
                 &worker_source,
                 &worker_target,
                 &source_consent,
                 &target_consent,
                 false,
                 &mut progress,
-            )
+            );
+            (result, progress.total, progress.entry_count)
         });
         rx.recv_timeout(Duration::from_secs(3)).unwrap();
         let deadline = Instant::now() + Duration::from_secs(3);
@@ -822,9 +828,18 @@ mod tests {
         fs::remove_file(&source).unwrap();
         fs::write(&source, b"new source after question").unwrap();
         job.request("resume");
+        let (result, total, count) = worker.join().unwrap();
         assert!(
-            !worker.join().unwrap().unwrap(),
+            !result.unwrap(),
             "false causes a new question rather than replacing"
+        );
+        assert_eq!(
+            total, None,
+            "changed source invalidates the old byte estimate"
+        );
+        assert_eq!(
+            count, None,
+            "changed source invalidates the old entry estimate"
         );
         assert_eq!(fs::read(source).unwrap(), b"new source after question");
         assert_eq!(fs::read(&target).unwrap(), b"old target must remain");
@@ -833,5 +848,141 @@ mod tests {
             1,
             "owned staging was cleaned"
         );
+    }
+
+    #[test]
+    fn discarded_stage_and_new_consent_count_bytes_once_and_keep_completed_sibling_metrics() {
+        use std::sync::atomic::AtomicBool;
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let sibling = vec![0x31; 41];
+        let contents = vec![0x43; 2 * 1024 * 1024];
+        fs::write(src.join("sibling"), &sibling).unwrap();
+        fs::write(src.join("file"), &contents).unwrap();
+        let target = dest.join("file");
+        fs::write(&target, b"old").unwrap();
+        let mut context = f.service.context();
+        context.language = "en".into();
+        let job = context
+            .transfers
+            .register("stage-metrics", &context)
+            .unwrap();
+        let questions = Arc::new(AtomicUsize::new(0));
+        let observed = questions.clone();
+        let controls = context.transfers.clone();
+        let resolver = Context::new(f.root.clone(), f.root.join("Desktop"), "en".into(), false);
+        f.service.events.on("files.conflict",Arc::new(move|event| {
+            assert_eq!(event["kind"],"collision");observed.fetch_add(1,Ordering::SeqCst);
+            controls.resolve(&json!({"jobId":event["jobId"],"conflictId":event["conflictId"],"choice":"replace"}),&resolver,false).unwrap();
+        }));
+        let samples = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let recorded = samples.clone();
+        let discard_started = Arc::new(AtomicBool::new(false));
+        let after_discard = discard_started.clone();
+        f.service.events.on(
+            "files.progress",
+            Arc::new(move |event| {
+                recorded.lock().unwrap().push((
+                    event["done"].as_u64().unwrap(),
+                    after_discard.load(Ordering::SeqCst),
+                ))
+            }),
+        );
+        let mut progress = super::super::tests::progress();
+        progress.ctx = Some(&context);
+        progress.control = Some(job);
+        progress.total = Some((sibling.len() + contents.len()) as u64);
+        progress.entry_count = Some(2);
+        copy_any(
+            &src.join("sibling"),
+            &dest.join("sibling"),
+            &mut progress,
+            0,
+        )
+        .unwrap();
+        let changed = target.clone();
+        let first = AtomicBool::new(true);
+        progress.before_commit = Some(Box::new(move || {
+            if first.swap(false, Ordering::SeqCst) {
+                fs::write(&changed, b"target changed after staging").unwrap();
+                discard_started.store(true, Ordering::SeqCst);
+            }
+        }));
+        entry(&src.join("file"), &target, false, &mut progress, 0).unwrap();
+        assert_eq!(
+            questions.load(Ordering::SeqCst),
+            2,
+            "discarding consent requires a new real question"
+        );
+        assert_eq!(progress.done, (sibling.len() + contents.len()) as u64);
+        assert_eq!(progress.total, Some(progress.done));
+        assert_eq!(progress.entries_done, Some(2));
+        assert_eq!(fs::read(dest.join("sibling")).unwrap(), sibling);
+        assert_eq!(fs::read(target).unwrap(), contents);
+        assert!(
+            samples
+                .lock()
+                .unwrap()
+                .iter()
+                .any(|(done, after_discard)| *after_discard && *done == sibling.len() as u64),
+            "a reset is published before retry"
+        );
+    }
+
+    #[test]
+    fn mid_copy_error_cleanup_and_explicit_retry_reset_only_that_attempt() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let sibling = vec![0x31; 41];
+        let contents = vec![0x44; 4 * 1024 * 1024];
+        fs::write(src.join("sibling"), &sibling).unwrap();
+        fs::write(src.join("file"), &contents).unwrap();
+        let mut context = f.service.context();
+        context.language = "en".into();
+        let job = context
+            .transfers
+            .register("retry-metrics", &context)
+            .unwrap();
+        let questions = Arc::new(AtomicUsize::new(0));
+        let observed = questions.clone();
+        let controls = context.transfers.clone();
+        let resolver = Context::new(f.root.clone(), f.root.join("Desktop"), "en".into(), false);
+        f.service.events.on("files.conflict",Arc::new(move|event| {
+            assert_eq!(event["kind"],"error");assert_eq!(event["retrySafe"],true);observed.fetch_add(1,Ordering::SeqCst);
+            controls.resolve(&json!({"jobId":event["jobId"],"conflictId":event["conflictId"],"choice":"retry"}),&resolver,false).unwrap();
+        }));
+        let mut progress = super::super::tests::progress();
+        progress.ctx = Some(&context);
+        progress.control = Some(job);
+        progress.total = Some((sibling.len() + contents.len()) as u64);
+        progress.entry_count = Some(2);
+        copy_any(
+            &src.join("sibling"),
+            &dest.join("sibling"),
+            &mut progress,
+            0,
+        )
+        .unwrap();
+        // Inject ENOSPC once only after one real MiB has been written, at the I/O error boundary.
+        progress.fail_after_write = Some(1024 * 1024);
+        entry(
+            &src.join("file"),
+            &dest.join("file"),
+            false,
+            &mut progress,
+            0,
+        )
+        .unwrap();
+        assert_eq!(questions.load(Ordering::SeqCst), 1);
+        assert_eq!(progress.done, (sibling.len() + contents.len()) as u64);
+        assert_eq!(progress.total, Some(progress.done));
+        assert_eq!(progress.entry_count, Some(2));
+        assert_eq!(progress.entries_done, Some(2));
+        assert!(progress.partial_paths.is_empty());
+        assert_eq!(fs::read(dest.join("sibling")).unwrap(), sibling);
+        assert_eq!(fs::read(dest.join("file")).unwrap(), contents);
+        assert_eq!(fs::read(src.join("file")).unwrap(), contents);
     }
 }
