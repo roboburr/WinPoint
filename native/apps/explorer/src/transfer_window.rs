@@ -251,12 +251,12 @@ fn line(name: &str, class: &str) -> gtk::Label {
 
 fn captions(widget: &gtk::Widget) {
     match widget.widget_name().as_str() {
-        "explorer-cap-max" => {
+        "explorer-maximize" => {
             widget.set_sensitive(false);
             widget.set_widget_name("explorer-transfer-maximize");
         }
-        "explorer-cap-min" => widget.set_widget_name("explorer-transfer-minimize"),
-        "explorer-cap-close" => widget.set_widget_name("explorer-transfer-close"),
+        "explorer-minimize" => widget.set_widget_name("explorer-transfer-minimize"),
+        "explorer-close" => widget.set_widget_name("explorer-transfer-close"),
         _ => {}
     }
     let mut child = widget.first_child();
