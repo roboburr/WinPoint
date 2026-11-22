@@ -19,6 +19,7 @@ use std::{
 pub(crate) mod actions;
 mod archives;
 mod clipboard;
+mod control;
 mod dry;
 mod mutate;
 mod places;
@@ -111,6 +112,7 @@ pub(super) struct Context {
     show_hidden: std::sync::OnceLock<bool>,
     settings_dir: Option<PathBuf>,
     events: Option<Arc<Events>>,
+    transfers: Arc<control::Registry>,
 }
 impl Context {
     pub fn new(home: PathBuf, desktop: PathBuf, language: String, show_hidden: bool) -> Self {
@@ -121,6 +123,7 @@ impl Context {
             show_hidden: std::sync::OnceLock::from(show_hidden),
             settings_dir: None,
             events: None,
+            transfers: Arc::new(control::Registry::default()),
         }
     }
     /// The language of this call's texts (C1), for `crate::i18n::tr(ctx.lang(), …)` and `ApiError::tr`.
@@ -169,6 +172,7 @@ pub(crate) struct Files {
     idle: Condvar,
     /// [`Files::busy`] found a call in flight: the end of the last one emits [`IDLE_EVENT`] (once)
     idle_wanted: AtomicBool,
+    transfers: Arc<control::Registry>,
 }
 /// The local event (this process only, never sent to other windows) that ends a [`Files::busy`] wait: the last
 /// `files.*` call in flight has ended (D-G45, GX1 m5: a restarting Explorer waits for its copy).
@@ -213,6 +217,7 @@ impl Files {
             jobs: Mutex::new((false, 0)),
             idle: Condvar::new(),
             idle_wanted: AtomicBool::new(false),
+            transfers: Arc::new(control::Registry::default()),
         }))
     }
 
@@ -241,6 +246,7 @@ impl Files {
             jobs: Mutex::new((false, 0)),
             idle: Condvar::new(),
             idle_wanted: AtomicBool::new(false),
+            transfers: Arc::new(control::Registry::default()),
         })
     }
     /// Tests: one `files.*` call in flight until the guard is dropped (a copy that is still running).
@@ -269,6 +275,7 @@ impl Files {
             context
         };
         context.events = Some(self.events.clone());
+        context.transfers = self.transfers.clone();
         context
     }
 
@@ -298,6 +305,8 @@ impl Files {
                 | "files.rename"
                 | "files.copy"
                 | "files.move"
+                | "files.transferControl"
+                | "files.resolveConflict"
                 | "files.clipboardSet"
                 | "files.clipboardGet"
                 | "files.clipboardClear"
@@ -373,6 +382,12 @@ impl Files {
             return None;
         }
         let context = self.context();
+        if method == "files.transferControl" {
+            return Some(self.transfers.call(args, &context, self.dry_run));
+        }
+        if method == "files.resolveConflict" {
+            return Some(self.transfers.resolve(args, &context, self.dry_run));
+        }
         if self.dry_run {
             if let Some(result) = dry::call(method, args, &context) {
                 return Some(result);
@@ -415,6 +430,8 @@ impl Files {
     }
 
     pub(crate) fn shutdown(&self) {
+        // A paused transfer must wake before we wait for workers to leave; cancellation is cooperative.
+        self.transfers.shutdown();
         // Closing a window must not terminate a worker halfway through copying a file.
         let mut jobs = self.jobs.lock().unwrap_or_else(|error| error.into_inner());
         jobs.0 = true;
@@ -1012,6 +1029,7 @@ mod tests {
             jobs: Mutex::new((false, 1)),
             idle: Condvar::new(),
             idle_wanted: AtomicBool::new(false),
+            transfers: Arc::new(control::Registry::default()),
         });
         let job = Job(&service);
         let closing = service.clone();
@@ -1057,6 +1075,7 @@ mod tests {
             jobs: Mutex::new((false, 0)),
             idle: Condvar::new(),
             idle_wanted: AtomicBool::new(false),
+            transfers: Arc::new(control::Registry::default()),
         };
         fs::create_dir(root.join("config")).unwrap();
         let settings = |value: Value| {

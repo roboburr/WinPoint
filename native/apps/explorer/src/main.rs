@@ -107,6 +107,7 @@ mod picker;
 mod tabs;
 mod toolbar;
 mod transfer;
+mod transfer_window;
 mod util;
 
 use explorer::{Explorer, Params};

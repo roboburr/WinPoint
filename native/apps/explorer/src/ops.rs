@@ -2,11 +2,11 @@
 //! `restoreNames`, `dropTo`, `renameItem`, `setAttributes`, `loadOpenWith`, `showJob`): open, rename, new
 //! folder and text document, cut, copy, paste, move and copy by drag and drop, to the Prullenbak (Del and
 //! Shift+Del: the WebKit app never deleted permanently, and the host has no such method), compress, extract,
-//! restore, empty the Prullenbak, Openen met, Ongedaan maken (Ctrl+Z) and the progress cards of long jobs.
+//! restore, empty the Prullenbak, Openen met, Ongedaan maken (Ctrl+Z) and separate transfer windows.
 //!
 //! Long jobs (copy, move, paste, compress, extract) carry a `jobId`; when one runs longer than 700 ms a
-//! Windows-style card ("3 items kopiëren naar Documenten", a bar, the percentage and the current file) shows
-//! above the list, fed by the host's files.progress events. Name conflicts are the host's ("naam (2).ext"),
+//! Windows-style operation window shows progress, details and host-backed transfer controls. Name conflicts
+//! remain the host's ("naam (2).ext"),
 //! failed items come back in `failed` and show as "Dit ging mis bij: ...".
 //!
 //! Undo steps are asynchronous (`Step`): Ctrl+Z runs the last one, then "Ongedaan gemaakt" (or the error), the
@@ -15,11 +15,12 @@ use crate::explorer::{Explorer, NavOpts, ToastOpts, WeakExplorer};
 use crate::fileview::RenameDone;
 use crate::i18n::{f, n, s};
 use crate::model::Loc;
+use crate::transfer_window::TransferWindow;
 use crate::util::{self, Item, num, st};
 use gtk::glib;
 use gtk::prelude::*;
 use kit::CallError;
-use kit::controls::{Dialog, DialogResult, MenuItem, ProgressBar, Severity};
+use kit::controls::{Dialog, DialogResult, MenuItem, Severity};
 use serde_json::{Value, json};
 use std::cell::{Cell, RefCell};
 use std::collections::{HashMap, HashSet};
@@ -97,8 +98,21 @@ fn failed_names(res: &Value) -> String {
 /// "Dit ging mis bij: ..." when some items failed.
 fn report_failed(x: &Explorer, res: &Value) {
     if !failed(res).is_empty() {
-        x.show_error(&f("errSome", &[("names", &failed_names(res))]), None);
+        x.show_error(&failure_message(res), None);
     }
+}
+
+fn failure_message(res: &Value) -> String {
+    let mut message = f("errSome", &[("names", &failed_names(res))]);
+    // A cancelled transfer may deliberately preserve a partial destination changed by another program.
+    // Keep the host's concrete warning visible instead of misreporting a clean cancellation.
+    if let Some(warning) = failed(res).iter().filter(|entry| entry["code"] == "partial_cleanup")
+        .find_map(|entry| entry["error"].as_str().filter(|message| !message.is_empty()))
+    {
+        message.push('\n');
+        message.push_str(warning);
+    }
+    message
 }
 
 fn dry(res: &Value) -> bool {
@@ -111,24 +125,25 @@ fn text_of(v: &Value, key: &str) -> Option<String> {
 
 // ============================================================================================ jobs
 
-/// The methods that get a jobId and a progress card, with their job kind.
+/// The methods that get a jobId and a separate operation window, with their job kind.
 const JOB_OPS: [(&str, &str); 5] =
     [("files.copy", "copy"), ("files.move", "move"), ("files.paste", "paste"), ("files.compress", "compress"), ("files.extract", "extract")];
 
-struct JobCard {
-    root: gtk::Box,
-    bar: ProgressBar,
-    pct: gtk::Label,
-    sub: gtk::Label,
-}
-
 struct Job {
+    id: String,
     kind: &'static str,
     count: usize,
     dest: Option<String>,
     x: WeakExplorer,
-    card: RefCell<Option<JobCard>>,
+    source_label: String,
+    source_dir: Option<String>,
+    destination_label: String,
+    window: RefCell<Option<TransferWindow>>,
+    /// A hidden/minimised operation and a closed source Explorer must not kill its backend mid-transfer.
+    hold: RefCell<Option<gtk::gio::ApplicationHoldGuard>>,
+    backend_epoch: u64,
     last: RefCell<Option<Value>>,
+    conflict: RefCell<Option<Value>>,
     /// The call gave up waiting (the backend client's read limit) while files.progress still came: finish when
     /// it says the job finished.
     orphan: Cell<bool>,
@@ -138,6 +153,11 @@ thread_local! {
     static JOBS: RefCell<HashMap<String, Rc<Job>>> = RefCell::new(HashMap::new());
     static JOB_SEQ: Cell<u64> = const { Cell::new(0) };
     static LISTENING: Cell<bool> = const { Cell::new(false) };
+    static BACKEND_EPOCH: Cell<u64> = const { Cell::new(0) };
+}
+
+fn same_operation<T>(current: Option<Rc<T>>, expected: &Rc<T>) -> bool {
+    current.is_some_and(|current| Rc::ptr_eq(&current, expected))
 }
 
 fn job_kind(method: &str) -> Option<&'static str> {
@@ -153,16 +173,38 @@ fn listen_progress(x: &Explorer) {
     if LISTENING.with(|l| l.replace(true)) {
         return;
     }
+    x.ctx().on("backend.ready", |_, data| {
+        if data["respawn"] != true { return; }
+        BACKEND_EPOCH.with(|epoch| epoch.set(epoch.get().wrapping_add(1)));
+        // Do not discard requests waiting to start on the new endpoint. Only disconnected old calls are
+        // known orphans; old in-flight callbacks below detect the epoch change when they return offline.
+        let orphaned: Vec<Rc<Job>> = JOBS.with(|jobs| jobs.borrow().values().filter(|job| job.orphan.get()).cloned().collect());
+        for job in orphaned {
+            JOBS.with(|jobs| jobs.borrow_mut().remove(&job.id));
+            remove_window(&job, Some(s("transferInterrupted")));
+        }
+    });
+    x.ctx().on("files.conflict", |_, data| {
+        let Some(id) = data["jobId"].as_str() else { return };
+        let Some(job) = self::job(id) else { return };
+        if data["conflictId"].as_str().is_none_or(str::is_empty) { return; }
+        *job.conflict.borrow_mut() = Some(data.clone());
+        if job.window.borrow().is_none() { show_window(&job); }
+        show_conflict(&job, data);
+    });
     x.ctx().on("files.progress", |_, d| {
         let Some(id) = d["jobId"].as_str() else { return };
         let Some(job) = job(id) else { return };
         *job.last.borrow_mut() = Some(d.clone());
-        if let Some(card) = job.card.borrow().as_ref() {
-            update_card(card, d);
+        if d["state"].as_str().is_some_and(|state| state != "waitingConflict") {
+            job.conflict.borrow_mut().take();
+        }
+        if let Some(window) = job.window.borrow().as_ref() {
+            window.update(d);
         }
         if job.orphan.get() && d["finished"] == true {
             JOBS.with(|j| j.borrow_mut().remove(id));
-            remove_card(&job);
+            remove_window(&job, (d["state"] == "failed").then_some(s("transferFailed")));
             if let Some(x) = job.x.upgrade() {
                 if let Some(dest) = &job.dest {
                     x.invalidate_dir(dest);
@@ -175,84 +217,70 @@ fn listen_progress(x: &Explorer) {
     });
 }
 
-fn update_card(card: &JobCard, d: &Value) {
-    let total = num(d, "total");
-    if total > 0.0 {
-        let v = (num(d, "done") / total * 100.0).clamp(0.0, 100.0);
-        card.bar.set_indeterminate(false);
-        card.bar.set_fraction(v / 100.0);
-        card.pct.set_label(&format!("{}%", v.floor()));
-    }
-    if let Some(cur) = d["current"].as_str().filter(|c| !c.is_empty()) {
-        card.sub.set_label(&util::basename(cur));
-    }
-}
-
-fn show_card(job: &Job) {
-    let Some(x) = job.x.upgrade() else { return };
-    let name = job.dest.as_deref().map(|d| x.folder_label(d)).unwrap_or_default();
-    let key = format!("job_{}", job.kind);
-    let title_text = match job.kind {
-        "compress" | "extract" => s(&key).to_owned(),
-        _ => n(&key, job.count, &[("name", &name)]),
-    };
-    let root = gtk::Box::new(gtk::Orientation::Horizontal, 12);
-    root.add_css_class("xp-job");
-    root.set_widget_name("explorer-job");
-    root.update_property(&[gtk::accessible::Property::Label(&title_text)]);
-    let icon = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    icon.add_css_class("xp-job-icon");
-    icon.set_size_request(20, 20);
-    icon.set_valign(gtk::Align::Start);
-    let glyph = kit::icons::glyph(
-        match job.kind {
-            "move" => "cut",
-            "compress" | "extract" => "folder",
-            _ => "copy",
-        },
-        16,
-    );
-    glyph.set_hexpand(true);
-    icon.append(&glyph);
-    root.append(&icon);
-    let text = gtk::Box::new(gtk::Orientation::Vertical, 6);
-    text.add_css_class("xp-job-text");
-    text.set_hexpand(true);
-    let row = gtk::Box::new(gtk::Orientation::Horizontal, 12);
-    let title = kit::controls::label(&title_text, "xp-job-title", false);
-    title.set_hexpand(true);
-    let pct = kit::controls::label("", "xp-job-pct", false);
-    pct.add_css_class("w11-tabular");
-    row.append(&title);
-    row.append(&pct);
-    let bar = ProgressBar::new();
-    bar.set_indeterminate(true);
-    let sub = kit::controls::label("", "xp-job-sub", false);
-    sub.set_size_request(-1, 16);
-    text.append(&row);
-    text.append(bar.widget());
-    text.append(&sub);
-    root.append(&text);
-    x.infobars().append(&root);
-    let card = JobCard { root, bar, pct, sub };
+fn show_window(job: &Job) {
+    if job.window.borrow().is_some() { return; }
+    let id = job.id.clone();
+    let window = TransferWindow::new(job.kind, job.count, job.source_label.clone(), job.destination_label.clone(),
+        job.source_dir.clone(), job.dest.clone(), Rc::new(move |action| control_job(&id, action)));
     if let Some(last) = job.last.borrow().as_ref() {
-        update_card(&card, last);
+        window.update(last);
     }
-    *job.card.borrow_mut() = Some(card);
+    let activate = job.x.upgrade().is_some_and(|x| x.window().window().is_active());
+    window.show(activate);
+    *job.window.borrow_mut() = Some(window);
+    if let Some(conflict) = job.conflict.borrow().as_ref() { show_conflict(job, conflict); }
 }
 
-fn remove_card(job: &Job) {
-    let card = job.card.borrow_mut().take();
-    if let Some(card) = card {
-        card.bar.set_indeterminate(false);
-        if let Some(parent) = card.root.parent().and_downcast::<gtk::Box>() {
-            parent.remove(&card.root);
-        }
+fn show_conflict(job: &Job, data: &Value) {
+    let (id, conflict_id) = (job.id.clone(), data["conflictId"].as_str().unwrap_or("").to_owned());
+    if let Some(window) = job.window.borrow().as_ref() {
+        window.show_conflict(data, Rc::new(move |choice, all| resolve_conflict(&id, &conflict_id, choice, all)));
     }
+}
+
+fn resolve_conflict(id: &str, conflict_id: &str, choice: &str, all: bool) {
+    let Some(expected) = self::job(id) else { return };
+    if expected.conflict.borrow().as_ref().is_none_or(|data| data["conflictId"] != conflict_id) { return; }
+    let (id, conflict_id) = (id.to_owned(), conflict_id.to_owned());
+    kit::ctx().call("files.resolveConflict", json!({"jobId": id, "conflictId": conflict_id,
+        "choice": choice, "applyToAll": all}), move |result| {
+        if !same_operation(self::job(&id), &expected) { return; }
+        if let Err(error) = result
+            && let Some(window) = expected.window.borrow().as_ref()
+        {
+            window.conflict_error(&conflict_id, &err_text(&error));
+        }
+        // Success is only a recorded decision. The worker's next progress/conflict event controls the page.
+    });
+}
+
+fn remove_window(job: &Job, error: Option<&str>) {
+    if error.is_some() && job.window.borrow().is_none() { show_window(job); }
+    let window = job.window.borrow_mut().take();
+    if let Some(window) = window {
+        if let Some(error) = error { window.fail(error); } else { window.finish(); }
+    }
+    let hold = job.hold.borrow_mut().take();
+    drop(hold);
+}
+
+fn control_job(id: &str, action: &str) {
+    let Some(job) = self::job(id) else { return };
+    let Some(stamp) = job.window.borrow().as_ref().map(TransferWindow::begin_control) else { return };
+    let id = job.id.clone();
+    kit::ctx().call("files.transferControl", json!({"jobId": id, "action": action}), move |result| {
+        let Some(job) = self::job(&id) else { return };
+        if let Some(window) = job.window.borrow().as_ref() {
+            match result {
+                Ok(value) => window.control_result(&value, stamp),
+                Err(error) => window.control_error(&err_text(&error), stamp),
+            }
+        }
+    });
 }
 
 /// main.js `op`: a files.* call; copy, move, paste, compress and extract get a jobId and, after 700 ms, a
-/// progress card. A dry-run answer says so once.
+/// progress window. A dry-run answer says so once.
 pub(crate) fn op(x: &Explorer, method: &str, mut args: Value, done: impl FnOnce(&Explorer, Result<Value, CallError>) + 'static) {
     let Some(kind) = job_kind(method) else {
         x.call(method, args, move |x, r| {
@@ -276,13 +304,35 @@ pub(crate) fn op(x: &Explorer, method: &str, mut args: Value, done: impl FnOnce(
     if count == 0 {
         count = x.state().clipboard_paths.len().max(1);
     }
+    let sources: Vec<String> = if let Some(paths) = args["paths"].as_array() {
+        paths.iter().filter_map(Value::as_str).map(str::to_owned).collect()
+    } else if let Some(path) = args["path"].as_str() {
+        vec![path.to_owned()]
+    } else { x.state().clipboard_paths.clone() };
+    let parents: HashSet<String> = sources.iter().map(|path| util::dirname(path)).collect();
+    let source_label = if parents.len() == 1 {
+        parents.iter().next().map(|path| x.folder_label(path)).unwrap_or_default()
+    } else { s("transferVarious").to_owned() };
+    let source_dir = (parents.len() == 1).then(|| parents.iter().next().cloned()).flatten();
+    let dest = text_of(&args, "dest");
+    let destination_label = dest.as_deref().map(|path| x.folder_label(path)).unwrap_or_default();
+    let kind = if kind == "paste" {
+        if x.state().clipboard_op.as_deref() == Some("cut") { "move" } else { "copy" }
+    } else { kind };
     let job = Rc::new(Job {
+        id: id.clone(),
         kind,
         count,
-        dest: text_of(&args, "dest"),
+        dest,
         x: x.weak(),
-        card: RefCell::new(None),
+        source_label,
+        source_dir,
+        destination_label,
+        window: RefCell::new(None),
+        hold: RefCell::new(Some(x.ctx().app().hold())),
+        backend_epoch: BACKEND_EPOCH.with(Cell::get),
         last: RefCell::new(None),
+        conflict: RefCell::new(None),
         orphan: Cell::new(false),
     });
     JOBS.with(|j| j.borrow_mut().insert(id.clone(), job.clone()));
@@ -290,26 +340,42 @@ pub(crate) fn op(x: &Explorer, method: &str, mut args: Value, done: impl FnOnce(
     let tid = id.clone();
     timer.start(700, move || {
         if let Some(job) = self::job(&tid) {
-            show_card(&job);
+            show_window(&job);
         }
     });
     args["jobId"] = json!(id);
-    x.call(method, args, move |x, r| {
+    if matches!(method, "files.copy" | "files.move" | "files.paste") { args["interactive"] = json!(true); }
+    // Job ownership is process-wide, unlike x.call's source-window-bound callback. Always finish the window
+    // and release its hold even if the user closed the initiating Explorer while this request was running.
+    x.ctx().call(method, args, move |r| {
         timer.cancel();
+        // A respawn cleanup may already have retired this exact operation. Its late response cannot reopen
+        // an error window, release another job, or invoke the source-window completion a second time.
+        if !same_operation(self::job(&id), &job) { return; }
         if let Err(e) = &r
             && e.code == "offline"
             && job.last.borrow().as_ref().is_some_and(|l| l["finished"] != true)
         {
-            // still running in the host: the card stays until files.progress says it finished
-            job.orphan.set(true);
+            if BACKEND_EPOCH.with(Cell::get) != job.backend_epoch {
+                JOBS.with(|jobs| jobs.borrow_mut().remove(&id));
+                remove_window(&job, Some(s("transferInterrupted")));
+            } else {
+                // Still potentially running in the live host. Preserve ownership until finish or respawn.
+                job.orphan.set(true);
+            }
             return;
         }
         JOBS.with(|j| j.borrow_mut().remove(&id));
-        remove_card(&job);
-        if let Ok(v) = &r {
-            x.check_dry(v);
+        let error = match &r {
+            Err(error) => Some(err_text(error)),
+            Ok(value) if !failed(value).is_empty() => Some(failure_message(value)),
+            _ => None,
+        };
+        remove_window(&job, error.as_deref());
+        if let Some(x) = job.x.upgrade() {
+            if let Ok(v) = &r { x.check_dry(v); }
+            done(&x, r);
         }
-        done(x, r);
     });
 }
 
@@ -800,6 +866,16 @@ pub fn open_with_items(x: &Explorer, item: &Item, done: impl FnOnce(Vec<MenuItem
 
 // ============================================================================================ drop
 
+fn simple_move_undoable(paths: &[String], dest: &str, result: &Value) -> bool {
+    if result["undoable"] == false || result["cancelled"] == true || !failed(result).is_empty()
+        || ["skipped", "mergedPaths", "overwrittenPaths"].iter().any(|key| result[*key].as_array().is_some_and(|a| !a.is_empty()))
+    { return false; }
+    let Some(completed) = result["paths"].as_array() else { return false };
+    completed.len() == paths.len() && paths.iter().zip(completed).all(|(source, target)| {
+        target.as_str().is_some_and(|target| target == util::join_path(dest, &util::basename(source)))
+    })
+}
+
 /// A drop (main.js dropTo): copy or move `paths` into `dest` (files.copy / files.move) with the job card,
 /// "errSome", the toast "copied" / "moved" (with Ongedaan maken for a move: the items back per folder) and
 /// the undo step.
@@ -816,10 +892,10 @@ pub fn drop_to(x: &Explorer, paths: Vec<String>, dest: String, copy: bool) {
         Ok(res) => {
             report_failed(x, &res);
             if !dry(&res) {
-                let count = sent.len().saturating_sub(failed(&res).len());
+                let count = res["paths"].as_array().map(Vec::len).unwrap_or_else(|| sent.len().saturating_sub(failed(&res).len()));
                 if count > 0 {
                     let mut action = None;
-                    if !copy {
+                    if !copy && simple_move_undoable(&sent, &d, &res) {
                         let mut by_dir: Vec<(String, Vec<String>)> = Vec::new();
                         for p in &sent {
                             let from = util::dirname(p);
@@ -875,5 +951,37 @@ mod tests {
         assert_eq!(failed_names(&json!({})), "");
         assert_eq!(job_kind("files.paste"), Some("paste"));
         assert_eq!(job_kind("files.trash"), None);
+    }
+
+    #[test]
+    fn cancellation_cleanup_warning_stays_visible_with_the_preserved_destination_name() {
+        let message = failure_message(&json!({"cancelled": true, "failed": [
+            {"path": "/private/dest/report.txt", "code": "partial_cleanup", "error": "The changed partial copy was preserved."}
+        ]}));
+        assert!(message.contains("report.txt"));
+        assert!(message.contains("The changed partial copy was preserved."));
+    }
+
+    #[test]
+    fn late_callback_cannot_finish_a_retired_or_replaced_operation() {
+        let old = Rc::new(());
+        assert!(same_operation(Some(old.clone()), &old));
+        // Once crash cleanup removed the job, its old HTTP callback has no operation to finish again.
+        assert!(!same_operation(None, &old));
+        let replacement = Rc::new(());
+        assert!(!same_operation(Some(replacement.clone()), &old));
+        assert!(same_operation(Some(replacement.clone()), &replacement));
+    }
+
+    #[test]
+    fn old_move_undo_is_never_offered_for_replacements_merges_skips_or_renamed_targets() {
+        let sent = vec!["/source/a.txt".to_owned()];
+        assert!(simple_move_undoable(&sent, "/dest", &json!({"paths": ["/dest/a.txt"]})));
+        assert!(!simple_move_undoable(&sent, "/dest", &json!({"paths": ["/dest/a.txt"], "undoable": false})));
+        assert!(!simple_move_undoable(&sent, "/dest", &json!({"paths": ["/dest/a.txt"], "mergedPaths": ["/dest/a.txt"]})));
+        assert!(!simple_move_undoable(&sent, "/dest", &json!({"paths": ["/dest/a.txt"], "overwrittenPaths": ["/dest/a.txt"]})));
+        assert!(!simple_move_undoable(&sent, "/dest", &json!({"paths": ["/dest/a (2).txt"]})));
+        assert!(!simple_move_undoable(&sent, "/dest", &json!({"paths": [], "skipped": ["/source/a.txt"]})));
+        assert!(!simple_move_undoable(&sent, "/dest", &json!({"paths": ["/dest/a.txt"], "cancelled": true})));
     }
 }

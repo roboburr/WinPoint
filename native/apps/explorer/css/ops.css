@@ -25,17 +25,46 @@
 .xp-preview-img { border-radius: 4px; }
 .xp-preview-msg { padding: 0 12px; color: var(--text-2); }
 
-/* ---- progress card for long copy / move / zip operations (files.progress) -------------------------- */
-.xp-job {
-  padding: 12px 16px;
-  border: 1px solid var(--stroke-card);
-  border-radius: var(--radius-card);
-  background-color: var(--bg-card);
+/* ---- separate file-operation window: compact bar / expanded throughput graph --------------------- */
+.xp-transfer-window .w11-content { background-color: var(--bg-solid-base); }
+.xp-transfer-body { padding: 20px 32px 18px; }
+.xp-transfer-summary { font-size: var(--fs-body); color: var(--text-1); }
+.xp-transfer-percent { font-size: var(--fs-subtitle); color: var(--text-1); }
+progressbar.xp-transfer-progress { min-height: 18px; margin-top: 2px; }
+progressbar.xp-transfer-progress > trough {
+  min-height: 18px; border-radius: 0; border: 1px solid var(--stroke-control-strong);
+  background-color: var(--fill-control-alt-3);
 }
-.xp-job-icon { min-width: 20px; min-height: 20px; color: var(--accent-fg); }
-.xp-job-title { font-weight: 600; color: var(--text-1); }
-.xp-job-pct { color: var(--text-2); }
-.xp-job-sub { color: var(--text-2); }
+progressbar.xp-transfer-progress > trough > progress {
+  min-height: 18px; border-radius: 0; border: 0; background-color: #06b51b;
+}
+progressbar.xp-transfer-progress.is-paused > trough > progress { background-color: #d6a000; }
+.xp-transfer-graph { color: #06b51b; }
+.xp-transfer-graph.is-paused { color: #d6a000; }
+.xp-transfer-speed, .xp-transfer-detail { font-size: var(--fs-body); color: var(--text-1); }
+.xp-transfer-speed { color: #000000; }
+.xp-transfer-footer {
+  min-height: 54px; padding: 0 32px; border-top: 1px solid var(--stroke-divider);
+  background-color: var(--bg-solid-base);
+}
+button.xp-transfer-details-button {
+  padding: 0; margin: 0; border: 0; border-radius: 0; box-shadow: none;
+  background-color: transparent; color: var(--text-1); min-height: 54px;
+}
+button.xp-transfer-details-button:hover { color: var(--accent-fg); }
+.xp-transfer-chevron {
+  min-width: 20px; min-height: 20px; border: 1px solid var(--text-3); border-radius: 50%;
+  color: var(--text-2);
+}
+.xp-transfer-error { margin-top: 6px; color: var(--sys-critical); }
+.w11-hc .xp-transfer-graph { color: var(--text-1); }
+.w11-hc .xp-transfer-speed { color: var(--text-1); }
+.w11-hc progressbar.xp-transfer-progress > trough > progress { background-color: var(--text-1); }
+.xp-transfer-conflict { padding: 20px 32px 24px; background-color: var(--bg-solid-base); }
+.xp-transfer-conflict-info { font-size: var(--fs-caption); color: var(--text-2); }
+button.xp-transfer-conflict-action {
+  min-height: 42px; padding: 4px 12px; color: var(--accent-fg); font-size: var(--fs-body-large);
+}
 
 /* ---- drag and drop ---------------------------------------------------------------------------------- */
 .xp-drophint {

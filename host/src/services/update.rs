@@ -511,7 +511,7 @@ impl Update {
         }
         let live = (mode == Mode::Owner).then(|| self.handle().and_then(|h| h.ask(|e| e.live()))).flatten().flatten();
         let snapshot = shared.store.read(store::SNAPSHOT);
-        let job = shared.store.read(store::JOB);
+        let job = shared.store.read_job();
         let mut view = compose(shared, snapshot.as_ref(), job.as_ref(), live.as_ref(), packages);
         // GW7: the card has shown startFailed/ended once this answer leaves (upgrade.json may go at the next check)
         if mode == Mode::Owner {
@@ -726,6 +726,7 @@ pub(crate) fn compose(shared: &Shared, snapshot: Option<&Value>, job: Option<&Va
             && boot.is_some()
             && j["bootId"].as_str() == boot.as_deref()
             && store::owner_alive(&j["owner"])
+            && store::completed_snapshot_job(j, snap).is_none()
     });
     let job_view = live.cloned().or_else(|| {
         file_job.map(|j| {

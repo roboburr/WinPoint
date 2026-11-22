@@ -5,6 +5,23 @@ section here.
 
 ## Unreleased
 
+## 0.9.8
+
+- **A separate file-transfer window.** Long copies, moves and pastes use a Windows-style progress window instead
+  of the wide inline Explorer card. Switch between the compact percentage bar and expanded green speed graph,
+  with the current file, remaining time and recursive item count. Source and destination folders are links.
+- **Working pause, resume and cancel.** Controls affect only their own transfer. Closing the progress window or
+  pressing Escape requests cancellation; minimising it keeps the transfer running. Closing the source Explorer
+  does not interrupt it. Cancellation preserves completed items and detects changed partial destinations;
+  cross-filesystem moves validate the copied destination before removing the source.
+
+- **Choose what happens when files already exist.** Explorer asks whether to replace, skip or keep both, with an
+  option to apply the choice to later conflicts. Existing folders merge their contents; unrelated files stay
+  in place. Recoverable errors offer retry, skip or cancel when retrying is safe.
+- **Completed updates no longer remain stuck as running.** When the completed snapshot proves that the same
+  update ended, an older unfinished task record cannot keep the progress screen or block WinPoint updates.
+  Real active updates retain their safety checks.
+
 ## 0.9.7
 
 - **Type in the taskbar, see results in Start.** The full search box is editable. Start mirrors the query while

@@ -143,7 +143,7 @@ pub(crate) fn job_windows(store: &store::Store, paths: &Paths, now: u64) -> Vec<
         .iter()
         .filter_map(|j| Some((j["startedAt"].as_u64()?, j["finishedAt"].as_u64()?)))
         .collect();
-    if let Some(job) = store.read(store::JOB)
+    if let Some(job) = store.read_job()
         && let Some(started) = job["startedAt"].as_u64()
     {
         let end = job["finishedAt"].as_u64().unwrap_or_else(|| {

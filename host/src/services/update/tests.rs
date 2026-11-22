@@ -1912,3 +1912,164 @@ fn the_snapshot_job_carries_the_fields_the_page_reads() {
     assert!(compose(&shared, Some(&snapshot), None, None, false)["job"].is_null());
     assert_eq!(f.stub_log(), "");
 }
+
+
+/// A successful terminal snapshot must not resurrect the same old unfinished job.json when that write failed.
+#[test]
+fn a_finished_snapshot_does_not_resurrect_the_same_unfinished_job_file() {
+    let f = Fixture::new("finished-file-fallback");
+    let ctx = f.ctx("panel", false, "en");
+    let setup = paths::resolve(&f.env()).unwrap();
+    let store = store::Store::open(ctx.cache_dir.join("update")).unwrap();
+    let shared = super::Shared { ctx, setup: setup.clone(), store, stats: Default::default(), rev: Default::default() };
+    let boot = store::boot_id(&setup.paths).unwrap();
+    let id = "cf1a9493ddde0422abd94bb718761394";
+    let file = json!({"version":1,"jobId":id,"bootId":boot,"role":"update","owner":store::current_owner(),
+                      "startedAt":10,"lastStatus":9,"pct":0,"committing":true,"allowCancel":false,
+                      "rowStates":{"kernel":{"state":"downloading","pct":11},"other":{"state":"installing","pct":50}}});
+    let snapshot = json!({"rev":73,"bootId":boot,"backend":"packagekit","checkedAt":30,"packages":[],
+                         "network":{"state":"full","online":true,"metered":false},
+                         "lastJob":{"jobId":id,"role":"update","finishedAt":20,
+                                    "outcome":{"exit":1,"code":null},"rows":[]}});
+    write(&setup.paths.reboot_required, "*** System restart required ***\n");
+    let view = compose(&shared, Some(&snapshot), Some(&file), None, false);
+    assert!(view["job"].is_null(), "an alive owner alone must not revive its completed old file");
+    assert_eq!(view["phase"], "restartRequired");
+    assert_eq!(view["totals"]["count"], 0);
+    assert!(view["rows"].as_array().unwrap().is_empty());
+
+    let mut unrelated = snapshot.clone();
+    unrelated["lastJob"]["jobId"] = json!("0123456789abcdef0123456789abcdef");
+    let running = compose(&shared, Some(&unrelated), Some(&file), None, false);
+    assert_eq!(running["job"]["jobId"], id, "completion of another job is no proof this one ended");
+    assert_eq!(running["phase"], "installing");
+    let mut no_terminal_time = snapshot.clone();
+    no_terminal_time["lastJob"]["finishedAt"] = Value::Null;
+    assert_eq!(compose(&shared, Some(&no_terminal_time), Some(&file), None, false)["job"]["jobId"], id);
+    for invalid in [
+        json!({"jobId":id,"role":"repair","finishedAt":20,"outcome":{"exit":1}}),
+        json!({"jobId":id,"role":"update","finishedAt":9,"outcome":{"exit":1}}),
+        json!({"jobId":id,"role":"update","finishedAt":20,"outcome":{"exit":null,"code":"unknown_outcome"}}),
+        json!({"jobId":id,"role":"update","finishedAt":20,"outcome":{}}),
+    ] {
+        let mut conservative = snapshot.clone();
+        conservative["lastJob"] = invalid;
+        assert_eq!(compose(&shared, Some(&conservative), Some(&file), None, false)["job"]["jobId"], id,
+                   "inconsistent or uncertain completion does not discard a committing job");
+    }
+    let mut missing_id = file.clone();
+    missing_id["jobId"] = Value::Null;
+    let mut incomplete = snapshot.clone();
+    incomplete["lastJob"]["jobId"] = Value::Null;
+    assert!(compose(&shared, Some(&incomplete), Some(&missing_id), None, false)["job"].is_object(),
+            "missing identifiers must not accidentally match");
+
+    let live = json!({"jobId":id,"role":"update","status":9,"pct":60,"committing":true,"startedAt":10,"rows":{}});
+    let authoritative = compose(&shared, Some(&snapshot), Some(&file), Some(&live), false);
+    assert_eq!(authoritative["job"]["jobId"], id, "an actual live transaction keeps precedence");
+    assert_eq!(authoritative["job"]["pct"], 60);
+    assert_eq!(authoritative["phase"], "installing");
+    assert!(guard::job_blocks_power(&file, Some(&boot), true, 10, 30),
+            "this presentation fix does not weaken the power guard for a real committing transaction");
+    assert!(f.never_connected());
+    assert!(f.stub_log().is_empty());
+}
+
+
+/// Status, power/installer guards, history and reattach share the same terminal evidence, without rewriting it.
+#[test]
+fn terminal_snapshot_reconciles_only_the_matching_job_for_readers_and_reattach() {
+    let f = Fixture::new("terminal-job-readers");
+    let ctx = f.ctx("panel", false, "en");
+    let setup = paths::resolve(&f.env()).unwrap();
+    let store = store::Store::open(ctx.cache_dir.join("update")).unwrap();
+    let boot = store::boot_id(&setup.paths).unwrap();
+    let id = "0123456789abcdef0123456789abcdef";
+    let file = json!({"jobId":id,"bootId":boot,"role":"update","startedAt":10,
+                      "owner":store::current_owner(),"committing":true,"tid":"/old/transaction"});
+    let snapshot = json!({"bootId":boot,"lastJob":{"jobId":id,"role":"update","finishedAt":20,
+                                                 "outcome":{"exit":1,"code":null}}});
+    store.write(store::JOB, &file).unwrap();
+    store.write(store::SNAPSHOT, &snapshot).unwrap();
+    let raw_job = fs::read(store.dir().join(store::JOB)).unwrap();
+    let raw_snapshot = fs::read(store.dir().join(store::SNAPSHOT)).unwrap();
+    let reconciled = store.read_job().unwrap();
+    assert_eq!(reconciled["finishedAt"], 20);
+    assert_eq!(reconciled["outcome"], snapshot["lastJob"]["outcome"]);
+    assert_eq!(reconciled["committing"], false);
+    assert_eq!(model::reattach(Some(&reconciled), Some(&boot)), model::Reattach::Nothing,
+               "a known success must not be replaced by GetOldTransactions' later unknown outcome");
+    assert_eq!(super::history::job_windows(&store, &setup.paths, 100), [(10, 20)],
+               "a completed old job must not claim ownership of later apt transactions");
+    assert!(guard::power_blocked_in(&ctx, &setup, crate::i18n::Lang::En).is_none());
+    assert_eq!(fs::read(store.dir().join(store::JOB)).unwrap(), raw_job, "read-only reconciliation leaves the file intact");
+    assert_eq!(fs::read(store.dir().join(store::SNAPSHOT)).unwrap(), raw_snapshot);
+
+    // A new transaction may have taken the lock while ENOSPC left the old job file behind.
+    // Its real activity takes precedence over the old job's confirmed terminal metadata.
+    let active_slot = store.try_lock(store::JOB_LOCK).unwrap().unwrap();
+    assert!(guard::power_blocked_in(&ctx, &setup, crate::i18n::Lang::En).is_some());
+    let active_shared = super::Shared { ctx: ctx.clone(), setup: setup.clone(), store: store.clone(), stats: Default::default(), rev: Default::default() };
+    assert!(super::upgrade::busy(&active_shared, &snapshot));
+    drop(active_slot);
+    assert!(guard::power_blocked_in(&ctx, &setup, crate::i18n::Lang::En).is_none());
+    assert!(!super::upgrade::busy(&active_shared, &snapshot));
+
+    for completion in [
+        json!({"jobId":"fedcba9876543210fedcba9876543210","role":"update","finishedAt":20,"outcome":{"exit":1}}),
+        json!({"jobId":id,"role":"update","finishedAt":20,"outcome":{"exit":null,"code":"unknown_outcome"}}),
+    ] {
+        store.write(store::SNAPSHOT, &json!({"lastJob":completion})).unwrap();
+        let pending = store.read_job().unwrap();
+        assert!(pending.get("finishedAt").is_none());
+        assert!(guard::power_blocked_in(&ctx, &setup, crate::i18n::Lang::En).is_some(),
+                "an unrelated or uncertain record must never unblock a real committing job");
+        assert_ne!(model::reattach(Some(&pending), Some(&boot)), model::Reattach::Nothing);
+    }
+    assert!(f.never_connected());
+}
+
+
+/// One exact completion survives subsequent snapshots until the raw job slot is repaired or replaced.
+#[test]
+fn a_stale_raw_job_keeps_one_terminal_proof_across_later_completed_jobs() {
+    let f = Fixture::new("terminal-job-proof-slot");
+    let ctx = f.ctx("panel", false, "en");
+    let store = store::Store::open(ctx.cache_dir.join("update")).unwrap();
+    let id = "0123456789abcdef0123456789abcdef";
+    let raw = json!({"jobId":id,"role":"update","startedAt":10,"owner":store::current_owner(),"committing":true});
+    let terminal = json!({"jobId":id,"role":"update","finishedAt":20,"outcome":{"exit":1,"code":null},"rows":[]});
+    store.write(store::JOB, &raw).unwrap();
+    store.write(store::SNAPSHOT, &json!({"lastJob":terminal})).unwrap();
+    let original_job = fs::read(store.dir().join(store::JOB)).unwrap();
+    let mut next = json!({"lastJob":{"jobId":"fedcba9876543210fedcba9876543210","role":"update","finishedAt":40,
+                                    "outcome":{"exit":1,"code":null},"rows":[]}});
+    store.retain_job_completion(&mut next);
+    assert_eq!(next["confirmedJobCompletion"], terminal);
+    store.write(store::SNAPSHOT, &next).unwrap();
+    assert_eq!(store.read_job().unwrap()["finishedAt"], 20);
+    assert_eq!(store.read_job().unwrap()["outcome"]["exit"], 1, "a newer job cannot downgrade the old known success");
+    next["lastJob"]["jobId"] = json!("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    next["lastJob"]["finishedAt"] = json!(60);
+    store.retain_job_completion(&mut next);
+    store.write(store::SNAPSHOT, &next).unwrap();
+    assert_eq!(next["confirmedJobCompletion"], terminal, "the slot remains one bounded object for the raw id");
+    assert_eq!(fs::read(store.dir().join(store::JOB)).unwrap(), original_job, "no repair write occurs in a read or carry");
+
+    let mut newer_raw = raw.clone();
+    newer_raw["jobId"] = json!("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+    store.write(store::JOB, &newer_raw).unwrap();
+    store.retain_job_completion(&mut next);
+    assert!(next.get("confirmedJobCompletion").is_none(), "prune the exact-id proof when the raw slot changes");
+    store.write(store::SNAPSHOT, &next).unwrap();
+    assert!(store.read_job().unwrap().get("finishedAt").is_none(), "the new genuine job stays unfinished");
+
+    let mut repaired = raw;
+    repaired["finishedAt"] = json!(20);
+    repaired["outcome"] = terminal["outcome"].clone();
+    store.write(store::JOB, &repaired).unwrap();
+    next["confirmedJobCompletion"] = terminal;
+    store.retain_job_completion(&mut next);
+    assert!(next.get("confirmedJobCompletion").is_none(), "a physically terminal job needs no extra proof slot");
+    assert!(f.never_connected());
+}

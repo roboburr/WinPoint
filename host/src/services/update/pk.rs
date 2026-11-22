@@ -578,7 +578,8 @@ impl Engine {
         self.hero = self.hero_key();
         self.rev = store::next_rev(&self.shared.store, self.rev);
         self.shared.rev.store(self.rev, Ordering::SeqCst);
-        let snapshot = self.snapshot_json();
+        let mut snapshot = self.snapshot_json();
+        self.shared.store.retain_job_completion(&mut snapshot);
         let _ = self.shared.store.write(SNAPSHOT, &snapshot);
         self.write_job();
         let view = super::compose(&self.shared, Some(&snapshot), self.shared.store.read(JOB).as_ref(), self.live().as_ref(), false);
@@ -684,6 +685,12 @@ impl Engine {
             _ => Err(err("unsupported", lang, "update.err.noPackageKit")),
         }
     }
+    fn clear_last_job_rows(&mut self) {
+        if let Some(last_job) = self.last_job.as_mut() {
+            last_job["rows"] = json!([]);
+        }
+    }
+
     /// `update.check`: RefreshCache(false) → GetUpdates(none) → phasing → GetDetails (design §4.6).
     pub(crate) fn check(&mut self, lang: Lang) -> ApiResult {
         let conn = self.ready(lang)?;
@@ -704,8 +711,8 @@ impl Engine {
         self.error = None;
         self.refresh_error = None;
         self.warnings.clear();
-        // the last job's rows (installed, restart, failed) last until this check (review F3)
-        self.last_job = None;
+        // The displayed rows last until this check, but terminal evidence must survive a failed job-file write.
+        self.clear_last_job_rows();
         self.start_tx(&conn, Purpose::Refresh, "RefreshCache", (false,).to_variant(), Vec::new());
         self.persist();
         Ok(json!({"started":true}))
@@ -766,7 +773,7 @@ impl Engine {
             _lock: Some(lock),
         });
         self.error = None;
-        self.last_job = None;
+        self.clear_last_job_rows();
         self.hold_app(true);
         self.start_progress_timer();
         // written before UpdatePackages (design §4.5)
@@ -852,7 +859,7 @@ impl Engine {
             written: Instant::now(),
             _lock: Some(lock),
         });
-        self.last_job = None;
+        self.clear_last_job_rows();
         self.hold_app(true);
         self.start_progress_timer();
         self.persist();
@@ -1502,7 +1509,7 @@ impl Engine {
 
     fn reattach(&mut self) {
         let boot = store::boot_id(&self.shared.setup.paths);
-        let job = self.shared.store.read(JOB);
+        let job = self.shared.store.read_job();
         let plan = model::reattach(job.as_ref(), boot.as_deref());
         let Some(job) = job else { return };
         if plan == model::Reattach::Nothing {
@@ -1924,10 +1931,13 @@ mod engine_tests {
         assert_eq!(states, [("soup", "installed"), ("other", "pendingDownload")]);
         assert_eq!(view["phase"], "available");
         assert_eq!(e.shared.store.jobs().len(), 1);
-        // the next check ends the record
-        e.last_job = None;
+        // The next check clears visible rows without erasing evidence of the completed job.
+        e.clear_last_job_rows();
         e.persist();
-        assert!(e.shared.store.read(SNAPSHOT).unwrap()["lastJob"].is_null());
+        let after_check = e.shared.store.read(SNAPSHOT).unwrap();
+        assert_eq!(after_check["lastJob"]["jobId"], snapshot["lastJob"]["jobId"]);
+        assert_eq!(after_check["lastJob"]["outcome"], snapshot["lastJob"]["outcome"]);
+        assert!(after_check["lastJob"]["rows"].as_array().unwrap().is_empty());
     }
 
     #[test]

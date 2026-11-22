@@ -1,5 +1,7 @@
 //! Conflict-safe Explorer writes. Existing names, including dangling links, are never replaced.
-use super::{ApiError, ApiResult, Context, abs_in, directory, io_error, paths, validate_name};
+use super::{
+    ApiError, ApiResult, Context, abs_in, control, directory, io_error, paths, validate_name,
+};
 use serde_json::{Value, json};
 use std::{
     ffi::{CString, OsStr, OsString},
@@ -13,7 +15,10 @@ use std::{
         },
     },
     path::{Path, PathBuf},
-    sync::atomic::{AtomicU64, Ordering},
+    sync::{
+        Arc,
+        atomic::{AtomicU64, Ordering},
+    },
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 
@@ -27,6 +32,9 @@ const COMPOUND_EXTENSIONS: [&str; 6] = [
 ];
 static SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
+#[path = "transfer_interactive.rs"]
+mod interactive;
+
 pub(super) fn call(method: &str, args: &Value, ctx: &Context) -> Option<ApiResult> {
     match method {
         "files.createFolder" => Some(create(args, ctx, true)),
@@ -36,7 +44,14 @@ pub(super) fn call(method: &str, args: &Value, ctx: &Context) -> Option<ApiResul
             let sources = paths(&args["paths"], ctx.lang())?;
             let dest = directory(&args["dest"], ctx.lang())?;
             let job = args.get("jobId").and_then(Value::as_str);
-            transfer(sources, dest, method == "files.move", job, ctx)
+            transfer_with_options(
+                sources,
+                dest,
+                method == "files.move",
+                job,
+                args["interactive"] == true,
+                ctx,
+            )
         })()),
         _ => None,
     }
@@ -318,8 +333,23 @@ struct Progress<'a> {
     done: u64,
     items: usize,
     count: usize,
+    entry_count: Option<u64>,
+    entries_done: Option<u64>,
     current: String,
     last: Option<Instant>,
+    control: Option<Arc<control::Job>>,
+    cancelled: bool,
+    partial_paths: Vec<PathBuf>,
+    overwritten_paths: Vec<PathBuf>,
+    merged_paths: Vec<PathBuf>,
+    skipped_paths: Vec<PathBuf>,
+    recovery_paths: Vec<PathBuf>,
+    #[cfg(test)]
+    after_write: Option<Box<dyn FnMut(u64) + Send>>,
+    #[cfg(test)]
+    before_commit: Option<Box<dyn FnMut() + Send>>,
+    #[cfg(test)]
+    before_stage: Option<Box<dyn FnMut() + Send>>,
 }
 
 impl<'a> Progress<'a> {
@@ -334,12 +364,69 @@ impl<'a> Progress<'a> {
         }
         self.last = Some(Instant::now());
         if let Some(ctx) = self.ctx {
-            ctx.emit("files.progress", json!({"jobId":self.job,"op":if self.moving {"move"} else {"copy"},"done":self.done,"total":self.total,"items":self.items,"count":self.count,"current":self.current,"finished":finished}));
+            let mut event = json!({"jobId":self.job,"op":if self.moving {"move"} else {"copy"},"done":self.done,"total":self.total,"items":self.items,"count":self.count,"entryCount":self.entry_count,"entriesDone":self.entries_done,"current":self.current,"finished":finished});
+            if let Some(control) = &self.control {
+                for (key, value) in control.json().as_object().unwrap() {
+                    event[key] = value.clone();
+                }
+            }
+            ctx.emit("files.progress", event);
         }
     }
     fn add(&mut self, bytes: u64) {
         self.done = self.done.saturating_add(bytes);
+        #[cfg(test)]
+        if let Some(hook) = &mut self.after_write {
+            hook(self.done);
+        }
         self.emit(false, false);
+    }
+    fn checkpoint(&mut self) -> io::Result<()> {
+        if let Some(control) = self.control.clone() {
+            control.checkpoint(|| self.emit(false, true))?;
+        }
+        Ok(())
+    }
+    fn complete_entries(&mut self, count: Option<u64>) {
+        self.entries_done = self
+            .entries_done
+            .zip(count)
+            .map(|(done, count)| done.saturating_add(count));
+    }
+    fn begin_commit(&mut self) -> io::Result<Option<control::Commit>> {
+        #[cfg(test)]
+        if let Some(hook) = &mut self.before_commit {
+            hook();
+        }
+        self.control
+            .clone()
+            .map(|control| control.begin_commit(|| self.emit(false, true)))
+            .transpose()
+    }
+    fn finish(&mut self, phase: &'static str) {
+        if let Some(control) = &self.control {
+            control.finish(phase);
+        }
+        self.emit(true, true);
+    }
+    fn note_partial(&mut self, path: &Path, cleanup: io::Result<()>) {
+        if cleanup.is_err() && lexists(path) {
+            // Recursive targets use descriptor-relative paths; report the real pathname while the fd lives.
+            let reported = path
+                .strip_prefix("/proc/self/fd")
+                .ok()
+                .and_then(|relative| {
+                    let mut components = relative.components();
+                    let descriptor = components.next()?.as_os_str();
+                    let directory =
+                        fs::read_link(Path::new("/proc/self/fd").join(descriptor)).ok()?;
+                    Some(directory.join(components.as_path()))
+                })
+                .unwrap_or_else(|| path.into());
+            if !self.partial_paths.contains(&reported) {
+                self.partial_paths.push(reported);
+            }
+        }
     }
 }
 
@@ -348,6 +435,17 @@ pub(super) fn transfer(
     dest: PathBuf,
     moving: bool,
     job: Option<&str>,
+    ctx: &Context,
+) -> ApiResult {
+    transfer_with_options(sources, dest, moving, job, false, ctx)
+}
+
+pub(super) fn transfer_with_options(
+    sources: Vec<PathBuf>,
+    dest: PathBuf,
+    moving: bool,
+    job: Option<&str>,
+    interactive: bool,
     ctx: &Context,
 ) -> ApiResult {
     let lang = ctx.lang();
@@ -359,20 +457,50 @@ pub(super) fn transfer(
             crate::i18n::NO_PARAMS,
         ));
     }
+    let job = job
+        .filter(|job| !job.is_empty())
+        .map(str::to_owned)
+        .unwrap_or_else(nonce);
+    let control = ctx.transfers.register(&job, ctx)?;
     let mut progress = Progress {
         ctx: Some(ctx),
-        job: job
-            .filter(|job| !job.is_empty())
-            .map(str::to_owned)
-            .unwrap_or_else(nonce),
+        job,
         moving,
-        total: total_size(&sources),
+        total: None,
         done: 0,
         items: 0,
         count: sources.len(),
+        entry_count: None,
+        entries_done: Some(0),
         current: String::new(),
         last: None,
+        control: Some(control),
+        cancelled: false,
+        partial_paths: Vec::new(),
+        overwritten_paths: Vec::new(),
+        merged_paths: Vec::new(),
+        skipped_paths: Vec::new(),
+        recovery_paths: Vec::new(),
+        #[cfg(test)]
+        after_write: None,
+        #[cfg(test)]
+        before_commit: None,
+        #[cfg(test)]
+        before_stage: None,
     };
+    progress.emit(false, true);
+    // Register and emit first: a long directory pre-scan is itself pausable/cancellable.
+    let mut source_entries = Vec::new();
+    match transfer_size(&sources, &mut progress) {
+        Ok(Some(plan)) => {
+            progress.total = Some(plan.bytes);
+            progress.entry_count = Some(plan.entries);
+            source_entries = plan.by_source;
+        }
+        Ok(None) => {}
+        Err(error) if control::is_cancelled(&error) => progress.cancelled = true,
+        Err(_) => {}
+    }
     progress.emit(false, true);
     let mut completed = Vec::new();
     let mut failed = Vec::new();
@@ -383,37 +511,68 @@ pub(super) fn transfer(
     let dest_real = match fs::canonicalize(&dest) {
         Ok(path) => path,
         Err(error) => {
-            progress.emit(true, true);
+            progress.finish("failed");
             return Err(io_error(error, &dest, lang));
         }
     };
-    for source in &sources {
+    for (source_index, source) in sources.iter().enumerate() {
+        if progress.cancelled {
+            break;
+        }
         let name = source.file_name().and_then(OsStr::to_str).unwrap_or("");
         progress.current = name.to_owned();
         let result = (|| {
+            progress.checkpoint()?;
             if name.is_empty() {
                 return Err(io::Error::from_raw_os_error(libc::EINVAL));
             }
             let metadata = fs::symlink_metadata(source)?;
+            let same_folder = if interactive {
+                source
+                    .parent()
+                    .and_then(|p| fs::canonicalize(p).ok())
+                    .as_ref()
+                    == Some(&dest_real)
+            } else {
+                source.parent() == Some(dest.as_path())
+            };
             if metadata.is_dir() && dest_real.starts_with(fs::canonicalize(source)?) {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidInput,
                     into_itself.as_str(),
                 ));
             }
-            if moving && source.parent() == Some(dest.as_path()) {
-                return Ok(source.clone());
+            if moving && same_folder {
+                progress.complete_entries(
+                    source_entries
+                        .get(source_index)
+                        .copied()
+                        .or_else(|| (!metadata.is_dir()).then_some(1)),
+                );
+                return Ok(Some(source.clone()));
+            }
+            if interactive && !(!moving && same_folder) {
+                return interactive::entry(source, &dest_real.join(name), moving, &mut progress, 0);
             }
             for attempt in 0..20 {
-                let target = if !moving && source.parent() == Some(dest.as_path()) {
+                let target = if !moving && same_folder {
                     copy_path(&dest, name, metadata.is_dir(), &copy_word)?
                 } else {
                     unique_path(&dest, name, metadata.is_dir())?
                 };
                 let write = if moving {
-                    match rename_noreplace(source, &target) {
+                    let commit = progress.begin_commit()?;
+                    let renamed = rename_noreplace(source, &target);
+                    drop(commit);
+                    match renamed {
                         Ok(()) => {
                             progress.add(if metadata.is_dir() { 0 } else { metadata.len() });
+                            progress.complete_entries(
+                                source_entries
+                                    .get(source_index)
+                                    .copied()
+                                    .or_else(|| (!metadata.is_dir()).then_some(1)),
+                            );
                             Ok(())
                         }
                         Err(error) if error.raw_os_error() == Some(libc::EXDEV) => {
@@ -425,7 +584,7 @@ pub(super) fn transfer(
                     copy_any(source, &target, &mut progress, 0).map(|_| ())
                 };
                 match write {
-                    Ok(()) => return Ok(target),
+                    Ok(()) => return Ok(Some(target)),
                     Err(error) if error.kind() == io::ErrorKind::AlreadyExists && attempt < 19 => {
                         continue;
                     }
@@ -435,13 +594,18 @@ pub(super) fn transfer(
             Err(io::Error::from_raw_os_error(libc::EEXIST))
         })();
         match result {
-            Ok(path) => {
+            Ok(Some(path)) => {
                 completed.push(path);
                 if !(moving && source.parent() == Some(dest.as_path())) {
                     progress.items += 1;
                 }
             }
+            Ok(None) => {}
             Err(error) => {
+                if control::is_cancelled(&error) {
+                    progress.cancelled = true;
+                    break;
+                }
                 let message = if error.kind() == io::ErrorKind::InvalidInput
                     && error.to_string() == into_itself
                 {
@@ -453,7 +617,19 @@ pub(super) fn transfer(
             }
         }
     }
-    progress.emit(true, true);
+    for path in &progress.partial_paths {
+        failed.push(json!({"path":path,"error":crate::i18n::tr(lang,"files.transferPartial"),"code":"partial_cleanup"}));
+    }
+    for path in &progress.recovery_paths {
+        failed.push(json!({"path":path,"error":crate::i18n::tr(lang,"files.transferRecovery"),"code":"recovery_kept"}));
+    }
+    progress.finish(if progress.cancelled {
+        "cancelled"
+    } else if failed.is_empty() {
+        "finished"
+    } else {
+        "failed"
+    });
     ctx.changed(&dest);
     if moving {
         for source in &sources {
@@ -462,7 +638,58 @@ pub(super) fn transfer(
             }
         }
     }
-    Ok(json!({"ok":failed.is_empty(),"paths":completed,"failed":failed,"jobId":progress.job}))
+    Ok(
+        json!({"ok":failed.is_empty() && !progress.cancelled,"cancelled":progress.cancelled,"paths":completed,"failed":failed,"partialPaths":progress.partial_paths,"recoveryPaths":progress.recovery_paths,"overwrittenPaths":progress.overwritten_paths,"mergedPaths":progress.merged_paths,"skipped":progress.skipped_paths,"undoable":progress.overwritten_paths.is_empty() && progress.merged_paths.is_empty() && progress.recovery_paths.is_empty(),"jobId":progress.job,"entryCount":progress.entry_count,"entriesDone":progress.entries_done}),
+    )
+}
+
+struct TransferPlan {
+    bytes: u64,
+    entries: u64,
+    by_source: Vec<u64>,
+}
+
+fn transfer_size(
+    paths: &[PathBuf],
+    progress: &mut Progress<'_>,
+) -> io::Result<Option<TransferPlan>> {
+    let deadline = Instant::now() + Duration::from_millis(1500);
+    let mut plan = TransferPlan {
+        bytes: 0,
+        entries: 0,
+        by_source: vec![0; paths.len()],
+    };
+    let mut stack = paths
+        .iter()
+        .cloned()
+        .enumerate()
+        .map(|(i, p)| (p, i))
+        .collect::<Vec<_>>();
+    while let Some((path, index)) = stack.pop() {
+        progress.checkpoint()?;
+        if Instant::now() > deadline {
+            return Ok(None);
+        }
+        let Ok(metadata) = fs::symlink_metadata(&path) else {
+            continue;
+        };
+        plan.entries = plan.entries.saturating_add(1);
+        plan.by_source[index] = plan.by_source[index].saturating_add(1);
+        if metadata.is_dir() {
+            if let Ok(entries) = fs::read_dir(path) {
+                for entry in entries.flatten() {
+                    progress.checkpoint()?;
+                    if Instant::now() > deadline {
+                        return Ok(None);
+                    }
+                    stack.push((entry.path(), index));
+                }
+            }
+        } else {
+            plan.bytes = plan.bytes.saturating_add(metadata.len());
+        }
+    }
+    Ok(Some(plan))
 }
 
 pub(super) fn total_size(paths: &[PathBuf]) -> Option<u64> {
@@ -490,6 +717,7 @@ pub(super) fn total_size(paths: &[PathBuf]) -> Option<u64> {
 #[derive(Clone, Debug)]
 struct Snapshot {
     metadata: Metadata,
+    copied: Metadata,
     children: Vec<(OsString, Snapshot)>,
 }
 
@@ -514,12 +742,14 @@ fn copy_any(
     progress: &mut Progress<'_>,
     depth: usize,
 ) -> io::Result<Snapshot> {
+    progress.checkpoint()?;
     if depth > 256 {
         return Err(io::Error::from_raw_os_error(libc::ELOOP));
     }
     let metadata = fs::symlink_metadata(source)?;
     let mut snapshot = Snapshot {
         metadata: metadata.clone(),
+        copied: metadata.clone(),
         children: Vec::new(),
     };
     if metadata.file_type().is_symlink() {
@@ -528,6 +758,12 @@ fn copy_any(
             return Err(io::Error::from_raw_os_error(libc::EBUSY));
         }
         symlink(link, target)?;
+        let owned = fs::symlink_metadata(target)?;
+        snapshot.copied = owned.clone();
+        if let Err(error) = progress.checkpoint() {
+            progress.note_partial(target, cleanup_owned(target, &owned));
+            return Err(error);
+        }
     } else if metadata.is_dir() {
         let directory = OpenOptions::new()
             .read(true)
@@ -551,6 +787,7 @@ fn copy_any(
             // Walk the open directory, so replacing a source component with a link
             // cannot redirect this recursive copy into a different tree.
             for entry in fs::read_dir(format!("/proc/self/fd/{}", directory.as_raw_fd()))? {
+                progress.checkpoint()?;
                 let entry = entry?;
                 progress.current = entry.file_name().to_string_lossy().into_owned();
                 let child = copy_any(
@@ -561,14 +798,16 @@ fn copy_any(
                 )?;
                 snapshot.children.push((entry.file_name(), child));
             }
+            progress.checkpoint()?;
             preserve_metadata(&directory, &output_directory, &directory.metadata()?);
+            snapshot.copied = output_directory.metadata()?;
             if !same_identity(&owned, &fs::symlink_metadata(target)?) {
                 return Err(io::Error::from_raw_os_error(libc::EBUSY));
             }
             Ok(())
         })();
         if let Err(error) = result {
-            cleanup_owned(target, &owned);
+            progress.note_partial(target, cleanup_tree(target, &owned, &snapshot.children));
             return Err(error);
         }
     } else if metadata.is_file() {
@@ -578,22 +817,30 @@ fn copy_any(
             .create_new(true)
             .mode(0o600)
             .open(target)?;
-        let owned = output.metadata()?;
+        let mut owned = output.metadata()?;
         let result = (|| {
             let mut buffer = vec![0_u8; 1024 * 1024];
             loop {
+                progress.checkpoint()?;
+                verify_output(&output, target, &owned)?;
                 let read = input.read(&mut buffer)?;
                 if read == 0 {
                     break;
                 }
+                verify_output(&output, target, &owned)?;
                 output.write_all(&buffer[..read])?;
+                owned = output.metadata()?;
                 progress.add(read as u64);
             }
+            progress.checkpoint()?;
+            verify_output(&output, target, &owned)?;
             output.flush()?;
             if !unchanged(&metadata, &input.metadata()?) {
                 return Err(io::Error::from_raw_os_error(libc::EBUSY));
             }
             preserve_metadata(&input, &output, &input.metadata()?);
+            owned = output.metadata()?;
+            snapshot.copied = owned.clone();
             if !same_identity(&owned, &fs::symlink_metadata(target)?) {
                 return Err(io::Error::from_raw_os_error(libc::EBUSY));
             }
@@ -601,13 +848,23 @@ fn copy_any(
         })();
         if let Err(error) = result {
             drop(output);
-            cleanup_owned(target, &owned);
+            progress.note_partial(target, cleanup_owned(target, &owned));
             return Err(error);
         }
     } else {
         return Err(io::Error::from_raw_os_error(libc::EINVAL));
     }
+    progress.complete_entries(Some(1));
     Ok(snapshot)
+}
+
+fn verify_output(output: &File, path: &Path, expected: &Metadata) -> io::Result<()> {
+    if !unchanged(expected, &output.metadata()?)
+        || !same_identity(expected, &fs::symlink_metadata(path)?)
+    {
+        return Err(io::Error::from_raw_os_error(libc::EBUSY));
+    }
+    Ok(())
 }
 
 fn open_regular_source(path: &Path, expected: &Metadata) -> io::Result<File> {
@@ -623,14 +880,53 @@ fn open_regular_source(path: &Path, expected: &Metadata) -> io::Result<File> {
     Ok(file)
 }
 
-fn cleanup_owned(path: &Path, owned: &Metadata) {
-    if fs::symlink_metadata(path).is_ok_and(|current| same_identity(owned, &current)) {
-        if owned.is_dir() {
-            let _ = fs::remove_dir_all(path);
-        } else {
-            let _ = fs::remove_file(path);
+fn cleanup_owned(path: &Path, owned: &Metadata) -> io::Result<()> {
+    match fs::symlink_metadata(path) {
+        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(()),
+        Err(error) => Err(error),
+        Ok(current) if !unchanged(owned, &current) => {
+            Err(io::Error::from_raw_os_error(libc::EBUSY))
         }
+        Ok(_) => fs::remove_file(path),
     }
+}
+
+fn cleanup_tree(
+    path: &Path,
+    owned: &Metadata,
+    children: &[(OsString, Snapshot)],
+) -> io::Result<()> {
+    let current = match fs::symlink_metadata(path) {
+        Ok(current) => current,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(()),
+        Err(error) => return Err(error),
+    };
+    if !same_identity(owned, &current) {
+        return Err(io::Error::from_raw_os_error(libc::EBUSY));
+    }
+    let directory = OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC)
+        .open(path)?;
+    if !same_identity(owned, &directory.metadata()?) {
+        return Err(io::Error::from_raw_os_error(libc::EBUSY));
+    }
+    let opened = PathBuf::from(format!("/proc/self/fd/{}", directory.as_raw_fd()));
+    let mut incomplete = false;
+    for (name, snapshot) in children {
+        let child = opened.join(name);
+        let result = if snapshot.copied.is_dir() {
+            cleanup_tree(&child, &snapshot.copied, &snapshot.children)
+        } else {
+            cleanup_owned(&child, &snapshot.copied)
+        };
+        incomplete |= result.is_err();
+    }
+    // rmdir is deliberately nonrecursive: unknown or externally changed entries survive.
+    if incomplete || !same_identity(owned, &fs::symlink_metadata(path)?) {
+        return Err(io::Error::from_raw_os_error(libc::EBUSY));
+    }
+    fs::remove_dir(path)
 }
 
 fn preserve_metadata(source: &File, target: &File, metadata: &Metadata) {
@@ -698,8 +994,38 @@ fn preserve_metadata(source: &File, target: &File, metadata: &Metadata) {
 
 fn copy_then_remove(source: &Path, target: &Path, progress: &mut Progress<'_>) -> io::Result<()> {
     let snapshot = copy_any(source, target, progress, 0)?;
+    let prepared = (|| {
+        loop {
+            progress.checkpoint()?;
+            verify_snapshot_checked(source, &snapshot, &mut || progress.checkpoint())?;
+            verify_copied_checked(target, &snapshot, &mut || progress.checkpoint())?;
+            let commit = progress.begin_commit()?;
+            // Admission may have paused. Recheck both exact trees AFTER resume, before deleting anything.
+            verify_snapshot_checked(source, &snapshot, &mut || Ok(()))?;
+            verify_copied_checked(target, &snapshot, &mut || Ok(()))?;
+            if progress.control.as_ref().is_some_and(|job| job.pending()) {
+                drop(commit);
+                continue;
+            }
+            break Ok(commit);
+        }
+    })();
+    let commit = match prepared {
+        Ok(commit) => commit,
+        Err(error) => {
+            if control::is_cancelled(&error) {
+                let cleanup = if snapshot.copied.is_dir() {
+                    cleanup_tree(target, &snapshot.copied, &snapshot.children)
+                } else {
+                    cleanup_owned(target, &snapshot.copied)
+                };
+                progress.note_partial(target, cleanup);
+            }
+            return Err(error);
+        }
+    };
     // Keep both copies rather than remove a source that changed while being copied.
-    verify_snapshot(source, &snapshot)?;
+    // From here to the end of removal, finish this one committed move even if cancellation arrives.
     let parent = source
         .parent()
         .ok_or_else(|| io::Error::from_raw_os_error(libc::EINVAL))?;
@@ -707,7 +1033,9 @@ fn copy_then_remove(source: &Path, target: &Path, progress: &mut Progress<'_>) -
         .file_name()
         .ok_or_else(|| io::Error::from_raw_os_error(libc::EINVAL))?;
     let parent = File::open(parent)?;
-    remove_snapshot_at(&parent, name, &snapshot)
+    let result = remove_snapshot_at(&parent, name, &snapshot);
+    drop(commit);
+    result
 }
 
 pub(super) fn move_noreplace_exact(source: &Path, target: &Path) -> io::Result<()> {
@@ -722,8 +1050,23 @@ pub(super) fn move_noreplace_exact(source: &Path, target: &Path) -> io::Result<(
                 done: 0,
                 items: 0,
                 count: 1,
+                entry_count: None,
+                entries_done: Some(0),
                 current: String::new(),
                 last: None,
+                control: None,
+                cancelled: false,
+                partial_paths: Vec::new(),
+                overwritten_paths: Vec::new(),
+                merged_paths: Vec::new(),
+                skipped_paths: Vec::new(),
+                recovery_paths: Vec::new(),
+                #[cfg(test)]
+                after_write: None,
+                #[cfg(test)]
+                before_commit: None,
+                #[cfg(test)]
+                before_stage: None,
             };
             copy_then_remove(source, target, &mut progress)
         }
@@ -731,11 +1074,43 @@ pub(super) fn move_noreplace_exact(source: &Path, target: &Path) -> io::Result<(
     }
 }
 
+#[cfg(test)]
 fn verify_snapshot(path: &Path, snapshot: &Snapshot) -> io::Result<()> {
-    if !unchanged(&snapshot.metadata, &fs::symlink_metadata(path)?) {
+    verify_snapshot_checked(path, snapshot, &mut || Ok(()))
+}
+
+fn verify_snapshot_checked(
+    path: &Path,
+    snapshot: &Snapshot,
+    checkpoint: &mut impl FnMut() -> io::Result<()>,
+) -> io::Result<()> {
+    verify_tree_checked(path, snapshot, false, checkpoint)
+}
+
+fn verify_copied_checked(
+    path: &Path,
+    snapshot: &Snapshot,
+    checkpoint: &mut impl FnMut() -> io::Result<()>,
+) -> io::Result<()> {
+    verify_tree_checked(path, snapshot, true, checkpoint)
+}
+
+fn verify_tree_checked(
+    path: &Path,
+    snapshot: &Snapshot,
+    copied: bool,
+    checkpoint: &mut impl FnMut() -> io::Result<()>,
+) -> io::Result<()> {
+    checkpoint()?;
+    let metadata = if copied {
+        &snapshot.copied
+    } else {
+        &snapshot.metadata
+    };
+    if !unchanged(metadata, &fs::symlink_metadata(path)?) {
         return Err(io::Error::from_raw_os_error(libc::EBUSY));
     }
-    if snapshot.metadata.is_dir() {
+    if metadata.is_dir() {
         let actual: std::collections::BTreeSet<_> = fs::read_dir(path)?
             .map(|entry| entry.map(|entry| entry.file_name()))
             .collect::<io::Result<_>>()?;
@@ -748,7 +1123,7 @@ fn verify_snapshot(path: &Path, snapshot: &Snapshot) -> io::Result<()> {
             return Err(io::Error::from_raw_os_error(libc::EBUSY));
         }
         for (name, child) in &snapshot.children {
-            verify_snapshot(&path.join(name), child)?;
+            verify_tree_checked(&path.join(name), child, copied, checkpoint)?;
         }
     }
     Ok(())
@@ -821,7 +1196,7 @@ mod tests {
             let _ = fs::remove_dir_all(&self.0);
         }
     }
-    fn progress() -> Progress<'static> {
+    pub(super) fn progress() -> Progress<'static> {
         Progress {
             ctx: None,
             job: "test".into(),
@@ -830,9 +1205,431 @@ mod tests {
             done: 0,
             items: 0,
             count: 1,
+            entry_count: None,
+            entries_done: Some(0),
             current: String::new(),
             last: None,
+            control: None,
+            cancelled: false,
+            partial_paths: Vec::new(),
+            overwritten_paths: Vec::new(),
+            merged_paths: Vec::new(),
+            skipped_paths: Vec::new(),
+            recovery_paths: Vec::new(),
+            after_write: None,
+            before_commit: None,
+            before_stage: None,
         }
+    }
+
+    fn wait_state(job: &control::Job, expected: &str) {
+        let deadline = Instant::now() + Duration::from_secs(3);
+        while job.json()["state"] != expected && Instant::now() < deadline {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert_eq!(job.json()["state"], expected);
+    }
+
+    #[test]
+    fn real_copy_pause_stops_bytes_resume_completes_and_cancel_removes_only_owned_partial() {
+        for action in ["resume", "cancel-paused", "cancel-active"] {
+            let fixture = Fixture::new();
+            let source = fixture.0.join("source");
+            let target = fixture.0.join("target");
+            let existing = fixture.0.join("existing");
+            let contents = vec![0x6d; 4 * 1024 * 1024];
+            fs::write(&source, &contents).unwrap();
+            fs::write(&existing, b"untouched").unwrap();
+            let ctx = Context::new(
+                fixture.0.clone(),
+                fixture.0.join("Desktop"),
+                "en".into(),
+                false,
+            );
+            let job = ctx.transfers.register(action, &ctx).unwrap();
+            let worker_job = job.clone();
+            let (tx, rx) = std::sync::mpsc::channel();
+            let worker_source = source.clone();
+            let worker_target = target.clone();
+            let worker = std::thread::spawn(move || {
+                let mut progress = progress();
+                progress.control = Some(worker_job.clone());
+                progress.after_write = Some(Box::new(move |done| {
+                    if done == 1024 * 1024 {
+                        worker_job.request(if action == "cancel-active" {
+                            "cancel"
+                        } else {
+                            "pause"
+                        });
+                        tx.send(()).unwrap();
+                    }
+                }));
+                copy_any(&worker_source, &worker_target, &mut progress, 0)
+            });
+            rx.recv_timeout(Duration::from_secs(3)).unwrap();
+            if action != "cancel-active" {
+                wait_state(&job, "paused");
+                let length = fs::metadata(&target).unwrap().len();
+                assert_eq!(length, 1024 * 1024);
+                std::thread::sleep(Duration::from_millis(25));
+                assert_eq!(fs::metadata(&target).unwrap().len(), length);
+                job.request(if action == "resume" {
+                    "resume"
+                } else {
+                    "cancel"
+                });
+            }
+            let result = worker.join().unwrap();
+            if action == "resume" {
+                result.unwrap();
+                assert_eq!(fs::read(&target).unwrap(), contents);
+            } else {
+                assert!(control::is_cancelled(&result.unwrap_err()));
+                assert!(!lexists(&target));
+            }
+            assert_eq!(fs::read(&source).unwrap(), contents);
+            assert_eq!(fs::read(&existing).unwrap(), b"untouched");
+        }
+    }
+
+    #[test]
+    fn cross_device_cancel_at_delete_boundary_keeps_source_and_cleans_new_copy() {
+        // Invoke the exact EXDEV path on private files without requiring a second mounted filesystem.
+        let fixture = Fixture::new();
+        let source = fixture.0.join("source");
+        fs::create_dir(&source).unwrap();
+        fs::write(source.join("important"), b"source remains complete").unwrap();
+        let target = fixture.0.join("new-copy");
+        let existing = fixture.0.join("existing");
+        fs::write(&existing, b"existing remains").unwrap();
+        let ctx = Context::new(
+            fixture.0.clone(),
+            fixture.0.join("Desktop"),
+            "en".into(),
+            false,
+        );
+        let job = ctx.transfers.register("before-delete", &ctx).unwrap();
+        let mut progress = progress();
+        progress.control = Some(job.clone());
+        progress.before_commit = Some(Box::new(move || job.request("cancel")));
+        assert!(control::is_cancelled(
+            &copy_then_remove(&source, &target, &mut progress).unwrap_err()
+        ));
+        assert_eq!(
+            fs::read(source.join("important")).unwrap(),
+            b"source remains complete"
+        );
+        assert!(!lexists(&target));
+        assert_eq!(fs::read(existing).unwrap(), b"existing remains");
+    }
+
+    #[test]
+    fn cancel_before_copy_does_not_touch_preexisting_target_or_source() {
+        let fixture = Fixture::new();
+        let source = fixture.0.join("source");
+        let target = fixture.0.join("target");
+        fs::write(&source, b"source").unwrap();
+        fs::write(&target, b"existing target").unwrap();
+        let ctx = Context::new(
+            fixture.0.clone(),
+            fixture.0.join("Desktop"),
+            "en".into(),
+            false,
+        );
+        let job = ctx.transfers.register("cancel-before-copy", &ctx).unwrap();
+        job.request("cancel");
+        let mut progress = progress();
+        progress.control = Some(job);
+        assert!(control::is_cancelled(
+            &copy_any(&source, &target, &mut progress, 0).unwrap_err()
+        ));
+        assert_eq!(fs::read(source).unwrap(), b"source");
+        assert_eq!(fs::read(target).unwrap(), b"existing target");
+    }
+
+    #[test]
+    fn cross_device_move_keeps_source_when_completed_target_changed_while_paused() {
+        for mutation in ["unlink", "truncate", "replace", "child-replace"] {
+            let fixture = Fixture::new();
+            let source = fixture.0.join("source");
+            let target = fixture.0.join("target");
+            if mutation == "child-replace" {
+                fs::create_dir(&source).unwrap();
+                fs::write(source.join("child"), b"precious source").unwrap();
+            } else {
+                fs::write(&source, b"precious source").unwrap();
+            }
+            let ctx = Context::new(
+                fixture.0.clone(),
+                fixture.0.join("Desktop"),
+                "en".into(),
+                false,
+            );
+            let job = ctx.transfers.register(mutation, &ctx).unwrap();
+            let gate = job.clone();
+            let (tx, rx) = std::sync::mpsc::channel();
+            let worker_source = source.clone();
+            let worker_target = target.clone();
+            let worker = std::thread::spawn(move || {
+                let mut progress = progress();
+                progress.control = Some(gate.clone());
+                progress.before_commit = Some(Box::new(move || {
+                    gate.request("pause");
+                    tx.send(()).unwrap();
+                }));
+                copy_then_remove(&worker_source, &worker_target, &mut progress)
+            });
+            rx.recv_timeout(Duration::from_secs(3)).unwrap();
+            wait_state(&job, "paused");
+            match mutation {
+                "unlink" => fs::remove_file(&target).unwrap(),
+                "truncate" => fs::write(&target, b"changed").unwrap(),
+                "replace" => {
+                    fs::remove_file(&target).unwrap();
+                    fs::write(&target, b"foreign replacement").unwrap();
+                }
+                _ => {
+                    fs::remove_file(target.join("child")).unwrap();
+                    fs::write(target.join("child"), b"foreign replacement").unwrap();
+                }
+            }
+            job.request("resume");
+            assert!(worker.join().unwrap().is_err());
+            assert_eq!(
+                fs::read(if mutation == "child-replace" {
+                    source.join("child")
+                } else {
+                    source.clone()
+                })
+                .unwrap(),
+                b"precious source"
+            );
+            if mutation == "replace" {
+                assert_eq!(fs::read(target).unwrap(), b"foreign replacement");
+            }
+        }
+    }
+
+    #[test]
+    fn cancelling_recursive_copy_preserves_foreign_children_and_changed_partial_files() {
+        for mutation in ["unknown-child", "replaced-child", "changed-partial"] {
+            let fixture = Fixture::new();
+            let source = fixture.0.join("source");
+            let target = fixture.0.join("target");
+            fs::create_dir(&source).unwrap();
+            fs::write(source.join("child"), vec![0x67; 4 * 1024 * 1024]).unwrap();
+            let ctx = Context::new(
+                fixture.0.clone(),
+                fixture.0.join("Desktop"),
+                "en".into(),
+                false,
+            );
+            let job = ctx.transfers.register(mutation, &ctx).unwrap();
+            let gate = job.clone();
+            let worker_source = source.clone();
+            let worker_target = target.clone();
+            let worker = std::thread::spawn(move || {
+                let mut progress = progress();
+                progress.control = Some(gate.clone());
+                progress.after_write = Some(Box::new(move |done| {
+                    if done == 1024 * 1024 {
+                        gate.request("pause");
+                    }
+                }));
+                let result = copy_any(&worker_source, &worker_target, &mut progress, 0);
+                (result, progress.partial_paths)
+            });
+            wait_state(&job, "paused");
+            let foreign = if mutation == "unknown-child" {
+                target.join("foreign")
+            } else {
+                target.join("child")
+            };
+            if mutation == "replaced-child" {
+                fs::remove_file(&foreign).unwrap();
+            }
+            fs::write(&foreign, b"foreign data must survive").unwrap();
+            job.request("cancel");
+            let (result, partial) = worker.join().unwrap();
+            assert!(control::is_cancelled(&result.unwrap_err()));
+            assert_eq!(fs::read(&foreign).unwrap(), b"foreign data must survive");
+            assert!(target.is_dir());
+            assert!(!partial.is_empty());
+            assert_eq!(
+                fs::metadata(source.join("child")).unwrap().len(),
+                4 * 1024 * 1024
+            );
+        }
+    }
+
+    #[test]
+    fn resuming_changed_partial_cross_device_copy_never_deletes_its_source() {
+        let fixture = Fixture::new();
+        let source = fixture.0.join("source");
+        let target = fixture.0.join("target");
+        let original = vec![0x67; 4 * 1024 * 1024];
+        fs::write(&source, &original).unwrap();
+        let ctx = Context::new(
+            fixture.0.clone(),
+            fixture.0.join("Desktop"),
+            "en".into(),
+            false,
+        );
+        let job = ctx
+            .transfers
+            .register("changed-partial-resume", &ctx)
+            .unwrap();
+        let gate = job.clone();
+        let worker_source = source.clone();
+        let worker_target = target.clone();
+        let worker = std::thread::spawn(move || {
+            let mut progress = progress();
+            progress.control = Some(gate.clone());
+            progress.after_write = Some(Box::new(move |done| {
+                if done == 1024 * 1024 {
+                    gate.request("pause");
+                }
+            }));
+            let result = copy_then_remove(&worker_source, &worker_target, &mut progress);
+            (result, progress.partial_paths)
+        });
+        wait_state(&job, "paused");
+        fs::write(&target, b"foreign rewrite").unwrap();
+        job.request("resume");
+        let (result, partial) = worker.join().unwrap();
+        assert_eq!(result.unwrap_err().raw_os_error(), Some(libc::EBUSY));
+        assert_eq!(fs::read(source).unwrap(), original);
+        assert_eq!(fs::read(&target).unwrap(), b"foreign rewrite");
+        assert_eq!(partial, vec![target]);
+    }
+
+    #[test]
+    fn cancelled_transfer_finishes_with_real_state_and_cut_clipboard_is_kept() {
+        let fixture = Fixture::new();
+        let source = fixture.0.join("source");
+        let dest = fixture.0.join("dest");
+        fs::write(&source, b"valuable").unwrap();
+        fs::create_dir(&dest).unwrap();
+        let service = super::super::Files::for_tests(&fixture.0.join("service"));
+        let controls = service.transfers.clone();
+        let events_seen = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let seen = events_seen.clone();
+        let context = Context::new(
+            fixture.0.clone(),
+            fixture.0.join("Desktop"),
+            "en".into(),
+            false,
+        );
+        service.events.on(
+            "files.progress",
+            Arc::new(move |event| {
+                seen.lock().unwrap().push(event.clone());
+                if event["finished"] != true {
+                    controls
+                        .call(
+                            &json!({"jobId":event["jobId"],"action":"cancel"}),
+                            &context,
+                            false,
+                        )
+                        .unwrap();
+                }
+            }),
+        );
+        let clipboard =
+            super::super::clipboard::Clipboard::new(fixture.0.join("clipboard")).unwrap();
+        let context = service.context();
+        clipboard
+            .call(
+                "files.clipboardSet",
+                &json!({"paths":[source],"op":"cut"}),
+                &context,
+            )
+            .unwrap()
+            .unwrap();
+        let result = clipboard
+            .call(
+                "files.paste",
+                &json!({"dest":dest,"jobId":"cut-cancel"}),
+                &context,
+            )
+            .unwrap()
+            .unwrap();
+        assert_eq!(result["cancelled"], true);
+        assert_eq!(result["ok"], false);
+        assert!(source.exists());
+        assert!(fs::read_dir(dest).unwrap().next().is_none());
+        assert_eq!(
+            clipboard
+                .call("files.clipboardGet", &json!({}), &context)
+                .unwrap()
+                .unwrap()["op"],
+            "cut"
+        );
+        let seen = events_seen.lock().unwrap();
+        let terminal = seen.last().unwrap();
+        assert_eq!(terminal["state"], "cancelled");
+        assert_eq!(terminal["finished"], true);
+        assert_eq!(terminal["canCancel"], false);
+        service.events.shutdown();
+    }
+
+    #[test]
+    fn recursive_entry_counts_are_additive_and_include_atomic_directory_moves() {
+        for moving in [false, true] {
+            let fixture = Fixture::new();
+            let source = fixture.0.join("source");
+            let dest = fixture.0.join("dest");
+            fs::create_dir(&source).unwrap();
+            fs::create_dir(source.join("nested")).unwrap();
+            fs::create_dir(&dest).unwrap();
+            fs::write(source.join("first"), b"123").unwrap();
+            fs::write(source.join("second"), b"456").unwrap();
+            fs::write(source.join("nested/third"), b"789").unwrap();
+            let ctx = Context::new(
+                fixture.0.clone(),
+                fixture.0.join("Desktop"),
+                "en".into(),
+                false,
+            );
+            let result = transfer(
+                vec![source.clone()],
+                dest.clone(),
+                moving,
+                Some("recursive-items"),
+                &ctx,
+            )
+            .unwrap();
+            assert_eq!(result["ok"], true);
+            assert_eq!(result["entryCount"], 5); // selected folder, nested folder and three files
+            assert_eq!(result["entriesDone"], 5);
+            assert_eq!(fs::read(dest.join("source/nested/third")).unwrap(), b"789");
+            assert_eq!(source.exists(), !moving);
+        }
+    }
+
+    #[test]
+    fn completed_tree_cleanup_never_recurses_into_unknown_or_replaced_children() {
+        let fixture = Fixture::new();
+        let source = fixture.0.join("source");
+        let target = fixture.0.join("target");
+        fs::create_dir(&source).unwrap();
+        fs::write(source.join("owned"), b"owned").unwrap();
+        fs::write(source.join("replaced"), b"copied").unwrap();
+        let snapshot = copy_any(&source, &target, &mut progress(), 0).unwrap();
+        fs::remove_file(target.join("replaced")).unwrap();
+        fs::write(target.join("replaced"), b"foreign replacement").unwrap();
+        fs::write(target.join("foreign"), b"foreign insertion").unwrap();
+        assert!(cleanup_tree(&target, &snapshot.copied, &snapshot.children).is_err());
+        assert!(!target.join("owned").exists());
+        assert_eq!(
+            fs::read(target.join("replaced")).unwrap(),
+            b"foreign replacement"
+        );
+        assert_eq!(
+            fs::read(target.join("foreign")).unwrap(),
+            b"foreign insertion"
+        );
+        assert_eq!(fs::read(source.join("replaced")).unwrap(), b"copied");
     }
 
     #[test]

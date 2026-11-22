@@ -51,8 +51,19 @@ pub(crate) fn power_blocked_in(ctx: &ServiceContext, setup: &Setup, lang: crate:
         return Some(ApiError::tr("update_busy", lang, "update.winpoint.err.installing", crate::i18n::NO_PARAMS));
     }
     let store = Store::open(ctx.cache_dir.join("update")).ok()?;
-    let job = store.read(JOB)?;
     let boot = store::boot_id(&setup.paths);
+    let job = store.read_job();
+    let active_record = job.as_ref().is_some_and(|job| {
+        job.get("finishedAt").is_none_or(Value::is_null)
+            && boot.is_some() && job["bootId"].as_str() == boot.as_deref()
+            && store::owner_alive(&job["owner"])
+    });
+    // A new real job can hold the slot before its first job.json write succeeds. A terminal shadow of
+    // an older job (or a missing record) cannot prove that this new holder is safe to interrupt.
+    if store.held(store::JOB_LOCK).unwrap_or(true) && !active_record {
+        return Some(ApiError::tr("update_busy", lang, "update.guard.power", crate::i18n::NO_PARAMS));
+    }
+    let job = job?;
     let written = store.modified_ms(JOB).unwrap_or(0);
     job_blocks_power(&job, boot.as_deref(), store::owner_alive(&job["owner"]), written, store::now_ms())
         .then(|| ApiError::tr("update_busy", lang, "update.guard.power", crate::i18n::NO_PARAMS))
@@ -79,9 +90,10 @@ pub(crate) fn restart_all_blocked(ctx: &ServiceContext) -> Option<ApiError> {
         return Some(ApiError::tr("update_busy", lang, "update.guard.upgrade", crate::i18n::NO_PARAMS));
     }
     if let Ok(store) = Store::open(ctx.cache_dir.join("update"))
-        && let Some(job) = store.read(JOB)
-        && job.get("finishedAt").is_none_or(Value::is_null)
-        && store::owner_alive(&job["owner"])
+        && (store.held(store::JOB_LOCK).unwrap_or(true)
+            || store.read_job().is_some_and(|job| {
+                job.get("finishedAt").is_none_or(Value::is_null) && store::owner_alive(&job["owner"])
+            }))
     {
         return Some(ApiError::tr(
             "update_busy",
@@ -113,9 +125,10 @@ pub(crate) fn busy_for_winpoint(ctx: &ServiceContext) -> bool {
         return true;
     }
     if let Ok(store) = Store::open(ctx.cache_dir.join("update"))
-        && let Some(job) = store.read(JOB)
-        && job.get("finishedAt").is_none_or(Value::is_null)
-        && store::owner_alive(&job["owner"])
+        && (store.held(store::JOB_LOCK).unwrap_or(true)
+            || store.read_job().is_some_and(|job| {
+                job.get("finishedAt").is_none_or(Value::is_null) && store::owner_alive(&job["owner"])
+            }))
     {
         return true;
     }

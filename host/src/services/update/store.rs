@@ -44,6 +44,26 @@ pub(crate) fn is_token(value: &str) -> bool {
     value.len() == 32 && value.bytes().all(|b| b.is_ascii_hexdigit())
 }
 
+/// A terminal snapshot of this exact job is stronger than an older unfinished job file.
+/// Keep uncertain/malformed records conservative: neither age nor an absent daemon proves completion.
+pub(crate) fn completed_snapshot_job<'a>(job: &Value, snapshot: &'a Value) -> Option<&'a Value> {
+    let id = job["jobId"].as_str().filter(|id| !id.is_empty())?;
+    let role = job["role"].as_str().filter(|role| matches!(*role, "update" | "repair"))?;
+    let started = job["startedAt"].as_u64()?;
+    for completed in [snapshot.get("lastJob"), snapshot.get("confirmedJobCompletion")].into_iter().flatten() {
+        let Some(finished) = completed["finishedAt"].as_u64() else { continue };
+        let Some(exit) = completed["outcome"]["exit"].as_u64() else { continue };
+        // Unknown outcome is not proof that a committing transaction ended safely.
+        if completed["jobId"].as_str() == Some(id) && completed["role"].as_str() == Some(role)
+            && finished >= started && [1, 2, 3].contains(&exit)
+            && completed["outcome"]["code"] != "unknown_outcome"
+        {
+            return Some(completed);
+        }
+    }
+    None
+}
+
 fn denied() -> io::Error {
     io::Error::from(io::ErrorKind::PermissionDenied)
 }
@@ -86,6 +106,33 @@ impl Store {
     pub(crate) fn read(&self, name: &str) -> Option<Value> {
         let bytes = read_private(&self.path(name), MAX_FILE).ok()?;
         serde_json::from_slice(&bytes).ok()
+    }
+    /// Read-only reconciliation when writing the terminal job file failed but its snapshot succeeded.
+    /// Do not rewrite either file, and never turn a different/uncertain job into a completed one.
+    pub(crate) fn read_job(&self) -> Option<Value> {
+        let mut job = self.read(JOB)?;
+        if job.get("finishedAt").is_none_or(Value::is_null)
+            && let Some(snapshot) = self.read(SNAPSHOT)
+            && let Some(completed) = completed_snapshot_job(&job, &snapshot)
+        {
+            job["finishedAt"] = completed["finishedAt"].clone();
+            job["outcome"] = completed["outcome"].clone();
+            job["committing"] = json!(false);
+            job["allowCancel"] = json!(false);
+        }
+        Some(job)
+    }
+    /// Keep at most one confirmed completion for the exact stale raw job slot while snapshots advance.
+    /// A later check/job must not erase its only terminal evidence when job.json writes are still failing.
+    pub(crate) fn retain_job_completion(&self, snapshot: &mut Value) {
+        let Some(object) = snapshot.as_object_mut() else { return };
+        object.remove("confirmedJobCompletion");
+        let Some(job) = self.read(JOB).filter(|job| job.get("finishedAt").is_none_or(Value::is_null)) else { return };
+        if completed_snapshot_job(&job, snapshot).is_some() { return; }
+        let Some(previous) = self.read(SNAPSHOT) else { return };
+        if let Some(completed) = completed_snapshot_job(&job, &previous) {
+            snapshot["confirmedJobCompletion"] = completed.clone();
+        }
     }
     /// Atomic write (temp file + rename), mode 0600.
     pub(crate) fn write(&self, name: &str, value: &Value) -> io::Result<()> {

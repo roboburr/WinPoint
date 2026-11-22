@@ -210,13 +210,13 @@ pub(crate) fn reboot_first(shared: &Shared) -> bool {
 pub(crate) fn busy(shared: &Shared, snapshot: &Value) -> bool {
     let paths = &shared.setup.paths;
     let boot = store::boot_id(paths);
-    let job = shared.store.read(store::JOB).is_some_and(|j| {
+    let job = shared.store.read_job().is_some_and(|j| {
         j.get("finishedAt").is_none_or(Value::is_null)
             && boot.is_some()
             && j["bootId"].as_str() == boot.as_deref()
             && store::owner_alive(&j["owner"])
     });
-    job || snapshot["foreign"] == true
+    shared.store.held(store::JOB_LOCK).unwrap_or(true) || job || snapshot["foreign"] == true
         || guard::software_job_active(&shared.ctx.cache_dir.join("software/jobs"))
         || guard::apt_lock_held(paths)
 }

@@ -231,9 +231,20 @@ impl Clipboard {
                     ));
                 }
                 let cutting = state["op"] == "cut";
-                let result =
-                    mutate::transfer(selected, destination, cutting, args["jobId"].as_str(), ctx)?;
-                if cutting {
+                let result = mutate::transfer_with_options(
+                    selected,
+                    destination,
+                    cutting,
+                    args["jobId"].as_str(),
+                    args["interactive"] == true,
+                    ctx,
+                )?;
+                if cutting
+                    && result["cancelled"] != true
+                    && result["skipped"]
+                        .as_array()
+                        .is_none_or(|items| items.is_empty())
+                {
                     let lock = self.lock(lang)?;
                     // A user may copy another selection while a large move is running.
                     // Clear only the selection this paste actually consumed.
