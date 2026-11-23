@@ -365,8 +365,12 @@ impl TransferWindow {
         let details_row = gtk::Box::new(gtk::Orientation::Horizontal, 7);
         let circle = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         circle.add_css_class("xp-transfer-chevron");
+        circle.set_hexpand(false);
         circle.set_valign(gtk::Align::Center);
         let details_icon = kit::icons::glyph("chevron-down", 12);
+        details_icon.set_hexpand(true);
+        details_icon.set_halign(gtk::Align::Center);
+        details_icon.set_valign(gtk::Align::Center);
         circle.append(&details_icon);
         let details_label = gtk::Label::new(None);
         details_row.append(&circle);
