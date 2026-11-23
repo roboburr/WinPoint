@@ -322,6 +322,16 @@ pub(super) fn rename_noreplace(source: &Path, target: &Path) -> io::Result<()> {
     }
 }
 
+// Some mounted filesystems reject RENAME_NOREPLACE. Explorer can use the same
+// guarded copy-before-delete path as a cross-device move; the shared rename
+// primitive keeps its strict, atomic contract for archive/trash/rename callers.
+fn move_needs_copy(error: &io::Error) -> bool {
+    matches!(
+        error.raw_os_error(),
+        Some(libc::EXDEV | libc::EINVAL | libc::ENOSYS | libc::EOPNOTSUPP)
+    )
+}
+
 fn c_path(path: &Path) -> io::Result<CString> {
     CString::new(path.as_os_str().as_bytes())
         .map_err(|_| io::Error::from_raw_os_error(libc::EINVAL))
@@ -621,7 +631,7 @@ pub(super) fn transfer_with_options(
                             );
                             Ok(())
                         }
-                        Err(error) if error.raw_os_error() == Some(libc::EXDEV) => {
+                        Err(error) if move_needs_copy(&error) => {
                             copy_then_remove(source, &target, &mut progress)
                         }
                         Err(error) => Err(error),

@@ -14,6 +14,10 @@ section here.
 - **Move replacements on the same filesystem without recopying their contents.** After the existing replace
   confirmation, eligible moves use rename with the existing destination checks and rollback safeguards.
   Cross-filesystem moves retain the validated copy-before-delete path; directory merges keep their existing rules.
+- **Handle limited rename support on NTFS/FUSE mounts.** File and link replacements use exclusively writable
+  staging and no-replace publication when the filesystem rejects Linux's no-replace rename flag. Unfinished
+  private aliases are retained as recovery paths. Ordinary file and folder moves can use the validated
+  copy-before-delete path. Merging existing folders keeps its earlier rules.
 - **Keep the Windows-style transfer window and its controls.** The compact percentage bar, expanded green speed
   graph, details and folder links remain, together with pause, resume, cancel, replace, skip, keep both and retry.
   Cancellation and changed-file checks remain part of each bounded transfer step.
