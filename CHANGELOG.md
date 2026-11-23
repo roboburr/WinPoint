@@ -5,6 +5,19 @@ section here.
 
 ## Unreleased
 
+## 0.9.9
+
+- **Kernel-assisted file transfers.** Explorer uses Linux's `copy_file_range` API between already-open files
+  where supported, in chunks of at most 8 MiB. Other filesystems use a bounded buffered fallback at the current
+  file offsets, with one reusable 1 MiB buffer per job. Short copies, interrupted operations and partially
+  completed writes retain correct byte accounting; destination ownership is checked before writes.
+- **Move replacements on the same filesystem without recopying their contents.** After the existing replace
+  confirmation, eligible moves use rename with the existing destination checks and rollback safeguards.
+  Cross-filesystem moves retain the validated copy-before-delete path; directory merges keep their existing rules.
+- **Keep the Windows-style transfer window and its controls.** The compact percentage bar, expanded green speed
+  graph, details and folder links remain, together with pause, resume, cancel, replace, skip, keep both and retry.
+  Cancellation and changed-file checks remain part of each bounded transfer step.
+
 ## 0.9.8
 
 - **A separate file-transfer window.** Long copies, moves and pastes use a Windows-style progress window instead

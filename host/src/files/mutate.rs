@@ -34,6 +34,8 @@ static SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 #[path = "transfer_interactive.rs"]
 mod interactive;
+#[path = "transfer_bytes.rs"]
+mod transfer_bytes;
 
 pub(super) fn call(method: &str, args: &Value, ctx: &Context) -> Option<ApiResult> {
     match method {
@@ -350,6 +352,7 @@ struct Progress<'a> {
     merged_paths: Vec<PathBuf>,
     skipped_paths: Vec<PathBuf>,
     recovery_paths: Vec<PathBuf>,
+    copy_buffer: Vec<u8>,
     #[cfg(test)]
     after_write: Option<Box<dyn FnMut(u64) + Send>>,
     #[cfg(test)]
@@ -521,6 +524,7 @@ pub(super) fn transfer_with_options(
         merged_paths: Vec::new(),
         skipped_paths: Vec::new(),
         recovery_paths: Vec::new(),
+        copy_buffer: Vec::new(),
         #[cfg(test)]
         after_write: None,
         #[cfg(test)]
@@ -861,26 +865,37 @@ fn copy_any(
             return Err(error);
         }
     } else if metadata.is_file() {
-        let mut input = open_regular_source(source, &metadata)?;
+        let input = open_regular_source(source, &metadata)?;
         let mut output = OpenOptions::new()
             .write(true)
             .create_new(true)
             .mode(0o600)
             .open(target)?;
         let mut owned = output.metadata()?;
+        // One lazily allocated fallback buffer belongs to the job, not to every file.
+        // Namespace, source-consistency and cleanup checks remain here around the byte engine.
+        let mut buffer = std::mem::take(&mut progress.copy_buffer);
+        let mut engine = transfer_bytes::CopyEngine::new();
         let result = (|| {
-            let mut buffer = vec![0_u8; 1024 * 1024];
             loop {
                 progress.checkpoint()?;
                 verify_output(&output, target, &owned)?;
-                let read = input.read(&mut buffer)?;
-                if read == 0 {
+                let chunk = engine.copy_next(&input, &output, &mut buffer, || {
+                    progress.checkpoint()?;
+                    verify_output(&output, target, &owned)
+                });
+                let written = match &chunk {
+                    Ok(chunk) => chunk.bytes_written,
+                    Err(error) => error.bytes_written,
+                };
+                if written != 0 {
+                    owned = output.metadata()?;
+                    progress.add(written as u64);
+                }
+                let chunk = chunk.map_err(|error| error.error)?;
+                if chunk.eof {
                     break;
                 }
-                verify_output(&output, target, &owned)?;
-                output.write_all(&buffer[..read])?;
-                owned = output.metadata()?;
-                progress.add(read as u64);
                 #[cfg(test)]
                 if progress
                     .fail_after_write
@@ -904,6 +919,7 @@ fn copy_any(
             }
             Ok(())
         })();
+        progress.copy_buffer = buffer;
         if let Err(error) = result {
             drop(output);
             let changed = !fs::symlink_metadata(source).is_ok_and(|now| unchanged(&metadata, &now));
@@ -1123,6 +1139,7 @@ pub(super) fn move_noreplace_exact(source: &Path, target: &Path) -> io::Result<(
                 merged_paths: Vec::new(),
                 skipped_paths: Vec::new(),
                 recovery_paths: Vec::new(),
+                copy_buffer: Vec::new(),
                 #[cfg(test)]
                 after_write: None,
                 #[cfg(test)]
@@ -1280,6 +1297,7 @@ mod tests {
             merged_paths: Vec::new(),
             skipped_paths: Vec::new(),
             recovery_paths: Vec::new(),
+            copy_buffer: Vec::new(),
             after_write: None,
             before_commit: None,
             before_stage: None,
@@ -1302,7 +1320,7 @@ mod tests {
             let source = fixture.0.join("source");
             let target = fixture.0.join("target");
             let existing = fixture.0.join("existing");
-            let contents = vec![0x6d; 4 * 1024 * 1024];
+            let contents = vec![0x6d; 12 * 1024 * 1024];
             fs::write(&source, &contents).unwrap();
             fs::write(&existing, b"untouched").unwrap();
             let ctx = Context::new(
@@ -1319,8 +1337,10 @@ mod tests {
             let worker = std::thread::spawn(move || {
                 let mut progress = progress();
                 progress.control = Some(worker_job.clone());
+                let mut triggered = false;
                 progress.after_write = Some(Box::new(move |done| {
-                    if done == 1024 * 1024 {
+                    if done > 0 && !triggered {
+                        triggered = true;
                         worker_job.request(if action == "cancel-active" {
                             "cancel"
                         } else {
@@ -1335,7 +1355,8 @@ mod tests {
             if action != "cancel-active" {
                 wait_state(&job, "paused");
                 let length = fs::metadata(&target).unwrap().len();
-                assert_eq!(length, 1024 * 1024);
+                assert!(length > 0 && length < contents.len() as u64);
+                assert!(length <= 8 * 1024 * 1024);
                 std::thread::sleep(Duration::from_millis(25));
                 assert_eq!(fs::metadata(&target).unwrap().len(), length);
                 job.request(if action == "resume" {
@@ -1482,7 +1503,7 @@ mod tests {
             let source = fixture.0.join("source");
             let target = fixture.0.join("target");
             fs::create_dir(&source).unwrap();
-            fs::write(source.join("child"), vec![0x67; 4 * 1024 * 1024]).unwrap();
+            fs::write(source.join("child"), vec![0x67; 12 * 1024 * 1024]).unwrap();
             let ctx = Context::new(
                 fixture.0.clone(),
                 fixture.0.join("Desktop"),
@@ -1496,8 +1517,10 @@ mod tests {
             let worker = std::thread::spawn(move || {
                 let mut progress = progress();
                 progress.control = Some(gate.clone());
+                let mut triggered = false;
                 progress.after_write = Some(Box::new(move |done| {
-                    if done == 1024 * 1024 {
+                    if done > 0 && !triggered {
+                        triggered = true;
                         gate.request("pause");
                     }
                 }));
@@ -1522,7 +1545,7 @@ mod tests {
             assert!(!partial.is_empty());
             assert_eq!(
                 fs::metadata(source.join("child")).unwrap().len(),
-                4 * 1024 * 1024
+                12 * 1024 * 1024
             );
         }
     }
@@ -1532,7 +1555,7 @@ mod tests {
         let fixture = Fixture::new();
         let source = fixture.0.join("source");
         let target = fixture.0.join("target");
-        let original = vec![0x67; 4 * 1024 * 1024];
+        let original = vec![0x67; 12 * 1024 * 1024];
         fs::write(&source, &original).unwrap();
         let ctx = Context::new(
             fixture.0.clone(),
@@ -1550,8 +1573,10 @@ mod tests {
         let worker = std::thread::spawn(move || {
             let mut progress = progress();
             progress.control = Some(gate.clone());
+            let mut triggered = false;
             progress.after_write = Some(Box::new(move |done| {
-                if done == 1024 * 1024 {
+                if done > 0 && !triggered {
+                    triggered = true;
                     gate.request("pause");
                 }
             }));

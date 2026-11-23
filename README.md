@@ -74,7 +74,7 @@ Settings includes GNOME-backed display, sound, mouse, touchpad, keyboard, access
 Download `winpoint-<version>-linux-x86_64.tar.gz` from the [latest release](https://github.com/roboburr/WinPoint/releases/latest) into your Downloads folder, open a terminal and paste this line (the release notes have it for that release):
 
 ```bash
-cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.8-linux-x86_64.tar.gz && ./winpoint-0.9.8/scripts/install.sh
+cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.9-linux-x86_64.tar.gz && ./winpoint-0.9.9/scripts/install.sh
 ```
 
 The installer puts WinPoint in your home folder (`~/.local`) and adds **WinPoint** to the login screen, next to Ubuntu. It asks for your password once; an account that isn't an administrator needs an administrator's password. Then sign out: WinPoint starts at the next sign-in. Your Ubuntu session keeps its own look and dock; pick **Ubuntu** with the gear at the bottom right of the login screen to use it.
@@ -83,11 +83,11 @@ The installer picks Dutch or English from your system's language and region. Cha
 
 ## Update
 
-The latest release is **[WinPoint 0.9.8](https://github.com/roboburr/WinPoint/releases/tag/v0.9.8)**. Copies and moves have a separate transfer window with a compact progress bar, an expandable green speed graph and working pause, resume and cancel controls. Details show the current file, time remaining and item count. Name conflicts ask whether to replace, skip or keep both; existing folders merge safely. Completed system updates no longer leave a stale running task blocking WinPoint updates. All 0.9.7 fixes are included. See the [changelog](CHANGELOG.md#098) for the full list.
+The latest release is **[WinPoint 0.9.9](https://github.com/roboburr/WinPoint/releases/tag/v0.9.9)**. File transfers use Linux's kernel copy path where supported, with a reusable buffered fallback. Replacing a file with a move on the same filesystem uses rename instead of copying its contents again, with the existing confirmation and rollback safeguards. The separate Windows-style transfer window keeps its green speed graph, details, pause, resume and cancel controls, and replace, skip and keep-both prompts. All 0.9.8 fixes are included. See the [changelog](CHANGELOG.md#099) for the full list.
 
 WinPoint checks GitHub once a day and tells you when a new release is out. Click **Download and install** in **Settings › Update & recovery**: WinPoint downloads it, checks it against GitHub's checksum and installs it, keeping your settings. Then restart WinPoint or sign out and back in, as the page says. Automatic checks can be turned off under **Advanced options**; installing a newer release by hand with the line above works too.
 
-To check now, open **Settings › Update & recovery › Check for updates**. Version 0.9.8 is offered to earlier releases and the unpublished 0.9.1 development version. The download includes all 19 programs and the GNOME extension. Installing the update leaves running programs in place; the page tells you when to restart WinPoint or sign out to use the new components.
+To check now, open **Settings › Update & recovery › Check for updates**. Version 0.9.9 is offered to earlier releases and the unpublished 0.9.1 development version. The download includes all 19 programs and the GNOME extension. Installing the update leaves running programs in place; the page tells you when to restart WinPoint or sign out to use the new components.
 
 ## Uninstall
 
@@ -101,7 +101,7 @@ It asks for your password once and removes WinPoint's files and its choice at th
 
 ## Build from source
 
-The current source is on **`main`**. Releases use tags such as `v0.9.8`; temporary work branches are removed after integration.
+The current source is on **`main`**. Releases use tags such as `v0.9.9`; temporary work branches are removed after integration.
 
 See [the release procedure](docs/RELEASING.md) for publishing and updating winpoint.nl in the same release.
 
@@ -123,6 +123,8 @@ cargo fetch --locked --manifest-path native/Cargo.toml
 
 A GNOME Shell extension starts `win11-shell`, one GTK 4 process for the taskbar, Start, the flyouts and the desktop, and handles window placement, blur and shortcuts. A Rust backend gives it apps, settings, tray icons, notifications, sound, network, power and files over a local JSON API; every app is its own GTK 4 process. The extension runs only in the WinPoint session; your Ubuntu session doesn't load it.
 
+Explorer's transfer engine is original Rust code under MIT, using Linux's file-descriptor-based `copy_file_range` API in bounded chunks and reusing one fallback buffer per job. It incorporates no transfer code from GPL/LGPL projects. The caller retains the existing file-ownership, conflict, cancellation and rollback checks around these operations.
+
 Settings live in `~/.config/win11-gnome/settings.json` (defaults in [host/src/settings-defaults.json](host/src/settings-defaults.json)). Contributors: start with [native/ARCH.md](native/ARCH.md), [native/APPS.md](native/APPS.md) and [tests/gnome/README.md](tests/gnome/README.md), and before a pull request run `python3 -B tools/i18n/check.py` (every UI text is a Dutch/English pair) and `tests/rust-sandbox/run-tests.sh`.
 
 ## Known limitations
@@ -141,5 +143,7 @@ WinPoint is under the [MIT licence](LICENSE); [THIRD_PARTY_NOTICES.md](THIRD_PAR
 - the **Win11 icon theme** by [yeyushengfan258](https://github.com/yeyushengfan258/Win11-icon-theme) (`vendor/icons/`, `vendor/icon-source/` and `vendor/ui/assets/icons/settings.svg`), which is **GPL-3.0-only** (changes in [vendor/ICON_PROVENANCE.md](vendor/ICON_PROVENANCE.md));
 - the **Lotus wallpapers**, AI-generated and released under [CC0-1.0](LICENSES/CC0-1.0.txt);
 - the Rust crates, which keep their own licences ([LICENSES/RUST-CRATES.md](LICENSES/RUST-CRATES.md)), and two Rust files translated from CPython (PSF-2.0).
+
+Third-party notices and full licence texts are also available on [winpoint.nl](https://winpoint.nl/third-party-licenses.html).
 
 WinPoint is an independent project, not affiliated with or endorsed by Microsoft. Windows and Windows 11 are trademarks of Microsoft Corporation. No Microsoft code, assets or fonts are included. Alles follows the look and search syntax of Everything by voidtools; it contains no voidtools code and is not affiliated with voidtools.

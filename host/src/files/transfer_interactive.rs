@@ -413,6 +413,211 @@ fn replace(
     if expected.is_dir() {
         return Err(io::Error::from_raw_os_error(libc::EISDIR));
     }
+    if moving
+        && let Some(replaced) = replace_move(source, target, consent_source, expected, progress)?
+    {
+        return Ok(replaced);
+    }
+    replace_copy(source, target, consent_source, expected, moving, progress)
+}
+
+fn replace_move(
+    source: &Path,
+    target: &Path,
+    consent_source: &Metadata,
+    expected: &Metadata,
+    progress: &mut Progress<'_>,
+) -> io::Result<Option<bool>> {
+    replace_move_with(
+        source,
+        target,
+        consent_source,
+        expected,
+        progress,
+        rename_noreplace,
+    )
+}
+
+/// `None` leaves both public entries untouched and selects the existing copy/verify/delete path.
+/// The injected rename is the same no-replace syscall in production; tests exercise its race/error boundaries.
+fn replace_move_with(
+    source: &Path,
+    target: &Path,
+    consent_source: &Metadata,
+    expected: &Metadata,
+    progress: &mut Progress<'_>,
+    mut rename: impl FnMut(&Path, &Path) -> io::Result<()>,
+) -> io::Result<Option<bool>> {
+    if !(consent_source.is_file() || consent_source.file_type().is_symlink()) || expected.is_dir() {
+        return Ok(None);
+    }
+    let pin_parent = |path: &Path| -> io::Result<(File, PathBuf)> {
+        let parent = path
+            .parent()
+            .ok_or_else(|| io::Error::from_raw_os_error(libc::EINVAL))?;
+        let parent = opened_directory(&fs::canonicalize(parent)?)?;
+        let pinned = fd_path(&parent).join(
+            path.file_name()
+                .ok_or_else(|| io::Error::from_raw_os_error(libc::EINVAL))?,
+        );
+        Ok((parent, pinned))
+    };
+    // Keep both directory descriptors alive through rollback, even if a public parent is renamed.
+    let (_input, source) = pin_parent(source)?;
+    let (output, target) = pin_parent(target)?;
+    if consent_source.dev() != output.metadata()?.dev() {
+        return Ok(None);
+    }
+    let stage_root = fd_path(&output).join(format!(".winpoint-transfer-{}", nonce()));
+    fs::DirBuilder::new().mode(0o700).create(&stage_root)?;
+    let stage = opened_directory(&stage_root)?;
+    let stage_metadata = stage.metadata()?;
+    let new = fd_path(&stage).join("new");
+    let old = fd_path(&stage).join("old");
+    #[cfg(test)]
+    if let Some(hook) = &mut progress.before_stage {
+        hook();
+    }
+    let mut source_captured = false;
+    let mut target_captured = false;
+    let mut published = false;
+    let mut source_metadata = None;
+    let mut target_metadata = None;
+    let mut commit = None;
+    let result = (|| {
+        loop {
+            progress.checkpoint()?;
+            if !fs::symlink_metadata(&source).is_ok_and(|m| unchanged(consent_source, &m)) {
+                progress.uncertain_metrics();
+                return Ok(Some(false));
+            }
+            if !fs::symlink_metadata(&target).is_ok_and(|m| unchanged(expected, &m)) {
+                return Ok(Some(false));
+            }
+            commit = progress.begin_commit()?;
+            if progress.control.as_ref().is_some_and(|job| job.pending()) {
+                drop(commit.take());
+                continue;
+            }
+            // begin_commit may have waited for Pause: consent must still describe both entries.
+            if !fs::symlink_metadata(&source).is_ok_and(|m| unchanged(consent_source, &m)) {
+                progress.uncertain_metrics();
+                return Ok(Some(false));
+            }
+            if !fs::symlink_metadata(&target).is_ok_and(|m| unchanged(expected, &m)) {
+                return Ok(Some(false));
+            }
+            break;
+        }
+        // Capture the source first. A raced foreign source is checked in private staging and
+        // never published on the real target name. EXDEV here has changed neither public name.
+        match rename(&source, &new) {
+            Ok(()) => source_captured = true,
+            Err(error) if error.raw_os_error() == Some(libc::EXDEV) => return Ok(None),
+            Err(error) => return Err(error),
+        }
+        let observed = fs::symlink_metadata(&new)?;
+        let consent_matches = captured_matches(consent_source, &observed);
+        source_metadata = Some(observed);
+        if !consent_matches {
+            progress.uncertain_metrics();
+            return Ok(Some(false));
+        }
+        if !fs::symlink_metadata(&target).is_ok_and(|m| {
+            if same_identity(consent_source, expected) {
+                captured_matches(expected, &m) // Capturing one hard link also changes its sibling's ctime.
+            } else {
+                unchanged(expected, &m)
+            }
+        }) {
+            return Ok(Some(false));
+        }
+        match rename(&target, &old) {
+            Ok(()) => target_captured = true,
+            Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(Some(false)),
+            Err(error) => return Err(error),
+        }
+        let observed = fs::symlink_metadata(&old)?;
+        let consent_matches = captured_matches(expected, &observed);
+        target_metadata = Some(observed);
+        if !consent_matches {
+            return Ok(Some(false));
+        }
+        if !fs::symlink_metadata(&new)
+            .is_ok_and(|m| captured_matches(source_metadata.as_ref().unwrap(), &m))
+        {
+            return Err(io::Error::from_raw_os_error(libc::EBUSY));
+        }
+        rename(&new, &target)?; // Never replace a name created after the old target was captured.
+        source_captured = false;
+        published = true;
+        record(&mut progress.overwritten_paths, &target);
+        if !fs::symlink_metadata(&target).is_ok_and(|m| captured_matches(consent_source, &m)) {
+            return Err(io::Error::from_raw_os_error(libc::EBUSY));
+        }
+        Ok(Some(true))
+    })();
+    if !published {
+        if target_captured
+            && target_metadata.as_ref().is_some_and(|owned| {
+                fs::symlink_metadata(&old).is_ok_and(|m| captured_matches(owned, &m))
+            })
+            && rename(&old, &target).is_ok()
+        {
+            target_captured = false;
+        }
+        if source_captured
+            && source_metadata.as_ref().is_some_and(|owned| {
+                fs::symlink_metadata(&new).is_ok_and(|m| captured_matches(owned, &m))
+            })
+            && rename(&new, &source).is_ok()
+        {
+            source_captured = false;
+        }
+    } else if matches!(result, Ok(Some(true))) && target_captured {
+        // A hard-linked source/target can acquire ctime from our later rename, so take a fresh
+        // exact cleanup snapshot only after checking every consent-bound content/identity field.
+        if let Ok(current) = fs::symlink_metadata(&old)
+            && target_metadata
+                .as_ref()
+                .is_some_and(|owned| captured_matches(owned, &current))
+            && cleanup_owned(&old, &current).is_ok()
+        {
+            target_captured = false;
+        }
+    }
+    let incomplete = source_captured || target_captured;
+    if source_captured {
+        record(&mut progress.recovery_paths, &new);
+    }
+    if target_captured {
+        record(&mut progress.recovery_paths, &old);
+    }
+    if !fs::symlink_metadata(&stage_root).is_ok_and(|m| same_identity(&stage_metadata, &m))
+        || fs::remove_dir(&stage_root).is_err()
+    {
+        record(&mut progress.recovery_paths, &fd_path(&stage));
+    }
+    // No pause checkpoint or file-byte traversal runs inside this short namespace transaction.
+    drop(commit);
+    if matches!(result, Ok(Some(true))) {
+        progress.add(consent_source.len());
+        progress.complete_entries(Some(1));
+    }
+    if incomplete && !published {
+        return Err(io::Error::from_raw_os_error(libc::EBUSY));
+    }
+    result
+}
+
+fn replace_copy(
+    source: &Path,
+    target: &Path,
+    consent_source: &Metadata,
+    expected: &Metadata,
+    moving: bool,
+    progress: &mut Progress<'_>,
+) -> io::Result<bool> {
     let parent = target
         .parent()
         .ok_or_else(|| io::Error::from_raw_os_error(libc::EINVAL))?;
@@ -936,7 +1141,7 @@ mod tests {
         let src = f.folder("src");
         let dest = f.folder("dest");
         let sibling = vec![0x31; 41];
-        let contents = vec![0x44; 4 * 1024 * 1024];
+        let contents = vec![0x44; 12 * 1024 * 1024];
         fs::write(src.join("sibling"), &sibling).unwrap();
         fs::write(src.join("file"), &contents).unwrap();
         let mut context = f.service.context();
@@ -965,7 +1170,7 @@ mod tests {
             0,
         )
         .unwrap();
-        // Inject ENOSPC once only after one real MiB has been written, at the I/O error boundary.
+        // Inject ENOSPC at the first real progress chunk above one MiB, before this larger copy finishes.
         progress.fail_after_write = Some(1024 * 1024);
         entry(
             &src.join("file"),
@@ -984,5 +1189,454 @@ mod tests {
         assert_eq!(fs::read(dest.join("sibling")).unwrap(), sibling);
         assert_eq!(fs::read(dest.join("file")).unwrap(), contents);
         assert_eq!(fs::read(src.join("file")).unwrap(), contents);
+    }
+
+    #[test]
+    fn overwrite_move_preserves_the_source_inode_without_reading_file_bytes() {
+        use std::os::unix::fs::PermissionsExt;
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"move this inode").unwrap();
+        fs::write(&target, b"old destination").unwrap();
+        // Rename requires parent-directory access, not read access to the file being moved.
+        fs::set_permissions(&source, fs::Permissions::from_mode(0)).unwrap();
+        let original = fs::symlink_metadata(&source).unwrap();
+        let (result, calls) = f.run(vec![source.clone()], dest.clone(), true, |_| {
+            ("replace", false)
+        });
+        assert_eq!(calls, 1);
+        assert_eq!(result["ok"], true);
+        assert_eq!(result["undoable"], false);
+        assert_eq!(result["overwrittenPaths"], json!([target]));
+        assert!(result["recoveryPaths"].as_array().unwrap().is_empty());
+        assert!(!lexists(&source));
+        assert!(captured_matches(
+            &original,
+            &fs::symlink_metadata(&target).unwrap()
+        ));
+        fs::set_permissions(&target, fs::Permissions::from_mode(0o600)).unwrap();
+        assert_eq!(fs::read(target).unwrap(), b"move this inode");
+        assert_eq!(fs::read_dir(dest).unwrap().count(), 1);
+    }
+
+    #[test]
+    fn overwrite_move_keeps_symlinks_as_links_and_does_not_touch_either_referent() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source_referent = f.root.join("source-referent");
+        let target_referent = f.root.join("target-referent");
+        fs::write(&source_referent, b"source referent remains").unwrap();
+        fs::write(&target_referent, b"target referent remains").unwrap();
+        let source = src.join("link");
+        let target = dest.join("link");
+        symlink(&source_referent, &source).unwrap();
+        symlink(&target_referent, &target).unwrap();
+        let original = fs::symlink_metadata(&source).unwrap();
+        let (result, calls) = f.run(vec![source.clone()], dest, true, |_| ("replace", false));
+        assert_eq!(calls, 1);
+        assert_eq!(result["ok"], true);
+        assert!(!lexists(&source));
+        assert!(captured_matches(
+            &original,
+            &fs::symlink_metadata(&target).unwrap()
+        ));
+        assert_eq!(fs::read_link(&target).unwrap(), source_referent);
+        assert_eq!(
+            fs::read(source_referent).unwrap(),
+            b"source referent remains"
+        );
+        assert_eq!(
+            fs::read(target_referent).unwrap(),
+            b"target referent remains"
+        );
+    }
+
+    #[test]
+    fn overwrite_move_adds_metrics_once_and_removes_an_old_hard_link_safely() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"same hard-linked inode").unwrap();
+        fs::hard_link(&source, &target).unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        progress.done = 41;
+        progress.entries_done = Some(1);
+        assert!(replace(&source, &target, &consent, &expected, true, &mut progress).unwrap());
+        assert_eq!(progress.done, 41 + consent.len());
+        assert_eq!(progress.entries_done, Some(2));
+        assert_eq!(progress.overwritten_paths, vec![target.clone()]);
+        assert!(progress.recovery_paths.is_empty());
+        assert!(same_identity(
+            &consent,
+            &fs::symlink_metadata(target).unwrap()
+        ));
+        assert!(!lexists(&source));
+        assert_eq!(fs::read_dir(dest).unwrap().count(), 1);
+    }
+
+    #[test]
+    fn overwrite_move_rejects_a_source_replaced_between_consent_and_capture() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let retained = src.join("retained-original");
+        let target = dest.join("file");
+        fs::write(&source, b"consented source").unwrap();
+        fs::write(&target, b"existing target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        let mut first = true;
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |from, to| {
+                if first {
+                    first = false;
+                    fs::rename(&source, &retained)?;
+                    fs::write(&source, b"raced source must not be published")?;
+                }
+                rename_noreplace(from, to)
+            },
+        )
+        .unwrap();
+        assert_eq!(result, Some(false));
+        assert_eq!(
+            fs::read(source).unwrap(),
+            b"raced source must not be published"
+        );
+        assert_eq!(fs::read(retained).unwrap(), b"consented source");
+        assert_eq!(fs::read(target).unwrap(), b"existing target");
+        assert_eq!(progress.done, 0);
+        assert_eq!(progress.total, None);
+        assert!(progress.overwritten_paths.is_empty());
+        assert!(progress.recovery_paths.is_empty());
+    }
+
+    #[test]
+    fn overwrite_move_restores_source_when_the_consented_target_changes_after_capture() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"source stays available").unwrap();
+        fs::write(&target, b"old target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        let mut first = true;
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |from, to| {
+                rename_noreplace(from, to)?;
+                if first {
+                    first = false;
+                    fs::write(&target, b"changed target must not be overwritten")?;
+                }
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(result, Some(false));
+        assert!(captured_matches(
+            &consent,
+            &fs::symlink_metadata(&source).unwrap()
+        ));
+        assert_eq!(fs::read(source).unwrap(), b"source stays available");
+        assert_eq!(
+            fs::read(target).unwrap(),
+            b"changed target must not be overwritten"
+        );
+        assert_eq!(progress.done, 0);
+        assert!(progress.recovery_paths.is_empty());
+        assert_eq!(fs::read_dir(dest).unwrap().count(), 1);
+    }
+
+    #[test]
+    fn overwrite_move_never_overwrites_a_new_target_and_keeps_the_old_target_as_recovery() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"source restored").unwrap();
+        fs::write(&target, b"old target recovered").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |from, to| {
+                rename_noreplace(from, to)?;
+                if to.file_name() == Some(OsStr::new("old")) {
+                    fs::write(&target, b"new foreign target")?;
+                }
+                Ok(())
+            },
+        );
+        assert_eq!(result.unwrap_err().raw_os_error(), Some(libc::EBUSY));
+        assert_eq!(fs::read(source).unwrap(), b"source restored");
+        assert_eq!(fs::read(target).unwrap(), b"new foreign target");
+        let old = progress
+            .recovery_paths
+            .iter()
+            .find(|p| p.file_name() == Some(OsStr::new("old")))
+            .unwrap();
+        assert_eq!(fs::read(old).unwrap(), b"old target recovered");
+        assert!(
+            progress
+                .recovery_paths
+                .contains(&old.parent().unwrap().to_path_buf())
+        );
+        assert_eq!(progress.done, 0);
+        assert!(progress.overwritten_paths.is_empty());
+    }
+
+    #[test]
+    fn overwrite_move_never_replaces_a_foreign_source_created_during_rollback() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"captured source recovered").unwrap();
+        fs::write(&target, b"untouched target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |from, to| {
+                if to.file_name() == Some(OsStr::new("old")) {
+                    fs::write(&source, b"foreign new source")?;
+                    return Err(io::Error::from_raw_os_error(libc::EIO));
+                }
+                rename_noreplace(from, to)
+            },
+        );
+        assert_eq!(result.unwrap_err().raw_os_error(), Some(libc::EBUSY));
+        assert_eq!(fs::read(source).unwrap(), b"foreign new source");
+        assert_eq!(fs::read(target).unwrap(), b"untouched target");
+        let recovered = progress
+            .recovery_paths
+            .iter()
+            .find(|p| p.file_name() == Some(OsStr::new("new")))
+            .unwrap();
+        assert_eq!(fs::read(recovered).unwrap(), b"captured source recovered");
+        assert!(same_identity(
+            &consent,
+            &fs::symlink_metadata(recovered).unwrap()
+        ));
+        assert_eq!(progress.done, 0);
+    }
+
+    #[test]
+    fn overwrite_move_rollback_uses_pinned_parents_after_both_public_directories_are_replaced() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let moved_src = f.root.join("original-src");
+        let moved_dest = f.root.join("original-dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"original source").unwrap();
+        fs::write(&target, b"original target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        let mut first = true;
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |from, to| {
+                if first {
+                    first = false;
+                    rename_noreplace(from, to)?;
+                    fs::rename(&src, &moved_src)?;
+                    fs::create_dir(&src)?;
+                    fs::write(&source, b"foreign source directory")?;
+                    return Ok(());
+                }
+                if to.file_name() == Some(OsStr::new("old")) {
+                    fs::rename(&dest, &moved_dest)?;
+                    fs::create_dir(&dest)?;
+                    fs::write(&target, b"foreign target directory")?;
+                    return Err(io::Error::from_raw_os_error(libc::EIO));
+                }
+                rename_noreplace(from, to)
+            },
+        );
+        assert_eq!(result.unwrap_err().raw_os_error(), Some(libc::EIO));
+        assert_eq!(fs::read(source).unwrap(), b"foreign source directory");
+        assert_eq!(fs::read(target).unwrap(), b"foreign target directory");
+        assert_eq!(
+            fs::read(moved_src.join("file")).unwrap(),
+            b"original source"
+        );
+        assert_eq!(
+            fs::read(moved_dest.join("file")).unwrap(),
+            b"original target"
+        );
+        assert_eq!(fs::read_dir(moved_dest).unwrap().count(), 1);
+        assert!(progress.recovery_paths.is_empty());
+    }
+
+    #[test]
+    fn overwrite_move_exdev_keeps_both_public_names_intact_before_existing_copy_fallback() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"cross-device source").unwrap();
+        fs::write(&target, b"old target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let mut progress = super::super::tests::progress();
+        let mut calls = 0;
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |_, _| {
+                calls += 1;
+                Err(io::Error::from_raw_os_error(libc::EXDEV))
+            },
+        )
+        .unwrap();
+        assert_eq!(result, None);
+        assert_eq!(calls, 1);
+        assert!(unchanged(&consent, &fs::symlink_metadata(&source).unwrap()));
+        assert!(unchanged(
+            &expected,
+            &fs::symlink_metadata(&target).unwrap()
+        ));
+        assert_eq!(progress.done, 0);
+        assert!(progress.recovery_paths.is_empty());
+        assert_eq!(fs::read_dir(&dest).unwrap().count(), 1);
+        assert!(replace_copy(&source, &target, &consent, &expected, true, &mut progress).unwrap());
+        assert!(!lexists(&source));
+        assert_eq!(fs::read(&target).unwrap(), b"cross-device source");
+        assert!(!same_identity(
+            &consent,
+            &fs::symlink_metadata(target).unwrap()
+        ));
+        assert_eq!(progress.done, consent.len());
+        assert!(progress.recovery_paths.is_empty());
+    }
+
+    #[test]
+    fn overwrite_move_cancellation_before_commit_does_not_capture_either_entry() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"source").unwrap();
+        fs::write(&target, b"target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let context = Context::new(f.root.clone(), f.root.join("Desktop"), "en".into(), false);
+        let job = context
+            .transfers
+            .register("cancel-overwrite-rename", &context)
+            .unwrap();
+        let cancel = job.clone();
+        let mut progress = super::super::tests::progress();
+        progress.control = Some(job);
+        progress.before_commit = Some(Box::new(move || cancel.request("cancel")));
+        let result = replace_move_with(
+            &source,
+            &target,
+            &consent,
+            &expected,
+            &mut progress,
+            |_, _| panic!("cancelled before the first rename"),
+        );
+        assert!(control::is_cancelled(&result.unwrap_err()));
+        assert!(unchanged(&consent, &fs::symlink_metadata(source).unwrap()));
+        assert!(unchanged(&expected, &fs::symlink_metadata(target).unwrap()));
+        assert!(progress.recovery_paths.is_empty());
+        assert_eq!(fs::read_dir(dest).unwrap().count(), 1);
+    }
+
+    #[test]
+    fn overwrite_move_pauses_before_capture_and_resumes_without_changing_consent() {
+        let f = Fixture::new();
+        let src = f.folder("src");
+        let dest = f.folder("dest");
+        let source = src.join("file");
+        let target = dest.join("file");
+        fs::write(&source, b"source").unwrap();
+        fs::write(&target, b"target").unwrap();
+        let consent = fs::symlink_metadata(&source).unwrap();
+        let expected = fs::symlink_metadata(&target).unwrap();
+        let context = Context::new(f.root.clone(), f.root.join("Desktop"), "en".into(), false);
+        let job = context
+            .transfers
+            .register("pause-overwrite-rename", &context)
+            .unwrap();
+        let pause = job.clone();
+        let worker_source = source.clone();
+        let worker_target = target.clone();
+        let (tx, rx) = std::sync::mpsc::channel();
+        let worker = std::thread::spawn(move || {
+            let mut progress = super::super::tests::progress();
+            progress.control = Some(pause.clone());
+            progress.before_stage = Some(Box::new(move || {
+                pause.request("pause");
+                tx.send(()).unwrap();
+            }));
+            replace(
+                &worker_source,
+                &worker_target,
+                &consent,
+                &expected,
+                true,
+                &mut progress,
+            )
+        });
+        rx.recv_timeout(Duration::from_secs(3)).unwrap();
+        let deadline = Instant::now() + Duration::from_secs(3);
+        while job.json()["state"] != "paused" && Instant::now() < deadline {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert_eq!(job.json()["state"], "paused");
+        assert_eq!(fs::read(&source).unwrap(), b"source");
+        assert_eq!(fs::read(&target).unwrap(), b"target");
+        job.request("resume");
+        assert!(worker.join().unwrap().unwrap());
+        assert!(!lexists(&source));
+        assert_eq!(fs::read(target).unwrap(), b"source");
     }
 }
