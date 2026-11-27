@@ -5,6 +5,20 @@ section here.
 
 ## Unreleased
 
+## 0.9.11
+
+2026-11-27
+
+- **Use the desktop's bottom and right edges for icons.** Spread leftover space between grid cells instead of
+  leaving an unused strip beside the last column and above the taskbar. Saved cell coordinates and icon sizes
+  stay the same; dragging and grid alignment use the same spacing, including with the auto-hide preference enabled.
+  Reserve the taskbar only once when Mutter has already constrained the desktop to the available work area.
+- **Keep edge placement consistent.** Drawing, dragging and placing new or pasted items use the same rounded
+  grid boundaries, including fractional spacing. Icon size and text scaling retain their reserved tile footprint.
+- **Verify placement and persistence.** Isolated GNOME tests cover real drags with all three icon sizes and
+  100%, 150% and 200% text sizes, the actual taskbar boundary, free placement and saved positions after restarting
+  only the test shell. Shared geometry tests also cover different logical screen scales and small work areas.
+
 ## 0.9.10
 
 2026-11-27

@@ -74,7 +74,7 @@ Instellingen bevat de GNOME-functies voor beeldscherm, geluid, muis, touchpad, t
 Download `winpoint-<versie>-linux-x86_64.tar.gz` van de [nieuwste uitgave](https://github.com/roboburr/WinPoint/releases/latest) naar je map Downloads, open een terminal en plak deze regel (de uitgavenotities geven hem voor die uitgave):
 
 ```bash
-cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.10-linux-x86_64.tar.gz && ./winpoint-0.9.10/scripts/install.sh
+cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.11-linux-x86_64.tar.gz && ./winpoint-0.9.11/scripts/install.sh
 ```
 
 De installer zet WinPoint in je thuismap (`~/.local`) en voegt **WinPoint** toe aan het inlogscherm, naast Ubuntu. Hij vraagt één keer om je wachtwoord; is je account geen beheerder, dan is het wachtwoord van een beheerder nodig. Meld je daarna af: WinPoint start bij de volgende keer aanmelden. Je Ubuntu-sessie houdt zijn eigen uiterlijk en dock; kies **Ubuntu** met het tandwiel rechtsonder op het inlogscherm om die te gebruiken.
@@ -83,16 +83,16 @@ De installer kiest Nederlands of Engels op basis van de taal en regio van je sys
 
 ## Bijwerken
 
-De nieuwste uitgave is **[WinPoint 0.9.10](https://github.com/roboburr/WinPoint/releases/tag/v0.9.10)**. Deze herstelt
-het slepen van vensters naar de schermranden en Win+Links/Rechts op getroffen nieuwe Ubuntu-installaties. Bij het
-starten van het paneel herstelt WinPoint de specifieke configuratie waarin uitlijnen uitstaat en beide
-uitlijnsneltoetsen leeg zijn, wanneer Tiling Assistant het uitlijnen niet beheert. Aangepaste sneltoetsen en andere
-configuraties blijven behouden; de eerdere GNOME-voorkeuren worden bewaard om ze in Ubuntu terug te zetten.
-Alle oplossingen van 0.9.9 zijn inbegrepen. Zie de [changelog](CHANGELOG.md#0910) voor de details.
+De nieuwste uitgave is **[WinPoint 0.9.11](https://github.com/roboburr/WinPoint/releases/tag/v0.9.11)**. Je kunt
+bureaubladpictogrammen, waaronder de prullenbak, dicht bij de rechteronderhoek boven de taakbalk plaatsen.
+Het raster gebruikt de resterende ruimte langs de randen en reserveert de taakbalk niet nogmaals als GNOME
+het bureaublad al heeft ingekort. Opgeslagen rasterposities en pictogramgroottes blijven behouden; slepen en
+plakken gebruiken dezelfde grenzen. Alle uitlijnreparaties van 0.9.10 en eerdere oplossingen zijn inbegrepen.
+Zie de [changelog](CHANGELOG.md#0911) voor de details.
 
 WinPoint kijkt één keer per dag op GitHub en meldt het als er een nieuwe uitgave is. Klik in **Instellingen › Update en herstel** op **Downloaden en installeren**: WinPoint downloadt de uitgave, controleert hem met het controlegetal van GitHub en installeert hem; je instellingen blijven bewaard. Start daarna WinPoint opnieuw of meld je af en weer aan, zoals de pagina aangeeft. Het automatisch controleren kun je uitzetten onder **Geavanceerde opties**; een nieuwere uitgave zelf installeren met de regel hierboven kan ook.
 
-Wil je nu controleren, open dan **Instellingen › Update en herstel › Controleren op updates**. Versie 0.9.10 wordt aangeboden aan eerdere uitgaven en de niet-gepubliceerde ontwikkelversie 0.9.1. De download bevat alle 19 programma’s en de GNOME-extensie. Tijdens het installeren blijven de programma’s draaien; de pagina geeft aan wanneer je WinPoint opnieuw moet starten of je moet afmelden om de nieuwe onderdelen te gebruiken.
+Wil je nu controleren, open dan **Instellingen › Update en herstel › Controleren op updates**. Versie 0.9.11 wordt aangeboden aan eerdere uitgaven en de niet-gepubliceerde ontwikkelversie 0.9.1. De download bevat alle 19 programma’s en de GNOME-extensie. Tijdens het installeren blijven de programma’s draaien; de pagina geeft aan wanneer je WinPoint opnieuw moet starten of je moet afmelden om de nieuwe onderdelen te gebruiken.
 
 De volledige [changelog](https://winpoint.nl/changelog.html) staat ook op winpoint.nl.
 
@@ -108,7 +108,7 @@ Dit vraagt één keer om je wachtwoord en verwijdert de bestanden van WinPoint e
 
 ## Bouwen vanuit de broncode
 
-De actuele broncode staat op **`main`**. Uitgaven hebben een tag zoals `v0.9.10`; tijdelijke werkbranches worden na samenvoegen opgeruimd.
+De actuele broncode staat op **`main`**. Uitgaven hebben een tag zoals `v0.9.11`; tijdelijke werkbranches worden na samenvoegen opgeruimd.
 
 Zie [de releaseprocedure](docs/RELEASING.md) voor publicatie en het gelijktijdig bijwerken van winpoint.nl.
 

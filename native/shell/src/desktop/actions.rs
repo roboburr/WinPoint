@@ -409,8 +409,8 @@ impl Desk {
             }
             let mut start = point.map(|(x, y)| {
                 (
-                    (((x - super::grid::ORIGIN) / m.cw).floor() as i32).clamp(0, m.cols - 1),
-                    (((y - super::grid::ORIGIN) / m.ch).floor() as i32).clamp(0, m.rows - 1),
+                    super::layout::cell_at(x - 1.0, m.cw, m.cols),
+                    super::layout::cell_at(y, m.ch, m.rows),
                 )
             });
             for n in names {
@@ -687,12 +687,17 @@ impl Desk {
     pub fn on_geometry(self: &Rc<Self>, data: &Value) {
         // only a real change: set_default_size queues a resize and a desktop frame even for the same size
         let Some((w, h)) = super::size_of(data) else { return };
+        let monitor_changed = self.monitor_size.replace((w, h)) != (w, h);
         let shown = (self.window.width(), self.window.height());
         if self.window.default_size() != (w, h) || (self.window.is_mapped() && shown != (w, h)) {
             self.window.set_default_size(w, h);
         }
         // the other monitors (none with one monitor), and where each lies among them ("span")
         super::screens::sync(self, data);
+        if monitor_changed && self.s.borrow().loaded {
+            self.layout();
+            self.render();
+        }
     }
 }
 

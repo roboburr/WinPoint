@@ -12,6 +12,7 @@
 mod actions;
 mod dialogs;
 mod grid;
+mod layout;
 mod menus;
 mod screens;
 mod wallpaper;

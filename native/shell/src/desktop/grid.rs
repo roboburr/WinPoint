@@ -15,7 +15,7 @@ use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 use std::time::{Duration, Instant};
 
-pub const ORIGIN: f64 = 3.0;
+pub use super::layout::ORIGIN;
 const SPECIAL_ORDER: [&str; 3] = ["thispc", "home", "trash"];
 pub const SIZE_ORDER: [&str; 3] = ["small", "medium", "large"];
 
@@ -190,6 +190,7 @@ pub struct Desk {
     pub icons: RefCell<HashMap<String, Option<gdk::Texture>>>,
     pub dialogs: RefCell<Vec<glib::WeakRef<gtk::Window>>>,
     pub size: Cell<(i32, i32)>,
+    pub monitor_size: Cell<(i32, i32)>,
     pub alive: Cell<bool>,
     pub menu_open: Cell<bool>,
     reload_timer: RefCell<Option<glib::SourceId>>,
@@ -257,6 +258,7 @@ impl Desk {
             icons: RefCell::new(HashMap::new()),
             dialogs: RefCell::new(Vec::new()),
             size: Cell::new((w, h)),
+            monitor_size: Cell::new((w, h)),
             alive: Cell::new(true),
             menu_open: Cell::new(false),
             reload_timer: RefCell::new(None),
@@ -551,12 +553,13 @@ impl Desk {
         let ts = crate::theme::look().text_scale;
         let cw = (cw + (ts - 1.0) * 24.0).round();
         let ch = (ch + (ts - 1.0) * 32.0).round();
-        let bottom = if self.shell.setting("taskbar.autoHide") == true { 0.0 } else { crate::panel::BAR as f64 };
+        let bottom = if self.shell.setting("taskbar.autoHide") == true { 0 } else { crate::panel::BAR };
         let (w, h) = self.size.get();
-        let (w, h) = (w as f64, h as f64 - bottom);
-        let cols = (((w - ORIGIN * 2.0) / cw).floor() as i32).max(1);
-        let rows = (((h - ORIGIN * 2.0) / ch).floor() as i32).max(1);
-        Metrics { cw, ch, icon, cols, rows, tw: cw - 2.0 }
+        let (w, h) = (w as f64, super::layout::usable_height(h, self.monitor_size.get().1, bottom));
+        let tw = cw - 2.0;
+        let (cols, cw) = super::layout::axis(w, cw);
+        let (rows, ch) = super::layout::axis(h, ch);
+        Metrics { cw, ch, icon, cols, rows, tw }
     }
 
     pub fn layout(self: &Rc<Self>) {
@@ -638,7 +641,7 @@ impl Desk {
 
     /// The pixel spot of a grid position.
     pub fn spot(m: &Metrics, (x, y): (f64, f64)) -> (f64, f64) {
-        ((ORIGIN + x * m.cw + (m.cw - m.tw) / 2.0).round(), (ORIGIN + y * m.ch).round())
+        ((ORIGIN + x * m.cw + 1.0).round(), (ORIGIN + y * m.ch).round())
     }
 
     /* ---------------------------------------------------------------- render */
