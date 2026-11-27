@@ -15,9 +15,9 @@ download, checksum, version labels, release notes and install command agree with
    `systemFiles` compatibility result. Changes to system files require the manual-install route in the notes.
 4. Push main and the annotated version tag. Upload both assets to a draft release; verify GitHub's asset sizes
    and SHA-256 digests before publishing it as the latest stable release. Verify the actual updater sees it.
-5. Immediately update the existing winpoint.nl source at `/run/media/robin/22TB/VPS/winpoint`: version labels,
-   JSON-LD, download/checksum/release-note links, exact unpack command, size and release summary. Build the static
-   site. Back up the remote index, verify its expected old hash, and atomically replace it with the reviewed build.
+5. Immediately update the existing winpoint.nl source checkout (`VPS/winpoint`; locate the active copy before editing): version labels,
+   JSON-LD, download/checksum/release-note links, exact unpack command, size and release summary. Include `/changelog.html` with every release section from `CHANGELOG.md`, link it from the website and keep
+   the RAM measurement version/date and licence resources intact. Build the static site. Back up the remote index, verify its expected old hash, and atomically replace it with the reviewed build.
    Caddy serves the new static page without a restart. Verify the public HTTPS page and download links.
 
 Publishing does not install or restart WinPoint in the user's session. If the extension changed, tell users that

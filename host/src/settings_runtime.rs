@@ -69,6 +69,7 @@ impl SettingsRuntime {
         if let Ok(settings) = runtime.store.snapshot() {
             runtime.effects.captions_at_start(&settings);
         }
+        crate::gnome_look::repair_native_snap_at_start(kind, runtime.effects.dry_run);
         if runtime.effects.mirror && !runtime.effects.dry_run {
             runtime.start_mirror(agreed);
         }

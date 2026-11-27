@@ -246,3 +246,329 @@ fn restore_keybindings() -> bool {
     }
     true
 }
+
+// Ubuntu's Tiling Assistant disables these native keys. The WinPoint mode does not
+// enable that extension: repair only its complete disabled fingerprint, at panel start.
+fn snap_context(kind: &str, dry_run: bool, session: &str, desktop: &str) -> bool {
+    kind == "panel"
+        && !dry_run
+        && session == "gnome"
+        && desktop
+            .split(':')
+            .any(|part| part.eq_ignore_ascii_case("winpoint"))
+}
+
+fn snap_fingerprint(edge: bool, left: &[String], right: &[String], ta_inactive: bool) -> bool {
+    ta_inactive && !edge && left.is_empty() && right.is_empty()
+}
+
+fn snap_profile(mutter: &gio::Settings, bindings: &gio::Settings) -> bool {
+    if ![
+        (mutter, "edge-tiling"),
+        (bindings, "toggle-tiled-left"),
+        (bindings, "toggle-tiled-right"),
+    ]
+    .iter()
+    .all(|(s, key)| {
+        s.settings_schema()
+            .is_some_and(|schema| schema.has_key(key))
+            && s.is_writable(key)
+    }) {
+        return false;
+    }
+    let left: Vec<_> = bindings
+        .strv("toggle-tiled-left")
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    let right: Vec<_> = bindings
+        .strv("toggle-tiled-right")
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    snap_fingerprint(mutter.boolean("edge-tiling"), &left, &right, true)
+}
+
+fn checked_note(settings: &gio::Settings, key: &str, target: &glib::Variant) -> bool {
+    let mut expected = load();
+    if note_in(&mut expected, settings, key, target) {
+        save(&expected);
+    }
+    load() == expected
+}
+
+fn ta_info_inactive(info: &glib::Variant) -> bool {
+    if info.type_().as_str() != "a{sv}" {
+        return false;
+    }
+    if info.n_children() == 0 {
+        return true;
+    }
+    let Some(state) = glib::VariantDict::new(Some(info)).lookup_value("state", None) else {
+        return false;
+    };
+    let state = state
+        .get::<f64>()
+        .or_else(|| state.get::<u32>().map(f64::from))
+        .or_else(|| state.get::<i32>().map(f64::from));
+    state == Some(2.0) || state == Some(6.0) // INACTIVE or INITIALIZED: installed, never enabled.
+}
+
+fn ta_inactive() -> bool {
+    let Ok(bus) = gio::bus_get_sync(gio::BusType::Session, gio::Cancellable::NONE) else {
+        return false;
+    };
+    let started = std::time::Instant::now();
+    for uuid in [
+        "tiling-assistant@ubuntu.com",
+        "tiling-assistant@leleat-on-github",
+    ] {
+        let Some(remaining) = std::time::Duration::from_millis(500).checked_sub(started.elapsed())
+        else {
+            return false;
+        };
+        let Ok(reply) = bus.call_sync(
+            Some("org.gnome.Shell"),
+            "/org/gnome/Shell",
+            "org.gnome.Shell.Extensions",
+            "GetExtensionInfo",
+            Some(&(uuid,).to_variant()),
+            Some(glib::VariantTy::new("(a{sv})").unwrap()),
+            gio::DBusCallFlags::NO_AUTO_START,
+            remaining.as_millis().max(1) as i32,
+            gio::Cancellable::NONE,
+        ) else {
+            return false;
+        };
+        if !ta_info_inactive(&reply.child_value(0)) {
+            return false;
+        }
+    }
+    true
+}
+
+fn repair_snap(
+    mutter: &gio::Settings,
+    bindings: &gio::Settings,
+    ta_inactive: bool,
+    mut remember: impl FnMut(&gio::Settings, &str, &glib::Variant) -> bool,
+    mut write: impl FnMut(&gio::Settings, &str, &glib::Variant) -> bool,
+) -> bool {
+    let updates = [
+        (mutter, "edge-tiling", true.to_variant()),
+        (
+            bindings,
+            "toggle-tiled-left",
+            vec!["<Super>Left"].to_variant(),
+        ),
+        (
+            bindings,
+            "toggle-tiled-right",
+            vec!["<Super>Right"].to_variant(),
+        ),
+    ];
+    if !snap_profile(mutter, bindings) || !ta_inactive {
+        return false;
+    }
+    let before: Vec<_> = updates
+        .iter()
+        .map(|(s, key, _)| s.user_value(key))
+        .collect();
+    for (s, key, value) in &updates {
+        if !remember(s, key, value) {
+            return false;
+        }
+    }
+    for (index, (s, key, value)) in updates.iter().enumerate() {
+        if !write(s, key, value) {
+            for ((previous, name, owned), user) in updates[..index].iter().zip(&before).rev() {
+                if previous.value(name) != *owned {
+                    continue;
+                }
+                if let Some(user) = user {
+                    let _ = previous.set_value(name, user);
+                } else {
+                    previous.reset(name);
+                }
+            }
+            return false;
+        }
+    }
+    true
+}
+
+pub(crate) fn repair_native_snap_at_start(kind: &str, dry_run: bool) {
+    if !snap_context(
+        kind,
+        dry_run,
+        crate::services::caps::session(),
+        &std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default(),
+    ) {
+        return;
+    }
+    let (Some(mutter), Some(bindings)) = (
+        schema("org.gnome.mutter"),
+        schema("org.gnome.mutter.keybindings"),
+    ) else {
+        return;
+    };
+    if !snap_profile(&mutter, &bindings) {
+        return;
+    }
+    if repair_snap(
+        &mutter,
+        &bindings,
+        ta_inactive(),
+        checked_note,
+        |s, key, value| s.set_value(key, value).is_ok(),
+    ) {
+        gio::Settings::sync();
+    }
+}
+
+#[cfg(test)]
+mod snap_tests {
+    use super::*;
+    fn memory() -> (gio::Settings, gio::Settings) {
+        let source = gio::SettingsSchemaSource::default().unwrap();
+        let backend = gio::memory_settings_backend_new();
+        let settings =
+            |id| gio::Settings::new_full(&source.lookup(id, true).unwrap(), Some(&backend), None);
+        let mutter = settings("org.gnome.mutter");
+        let bindings = settings("org.gnome.mutter.keybindings");
+        mutter.set_boolean("edge-tiling", false).unwrap();
+        for key in ["toggle-tiled-left", "toggle-tiled-right"] {
+            bindings.set_strv(key, &[] as &[&str]).unwrap();
+        }
+        (mutter, bindings)
+    }
+    #[test]
+    fn snap_guard_and_complete_fingerprint_only() {
+        assert!(snap_context("panel", false, "gnome", "WinPoint:GNOME"));
+        for args in [
+            ("settings", false, "gnome", "WinPoint"),
+            ("panel", true, "gnome", "WinPoint"),
+            ("panel", false, "hyprland", "WinPoint"),
+            ("panel", false, "gnome", "ubuntu:GNOME"),
+        ] {
+            assert!(!snap_context(args.0, args.1, args.2, args.3));
+        }
+        assert!(snap_fingerprint(false, &[], &[], true));
+        assert!(!snap_fingerprint(false, &[], &[], false));
+        assert!(!snap_fingerprint(true, &[], &[], true));
+        assert!(!snap_fingerprint(false, &["<Alt>Left".into()], &[], true));
+        assert!(!snap_fingerprint(
+            false,
+            &[],
+            &["<Super>Right".into()],
+            true
+        ));
+    }
+    #[test]
+    fn ta_requires_absent_inactive_or_never_started() {
+        let empty = std::collections::HashMap::<String, glib::Variant>::new().to_variant();
+        assert!(ta_info_inactive(&empty));
+        for state in [1.0, 2.0, 3.0, 6.0, 7.0, 8.0, 9.0, 99.0, 2.1, f64::NAN] {
+            let info = std::collections::HashMap::from([("state".to_string(), state.to_variant())])
+                .to_variant();
+            assert_eq!(ta_info_inactive(&info), state == 2.0 || state == 6.0);
+        }
+        assert!(!ta_info_inactive(&"unknown".to_variant()));
+    }
+    #[test]
+    fn snap_repair_records_and_restores_all_three_values() {
+        let (mutter, bindings) = memory();
+        let mut record = json!({"version":1,"keys":{}});
+        assert!(repair_snap(
+            &mutter,
+            &bindings,
+            true,
+            |s, k, v| {
+                note_in(&mut record, s, k, v);
+                true
+            },
+            |s, k, v| s.set_value(k, v).is_ok()
+        ));
+        assert!(mutter.boolean("edge-tiling"));
+        assert_eq!(
+            bindings.strv("toggle-tiled-left").as_slice(),
+            ["<Super>Left"]
+        );
+        assert_eq!(
+            bindings.strv("toggle-tiled-right").as_slice(),
+            ["<Super>Right"]
+        );
+        assert_eq!(record["keys"].as_object().unwrap().len(), 3);
+        assert!(!repair_snap(
+            &mutter,
+            &bindings,
+            true,
+            |_, _, _| panic!("already repaired"),
+            |_, _, _| false
+        ));
+        assert!(restore_keys(&record, |id| Some(
+            if id == "org.gnome.mutter" {
+                mutter.clone()
+            } else {
+                bindings.clone()
+            }
+        )));
+        assert!(!mutter.boolean("edge-tiling"));
+        assert!(
+            bindings.strv("toggle-tiled-left").is_empty()
+                && bindings.strv("toggle-tiled-right").is_empty()
+        );
+    }
+    #[test]
+    fn partial_failure_rolls_back_and_preserves_custom_profiles() {
+        let (mutter, bindings) = memory();
+        let mut writes = 0;
+        assert!(!repair_snap(
+            &mutter,
+            &bindings,
+            true,
+            |_, _, _| true,
+            |s, k, v| {
+                writes += 1;
+                writes < 3 && s.set_value(k, v).is_ok()
+            }
+        ));
+        assert!(!mutter.boolean("edge-tiling"));
+        assert!(
+            bindings.strv("toggle-tiled-left").is_empty()
+                && bindings.strv("toggle-tiled-right").is_empty()
+        );
+        bindings
+            .set_strv("toggle-tiled-left", ["<Alt>Left"])
+            .unwrap();
+        assert!(!repair_snap(
+            &mutter,
+            &bindings,
+            true,
+            |_, _, _| panic!("custom profile"),
+            |_, _, _| false
+        ));
+        assert_eq!(bindings.strv("toggle-tiled-left").as_slice(), ["<Alt>Left"]);
+    }
+    #[test]
+    fn unconfirmed_backup_prevents_every_write() {
+        let (mutter, bindings) = memory();
+        let mut writes = 0;
+        assert!(!repair_snap(
+            &mutter,
+            &bindings,
+            true,
+            |_, _, _| false,
+            |_, _, _| {
+                writes += 1;
+                true
+            }
+        ));
+        assert_eq!(writes, 0);
+        assert!(!mutter.boolean("edge-tiling"));
+        assert!(
+            bindings.strv("toggle-tiled-left").is_empty()
+                && bindings.strv("toggle-tiled-right").is_empty()
+        );
+    }
+}

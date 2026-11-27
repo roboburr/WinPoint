@@ -74,7 +74,7 @@ Settings includes GNOME-backed display, sound, mouse, touchpad, keyboard, access
 Download `winpoint-<version>-linux-x86_64.tar.gz` from the [latest release](https://github.com/roboburr/WinPoint/releases/latest) into your Downloads folder, open a terminal and paste this line (the release notes have it for that release):
 
 ```bash
-cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.9-linux-x86_64.tar.gz && ./winpoint-0.9.9/scripts/install.sh
+cd "$(xdg-user-dir DOWNLOAD)" && tar -xzf winpoint-0.9.10-linux-x86_64.tar.gz && ./winpoint-0.9.10/scripts/install.sh
 ```
 
 The installer puts WinPoint in your home folder (`~/.local`) and adds **WinPoint** to the login screen, next to Ubuntu. It asks for your password once; an account that isn't an administrator needs an administrator's password. Then sign out: WinPoint starts at the next sign-in. Your Ubuntu session keeps its own look and dock; pick **Ubuntu** with the gear at the bottom right of the login screen to use it.
@@ -83,11 +83,17 @@ The installer picks Dutch or English from your system's language and region. Cha
 
 ## Update
 
-The latest release is **[WinPoint 0.9.9](https://github.com/roboburr/WinPoint/releases/tag/v0.9.9)**. File transfers use Linux's kernel copy path where supported, with a reusable buffered fallback. Replacing a file with a move on the same filesystem uses rename instead of copying its contents again, with the existing confirmation and rollback safeguards. The separate Windows-style transfer window keeps its green speed graph, details, pause, resume and cancel controls, and replace, skip and keep-both prompts. NTFS/FUSE mounts with limited rename support use guarded file staging or validated copy-before-delete. All 0.9.8 fixes are included. See the [changelog](CHANGELOG.md#099) for the full list.
+The latest release is **[WinPoint 0.9.10](https://github.com/roboburr/WinPoint/releases/tag/v0.9.10)**. It fixes dragging
+windows to screen edges and Win+Left/Right on affected fresh Ubuntu installs. At panel startup, WinPoint repairs
+the specific configuration where edge snapping is off and both tile shortcuts are empty, when Tiling Assistant
+does not own snapping. Custom bindings and other configurations are preserved; the previous GNOME preferences
+are recorded for restoration in Ubuntu. All 0.9.9 fixes are included. See the [changelog](CHANGELOG.md#0910) for details.
 
 WinPoint checks GitHub once a day and tells you when a new release is out. Click **Download and install** in **Settings › Update & recovery**: WinPoint downloads it, checks it against GitHub's checksum and installs it, keeping your settings. Then restart WinPoint or sign out and back in, as the page says. Automatic checks can be turned off under **Advanced options**; installing a newer release by hand with the line above works too.
 
-To check now, open **Settings › Update & recovery › Check for updates**. Version 0.9.9 is offered to earlier releases and the unpublished 0.9.1 development version. The download includes all 19 programs and the GNOME extension. Installing the update leaves running programs in place; the page tells you when to restart WinPoint or sign out to use the new components.
+To check now, open **Settings › Update & recovery › Check for updates**. Version 0.9.10 is offered to earlier releases and the unpublished 0.9.1 development version. The download includes all 19 programs and the GNOME extension. Installing the update leaves running programs in place; the page tells you when to restart WinPoint or sign out to use the new components.
+
+The complete [changelog](https://winpoint.nl/changelog.html) is also available on winpoint.nl.
 
 ## Uninstall
 
@@ -101,7 +107,7 @@ It asks for your password once and removes WinPoint's files and its choice at th
 
 ## Build from source
 
-The current source is on **`main`**. Releases use tags such as `v0.9.9`; temporary work branches are removed after integration.
+The current source is on **`main`**. Releases use tags such as `v0.9.10`; temporary work branches are removed after integration.
 
 See [the release procedure](docs/RELEASING.md) for publishing and updating winpoint.nl in the same release.
 

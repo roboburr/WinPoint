@@ -885,6 +885,8 @@ def launch_problems(opts) -> list[tuple[str, str]]:
     p = []
     set_session_mode(getattr(opts, 'session_mode', None))
     set_winpoint_feed(getattr(opts, 'winpoint_feed', False))
+    if getattr(opts, 'native_snap_fixture', False) and getattr(opts, 'session_mode', None) != 'winpoint':
+        p.append(('native-snap-fixture-mode', '--native-snap-fixture requires --session-mode winpoint'))
     if not opts.guard_only:
         p += build_dir_problems(set_build_dir(opts.build_dir))
     p += source_problems(opts.source)
@@ -2085,6 +2087,30 @@ def seed_defaults(defaults: dict) -> dict:
     return {**defaults, 'update': {**defaults.get('update', {}), 'winpointAutoCheck': False}}
 
 
+def prepare_native_snap_fixture() -> None:
+    """Before the first Shell/panel boot, seed only this run's keyfile and disabled TA stand-in."""
+    if SESSION_MODE != 'winpoint':
+        raise Fatal('--native-snap-fixture requires --session-mode winpoint')
+    keyfile = RUN / 'config/glib-2.0/settings/keyfile'
+    with keyfile.open('a') as stream:
+        stream.write('\n[org/gnome/mutter]\nedge-tiling=false\n'
+                     '\n[org/gnome/mutter/keybindings]\ntoggle-tiled-left=@as []\ntoggle-tiled-right=@as []\n')
+    # A real, installed-but-disabled extension in Main.extensionManager (state 6), not a mocked D-Bus reply.
+    extension = RUN / 'data/gnome-shell/extensions/tiling-assistant@ubuntu.com'
+    extension.mkdir(parents=True)
+    (extension / 'metadata.json').write_text(json.dumps({
+        'uuid': 'tiling-assistant@ubuntu.com', 'name': 'Inactive TA regression fixture',
+        'description': 'Private harness fixture; must never be enabled',
+        'shell-version': ['50'], 'session-modes': ['user'], 'version': 99999,
+    }))
+    (extension / 'extension.js').write_text(
+        "export default class InactiveTilingAssistant { enable() { throw new Error('Inactive TA fixture enabled'); } disable() {} }\n")
+    (RUN / 'logs/native-snap-fixture.json').write_text(json.dumps({
+        'beforeFirstShellStart': True, 'edge': False, 'left': [], 'right': [],
+        'ta': 'tiling-assistant@ubuntu.com', 'expectedState': 6,
+    }))
+
+
 def tree_version() -> str:
     """The installed tree's own version (D-G74a, the root Cargo.toml's [workspace.package] version): the release the
     fake GitHub offers (winpoint_bundle)."""
@@ -2518,6 +2544,8 @@ def cmd_run(args) -> int:
     global SRC
     SRC = G
     prepare(args.lang, args.seed, args.profile_picture)  # wipes RUN; seeds settings from G until --source is in
+    if args.native_snap_fixture:
+        prepare_native_snap_fixture()
     source = {'rev': 'worktree', 'path': str(G)}
     if args.source != 'worktree':
         source = export_source(args.source)
@@ -3386,6 +3414,8 @@ def add_run_options(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
     p.add_argument('--session-mode', choices=('winpoint',),
                    help="GNOME Shell in WinPoint's login session mode (scripts/install-session.py), the extension "
                         'turned on by that mode only')
+    p.add_argument('--native-snap-fixture', action='store_true',
+                   help='private first-boot regression seed: native tiling off and installed-but-disabled TA; requires WinPoint mode')
     p.add_argument('--out', help='output directory inside tests/gnome (default: baseline/<lang>, or '
                                  '<scenario dir>/<scenario stem>.out with --scenario)')
     p.add_argument('--lock', help=argparse.SUPPRESS)        # set by launch: "parent[:kind]" or "fd:N"

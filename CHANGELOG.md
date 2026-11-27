@@ -5,6 +5,23 @@ section here.
 
 ## Unreleased
 
+## 0.9.10
+
+2026-11-27
+
+- **Restore window snapping on affected fresh Ubuntu installs.** At the start of the WinPoint panel, repair the
+  specific configuration where native edge snapping is off and both left/right tile shortcuts are empty. This
+  restores dragging windows to screen edges and Win+Left/Right in WinPoint.
+- **Keep existing snap setups.** The repair runs only in the WinPoint GNOME session. A bounded, read-only GNOME
+  Shell check skips it when Tiling Assistant is active, changing state, or cannot be verified. Custom shortcut
+  bindings and other configurations are left as they are.
+- **Preserve GNOME's previous settings.** Verify the saved values before changing the three preferences; if a
+  write fails, roll back only completed writes that still hold WinPoint's values. Choosing Ubuntu restores the
+  recorded preferences when they still match WinPoint's managed values.
+- **Cover the repair and recovery paths.** Regression tests cover the exact disabled profile, session and dry-run
+  guards, Tiling Assistant states, saved-value restoration, partial-write rollback and refusal without a confirmed
+  backup. The login-session mode files and external extension settings remain unchanged.
+
 ## 0.9.9
 
 - **Kernel-assisted file transfers.** Explorer uses Linux's `copy_file_range` API between already-open files
